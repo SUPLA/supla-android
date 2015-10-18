@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/AC/Devel/projekty/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/pre-dexed/arm/debug/support-annotations-21.0.3-7637d26ec91f01b1d854581e6076fa2b3aa50d2a.jar" />
+    </item>
+    <item
+        jar="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/jars/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/pre-dexed/arm/debug/internal_impl-21.0.3-75e186bb6391c2e299f4b3904d472319390e3acc.jar" />
+    </item>
+    <item
+        jar="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/pre-dexed/arm/debug/classes-1dcd0fd2fd239fc564d427da4c804c2b1c880741.jar" />
+    </item>
+    <item
+        jar="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/AC/AndroidStudioProjects/SUPLA/app/build/intermediates/pre-dexed/arm/debug/classes-7df9c5c7a82b68710c99ce734caa93c305194379.jar" />
+    </item>
+
+</items>

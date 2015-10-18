@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SUPLA</string>
+    <string name="result_code_temp_unavail">Service temporarily unavailable</string>
+    <string name="result_code_bad_credentals">Bad credentials</string>
+    <string name="result_code_bad_client_limit">Client limit exceeded</string>
+    <string name="result_code_access_disabled">Access disabled</string>
+</resources>
