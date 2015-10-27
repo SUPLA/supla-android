@@ -1,4 +1,4 @@
-package org.supla.android;
+package org.supla.android.lib;
 
 /*
  This program is free software; you can redistribute it and/or
@@ -18,51 +18,15 @@ package org.supla.android;
  Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl [AC SOFTWARE]
  */
 
-import android.content.Context;
+import org.supla.android.lib.SuplaChannelValue;
 
-import org.supla.android.lib.SuplaClient;
+public class SuplaChannelValueUpdate {
 
-public class SuplaApp {
+    public boolean EOL;
 
- private static final Object _lck = new Object();
- private static SuplaClient _SuplaClient = null;
- private static SuplaApp _SuplaApp = null;
+    public int Id;
+    public boolean OnLine;
 
- public void SuplaClientInitIfNeed(Context context) {
-
-  synchronized (_lck) {
-
-   if (_SuplaClient == null) {
-    _SuplaClient = new SuplaClient(context);
-    _SuplaClient.start();
-   }
-
-  }
-
- }
-
- public SuplaClient getSuplaClient() {
-
-  SuplaClient result;
-
-  synchronized (_lck) {
-   result = _SuplaClient;
-  }
-
-  return result;
- }
-
- public static synchronized SuplaApp getApp() {
-
-  synchronized (_lck) {
-
-   if (_SuplaApp == null) {
-    _SuplaApp = new SuplaApp();
-   }
-
-  }
-
-  return _SuplaApp;
- }
+    public SuplaChannelValue Value;
 
 }

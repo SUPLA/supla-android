@@ -19,11 +19,15 @@ package org.supla.android;
  */
 
 
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.content.Intent;
+
+import org.supla.android.lib.SuplaClient;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 
@@ -42,8 +46,15 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
     @Override
     public void onClick(View v) {
 
-        SuplaClient Client = new SuplaClient(getApplicationContext());
-        Client.start();
+        Intent i = new Intent(getBaseContext(), CfgActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
     }
 }
