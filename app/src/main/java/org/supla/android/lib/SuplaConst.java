@@ -24,6 +24,7 @@ public class SuplaConst {
     public final static int SUPLA_CLIENT_NAME_MAXSIZE = 201;
     public final static int SUPLA_ACCESSID_PWD_MAXSIZE = 33;
     public final static int SUPLA_SOFTVER_MAXSIZE = 21;
+    public final static int SUPLA_CHANNELVALUE_SIZE = 8;
     public final static int SUPLA_RESULTCODE_NONE                      = 0;
     public final static int SUPLA_RESULTCODE_UNSUPORTED                = 1;
     public final static int SUPLA_RESULTCODE_FALSE                     = 2;
@@ -39,4 +40,30 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED      = 12;
     public final static int SUPLA_RESULTCODE_DEVICE_LIMITEXCEEDED      = 13;
     public final static int SUPLA_RESULTCODE_GUID_ERROR                = 14;
+
+
+    public final static int SUPLA_CHANNELFNC_NONE                          =  0;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK     = 10;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATE            = 20;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR      = 30;
+    public final static int SUPLA_CHANNELFNC_THERMOMETER                   = 40;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY            = 50;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATE               = 60;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR         = 70;
+    public final static int SUPLA_CHANNELFNC_NOLIQUIDSENSOR                = 80;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK        = 90;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_DOOR               = 100;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER   = 110;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER      = 120;
+    public final static int SUPLA_CHANNELFNC_POWERSWITCH                   = 130;
+    public final static int SUPLA_CHANNELFNC_LIGHTSWITCH                   = 140;
+
+
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR           = 30;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK             = 40;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER        = 50;
+    public final static int SUPLA_EVENT_POWERONOFF                         = 60;
+    public final static int SUPLA_EVENT_LIGHTONOFF                         = 70;
 }

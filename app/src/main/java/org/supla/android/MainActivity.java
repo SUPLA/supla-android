@@ -19,42 +19,291 @@ package org.supla.android;
  */
 
 
-import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.view.View.OnClickListener;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import org.supla.android.lib.SuplaClient;
+import org.supla.android.db.Channel;
+import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaEvent;
+import org.supla.android.listview.ChannelLayout;
+import org.supla.android.listview.ChannelListView;
+import org.supla.android.listview.ListViewCursorAdapter;
+import org.supla.android.db.DbHelper;
 
-public class MainActivity extends ActionBarActivity implements OnClickListener {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    Button btnTest;
+public class MainActivity extends NavigationActivity implements OnClickListener, ChannelListView.OnChannelButtonTouchListener {
+
+    private ChannelListView cLV;
+    private ListViewCursorAdapter listViewCursorAdapter;
+    private DbHelper DbH_ListView;
+
+    private RelativeLayout NotificationView;
+    private Handler notif_handler;
+    private Runnable notif_nrunnable;
+    private ImageView notif_img;
+    private TextView notif_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Trace.d("MainActivity", "Created!");
+
+        notif_handler = null;
+        notif_nrunnable = null;
+
         setContentView(R.layout.activity_main);
 
-        btnTest = (Button)findViewById(R.id.button);
-        btnTest.setOnClickListener(this);
+        NotificationView = (RelativeLayout)Inflate(R.layout.notification, null);
+        NotificationView.setVisibility(View.GONE);
+
+
+        RelativeLayout NotifBgLayout = (RelativeLayout)NotificationView.findViewById(R.id.notif_bg_layout);
+        NotifBgLayout.setOnClickListener(this);
+        NotifBgLayout.setBackgroundColor(getResources().getColor(R.color.notification_bg));
+
+        getRootLayout().addView(NotificationView);
+
+        notif_img = (ImageView)NotificationView.findViewById(R.id.notif_img);
+        notif_text = (TextView)NotificationView.findViewById(R.id.notif_txt);
+
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
+        notif_text.setTypeface(type);
+
+        cLV = (ChannelListView) findViewById(R.id.channelsListView);
+        cLV.setOnChannelButtonTouchListener(this);
+
+        DbH_ListView = new DbHelper(this);
+
+        RegisterMessageHandler();
+        showMenuBar();
+        showMenuButton();
+    }
+
+
+    private boolean SetListCursorAdapter() {
+
+        if ( listViewCursorAdapter == null ) {
+
+            listViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
+            cLV.setAdapter(listViewCursorAdapter);
+
+            return true;
+
+        } else if ( listViewCursorAdapter.getCursor() == null ) {
+
+            listViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor());
+        }
+
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
+
+        if ( !SetListCursorAdapter() )
+            cLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Trace.d("MainActivity", "Destroyed!");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void OnDataChangedMsg() {
+        cLV.Refresh(DbH_ListView.getChannelListCursor(), false);
+    }
+
+    @Override
+    protected void OnDisconnectedMsg() {
+
+        if ( listViewCursorAdapter != null )
+           listViewCursorAdapter.changeCursor(null);
+
+    }
+
+    @Override
+    protected void OnConnectingMsg () {
+        SetListCursorAdapter();
+    }
+
+    @Override
+    protected void OnEventMsg(SuplaEvent event) {
+        super.OnEventMsg(event);
+
+        if ( event.Owner ) return;
+
+        DbHelper DbH = new DbHelper(this);
+
+        long acceddid = DbH.getCurrentAccessId();
+        Channel channel = DbH.getChannel(acceddid, event.ChannelID, false);
+
+        if ( channel == null ) return;
+
+        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc());
+
+        if ( ImgIdx == -1 ) return;
+
+        String msg;
+
+        switch(event.Event) {
+            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
+                msg = getResources().getString(R.string.event_openedthegateway);
+                break;
+            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE:
+                msg = getResources().getString(R.string.event_openedclosedthegate);
+                break;
+            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR:
+                msg = getResources().getString(R.string.event_openedclosedthegatedoors);
+                break;
+            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK:
+                msg = getResources().getString(R.string.event_openedthedoor);
+                break;
+            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
+                msg = getResources().getString(R.string.event_openedcloserollershutter);
+                break;
+            case SuplaConst.SUPLA_EVENT_POWERONOFF:
+                msg = getResources().getString(R.string.event_poweronoff);
+                break;
+            case SuplaConst.SUPLA_EVENT_LIGHTONOFF:
+                msg = getResources().getString(R.string.event_turnedthelightonoff);
+                break;
+            default:
+                return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
+
+
+        if ( channel.getCaption().equals("") == false ) {
+            msg = msg + " (" + channel.getCaption()+")";
+        }
+
+
+        ShowNotificationMessage(msg, ImgIdx);
+    }
+
+    private void ShowHideNotificationView(final boolean show) {
+
+        if ( show == false && NotificationView.getVisibility() == View.GONE )
+            return;
+
+        float height = getResources().getDimension(R.dimen.channel_layout_height);
+
+        NotificationView.setVisibility(View.VISIBLE);
+        NotificationView.bringToFront();
+        NotificationView.setTranslationY(show ? height : 0);
+
+        NotificationView.animate()
+                .translationY(show ? 0 : height)
+                .setDuration(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        if (show == false) {
+                            NotificationView.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+
+
+    }
+
+    public void ShowNotificationMessage(String msg, int img) {
+
+        notif_img.setImageResource(img);
+        notif_text.setText(msg);
+
+        ShowHideNotificationView(true);
+
+        if ( notif_handler != null
+                && notif_nrunnable != null ) {
+            notif_handler.removeCallbacks(notif_nrunnable);
+        }
+
+        notif_handler = new Handler();
+        notif_nrunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                HideNotificationMessage();
+
+                notif_handler = null;
+                notif_nrunnable = null;
+            }
+        };
+
+        notif_handler.postDelayed(notif_nrunnable, 5000);
+
+    }
+
+    public void HideNotificationMessage() {
+        ShowHideNotificationView(false);
     }
 
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
 
-        Intent i = new Intent(getBaseContext(), CfgActivity.class);
-        startActivity(i);
-        overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+        if ( v.getParent() == NotificationView ) {
+            HideNotificationMessage();
+        }
+    }
+
+        @Override
+    public void onChannelButtonTouch(boolean left, boolean up, int channelId, int channelFunc) {
+
+        if ( SuplaApp.getApp().getSuplaClient() == null )
+            return;
+
+        if ( up ) {
+
+            if ( channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER )
+                SuplaApp.getApp().getSuplaClient().Open(channelId, 0);
+
+        } else {
+
+            int Open = 0;
+
+            if ( left ) {
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
+            } else {
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
+            }
+
+            SuplaApp.getApp().getSuplaClient().Open(channelId, Open);
+
+        }
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
+    public void onBackPressed() {
+        gotoMain();
     }
 }

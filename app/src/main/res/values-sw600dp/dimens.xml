@@ -1,0 +1,20 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="channel_layout_height">180dp</dimen>
+    <dimen name="channel_separator_height">1dp</dimen>
+    <dimen name="channel_layout_button_width">150dp</dimen>
+    <dimen name="channel_layout_top_margin">5dp</dimen>
+    <dimen name="channel_layout_bottom_margin">5dp</dimen>
+    <dimen name="channel_circle_size">15dp</dimen>
+    <dimen name="channel_circle_margin">20dp</dimen>
+    <dimen name="channel_btn_text">25sp</dimen>
+    <dimen name="channel_caption_top_margin">25dp</dimen>
+    <dimen name="channel_caption_text">14sp</dimen>
+    <dimen name="channel_temp_text">40sp</dimen>
+    <dimen name="channel_temp_margin">2dp</dimen>
+    <dimen name="channel_img_top_margin">24dp</dimen>
+    <dimen name="channel_img_width">100dp</dimen>
+    <dimen name="channel_img_height">90dp</dimen>
+</resources>

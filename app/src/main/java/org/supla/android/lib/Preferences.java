@@ -91,4 +91,8 @@ public class Preferences {
         editor.putString(pref_accessidpwd, AccessIDpwd);
         editor.commit();
     }
+
+    public boolean configIsSet() {
+        return getServerAddress().equals("") == false && getAccessID() != 0 && getAccessIDpwd().equals("") == false;
+    }
 }

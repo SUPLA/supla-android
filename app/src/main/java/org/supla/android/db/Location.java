@@ -72,7 +72,6 @@ public class Location {
 
     public void AssignCursorData(Cursor cursor) {
 
-        cursor.moveToFirst();
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
         setLocationId(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION)));

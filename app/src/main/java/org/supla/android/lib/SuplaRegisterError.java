@@ -34,19 +34,20 @@ public class SuplaRegisterError {
      switch(ResultCode) {
 
       case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-       resid = R.string.result_code_temp_unavail;
+       resid = R.string.status_temporarily_unavailable;
        break;
 
       case SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS:
-       resid = R.string.result_code_bad_credentals;
+       resid = R.string.status_bad_credentials;
        break;
 
       case SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED:
-       resid = R.string.result_code_bad_client_limit;
+       resid = R.string.status_climit_exceded;
        break;
 
+      case SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED:
       case SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED:
-       resid = R.string.result_code_access_disabled;
+       resid = R.string.status_access_disabled;
        break;
 
      }

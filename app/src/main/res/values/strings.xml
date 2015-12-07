@@ -1,7 +1,78 @@
 <resources>
+
     <string name="app_name">SUPLA</string>
-    <string name="result_code_temp_unavail">Service temporarily unavailable</string>
-    <string name="result_code_bad_credentals">Bad credentials</string>
-    <string name="result_code_bad_client_limit">Client limit exceeded</string>
-    <string name="result_code_access_disabled">Access disabled</string>
+    <string name="slogan">"YOUR HOME CONNECTED"</string>
+    <string name="menubar_title">supla</string>
+    <string name="homepage">www.supla.org</string>
+    <string name="homepage_url">https://www.supla.org</string>
+    <string name="feedback_email">feedback@supla.org</string>
+    <string name="feedback_subject">SUPLA for Android feedback</string>
+    <string name="feedback_title">Send email</string>
+
+    <string name="version">version</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
+
+    <string name="status_connecting">Connecting...</string>
+    <string name="status_unknown_err">Unknown error</string>
+    <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
+    <string name="status_bad_credentials">Bad credentials</string>
+    <string name="status_climit_exceded">Client limit exceeded</string>
+    <string name="status_access_disabled">Access disabled</string>
+    <string name="status_version_error">Incompatible server version</string>
+
+    <string name="channel_func_gateway">Gateway</string>
+    <string name="channel_func_gate">Gate</string>
+    <string name="channel_func_garagedoor">Garage door</string>
+    <string name="channel_func_door">Door</string>
+    <string name="channel_func_rollershutter">Roller shutter</string>
+    <string name="channel_func_powerswith">Power switch</string>
+    <string name="channel_func_lightswith">Lighting switch</string>
+    <string name="channel_func_thermometer">Thermometer</string>
+    <string name="channel_func_noliquidsensor">No liquid sensor</string>
+    <string name="channel_func_gatewayopeningsensor">Gateway opening sensor</string>
+    <string name="channel_func_gateopeningsensor">Gate opening sensor</string>
+    <string name="channel_func_garagedooropeningsensor">Garage door opening sensor</string>
+    <string name="channel_func_dooropeningsensor">Door opening sensor</string>
+    <string name="channel_func_rsopeningsensor">Roller shutter opening sensor</string>
+
+    <string name="channel_btn_open">Open</string>
+    <string name="channel_btn_openclose">Open Close</string>
+    <string name="channel_btn_reveal">Open</string>
+    <string name="channel_btn_shut">Shut</string>
+    <string name="channel_btn_on">On</string>
+    <string name="channel_btn_off">Off</string>
+
+    <string name="event_openedthegateway">opened the gateway</string>
+    <string name="event_openedclosedthegate">opened / closed the gate</string>
+    <string name="event_openedclosedthegatedoors">opened / closed the gate doors</string>
+    <string name="event_openedthedoor">opened the door</string>
+    <string name="event_openedcloserollershutter">opened / closed roller shutter</string>
+    <string name="event_poweronoff">turned the power ON/OFF</string>
+    <string name="event_turnedthelightonoff">turned the light ON/OFF</string>
+
+    <string name="server_address">SERVER ADDRESS</string>
+    <string name="access_id">ACCESS IDENTIFIER</string>
+    <string name="password">PASSWORD</string>
+
+    <string name="about_app">Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl\n
+ UI Design: Mateusz Major mateuszmajor@me.com\n\n
+
+ This program is free software; you can redistribute it and/or\n
+ modify it under the terms of the GNU General Public License\n
+ as published by the Free Software Foundation; either version 2\n
+ of the License, or (at your option) any later version.\n\n
+
+ This program is distributed in the hope that it will be useful,\n
+ but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+ GNU General Public License for more details.\n\n
+
+ You should have received a copy of the GNU General Public License\n
+ along with this program; if not, write to the Free Software\n
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    </string>
+
 </resources>

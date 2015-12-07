@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
     sourceSets.main.jni.srcDirs = []
 
     defaultConfig {
         applicationId "org.supla.android"
-        minSdkVersion 12
-        targetSdkVersion 21
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
 
@@ -24,6 +24,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi', 'armeabi-v7a'
+            universalApk true
         }
     }
 
@@ -51,4 +60,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
 }

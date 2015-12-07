@@ -18,51 +18,128 @@ package org.supla.android;
  Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl [AC SOFTWARE]
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.widget.EditText;
 
+import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaClientMsg;
+
+import java.util.ArrayList;
+
 
 public class SuplaApp {
 
- private static final Object _lck = new Object();
- private static SuplaClient _SuplaClient = null;
- private static SuplaApp _SuplaApp = null;
+    private ArrayList<Handler>msgReceivers = new ArrayList<Handler>();
 
- public void SuplaClientInitIfNeed(Context context) {
+    private static final Object _lck1 = new Object();
+    private static final Object _lck2 = new Object();
 
-  synchronized (_lck) {
+    private static SuplaClient _SuplaClient = null;
+    private static SuplaApp _SuplaApp = null;
 
-   if (_SuplaClient == null) {
-    _SuplaClient = new SuplaClient(context);
-    _SuplaClient.start();
-   }
+    private Handler _sc_msg_handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
 
-  }
+            SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
 
- }
+            if ( _msg != null ) {
 
- public SuplaClient getSuplaClient() {
+                synchronized (_lck2) {
 
-  SuplaClient result;
+                    for(int a=0;a<msgReceivers.size();a++) {
+                        Handler msgReceiver = msgReceivers.get(a);
+                        msgReceiver.sendMessage(msgReceiver.obtainMessage(_msg.getType(), _msg));
+                    }
 
-  synchronized (_lck) {
-   result = _SuplaClient;
-  }
+                }
 
-  return result;
- }
 
- public static synchronized SuplaApp getApp() {
+            }
+        }
+    };
 
-  synchronized (_lck) {
+    public void addMsgReceiver(Handler msgReceiver) {
+        synchronized (_lck2) {
 
-   if (_SuplaApp == null) {
-    _SuplaApp = new SuplaApp();
-   }
+            if ( msgReceivers.indexOf(msgReceiver) == -1 )
+                msgReceivers.add(msgReceiver);
 
-  }
+        }
+    }
 
-  return _SuplaApp;
- }
+    public void removeMsgReceiver(Handler msgReceiver) {
+        synchronized (_lck2) {
+            msgReceivers.remove(msgReceiver);
+        }
+    }
+
+    public SuplaClient SuplaClientInitIfNeed(Context context) {
+
+        SuplaClient result;
+
+        synchronized (_lck1) {
+
+            if (_SuplaClient == null || _SuplaClient.canceled() ) {
+                _SuplaClient = new SuplaClient(context);
+                _SuplaClient.setMsgHandler(_sc_msg_handler);
+                _SuplaClient.start();
+            }
+
+            result = _SuplaClient;
+        }
+
+        return result;
+    }
+
+    public void SuplaClientTerminate() {
+
+        synchronized (_lck1) {
+
+            if (_SuplaClient != null) {
+                _SuplaClient.cancel();
+            }
+        }
+    }
+
+    public void OnSuplaClientFinished(SuplaClient sender) {
+
+        synchronized (_lck1) {
+
+            if (_SuplaClient == sender ) {
+                _SuplaClient = null;
+            }
+        }
+    }
+
+    public SuplaClient getSuplaClient() {
+
+        SuplaClient result;
+
+        synchronized (_lck1) {
+            result = _SuplaClient;
+        }
+
+        return result;
+    }
+
+    public static SuplaApp getApp() {
+
+        synchronized (_lck1) {
+
+            if (_SuplaApp == null) {
+                _SuplaApp = new SuplaApp();
+            }
+
+        }
+
+        return _SuplaApp;
+    }
+
+
 
 }

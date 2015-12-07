@@ -28,7 +28,7 @@ public class SuplaContract {
 
         public static final String TABLE_NAME = "accessid";
 
-        public static final String _ID = "id";  // Primary Key
+        public static final String _ID = "_id";  // Primary Key
         public static final String COLUMN_NAME_ACCESSID = "accessid"; // SuplaCfg.AccessID
         public static final String COLUMN_NAME_SERVERADDRESS = "serveraddress"; // SuplaCfg.Host
 
@@ -38,7 +38,7 @@ public class SuplaContract {
 
         public static final String TABLE_NAME = "location";
 
-        public static final String _ID = "id"; // Primary Key
+        public static final String _ID = "_id"; // Primary Key
         public static final String COLUMN_NAME_LOCATIONID = "locationid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_VISIBLE = "visible";
@@ -51,7 +51,7 @@ public class SuplaContract {
 
         public static final String TABLE_NAME = "channel";
 
-        public static final String _ID = "id"; // Primary Key
+        public static final String _ID = "_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_FUNC = "func";

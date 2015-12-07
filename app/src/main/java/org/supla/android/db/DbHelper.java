@@ -27,13 +27,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.supla.android.Trace;
 import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaChannel;
-import org.supla.android.lib.SuplaChannelValue;
+import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
 
-import java.nio.channels.Channel;
 
 public class DbHelper extends SQLiteOpenHelper {
 
+    private SQLiteDatabase rdb = null;
     private Context context;
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "supla.db";
@@ -41,7 +41,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        rdb = getReadableDatabase();
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -106,6 +108,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public long getCurrentAccessId() {
 
         long result = 0;
+
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -202,7 +205,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 null
         );
 
+
         if ( c.getCount() > 0 ) {
+
+            c.moveToFirst();
+
             result = new Location();
             result.AssignCursorData(c);
         }
@@ -225,9 +232,9 @@ public class DbHelper extends SQLiteOpenHelper {
             if ( location == null ) {
 
                 location = new Location();
+                location.setAccessId(accessid);
                 location.AssignSuplaLocation(suplaLocation);
                 location.setVisible(1);
-                location.setAccessId(accessid);
 
                 db = getWritableDatabase();
                 db.insert(
@@ -239,6 +246,9 @@ public class DbHelper extends SQLiteOpenHelper {
             } else if ( location.Diff(suplaLocation) ) {
 
                 db = getWritableDatabase();
+
+                location.AssignSuplaLocation(suplaLocation);
+                location.setVisible(1);
 
                 String selection = SuplaContract.LocationEntry._ID + " LIKE ?";
                 String[] selectionArgs = { String.valueOf(location.getId()) };
@@ -262,17 +272,208 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public Channel getChannel(long accessid, long id, boolean primary_key) {
 
-        return null;
+        Channel result = null;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                SuplaContract.ChannelEntry._ID,
+                SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION,
+                SuplaContract.ChannelEntry.COLUMN_NAME_FUNC,
+                SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE,
+                SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE,
+                SuplaContract.ChannelEntry.COLUMN_NAME_VALUE,
+                SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE,
+                SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID,
+
+        };
+
+        String selection = ( primary_key == true ? SuplaContract.ChannelEntry._ID : SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID ) + " = ?" +
+                " AND " + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID +
+                " IN ( SELECT "+SuplaContract.LocationEntry._ID+" FROM "+SuplaContract.LocationEntry.TABLE_NAME+" WHERE "+SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID+" = ? )";
+
+        String[] selectionArgs = {
+                String.valueOf(id),
+                String.valueOf(accessid),
+        };
+
+
+        Cursor c = db.query(
+                SuplaContract.ChannelEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if ( c.getCount() > 0 ) {
+
+            c.moveToFirst();
+
+            result = new Channel();
+            result.AssignCursorData(c);
+        }
+
+        db.close();
+
+        return result;
     }
 
-    public boolean updateChannel(SuplaChannel channel) {
+    private void _updateChannel(SQLiteDatabase db, Channel channel) {
+
+        String selection = SuplaContract.ChannelEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(channel.getId()) };
+
+        db.update(
+                SuplaContract.ChannelEntry.TABLE_NAME,
+                channel.getContentValues(),
+                selection,
+                selectionArgs);
+    }
+
+    public boolean updateChannel(SuplaChannel suplaChannel) {
+
         long accessid = getCurrentAccessId();
 
+
+        if ( accessid != 0 ) {
+
+            Location location = getLocation(accessid, suplaChannel.LocationID, false);
+            SQLiteDatabase db = null;
+
+            if ( location != null ) {
+
+                Channel channel = getChannel(accessid, suplaChannel.Id, false);
+
+                if ( channel == null ) {
+
+                    channel = new Channel();
+                    channel.AssignSuplaChannel(suplaChannel);
+                    channel.setVisible(1);
+                    channel.setLocationId(location.getId());
+
+                    db = getWritableDatabase();
+                    db.insert(
+                            SuplaContract.ChannelEntry.TABLE_NAME,
+                            null,
+                            channel.getContentValues());
+
+                } else if ( channel.Diff(suplaChannel)
+                            || channel.getVisible() != 1 ) {
+
+                    db = getWritableDatabase();
+
+                    channel.AssignSuplaChannel(suplaChannel);
+                    channel.setVisible(1);
+
+                    _updateChannel(db, channel);
+                };
+
+
+                if ( db != null ) {
+                    db.close();
+                    return true;
+                }
+
+            }
+        }
+
         return false;
     }
 
-    public boolean updateChannelValue(SuplaChannelValue channelValue) {
+    public boolean updateChannelValue(SuplaChannelValueUpdate channelValue) {
+
+        long accessid = getCurrentAccessId();
+        Channel channel = getChannel(accessid, channelValue.Id, false);
+
+        if ( channel != null
+                && ( channel.getOnLine() != channelValue.OnLine
+                     || channel.getValue().Diff(channelValue.Value) ) ) {
+
+            SQLiteDatabase db = getWritableDatabase();
+
+            channel.setOnLine(channelValue.OnLine);
+            channel.getValue().AssignSuplaChannelValue(channelValue.Value);
+
+            _updateChannel(db, channel);
+            db.close();
+
+            return true;
+        }
 
         return false;
+    }
+
+    public boolean setChannelsVisible(int Visible, int WhereVisible) {
+
+        String selection = SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " = ?";
+        String[] selectionArgs = { String.valueOf(WhereVisible) };
+
+        ContentValues values = new ContentValues();
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, Visible);
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        int count = db.update(
+                SuplaContract.ChannelEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        db.close();
+
+        return count > 0 ? true : false;
+    }
+
+    public boolean setChannelsOffline() {
+
+        String selection = SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE + " = ?";
+        String[] selectionArgs = { String.valueOf((int)1) };
+
+        ContentValues values = new ContentValues();
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE, 0);
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        int count = db.update(
+                SuplaContract.ChannelEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        db.close();
+
+        return count > 0 ? true : false;
+    }
+
+    public Cursor getChannelListCursor() {
+
+
+        String sql = "SELECT "
+                +"C."+    SuplaContract.ChannelEntry._ID
+                +", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_VALUE
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID
+
+                + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C"
+                + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
+                + " ON C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = L." + SuplaContract.LocationEntry._ID
+                + " WHERE C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0"
+                + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION+", "
+                               + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC+" DESC, "
+                               + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION;
+
+
+
+        return rdb.rawQuery(sql, null);
     }
 }

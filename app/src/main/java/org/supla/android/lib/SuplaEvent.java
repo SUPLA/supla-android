@@ -20,6 +20,7 @@ package org.supla.android.lib;
 
 public class SuplaEvent {
 
+    public boolean Owner;
     public int Event;
     public int ChannelID;
     public long DurationMS;
