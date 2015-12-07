@@ -162,7 +162,7 @@ public class ChannelLayout extends LinearLayout {
 
         tv.setTypeface(type);
 
-        tv.setTextSize((int) getResources().getDimension(R.dimen.channel_btn_text));
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text));
         tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
         tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
@@ -234,7 +234,7 @@ public class ChannelLayout extends LinearLayout {
 
             Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/OpenSans-Regular.ttf");
             Text.setTypeface(type);
-            Text.setTextSize((int) getResources().getDimension(R.dimen.channel_temp_text));
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_temp_text));
             Text.setTextColor(getResources().getColor(R.color.channel_temp_text));
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 

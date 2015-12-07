@@ -21,6 +21,7 @@ package org.supla.android.listview;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -70,7 +71,7 @@ public class SectionLayout extends LinearLayout {
 
         Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
         Caption.setTypeface(type);
-        Caption.setTextSize((int) getResources().getDimension(R.dimen.channel_section_text));
+        Caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_section_text));
         Caption.setTextColor(getResources().getColor(R.color.channel_section_text));
         Caption.setGravity(Gravity.CENTER_VERTICAL);
 
