@@ -33,7 +33,7 @@ public class LineView extends View {
         setBackgroundColor(getResources().getColor(R.color.channel_separetor));
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.channel_separator_height));
+                RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.channel_separator_height));
 
         lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
 

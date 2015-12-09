@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
@@ -81,9 +82,19 @@ public class StatusActivity extends NavigationActivity {
     protected void onResume() {
         super.onResume();
 
-        if ( SuplaApp.getApp().getSuplaClient() != null
-             && SuplaApp.getApp().getSuplaClient().Registered() )
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+        if ( client != null
+                && client.Registered() ) {
             showMain(this);
+        } else {
+
+            SuplaRegisterError error = SuplaClient.getLastRegisterError();
+
+            if ( error != null )
+                _OnRegisterErrorMsg(error);
+        }
+
 
     }
 
@@ -180,10 +191,7 @@ public class StatusActivity extends NavigationActivity {
         showMain(this);
     };
 
-    @Override
-    protected void OnRegisterErrorMsg(SuplaRegisterError error) {
-
-        super.OnRegisterErrorMsg(error);
+    private void _OnRegisterErrorMsg(SuplaRegisterError error) {
         String msg;
 
 
@@ -207,6 +215,14 @@ public class StatusActivity extends NavigationActivity {
         }
 
         setStatusError(msg);
+    }
+
+    @Override
+    protected void OnRegisterErrorMsg(SuplaRegisterError error) {
+
+        super.OnRegisterErrorMsg(error);
+        _OnRegisterErrorMsg(error);
+
     };
 
     @Override

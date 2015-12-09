@@ -89,7 +89,7 @@ public class ChannelLayout extends LinearLayout {
         public CircleView(Context context, boolean right) {
             super(context);
 
-            int size = (int) getResources().getDimension(R.dimen.channel_circle_size);
+            int size = getResources().getDimensionPixelSize(R.dimen.channel_circle_size);
             paint = new Paint();
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
             paint.setColor(getResources().getColor(R.color.channel_circle_off));
@@ -97,7 +97,7 @@ public class ChannelLayout extends LinearLayout {
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     size, size);
 
-            int margin = (int) getResources().getDimension(R.dimen.channel_circle_margin);
+            int margin = getResources().getDimensionPixelSize(R.dimen.channel_circle_margin);
 
             if ( right ) {
                 lp.rightMargin = margin;
@@ -147,7 +147,7 @@ public class ChannelLayout extends LinearLayout {
             if ( imgl_id != -1 )
                lp.addRule(RelativeLayout.BELOW, imgl_id);
 
-            lp.topMargin = (int) getResources().getDimension(R.dimen.channel_caption_top_margin);
+            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
             setLayoutParams(lp);
         }
 
@@ -245,23 +245,23 @@ public class ChannelLayout extends LinearLayout {
 
         private void SetDimensions() {
 
-            int width = (int) getResources().getDimension(R.dimen.channel_img_width);
+            int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
             if ( Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
                 width*=2.5;
             }
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, (int) getResources().getDimension(R.dimen.channel_img_height));
+                    width, getResources().getDimensionPixelSize(R.dimen.channel_img_height));
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, (int) getResources().getDimension(R.dimen.channel_img_top_margin), 0, 0);
+            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
 
             setLayoutParams(lp);
 
             lp = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.channel_img_width), (int) getResources().getDimension(R.dimen.channel_img_height));
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
 
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
@@ -270,10 +270,10 @@ public class ChannelLayout extends LinearLayout {
             Img.setLayoutParams(lp);
 
             lp = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.channel_img_width), (int) getResources().getDimension(R.dimen.channel_img_height));
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
             lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-            lp.leftMargin = (int) getResources().getDimension(R.dimen.channel_temp_margin);
+            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_temp_margin);
 
             Text.setLayoutParams(lp);
             Text.setVisibility(Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ? View.VISIBLE : View.INVISIBLE);
@@ -323,18 +323,18 @@ public class ChannelLayout extends LinearLayout {
         left_btn = new FrameLayout(context);
 
         right_btn.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.channel_layout_button_width), (int) getResources().getDimension(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
 
         right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         left_btn.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.channel_layout_button_width), (int) getResources().getDimension(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
 
         left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         content = new RelativeLayout(context);
         content.setLayoutParams(new LayoutParams(
-                LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.channel_layout_height)));
+                LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
 
         content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
@@ -359,11 +359,11 @@ public class ChannelLayout extends LinearLayout {
 
         {
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.channel_img_width), (int) getResources().getDimension(R.dimen.channel_img_height));
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, (int) getResources().getDimension(R.dimen.channel_img_top_margin), 0, 0);
+            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
 
             imgl = new ChannelImageLayout(context);
             content.addView(imgl);

@@ -49,9 +49,9 @@ public class StartActivity extends Activity {
 
         SuplaApp.getApp().SuplaClientInitIfNeed(this);
 
-    //    Display display = getWindowManager().getDefaultDisplay();
-    //    Trace.d("ScreenSize", Integer.toString(display.getWidth())+"x"+Integer.toString(display.getHeight()));
-    //    Trace.d("Density", Double.toString(getResources().getDisplayMetrics().density));
+        Display display = getWindowManager().getDefaultDisplay();
+        Trace.d("ScreenSize", Integer.toString(display.getWidth())+"x"+Integer.toString(display.getHeight()));
+        Trace.d("Density", Double.toString(getResources().getDisplayMetrics().density));
     }
 
     @Override

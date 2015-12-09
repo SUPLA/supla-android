@@ -32,6 +32,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.supla.android.lib.SuplaClient;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -318,8 +321,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public static void showMain(Activity sender) {
 
-        if ( SuplaApp.getApp().getSuplaClient() != null
-                && SuplaApp.getApp().getSuplaClient().Registered() ) {
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+        if ( client != null
+                && client.Registered() ) {
 
             showActivity(sender, MainActivity.class, 0);
         } else {

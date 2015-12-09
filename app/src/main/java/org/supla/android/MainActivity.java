@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelLayout;
@@ -61,7 +62,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Trace.d("MainActivity", "Created!");
+       // Trace.d("MainActivity", "Created!");
 
         notif_handler = null;
         notif_nrunnable = null;
@@ -117,15 +118,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         super.onResume();
 
-        SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
-
         if ( !SetListCursorAdapter() )
             cLV.Refresh(DbH_ListView.getChannelListCursor(), true);
     }
 
     @Override
     protected void onDestroy() {
-        Trace.d("MainActivity", "Destroyed!");
+       // Trace.d("MainActivity", "Destroyed!");
         super.onDestroy();
     }
 
@@ -278,13 +277,16 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         @Override
     public void onChannelButtonTouch(boolean left, boolean up, int channelId, int channelFunc) {
 
-        if ( SuplaApp.getApp().getSuplaClient() == null )
+
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+        if ( client == null )
             return;
 
         if ( up ) {
 
             if ( channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER )
-                SuplaApp.getApp().getSuplaClient().Open(channelId, 0);
+                client.Open(channelId, 0);
 
         } else {
 
@@ -296,7 +298,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            SuplaApp.getApp().getSuplaClient().Open(channelId, Open);
+            client.Open(channelId, Open);
 
         }
 

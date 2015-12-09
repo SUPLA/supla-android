@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.lib.SuplaRegisterError;
@@ -46,14 +47,24 @@ public class BaseActivity extends Activity {
             bgTimer.cancel();
             bgTimer = null;
         }
+/*
+//CHECK IT AT BW (FAST DSL)
 
-        if ( getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)
-                &&  SuplaApp.getApp().getSuplaClient() != null ) {
+        {
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-            SuplaApp.getApp().getSuplaClient().Reconnect();
+            if ( getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)
+                    &&  client != null ) {
+
+                Trace.d("A", "A");
+                client.Reconnect();
+            }
         }
 
+*/
         BackgroundTime = null;
+
+        SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
     };
 
     @Override
@@ -67,11 +78,13 @@ public class BaseActivity extends Activity {
                 @Override
                 public void run() {
 
-                    if ( SuplaApp.getApp().getSuplaClient() == null
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+                    if ( client == null
                             || getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout) ) {
 
-                        if ( SuplaApp.getApp().getSuplaClient() != null ) {
-                            SuplaApp.getApp().getSuplaClient().cancel();
+                        if ( client != null ) {
+                            client.cancel();
                         }
 
                         bgTimer.cancel();

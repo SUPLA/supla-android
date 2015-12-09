@@ -52,8 +52,8 @@ public class SectionLayout extends LinearLayout {
 
     private void Init(Context context) {
 
-        int height = (int)getResources().getDimension(R.dimen.channel_section_height);
-        int sheight = (int)getResources().getDimension(R.dimen.channel_separator_height);
+        int height = getResources().getDimensionPixelSize(R.dimen.channel_section_height);
+        int sheight = getResources().getDimensionPixelSize(R.dimen.channel_separator_height);
 
         setBackgroundColor(getResources().getColor(R.color.channel_cell));
         setOrientation(VERTICAL);
@@ -64,7 +64,7 @@ public class SectionLayout extends LinearLayout {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height - sheight);
 
-        lp.setMargins((int) getResources().getDimension(R.dimen.channel_separator_text_margin), 0, 0, 0);
+        lp.setMargins(getResources().getDimensionPixelSize(R.dimen.channel_separator_text_margin), 0, 0, 0);
 
         Caption = new TextView(context);
         Caption.setLayoutParams(lp);

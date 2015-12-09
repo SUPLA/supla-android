@@ -40,6 +40,8 @@ public class SuplaClient extends Thread {
     private android.os.Handler _msgHandler;
     private Object msgh_lck = new Object();
     private Object sc_lck = new Object();
+    private static Object st_lck = new Object();
+    private static SuplaRegisterError lastRegisterError = null;
 
     public native void CfgInit(SuplaCfg cfg);
     private native long scInit(SuplaCfg cfg);
@@ -51,6 +53,7 @@ public class SuplaClient extends Thread {
     private native void scDisconnect(long _supla_client);
     private native boolean scIterate(long _supla_client, int wait_usec);
     private native boolean scOpen(long _supla_client, int ChannelID, int Open);
+
 
     public SuplaClient(Context context) {
 
@@ -229,6 +232,10 @@ public class SuplaClient extends Thread {
     private void onRegisterError(SuplaRegisterError registerError) {
         Trace.d(log_tag, registerError.codeToString(_context));
 
+        synchronized (st_lck) {
+            lastRegisterError = registerError;
+        }
+
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegisterError);
         msg.setRegisterError(registerError);
         sendMessage(msg);
@@ -297,11 +304,26 @@ public class SuplaClient extends Thread {
         _canceled = true;
     }
 
+    public static SuplaRegisterError getLastRegisterError() {
+
+        SuplaRegisterError result = null;
+
+        synchronized (st_lck) {
+            result = lastRegisterError;
+        }
+
+        return result;
+    }
+
     public void run() {
 
         DbH = new DbHelper(_context);
 
         while(!canceled()) {
+
+            synchronized (st_lck) {
+                lastRegisterError = null;
+            }
 
             onConnecting();
 
@@ -363,7 +385,6 @@ public class SuplaClient extends Thread {
                 } catch (InterruptedException e) {}
             }
         }
-
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
     }
