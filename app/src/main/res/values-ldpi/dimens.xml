@@ -1,9 +1,0 @@
-<resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-
-    <dimen name="channel_btn_text">25sp</dimen>
-    <dimen name="channel_caption_text">12sp</dimen>
-    <dimen name="channel_section_text">30sp</dimen>
-    <dimen name="channel_temp_text">30sp</dimen>
-
-</resources>
