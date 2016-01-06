@@ -1,0 +1,71 @@
+<resources>
+
+    <string name="feedback_title">Wyślij email</string>
+
+    <string name="version">wersja</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="about">O programie</string>
+    <string name="settings">Ustawienia</string>
+
+    <string name="status_connecting">Łączenie...</string>
+    <string name="status_unknown_err">Nieznany błąd</string>
+    <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
+    <string name="status_bad_credentials">Błędne poświadczenia</string>
+    <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
+    <string name="status_access_disabled">Dostęp wyłączony</string>
+    <string name="status_version_error">Niekompatybilna wersja serwera</string>
+
+    <string name="channel_func_gateway">Furtka</string>
+    <string name="channel_func_gate">Brama</string>
+    <string name="channel_func_garagedoor">Brama garażowa</string>
+    <string name="channel_func_door">Drzwi</string>
+    <string name="channel_func_rollershutter">Roleta</string>
+    <string name="channel_func_powerswith">Włącznik zasilania</string>
+    <string name="channel_func_lightswith">Włącznik światła</string>
+    <string name="channel_func_thermometer">Termometr</string>
+    <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
+    <string name="channel_func_gatewayopeningsensor">Czujnik otwacia furtki</string>
+    <string name="channel_func_gateopeningsensor">Czujnik otwarcia bramy</string>
+    <string name="channel_func_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
+    <string name="channel_func_dooropeningsensor">Czujnik otwacia drzwi</string>
+    <string name="channel_func_rsopeningsensor">Czujnik otwacia rolet</string>
+
+    <string name="channel_btn_open">Otwórz</string>
+    <string name="channel_btn_openclose">Otwórz Zamknij</string>
+    <string name="channel_btn_reveal">Odsłoń</string>
+    <string name="channel_btn_shut">Zasłoń</string>
+    <string name="channel_btn_on">Włącz</string>
+    <string name="channel_btn_off">Wyłącz</string>
+
+    <string name="event_openedthegateway">otworzył furtkę</string>
+    <string name="event_openedclosedthegate">otworzył / zamknął bramę</string>
+    <string name="event_openedclosedthegatedoors">otworzył / zamknął drzwi garażowe</string>
+    <string name="event_openedthedoor">otworzył drzwi</string>
+    <string name="event_openedcloserollershutter">otworzył / zamknął roletę</string>
+    <string name="event_poweronoff">włączył / wyłączył zasilanie</string>
+    <string name="event_turnedthelightonoff">włączył / wyłączył światło</string>
+
+    <string name="server_address">ADRES SERWERA</string>
+    <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
+    <string name="password">HASŁO</string>
+
+    <string name="about_app">Autor: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl [AC SOFTWARE]\n
+   UI Design: Mateusz Major mateuszmajor@me.com\n\n
+
+   Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
+   modyfikować zgodnie z warunkami licencji GNU General Public License\n
+   opublikowanej przez Free Software Foundation w wersji 2\n
+   Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
+  
+   Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
+   ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
+   Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
+   General Public Licence aby zapoznać się ze szczegółami.\n\n
+  
+   Powinieneś otrzymać kopię GNU General Public License\n
+   wraz z tym programem; jeśli nie, napisz do Free Software\n
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+    </string>
+
+</resources>

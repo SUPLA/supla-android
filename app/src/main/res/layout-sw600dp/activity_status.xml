@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/activity_status_bg_err">
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/status_progress"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:progress="50"
+        android:layout_alignParentBottom="true"
+        android:nestedScrollingEnabled="false"
+        android:mirrorForRtl="false"
+        android:secondaryProgressTint="@color/activity_bg" />
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:id="@+id/status_img"
+        android:layout_marginTop="130dp"
+        android:background="@drawable/error"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="Connecting..."
+        android:id="@+id/status_text"
+        android:layout_marginTop="68dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/status_img"
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp" />
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:bottomRightRadius="10dp"
+        android:bottomLeftRadius="10dp"
+        android:topLeftRadius="10dp"
+        android:topRightRadius="10dp"
+        android:layout_width="280dp"
+        android:layout_height="60dp"
+        android:id="@+id/status_btn"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/status_text"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="30dp"
+        android:text="Settings"
+        android:textSize="30sp" />
+
+</RelativeLayout>

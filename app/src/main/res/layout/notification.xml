@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/channel_layout_height"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:background="@color/notification_bg"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/notif_bg_layout">
+
+        <ImageView
+            android:layout_width="@dimen/channel_img_width"
+            android:layout_height="@dimen/channel_img_height"
+            android:id="@+id/notif_img"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/channel_img_top_margin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/notif_txt"
+            android:layout_below="@+id/notif_img"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+</RelativeLayout>
