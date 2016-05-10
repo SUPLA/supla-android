@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="slogan">"ТВОЙ ДОМ НА СВЯЗИ"</string>
     <string name="feedback_title">Написать отзыв</string>
 
     <string name="version">версия</string>
@@ -31,6 +30,8 @@
     <string name="channel_func_garagedooropeningsensor">Датчик открытия гаражных ворот</string>
     <string name="channel_func_dooropeningsensor">Датчик открытия двери</string>
     <string name="channel_func_rsopeningsensor">Датчик открытия роллет</string>
+    <string name="channel_func_humidity">Влажность</string>  
+    <string name="channel_func_humidityandtemperature">Температура и влажность</string>  
 
     <string name="channel_btn_open">Открыть</string>
     <string name="channel_btn_openclose">Открыть Закрыть</string>
