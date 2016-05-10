@@ -6,6 +6,8 @@
     <string name="about">Über das Programm</string>
     <string name="settings">Einstellungen</string>
 
+    <string name="version">version</string>
+
     <string name="status_connecting">Verbindung...</string>
     <string name="status_unknown_err">Unbekannter Fehler</string>
     <string name="status_temporarily_unavailable">Service momentan nicht verfügbar</string>
@@ -22,6 +24,8 @@
     <string name="channel_func_powerswith">Aufladen anmachen</string>
     <string name="channel_func_lightswith">Licht anmachen</string>
     <string name="channel_func_thermometer">Thermometer</string>
+    <string name="channel_func_humidity">Feuchtigkeitssensor</string>
+    <string name="channel_func_humidityandtemperature">Temperatur- und Feuchtigkeitssensor</string>
     <string name="channel_func_noliquidsensor">kein Flüssigkeitssensor</string>
     <string name="channel_func_gatewayopeningsensor">Pforte-Öffnungssensor</string>
     <string name="channel_func_gateopeningsensor">Tor-Öffnungssensor</string>

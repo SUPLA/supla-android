@@ -47,6 +47,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATE            = 20;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR      = 30;
     public final static int SUPLA_CHANNELFNC_THERMOMETER                   = 40;
+    public final static int SUPLA_CHANNELFNC_HUMIDITY                      = 42;
+    public final static int SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE        = 45;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY            = 50;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATE               = 60;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR         = 70;
@@ -57,7 +59,12 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER      = 120;
     public final static int SUPLA_CHANNELFNC_POWERSWITCH                   = 130;
     public final static int SUPLA_CHANNELFNC_LIGHTSWITCH                   = 140;
-
+    public final static int SUPLA_CHANNELFNC_RING                          = 150;
+    public final static int SUPLA_CHANNELFNC_ALARM                         = 160;
+    public final static int SUPLA_CHANNELFNC_NOTIFICATION                  = 170;
+    public final static int SUPLA_CHANNELFNC_DIMMER                        = 180;
+    public final static int SUPLA_CHANNELFNC_RGBLIGHTING                   = 190;
+    public final static int SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING          = 200;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;

@@ -169,9 +169,13 @@ public class ChannelLayout extends LinearLayout {
         return tv;
     }
 
-    public static int getImageIdx(boolean StateUp, int func) {
+    public static int getImageIdx(boolean StateUp, int func, int img) {
 
         int img_idx = -1;
+
+        if ( img != 1
+                && func != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE )
+            return img_idx;
 
         switch(func) {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
@@ -203,6 +207,12 @@ public class ChannelLayout extends LinearLayout {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 img_idx = R.drawable.thermometer;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                img_idx = R.drawable.humidity;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                img_idx = img == 1 ? R.drawable.thermometer : R.drawable.humidity;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                 img_idx = R.drawable.noliquid;
                 break;
@@ -214,8 +224,10 @@ public class ChannelLayout extends LinearLayout {
 
     private class ChannelImageLayout extends RelativeLayout {
 
-        private ImageView Img;
-        private TextView Text;
+        private ImageView Img1;
+        private ImageView Img2;
+        private TextView Text1;
+        private TextView Text2;
         private int Func;
         private boolean StateUp;
 
@@ -226,11 +238,28 @@ public class ChannelLayout extends LinearLayout {
             setId(ViewHelper.generateViewId());
             Func = 0;
 
-            Img = new ImageView(context);
+            Img1 = newImageView(context);
+            Img2 = newImageView(context);
+
+            Text1 = newTextView(context);
+            Text2 = newTextView(context);
+
+            SetDimensions();
+        }
+
+        private ImageView newImageView(Context context) {
+
+            ImageView Img = new ImageView(context);
             Img.setId(ViewHelper.generateViewId());
             addView(Img);
 
-            Text = new TextView(context);
+            return  Img;
+        }
+
+        private TextView newTextView(Context context) {
+
+            TextView Text = new TextView(context);
+            Text.setId(ViewHelper.generateViewId());
 
             Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/OpenSans-Regular.ttf");
             Text.setTypeface(type);
@@ -240,7 +269,38 @@ public class ChannelLayout extends LinearLayout {
 
             addView(Text);
 
-            SetDimensions();
+            return Text;
+        }
+
+        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_imgtext_height));
+
+            lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
+
+            Text.setLayoutParams(lp);
+            Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+
+        }
+
+        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin) {
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+
+
+            if ( img2 == false ) {
+                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT );
+            } else {
+                lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
+            }
+
+            lp.leftMargin = leftMargin;
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+
+            Img.setLayoutParams(lp);
+
         }
 
         private void SetDimensions() {
@@ -249,6 +309,8 @@ public class ChannelLayout extends LinearLayout {
 
             if ( Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
                 width*=2.5;
+            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+                width*=4.3;
             }
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
@@ -260,24 +322,14 @@ public class ChannelLayout extends LinearLayout {
 
             setLayoutParams(lp);
 
-            lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+            SetImgDimensions(Img1, false, Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
+            SetImgDimensions(Img2, true, 0);
+
+            SetTextDimensions(Text1, Img1, Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                                           || Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
 
 
-            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-
-            Img.setLayoutParams(lp);
-
-            lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_temp_margin);
-
-            Text.setLayoutParams(lp);
-            Text.setVisibility(Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ? View.VISIBLE : View.INVISIBLE);
-
+            SetTextDimensions(Text2, Img2, Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
 
         }
 
@@ -288,13 +340,22 @@ public class ChannelLayout extends LinearLayout {
 
             StateUp = stateUp;
 
-            int img_idx = getImageIdx(StateUp, func);
+            int img1_idx = getImageIdx(StateUp, func, 1);
 
-            if ( img_idx == -1 ) {
-                Img.setVisibility(View.INVISIBLE);
+            if ( img1_idx == -1 ) {
+                Img1.setVisibility(View.INVISIBLE);
             } else {
-                Img.setImageResource(img_idx);
-                Img.setVisibility(View.VISIBLE);
+                Img1.setImageResource(img1_idx);
+                Img1.setVisibility(View.VISIBLE);
+            }
+
+            int img2_idx = getImageIdx(StateUp, func, 2);
+
+            if ( img2_idx == -1 ) {
+                Img2.setVisibility(View.INVISIBLE);
+            } else {
+                Img2.setImageResource(img2_idx);
+                Img2.setVisibility(View.VISIBLE);
             }
 
             if ( Func != func ) {
@@ -304,8 +365,12 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
-        public void setText(String text) {
-            Text.setText(text);
+        public void setText1(String text) {
+            Text1.setText(text);
+        }
+
+        public void setText2(String text) {
+            Text2.setText(text);
         }
 
     }
@@ -787,6 +852,12 @@ public class ChannelLayout extends LinearLayout {
                     case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                         idx = R.string.channel_func_thermometer;
                         break;
+                    case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                        idx = R.string.channel_func_humidity;
+                        break;
+                    case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                        idx = R.string.channel_func_humidityandtemperature;
+                        break;
                     case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                         idx = R.string.channel_func_noliquidsensor;
                         break;
@@ -806,9 +877,21 @@ public class ChannelLayout extends LinearLayout {
 
         if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
             if ( channel.getOnLine() )
-                imgl.setText(String.format("%.1f", channel.getTemp())+ (char) 0x00B0);
+                imgl.setText1(String.format("%.1f", channel.getTemp())+ (char) 0x00B0);
             else
-                imgl.setText("---");
+                imgl.setText1("---");
+        }
+
+        if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+            if ( channel.getOnLine() ) {
+
+                imgl.setText1(String.format("%.1f", channel.getTemp()) + (char) 0x00B0);
+                imgl.setText2(String.format("%.1f", channel.getHumidity()));
+
+            } else {
+                imgl.setText1("---");
+                imgl.setText2("---");
+            }
         }
     }
 

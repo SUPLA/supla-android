@@ -321,15 +321,20 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public static void showMain(Activity sender) {
 
+
+
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null
                 && client.Registered() ) {
 
             showActivity(sender, MainActivity.class, 0);
+
         } else {
             showStatus(sender);
         }
+
+
 
     }
 
@@ -397,8 +402,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     protected void BeforeStatusMsg() {
         super.BeforeStatusMsg();
 
-        if ( ( CurrentActivity == null
-                 || !(CurrentActivity instanceof StatusActivity) )
+        if (  CurrentActivity != null
+                && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity) ) {
             showStatus(this);
         }

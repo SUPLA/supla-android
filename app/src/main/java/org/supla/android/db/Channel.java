@@ -171,26 +171,63 @@ public class Channel {
         return values;
     }
 
+    public double getHumidity() {
+
+        byte[] t = Value.getChannelValue();
+
+        if ( t.length > 0 ) {
+
+            byte[] i = new byte[4];
+            i[0] = t[7];
+            i[1] = t[6];
+            i[2] = t[5];
+            i[3] = t[4];
+
+            return ByteBuffer.wrap(i).getInt() / 1000.00;
+        }
+
+        return 0;
+    }
+
     public double getTemp() {
 
         if ( Value != null ) {
 
-            byte[] t = Value.getChannelValue();
+            if ( getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
 
-            if ( t.length > 0 ) {
+                byte[] t = Value.getChannelValue();
 
-                byte b;
-                int l = t.length;
-                int hl = l/2;
+                if ( t.length > 0 ) {
 
-                for(int a=0;a<hl;a++) {
-                    b = t[a];
-                    t[a] = t[l-1-a];
-                    t[l-1-a] = b;
+                    byte[] i = new byte[4];
+                    i[0] = t[3];
+                    i[1] = t[2];
+                    i[2] = t[1];
+                    i[3] = t[0];
+
+                    return ByteBuffer.wrap(i).getInt() / 1000.00;
                 }
 
-                return ByteBuffer.wrap(t).getDouble();
+            } else {
+
+                byte[] t = Value.getChannelValue();
+
+                if ( t.length > 0 ) {
+
+                    byte b;
+                    int l = t.length;
+                    int hl = l/2;
+
+                    for(int a=0;a<hl;a++) {
+                        b = t[a];
+                        t[a] = t[l-1-a];
+                        t[l-1-a] = b;
+                    }
+
+                    return ByteBuffer.wrap(t).getDouble();
+                }
             }
+
 
         }
 

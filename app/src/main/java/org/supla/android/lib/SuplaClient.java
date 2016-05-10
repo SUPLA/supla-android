@@ -263,6 +263,8 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
+        //Trace.d(log_tag, "Channel Function"+Integer.toString(channel.Func));
+
         if ( DbH.updateChannel(channel) ) {
             _DataChanged = true;
         }

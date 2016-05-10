@@ -155,7 +155,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if ( channel == null ) return;
 
-        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc());
+        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc(), 1);
 
         if ( ImgIdx == -1 ) return;
 

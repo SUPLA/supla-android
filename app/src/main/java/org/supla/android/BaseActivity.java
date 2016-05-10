@@ -65,6 +65,7 @@ public class BaseActivity extends Activity {
         BackgroundTime = null;
 
         SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
+
     };
 
     @Override

@@ -24,6 +24,8 @@
     <string name="channel_func_powerswith">Włącznik zasilania</string>
     <string name="channel_func_lightswith">Włącznik światła</string>
     <string name="channel_func_thermometer">Termometr</string>
+    <string name="channel_func_humidity">Wilgotność</string>
+    <string name="channel_func_humidityandtemperature">Temperatura i wilgotność</string>
     <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
     <string name="channel_func_gatewayopeningsensor">Czujnik otwacia furtki</string>
     <string name="channel_func_gateopeningsensor">Czujnik otwarcia bramy</string>

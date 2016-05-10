@@ -11,4 +11,6 @@
     <dimen name="channel_temp_text">40sp</dimen>
     <dimen name="channel_img_width">100dp</dimen>
     <dimen name="channel_img_height">90dp</dimen>
+    <dimen name="channel_imgtext_width">120dp</dimen>
+    <dimen name="channel_imgtext_height">100dp</dimen>
 </resources>
