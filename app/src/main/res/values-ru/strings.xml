@@ -1,0 +1,75 @@
+<resources>
+
+    <string name="feedback_title">Написать отзыв</string>
+
+    <string name="version">версия</string>
+
+    <string name="feedback">Отзыв</string>
+    <string name="about">О программе</string>
+    <string name="settings">Установки</string>
+
+    <string name="status_connecting">Подключение...</string>
+    <string name="status_unknown_err">Непонятная ошибка</string>
+    <string name="status_temporarily_unavailable">Сервис временно не доступен</string>
+    <string name="status_bad_credentials">Неправильные логин/пароль</string>
+    <string name="status_climit_exceded">Ограничение количества пользователей</string>
+    <string name="status_access_disabled">Доступ ограничен</string>
+    <string name="status_version_error">Несовместимая версия сервера</string>
+
+    <string name="channel_func_gateway">Калитка</string>
+    <string name="channel_func_gate">Ворота</string>
+    <string name="channel_func_garagedoor">Гаражные ворота</string>
+    <string name="channel_func_door">Дверь</string>
+    <string name="channel_func_rollershutter">Роллеты</string>
+    <string name="channel_func_powerswith">Управление розеткой</string>
+    <string name="channel_func_lightswith">Управление светом</string>
+    <string name="channel_func_thermometer">Термометр</string>
+    <string name="channel_func_noliquidsensor">Датчик жидкости</string>
+    <string name="channel_func_gatewayopeningsensor">Датчик открытия калитки</string>
+    <string name="channel_func_gateopeningsensor">Датчик открытия ворот</string>
+    <string name="channel_func_garagedooropeningsensor">Датчик открытия гаражных ворот</string>
+    <string name="channel_func_dooropeningsensor">Датчик открытия двери</string>
+    <string name="channel_func_rsopeningsensor">Датчик открытия роллет</string>
+    <string name="channel_func_humidity">Влажность</string>  
+    <string name="channel_func_humidityandtemperature">Температура и влажность</string>  
+
+    <string name="channel_btn_open">Открыть</string>
+    <string name="channel_btn_openclose">Открыть Закрыть</string>
+    <string name="channel_btn_reveal">Поднять</string>
+    <string name="channel_btn_shut">Опустить</string>
+    <string name="channel_btn_on">Включить</string>
+    <string name="channel_btn_off">Выключить</string>
+
+    <string name="event_openedthegateway">открытие калитки</string>
+    <string name="event_openedclosedthegate">открытие / закрытие ворот</string>
+    <string name="event_openedclosedthegatedoors">открытие / закрытие гаражных ворот</string>
+    <string name="event_openedthedoor">открытие двери</string>
+    <string name="event_openedcloserollershutter">поднятие / опускание роллет</string>
+    <string name="event_poweronoff">включение/выключение розетки</string>
+    <string name="event_turnedthelightonoff">включение/выключение света</string>
+
+    <string name="server_address">АДРЕС СЕРВЕРА</string>
+    <string name="access_id">КЛЮЧ ДОСТУПА</string>
+    <string name="password">ПАРОЛЬ</string>
+
+    <string name="about_app">Автор: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl\n
+ Дизайн интерфейса: Mateusz Major mateuszmajor@me.com\n
+ Русский первод: Mike Jangolenko 7472945@mail.ru\n\n
+
+ Эта программа с открытым кодом; вы можете использовать ее и/или\n
+ изменять ее по условиям GNU General Public License\n
+ которая публикуется Free Software Foundation; по версии 2\n
+ Лицензии, или (по вашему усмотрению) любой поздней версии.\n\n
+
+ Эта пррграмма распространяется в надежде ее полезности,\n
+ но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ; безо всяких подразумеваемых гарантий\n
+ КОММЕРЧЕСКОГО ИЛИ ЧАСТНОГО ПРИМЕНЕНИЯ. Подробнее в тексте\n
+ GNU General Public License.\n\n
+
+ Если к программе не приложена копия GNU General Public License\n
+ отправте запрос по адресу: Free Software Foundation, Inc., 59\n
+ Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    </string>
+
+</resources>
+
