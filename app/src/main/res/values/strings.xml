@@ -59,8 +59,8 @@
     <string name="access_id">ACCESS IDENTIFIER</string>
     <string name="password">PASSWORD</string>
 
-    <string name="about_app">Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl\n
- UI Design: Mateusz Major mateuszmajor@me.com\n\n
+    <string name="about_app">Author: Przemyslaw Zygmunt przemek@supla.org\n
+ UI Design: Mateusz Major mateusz@supla.org\n\n
 
  This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n
