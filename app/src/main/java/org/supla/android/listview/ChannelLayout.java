@@ -876,22 +876,25 @@ public class ChannelLayout extends LinearLayout {
 
 
         if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
-            if ( channel.getOnLine() )
+            if ( channel.getOnLine()
+                    && channel.getTemp() >= -273 )
                 imgl.setText1(String.format("%.1f", channel.getTemp())+ (char) 0x00B0);
             else
                 imgl.setText1("---");
         }
 
         if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
-            if ( channel.getOnLine() ) {
-
+            if ( channel.getOnLine()
+                 && channel.getTemp() >= -273 )
                 imgl.setText1(String.format("%.1f", channel.getTemp()) + (char) 0x00B0);
-                imgl.setText2(String.format("%.1f", channel.getHumidity()));
-
-            } else {
+            else
                 imgl.setText1("---");
+
+            if ( channel.getOnLine()
+                    && channel.getHumidity() > -1 )
+                imgl.setText2(String.format("%.1f", channel.getHumidity()));
+            else
                 imgl.setText2("---");
-            }
         }
     }
 

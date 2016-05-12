@@ -42,7 +42,7 @@ public class ChannelValue {
     }
 
     byte[] getChannelValue() {
-        return Value;
+        return Value.clone();
     }
 
     String getChannelStringValue() {

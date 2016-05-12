@@ -186,7 +186,7 @@ public class Channel {
             return ByteBuffer.wrap(i).getInt() / 1000.00;
         }
 
-        return 0;
+        return -1;
     }
 
     public double getTemp() {
@@ -208,7 +208,7 @@ public class Channel {
                     return ByteBuffer.wrap(i).getInt() / 1000.00;
                 }
 
-            } else {
+            } else if ( getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
 
                 byte[] t = Value.getChannelValue();
 
@@ -224,6 +224,7 @@ public class Channel {
                         t[l-1-a] = b;
                     }
 
+
                     return ByteBuffer.wrap(t).getDouble();
                 }
             }
@@ -231,7 +232,7 @@ public class Channel {
 
         }
 
-        return 0;
+        return -275;
     }
 
     private boolean hiValue() {
