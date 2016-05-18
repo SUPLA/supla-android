@@ -214,7 +214,7 @@ public class ChannelLayout extends LinearLayout {
                 img_idx = img == 1 ? R.drawable.thermometer : R.drawable.humidity;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                img_idx = R.drawable.noliquid;
+                img_idx = StateUp ? R.drawable.liquid : R.drawable.noliquid;
                 break;
 
         }
