@@ -31,7 +31,15 @@
     <string name="channel_func_dooropeningsensor">Датчик открытия двери</string>
     <string name="channel_func_rsopeningsensor">Датчик открытия роллет</string>
     <string name="channel_func_humidity">Влажность</string>  
-    <string name="channel_func_humidityandtemperature">Температура и влажность</string>  
+    <string name="channel_func_humidityandtemperature">Температура и влажность</string>
+    <string name="channel_func_dimmer">Диммер</string>
+    <string name="channel_func_rgblighting">Контроллер освещения RGB  </string>
+    <string name="channel_func_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
+
+
+    <string name="rgb_brightness">Яркость</string>
+    <string name="rgb_color">Цвет</string>
+    <string name="rgb_state">Cостояние</string>
 
     <string name="channel_btn_open">Открыть</string>
     <string name="channel_btn_openclose">Открыть Закрыть</string>

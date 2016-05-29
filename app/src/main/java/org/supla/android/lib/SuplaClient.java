@@ -55,7 +55,7 @@ public class SuplaClient extends Thread {
     private native void scDisconnect(long _supla_client);
     private native boolean scIterate(long _supla_client, int wait_usec);
     private native boolean scOpen(long _supla_client, int ChannelID, int Open);
-
+    private native boolean scSetRGBW(long _supla_client, int ChannelID, int Color, int ColorBrightness, int Brightness);
 
     public SuplaClient(Context context) {
 
@@ -186,6 +186,19 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+
+    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness) {
+
+        boolean result = false;
+
+        synchronized (sc_lck) {
+            result = _supla_client != 0 ? scSetRGBW(_supla_client, ChannelID, Color, ColorBrightness, Brightness) : false;
+        }
+
+        return result;
+    };
+
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, new Integer(versionError.Version).toString() + "," + new Integer(versionError.RemoteVersionMin).toString() + "," + new Integer(versionError.RemoteVersion).toString());
 
@@ -276,7 +289,7 @@ public class SuplaClient extends Thread {
 
         if ( _DataChanged ) {
             Trace.d(log_tag, "Channel updated");
-            onDataChanged();
+            onDataChanged(channel.Id);
         }
 
     }
@@ -284,7 +297,7 @@ public class SuplaClient extends Thread {
     private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if ( DbH.updateChannelValue(channelValueUpdate) ) {
-            Trace.d(log_tag, "Channel value updated");
+            Trace.d(log_tag, "Channel id"+Integer.toString(channelValueUpdate.Id)+" value updated");
             onDataChanged();
         }
 
@@ -299,10 +312,17 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onDataChanged(int ChannelId) {
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
+        msg.setChannelId(ChannelId);
+
+        sendMessage(msg);
+
+    }
+
     private void onDataChanged() {
-
-        sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onDataChanged));
-
+        onDataChanged(0);
     }
 
     public synchronized boolean canceled() {

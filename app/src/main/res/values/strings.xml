@@ -33,12 +33,19 @@
     <string name="channel_func_thermometer">Thermometer</string>
     <string name="channel_func_humidity">Humidity</string>
     <string name="channel_func_humidityandtemperature">Temperature and Humidity</string>
+    <string name="channel_func_dimmer">Dimmer</string>
+    <string name="channel_func_rgblighting">RGB Lighting</string>
+    <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
     <string name="channel_func_noliquidsensor">No liquid sensor</string>
     <string name="channel_func_gatewayopeningsensor">Gateway opening sensor</string>
     <string name="channel_func_gateopeningsensor">Gate opening sensor</string>
     <string name="channel_func_garagedooropeningsensor">Garage door opening sensor</string>
     <string name="channel_func_dooropeningsensor">Door opening sensor</string>
     <string name="channel_func_rsopeningsensor">Roller shutter opening sensor</string>
+
+    <string name="rgb_brightness">Brightness</string>
+    <string name="rgb_color">Color</string>
+    <string name="rgb_state">State</string>
 
     <string name="channel_btn_open">Open</string>
     <string name="channel_btn_openclose">Open Close</string>
@@ -76,5 +83,6 @@
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
+
 
 </resources>

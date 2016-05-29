@@ -398,6 +398,7 @@ public class DbHelper extends SQLiteOpenHelper {
             channel.setOnLine(channelValue.OnLine);
             channel.getValue().AssignSuplaChannelValue(channelValue.Value);
 
+
             _updateChannel(db, channel);
             db.close();
 

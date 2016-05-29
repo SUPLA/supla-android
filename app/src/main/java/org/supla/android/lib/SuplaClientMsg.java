@@ -26,21 +26,22 @@ public class SuplaClientMsg {
     private SuplaRegisterResult RegisterResult;
     private SuplaRegisterError RegisterError;
     private SuplaEvent Event;
+    private int ChannelId;
 
-    public final static int onDataChanged     = 1;
-    public final static int onConnecting      = 2;
-    public final static int onRegistered      = 3;
-    public final static int onRegistering     = 4;
-    public final static int onRegisterError   = 5;
-    public final static int onDisconnected    = 6;
-    public final static int onConnected       = 7;
-    public final static int onVersionError    = 8;
-    public final static int onEvent           = 9;
-
+    public final static int onDataChanged        = 1;
+    public final static int onConnecting         = 2;
+    public final static int onRegistered         = 3;
+    public final static int onRegistering        = 4;
+    public final static int onRegisterError      = 5;
+    public final static int onDisconnected       = 6;
+    public final static int onConnected          = 7;
+    public final static int onVersionError       = 8;
+    public final static int onEvent              = 9;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
         Sender = sender;
+        ChannelId = 0;
     }
 
     public SuplaClient getSender() {
@@ -81,5 +82,13 @@ public class SuplaClientMsg {
 
     public void setEvent(SuplaEvent event) {
         Event = event;
+    }
+
+    public int getChannelId() {
+        return ChannelId;
+    }
+
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 }

@@ -10,7 +10,7 @@ public class Trace
     public static final int    ERRORS_WARNINGS_INFO         = 3;
     public static final int    ERRORS_WARNINGS_INFO_DEBUG   = 4;
 
-    private static final int  LOGGING_LEVEL = ERRORS_ONLY; //ERRORS_WARNINGS_INFO_DEBUG;      // Errors + warnings + info + debug (default)
+    private static final int  LOGGING_LEVEL = ERRORS_ONLY;      // Errors + warnings + info + debug (default)
 
     public static void e(String tag, String msg)
     {

@@ -71,6 +71,7 @@ public class ChannelLayout extends LinearLayout {
 
     private boolean RightButtonEnabled;
     private boolean LeftButtonEnabled;
+    private boolean DetailSliderEnabled;
 
 
     private class AnimParams  {
@@ -169,7 +170,7 @@ public class ChannelLayout extends LinearLayout {
         return tv;
     }
 
-    public static int getImageIdx(boolean StateUp, int func, int img) {
+    public static int getImageIdx(int StateUp, int func, int img) {
 
         int img_idx = -1;
 
@@ -180,29 +181,29 @@ public class ChannelLayout extends LinearLayout {
         switch(func) {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                img_idx = StateUp ? R.drawable.gatewayclosed : R.drawable.gatewayopen;
+                img_idx = StateUp == 1 ? R.drawable.gatewayclosed : R.drawable.gatewayopen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                img_idx = StateUp ? R.drawable.gateclosed : R.drawable.gateopen;
+                img_idx = StateUp == 1 ? R.drawable.gateclosed : R.drawable.gateopen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                img_idx = StateUp ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
+                img_idx = StateUp == 1 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                img_idx = StateUp ? R.drawable.doorclosed : R.drawable.dooropen;
+                img_idx = StateUp == 1 ? R.drawable.doorclosed : R.drawable.dooropen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                img_idx = StateUp ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
+                img_idx = StateUp == 1 ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                img_idx = StateUp ? R.drawable.poweron : R.drawable.poweroff;
+                img_idx = StateUp == 1 ? R.drawable.poweron : R.drawable.poweroff;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                img_idx = StateUp ? R.drawable.lighton : R.drawable.lightoff;
+                img_idx = StateUp == 1 ? R.drawable.lighton : R.drawable.lightoff;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 img_idx = R.drawable.thermometer;
@@ -214,7 +215,31 @@ public class ChannelLayout extends LinearLayout {
                 img_idx = img == 1 ? R.drawable.thermometer : R.drawable.humidity;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                img_idx = StateUp ? R.drawable.liquid : R.drawable.noliquid;
+                img_idx = StateUp == 1 ? R.drawable.liquid : R.drawable.noliquid;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                img_idx = StateUp == 1 ? R.drawable.dimmeron : R.drawable.dimmeroff;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                img_idx = StateUp == 1 ? R.drawable.rgbon : R.drawable.rgboff;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+
+                switch(StateUp) {
+                    case 0:
+                        img_idx = R.drawable.dimmerrgboffoff;
+                        break;
+                    case 1:
+                        img_idx = R.drawable.dimmerrgbonoff;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.dimmerrgboffon;
+                        break;
+                    case 3:
+                        img_idx = R.drawable.dimmerrgbonon;
+                        break;
+                }
+
                 break;
 
         }
@@ -229,7 +254,7 @@ public class ChannelLayout extends LinearLayout {
         private TextView Text1;
         private TextView Text2;
         private int Func;
-        private boolean StateUp;
+        private int StateUp;
 
 
         public ChannelImageLayout(Context context) {
@@ -333,7 +358,7 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
-        public void setFunc(int func, boolean stateUp) {
+        public void setFunc(int func, int stateUp) {
 
             if ( Func == func && StateUp == stateUp )
                 return;
@@ -696,6 +721,7 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
+
     public boolean getRightButtonEnabled() {
         return RightButtonEnabled;
     }
@@ -710,14 +736,37 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-    public boolean getLeftButtonVisible() {
-        return LeftButtonEnabled;
+    private void setDetailSliderEnabled(boolean detailSliderEnabled) {
+
+        if ( detailSliderEnabled ) {
+            setRightButtonEnabled(false);
+        }
+
+        DetailSliderEnabled = detailSliderEnabled;
+
     }
+
+    public boolean getDetailSliderEnabled() {
+
+        return DetailSliderEnabled;
+    }
+
+    public boolean getButtonsEnabled() {
+        return LeftButtonEnabled || RightButtonEnabled;
+    }
+
 
     public String getCaption() {
         return caption_text.getText().toString();
     }
 
+    public void setBackgroundColor(int color) {
+
+        super.setBackgroundColor(color);
+
+        if ( content != null )
+            content.setBackgroundColor(color);
+    }
 
     public void setChannelData(Channel channel) {
 
@@ -767,6 +816,7 @@ public class ChannelLayout extends LinearLayout {
         {
             boolean lenabled = false;
             boolean renabled = false;
+            boolean dslider = false;
 
             switch(Func) {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
@@ -791,6 +841,16 @@ public class ChannelLayout extends LinearLayout {
                     renabled = true;
 
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+
+                    left_circle.setVisibility(View.INVISIBLE);
+                    right_circle.setVisibility(View.VISIBLE);
+                    dslider = true;
+
+                    break;
+
                 default:
 
                     left_circle.setVisibility(View.INVISIBLE);
@@ -802,78 +862,11 @@ public class ChannelLayout extends LinearLayout {
 
             setLeftButtonEnabled(lenabled && channel.getOnLine());
             setRightButtonEnabled(renabled && channel.getOnLine());
+            setDetailSliderEnabled(dslider && channel.getOnLine());
 
         }
 
-        {
-            String Caption = channel.getCaption();
-
-            if ( Caption.equals("") ) {
-
-                int idx = -1;
-
-                switch(Func) {
-                    case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-                        idx = R.string.channel_func_gatewayopeningsensor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                        idx = R.string.channel_func_gateway;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-                        idx = R.string.channel_func_gateopeningsensor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                        idx = R.string.channel_func_gate;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-                        idx = R.string.channel_func_garagedooropeningsensor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                        idx = R.string.channel_func_garagedoor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-                        idx = R.string.channel_func_dooropeningsensor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                        idx = R.string.channel_func_door;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-                        idx = R.string.channel_func_rsopeningsensor;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                        idx = R.string.channel_func_rollershutter;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                        idx = R.string.channel_func_powerswith;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                        idx = R.string.channel_func_lightswith;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                        idx = R.string.channel_func_thermometer;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-                        idx = R.string.channel_func_humidity;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                        idx = R.string.channel_func_humidityandtemperature;
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                        idx = R.string.channel_func_noliquidsensor;
-                        break;
-                }
-
-
-
-                if ( idx == -1 )
-                    Caption = Integer.toString(Func);
-                else
-                    Caption = getResources().getString(idx);
-            }
-
-            caption_text.setText(Caption);
-        }
-
+        caption_text.setText(channel.getNotEmptyCaption(getContext()));
 
         if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
             if ( channel.getOnLine()

@@ -91,7 +91,6 @@ public class ChannelValue {
         setChannelValue(channelValue.Value);
         setChannelSubValue(channelValue.SubValue);
 
-
     }
 
     public boolean Diff(SuplaChannelValue channelValue) {

@@ -42,7 +42,7 @@ import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends NavigationActivity implements OnClickListener, ChannelListView.OnChannelButtonTouchListener {
+public class MainActivity extends NavigationActivity implements OnClickListener, ChannelListView.OnChannelButtonTouchListener, ChannelListView.OnDetailListener {
 
     private ChannelListView cLV;
     private ListViewCursorAdapter listViewCursorAdapter;
@@ -83,12 +83,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         cLV = (ChannelListView) findViewById(R.id.channelsListView);
         cLV.setOnChannelButtonTouchListener(this);
+        cLV.setOnDetailListener(this);
 
         DbH_ListView = new DbHelper(this);
 
         RegisterMessageHandler();
         showMenuBar();
         showMenuButton();
+
     }
 
 
@@ -110,12 +112,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        cLV.hideDetail(false);
+    }
+
+    @Override
     protected void onResume() {
 
         super.onResume();
 
-        if ( !SetListCursorAdapter() )
+        if ( !SetListCursorAdapter() ) {
+            cLV.setSelection(0);
             cLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+        }
+
+
+        cLV.hideDetail(false);
     }
 
     @Override
@@ -125,7 +138,20 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnDataChangedMsg() {
+    protected void OnDataChangedMsg(int ChannelId) {
+
+        if ( cLV.detail_getChannelId() == ChannelId ) {
+
+            Channel c = cLV.detail_getChannel();
+
+            if ( c != null && !c.getOnLine() )
+                cLV.hideDetail(true);
+            else
+                cLV.detail_OnChannelDataChanged();
+
+        }
+
+
         cLV.Refresh(DbH_ListView.getChannelListCursor(), false);
     }
 
@@ -302,6 +328,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onBackPressed() {
-        gotoMain();
+
+        if ( cLV.isDetailVisible() ) {
+            cLV.hideDetail(true);
+        } else {
+            gotoMain();
+        }
+
+    }
+
+
+    @Override
+    public void onChannelDetailShow() {
+        hideMenuButton();
+    }
+
+    @Override
+    public void onChannelDetailHide() {
+        showMenuButton();
     }
 }

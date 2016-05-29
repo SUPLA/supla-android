@@ -3,6 +3,7 @@
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
     <color name="channel_cell">#fafbfc</color>
+    <color name="detail_gb">#ffe804</color>
     <color name="activity_bg">#fafbfc</color>
     <color name="activity_status_bg_err">#FFFEE700</color>
     <color name="activity_status_bg_normal">#12a71e</color>

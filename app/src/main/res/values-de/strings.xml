@@ -26,12 +26,19 @@
     <string name="channel_func_thermometer">Thermometer</string>
     <string name="channel_func_humidity">Feuchtigkeitssensor</string>
     <string name="channel_func_humidityandtemperature">Temperatur- und Feuchtigkeitssensor</string>
+    <string name="channel_func_dimmer">Helligkeitsregler</string>
+    <string name="channel_func_rgblighting">RGB- Beleuchtungskontroller</string>
+    <string name="channel_func_dimmerandrgblighting">Helligkeitsregler und RGB-Beleuchtungskontroller</string>
     <string name="channel_func_noliquidsensor">kein Flüssigkeitssensor</string>
     <string name="channel_func_gatewayopeningsensor">Pforte-Öffnungssensor</string>
     <string name="channel_func_gateopeningsensor">Tor-Öffnungssensor</string>
     <string name="channel_func_garagedooropeningsensor">Garagentor-Öffnungssensor</string>
     <string name="channel_func_dooropeningsensor">Tür-Öffnungssensor</string>
     <string name="channel_func_rsopeningsensor">Rolladen-Öffnungssensor</string>
+
+    <string name="rgb_brightness">Helligkeit</string>
+    <string name="rgb_color">Farbe</string>
+    <string name="rgb_state">Zustand</string>
 
     <string name="channel_btn_open">Öffnen</string>
     <string name="channel_btn_openclose">Öffnen Schließen</string>

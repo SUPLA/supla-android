@@ -20,8 +20,11 @@ package org.supla.android.db;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 
+import org.supla.android.R;
 import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
@@ -61,6 +64,87 @@ public class Channel {
     }
 
     public String getCaption() {
+        return getCaption(null);
+    }
+
+    public String getNotEmptyCaption(Context context) {
+        return getCaption(context);
+    }
+
+    private String getCaption(Context context) {
+
+        if ( context != null && Caption.equals("") ) {
+
+            int idx = -1;
+
+            switch(Func) {
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+                    idx = R.string.channel_func_gatewayopeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                    idx = R.string.channel_func_gateway;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+                    idx = R.string.channel_func_gateopeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                    idx = R.string.channel_func_gate;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+                    idx = R.string.channel_func_garagedooropeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                    idx = R.string.channel_func_garagedoor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+                    idx = R.string.channel_func_dooropeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                    idx = R.string.channel_func_door;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                    idx = R.string.channel_func_rsopeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                    idx = R.string.channel_func_rollershutter;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                    idx = R.string.channel_func_powerswith;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                    idx = R.string.channel_func_lightswith;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    idx = R.string.channel_func_thermometer;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                    idx = R.string.channel_func_humidity;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    idx = R.string.channel_func_humidityandtemperature;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+                    idx = R.string.channel_func_noliquidsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                    idx = R.string.channel_func_dimmer;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                    idx = R.string.channel_func_rgblighting;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                    idx = R.string.channel_func_dimmerandrgblighting;
+                    break;
+            }
+
+
+
+            if ( idx == -1 )
+                Caption = Integer.toString(Func);
+            else
+                Caption = context.getResources().getString(idx);
+        }
+
         return Caption;
     }
 
@@ -235,6 +319,47 @@ public class Channel {
         return -275;
     }
 
+    private byte getBrightness(short n) {
+
+        byte[] t = Value.getChannelValue();
+        byte result = 0;
+
+        if ( t.length > n ) {
+
+            result = t[n];
+
+            if ( result > 100 )
+                result = 0;
+        }
+
+        return result;
+    }
+
+    public byte getColorBrightness() {
+
+       return getBrightness((short)1);
+    }
+
+    public byte getBrightness() {
+        return getBrightness((short)0);
+    }
+
+    public int getColor() {
+
+        int result = 0;
+
+        byte[] t = Value.getChannelValue();
+
+        if ( t.length > 4 ) {
+
+            result = ((int)t[4] << 16) & 0x00FF0000;
+            result |= ((int)t[3] << 8) & 0x0000FF00;
+            result |= (int)t[2] & 0x00000FF;
+        }
+
+        return result;
+    }
+
     private boolean hiValue() {
 
         if ( getOnLine()
@@ -252,7 +377,7 @@ public class Channel {
     }
 
 
-    public boolean StateUp() {
+    public int StateUp() {
 
         if ( getOnLine() ) {
             switch(getFunc()) {
@@ -267,21 +392,41 @@ public class Channel {
                         byte[] sub_value = getValue().getChannelSubValue();
                         if ( sub_value.length > 0
                                 && sub_value[0] == 1 ) {
-                            return true;
+                            return 1;
                         }
 
                     }
 
-                    return false;
+                    return 0;
 
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
-                    return false;
+                    return 1;
+
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                    return getBrightness() > 0 ? 1 : 0;
+
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                    return getColorBrightness() > 0 ? 1 : 0;
+
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                {
+                    int result = 0;
+
+                    if ( getBrightness() > 0 )
+                        result |= 0x1;
+
+                    if ( getColorBrightness() > 0 )
+                        result |= 0x2;
+
+                    return result;
+                }
+
 
             }
         }
 
-        return hiValue();
+        return hiValue() ? 1 : 0;
 
     }
 
