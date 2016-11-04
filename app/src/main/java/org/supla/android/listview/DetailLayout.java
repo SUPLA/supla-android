@@ -85,7 +85,7 @@ public abstract class DetailLayout extends FrameLayout {
     public abstract View getContentView();
     public abstract void OnChannelDataChanged();
     public void setData(Channel channel) {
-        mChannelId = channel.getChannelId();
+        mChannelId = channel == null ? 0 : channel.getChannelId();
     }
 
     @Override

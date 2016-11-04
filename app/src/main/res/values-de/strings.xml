@@ -16,6 +16,9 @@
     <string name="status_access_disabled">Zugriff deaktiviert</string>
     <string name="status_version_error">Nicht kompatible Server-Version</string>
 
+    <string name="err_hostnotfound">Host nicht gefunden</string>
+    <string name="err_cantconnecttohost">Kann nicht Host verbinden</string>
+
     <string name="channel_func_gateway">Pforte</string>
     <string name="channel_func_gate">Tor</string>
     <string name="channel_func_garagedoor">Garagentor</string>
@@ -35,6 +38,8 @@
     <string name="channel_func_garagedooropeningsensor">Garagentor-Öffnungssensor</string>
     <string name="channel_func_dooropeningsensor">Tür-Öffnungssensor</string>
     <string name="channel_func_rsopeningsensor">Rolladen-Öffnungssensor</string>
+    <string name="channel_func_depthsensor">Tiefensensor</string>
+    <string name="channel_func_distancesensor">Abstandssensor</string>
 
     <string name="rgb_brightness">Helligkeit</string>
     <string name="rgb_color">Farbe</string>
@@ -70,4 +75,10 @@
 
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
     </string>
+
+    <string name="rate_msg">Wenn Ihnen diese App gefällt, bewerten Sie sie bitte. Vielen Dank dafür!</string>
+    <string name="rate_now">Bewerten</string>
+    <string name="rate_later">Später</string>
+    <string name="rate_no_thanks">Nein danke</string>
+
 </resources>

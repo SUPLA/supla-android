@@ -21,9 +21,11 @@ package org.supla.android;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -129,6 +131,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
         cLV.hideDetail(false);
+
+        RateApp ra = new RateApp(this);
+        ra.showDialog(1000);
+
     }
 
     @Override
@@ -145,7 +151,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             Channel c = cLV.detail_getChannel();
 
             if ( c != null && !c.getOnLine() )
-                cLV.hideDetail(true);
+                cLV.hideDetail(false);
             else
                 cLV.detail_OnChannelDataChanged();
 
@@ -305,6 +311,19 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if ( client == null )
             return;
 
+
+        if ( !up
+             || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER  )   {
+
+
+            Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+            if ( v != null )
+                v.vibrate(100);
+
+        }
+
+
         if ( up ) {
 
             if ( channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER )
@@ -347,4 +366,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onChannelDetailHide() {
         showMenuButton();
     }
+
 }
+

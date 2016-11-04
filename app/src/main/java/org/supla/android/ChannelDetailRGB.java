@@ -66,7 +66,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     int lastBrightness;
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
-    final static private long MIN_UPDATE_DELAY = 500;
+    final static private long MIN_UPDATE_DELAY = 2000;
 
     public ChannelDetailRGB(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -156,7 +156,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         rgbPicker.setColorBrightnessWheelVisible(true);
         setColorVisibility(View.VISIBLE);
 
-        channelDataToViews(null);
+        channelDataToViews();
     }
 
     private void showDimmer() {
@@ -164,14 +164,12 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         rgbPicker.setBWBrightnessWheelVisible(true);
         setColorVisibility(View.GONE);
 
-        channelDataToViews(null);
+        channelDataToViews();
     }
 
     public void setData(Channel channel) {
 
         super.setData(channel);
-
-        Trace.d("F", "Func:"+Integer.toString(channel.getFunc()));
 
         switch(channel.getFunc()) {
 
@@ -196,26 +194,21 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         }
 
 
-        channelDataToViews(channel);
+        channelDataToViews();
     }
 
-    private void channelDataToViews(Channel channel) {
+    private void channelDataToViews() {
 
-        if ( channel == null ) {
-
-            channel = getChannelFromDatabase();
-
-            if ( channel == null )
-                return;
-        }
-
+        Channel channel = getChannelFromDatabase();
 
         tvTitle.setText(channel.getNotEmptyCaption(getContext()));
 
-        if ( rgbPicker.getColorBrightnessWheelVisible() )
+        if ( rgbPicker.getColorBrightnessWheelVisible()
+                && (int)rgbPicker.getBrightnessValue() != (int)channel.getColorBrightness() )
             rgbPicker.setBrightnessValue(channel.getColorBrightness());
 
-        if ( rgbPicker.getBWBrightnessWheelVisible() )
+        if ( rgbPicker.getBWBrightnessWheelVisible()
+                && (int)rgbPicker.getBrightnessValue() != (int)channel.getBrightness() )
             rgbPicker.setBrightnessValue(channel.getBrightness());
 
         if ( rgbPicker.getColorWheelVisible() )
@@ -337,7 +330,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         }
 
         if ( v == tabDimmer || v == tabRGB ) {
-            channelDataToViews(null);
+            channelDataToViews();
         }
 
     }
@@ -367,7 +360,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         if ( System.currentTimeMillis()-changeFinishedTime >= MIN_UPDATE_DELAY ) {
 
-            channelDataToViews(null);
+            channelDataToViews();
 
         } else {
 

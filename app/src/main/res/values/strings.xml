@@ -23,6 +23,9 @@
     <string name="status_access_disabled">Access disabled</string>
     <string name="status_version_error">Incompatible server version</string>
 
+    <string name="err_hostnotfound">Host not found</string>
+    <string name="err_cantconnecttohost">Can\'t connect to host</string>
+
     <string name="channel_func_gateway">Gateway</string>
     <string name="channel_func_gate">Gate</string>
     <string name="channel_func_garagedoor">Garage door</string>
@@ -42,6 +45,8 @@
     <string name="channel_func_garagedooropeningsensor">Garage door opening sensor</string>
     <string name="channel_func_dooropeningsensor">Door opening sensor</string>
     <string name="channel_func_rsopeningsensor">Roller shutter opening sensor</string>
+    <string name="channel_func_depthsensor">Depth sensor</string>
+    <string name="channel_func_distancesensor">Distance sensor</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
@@ -84,5 +89,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
+    <string name="rate_msg">If you enjoy using this app, please take a moment to rate it. Thanks for your support!</string>
+    <string name="rate_now">Rate Now</string>
+    <string name="rate_later">Later</string>
+    <string name="rate_no_thanks">No thanks</string>
 
 </resources>

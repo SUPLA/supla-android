@@ -16,6 +16,9 @@
     <string name="status_access_disabled">Доступ ограничен</string>
     <string name="status_version_error">Несовместимая версия сервера</string>
 
+    <string name="err_hostnotfound">Хост не найден</string>
+    <string name="err_cantconnecttohost">Не удается подключиться к хосту</string>
+
     <string name="channel_func_gateway">Калитка</string>
     <string name="channel_func_gate">Ворота</string>
     <string name="channel_func_garagedoor">Гаражные ворота</string>
@@ -35,7 +38,8 @@
     <string name="channel_func_dimmer">Диммер</string>
     <string name="channel_func_rgblighting">Контроллер освещения RGB  </string>
     <string name="channel_func_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
-
+    <string name="channel_func_depthsensor">датчик глубины</string>
+    <string name="channel_func_distancesensor">датчик расстояния</string>
 
     <string name="rgb_brightness">Яркость</string>
     <string name="rgb_color">Цвет</string>
@@ -78,6 +82,11 @@
  отправте запрос по адресу: Free Software Foundation, Inc., 59\n
  Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
+
+    <string name="rate_msg">If you enjoy using this app, please take a moment to rate it. Thanks for your support!</string>
+    <string name="rate_now">Rate Now</string>
+    <string name="rate_later">Later</string>
+    <string name="rate_no_thanks">No thanks</string>
 
 </resources>
 

@@ -25,6 +25,7 @@ public class SuplaClientMsg {
     private SuplaVersionError VersionError;
     private SuplaRegisterResult RegisterResult;
     private SuplaRegisterError RegisterError;
+    private SuplaConnError ConnError;
     private SuplaEvent Event;
     private int ChannelId;
 
@@ -37,6 +38,7 @@ public class SuplaClientMsg {
     public final static int onConnected          = 7;
     public final static int onVersionError       = 8;
     public final static int onEvent              = 9;
+    public final static int onConnError          = 10;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -74,6 +76,14 @@ public class SuplaClientMsg {
 
     public void setRegisterError(SuplaRegisterError registerError) {
         RegisterError = registerError;
+    }
+
+    public SuplaConnError getConnError() {
+        return ConnError;
+    }
+
+    public void setConnError(SuplaConnError connError) {
+        ConnError = connError;
     }
 
     public SuplaEvent getEvent() {

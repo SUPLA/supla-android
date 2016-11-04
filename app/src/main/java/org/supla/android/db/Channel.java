@@ -135,6 +135,12 @@ public class Channel {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                     idx = R.string.channel_func_dimmerandrgblighting;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
+                    idx = R.string.channel_func_depthsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
+                    idx = R.string.channel_func_distancesensor;
+                    break;
             }
 
 
@@ -255,6 +261,29 @@ public class Channel {
         return values;
     }
 
+    public double getDouble(double unknown) {
+
+        byte[] t = Value.getChannelValue();
+
+        if ( t.length > 0 ) {
+
+            byte b;
+            int l = t.length;
+            int hl = l/2;
+
+            for(int a=0;a<hl;a++) {
+                b = t[a];
+                t[a] = t[l-1-a];
+                t[l-1-a] = b;
+            }
+
+
+            return ByteBuffer.wrap(t).getDouble();
+        }
+
+        return unknown;
+    }
+
     public double getHumidity() {
 
         byte[] t = Value.getChannelValue();
@@ -294,29 +323,17 @@ public class Channel {
 
             } else if ( getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
 
-                byte[] t = Value.getChannelValue();
-
-                if ( t.length > 0 ) {
-
-                    byte b;
-                    int l = t.length;
-                    int hl = l/2;
-
-                    for(int a=0;a<hl;a++) {
-                        b = t[a];
-                        t[a] = t[l-1-a];
-                        t[l-1-a] = b;
-                    }
-
-
-                    return ByteBuffer.wrap(t).getDouble();
-                }
+                return getDouble(-275);
             }
 
 
         }
 
         return -275;
+    }
+
+    public double getDistance() {
+        return getDouble(-1);
     }
 
     private byte getBrightness(short n) {

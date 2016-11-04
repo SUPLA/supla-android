@@ -153,6 +153,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         }
 
+        c.close();
         db.close();
 
         if ( result == 0 ) {
@@ -214,6 +215,7 @@ public class DbHelper extends SQLiteOpenHelper {
             result.AssignCursorData(c);
         }
 
+        c.close();
         db.close();
 
         return result;
@@ -317,6 +319,7 @@ public class DbHelper extends SQLiteOpenHelper {
             result.AssignCursorData(c);
         }
 
+        c.close();
         db.close();
 
         return result;
@@ -448,6 +451,26 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return count > 0 ? true : false;
+    }
+
+    public int getChannelCount() {
+
+        String selection = "SELECT count(*) FROM " + SuplaContract.ChannelEntry.TABLE_NAME +
+                " WHERE " + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID +
+                " IN ( SELECT "+SuplaContract.LocationEntry._ID+" FROM "+SuplaContract.LocationEntry.TABLE_NAME+" WHERE "+SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID+" = ? )";
+
+        int count = 0;
+        long accessid = getCurrentAccessId();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(selection, new String[] {String.valueOf(accessid)});
+        c.moveToFirst();
+        count = c.getInt(0);
+        c.close();
+        db.close();
+
+        return count;
+
     }
 
     public Cursor getChannelListCursor() {

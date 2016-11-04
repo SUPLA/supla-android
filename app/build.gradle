@@ -9,8 +9,8 @@ android {
         applicationId "org.supla.android"
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 8
-        versionName "1.1"
+        versionCode 15
+        versionName "1.2.1"
 
         sourceSets.main {
             jniLibs.srcDir 'src/main/libs'
@@ -31,7 +31,7 @@ android {
         abi {
             enable true
             reset()
-            include 'x86', 'armeabi', 'armeabi-v7a'
+            include 'armeabi-v7a', 'x86', 'armeabi'
             universalApk true
         }
     }

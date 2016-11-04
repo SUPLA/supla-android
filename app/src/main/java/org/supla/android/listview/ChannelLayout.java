@@ -15,7 +15,7 @@ package org.supla.android.listview;
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
- Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl [AC SOFTWARE]
+ Author: Przemyslaw Zygmunt przemek@supla.org
  */
 
 
@@ -242,6 +242,13 @@ public class ChannelLayout extends LinearLayout {
 
                 break;
 
+            case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
+                img_idx = R.drawable.depthsensor;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
+                img_idx = R.drawable.distancesensor;
+                break;
         }
 
         return img_idx;
@@ -297,10 +304,11 @@ public class ChannelLayout extends LinearLayout {
             return Text;
         }
 
-        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
+        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible, int width, int height) {
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_imgtext_height));
+            Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
 
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
 
@@ -309,10 +317,16 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
-        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin) {
+        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
+
+            SetTextDimensions(Text, Img, visible, getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_imgtext_height));
+
+        }
+
+        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin, int width, int height) {
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+                    width, height);
 
 
             if ( img2 == false ) {
@@ -328,14 +342,26 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
+        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin) {
+            SetImgDimensions(Img, img2, leftMargin, getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+        }
+
         private void SetDimensions() {
 
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
             if ( Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
+
                 width*=2.5;
+
             } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+
                 width*=4.3;
+            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+                        || Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR  ) {
+
+                width*=2.8;
+
             }
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
@@ -347,13 +373,45 @@ public class ChannelLayout extends LinearLayout {
 
             setLayoutParams(lp);
 
-            SetImgDimensions(Img1, false, Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
+
+
+
+            if ( Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR ) {
+
+                RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width), getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
+
+                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                _lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+                Img1.setLayoutParams(_lp);
+                Img1.setVisibility(View.VISIBLE);
+
+
+                _lp = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
+
+                _lp.addRule(RelativeLayout.ABOVE, Img1.getId());
+                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+
+                Text1.setLayoutParams(_lp);
+                Text1.setVisibility(View.VISIBLE);
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+
+            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
+            } else {
+
+                SetImgDimensions(Img1, false, Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
+                SetTextDimensions(Text1, Img1, Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                        || Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+
+            }
+
+
             SetImgDimensions(Img2, true, 0);
-
-            SetTextDimensions(Text1, Img1, Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-                                           || Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
-
-
             SetTextDimensions(Text2, Img2, Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
 
         }
@@ -869,14 +927,15 @@ public class ChannelLayout extends LinearLayout {
         caption_text.setText(channel.getNotEmptyCaption(getContext()));
 
         if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
+
             if ( channel.getOnLine()
                     && channel.getTemp() >= -273 )
                 imgl.setText1(String.format("%.1f", channel.getTemp())+ (char) 0x00B0);
             else
                 imgl.setText1("---");
-        }
 
-        if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+        } else if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+
             if ( channel.getOnLine()
                  && channel.getTemp() >= -273 )
                 imgl.setText1(String.format("%.1f", channel.getTemp()) + (char) 0x00B0);
@@ -888,6 +947,41 @@ public class ChannelLayout extends LinearLayout {
                 imgl.setText2(String.format("%.1f", channel.getHumidity()));
             else
                 imgl.setText2("---");
+
+        } else if ( channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
+                    || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ) {
+
+            if ( channel.getOnLine()
+                 && channel.getDistance() > -1 ) {
+
+                double distance = channel.getDistance();
+
+                if ( distance >= 1000 ) {
+
+                    imgl.setText1(String.format("%.2f km", distance/1000.00));
+
+                } else if ( distance >= 1 ) {
+
+                    imgl.setText1(String.format("%.2f m", distance));
+
+                } else {
+                    distance *= 100;
+
+                    if ( distance >= 1 ) {
+                        imgl.setText1(String.format("%.1f cm", distance));
+                    } else {
+                        distance *= 10;
+
+                        imgl.setText1(String.format("%i mm", (int)distance));
+                    }
+                }
+
+
+            } else {
+                imgl.setText1("--- m");
+            }
+
+
         }
     }
 

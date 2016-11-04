@@ -16,6 +16,9 @@
     <string name="status_access_disabled">Dostęp wyłączony</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
 
+    <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
+    <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
+
     <string name="channel_func_gateway">Furtka</string>
     <string name="channel_func_gate">Brama</string>
     <string name="channel_func_garagedoor">Brama garażowa</string>
@@ -35,6 +38,8 @@
     <string name="channel_func_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
     <string name="channel_func_dooropeningsensor">Czujnik otwacia drzwi</string>
     <string name="channel_func_rsopeningsensor">Czujnik otwacia rolet</string>
+    <string name="channel_func_depthsensor">Czujnik głębokości</string>
+    <string name="channel_func_distancesensor">Czujnik odległości</string>
 
     <string name="rgb_brightness">Jasność</string>
     <string name="rgb_color">Kolor</string>
@@ -76,5 +81,10 @@
    wraz z tym programem; jeśli nie, napisz do Free Software\n
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
     </string>
+
+    <string name="rate_msg">Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string> 
+    <string name="rate_now">Oceń teraz</string>
+     <string name="rate_later">Później</string>
+     <string name="rate_no_thanks">Nie, dziękuję</string>
 
 </resources>

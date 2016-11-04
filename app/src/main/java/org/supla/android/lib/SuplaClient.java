@@ -134,6 +134,8 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+
+
     public void Reconnect() {
         if ( Connected() ) Disconnect();
     }
@@ -205,12 +207,27 @@ public class SuplaClient extends Thread {
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onVersionError);
         msg.setVersionError(versionError);
         sendMessage(msg);
+
+        cancel();
     }
 
     private void onConnecting() {
         Trace.d(log_tag, "Connecting");
 
         sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnecting));
+    }
+
+    private void onConnError(SuplaConnError connError) {
+
+        Trace.d(log_tag, connError.codeToString(_context));
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onConnError);
+        msg.setConnError(connError);
+        sendMessage(msg);
+
+        if ( connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND ) {
+            cancel();
+        }
     }
 
     private void onConnected() {
@@ -298,7 +315,7 @@ public class SuplaClient extends Thread {
 
         if ( DbH.updateChannelValue(channelValueUpdate) ) {
             Trace.d(log_tag, "Channel id"+Integer.toString(channelValueUpdate.Id)+" value updated");
-            onDataChanged();
+            onDataChanged(channelValueUpdate.Id);
         }
 
     }

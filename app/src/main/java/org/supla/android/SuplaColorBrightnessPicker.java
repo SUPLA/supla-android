@@ -30,7 +30,7 @@ import android.view.View;
     Author: Przemyslaw Zygmunt przemek@supla.org
 
 
-    Code fragments based on:
+    Fragments of code based on:
     https://github.com/chiralcode/Android-Color-Picker/blob/master/src/com/chiralcode/colorpicker/ColorPicker.java
     https://github.com/LarsWerkman/HoloColorPicker/blob/master/libary/src/main/java/com/larswerkman/holocolorpicker/ColorPicker.java
 
@@ -581,8 +581,7 @@ public class SuplaColorBrightnessPicker extends View {
 
             selectedColor = calculateColor((float)outerWheelPointerAngle, Colors);
             setBWcolor();
-
-            invalidate();
+            setBrightnessValue(selectedBrightness);
         }
 
     }
@@ -675,25 +674,24 @@ public class SuplaColorBrightnessPicker extends View {
         else if ( value > 100 )
             value = 100;
 
-        if ( selectedBrightness != value ) {
 
-            if ( value == 100 ) {
-                innerWheelPointerAngle = m90_01d;
-            } else {
+        if ( value == 100 ) {
+            innerWheelPointerAngle = m90_01d;
+        } else {
 
-                double a = 360*value/100;
+            double a = 360*value/100;
 
-                if ( a > 180 )
-                    a-=360;
+            if ( a > 180 )
+                a-=360;
 
-                innerWheelPointerAngle = Math.toRadians(a)+m90d;
-            }
-
-
-            selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
-            selectedBrightness = value;
-            invalidate();
+            innerWheelPointerAngle = Math.toRadians(a)+m90d;
         }
+
+
+        selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+        selectedBrightness = value;
+        invalidate();
+
 
     }
 

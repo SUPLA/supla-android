@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
+import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegisterResult;
@@ -228,6 +229,12 @@ public class StatusActivity extends NavigationActivity {
     @Override
     protected void OnVersionErrorMsg(SuplaVersionError error) {
         setStatusError(getResources().getString(R.string.status_version_error));
+    };
+
+    @Override
+    protected void OnConnErrorMsg(SuplaConnError error) {
+        if ( error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND )
+            setStatusError(getResources().getString(R.string.err_hostnotfound));
     };
 
     @Override

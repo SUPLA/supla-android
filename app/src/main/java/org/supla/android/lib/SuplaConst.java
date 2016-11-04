@@ -40,7 +40,8 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED      = 12;
     public final static int SUPLA_RESULTCODE_DEVICE_LIMITEXCEEDED      = 13;
     public final static int SUPLA_RESULTCODE_GUID_ERROR                = 14;
-
+    public final static int SUPLA_RESULTCODE_HOSTNOTFOUND              = 15;
+    public final static int SUPLA_RESULTCODE_CANTCONNECTTOHOST         = 16;
 
     public final static int SUPLA_CHANNELFNC_NONE                          =  0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK     = 10;
@@ -65,6 +66,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_DIMMER                        = 180;
     public final static int SUPLA_CHANNELFNC_RGBLIGHTING                   = 190;
     public final static int SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING          = 200;
+    public final static int SUPLA_CHANNELFNC_DEPTHSENSOR                   = 210;
+    public final static int SUPLA_CHANNELFNC_DISTANCESENSOR                = 220;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
