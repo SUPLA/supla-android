@@ -2,6 +2,7 @@
 <resources>
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
+    <color name="channel_btn_pressed">#5ae966</color>
     <color name="channel_cell">#fafbfc</color>
     <color name="detail_gb">#ffe804</color>
     <color name="activity_bg">#fafbfc</color>

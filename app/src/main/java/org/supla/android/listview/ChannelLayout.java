@@ -28,6 +28,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -634,10 +635,32 @@ public class ChannelLayout extends LinearLayout {
     }
 
     private void onTouchDown(View v) {
+
+        if ( v == left_btn || v == right_btn ) {
+            v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
+        }
+
+
         onTouchUpDown(false, v);
     }
 
     private void onTouchUp(View v) {
+
+        if ( v == left_btn || v == right_btn ) {
+
+            final View _v = v;
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    _v.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+                }
+            }, 200);
+
+        }
+
+
         onTouchUpDown(true, v);
     }
 
