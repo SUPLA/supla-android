@@ -35,7 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase rdb = null;
     private Context context;
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "supla.db";
 
     public DbHelper(Context context) {
@@ -89,20 +89,44 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_LOCATION_TABLE);
         db.execSQL(SQL_CREATE_CHANNEL_TABLE);
 
+        upgradeToV2(db);
+
+    }
+
+    private void upgradeToV2(SQLiteDatabase db) {
+
+        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " ("+
+                SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + " INTEGER NOT NULL," +
+                " FOREIGN KEY (" + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + ") REFERENCES " +
+                SuplaContract.ChannelEntry.TABLE_NAME + " (" + SuplaContract.ChannelEntry._ID + "))";
+
+        Trace.d("sql-statments", SQL_CREATE_COLOR_TABLE);
+        db.execSQL(SQL_CREATE_COLOR_TABLE);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        if ( oldVersion == 2 && newVersion == 1 ) {
+
+            final String SQL_DROP_COLOR_TABLE = "DROP TABLE IF EXISTS "+SuplaContract.ColorListItemEntry.TABLE_NAME;
+            Trace.d("sql-statments", SQL_DROP_COLOR_TABLE);
+            db.execSQL(SQL_DROP_COLOR_TABLE);
+
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        final String SQL_DROP_ACCESSID_TABLE = "DROP TABLE IF EXISTS "+SuplaContract.AccessIDEntry.TABLE_NAME;
-        final String SQL_DROP_LOCATION_TABLE = "DROP TABLE IF EXISTS "+SuplaContract.LocationEntry.TABLE_NAME;
-        final String SQL_DROP_CHANNEL_TABLE = "DROP TABLE IF EXISTS "+SuplaContract.ChannelEntry.TABLE_NAME;
+        if ( oldVersion == 1 && newVersion == 2 ) {
+            upgradeToV2(db);
+        }
 
-        db.execSQL(SQL_DROP_ACCESSID_TABLE);
-        db.execSQL(SQL_DROP_LOCATION_TABLE);
-        db.execSQL(SQL_DROP_CHANNEL_TABLE);
-
-        onCreate(db);
     }
 
     public long getCurrentAccessId() {
@@ -500,4 +524,87 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return rdb.rawQuery(sql, null);
     }
+
+
+    public ColorListItem getColorListItem(long channel, int idx) {
+
+        ColorListItem result = null;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        String[] projection = {
+                SuplaContract.ColorListItemEntry._ID,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS,
+
+        };
+
+        String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + " = ?" +
+                " AND " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
+
+        String[] selectionArgs = {
+                String.valueOf(channel),
+                String.valueOf(idx),
+        };
+
+
+        Cursor c = db.query(
+                SuplaContract.ColorListItemEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if ( c.getCount() > 0 ) {
+
+            c.moveToFirst();
+
+            result = new ColorListItem();
+            result.AssignCursorData(c);
+        }
+
+        c.close();
+        db.close();
+
+        return result;
+    }
+
+    public void updateColorListItemValue(ColorListItem item) {
+
+        ColorListItem cli = getColorListItem(item.getChannel(), item.getIdx());
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        if ( cli == null ) {
+
+            db = getWritableDatabase();
+            db.insert(
+                    SuplaContract.ColorListItemEntry.TABLE_NAME,
+                    null,
+                    item.getContentValues());
+
+        } else {
+
+            cli.AssignColorListItem(item);
+
+            String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + " = ? ) AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
+            String[] selectionArgs = { String.valueOf(cli.getChannel()), String.valueOf(cli.getIdx()) };
+
+            db.update(
+                    SuplaContract.ColorListItemEntry.TABLE_NAME,
+                    cli.getContentValues(),
+                    selection,
+                    selectionArgs);
+
+        }
+
+
+        db.close();
+    }
+
 }

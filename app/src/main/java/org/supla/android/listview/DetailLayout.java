@@ -38,7 +38,7 @@ public abstract class DetailLayout extends FrameLayout {
     private ChannelListView cLV;
     private View mContentView;
     private int mChannelId;
-    private DbHelper DBH;
+    protected DbHelper DBH;
 
     public DetailLayout(Context context, ChannelListView cLV) {
         super(context);

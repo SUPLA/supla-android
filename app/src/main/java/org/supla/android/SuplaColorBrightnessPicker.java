@@ -573,13 +573,20 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setColor(int color) {
 
+        if ( (color & 0xFFFFFF) == 0xFFFFFF )
+            color = 0xFFFFFFFF;
+
         if ( selectedColor != color ) {
 
             selectedColor = color;
             setBWcolor();
             outerWheelPointerAngle = colorToAngle(color);
 
-            selectedColor = calculateColor((float)outerWheelPointerAngle, Colors);
+            if ( color == Color.WHITE )
+                selectedColor = color;
+            else
+                selectedColor = calculateColor((float)outerWheelPointerAngle, Colors);
+
             setBWcolor();
             setBrightnessValue(selectedBrightness);
         }

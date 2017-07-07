@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
+import org.supla.android.db.ColorListItem;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
@@ -41,9 +43,10 @@ import org.supla.android.listview.DetailLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ChannelDetailRGB extends DetailLayout implements View.OnClickListener, SuplaColorBrightnessPicker.OnColorBrightnessChangeListener {
+public class ChannelDetailRGB extends DetailLayout implements View.OnClickListener, SuplaColorBrightnessPicker.OnColorBrightnessChangeListener, SuplaColorListPicker.OnColorListTouchListener {
 
     SuplaColorBrightnessPicker rgbPicker;
+    SuplaColorListPicker clPicker;
     Button tabRGB;
     Button tabDimmer;
     ViewGroup tabs;
@@ -64,6 +67,8 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     int lastColor;
     int lastColorBrightness;
     int lastBrightness;
+
+    long channel_id;
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
     final static private long MIN_UPDATE_DELAY = 2000;
@@ -91,6 +96,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabs = (ViewGroup)findViewById(R.id.rlTabs);
 
         Resources r = getResources();
+
+        clPicker = (SuplaColorListPicker)findViewById(R.id.clPicker);
+        clPicker.addItem(Color.WHITE, (short)100);
+        clPicker.addItem();
+        clPicker.addItem();
+        clPicker.addItem();
+        clPicker.addItem();
+        clPicker.addItem();
+        clPicker.setOnTouchListener(this);
 
         rgbPicker = (SuplaColorBrightnessPicker)findViewById(R.id.rgbPicker);
         rgbPicker.setPercentVisible(false);
@@ -154,6 +168,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         rgbPicker.setColorWheelVisible(true);
         rgbPicker.setColorBrightnessWheelVisible(true);
+        clPicker.setVisibility(View.VISIBLE);
         setColorVisibility(View.VISIBLE);
 
         channelDataToViews();
@@ -162,6 +177,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private void showDimmer() {
 
         rgbPicker.setBWBrightnessWheelVisible(true);
+        clPicker.setVisibility(View.GONE);
         setColorVisibility(View.GONE);
 
         channelDataToViews();
@@ -213,6 +229,21 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         if ( rgbPicker.getColorWheelVisible() )
             rgbPicker.setColor(channel.getColor());
+
+        channel_id = channel.getId();
+
+        for(int a=1;a<6;a++) {
+            ColorListItem cli = DBH.getColorListItem(channel_id, a);
+
+            if ( cli != null ) {
+                clPicker.setItemColor(a, cli.getColor());
+                clPicker.setItemPercent(a, cli.getBrightness());
+            } else {
+                clPicker.setItemColor(a, Color.TRANSPARENT);
+                clPicker.setItemPercent(a, (short)0);
+            }
+        }
+
 
         pickerToInfoPanel();
     }
@@ -407,4 +438,38 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     }
 
 
+    @Override
+    public void onColorTouched(SuplaColorListPicker sclPicker, int color, short percent) {
+
+        if ( color != Color.TRANSPARENT && rgbPicker.getColorBrightnessWheelVisible() == true  ) {
+            rgbPicker.setColor(color);
+            rgbPicker.setBrightnessValue(percent);
+
+            onColorChanged(rgbPicker, color);
+        }
+
+    }
+
+    @Override
+    public void onEdit(SuplaColorListPicker sclPicker, int idx) {
+
+        if ( idx > 0 && rgbPicker.getColorBrightnessWheelVisible() == true ) {
+            sclPicker.setItemColor(idx, rgbPicker.getColor());
+            sclPicker.setItemPercent(idx, (short)rgbPicker.getBrightnessValue());
+
+
+            if ( channel_id != 0 ) {
+
+                ColorListItem cli = new ColorListItem();
+                cli.setChannel(channel_id);
+                cli.setIdx(idx);
+                cli.setColor(rgbPicker.getColor());
+                cli.setBrightness((short)rgbPicker.getBrightnessValue());
+
+                DBH.updateColorListItemValue(cli);
+            }
+
+        }
+
+    }
 }
