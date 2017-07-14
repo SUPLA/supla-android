@@ -367,7 +367,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         if ( accessid != 0 ) {
-
+            
             Location location = getLocation(accessid, suplaChannel.LocationID, false);
             SQLiteDatabase db = null;
 
@@ -389,11 +389,13 @@ public class DbHelper extends SQLiteOpenHelper {
                             channel.getContentValues());
 
                 } else if ( channel.Diff(suplaChannel)
+                            || channel.getLocationId() != location.getId()
                             || channel.getVisible() != 1 ) {
 
                     db = getWritableDatabase();
 
                     channel.AssignSuplaChannel(suplaChannel);
+                    channel.setLocationId(location.getId());
                     channel.setVisible(1);
 
                     _updateChannel(db, channel);
