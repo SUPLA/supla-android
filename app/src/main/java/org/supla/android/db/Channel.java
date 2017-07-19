@@ -336,7 +336,7 @@ public class Channel {
         return getDouble(-1);
     }
 
-    private byte getBrightness(short n) {
+    private byte getPercent(short n) {
 
         byte[] t = Value.getChannelValue();
         byte result = 0;
@@ -350,6 +350,14 @@ public class Channel {
         }
 
         return result;
+    }
+
+    public byte getPercent() {
+        return getPercent((short)0);
+    }
+
+    private byte getBrightness(short n) {
+        return getPercent((short)0);
     }
 
     public byte getColorBrightness() {
@@ -393,6 +401,19 @@ public class Channel {
         return false;
     }
 
+    public byte getSubValueHi() {
+
+        if ( getValue() != null ) {
+            byte[] sub_value = getValue().getChannelSubValue();
+            if ( sub_value.length > 0
+                    && sub_value[0] == 1 ) {
+                return 1;
+            }
+
+        }
+
+        return 0;
+    }
 
     public int StateUp() {
 
@@ -405,16 +426,7 @@ public class Channel {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
 
-                    if ( getValue() != null ) {
-                        byte[] sub_value = getValue().getChannelSubValue();
-                        if ( sub_value.length > 0
-                                && sub_value[0] == 1 ) {
-                            return 1;
-                        }
-
-                    }
-
-                    return 0;
+                    return getSubValueHi();
 
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 

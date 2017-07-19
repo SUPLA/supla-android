@@ -33,8 +33,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.supla.android.ChannelDetailRGB;
+import org.supla.android.ChannelDetailRS;
 import org.supla.android.R;
 import org.supla.android.db.Channel;
+import org.supla.android.lib.SuplaConst;
 
 
 public class ChannelListView extends ListView {
@@ -103,20 +105,55 @@ public class ChannelListView extends ListView {
     }
 
 
-    private DetailLayout getDetailLayout() {
+    private DetailLayout getDetailLayout(Channel channel) {
+
+        if ( mDetailLayout != null ) {
+
+            switch(channel.getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+
+                    if ( (mDetailLayout instanceof ChannelDetailRGB) == false )
+                        mDetailLayout = null;
+
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+
+                    if ( (mDetailLayout instanceof ChannelDetailRS) == false )
+                        mDetailLayout = null;
+
+                    break;
+            }
+
+        }
 
         if ( mDetailLayout == null ) {
 
 
-            mDetailLayout = new ChannelDetailRGB(getContext(), this);
-
-            if ( getParent() instanceof ViewGroup ) {
-                ((ViewGroup)getParent()).addView(mDetailLayout);
+            switch(channel.getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                    mDetailLayout = new ChannelDetailRGB(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                    mDetailLayout = new ChannelDetailRS(getContext(), this);
+                    break;
             }
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(getWidth(), getHeight());
-            lp.setMargins(getWidth(),0,-getWidth(),0);
-            mDetailLayout.setLayoutParams(lp);
+            if ( mDetailLayout != null ) {
+
+                if ( getParent() instanceof ViewGroup ) {
+                    ((ViewGroup)getParent()).addView(mDetailLayout);
+                }
+
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(getWidth(), getHeight());
+                lp.setMargins(getWidth(),0,-getWidth(),0);
+                mDetailLayout.setLayoutParams(lp);
+
+            }
+
 
             return mDetailLayout;
 
@@ -211,14 +248,14 @@ public class ChannelListView extends ListView {
 
 
                         Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
-                        if ( obj instanceof Cursor && getDetailLayout() != null ) {
 
-                            Channel channel = new Channel();
-                            channel.AssignCursorData((Cursor)obj);
-                            getDetailLayout().setData(channel);
+                        Channel channel = new Channel();
+                        channel.AssignCursorData((Cursor)obj);
 
+
+                        if ( obj instanceof Cursor && getDetailLayout(channel) != null ) {
                             detailTouchDown = true;
-
+                            getDetailLayout(channel).setData(channel);
                         }
                     }
 

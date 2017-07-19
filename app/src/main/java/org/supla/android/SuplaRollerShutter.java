@@ -124,6 +124,12 @@ public class SuplaRollerShutter extends View {
     }
 
     void setPercent(float percent) {
+
+        if ( percent < 0 )
+            percent = 0;
+        else if ( percent > 100 )
+            percent = 100;
+
         Percent = percent;
         invalidate();
     }
@@ -287,6 +293,7 @@ public class SuplaRollerShutter extends View {
 
         float x = event.getX();
         float y = event.getY();
+        boolean result = false;
 
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
@@ -301,6 +308,7 @@ public class SuplaRollerShutter extends View {
                 break;
             case MotionEvent.ACTION_DOWN:
                 virtPercent = Percent;
+                result = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 Moving = true;
@@ -320,6 +328,7 @@ public class SuplaRollerShutter extends View {
                     else if ( virtPercent > 100 )
                         virtPercent = 100;
 
+                    result = true;
                 }
 
                 invalidate();
@@ -329,7 +338,7 @@ public class SuplaRollerShutter extends View {
         MoveX = x;
         MoveY = y;
 
-        return true;
+        return result;
     }
 
     void setOnTouchListener(OnTouchListener l) {
