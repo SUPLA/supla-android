@@ -1,236 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/detail_rgb_gb">
 
 
+    <RelativeLayout
+        android:id="@+id/rlPicker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rlInfo"
+        android:layout_alignParentTop="false"
+        android:layout_below="@+id/rlTabs">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="false"
-            android:id="@+id/rlPicker"
-            android:layout_above="@+id/rlInfo"
-            android:layout_below="@+id/rlTabs">
+        <org.supla.android.SuplaColorBrightnessPicker
+            android:id="@+id/rgbPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/clPicker"
+            android:layout_centerInParent="true" />
 
-            <org.supla.android.SuplaColorBrightnessPicker
-                android:id="@+id/rgbPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/clPicker"
-                android:layout_centerInParent="true" />
+        <org.supla.android.SuplaColorListPicker
+            android:id="@+id/clPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp" />
 
-            <org.supla.android.SuplaColorListPicker
-                android:id="@+id/clPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp" />
+    </RelativeLayout>
 
-        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rlInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/rgb_detail_tab_btn_margin">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/rlInfo"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/rgb_detail_tab_btn_margin">
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:orientation="vertical"
+            <TextView
+                android:id="@+id/rgbDetailTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="false">
+                android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
+                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
+                android:text="KONTROLER RGB"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/rgb_detail_title_text" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/rgbDetailBrightnessCaption"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="KONTROLER RGB"
-                    android:id="@+id/rgbDetailTitle"
+                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
                     android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:textSize="@dimen/rgb_detail_title_text"
                     android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
+                    android:layout_weight="1"
+                    android:text="@string/rgb_brightness"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/rgb_detail_info_text" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/black"
-                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/rgbDetailBrightness"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/rgb_brightness"
-                        android:id="@+id/rgbDetailBrightnessCaption"
-                        android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                        android:layout_weight="1"
-                        android:textSize="@dimen/rgb_detail_info_text"
-                        android:textIsSelectable="true"
-                        android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                        android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="80%"
-                        android:id="@+id/rgbDetailBrightness"
-                        android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textSize="@dimen/rgb_detail_info_text"
-                        android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                        android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/black"
-                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
                     android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:id="@+id/rgbBrightnessLine" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/rgb_color"
-                        android:id="@+id/rgbDetailColorCaption"
-                        android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                        android:layout_weight="1"
-                        android:textSize="@dimen/rgb_detail_info_text"
-                        android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                        android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="0xFFFFFF"
-                        android:id="@+id/rgbDetailColor"
-                        android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:textSize="@dimen/rgb_detail_info_text"
-                        android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                        android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/black"
-                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:id="@+id/rgbColorLine" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/rgb_state"
-                        android:id="@+id/rgbDetailStateCaption"
-                        android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                        android:layout_weight="1"
-                        android:textSize="@dimen/rgb_detail_info_text"
-                        android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                        android:layout_marginBottom="@dimen/rgb_detail_info_text_margin" />
-
-
-                    <FrameLayout
-                        android:layout_width="25dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_gravity="center|right"
-                        android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin">
-
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:id="@+id/rgbDetailStateImage"
-                            android:layout_weight="1"
-                            android:src="@drawable/poweroff"
-                            android:scaleType="fitEnd"
-                            android:layout_marginBottom="@dimen/rgb_detail_state_margin"
-                            android:layout_marginTop="@dimen/rgb_detail_state_margin"
-                            android:layout_gravity="right" />
-
-                    </FrameLayout>
-
-                </LinearLayout>
-
+                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="80%"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/rgb_detail_info_text" />
             </LinearLayout>
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rgb_detail_tab_height"
-            android:id="@+id/rlTabs"
-            android:layout_alignParentTop="true"
-            android:visibility="visible">
+            <View
+                android:id="@+id/rgbBrightnessLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                android:background="@android:color/black" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:weightSum="2"
-                android:layout_alignParentStart="false"
-                android:gravity="center">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <Button
+                <TextView
+                    android:id="@+id/rgbDetailColorCaption"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/rgb_detail_tab_btn_height"
-                    android:text="RGB"
-                    android:id="@+id/rgbTabBtn_RGB"
-                    android:background="@drawable/rounded_rgb_left_btn"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
                     android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/rgb_detail_tab_btn_height"
-                    android:text="@string/channel_func_dimmer"
-                    android:id="@+id/rgbTabBtn_Dimmer"
-                    android:background="@drawable/rounded_rgb_right_sel_btn"
+                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
                     android:layout_weight="1"
+                    android:text="@string/rgb_color"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/rgb_detail_info_text" />
+
+                <TextView
+                    android:id="@+id/rgbDetailColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
                     android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
+                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="0xFFFFFF"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/rgb_detail_info_text" />
             </LinearLayout>
-        </RelativeLayout>
+
+            <View
+                android:id="@+id/rgbColorLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/rgbDetailStateCaption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
+                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
+                    android:layout_weight="1"
+                    android:text="@string/rgb_state"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/rgb_detail_info_text" />
+
+
+                <FrameLayout
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|right"
+                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                    android:layout_weight="1">
+
+
+                    <ImageView
+                        android:id="@+id/rgbDetailStateImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginBottom="@dimen/rgb_detail_state_margin"
+                        android:layout_marginTop="@dimen/rgb_detail_state_margin"
+                        android:layout_weight="1"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/poweroff" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlTabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rgb_detail_tab_height"
+        android:layout_alignParentTop="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="false"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/rgbTabBtn_RGB"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/rgb_detail_tab_btn_height"
+                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_rgb_left_btn"
+                android:text="RGB"
+                android:textSize="@dimen/rgb_detail_tab_btn_text" />
+
+            <Button
+                android:id="@+id/rgbTabBtn_Dimmer"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/rgb_detail_tab_btn_height"
+                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_rgb_right_sel_btn"
+                android:text="@string/channel_func_dimmer"
+                android:textSize="@dimen/rgb_detail_tab_btn_text" />
+        </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

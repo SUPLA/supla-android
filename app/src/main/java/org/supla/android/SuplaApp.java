@@ -29,7 +29,7 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 
 import java.util.ArrayList;
-
+import android.os.Vibrator;
 
 public class SuplaApp {
 
@@ -140,6 +140,13 @@ public class SuplaApp {
         return _SuplaApp;
     }
 
+    public static void Vibrate(Context context) {
+
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        if ( v != null )
+            v.vibrate(100);
+    }
 
 
 }

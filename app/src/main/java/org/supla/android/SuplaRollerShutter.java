@@ -46,6 +46,7 @@ public class SuplaRollerShutter extends View {
 
     public interface OnTouchListener {
         void onPercentChanged(SuplaRollerShutter rs, float percent);
+        void onPercentChangeing(SuplaRollerShutter rs, float percent);
     }
 
     private void init() {
@@ -299,7 +300,7 @@ public class SuplaRollerShutter extends View {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
 
-                if ( mOnTouchListener != null && virtPercent != Percent ) {
+                if ( mOnTouchListener != null ) {
                     mOnTouchListener.onPercentChanged(this, virtPercent);
                 }
 
@@ -328,6 +329,10 @@ public class SuplaRollerShutter extends View {
                     else if ( virtPercent > 100 )
                         virtPercent = 100;
 
+                    if ( mOnTouchListener != null ) {
+                        mOnTouchListener.onPercentChangeing(this, virtPercent);
+                    }
+
                     result = true;
                 }
 
@@ -341,7 +346,7 @@ public class SuplaRollerShutter extends View {
         return result;
     }
 
-    void setOnTouchListener(OnTouchListener l) {
+    void setOnPercentTouchListener(OnTouchListener l) {
         mOnTouchListener = l;
     }
 }

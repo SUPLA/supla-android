@@ -24,6 +24,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -316,7 +318,11 @@ public class ChannelListView extends ListView {
 
                             if ( detailSliding == false ) {
 
-                                int color = getResources().getColor(R.color.detail_gb);
+                                int color = Color.WHITE;
+
+                                if (mDetailLayout.getBackground() instanceof ColorDrawable) {
+                                    color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
+                                }
 
                                 if ( channelLayout != null )
                                     channelLayout.setBackgroundColor(color);

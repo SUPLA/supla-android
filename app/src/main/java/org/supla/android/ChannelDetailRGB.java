@@ -338,7 +338,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             setBtnBackground(tabRGB, R.drawable.rounded_rgb_left_sel_btn);
             setBtnBackground(tabDimmer, R.drawable.rounded_rgb_right_btn);
 
-            tabRGB.setTextColor(getResources().getColor(R.color.detail_gb));
+            tabRGB.setTextColor(getResources().getColor(R.color.detail_rgb_gb));
             tabDimmer.setTextColor(Color.BLACK);
 
 
@@ -350,7 +350,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             setBtnBackground(tabDimmer, R.drawable.rounded_rgb_right_sel_btn);
 
             tabRGB.setTextColor(Color.BLACK);
-            tabDimmer.setTextColor(getResources().getColor(R.color.detail_gb));
+            tabDimmer.setTextColor(getResources().getColor(R.color.detail_rgb_gb));
 
         } else if ( v == stateImage ) {
 

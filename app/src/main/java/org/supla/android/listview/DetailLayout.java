@@ -21,6 +21,7 @@ package org.supla.android.listview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -69,6 +70,11 @@ public abstract class DetailLayout extends FrameLayout {
         mContentView = getContentView();
 
         if ( mContentView != null ) {
+
+            if (mContentView.getBackground() instanceof ColorDrawable) {
+                setBackgroundColor(((ColorDrawable) mContentView.getBackground().mutate()).getColor());
+            }
+
             addView(mContentView);
         }
 

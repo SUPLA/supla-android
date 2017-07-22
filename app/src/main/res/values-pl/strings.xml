@@ -86,5 +86,6 @@
     <string name="rate_now">Oceń teraz</string>
      <string name="rate_later">Później</string>
      <string name="rate_no_thanks">Nie, dziękuję</string>
+    <string name="rs_percent_caption">Procent zamknięcia</string>
 
 </resources>

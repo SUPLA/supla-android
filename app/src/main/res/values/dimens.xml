@@ -40,4 +40,6 @@
     <dimen name="rgb_detail_info_text">11sp</dimen>
     <dimen name="rgb_detail_info_text_margin">5dp</dimen>
     <dimen name="rgb_detail_state_margin">5dp</dimen>
+    <dimen name="rs_detail_title_text">20sp</dimen>
+    <dimen name="rs_detail_info_text">12sp</dimen>
 </resources>

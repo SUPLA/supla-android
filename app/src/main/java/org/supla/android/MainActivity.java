@@ -21,11 +21,9 @@ package org.supla.android;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -315,12 +313,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if ( !up
              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER  )   {
 
-
-            Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-
-            if ( v != null )
-                v.vibrate(100);
-
+            SuplaApp.Vibrate(this);
         }
 
 

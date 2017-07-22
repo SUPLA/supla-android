@@ -367,7 +367,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         if ( accessid != 0 ) {
-            
+
             Location location = getLocation(accessid, suplaChannel.LocationID, false);
             SQLiteDatabase db = null;
 

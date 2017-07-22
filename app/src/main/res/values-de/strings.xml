@@ -81,4 +81,6 @@
     <string name="rate_later">Später</string>
     <string name="rate_no_thanks">Nein danke</string>
 
+    <string name="rs_percent_caption">Percentage of closing</string>
+
 </resources>
