@@ -914,12 +914,20 @@ public class ChannelLayout extends LinearLayout {
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
 
                     left_circle.setVisibility(View.INVISIBLE);
                     right_circle.setVisibility(View.VISIBLE);
                     dslider = true;
+
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+
+                    left_circle.setVisibility(View.VISIBLE);
+                    right_circle.setVisibility(View.VISIBLE);
+
+                    lenabled = true;
+                    renabled = true;
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
