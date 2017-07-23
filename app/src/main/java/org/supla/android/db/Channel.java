@@ -357,7 +357,7 @@ public class Channel {
     }
 
     private byte getBrightness(short n) {
-        return getPercent((short)0);
+        return getPercent(n);
     }
 
     public byte getColorBrightness() {
