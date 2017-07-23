@@ -41,7 +41,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaConst;
@@ -63,8 +62,8 @@ public class ChannelLayout extends LinearLayout {
     private TextView right_btn_text;
     private CaptionView caption_text;
 
-    private CircleView  right_circle;
-    private CircleView  left_circle;
+    private DotView right_dot;
+    private DotView left_dot;
 
     private LineView bottom_line;
 
@@ -83,23 +82,26 @@ public class ChannelLayout extends LinearLayout {
         public int left_btn_right;
     }
 
-    private class CircleView extends View {
+    private class DotView extends View {
 
         private Paint paint;
         private boolean On;
 
-        public CircleView(Context context, boolean right) {
+        public DotView(Context context, boolean right) {
             super(context);
 
-            int size = getResources().getDimensionPixelSize(R.dimen.channel_circle_size);
+            int size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
             paint = new Paint();
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-            paint.setColor(getResources().getColor(R.color.channel_circle_off));
+            paint.setColor(getResources().getColor(R.color.channel_dot_off));
+            paint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    (float) 1, getResources().getDisplayMetrics()));
+            paint.setStyle(Paint.Style.FILL);
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     size, size);
 
-            int margin = getResources().getDimensionPixelSize(R.dimen.channel_circle_margin);
+            int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
 
             if ( right ) {
                 lp.rightMargin = margin;
@@ -115,17 +117,27 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
+        public void setRing(boolean ring) {
+            paint.setStyle(ring ? Paint.Style.STROKE : Paint.Style.FILL);
+            invalidate();
+        }
+
+        public boolean getRing() {
+            return paint.getStyle() == Paint.Style.STROKE;
+        }
+
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
             canvas.drawColor(Color.TRANSPARENT);
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 2, paint);
+            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 2 - (getRing() ? paint.getStrokeWidth()/2 : 0), paint);
+
         }
 
 
         public void setOn(boolean on) {
-            paint.setColor(getResources().getColor(on ? R.color.channel_circle_on : R.color.channel_circle_off));
+            paint.setColor(getResources().getColor(on ? R.color.channel_dot_on : R.color.channel_dot_off));
             invalidate();
         }
 
@@ -497,11 +509,11 @@ public class ChannelLayout extends LinearLayout {
         right_btn_text = newTextView(context);
         right_btn.addView(right_btn_text);
 
-        right_circle = new CircleView(context, true);
-        content.addView(right_circle);
+        right_dot = new DotView(context, true);
+        content.addView(right_dot);
 
-        left_circle = new CircleView(context, false);
-        content.addView(left_circle);
+        left_dot = new DotView(context, false);
+        content.addView(left_dot);
 
         bottom_line = new LineView(context);
         content.addView(bottom_line);
@@ -855,8 +867,10 @@ public class ChannelLayout extends LinearLayout {
         ChannelID = channel.getChannelId();
 
         imgl.setFunc(Func, channel.StateUp());
-        left_circle.setOn(channel.getOnLine());
-        right_circle.setOn(channel.getOnLine());
+        left_dot.setOn(channel.getOnLine());
+        left_dot.setRing(false);
+        right_dot.setOn(channel.getOnLine());
+        right_dot.setRing(false);
 
         {
             int lidx = -1;
@@ -907,24 +921,24 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
 
-                    left_circle.setVisibility(View.INVISIBLE);
-                    right_circle.setVisibility(View.VISIBLE);
+                    left_dot.setVisibility(View.INVISIBLE);
+                    right_dot.setVisibility(View.VISIBLE);
 
                     renabled = true;
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
 
-                    left_circle.setVisibility(View.INVISIBLE);
-                    right_circle.setVisibility(View.VISIBLE);
+                    left_dot.setVisibility(View.INVISIBLE);
+                    right_dot.setVisibility(View.VISIBLE);
                     dslider = true;
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
 
-                    left_circle.setVisibility(View.VISIBLE);
-                    right_circle.setVisibility(View.VISIBLE);
+                    left_dot.setVisibility(View.VISIBLE);
+                    right_dot.setVisibility(View.VISIBLE);
 
                     lenabled = true;
                     renabled = true;
@@ -934,16 +948,30 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
 
-                    left_circle.setVisibility(View.INVISIBLE);
-                    right_circle.setVisibility(View.VISIBLE);
+                    left_dot.setVisibility(View.INVISIBLE);
+                    right_dot.setVisibility(View.VISIBLE);
                     dslider = true;
+
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+
+                    left_dot.setVisibility(View.VISIBLE);
+                    left_dot.setRing(true);
+                    right_dot.setVisibility(View.VISIBLE);
+                    right_dot.setRing(true);
 
                     break;
 
                 default:
 
-                    left_circle.setVisibility(View.INVISIBLE);
-                    right_circle.setVisibility(View.INVISIBLE);
+                    left_dot.setVisibility(View.INVISIBLE);
+                    right_dot.setVisibility(View.INVISIBLE);
 
 
                     break;
