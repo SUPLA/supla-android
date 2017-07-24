@@ -64,10 +64,7 @@
     <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
     <string name="password">HASŁO</string>
 
-    <string name="about_app">Autor: Przemyslaw Zygmunt przemek@supla.org\n
-   UI Design: Mateusz Major mateusz@supla.org\n\n
-
-   Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
+    <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n
    opublikowanej przez Free Software Foundation w wersji 2\n
    Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
@@ -87,5 +84,6 @@
      <string name="rate_later">Później</string>
      <string name="rate_no_thanks">Nie, dziękuję</string>
     <string name="rs_percent_caption">Procent zamknięcia</string>
+    <string name="calibration">[Kalibracja]</string>
 
 </resources>

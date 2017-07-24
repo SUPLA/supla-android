@@ -89,6 +89,7 @@
     <string name="rate_no_thanks">No thanks</string>
 
     <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="calibration">[калибровка]</string>
 
 </resources>
 

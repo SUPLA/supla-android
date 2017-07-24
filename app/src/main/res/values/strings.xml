@@ -71,9 +71,7 @@
     <string name="access_id">ACCESS IDENTIFIER</string>
     <string name="password">PASSWORD</string>
 
-    <string name="about_app">Author: Przemyslaw Zygmunt przemek@supla.org\n
- UI Design: Mateusz Major mateusz@supla.org\n\n
-
+    <string name="about_app">
  This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n
  as published by the Free Software Foundation; either version 2\n
@@ -95,5 +93,6 @@
     <string name="rate_no_thanks">No thanks</string>
 
     <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="calibration">[Calibration]</string>
 
 </resources>

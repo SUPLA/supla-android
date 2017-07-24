@@ -293,7 +293,7 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        //Trace.d(log_tag, "Channel Function"+Integer.toString(channel.Func)+"  channel ID: "+Integer.toString(channel.Id) +" channel Location ID: "+Integer.toString(channel.LocationID));
+        Trace.d(log_tag, "Channel Function"+Integer.toString(channel.Func)+"  channel ID: "+Integer.toString(channel.Id) +" channel Location ID: "+Integer.toString(channel.LocationID)+" OnLine: "+Boolean.toString(channel.OnLine));
 
         if ( DbH.updateChannel(channel) ) {
             _DataChanged = true;
@@ -314,7 +314,7 @@ public class SuplaClient extends Thread {
     private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if ( DbH.updateChannelValue(channelValueUpdate) ) {
-            Trace.d(log_tag, "Channel id"+Integer.toString(channelValueUpdate.Id)+" value updated");
+            Trace.d(log_tag, "Channel id"+Integer.toString(channelValueUpdate.Id)+" value updated"+" OnLine: "+Boolean.toString(channelValueUpdate.OnLine));
             onDataChanged(channelValueUpdate.Id);
         }
 

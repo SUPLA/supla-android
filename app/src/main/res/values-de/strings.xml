@@ -65,11 +65,7 @@
     <string name="password">KENNWORT</string>
 
 
-    <string name="about_app"> Übersetzung: Katarzyna Cieslik katarzyna.cieslik@outlook.de\n
- Autor: Przemyslaw Zygmunt przemek@supla.org\n
- UI Design: Mateusz Major mateusz@supla.org\n\n
-
- Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
+    <string name="about_app">Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
 
  Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
 
@@ -82,5 +78,6 @@
     <string name="rate_no_thanks">Nein danke</string>
 
     <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="calibration">[Kalibrierung]</string>
 
 </resources>
