@@ -64,19 +64,19 @@
     <string name="access_id">IDENTIFICATORE DELL’ACCESSO</string>
     <string name="password">PASSWORD</string>
 
-    <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
-   modyfikować zgodnie z warunkami licencji GNU General Public License\n
-   opublikowanej przez Free Software Foundation w wersji 2\n
-   Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
-  
-   Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
-   ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
-   Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
-   General Public Licence aby zapoznać się ze szczegółami.\n\n
-  
-   Powinieneś otrzymać kopię GNU General Public License\n
-   wraz z tym programem; jeśli nie, napisz do Free Software\n
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+    <string name="about_app">This program is free software; you can redistribute it and/or\n
+ modify it under the terms of the GNU General Public License\n
+ as published by the Free Software Foundation; either version 2\n
+ of the License, or (at your option) any later version.\n\n
+
+ This program is distributed in the hope that it will be useful,\n
+ but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+ GNU General Public License for more details.\n\n
+
+ You should have received a copy of the GNU General Public License\n
+ along with this program; if not, write to the Free Software\n
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
     <string name="rate_msg">Se questa applicazione Ti piace, Ti preghiamo di dedicare qualche minuto per valutarla. Ti ringraziamo per il Tuo supporto!</string> 
