@@ -1,0 +1,89 @@
+<resources>
+
+    <string name="feedback_title">Envoyer un e-mail</string>
+
+    <string name="version">version</string>
+
+    <string name="feedback">Retour d'information</string>
+    <string name="about">À propos de l'application</string>
+    <string name="settings">Paramètres</string>
+
+    <string name="status_connecting">Connexion en cours...</string>
+    <string name="status_unknown_err">erreur inconnue</string>
+    <string name="status_temporarily_unavailable">Ce service est temporairement indisponible</string>
+    <string name="status_bad_credentials">Informations d'identification invalides</string>
+    <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
+    <string name="status_access_disabled">L'accès a été fermé</string>
+    <string name="status_version_error">Incompatibilité de la version du serveur</string>
+
+    <string name="err_hostnotfound">Nous n'avons pas pu trouver cette adresse du serveur</string>
+    <string name="err_cantconnecttohost">Impossible de se connecter au serveur</string>
+
+    <string name="channel_func_gateway">Portillon</string>
+    <string name="channel_func_gate">Portail</string>
+    <string name="channel_func_garagedoor">Porte garage</string>
+    <string name="channel_func_door">Porte</string>
+    <string name="channel_func_rollershutter">Volet roulant</string>
+    <string name="channel_func_powerswith">Interrupteur d'alimentation</string>
+    <string name="channel_func_lightswith">Interrupteur de lumière</string>
+    <string name="channel_func_thermometer">Thermomètre</string>
+    <string name="channel_func_humidity">Humidité</string>
+    <string name="channel_func_humidityandtemperature">Température et humidité</string>
+    <string name="channel_func_dimmer">Variateur de luminosité</string>
+    <string name="channel_func_rgblighting">Éclairage RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Variateur de luminosité et éclairage RGB</string>
+    <string name="channel_func_noliquidsensor">Capteur d'absence de liquide</string>
+    <string name="channel_func_gatewayopeningsensor">Capteur d'ouverture de portillon</string>
+    <string name="channel_func_gateopeningsensor">Capteur d'ouverture de portail</string>
+    <string name="channel_func_garagedooropeningsensor">Capteur d'ouverture de porte garage</string>
+    <string name="channel_func_dooropeningsensor">Capteur d'ouverture de porte</string>
+    <string name="channel_func_rsopeningsensor">Capteur d'ouverture des volet</string>
+    <string name="channel_func_depthsensor">Capteur de profondeur</string>
+    <string name="channel_func_distancesensor">Capteur de distance</string>
+
+    <string name="rgb_brightness">Luminosité</string>
+    <string name="rgb_color">Couleur</string>
+    <string name="rgb_state">Status</string>
+
+    <string name="channel_btn_open">Ouvrir</string>
+    <string name="channel_btn_openclose">Ouvrir Fermer</string>
+    <string name="channel_btn_reveal">Ouvrir les volets</string>
+    <string name="channel_btn_shut">Fermer les volets</string>
+    <string name="channel_btn_on">Allumer</string>
+    <string name="channel_btn_off">Désactiver</string>
+
+    <string name="event_openedthegateway">a ouvert le portillon</string>
+    <string name="event_openedclosedthegate">a ouvert/fermé le portail</string>
+    <string name="event_openedclosedthegatedoors">a ouvert/fermé la porte</string>
+    <string name="event_openedthedoor">a ouvert la porte</string>
+    <string name="event_openedcloserollershutter">a ouvert/fermé les volets roulants</string>
+    <string name="event_poweronoff">a allumé/éteint l'électricité</string>
+    <string name="event_turnedthelightonoff">a allumé / éteint la lumière</string>
+
+    <string name="server_address">ADRESSE DU SERVEUR</string>
+    <string name="access_id">IDENTIFIANT D'ACCÈS</string>
+    <string name="password">MOT DE PASSE</string>
+
+    <string name="about_app">This program is free software; you can redistribute it and/or\n
+ modify it under the terms of the GNU General Public License\n
+ as published by the Free Software Foundation; either version 2\n
+ of the License, or (at your option) any later version.\n\n
+
+ This program is distributed in the hope that it will be useful,\n
+ but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+ GNU General Public License for more details.\n\n
+
+ You should have received a copy of the GNU General Public License\n
+ along with this program; if not, write to the Free Software\n
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    </string>
+
+    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l'évaluer. Nous vous remercions de votre support !</string> 
+    <string name="rate_now">Évaluer maintenant</string>
+     <string name="rate_later">Plus tard</string>
+     <string name="rate_no_thanks">Non, merci</string>
+    <string name="rs_percent_caption">Pourcentage fermeture</string>
+    <string name="calibration">[Calibration]</string>
+
+</resources>
