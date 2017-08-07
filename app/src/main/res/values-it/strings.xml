@@ -1,0 +1,89 @@
+<resources>
+
+    <string name="feedback_title">Invia un’email</string>
+
+    <string name="version">versione</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="about">Programma</string>
+    <string name="settings">Impostazioni</string>
+
+    <string name="status_connecting">Connessione in corso...</string>
+    <string name="status_unknown_err">Errore sconosciuto</string>
+    <string name="status_temporarily_unavailable">Servizio temporaneamente non disponibile</string>
+    <string name="status_bad_credentials">Credenziali non valide</string>
+    <string name="status_climit_exceded">Limite delle applicazioni dei clienti superato</string>
+    <string name="status_access_disabled">Accesso disabilitato</string>
+    <string name="status_version_error">Versione del server non compatibile</string>
+
+    <string name="err_hostnotfound">L’indirizzo del server non è stato trovato</string>
+    <string name="err_cantconnecttohost">Connessione con il server non riuscita</string>
+
+    <string name="channel_func_gateway">Cancello</string>
+    <string name="channel_func_gate">Cancello</string>
+    <string name="channel_func_garagedoor">Cancello per garage</string>
+    <string name="channel_func_door">Porta</string>
+    <string name="channel_func_rollershutter">Avvolgibile</string>
+    <string name="channel_func_powerswith">Interruttore di alimentazione</string>
+    <string name="channel_func_lightswith">Interruttore di luce</string>
+    <string name="channel_func_thermometer">Termometro</string>
+    <string name="channel_func_humidity">Umidità</string>
+    <string name="channel_func_humidityandtemperature">Temperatura e umidità</string>
+    <string name="channel_func_dimmer">Varialuce</string>
+    <string name="channel_func_rgblighting">Illuminazione RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Varialuce e illuminazione RGB</string>
+    <string name="channel_func_noliquidsensor">Sensore di mancanza liquido</string>
+    <string name="channel_func_gatewayopeningsensor">Sensore di apertura del cancello</string>
+    <string name="channel_func_gateopeningsensor">Sensore di apertura del cancello</string>
+    <string name="channel_func_garagedooropeningsensor">Sensore di apertura del cancello per garage</string>
+    <string name="channel_func_dooropeningsensor">Sensore di apertura della porta</string>
+    <string name="channel_func_rsopeningsensor">Sensore di apertura di avvolgibili</string>
+    <string name="channel_func_depthsensor">Sensore di profondità</string>
+    <string name="channel_func_distancesensor">Sensore di distanza</string>
+
+    <string name="rgb_brightness">Luminosità</string>
+    <string name="rgb_color">Colore</string>
+    <string name="rgb_state">Stato</string>
+
+    <string name="channel_btn_open">Apri</string>
+    <string name="channel_btn_openclose">Apri Chiudi</string>
+    <string name="channel_btn_reveal">Apri</string>
+    <string name="channel_btn_shut">Chiudi</string>
+    <string name="channel_btn_on">Abilita</string>
+    <string name="channel_btn_off">Disabilita</string>
+
+    <string name="event_openedthegateway">ha aperto il cancello</string>
+    <string name="event_openedclosedthegate">ha aperto/chiuso il cancello</string>
+    <string name="event_openedclosedthegatedoors">ha aperto/chiuso il cancello per garage</string>
+    <string name="event_openedthedoor">ha aperto la porta </string>
+    <string name="event_openedcloserollershutter">ha aperto/chiuso avvolgibili</string>
+    <string name="event_poweronoff">ha acceso/spento la corrente</string>
+    <string name="event_turnedthelightonoff">ha acceso/spento la luce </string>
+
+    <string name="server_address">INDIRIZZO DEL SERVER</string>
+    <string name="access_id">IDENTIFICATORE DELL’ACCESSO</string>
+    <string name="password">PASSWORD</string>
+
+    <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
+   modyfikować zgodnie z warunkami licencji GNU General Public License\n
+   opublikowanej przez Free Software Foundation w wersji 2\n
+   Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
+  
+   Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
+   ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
+   Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
+   General Public Licence aby zapoznać się ze szczegółami.\n\n
+  
+   Powinieneś otrzymać kopię GNU General Public License\n
+   wraz z tym programem; jeśli nie, napisz do Free Software\n
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+    </string>
+
+    <string name="rate_msg">Se questa applicazione Ti piace, Ti preghiamo di dedicare qualche minuto per valutarla. Ti ringraziamo per il Tuo supporto!</string> 
+    <string name="rate_now">Valuta adesso</string>
+     <string name="rate_later">Più tardi</string>
+     <string name="rate_no_thanks">No, grazie</string>
+    <string name="rs_percent_caption">Percentuale di chiusura</string>
+    <string name="calibration">[Calibrazione]</string>
+
+</resources>
