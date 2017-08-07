@@ -55,10 +55,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     private Button MiSettings;
     private Button MiAbout;
+    private Button MiDonate;
     private Button MiFeedback;
 
     private Button SettingsButton;
     private Button AboutButton;
+    private Button DonateButton;
     private Button FeedbackButton;
     private Button HomepageButton;
 
@@ -129,6 +131,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             MiSettings = (Button)MenuItemsLayout.findViewById(R.id.menuitem_settings);
             MiAbout = (Button)MenuItemsLayout.findViewById(R.id.menuitem_about);
+            MiDonate = (Button)MenuItemsLayout.findViewById(R.id.menuitem_donate);
             MiFeedback = (Button)MenuItemsLayout.findViewById(R.id.menuitem_feedback);
 
             MiSettings.setOnClickListener(this);
@@ -137,6 +140,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             SettingsButton = (Button)MenuItemsLayout.findViewById(R.id.btn_settings);
             AboutButton = (Button)MenuItemsLayout.findViewById(R.id.btn_about);
+            DonateButton = (Button)MenuItemsLayout.findViewById(R.id.btn_donate);
             FeedbackButton = (Button)MenuItemsLayout.findViewById(R.id.btn_feedback);
             HomepageButton = (Button)MenuItemsLayout.findViewById(R.id.btn_homepage);
 
@@ -148,6 +152,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
             SettingsButton.setTypeface(type);
             AboutButton.setTypeface(type);
+            DonateButton.setTypeface(type);
             FeedbackButton.setTypeface(type);
 
             type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
@@ -155,6 +160,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             SettingsButton.setTransformationMethod(null);
             AboutButton.setTransformationMethod(null);
+            DonateButton.setTransformationMethod(null);
             FeedbackButton.setTransformationMethod(null);
             HomepageButton.setTransformationMethod(null);
 
@@ -309,6 +315,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void donate() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
+        startActivity(browserIntent);
+    }
+
     private static void showActivity(Activity sender,  Class<?> cls, int flags) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
@@ -380,6 +391,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         } else if ( v == MiAbout || v == AboutButton ) {
 
             showAbout();
+
+        } else if ( v == MiDonate || v == DonateButton ) {
+
+            donate();
 
         } else if ( v == MiFeedback || v == FeedbackButton ) {
 
