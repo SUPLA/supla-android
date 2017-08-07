@@ -136,6 +136,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             MiSettings.setOnClickListener(this);
             MiAbout.setOnClickListener(this);
+            MiDonate.setOnClickListener(this);
             MiFeedback.setOnClickListener(this);
 
             SettingsButton = (Button)MenuItemsLayout.findViewById(R.id.btn_settings);
@@ -146,6 +147,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             SettingsButton.setOnClickListener(this);
             AboutButton.setOnClickListener(this);
+            DonateButton.setOnClickListener(this);
             FeedbackButton.setOnClickListener(this);
             HomepageButton.setOnClickListener(this);
 

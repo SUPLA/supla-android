@@ -1,8 +1,8 @@
 <resources>
 
     <string name="feedback_title">Invia un’email</string>
-    <string name="donate_title">Donate</string>
-    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="donate_title">Donazione</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
 
     <string name="version">versione</string>
 
