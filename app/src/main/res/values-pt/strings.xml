@@ -81,7 +81,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">JSe gostar da aplicação, avalie-a. Agradecemos o seu apoio!</string> 
+    <string name="rate_msg">Se gostar da aplicação, avalie-a. Agradecemos o seu apoio!</string> 
     <string name="rate_now">Avalie agora</string>
      <string name="rate_later">Mais tarde</string>
      <string name="rate_no_thanks">Não, obrigado</string>
