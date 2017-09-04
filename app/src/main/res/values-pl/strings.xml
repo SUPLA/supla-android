@@ -15,8 +15,11 @@
     <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
     <string name="status_bad_credentials">Błędne poświadczenia</string>
     <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
-    <string name="status_access_disabled">Dostęp wyłączony</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
+    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Aby ją włączyć przejdź do zakładki &quot;Smartfony&quot; na  stronie %1$s</string>
+    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę cloud.supla.org i w zakładce &quot;Smartfony&quot; przypisz odpowiedni identyfikator.</string>
+    <string name="status_device_disabled">Urządzenie jest wyłączone</string>
+    <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
     <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
     <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>

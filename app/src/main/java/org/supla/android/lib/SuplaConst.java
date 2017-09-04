@@ -42,6 +42,9 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_GUID_ERROR                = 14;
     public final static int SUPLA_RESULTCODE_HOSTNOTFOUND              = 15;
     public final static int SUPLA_RESULTCODE_CANTCONNECTTOHOST         = 16;
+    public final static int SUPLA_RESULTCODE_REGISTRATION_DISABLED     = 17;
+    public final static int SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED     = 18;
+    public final static int SUPLA_RESULTCODE_AUTHKEY_ERROR             = 19;
 
     public final static int SUPLA_CHANNELFNC_NONE                          =  0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK     = 10;

@@ -15,8 +15,11 @@
     <string name="status_temporarily_unavailable">Ce service est temporairement indisponible</string>
     <string name="status_bad_credentials">Informations d\u0027identification invalides</string>
     <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
-    <string name="status_access_disabled">L\u0027accès a été fermé</string>
     <string name="status_version_error">Incompatibilité de la version du serveur</string>
+    <string name="status_reg_disabled">Client Registration is off. Please go to &quot;Smartphone&quot; at %1$s to activate it.</string>
+    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to &quot;Smartphone&quot; at %1$s and get a valid identifier.</string>
+    <string name="status_device_disabled">Device is disabled</string>
+    <string name="status_accessid_disabled">Access Identifier is disabled</string>
 
     <string name="err_hostnotfound">Nous n\u0027avons pas pu trouver cette adresse du serveur</string>
     <string name="err_cantconnecttohost">Impossible de se connecter au serveur</string>

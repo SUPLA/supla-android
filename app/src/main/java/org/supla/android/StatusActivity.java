@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConnError;
@@ -192,6 +193,18 @@ public class StatusActivity extends NavigationActivity {
         showMain(this);
     };
 
+    private String getHostname() {
+
+        Preferences prefs = new Preferences(this);
+
+        if ( prefs.getServerAddress().toLowerCase().contains("supla.org") ) {
+            return "cloud.supla.org";
+        } else {
+            return prefs.getServerAddress();
+        }
+
+    }
+
     private void _OnRegisterErrorMsg(SuplaRegisterError error) {
         String msg;
 
@@ -208,8 +221,16 @@ public class StatusActivity extends NavigationActivity {
                 msg = getResources().getString(R.string.status_climit_exceded);
                 break;
             case SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED:
+                msg = getResources().getString(R.string.status_device_disabled);
+                break;
             case SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED:
-                msg = getResources().getString(R.string.status_access_disabled);
+                msg = getResources().getString(R.string.status_accessid_disabled);
+                break;
+            case SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED:
+                msg = getResources().getString(R.string.status_reg_disabled, getHostname());
+                break;
+            case SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED:
+                msg = getResources().getString(R.string.status_access_id_not_assigned, getHostname());
                 break;
             default:
                 msg = getResources().getString(R.string.status_unknown_err)+" ("+Integer.toString(error.ResultCode)+")";
