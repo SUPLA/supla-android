@@ -17,7 +17,7 @@
     <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
     <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Aby ją włączyć przejdź do zakładki \"Smartfony\" na  stronie %1$s</string>
-    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę cloud.supla.org i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
+    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę %1$s i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
     <string name="status_device_disabled">Urządzenie jest wyłączone</string>
     <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
