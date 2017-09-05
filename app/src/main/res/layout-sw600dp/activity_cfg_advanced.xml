@@ -11,107 +11,106 @@
     android:background="@color/activity_bg">
 
     <EditText
+        android:id="@+id/edServerAddr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edServerAddr"
-        android:inputType="textUri"
-        android:layout_below="@+id/cfg_label_title"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentStart="false"
+        android:layout_below="@+id/cfg_label_title_adv"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginTop="45dp"
+        android:inputType="textUri"
         android:padding="5dp"
-        android:textSize="10sp" />
+        android:textSize="35sp" />
 
     <TextView
+        android:id="@+id/cfg_label_svr_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/server_address"
-        android:id="@+id/cfg_label_svr_address"
-        android:layout_below="@+id/edServerAddr"
         android:layout_alignLeft="@+id/edServerAddr"
         android:layout_alignStart="@+id/edServerAddr"
+        android:layout_below="@+id/edServerAddr"
         android:layout_marginLeft="2dp"
-        android:textSize="9sp"
+        android:layout_marginTop="4dp"
+        android:text="@string/server_address"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:layout_marginTop="2dp" />
+        android:textSize="20sp" />
 
     <EditText
+        android:id="@+id/edAccessID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edAccessID"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/cfg_label_svr_address"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:numeric="decimal"
+        android:layout_below="@+id/cfg_label_svr_address"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginTop="50dp"
+        android:numeric="decimal"
         android:padding="5dp"
-        android:textSize="10sp" />
+        android:textSize="35sp" />
 
     <TextView
+        android:id="@+id/cfg_label_access_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/access_id"
-        android:id="@+id/cfg_label_access_id"
-        android:layout_below="@+id/edAccessID"
         android:layout_alignLeft="@+id/edAccessID"
         android:layout_alignStart="@+id/edAccessID"
-        android:textSize="9sp"
-        android:textColor="@android:color/black"
+        android:layout_below="@+id/edAccessID"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="4dp"
+        android:text="@string/access_id"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <EditText
+        android:id="@+id/edAccessIDpwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edAccessIDpwd"
-        android:padding="5dp"
-        android:password="true"
+        android:layout_below="@+id/cfg_label_access_id"
         android:layout_centerVertical="true"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_below="@+id/cfg_label_access_id"
-        android:layout_marginTop="5dp"
-        android:textSize="10sp" />
+        android:layout_marginTop="50dp"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:textSize="35sp" />
 
     <TextView
+        android:id="@+id/cfg_label_access_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/password"
-        android:id="@+id/cfg_label_access_pwd"
-        android:layout_below="@+id/edAccessIDpwd"
+        android:layout_alignLeft="@+id/edAccessIDpwd"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="false"
-        android:layout_alignLeft="@+id/edAccessIDpwd"
-        android:textSize="9sp"
-        android:textColor="@android:color/black"
+        android:layout_below="@+id/edAccessIDpwd"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="4dp"
+        android:text="@string/password"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <TextView
+        android:id="@+id/cfg_label_title_adv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:id="@+id/cfg_label_title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="2dp"
-        android:textColor="@android:color/black" />
+        android:layout_marginTop="120dp"
+        android:text="@string/settings"
+        android:textColor="@android:color/black"
+        android:textSize="60sp" />
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/cfg_save"
+        android:id="@+id/cfg_save_adv"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@+id/cfg_label_access_pwd"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginTop="80dp"
         android:background="@drawable/btnok" />
 
 </RelativeLayout>

@@ -68,6 +68,7 @@
     <string name="server_address">АДРЕС СЕРВЕРА</string>
     <string name="access_id">КЛЮЧ ДОСТУПА</string>
     <string name="password">ПАРОЛЬ</string>
+    <string name="create_account">Создать учетку</string>
 
     <string name="about_app">Автор: Przemyslaw Zygmunt przemek@supla.org\n
  Дизайн интерфейса: Mateusz Major mateusz@supla.org\n

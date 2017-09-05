@@ -1,117 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:clickable="true"
-    android:focusableInTouchMode="true"
+    android:layout_height="match_parent"
     tools:context="org.supla.android.CfgActivity"
     android:background="@color/activity_bg">
 
-    <EditText
+
+    <RelativeLayout
+        android:id="@+id/cfg_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edServerAddr"
-        android:inputType="textUri"
-        android:layout_below="@+id/cfg_label_title"
-        android:layout_marginTop="25dp"
-        android:layout_alignParentStart="false"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:padding="5dp"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/server_address"
-        android:id="@+id/cfg_label_svr_address"
-        android:layout_below="@+id/edServerAddr"
-        android:layout_alignLeft="@+id/edServerAddr"
-        android:layout_alignStart="@+id/edServerAddr"
-        android:layout_marginLeft="2dp"
-        android:textSize="9sp"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="2dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edAccessID"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/cfg_label_svr_address"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:numeric="decimal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:padding="5dp"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/access_id"
-        android:id="@+id/cfg_label_access_id"
-        android:layout_below="@+id/edAccessID"
-        android:layout_alignLeft="@+id/edAccessID"
-        android:layout_alignStart="@+id/edAccessID"
-        android:textSize="9sp"
-        android:textColor="@android:color/black"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edAccessIDpwd"
-        android:padding="5dp"
-        android:password="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_below="@+id/cfg_label_access_id"
-        android:layout_marginTop="10dp"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/password"
-        android:id="@+id/cfg_label_access_pwd"
-        android:layout_below="@+id/edAccessIDpwd"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignLeft="@+id/edAccessIDpwd"
-        android:textSize="9sp"
-        android:textColor="@android:color/black"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:id="@+id/cfg_label_title"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="5dp"
-        android:textColor="@android:color/black" />
+        android:layout_centerHorizontal="true">
 
-    <Button
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/cfg_save"
-        android:layout_below="@+id/cfg_label_access_pwd"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        style="?android:attr/borderlessButtonStyle"
-        android:background="@drawable/btnok" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <CheckBox
+            android:id="@+id/cfg_cb_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:buttonTint="@color/channel_btn"
+            android:text="@string/advanced_settings" />
+    </RelativeLayout>
 
 </RelativeLayout>

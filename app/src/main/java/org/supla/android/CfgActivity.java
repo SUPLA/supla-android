@@ -19,30 +19,43 @@ package org.supla.android;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
 
 public class CfgActivity extends NavigationActivity  {
 
+    private View vBasic;
+    private View vAdvanced;
+    private RelativeLayout rlContent;
+
     private EditText edServerAddr;
     private EditText edAccessID;
     private EditText edAccessIDpwd;
-    private Button SaveBtn;
+    private EditText edEmail;
+    private CheckBox cbAdvanced;
+
+    private Button btnSaveBasic, btnSaveAdv, btnCreate;
+
+    static final short CFG_LAYOUT_ADVANCED  =  0;
+    static final short CFG_LAYOUT_BASIC = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_cfg);
 
         View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
             @Override
@@ -53,23 +66,40 @@ public class CfgActivity extends NavigationActivity  {
             }
         };
 
+        setContentView(R.layout.activity_cfg);
+
+        rlContent = (RelativeLayout) findViewById(R.id.cfg_content);
+
+        vBasic = Inflate(R.layout.activity_cfg_basic, null);
+        vAdvanced = Inflate(R.layout.activity_cfg_advanced, null);
+
+        vBasic.setVisibility(View.GONE);
+        rlContent.addView(vBasic);
+
+        vAdvanced.setVisibility(View.VISIBLE);
+        rlContent.addView(vAdvanced);
+
+        cbAdvanced = (CheckBox)findViewById(R.id.cfg_cb_advanced);
+        cbAdvanced.setOnClickListener(this);
 
         edServerAddr = (EditText)findViewById(R.id.edServerAddr);
         edAccessID = (EditText)findViewById(R.id.edAccessID);
         edAccessIDpwd = (EditText)findViewById(R.id.edAccessIDpwd);
-        SaveBtn = (Button)findViewById(R.id.cfg_save);
-
-        SaveBtn.setOnClickListener(this);
+        edEmail = (EditText)findViewById(R.id.cfg_email);
 
         edServerAddr.setOnFocusChangeListener(fcl);
         edAccessID.setOnFocusChangeListener(fcl);
         edAccessIDpwd.setOnFocusChangeListener(fcl);
+        edEmail.setOnFocusChangeListener(fcl);
 
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         edServerAddr.setTypeface(type);
         edAccessID.setTypeface(type);
         edAccessIDpwd.setTypeface(type);
+        edEmail.setTypeface(type);
 
+        btnCreate = (Button)findViewById(R.id.cfg_create_account);
+        btnCreate.setOnClickListener(this);
 
         type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
         TextView v = (TextView)findViewById(R.id.cfg_label_svr_address);
@@ -81,19 +111,58 @@ public class CfgActivity extends NavigationActivity  {
         v = (TextView)findViewById(R.id.cfg_label_access_pwd);
         v.setTypeface(type);
 
-        type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
-        v = (TextView)findViewById(R.id.cfg_label_title);
+        v = (TextView)findViewById(R.id.cfg_label_email);
         v.setTypeface(type);
+
+
+        type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
+        v = (TextView)findViewById(R.id.cfg_label_title_basic);
+        v.setTypeface(type);
+
+        v = (TextView)findViewById(R.id.cfg_label_title_adv);
+        v.setTypeface(type);
+
+        btnCreate.setTypeface(type, Typeface.BOLD);
+        cbAdvanced.setTypeface(type);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             edServerAddr.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
             edAccessID.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
             edAccessIDpwd.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
+            edEmail.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
         } else {
             edServerAddr.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
             edAccessID.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
             edAccessIDpwd.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
+            edEmail.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
         }
+
+        btnSaveBasic = (Button)findViewById(R.id.cfg_save_basic);
+        btnSaveBasic.setOnClickListener(this);
+
+        btnSaveAdv = (Button)findViewById(R.id.cfg_save_adv);
+        btnSaveAdv.setOnClickListener(this);
+
+        edEmail.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                if ( getCurrentFocus() == edEmail ) {
+                    edServerAddr.setText("");
+                }
+
+            }
+        });
 
     }
 
@@ -103,14 +172,37 @@ public class CfgActivity extends NavigationActivity  {
     }
 
 
+    private void cbAdvancedClicked() {
+
+        if ( cbAdvanced.isChecked() ) {
+            vBasic.setVisibility(View.GONE);
+            vAdvanced.setVisibility(View.VISIBLE);
+        } else {
+            vBasic.setVisibility(View.VISIBLE);
+            vAdvanced.setVisibility(View.GONE);
+        }
+
+    }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v != SaveBtn ) return;
+        if ( v == cbAdvanced ) {
+            cbAdvancedClicked();
+            return;
+        }
 
-        SaveBtn.setEnabled(false);
+        if ( v == btnCreate ) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.create_url)));
+            startActivity(browserIntent);
+            return;
+        }
+
+        if ( v != btnSaveBasic && v != btnSaveAdv ) return;
+
+        btnSaveBasic.setEnabled(false);
+        btnSaveAdv.setEnabled(false);
 
         Preferences prefs = new Preferences(this);
 
@@ -140,6 +232,16 @@ public class CfgActivity extends NavigationActivity  {
             changed = true;
         }
 
+        if ( false == prefs.getEmail().equals(edEmail.getText().toString()) ) {
+            prefs.setEmail(edEmail.getText().toString());
+            changed = true;
+        }
+
+        if ( prefs.isAdvancedCfg() != cbAdvanced.isChecked() ) {
+            prefs.setAdvancedCfg(cbAdvanced.isChecked());
+            changed = true;
+        }
+
 
         if ( changed ) {
 
@@ -159,16 +261,20 @@ public class CfgActivity extends NavigationActivity  {
     protected void onResume() {
         super.onResume();
 
-        SaveBtn.setEnabled(true);
+        btnSaveBasic.setEnabled(true);
+        btnSaveAdv.setEnabled(true);
 
         Preferences prefs = new Preferences(this);
 
         edServerAddr.setText(prefs.getServerAddress(), EditText.BufferType.EDITABLE);
         edAccessID.setText(prefs.getAccessID() == 0 ? "" : Integer.toString(prefs.getAccessID()) );
         edAccessIDpwd.setText(prefs.getAccessIDpwd(), EditText.BufferType.EDITABLE);
+        edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
+
+        cbAdvanced.setChecked(prefs.isAdvancedCfg());
+        cbAdvancedClicked();
 
         String sender = getIntent().getStringExtra(INTENTSENDER);
-
 
         if ( sender != null && sender.equals(INTENTSENDER_MAIN)) {
             showMenuBar();

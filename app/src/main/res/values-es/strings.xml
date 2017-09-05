@@ -68,6 +68,7 @@
     <string name="server_address">DIRECCIÓN DEL SERVIDOR</string>
     <string name="access_id">IDENTIFICACIÓN DE ACCESO</string>
     <string name="password">CONTRASEÑA</string>
+    <string name="create_account">Crea cuenta</string>
 
     <string name="about_app">This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n

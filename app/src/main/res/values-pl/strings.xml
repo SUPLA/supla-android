@@ -68,6 +68,9 @@
     <string name="server_address">ADRES SERWERA</string>
     <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
     <string name="password">HASŁO</string>
+    <string name="email">ADRES E-MAIL</string>
+    <string name="advanced_settings">Ustawienia zaawansowane</string>
+    <string name="create_account"><u>Utwórz konto</u></string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n

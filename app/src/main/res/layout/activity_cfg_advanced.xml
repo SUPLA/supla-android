@@ -15,9 +15,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/edServerAddr"
         android:inputType="textUri"
-        android:layout_below="@+id/cfg_label_title"
+        android:layout_below="@+id/cfg_label_title_adv"
         android:layout_marginTop="25dp"
-        android:layout_alignParentStart="false"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:padding="5dp"
@@ -70,7 +69,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/edAccessIDpwd"
         android:padding="5dp"
-        android:password="true"
+        android:inputType="textPassword"
         android:layout_centerVertical="true"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
@@ -94,23 +93,23 @@
         android:layout_marginTop="4dp" />
 
     <TextView
+        android:id="@+id/cfg_label_title_adv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:id="@+id/cfg_label_title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="40dp"
-        android:textColor="@android:color/black" />
+        android:layout_marginTop="60dp"
+        android:text="@string/settings"
+        android:textColor="@android:color/black"
+        android:textSize="30sp" />
 
     <Button
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/cfg_save"
+        android:id="@+id/cfg_save_adv"
         android:layout_below="@+id/cfg_label_access_pwd"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="40dp"
         style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/btnok" />
 

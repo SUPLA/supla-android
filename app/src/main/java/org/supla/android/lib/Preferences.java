@@ -31,34 +31,62 @@ public class Preferences {
     private static final String pref_serveraddr = "pref_serveraddr";
     private static final String pref_accessid = "pref_accessid";
     private static final String pref_accessidpwd = "pref_accessidpwd";
+    private static final String pref_email = "pref_email";
+    private static final String pref_authkey = "pref_authkey";
+    private static final String pref_advanced = "pref_advanced";
+    private static final String pref_cfg_ver = "pref_cfg_ver";
 
     private SharedPreferences _prefs;
 
     public Preferences(Context context) {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if ( getCfgVersion() == 0 ) {
+
+            setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
+            setCfgVersion(2);
+        }
     }
 
-    public byte[] getClientGUID() {
+    private int getCfgVersion() {
+        return _prefs.getInt(pref_cfg_ver, 0);
+    }
 
-        byte[] result = Base64.decode(_prefs.getString(pref_guid, ""), Base64.DEFAULT);
+    public void setCfgVersion(int version) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putInt(pref_cfg_ver, version);
+        editor.commit();
+    }
 
-        if ( result.length != SuplaConst.SUPLA_GUID_SIZE ) {
+    private byte[] getRandom(String pref_key, int size) {
+
+        byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
+
+        if ( result.length != size ) {
 
             Random random = new Random();
-            result = new byte[SuplaConst.SUPLA_GUID_SIZE];
+            result = new byte[size];
 
-            for(int a=0;a<SuplaConst.SUPLA_GUID_SIZE;a++) {
+            for(int a=0;a<size;a++) {
                 result[a] = (byte)random.nextInt(255);
             }
 
             SharedPreferences.Editor editor = _prefs.edit();
-            editor.putString(pref_guid, Base64.encodeToString(result, Base64.DEFAULT));
+            editor.putString(pref_key, Base64.encodeToString(result, Base64.DEFAULT));
             editor.commit();
 
         }
 
         return result;
 
+    }
+
+    public byte[] getClientGUID() {
+        return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
+    }
+
+    public byte[] getAuthKey() {
+        return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
 
     public String getServerAddress() {
@@ -92,7 +120,34 @@ public class Preferences {
         editor.commit();
     }
 
+    public String getEmail() {
+        return _prefs.getString(pref_email, "");
+    }
+
+    public void setEmail(String email) {
+
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putString(pref_email, email);
+        editor.commit();
+    }
+
     public boolean configIsSet() {
-        return getServerAddress().equals("") == false && getAccessID() != 0 && getAccessIDpwd().equals("") == false;
+
+        if ( isAdvancedCfg() )
+            return getServerAddress().equals("") == false && getAccessID() != 0 && getAccessIDpwd().equals("") == false;
+
+        return getEmail().equals("") == false;
+    }
+
+    public void setAdvancedCfg(Boolean advanced) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putBoolean(pref_advanced, advanced);
+        editor.commit();
+    }
+
+    public boolean isAdvancedCfg() {
+
+        return _prefs.getBoolean(pref_advanced, false);
+
     }
 }

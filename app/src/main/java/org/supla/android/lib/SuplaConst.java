@@ -21,6 +21,7 @@ package org.supla.android.lib;
 public class SuplaConst {
 
     public final static int SUPLA_GUID_SIZE = 16;
+    public final static int SUPLA_AUTHKEY_SIZE = 16;
     public final static int SUPLA_CLIENT_NAME_MAXSIZE = 201;
     public final static int SUPLA_ACCESSID_PWD_MAXSIZE = 33;
     public final static int SUPLA_SOFTVER_MAXSIZE = 21;

@@ -10,6 +10,7 @@
     <string name="feedback_title">Send email</string>
     <string name="donate_title">Donate</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="create_url">https://cloud.supla.org/account/create</string>
 
     <string name="version">version</string>
 
@@ -75,6 +76,9 @@
     <string name="server_address">SERVER ADDRESS</string>
     <string name="access_id">ACCESS IDENTIFIER</string>
     <string name="password">PASSWORD</string>
+    <string name="email">E-MAIL ADDRESS</string>
+    <string name="advanced_settings">Advanced settings</string>
+    <string name="create_account"><u>Create an account</u></string>
 
     <string name="about_app">
  This program is free software; you can redistribute it and/or\n

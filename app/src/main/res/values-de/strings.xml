@@ -68,6 +68,7 @@
     <string name="server_address">SERVER ADRESSE</string>
     <string name="access_id">ZUGRIFFSKENNUNG</string>
     <string name="password">KENNWORT</string>
+    <string name="create_account">Konto erstellen</string>
 
 
     <string name="about_app">Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
