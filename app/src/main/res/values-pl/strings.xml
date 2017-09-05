@@ -9,6 +9,7 @@
     <string name="feedback">Feedback</string>
     <string name="about">O programie</string>
     <string name="settings">Ustawienia</string>
+    <string name="add_device">Dodaj urządzenie</string>
 
     <string name="status_connecting">Łączenie...</string>
     <string name="status_unknown_err">Nieznany błąd</string>
