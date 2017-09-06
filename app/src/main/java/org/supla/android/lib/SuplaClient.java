@@ -21,16 +21,31 @@ package org.supla.android.lib;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
+@SuppressWarnings("JniMissingFunction")
 public class SuplaClient extends Thread {
 
     private int _client_id;
@@ -56,6 +71,8 @@ public class SuplaClient extends Thread {
     private native boolean scIterate(long _supla_client, int wait_usec);
     private native boolean scOpen(long _supla_client, int ChannelID, int Open);
     private native boolean scSetRGBW(long _supla_client, int ChannelID, int Color, int ColorBrightness, int Brightness);
+    private native boolean scGetRegistrationEnabled(long _supla_client);
+    private native int scGetProtoVersion(long _supla_client);
 
     public SuplaClient(Context context) {
 
@@ -200,9 +217,44 @@ public class SuplaClient extends Thread {
         return result;
     };
 
+    public boolean GetRegistrationEnabled() {
+
+        boolean result = false;
+
+        synchronized (sc_lck) {
+            result = _supla_client != 0 ? scGetRegistrationEnabled(_supla_client) : false;
+        }
+
+        return result;
+    }
+
+    public int GetProtoVersion() {
+
+        int result = 0;
+
+        synchronized (sc_lck) {
+            result = _supla_client != 0 ? scGetProtoVersion(_supla_client) : 0;
+        }
+
+        return result;
+    }
 
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, new Integer(versionError.Version).toString() + "," + new Integer(versionError.RemoteVersionMin).toString() + "," + new Integer(versionError.RemoteVersion).toString());
+
+        Preferences prefs = new Preferences(_context);
+
+
+        if ( prefs.isAdvancedCfg()
+                && versionError.Version > versionError.RemoteVersion
+                && versionError.RemoteVersion >= 5
+                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion ) {
+
+                // set prefered to lower
+                prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
+                Reconnect();
+                return;
+        }
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onVersionError);
         msg.setVersionError(versionError);
@@ -251,6 +303,13 @@ public class SuplaClient extends Thread {
 
         Trace.d(log_tag, "Registered");
 
+        Preferences prefs = new Preferences(_context);
+
+        if (  prefs.getPreferedProtocolVersion() != SuplaConst.PROTOCOL_HIGHEST_VERSION
+                && registerResult.Version > prefs.getPreferedProtocolVersion() ) {
+            prefs.setPreferedProtocolVersion(SuplaConst.PROTOCOL_HIGHEST_VERSION);
+        }
+
         _client_id = registerResult.ClientID;
 
         Trace.d(log_tag, "registerResult.ChannelCount="+Integer.toString(registerResult.ChannelCount));
@@ -278,6 +337,16 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
 
         cancel();
+    }
+
+    private void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+
+        Trace.d(log_tag, "onRegistrationEnabled");
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistrationEnabled);
+        msg.setRegistrationEnabled(registrationEnabled);
+        sendMessage(msg);
+
     }
 
     private void LocationUpdate(SuplaLocation location) {
@@ -361,6 +430,47 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    private String autodiscoverGetHost(String email) {
+
+        String result = "";
+
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("https")
+                    .authority("autodiscover.supla.org")
+                    .appendPath("users")
+                    .appendPath(email);
+
+            request.setURI(new URI(builder.build().toString()));
+            HttpResponse response = client.execute(request);
+
+            if ( response != null ) {
+                String json = EntityUtils.toString(response.getEntity());
+
+                JSONTokener tokener = new JSONTokener(json);
+                JSONObject jsonResult = new JSONObject(tokener);
+
+                if ( jsonResult.getString("email").equals(email) ) {
+                    result = jsonResult.getString("server");
+                }
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public void run() {
 
         DbH = new DbHelper(_context);
@@ -398,13 +508,30 @@ public class SuplaClient extends Thread {
 
                     cfg.Host = prefs.getServerAddress();
                     cfg.clientGUID = prefs.getClientGUID();
-                    cfg.AccessID = prefs.getAccessID();
-                    cfg.AccessIDpwd = prefs.getAccessIDpwd();
+                    cfg.AuthKey = prefs.getAuthKey();
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android"+Build.VERSION.RELEASE+"/"+ BuildConfig.VERSION_NAME;
 
+                    if ( prefs.isAdvancedCfg() ) {
+                        cfg.AccessID = prefs.getAccessID();
+                        cfg.AccessIDpwd = prefs.getAccessIDpwd();
+                    } else {
+                        cfg.Email = prefs.getEmail();
+                        if ( !cfg.Email.isEmpty() && cfg.Host.isEmpty() ) {
+                            cfg.Host = autodiscoverGetHost(cfg.Email);
+
+                            if ( !cfg.Host.isEmpty() ) {
+                                prefs.setServerAddress(cfg.Host);
+                            }
+                        }
+
+                    }
+
+                    cfg.protocol_version = prefs.getPreferedProtocolVersion();
 
                     Init(cfg);
+
+
                 }
 
                 if ( Connect() ) {

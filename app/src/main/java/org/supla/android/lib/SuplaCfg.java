@@ -22,14 +22,17 @@ package org.supla.android.lib;
 public class SuplaCfg {
 
     byte[] clientGUID;
+    byte[] AuthKey;
     String Name;
     int AccessID;
     String AccessIDpwd;
+    String Email;
     String SoftVer;
     String Host;
     int tcp_port;
     int ssl_port;
     boolean ssl_enabled;
+    int protocol_version = 0;
 
 
     void setClientGUID(byte[] clientGUID) {
@@ -41,12 +44,25 @@ public class SuplaCfg {
 
     }
 
+    void setAuthKey(byte[] AuthKey) {
+
+        int len = AuthKey.length > SuplaConst.SUPLA_AUTHKEY_SIZE ? SuplaConst.SUPLA_AUTHKEY_SIZE : AuthKey.length;
+
+        if ( len > 0 )
+            System.arraycopy(AuthKey, 0, this.AuthKey, 0, len);
+
+    }
+
     void setName(String Name) {
         this.Name = Name.substring(0,SuplaConst.SUPLA_CLIENT_NAME_MAXSIZE-1);
     }
 
     void setAccessIDpwd(String AccessIDpwd) {
         this.AccessIDpwd = AccessIDpwd.substring(0, SuplaConst.SUPLA_ACCESSID_PWD_MAXSIZE-1);
+    }
+
+    void setEmail(String Email) {
+        this.Email = Email.substring(0, SuplaConst.SUPLA_EMAIL_MAXSIZE-1);
     }
 
     void setSoftVer(String SoftVer) {

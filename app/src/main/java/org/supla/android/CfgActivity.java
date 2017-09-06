@@ -35,6 +35,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
+import org.supla.android.lib.SuplaConst;
 
 public class CfgActivity extends NavigationActivity  {
 
@@ -244,6 +245,8 @@ public class CfgActivity extends NavigationActivity  {
 
 
         if ( changed ) {
+
+            prefs.setPreferedProtocolVersion(SuplaConst.PROTOCOL_HIGHEST_VERSION);
 
             showStatus(this);
             SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();

@@ -27,6 +27,7 @@ import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.lib.SuplaRegisterError;
+import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
 
 import java.util.Date;
@@ -162,6 +163,9 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onConnError:
                         OnConnErrorMsg(_msg.getConnError());
                         break;
+                    case SuplaClientMsg.onRegistrationEnabled:
+                        OnRegistrationEnabled(_msg.getRegistrationEnabled());
+                        break;
                 }
 
             }
@@ -189,4 +193,5 @@ public class BaseActivity extends Activity {
     protected void OnVersionErrorMsg(SuplaVersionError error) {};
     protected void OnEventMsg(SuplaEvent event) {};
     protected void OnConnErrorMsg(SuplaConnError error) {};
+    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {};
 }

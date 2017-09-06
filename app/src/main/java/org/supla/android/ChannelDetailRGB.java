@@ -270,6 +270,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         int brightness = (int)rgbPicker.getBrightnessValue();
 
         tvBrightness.setText(Integer.toString((int)brightness)+"%");
+
         tvColor.setText(String.format("#%06X", (0xFFFFFF & lastColor)));
         stateImage.setImageResource(rgbPicker.getBrightnessValue() > 0 ? R.drawable.poweron : R.drawable.poweroff );
 

@@ -27,18 +27,20 @@ public class SuplaClientMsg {
     private SuplaRegisterError RegisterError;
     private SuplaConnError ConnError;
     private SuplaEvent Event;
+    private SuplaRegistrationEnabled RegistrationEnabled;
     private int ChannelId;
 
-    public final static int onDataChanged        = 1;
-    public final static int onConnecting         = 2;
-    public final static int onRegistered         = 3;
-    public final static int onRegistering        = 4;
-    public final static int onRegisterError      = 5;
-    public final static int onDisconnected       = 6;
-    public final static int onConnected          = 7;
-    public final static int onVersionError       = 8;
-    public final static int onEvent              = 9;
-    public final static int onConnError          = 10;
+    public final static int onDataChanged         = 1;
+    public final static int onConnecting          = 2;
+    public final static int onRegistered          = 3;
+    public final static int onRegistering         = 4;
+    public final static int onRegisterError       = 5;
+    public final static int onDisconnected        = 6;
+    public final static int onConnected           = 7;
+    public final static int onVersionError        = 8;
+    public final static int onEvent               = 9;
+    public final static int onConnError           = 10;
+    public final static int onRegistrationEnabled = 11;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -100,5 +102,13 @@ public class SuplaClientMsg {
 
     public void setChannelId(int channelId) {
         ChannelId = channelId;
+    }
+
+    public SuplaRegistrationEnabled getRegistrationEnabled() {
+        return RegistrationEnabled;
+    }
+
+    void setRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+        RegistrationEnabled = registrationEnabled;
     }
 }

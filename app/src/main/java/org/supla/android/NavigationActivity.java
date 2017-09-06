@@ -25,7 +25,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
-
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 
 public class NavigationActivity extends BaseActivity implements View.OnClickListener {
@@ -57,12 +53,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private Button MiAbout;
     private Button MiDonate;
     private Button MiFeedback;
+    private Button MiAddDevice;
 
     private Button SettingsButton;
     private Button AboutButton;
     private Button DonateButton;
     private Button FeedbackButton;
     private Button HomepageButton;
+    private Button AddDeviceButton;
 
     private boolean Anim = false;
 
@@ -133,29 +131,34 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MiAbout = (Button)MenuItemsLayout.findViewById(R.id.menuitem_about);
             MiDonate = (Button)MenuItemsLayout.findViewById(R.id.menuitem_donate);
             MiFeedback = (Button)MenuItemsLayout.findViewById(R.id.menuitem_feedback);
+            MiAddDevice = (Button)MenuItemsLayout.findViewById(R.id.menuitem_add);
 
             MiSettings.setOnClickListener(this);
             MiAbout.setOnClickListener(this);
             MiDonate.setOnClickListener(this);
             MiFeedback.setOnClickListener(this);
+            MiAddDevice.setOnClickListener(this);
 
             SettingsButton = (Button)MenuItemsLayout.findViewById(R.id.btn_settings);
             AboutButton = (Button)MenuItemsLayout.findViewById(R.id.btn_about);
             DonateButton = (Button)MenuItemsLayout.findViewById(R.id.btn_donate);
             FeedbackButton = (Button)MenuItemsLayout.findViewById(R.id.btn_feedback);
             HomepageButton = (Button)MenuItemsLayout.findViewById(R.id.btn_homepage);
+            AddDeviceButton = (Button)MenuItemsLayout.findViewById(R.id.btn_add);
 
             SettingsButton.setOnClickListener(this);
             AboutButton.setOnClickListener(this);
             DonateButton.setOnClickListener(this);
             FeedbackButton.setOnClickListener(this);
             HomepageButton.setOnClickListener(this);
+            AddDeviceButton.setOnClickListener(this);
 
             Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
             SettingsButton.setTypeface(type);
             AboutButton.setTypeface(type);
             DonateButton.setTypeface(type);
             FeedbackButton.setTypeface(type);
+            AddDeviceButton.setTypeface(type);
 
             type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
             HomepageButton.setTypeface(type);
@@ -165,6 +168,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             DonateButton.setTransformationMethod(null);
             FeedbackButton.setTransformationMethod(null);
             HomepageButton.setTransformationMethod(null);
+            AddDeviceButton.setTransformationMethod(null);
 
             getRootLayout().addView(MenuItemsLayout);
         }
@@ -322,6 +326,13 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void addDevice() {
+
+
+
+    }
+
+
     private static void showActivity(Activity sender,  Class<?> cls, int flags) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
@@ -369,7 +380,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(intent);
     }
 
-
     @Override
     public void onClick(View v) {
 
@@ -393,6 +403,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         } else if ( v == MiAbout || v == AboutButton ) {
 
             showAbout();
+
+        } else if ( v == MiAddDevice || v == AddDeviceButton ) {
+
+            addDevice();
 
         } else if ( v == MiDonate || v == DonateButton ) {
 

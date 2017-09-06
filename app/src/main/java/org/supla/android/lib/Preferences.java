@@ -35,6 +35,7 @@ public class Preferences {
     private static final String pref_authkey = "pref_authkey";
     private static final String pref_advanced = "pref_advanced";
     private static final String pref_cfg_ver = "pref_cfg_ver";
+    private static final String pref_proto_ver = "pref_proto_ver";
 
     private SharedPreferences _prefs;
 
@@ -146,8 +147,16 @@ public class Preferences {
     }
 
     public boolean isAdvancedCfg() {
-
         return _prefs.getBoolean(pref_advanced, false);
+    }
 
+    public int getPreferedProtocolVersion() {
+        return _prefs.getInt(pref_proto_ver, SuplaConst.PROTOCOL_HIGHEST_VERSION);
+    }
+
+    public void setPreferedProtocolVersion(int version) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putInt(pref_proto_ver, version);
+        editor.commit();
     }
 }
