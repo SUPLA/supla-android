@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="390dp"
+        android:layout_height="470dp"
         android:background="@color/menubar">
 
         <View
@@ -36,7 +36,31 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="16dp"
             android:alpha="0.4"
-            android:id="@+id/view3" />
+            android:id="@+id/settings_line" />
+
+
+        <Button
+            android:id="@+id/menuitem_add"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignLeft="@+id/menuitem_settings"
+            android:layout_alignStart="@+id/menuitem_settings"
+            android:layout_below="@id/menuitem_settings"
+            android:layout_gravity="left"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/add_device" />
+
+        <View
+            android:layout_below="@id/menuitem_add"
+            android:layout_toRightOf="@+id/menuitem_add"
+            android:layout_height="0.25dp"
+            android:layout_width="wrap_content"
+            android:background="@color/menuseparator"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="16dp"
+            android:alpha="0.4"
+            android:id="@+id/add_line" />
 
         <Button
             android:layout_width="80dp"
@@ -45,9 +69,9 @@
             android:layout_gravity="left"
             android:clickable="true"
             android:background="@drawable/info"
-            android:layout_below="@id/menuitem_settings"
-            android:layout_alignLeft="@+id/menuitem_settings"
-            android:layout_alignStart="@+id/menuitem_settings"
+            android:layout_below="@id/menuitem_add"
+            android:layout_alignLeft="@+id/menuitem_add"
+            android:layout_alignStart="@+id/menuitem_add"
             style="?android:attr/borderlessButtonStyle"
             android:layout_marginTop="1dp" />
 
@@ -60,7 +84,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="16dp"
             android:alpha="0.4"
-            android:id="@+id/view2" />
+            android:id="@+id/about_line" />
 
 
         <Button
@@ -85,13 +109,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="16dp"
             android:alpha="0.4"
-            android:id="@+id/d_view2" />
-
-
-
-
-
-
+            android:id="@+id/donate_line" />
 
 
         <Button
@@ -136,9 +154,9 @@
             android:background="@color/menubar"
             android:text="@string/feedback"
             android:textColor="@android:color/white"
-            android:layout_below="@+id/d_view2"
-            android:layout_alignLeft="@+id/d_view2"
-            android:layout_alignStart="@+id/d_view2"
+            android:layout_below="@+id/donate_line"
+            android:layout_alignLeft="@+id/donate_line"
+            android:layout_alignStart="@+id/donate_line"
             style="?android:attr/borderlessButtonStyle"
             android:layout_alignBottom="@+id/menuitem_feedback"
             android:layout_marginLeft="10dp"
@@ -150,18 +168,31 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:id="@+id/btn_add"
+            android:background="@color/menubar"
+            android:text="@string/add_device"
+            android:textColor="@android:color/white"
+            android:gravity="center|left"
+            android:layout_above="@+id/add_line"
+            android:textSize="35sp"
+            android:layout_below="@+id/settings_line"
+            android:layout_alignLeft="@+id/btn_donate"
+            android:layout_alignStart="@+id/btn_donate" />
+
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
             android:id="@+id/btn_about"
             android:background="@color/menubar"
             android:text="@string/about"
             android:textColor="@android:color/white"
             android:gravity="center|left"
-            android:layout_below="@+id/view3"
-            android:layout_alignLeft="@+id/view2"
-            android:layout_alignStart="@+id/view2"
-            android:layout_above="@+id/view2"
-            android:layout_marginTop="1dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="35sp" />
+            android:layout_above="@+id/about_line"
+            android:textSize="35sp"
+            android:layout_below="@+id/add_line"
+            android:layout_alignLeft="@+id/btn_donate"
+            android:layout_alignStart="@+id/btn_donate" />
 
 
         <Button
@@ -173,10 +204,10 @@
             android:text="@string/donate_title"
             android:textColor="@android:color/white"
             android:gravity="center|left"
-            android:layout_below="@+id/view2"
-            android:layout_alignLeft="@+id/d_view2"
-            android:layout_alignStart="@+id/d_view2"
-            android:layout_above="@+id/d_view2"
+            android:layout_below="@+id/about_line"
+            android:layout_alignLeft="@+id/donate_line"
+            android:layout_alignStart="@+id/donate_line"
+            android:layout_above="@+id/donate_line"
             android:layout_marginTop="1dp"
             android:layout_marginLeft="10dp"
             android:textSize="35sp" />
@@ -190,12 +221,12 @@
             android:text="@string/settings"
             android:textColor="@android:color/white"
             android:gravity="center|left"
-            android:layout_above="@+id/menuitem_about"
-            android:layout_alignTop="@+id/menuitem_settings"
             android:layout_marginTop="1dp"
             android:textSize="35sp"
-            android:layout_alignLeft="@+id/view3"
-            android:layout_alignStart="@+id/view3"
+            android:layout_alignLeft="@+id/settings_line"
+            android:layout_alignStart="@+id/settings_line"
+            android:layout_above="@+id/settings_line"
+            android:layout_alignTop="@+id/menuitem_settings"
             android:layout_marginLeft="10dp" />
 
     </RelativeLayout>
