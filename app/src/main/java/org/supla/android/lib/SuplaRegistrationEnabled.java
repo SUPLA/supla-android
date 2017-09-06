@@ -18,8 +18,39 @@ package org.supla.android.lib;
  Author: Przemyslaw Zygmunt p.zygmunt@acsoftware.pl [AC SOFTWARE]
  */
 
+import java.util.Date;
+
 public class SuplaRegistrationEnabled {
 
     public long ClientTimestamp;
     public long IODeviceTimestamp;
+
+    public Date ClientRegistrationExpirationDate() {
+        if ( ClientTimestamp > 0 ) {
+            return new Date(ClientTimestamp * 1000L);
+        }
+
+        return null;
+    }
+
+    public Date IODeviceRegistrationExpirationDate() {
+        if ( IODeviceTimestamp > 0 ) {
+            return new Date(IODeviceTimestamp * 1000L);
+        }
+
+        return null;
+    }
+
+    public boolean IsClientRegistrationEnabled() {
+
+        Date d = ClientRegistrationExpirationDate();
+        return d != null && (new Date()).before(d);
+
+    }
+
+    public boolean IsIODeviceRegistrationEnabled() {
+        Date d = IODeviceRegistrationExpirationDate();
+        return d != null && (new Date()).before(d);
+    }
+
 }
