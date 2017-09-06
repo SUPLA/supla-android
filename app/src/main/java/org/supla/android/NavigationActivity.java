@@ -22,6 +22,8 @@ package org.supla.android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -32,6 +34,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
 
 
@@ -328,7 +331,28 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void addDevice() {
 
+        Preferences prefs = new Preferences(this);
 
+        if ( prefs.isAdvancedCfg() ) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.add_wizard_is_not_available);
+
+            builder.setPositiveButton(
+                    "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert = builder.create();
+
+            alert.show();
+
+        } else {
+            showAddWizard();
+        }
 
     }
 
@@ -372,6 +396,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void showAbout() {
         showActivity(this, AboutActivity.class, 0);
+    }
+
+    public void showAddWizard() {
+        showActivity(this, AddWizardActivity.class, 0);
     }
 
     public void gotoMain() {
