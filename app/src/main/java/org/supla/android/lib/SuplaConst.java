@@ -83,4 +83,46 @@ public class SuplaConst {
     public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER        = 50;
     public final static int SUPLA_EVENT_POWERONOFF                         = 60;
     public final static int SUPLA_EVENT_LIGHTONOFF                         = 70;
+
+
+    public final static int SUPLA_DCS_CALL_GETVERSION                      =   10;
+    public final static int SUPLA_SDC_CALL_GETVERSION_RESULT               =   20;
+    public final static int SUPLA_SDC_CALL_VERSIONERROR                    =   30;
+    public final static int SUPLA_DCS_CALL_PING_SERVER                     =   40;
+    public final static int SUPLA_SDC_CALL_PING_SERVER_RESULT              =   50;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE                  =   60;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_B                =   65;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_C                =   67;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_D                =   68;
+    public final static int SUPLA_SD_CALL_REGISTER_DEVICE_RESULT           =   70;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT                  =   80;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_B                =   85;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_C                =   86;
+    public final static int SUPLA_SC_CALL_REGISTER_CLIENT_RESULT           =   90;
+    public final static int SUPLA_DS_CALL_DEVICE_CHANNEL_VALUE_CHANGED     =   100;
+    public final static int SUPLA_SD_CALL_CHANNEL_SET_VALUE                =   110;
+    public final static int SUPLA_DS_CALL_CHANNEL_SET_VALUE_RESULT         =   120;
+    public final static int SUPLA_SC_CALL_LOCATION_UPDATE                  =   130;
+    public final static int SUPLA_SC_CALL_LOCATIONPACK_UPDATE              =   140;
+    public final static int SUPLA_SC_CALL_CHANNEL_UPDATE                   =   150;
+    public final static int SUPLA_SC_CALL_CHANNELPACK_UPDATE               =   160;
+    public final static int SUPLA_SC_CALL_CHANNEL_VALUE_UPDATE             =   170;
+    public final static int SUPLA_CS_CALL_GET_NEXT                         =   180;
+    public final static int SUPLA_SC_CALL_EVENT                            =   190;
+    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE                =   200;
+    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE_B              =   205;
+    public final static int SUPLA_DCS_CALL_SET_ACTIVITY_TIMEOUT            =   210;
+    public final static int SUPLA_SDC_CALL_SET_ACTIVITY_TIMEOUT_RESULT     =   220;
+    public final static int SUPLA_DS_CALL_GET_FIRMWARE_UPDATE_URL          =   300;
+    public final static int SUPLA_SD_CALL_GET_FIRMWARE_UPDATE_URL_RESULT   =   310;
+    public final static int SUPLA_DCS_CALL_GET_REGISTRATION_ENABLED        =   320;
+    public final static int SUPLA_SDC_CALL_GET_REGISTRATION_ENABLED_RESULT =   330;
+    public final static int SUPLA_CS_CALL_GET_OAUTH_PARAMETERS              =  340;
+    public final static int SUPLA_SC_CALL_GET_OAUTH_PARAMETERS_RESULT       =  350;
+
+
+    public final static int SUPLA_RESULT_CALL_NOT_ALLOWED     =  -5;
+    public final static int SUPLA_RESULT_FALSE                =   0;
+    public final static int SUPLA_RESULT_TRUE                 =   1;
+
 }

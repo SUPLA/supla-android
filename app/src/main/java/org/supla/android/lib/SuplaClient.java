@@ -349,6 +349,12 @@ public class SuplaClient extends Thread {
 
     }
 
+    private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
+
+        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: "+Long.toString(minVersionRequired.CallType)+" MinVersion: "+Integer.toString(minVersionRequired.MinVersion));
+
+    }
+
     private void LocationUpdate(SuplaLocation location) {
 
         if ( DbH.updateLocation(location) ) {
