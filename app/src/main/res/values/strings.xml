@@ -105,7 +105,8 @@
     <string name="rs_percent_caption">Percentage of closing</string>
     <string name="calibration">[Calibration]</string>
 
-    <string name="add_wizard_is_not_available">Add wizard is not available</string>
+    <string name="add_wizard_is_not_available">I/O Device Add Wizard is only available when server connection has been set based on the email address entered in the settings!</string>
+    <string name="devive_registration_disabled">I/O Device registration is currently off.  To continue go to „I/O Devices” at cloud.supla.org and enable the Device Add Button.</string>
 
 
 </resources>

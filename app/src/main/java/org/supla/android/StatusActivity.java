@@ -190,7 +190,12 @@ public class StatusActivity extends NavigationActivity {
     @Override
     protected void OnRegisteredMsg() {
         setStatusConnectingProgress(100);
-        showMain(this);
+
+        if ( CurrentActivity == null
+                || !(CurrentActivity instanceof AddWizardActivity) ) {
+            showMain(this);
+        }
+
     };
 
     private void _OnRegisterErrorMsg(SuplaRegisterError error) {

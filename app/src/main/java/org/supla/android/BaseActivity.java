@@ -40,6 +40,7 @@ public class BaseActivity extends Activity {
     private Handler _sc_msg_handler = null;
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
+    protected static Activity CurrentActivity = null;
 
     @Override
     protected void onResume() {

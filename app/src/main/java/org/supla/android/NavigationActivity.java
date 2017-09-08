@@ -42,7 +42,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public static final String INTENTSENDER = "sender";
     public static final String INTENTSENDER_MAIN = "main";
-    private static Activity CurrentActivity = null;
 
     private RelativeLayout RootLayout;
     private RelativeLayout ContentLayout;
@@ -457,13 +456,15 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     }
 
+
     @Override
     protected void BeforeStatusMsg() {
         super.BeforeStatusMsg();
 
         if (  CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
-                && !(CurrentActivity instanceof CfgActivity) ) {
+                && !(CurrentActivity instanceof CfgActivity)
+                && !(CurrentActivity instanceof AddWizardActivity )) {
             showStatus(this);
         }
     }
