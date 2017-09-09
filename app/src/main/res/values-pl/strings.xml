@@ -98,4 +98,40 @@
     <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email!</string>
     <string name="devive_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę cloud.supla.org i w zakładce ”Urządzenia we/wy” włącz dodawanie urządzeń.</string>
 
+    <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
+    <string name="wizard_step1_txt2">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+    <string name="next">Dalej</string>
+    <string name="start">START</string>>
+
+    <string name="wizard_step2_txt1">Wprowadź hasło do Twojej sieci WiFi, której nazwa to</string>
+    <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
+
+    <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
+    <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
+    <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
+
+    <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
+    <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
+    <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>
+    <string name="wizard_regenabled_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
+    <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
+    <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
+    <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
+    <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
+
+    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfikuraci, a następnie spróbuj ponownie.</string>
+
+    <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
+    <string name="wizard_iodev_data">Dane urządzenia</string>
+    <string name="wizard_iodev_name">Nazwa</string>
+    <string name="wizard_iodev_firmware">Firmware</string>
+    <string name="wizard_iodev_guid">GUID</string>
+    <string name="wizard_iodev_mac">MAC</string>
+    <string name="wizard_iodev_laststate">Poprzedni status</string>
+
+    <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
+    <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połaczenie nie jest kompatybilne z tym kreatorem!</string>
+    <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
+    <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
+
 </resources>

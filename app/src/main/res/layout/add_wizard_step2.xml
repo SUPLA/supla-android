@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <CheckBox
+        android:id="@+id/wizard_cb_save_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@+id/wizard_password"
+        android:layout_alignStart="@+id/wizard_password"
+        android:layout_below="@+id/wizard_password"
+        android:layout_marginTop="10dp"
+        android:buttonTint="@color/channel_btn"
+        android:text="@string/wizard_remember_passwd"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/wizard_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wizard_step2_txt2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/wizard_step2_txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_step2_txt1"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="140dp"
+        android:layout_height="107dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:background="@drawable/wifi" />
+
+    <TextView
+        android:id="@+id/wizard_step2_txt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/wizard_step2_txt1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:textSize="18sp" />
+</RelativeLayout>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/wizard_done_txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_done"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/wizard_done_txt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/wizard_done_txt1"
+        android:layout_alignStart="@+id/wizard_done_txt1"
+        android:layout_below="@+id/wizard_done_txt1"
+        android:layout_marginTop="22dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_iodev_data"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:background="@drawable/like" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignEnd="@+id/wizard_done_txt1"
+        android:layout_alignLeft="@+id/wizard_done_txt2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/wizard_done_txt1"
+        android:layout_alignStart="@+id/wizard_done_txt2"
+        android:layout_below="@+id/wizard_done_txt2"
+        android:layout_marginTop="20dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wizard_done_txt3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:gravity="right"
+                android:text="@string/wizard_iodev_name"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_txt4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:gravity="right"
+                android:text="@string/wizard_iodev_firmware"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_txt5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:gravity="right"
+                android:text="@string/wizard_iodev_guid"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_txt6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:gravity="right"
+                android:text="@string/wizard_iodev_mac"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_txt7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:gravity="right"
+                android:text="@string/wizard_iodev_laststate"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wizard_done_iodev_name"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_iodev_firmware"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_iodev_guid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_iodev_mac"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/wizard_done_iodev_laststate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/wizard_done_txt1"
+                android:layout_alignStart="@+id/wizard_done_txt1"
+                android:layout_below="@+id/wizard_done_txt1"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -21,15 +21,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaRegistrationEnabled;
@@ -51,16 +58,25 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private final int STEP_RECONNECT                     = 6;
     private final int STEP_DONE                          = 7;
 
+    private final int PAGE_STEP_1                     = 1;
+    private final int PAGE_STEP_2                     = 2;
+    private final int PAGE_STEP_3                     = 3;
+    private final int PAGE_ERROR                      = 4;
+    private final int PAGE_DONE                       = 5;
+
+    private final int SCAN_RETRY                      = 3;
+
+    private int scanRetry;
+
+    private int pageId;
     private Timer watchDog;
+    private Timer blinkTimer;
 
     private int step;
     private Date step_time;
 
     private BroadcastReceiver scanResultReceiver;
     private BroadcastReceiver stateChangedReceiver;
-    private Button btnStart;
-    private EditText edList;
-    private EditText edPassword;
 
     private ESPConfigureTask espConfigTask = null;
     private WifiManager manager = null;
@@ -70,32 +86,234 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private int iodev_NetworkID = -1;
     private String iodev_SSID = "";
 
+    private View vStep1;
+    private View vStep2;
+    private View vStep3;
+    private View vError;
+    private View vDone;
+
+    private TextView tvSSID;
+    private EditText edPassword;
+    private CheckBox cbSavePassword;
+
+    private ImageView ivDot;
+
+    private TextView tvErrorMsg;
+
+    private TextView tvIODevName;
+    private TextView tvIODevFirmware;
+    private TextView tvIODevGUID;
+    private TextView tvIODevMAC;
+    private TextView tvIODevLastState;
+
+    private Button btnNext;
+    ProgressBar progressBar;
+
+    private RelativeLayout rlStepContent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        watchDog = new Timer();
-
         manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         setContentView(R.layout.activity_wizard);
 
-        btnStart = (Button)findViewById(R.id.wizard_start);
-        btnStart.setOnClickListener(this);
+        rlStepContent = (RelativeLayout)findViewById(R.id.wizard_step_content);
 
-        edList = (EditText)findViewById(R.id.wizard_list);
-        edPassword = (EditText)findViewById(R.id.wizard_pwd);
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
+
+        vStep1 = Inflate(R.layout.add_wizard_step1, null);
+        vStep1.setVisibility(View.GONE);
+        rlStepContent.addView(vStep1);
+
+        TextView tv = (TextView)findViewById(R.id.wizard_step1_txt1);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_step1_txt2);
+        tv.setTypeface(type);
+
+        vStep2 = Inflate(R.layout.add_wizard_step2, null);
+        vStep2.setVisibility(View.GONE);
+        rlStepContent.addView(vStep2);
+
+        tv = (TextView)findViewById(R.id.wizard_step2_txt1);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_step2_txt2);
+        tv.setTypeface(type);
+
+        tvSSID = (TextView)findViewById(R.id.wizard_step2_txt2);
+        edPassword = (EditText)findViewById(R.id.wizard_password);
+        cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
+
+        cbSavePassword.setTypeface(type);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
+        } else {
+            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
+        }
+
+        vStep3 = Inflate(R.layout.add_wizard_step3, null);
+        vStep3.setVisibility(View.GONE);
+        rlStepContent.addView(vStep3);
+
+        tv = (TextView)findViewById(R.id.wizard_step3_txt1);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_step3_txt2);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_step3_txt3);
+        tv.setTypeface(type);
+
+        ivDot = (ImageView)findViewById(R.id.wizard_dot);
+
+        vError = Inflate(R.layout.add_wizard_error, null);
+        vError.setVisibility(View.GONE);
+        rlStepContent.addView(vError);
+
+        tvErrorMsg = (TextView)findViewById(R.id.wizard_error_txt);
+        tvErrorMsg.setTypeface(type);
+
+        vDone = Inflate(R.layout.add_wizard_done, null);
+        vDone.setVisibility(View.GONE);
+        rlStepContent.addView(vDone);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt1);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt2);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt3);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt4);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt5);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt6);
+        tv.setTypeface(type);
+
+        tv = (TextView)findViewById(R.id.wizard_done_txt7);
+        tv.setTypeface(type);
+
+        tvIODevName = (TextView)findViewById(R.id.wizard_done_iodev_name);
+        tvIODevName.setTypeface(type);
+
+        tvIODevFirmware = (TextView)findViewById(R.id.wizard_done_iodev_firmware);
+        tvIODevFirmware.setTypeface(type);
+
+        tvIODevGUID = (TextView)findViewById(R.id.wizard_done_iodev_guid);
+        tvIODevGUID.setTypeface(type);
+
+        tvIODevMAC = (TextView)findViewById(R.id.wizard_done_iodev_mac);
+        tvIODevMAC.setTypeface(type);
+
+        tvIODevLastState = (TextView)findViewById(R.id.wizard_done_iodev_laststate);
+        tvIODevLastState.setTypeface(type);
+
+        progressBar = (ProgressBar)findViewById(R.id.wizard_progress);
+        progressBar.setIndeterminate(false);
+
+        btnNext = (Button)findViewById(R.id.wizard_next);
+        btnNext.setOnClickListener(this);
 
         showMenuBar();
         RegisterMessageHandler();
     }
 
+    private void showPage(int id) {
+
+        setStep(STEP_NONE);
+        vStep1.setVisibility(View.GONE);
+        vStep2.setVisibility(View.GONE);
+        vStep3.setVisibility(View.GONE);
+        vError.setVisibility(View.GONE);
+        vDone.setVisibility(View.GONE);
+        progressBar.setIndeterminate(false);
+        btnNext.setEnabled(true);
+        btnNext.setText(R.string.next, TextView.BufferType.NORMAL);
+
+        switch(id) {
+            case PAGE_STEP_1:
+                vStep1.setVisibility(View.VISIBLE);
+                break;
+
+            case PAGE_STEP_2:
+                tvSSID.setText("\""+SSID+"\"");
+                vStep2.setVisibility(View.VISIBLE);
+                break;
+
+            case PAGE_STEP_3:
+                vStep3.setVisibility(View.VISIBLE);
+                btnNext.setText(R.string.start, TextView.BufferType.NORMAL);
+                break;
+
+            case PAGE_ERROR:
+                vError.setVisibility(View.VISIBLE);
+                btnNext.setText("OK", TextView.BufferType.NORMAL);
+                break;
+
+            case PAGE_DONE:
+                vDone.setVisibility(View.VISIBLE);
+                btnNext.setText("OK", TextView.BufferType.NORMAL);
+                break;
+        }
+
+        pageId = id;
+    }
+
+    private void showError(String error_msg) {
+        tvErrorMsg.setText(error_msg, TextView.BufferType.NORMAL);
+        showPage(PAGE_ERROR);
+    }
+
+    private void showError(int msg_id) {
+        showError(getResources().getString(msg_id));
+    }
+
+    private void showDone(ESPConfigureTask.ConfigResult result) {
+
+        tvIODevName.setText(result.deviceName, TextView.BufferType.NORMAL);
+        tvIODevFirmware.setText(result.deviceFirmwareVersion, TextView.BufferType.NORMAL);
+        tvIODevGUID.setText(result.deviceGUID, TextView.BufferType.NORMAL);
+        tvIODevMAC.setText(result.deviceMAC, TextView.BufferType.NORMAL);
+        tvIODevLastState.setText(result.deviceLastState, TextView.BufferType.NORMAL);
+
+        showPage(PAGE_DONE);
+    }
+
+    private void cleanUp() {
+
+        if ( watchDog != null ) {
+            watchDog.cancel();
+            watchDog = null;
+        }
+
+        if ( blinkTimer != null ) {
+            blinkTimer.cancel();
+            blinkTimer = null;
+        }
+
+        removeConfigTask();
+        unregisterReceivers();
+        removeIODeviceNetwork();
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        edList.setText("", EditText.BufferType.NORMAL);
 
+        cleanUp();
+
+        watchDog = new Timer();
         watchDog.scheduleAtFixedRate( new TimerTask() {
             @Override
             public void run() {
@@ -117,6 +335,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             case STEP_SCAN:
                             case STEP_CONNECT:
                             case STEP_CONFIGURE:
+                                timeout = 30;
+                                break;
                             case STEP_RECONNECT:
                                 timeout = 15;
                                 break;
@@ -135,22 +355,34 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         }, 0, 1000 );
 
 
+        blinkTimer = new Timer();
+        blinkTimer.scheduleAtFixedRate( new TimerTask() {
+            @Override
+            public void run() {
+
+                runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+
+                        if ( pageId == PAGE_STEP_3 ) {
+                         ivDot.setVisibility(ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+                        }
+
+                    }
+                });
+            }
+        }, 0, 100 );
+
+        showPage(PAGE_STEP_1);
+
     };
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        watchDog.cancel();
-
-        removeConfigTask();
-        unregisterReceivers();
-        removeIODeviceNetwork();
+        cleanUp();
     };
-
-    private void addLogLine(String line) {
-        edList.setText(edList.getText()+"\n"+line, EditText.BufferType.NORMAL);
-    }
 
     private void setStep(int step) {
 
@@ -165,24 +397,26 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void onWatchDogTimeout() {
 
-        addLogLine("Wathdog timeout: " + Integer.toString(step));
-
         switch(step) {
             case STEP_CHECK_WIFI:
+                showError(R.string.wizard_wifi_timeout);
                 break;
             case STEP_CHECK_REGISTRATION_ENABLED:
+                showError(R.string.wizard_wifi_timeout);
                 break;
             case STEP_SCAN:
+                showError(R.string.wizard_scan_timeout);
                 break;
             case STEP_CONNECT:
+                showError(R.string.wizard_connect_timeout);
                 break;
             case STEP_CONFIGURE:
+                showError(R.string.wizard_configure_timeout);
                 break;
             case STEP_RECONNECT:
+                showError(R.string.wizard_reconnect_timeout);
                 break;
         }
-
-        setStep(STEP_NONE);
 
         removeConfigTask();
         unregisterReceivers();
@@ -242,19 +476,40 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v != btnStart ) return;
+        if ( v == btnNext ) {
 
-        addLogLine("Start");
+            progressBar.setIndeterminate(true);
+            btnNext.setEnabled(false);
 
-        setStep(STEP_CHECK_WIFI);
+            switch(pageId) {
+                case PAGE_STEP_1:
 
-        if ( checkWiFi() ) {
+                    setStep(STEP_CHECK_WIFI);
 
-            setStep(STEP_CHECK_REGISTRATION_ENABLED);
-            SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
+                    if ( checkWiFi() ) {
+                        showPage(PAGE_STEP_2);
+                    } else {
+                        showError(R.string.wizard_wifi_error);
+                    }
 
-        } else {
-            setStep(STEP_NONE);
+                    break;
+                case PAGE_STEP_2:
+                    showPage(PAGE_STEP_3);
+                    break;
+                case PAGE_STEP_3:
+
+                    setStep(STEP_CHECK_REGISTRATION_ENABLED);
+                    SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
+
+                    break;
+                case PAGE_ERROR:
+                case PAGE_DONE:
+                    showMain(this);
+                    finish();
+                    break;
+
+            }
+
         }
 
     }
@@ -266,12 +521,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         if ( registrationEnabled.IsIODeviceRegistrationEnabled() ) {
 
             setStep(STEP_SCAN);
+            scanRetry = SCAN_RETRY;
             startScan();
 
         } else {
-
-            setStep(STEP_NONE);
-            addLogLine("Rejestracja wyłączona");
+            showError(R.string.devive_registration_disabled);
         }
 
 
@@ -310,8 +564,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 }
 
                 if ( !match ) {
-                    addLogLine("Nic nie znaleziono!");
-                    setStep(STEP_NONE);
+
+                    if ( scanRetry > 0 ) {
+                        scanRetry--;
+                        startScan();
+                    } else {
+                        showError(R.string.wizard_iodevice_notfound);
+                    }
+
+
                 }
 
             }
@@ -328,7 +589,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void connect() {
 
-        addLogLine("Łączenie z: "+iodev_SSID);
         setStep(STEP_CONNECT);
 
         WifiConfiguration conf = new WifiConfiguration();
@@ -338,7 +598,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         iodev_NetworkID = manager.addNetwork(conf);
 
         if ( iodev_NetworkID == -1 ) {
-            addLogLine("Nie można dodać sieci");
+            showError(R.string.wizard_addnetwork_error);
             return;
         }
 
@@ -368,7 +628,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             stateChangedReceiver = null;
 
                             setStep(STEP_CONFIGURE);
-                            espConfigTask.execute(SSID, edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
+                            espConfigTask.execute(SSID, "", prefs.getServerAddress(), prefs.getEmail());
 
                         }
 
@@ -415,33 +675,62 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         unregisterReceivers();
 
-        setStep(STEP_RECONNECT);
+        Trace.d("RESULT", Integer.toString(result.resultCode));
 
-        stateChangedReceiver = new BroadcastReceiver(){
-            @Override
-            public void onReceive(Context c, Intent i){
+        if ( result.resultCode == ESPConfigureTask.RESULT_SUCCESS ) {
 
-                NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+            Trace.d("RECONNECT", "RECONNECT");
+            setStep(STEP_RECONNECT);
 
-                if ( info != null
-                        && info.isConnected() ) {
+            if ( blinkTimer != null ) {
+                blinkTimer.cancel();
+                blinkTimer = null;
 
-                    WifiInfo wifiInfo = manager.getConnectionInfo();
-                    if (wifiInfo != null && wifiInfo.getNetworkId() == NetworkID ) {
+                ivDot.setVisibility(View.VISIBLE);
+            }
 
-                        unregisterReceiver(stateChangedReceiver);
-                        stateChangedReceiver = null;
+            stateChangedReceiver = new BroadcastReceiver(){
+                @Override
+                public void onReceive(Context c, Intent i){
 
-                        setStep(STEP_DONE);
+                    NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
-                        addLogLine("FINISH");
-                        addLogLine("Last state: "+result.deviceLastState);
+                    if ( info != null
+                            && info.isConnected() ) {
+
+                        WifiInfo wifiInfo = manager.getConnectionInfo();
+                        if (wifiInfo != null && wifiInfo.getNetworkId() == NetworkID ) {
+
+                            unregisterReceiver(stateChangedReceiver);
+                            stateChangedReceiver = null;
+
+                            setStep(STEP_DONE);
+                            showDone(result);
+                        }
+
                     }
 
                 }
+            };
 
+        } else {
+
+            switch (result.resultCode) {
+                case ESPConfigureTask.RESULT_PARAM_ERROR:
+                    showError(R.string.wizard_result_param_error);
+                    break;
+                case ESPConfigureTask.RESULT_COMPAT_ERROR:
+                    showError(R.string.wizard_result_compat_error);
+                    break;
+                case ESPConfigureTask.RESULT_CONN_ERROR:
+                    showError(R.string.wizard_result_conn_error);
+                    break;
+                case ESPConfigureTask.RESULT_FAILED:
+                    showError(R.string.wizard_result_failed);
+                    break;
             }
-        };
+        }
+
 
         IntentFilter i = new IntentFilter();
         i.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);

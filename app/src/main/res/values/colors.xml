@@ -6,7 +6,7 @@
     <color name="channel_cell">#fafbfc</color>
     <color name="detail_rgb_gb">#ffe804</color>
     <color name="activity_bg">#fafbfc</color>
-    <color name="activity_status_bg_err">#FFFEE700</color>
+    <color name="activity_status_bg_err">#fee700</color>
     <color name="activity_status_bg_normal">#12a71e</color>
 
     <color name="channel_dot_on">#12a71e</color>

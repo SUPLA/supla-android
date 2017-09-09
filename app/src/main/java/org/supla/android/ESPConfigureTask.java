@@ -47,6 +47,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
     public class ConfigResult {
         int resultCode;
 
+        String deviceName;
         String deviceLastState;
         String deviceFirmwareVersion;
         String deviceGUID;
@@ -100,31 +101,36 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                     };
                 }
 
-                Elements span = doc.getElementsByTag("span");
-                if ( span != null ) {
+                Elements h1 = doc.getElementsByTag("h1");
+                if ( h1 != null ) {
 
-                    for (Element element : span) {
+                    Elements next = h1.next();
+                    if ( next != null ) {
 
-                        if ( element.html().contains("LAST STATE") ) {
+                        for (Element element : next) {
 
-                            Pattern mPattern = Pattern.compile("^LAST\\ STATE:\\ (.*)\\<br\\>Firmware:\\ (.*)\\<br\\>GUID:\\ (.*)\\<br\\>MAC:\\ (.*)$");
+                            if ( element.html().contains("LAST STATE") ) {
 
-                            Matcher matcher = mPattern.matcher(element.html());
-                            if(matcher.find() && matcher.groupCount() == 4)  {
-                                for(int a=0;a<=matcher.groupCount();a++)
-                                    Trace.d("MATCH", Integer.toString(a)+". "+matcher.group(a));
+                                Pattern mPattern = Pattern.compile("^LAST\\ STATE:\\ (.*)\\<br\\>Firmware:\\ (.*)\\<br\\>GUID:\\ (.*)\\<br\\>MAC:\\ (.*)$");
 
-                                result.deviceLastState = matcher.group(1);
-                                result.deviceFirmwareVersion  = matcher.group(2);
-                                result.deviceGUID = matcher.group(3);
-                                result.deviceMAC = matcher.group(4);
+                                Matcher matcher = mPattern.matcher(element.html());
+                                if(matcher.find() && matcher.groupCount() == 4)  {
+
+                                    result.deviceName = h1.html();
+                                    result.deviceLastState = matcher.group(1);
+                                    result.deviceFirmwareVersion  = matcher.group(2);
+                                    result.deviceGUID = matcher.group(3);
+                                    result.deviceMAC = matcher.group(4);
+                                }
+
+                                break;
                             }
-
-                            break;
                         }
-                    }
 
+                    }
                 }
+
+
 
                 retryCount = -1;
 
@@ -146,6 +152,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                 || fieldMap.get("wpw") == null
                 || fieldMap.get("svr") == null
                 || fieldMap.get("eml") == null
+                || result.deviceFirmwareVersion == null
                 || result.deviceFirmwareVersion.isEmpty() ) {
 
             result.resultCode = RESULT_COMPAT_ERROR;
@@ -161,7 +168,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
         while(retryCount > 0)
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
 
             Document doc = (Document) Jsoup.connect("http://192.168.4.1")
                     .data(fieldMap)
@@ -174,10 +181,14 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
                 fieldMap.put("rbt", "1"); // reboot
 
-                Jsoup.connect("http://192.168.4.1")
-                        .data(fieldMap)
-                        .referrer("http://192.168.4.1").method(Connection.Method.POST).execute();
+                try {
+                    Jsoup.connect("http://192.168.4.1")
+                            .data(fieldMap)
+                            .referrer("http://192.168.4.1").method(Connection.Method.POST).execute();
 
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 result.resultCode = RESULT_SUCCESS;
                 return result;
