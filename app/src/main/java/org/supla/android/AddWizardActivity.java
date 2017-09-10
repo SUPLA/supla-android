@@ -704,6 +704,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             unregisterReceiver(stateChangedReceiver);
                             stateChangedReceiver = null;
 
+                            SuplaApp.getApp().getSuplaClient().Reconnect();
+
                             setStep(STEP_DONE);
                             showDone(result);
                         }
