@@ -91,5 +91,36 @@
      <string name="rate_no_thanks">Não, obrigado</string>
     <string name="rs_percent_caption">Percentagem do fecho</string>
     <string name="calibration">[Calibrar]</string>
+    <string name="wizard_step1_txt2">Para continuar carregue em <b>Continuar</b>.</string>
+    <string name="add_device">Adicionar um dispositivo</string>
+    <string name="advanced_settings">Configurações avançadas</string>
+    <string name="wizard_result_param_error">Os parâmetros de entrada errados!</string>
+    <string name="wizard_iodev_data">Dados do dispositivo</string>
+    <string name="email">ENDEREÇO E-MAIL</string>
+    <string name="wizard_step3_txt2">Se um dispositivo não trabalha no modo de configuração depois de o ligar à rede elétrica, mantenha o botão carregado <b>CONFIG</b> por 5 segundos ao mínimo.</string>
+    <string name="wizard_done">O dispositivo foi configurado com sucesso :)</string>
+    <string name="wizard_result_failed">A configuração falhou!</string>
+    <string name="add_wizard_is_not_available">O assistente para adicionar está disponível só se uma ligação com o servidor foi criada usando o enderço e-mail presente nas configurações!</string>
+    <string name="wizard_iodev_laststate">Estatuto anterior</string>
+    <string name="wizard_step3_txt3">Carregue no botão <b>START</b> para iniciar uma configuração.</string>
+    <string name="wizard_iodev_name">Nome</string>
+    <string name="next">Continuar</string>
+    <string name="wizard_addnetwork_error">Impossível adicionar uma configuração da rede WiFi!</string>
+    <string name="wizard_result_conn_error">Impossível conectar um dispositivo!</string>
+    <string name="wizard_iodevice_notfound">Nenhum dispositivo foi encontardo! Certifique-se que um dispositivo que quer configurar trabalha no modo de configuração e tente novamente.</string>
+    <string name="wizard_step3_txt1">Lique o seu atuador à rede elétrica. O dispositivo deveria trabalhar no modo de configuração por defeito assinalando-o com um diodo do estatuto a piscar no modo seguinte</string>
+    <string name="wizard_wifi_timeout">O tempo-limite de dados sobre a rede corrente WiFi foi excedido!</string>
+    <string name="wizard_regenabled_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
+    <string name="wizard_connect_timeout">O tempo-limite de conexão a um atuador foi excedido!</string>
+    <string name="wizard_reconnect_timeout">O tempo-limite de volta para a rede básica WiFi foi excedido!</string>
+    <string name="wizard_configure_timeout">O tempo-limite de configuração de um dispositivo foi excedido!</string>
+    <string name="wizard_scan_timeout">O tempo-limite de pesquisa da rede WiFi foi excedido!</string>
+    <string name="device_registration_disabled">O registo de dispositivos de entrada/saída está atualmente desligado. Para continuar vá para a página %1$s e ligue adicionar dispositivos no marcador “Dispositivos de I/O ”.</string>
+    <string name="wizard_remember_passwd">Recordar a senha</string>
+    <string name="wizard_wifi_error">A rede WiFi está desligada ou impossível ler o identificador ou o nome dela!</string>
+    <string name="start">START</string>
+    <string name="wizard_result_compat_error">O dispositivo que conectou não é compatível com este assistente!</string>
+    <string name="wizard_step1_txt1">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
+    <string name="wizard_step2_txt1">Introduza a senha da sua rede WiFi cujo nome é o seguinte</string>
 
 </resources>
