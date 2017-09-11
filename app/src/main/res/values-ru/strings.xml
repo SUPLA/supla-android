@@ -96,6 +96,37 @@
 
     <string name="rs_percent_caption">Percentage of closing</string>
     <string name="calibration">[калибровка]</string>
+    <string name="wizard_step1_txt2">Для продолжения нажмите <b>Далее</b>.</string>
+    <string name="add_device">Добавить устройство</string>
+    <string name="advanced_settings">Дополнительные параметры</string>
+    <string name="wizard_result_param_error">Неверные входные параметры!</string>
+    <string name="wizard_iodev_data">Данные устройства</string>
+    <string name="email">АДРЕС ЭЛЕКТРОННОЙ ПОЧТЫ</string>
+    <string name="wizard_step3_txt2">Если устройство после подключения питания не работает в режиме конфигурации, удерживайте нажатой кнопку <b>CONFIG</b> в течение минимум 5 секунд.</string>
+    <string name="wizard_done">Конфигурация устройства завершена успешно :)</string>
+    <string name="wizard_result_failed">Конфигурация завершена с ошибкой!</string>
+    <string name="add_wizard_is_not_available">Мастер добавления доступен, только когда установлено соединение с сервером по указанному в настройках адресу электронной почты!</string>
+    <string name="wizard_iodev_laststate">Предыдущее состояние</string>
+    <string name="wizard_step3_txt3">Нажмите кнопку <b>START</b>, чтобы начать конфигурацию.</string>
+    <string name="wizard_iodev_name">Название</string>
+    <string name="next">Далее</string>
+    <string name="wizard_addnetwork_error">Не удается добавить конфигурацию сети wi-fi!</string>
+    <string name="wizard_result_conn_error">Не удается установить соединение с устройством!</string>
+    <string name="wizard_iodevice_notfound">Не найдено никаких устройств! Убедитесь, что устройство, которое вы хотите настроить, работает в режиме конфигурации, а затем попробуйте снова.</string>
+    <string name="wizard_step3_txt1">Подключите ваше устройство ввода-вывода к питанию. Устройство должно по умолчанию работать в режиме конфигурации, информируя об этом миганием светодиода состояния следующим образом</string>
+    <string name="wizard_wifi_timeout">Превышено время ожидания данных о текущей сети wi-fi!</string>
+    <string name="wizard_regenabled_timeout">Превышено время ожидания информации о доступности регистрации устройств!</string>
+    <string name="wizard_connect_timeout">Превышено время ожидания соединения с устройством ввода-вывода!</string>
+    <string name="wizard_reconnect_timeout">Превышено время ожидания возврата в основную сеть wi-fi!</string>
+    <string name="wizard_configure_timeout">Превышено время ожидания завершения конфигурации устройства!</string>
+    <string name="wizard_scan_timeout">Превышено время ожидания завершения поиска сети wi-fi!</string>
+    <string name="device_registration_disabled">Регистрация устройств ввода/вывода в настоящее время отключена. Для продолжения перейдите на сайт %1$s и во вкладке ”Устройства” включите добавление устройств.</string>
+    <string name="wizard_remember_passwd">Запомнить пароль</string>
+    <string name="wizard_wifi_error">Сеть wi-fi отключена или не удается определить ее идентификатор или имя!</string>
+    <string name="start">START</string>
+    <string name="wizard_result_compat_error">Устройство, с которым установлено соединение, не совместимо с данным мастером!</string>
+    <string name="wizard_step1_txt1">Добро пожаловать в мастер добавления устройств, который поможет вам легко и быстро добавить новое устройство в систему.</string>
+    <string name="wizard_step2_txt1">Введите пароль для вашей сети wi-fi, название которой</string>
 
 </resources>
 
