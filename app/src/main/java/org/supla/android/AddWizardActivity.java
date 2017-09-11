@@ -648,7 +648,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             startScan();
 
         } else {
-            showError(getResources().getString(R.string.devive_registration_disabled, SuplaRegisterError.getHostname(this)));
+            showError(getResources().getString(R.string.device_registration_disabled, SuplaRegisterError.getHostname(this)));
         }
 
 
