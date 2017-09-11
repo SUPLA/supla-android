@@ -9,10 +9,10 @@
     <RelativeLayout
         android:id="@+id/rlRS"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="450dp"
         android:layout_alignParentTop="false"
-        android:layout_marginLeft="150dp"
-        android:layout_marginRight="150dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginRight="175dp"
         android:layout_marginTop="80dp">
 
         <org.supla.android.SuplaRollerShutter
@@ -49,15 +49,15 @@
 
                 <Button
                     android:id="@+id/rsBtnUp"
-                    android:layout_width="175dp"
-                    android:layout_height="175dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/rs_up" />
 
                 <Button
                     android:id="@+id/rsBtnDown"
-                    android:layout_width="175dp"
-                    android:layout_height="175dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:background="@drawable/rs_down" />
             </LinearLayout>
 
@@ -69,8 +69,8 @@
 
                 <Button
                     android:id="@+id/rsBtnStop"
-                    android:layout_width="175dp"
-                    android:layout_height="175dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:background="@drawable/rs_stop" />
@@ -83,15 +83,15 @@
 
                 <Button
                     android:id="@+id/rsBtnOpen"
-                    android:layout_width="175dp"
-                    android:layout_height="175dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/rs_open" />
 
                 <Button
                     android:id="@+id/rsBtnClose"
-                    android:layout_width="175dp"
-                    android:layout_height="175dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:background="@drawable/rs_close" />
             </LinearLayout>
 
