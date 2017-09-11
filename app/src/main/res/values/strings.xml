@@ -129,7 +129,7 @@
     <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
     <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
 
-    <string name="wizard_iodevice_notfound">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
+    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie.</string>
 
     <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
     <string name="wizard_iodev_data">Dane urządzenia</string>
@@ -137,7 +137,7 @@
     <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
     <string name="wizard_iodev_guid" translatable="false">GUID</string>
     <string name="wizard_iodev_mac" translatable="false">MAC</string>
-    <string name="wizard_iodev_laststate">Last state</string>
+    <string name="wizard_iodev_laststate">Previous state</string>
 
     <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
     <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>

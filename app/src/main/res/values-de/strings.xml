@@ -85,5 +85,36 @@
 
     <string name="rs_percent_caption">Percentage of closing</string>
     <string name="calibration">[Kalibrierung]</string>
+    <string name="wizard_step1_txt2">Um fortzusetzen, drücken Sie <b>Weiter</b>.</string>
+    <string name="add_device">Gerät hinzufügen</string>
+    <string name="advanced_settings">Erweiterte Einstellungen</string>
+    <string name="wizard_result_param_error">Falsche Eingabeparameter!</string>
+    <string name="wizard_iodev_data">Daten des Gerätes</string>
+    <string name="email">E-MAIL-ADRESSE</string>
+    <string name="wizard_step3_txt2">Wenn das Gerät nach dem Einschalten im Konfigurationsmodus nicht funktioniert, halten Sie die Taste <b>CONFIG</b> für mindestens 5 Sekunden gedrückt.</string>
+    <string name="wizard_done">Die Konfiguration wurde erfolgreich abgeschlossen :)</string>
+    <string name="wizard_result_failed">Die Konfiguration war nicht erfolgreich!</string>
+    <string name="add_wizard_is_not_available">Der Assistent zum Hinzufügen steht nur dann zur Verfügung, wenn Kontakt mit dem Server aufgrund der E-Mail-Adresse besteht!</string>
+    <string name="wizard_iodev_laststate">Vorheriger Status</string>
+    <string name="wizard_step3_txt3">Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.</string>
+    <string name="wizard_iodev_name">Name</string>
+    <string name="next">Weiter</string>
+    <string name="wizard_addnetwork_error">Die Konfiguration des WiFi-Netzwerkes kann nicht hinzugefügt werden!</string>
+    <string name="wizard_result_conn_error">Es gelang nicht, die Verbindung mit dem Gerät herzustellen!</string>
+    <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut.</string>
+    <string name="wizard_step3_txt1">Schließen Sie Ihr Betätigungsgerät an das Stromnetz an. Das Gerät soll standardmäßig im Konfigurationsmodus funktionieren, dies mit einer blinkenden Leuchtdiode signalisierend</string>
+    <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_regenabled_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_connect_timeout">Für die Herstellung der Verbindung mit dem Betätigungsgerät wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_scan_timeout">Für den Abschluss des Browsens des WiFi-Netzes wurde das Zeitlimit abgeschlossen!</string>
+    <string name="device_registration_disabled">Die Registrierung der Ein-/Ausgabegeräte ist momentan deaktiviert. Um fortzusetzen, kommen Sie zur Website %1$s und im Bereich \"E/A Geräte\" aktivieren Sie die Funktion \"Geräte hinzufügen\".</string>
+    <string name="wizard_remember_passwd">Passwort speichern</string>
+    <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
+    <string name="start">START</string>
+    <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
+    <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
+    <string name="wizard_step2_txt1">Geben Sie Ihr WiFi-Netzwerk-Passwort ein, dessen Name</string>
 
 </resources>
