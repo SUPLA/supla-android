@@ -117,10 +117,10 @@
     <string name="wizard_scan_timeout">Il tempo di attesa per la ricerca nella rete WiFi è stato superato!</string>
     <string name="device_registration_disabled">La registrazione dei dispositivi di input/output è attualmente disabilitata. Per continuare vai sulla pagina %1$s e abilita la funzione per aggiungere i dispositivi nella sezione ”Dispositivi di input/output”.</string>
     <string name="wizard_remember_passwd">Ricorda la password</string>
-    <string name="start">PARTENZA</string>
+    <string name="start">START</string>
     <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>
     <string name="wizard_result_compat_error">Il dispositivo con il quale è stata stabilita la connessione non è compatibile con questa procedura guidata!</string>
-    <string name="wizard_step1_txt1">"Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema. "</string>
+    <string name="wizard_step1_txt1">Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema.</string>
     <string name="wizard_step2_txt1">Inserisci la password alla Tua rete WiFi denominata</string>
 
 </resources>
