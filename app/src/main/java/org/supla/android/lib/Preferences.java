@@ -36,6 +36,8 @@ public class Preferences {
     private static final String pref_advanced = "pref_advanced";
     private static final String pref_cfg_ver = "pref_cfg_ver";
     private static final String pref_proto_ver = "pref_proto_ver";
+    private static final String pref_wizard_save_password = "pref_wizard_save_password";
+    private static final String pref_wizard_password = "pref_wizard_password";
 
     private SharedPreferences _prefs;
 
@@ -159,4 +161,25 @@ public class Preferences {
         editor.putInt(pref_proto_ver, version);
         editor.commit();
     }
+
+    public boolean wizardSavePasswordEnabled() {
+        return _prefs.getBoolean(pref_wizard_save_password, true);
+    }
+
+    public void wizardSetSavePasswordEnabled(boolean enabled) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putBoolean(pref_wizard_save_password, enabled);
+        editor.commit();
+    }
+
+    public String wizardGetPassword() {
+        return _prefs.getString(pref_wizard_password, "");
+    }
+
+    public void wizardSetPassword(String password) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putString(pref_wizard_password, password);
+        editor.commit();
+    }
+
 }

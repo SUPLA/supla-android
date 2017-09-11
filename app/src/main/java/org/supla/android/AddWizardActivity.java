@@ -18,10 +18,12 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -30,7 +32,9 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -150,12 +154,19 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
 
         cbSavePassword.setTypeface(type);
+        cbSavePassword.setOnClickListener(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
-        } else {
-            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
-        }
+        View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        };
+
+        edPassword.setOnFocusChangeListener(fcl);
 
         vStep3 = Inflate(R.layout.add_wizard_step3, null);
         vStep3.setVisibility(View.GONE);
@@ -229,6 +240,20 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         RegisterMessageHandler();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if ( pageId == PAGE_STEP_2
+                && event.getAction() == MotionEvent.ACTION_DOWN
+                && edPassword.hasFocus() ) {
+
+            edPassword.clearFocus();
+
+        }
+        
+        return super.onTouchEvent(event);
+    }
+
     private void showPage(int id) {
 
         setStep(STEP_NONE);
@@ -247,6 +272,13 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 break;
 
             case PAGE_STEP_2:
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
+                } else {
+                    edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
+                }
+
                 tvSSID.setText("\""+SSID+"\"");
                 vStep2.setVisibility(View.VISIBLE);
                 break;
@@ -375,6 +407,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             }
         }, 0, 100 );
 
+
+        Preferences prefs = new Preferences(this);
+
+        cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled());
+        edPassword.setText(prefs.wizardGetPassword());
+
         showPage(PAGE_STEP_1);
 
     };
@@ -382,6 +420,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     @Override
     protected void onPause() {
         super.onPause();
+
+        Preferences prefs = new Preferences(this);
+        if ( cbSavePassword.isChecked() ) {
+            prefs.wizardSetPassword(cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+        }
+
         cleanUp();
     };
 
@@ -495,7 +539,25 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     break;
                 case PAGE_STEP_2:
-                    showPage(PAGE_STEP_3);
+
+                    Preferences prefs = new Preferences(this);
+                        prefs.wizardSetPassword(cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+
+                    if ( edPassword.getText().toString().isEmpty() ) {
+
+                        progressBar.setIndeterminate(false);
+                        btnNext.setEnabled(true);
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_err));
+                        } else {
+                            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext_err));
+                        }
+
+                    } else {
+                        showPage(PAGE_STEP_3);
+                    }
+
                     break;
                 case PAGE_STEP_3:
 
@@ -511,6 +573,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
             }
 
+            return;
+        }
+
+        if ( v == cbSavePassword ) {
+            Preferences prefs = new Preferences(this);
+            prefs.wizardSetSavePasswordEnabled(cbSavePassword.isChecked());
+
+            return;
         }
 
     }
