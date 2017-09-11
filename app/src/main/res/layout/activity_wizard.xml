@@ -17,29 +17,13 @@
             android:id="@+id/wizard_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/rounded_wizard_btn"
             android:text="@string/next"
-            android:textColor="@color/activity_status_bg_normal"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:textAllCaps="false"
+            android:textColor="@color/activity_status_bg_normal" />
 
-        <ProgressBar
-            android:id="@+id/wizard_progress"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="2dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="0dp"
-            android:elevation="0dp"
-            android:indeterminate="false"
-            android:indeterminateTint="@color/activity_status_bg_normal"
-            android:progressBackgroundTint="@color/activity_status_bg_normal" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -52,5 +36,18 @@
         android:layout_alignParentTop="true">
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/wizard_step_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/activity_status_bg_normal">
+
+    </FrameLayout>
 
 </RelativeLayout>

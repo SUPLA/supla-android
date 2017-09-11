@@ -27,7 +27,7 @@ public class SuplaRegisterError {
 
     public int ResultCode;
 
-    private String getHostname(Context context) {
+    public static String getHostname(Context context) {
 
      Preferences prefs = new Preferences(context);
 

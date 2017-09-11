@@ -23,7 +23,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -39,11 +38,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
+import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
 import java.util.Date;
@@ -76,6 +75,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private int pageId;
     private Timer watchDog;
     private Timer blinkTimer;
+    private Timer preloaderTimer;
+    private short preloaderPos;
 
     private int step;
     private Date step_time;
@@ -112,7 +113,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private TextView tvIODevLastState;
 
     private Button btnNext;
-    ProgressBar progressBar;
 
     private RelativeLayout rlStepContent;
 
@@ -230,9 +230,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tvIODevLastState = (TextView)findViewById(R.id.wizard_done_iodev_laststate);
         tvIODevLastState.setTypeface(type);
 
-        progressBar = (ProgressBar)findViewById(R.id.wizard_progress);
-        progressBar.setIndeterminate(false);
-
         btnNext = (Button)findViewById(R.id.wizard_next);
         btnNext.setOnClickListener(this);
 
@@ -262,7 +259,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vStep3.setVisibility(View.GONE);
         vError.setVisibility(View.GONE);
         vDone.setVisibility(View.GONE);
-        progressBar.setIndeterminate(false);
+        setPreloaderVisible(false);
         btnNext.setEnabled(true);
         btnNext.setText(R.string.next, TextView.BufferType.NORMAL);
 
@@ -337,6 +334,59 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         removeConfigTask();
         unregisterReceivers();
         removeIODeviceNetwork();
+
+    }
+
+    private void setPreloaderVisible(boolean visible) {
+
+        if ( preloaderTimer != null ) {
+            preloaderPos = -1;
+            preloaderTimer.cancel();
+            preloaderTimer = null;
+        }
+
+
+        if ( visible ) {
+
+            preloaderPos = 0;
+
+            preloaderTimer = new Timer();
+            preloaderTimer.scheduleAtFixedRate( new TimerTask() {
+                @Override
+                public void run() {
+
+                    runOnUiThread(new Runnable()
+                    {
+                        public void run()
+                        {
+
+                            if ( preloaderPos == -1 ) {
+                                return;
+                            }
+
+                            String txt = "";
+
+                            for(int a=0;a<10;a++) {
+                                txt += preloaderPos == a ? "|" : ".";
+                            }
+
+
+                            preloaderPos++;
+                            if ( preloaderPos > 9 ) {
+                                preloaderPos = 0;
+                            }
+
+
+
+                            btnNext.setText(txt, TextView.BufferType.NORMAL);
+
+
+
+                        }
+                    });
+                }
+            }, 0, 100 );
+        }
 
     }
 
@@ -426,6 +476,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             prefs.wizardSetPassword(cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
         }
 
+        setPreloaderVisible(false);
         cleanUp();
     };
 
@@ -523,7 +574,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         if ( v == btnNext ) {
 
-            progressBar.setIndeterminate(true);
+            setPreloaderVisible(true);
             btnNext.setEnabled(false);
 
             switch(pageId) {
@@ -545,7 +596,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     if ( edPassword.getText().toString().isEmpty() ) {
 
-                        progressBar.setIndeterminate(false);
+                        setPreloaderVisible(false);
                         btnNext.setEnabled(true);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -561,6 +612,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     break;
                 case PAGE_STEP_3:
 
+                    btnNext.setText("....", TextView.BufferType.NORMAL);
                     setStep(STEP_CHECK_REGISTRATION_ENABLED);
                     SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
 
@@ -596,7 +648,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             startScan();
 
         } else {
-            showError(R.string.devive_registration_disabled);
+            showError(getResources().getString(R.string.devive_registration_disabled, SuplaRegisterError.getHostname(this)));
         }
 
 
@@ -699,7 +751,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             stateChangedReceiver = null;
 
                             setStep(STEP_CONFIGURE);
-                            espConfigTask.execute(SSID, "", prefs.getServerAddress(), prefs.getEmail());
+                            espConfigTask.execute(SSID, edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
 
                         }
 
@@ -746,11 +798,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         unregisterReceivers();
 
-        Trace.d("RESULT", Integer.toString(result.resultCode));
-
         if ( result.resultCode == ESPConfigureTask.RESULT_SUCCESS ) {
 
-            Trace.d("RECONNECT", "RECONNECT");
             setStep(STEP_RECONNECT);
 
             if ( blinkTimer != null ) {
@@ -775,7 +824,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             unregisterReceiver(stateChangedReceiver);
                             stateChangedReceiver = null;
 
-                            SuplaApp.getApp().getSuplaClient().Reconnect();
+                            if ( SuplaApp.getApp().getSuplaClient() != null ) {
+                                SuplaApp.getApp().getSuplaClient().Reconnect();
+                            }
 
                             setStep(STEP_DONE);
                             showDone(result);

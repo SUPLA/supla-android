@@ -179,6 +179,8 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
             Element msg = doc.getElementById("msg");
             if ( msg != null && msg.html().toLowerCase().contains("data saved") ) {
 
+                Trace.d("TRY RBT", "RBT");
+
                 Thread.sleep(1000);
 
                 fieldMap.put("rbt", "1"); // reboot
