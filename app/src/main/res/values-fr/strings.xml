@@ -91,5 +91,36 @@
      <string name="rate_no_thanks">Non, merci</string>
     <string name="rs_percent_caption">Pourcentage fermeture</string>
     <string name="calibration">[Calibration]</string>
+    <string name="wizard_step1_txt2">Pour continuer, appuyez sur <b>Continuer</b>.</string>
+    <string name="add_device">Ajoutez un dispositif</string>
+    <string name="advanced_settings">Paramètres avancés</string>
+    <string name="wizard_result_param_error">Paramètres d\'entrée erronés!</string>
+    <string name="wizard_iodev_data">Données du dispositif</string>
+    <string name="email">ADRESSE E-MAIL</string>
+    <string name="wizard_step3_txt2">Si le dispositif est allumé mais ne fonctionne pas en mode de configuration, maintenez la touche <b>CONFIG</b> pendant au moins 5 secondes.</string>
+    <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
+    <string name="wizard_result_failed">Échec de la configuration!</string>
+    <string name="add_wizard_is_not_available">Assistant d\'ajout est disponible uniquement lorsque vous êtes connecté au serveur en entrant votre adresse e-mail conforme à aux paramètres!</string>
+    <string name="wizard_iodev_laststate">Statut précédent</string>
+    <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
+    <string name="wizard_iodev_name">Nom</string>
+    <string name="next">Continuer</string>
+    <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau Wi-Fi !</string>
+    <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
+    <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau.</string>
+    <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
+    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau Wi-Fi actuel est dépassé!</string>
+    <string name="wizard_regenabled_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé!</string>
+    <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
+    <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
+    <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
+    <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
+    <string name="device_registration_disabled">Enregistrement des dispositifs d\'entrée/sortie  est actuellement désactivé. Pour continuer, allez à %1$s et activez l\'ajout de dispositifs dans l\'onglet \"Dispositifs d\'E/S\".</string>
+    <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
+    <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
+    <string name="start">DÉMARRER</string>
+    <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
+    <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
+    <string name="wizard_step2_txt1">Entrez le mot de passe de votre réseau Wi-Fi, dont le nom est</string>
 
 </resources>
