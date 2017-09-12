@@ -105,42 +105,42 @@
     <string name="rs_percent_caption">Percentage of closing</string>
     <string name="calibration">[Calibration]</string>
 
-    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email!</string>
-    <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Urządzenia we/wy” włącz dodawanie urządzeń.</string>
+    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings</string>
+    <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „I/O Devices” at  %1$s and enable the Device Add Button.</string>
 
-    <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-    <string name="wizard_step1_txt2">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+    <string name="wizard_step1_txt1">Welcome to the Device Add Wizard which will in an easy and simple way help you to add new device to the system.</string>
+    <string name="wizard_step1_txt2">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
     <string name="start">START</string>>
 
-    <string name="wizard_step2_txt1">Wprowadź hasło do Twojej sieci WiFi, której nazwa to</string>
+    <string name="wizard_step2_txt1">Enter password to your WiFi Network named</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
-    <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
-    <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
-    <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
+    <string name="wizard_step3_txt1">Power up your executive device. Configuration mode should be the default mode for the device, confirmed by a status diode flashing as</string>
+    <string name="wizard_step3_txt2">If the device when switched on does not work in the configuration mode, press and hold <b>CONFIG</b> button for at least 5 seconds.</string>
+    <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
-    <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
-    <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
-    <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>
-    <string name="wizard_regenabled_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
-    <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
-    <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
-    <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
-    <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
+    <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
+    <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
+    <string name="wizard_wifi_timeout">Current WiFi Network Data timeout.</string>
+    <string name="wizard_regenabled_timeout">Device registration availability information timeout!</string>
+    <string name="wizard_scan_timeout">WiFi Network Scan timeout!</string>
+    <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
+    <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
+    <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
 
-    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie.</string>
+    <string name="wizard_iodevice_notfound">No devices has been found! Check, if the device you want to configure is working in the configuration mode and try again.</string>
 
-    <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
-    <string name="wizard_iodev_data">Dane urządzenia</string>
+    <string name="wizard_done">Device configuration completed successfully :)</string>
+    <string name="wizard_iodev_data">Device parameters</string>
     <string name="wizard_iodev_name">Name</string>
     <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
     <string name="wizard_iodev_guid" translatable="false">GUID</string>
     <string name="wizard_iodev_mac" translatable="false">MAC</string>
     <string name="wizard_iodev_laststate">Previous state</string>
 
-    <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
-    <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>
-    <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
-    <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
+    <string name="wizard_result_param_error">Incorrect input parameters!</string>
+    <string name="wizard_result_compat_error">The connected device is not compatible with this Wizard!</string>
+    <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
+    <string name="wizard_result_failed">Configuration Failed!</string>
 </resources>
