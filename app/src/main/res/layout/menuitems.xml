@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/menuitems"
     android:gravity="top">
 
     <RelativeLayout
@@ -132,8 +131,7 @@
             android:layout_width="wrap_content"
             android:background="@color/menuseparator"
             android:layout_marginRight="0dp"
-            android:alpha="0.4"
-            android:id="@+id/feedback_line" />
+            android:alpha="0.4" />
 
         <Button
             android:layout_width="match_parent"

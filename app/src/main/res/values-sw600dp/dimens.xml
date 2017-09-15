@@ -16,7 +16,6 @@
 
     <dimen name="rgb_wheel_width">60dp</dimen>
     <dimen name="rgb_wheel_arrow_height">55dp</dimen>
-    <dimen name="rgb_detail_info_height">150dp</dimen>
     <dimen name="rgb_detail_tab_height">150dp</dimen>
     <dimen name="rgb_detail_tab_btn_margin">30dp</dimen>
     <dimen name="rgb_detail_tab_btn_height">40dp</dimen>

@@ -52,8 +52,6 @@
 
     <string name="channel_btn_open">Apri</string>
     <string name="channel_btn_openclose">Apri Chiudi</string>
-    <string name="channel_btn_reveal">Apri</string>
-    <string name="channel_btn_shut">Chiudi</string>
     <string name="channel_btn_on">Abilita</string>
     <string name="channel_btn_off">Disabilita</string>
 
@@ -110,7 +108,6 @@
     <string name="wizard_iodevice_notfound">Nessun dispositivo trovato! Assicurati che il dispositivo che vuoi configurare, lavora in modalità di configurazione e poi riprova.</string>
     <string name="wizard_step3_txt1">Collega il Tuo dispositivo di input/output all’alimentazione. Il dispositivo deve lavorare di default in modalità di configurazione facendo lampeggiare un diodo dello status nel seguente modo</string>
     <string name="wizard_wifi_timeout">Il tempo di attesa per i dati sulla rete corrente WiFi è stato superato!</string>
-    <string name="wizard_regenabled_timeout">Il tempo di attesa per l’informazione sulla disponibilità della registrazione dei dispositivi è stato superato!</string>
     <string name="wizard_connect_timeout">Il tempo di attesa per lo stabilimento della connessione con il dispositivo di input/output è stato superato!</string>
     <string name="wizard_reconnect_timeout">Il tempo di attesa per il ritorno alla rete basilare WiFi è stato superato!</string>
     <string name="wizard_configure_timeout">Il tempo di attesa per la terminazione della configurazione del dispositivo è stato superato!</string>

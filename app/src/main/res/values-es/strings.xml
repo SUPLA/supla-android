@@ -52,8 +52,6 @@
 
     <string name="channel_btn_open">Abrir</string>
     <string name="channel_btn_openclose">Abrir Cerrar</string>
-    <string name="channel_btn_reveal">Abrir</string>
-    <string name="channel_btn_shut">Cerrar</string>
     <string name="channel_btn_on">Activar</string>
     <string name="channel_btn_off">Desactivar</string>
 
@@ -110,7 +108,6 @@
     <string name="wizard_step3_txt1">Conecta tu dispositivo de entrada/salida a la alimentación. El dispositivo debería funcionar por defecto en el modo de configuración, señalizándolo mediante el parpadeo del diodo de estado de la siguiente forma</string>
     <string name="wizard_iodev_laststate">Estado anterior</string>
     <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera a los datos sobre la red WiFi actual!</string>
-    <string name="wizard_regenabled_timeout">¡Se ha superado el tiempo de espera a la información sobre la disponibilidad de registro de dispositivos!</string>
     <string name="wizard_connect_timeout">¡Se ha superado el tiempo de espera al establecimiento de una conexión con el dispositivo de entrada/salida!</string>
     <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera al retorno a la red WiFi fundamental!</string>
     <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera a la finalización de la configuración del dispositivo!</string>

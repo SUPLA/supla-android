@@ -52,8 +52,6 @@
 
     <string name="channel_btn_open">Öffnen</string>
     <string name="channel_btn_openclose">Öffnen Schließen</string>
-    <string name="channel_btn_reveal">Aufdecken</string>
-    <string name="channel_btn_shut">Abdecken</string>
     <string name="channel_btn_on">An</string>
     <string name="channel_btn_off">Aus</string>
 
@@ -104,7 +102,6 @@
     <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut.</string>
     <string name="wizard_step3_txt1">Schließen Sie Ihr Betätigungsgerät an das Stromnetz an. Das Gerät soll standardmäßig im Konfigurationsmodus funktionieren, dies mit einer blinkenden Leuchtdiode signalisierend</string>
     <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten!</string>
-    <string name="wizard_regenabled_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
     <string name="wizard_connect_timeout">Für die Herstellung der Verbindung mit dem Betätigungsgerät wurde das Zeitlimit überschritten!</string>
     <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
     <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>

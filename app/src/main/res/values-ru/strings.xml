@@ -52,8 +52,6 @@
 
     <string name="channel_btn_open">Открыть</string>
     <string name="channel_btn_openclose">Открыть Закрыть</string>
-    <string name="channel_btn_reveal">Поднять</string>
-    <string name="channel_btn_shut">Опустить</string>
     <string name="channel_btn_on">Включить</string>
     <string name="channel_btn_off">Выключить</string>
 
@@ -115,7 +113,6 @@
     <string name="wizard_iodevice_notfound">Не найдено никаких устройств! Убедитесь, что устройство, которое вы хотите настроить, работает в режиме конфигурации, а затем попробуйте снова.</string>
     <string name="wizard_step3_txt1">Подключите ваше устройство ввода-вывода к питанию. Устройство должно по умолчанию работать в режиме конфигурации, информируя об этом миганием светодиода состояния следующим образом</string>
     <string name="wizard_wifi_timeout">Превышено время ожидания данных о текущей сети wi-fi!</string>
-    <string name="wizard_regenabled_timeout">Превышено время ожидания информации о доступности регистрации устройств!</string>
     <string name="wizard_connect_timeout">Превышено время ожидания соединения с устройством ввода-вывода!</string>
     <string name="wizard_reconnect_timeout">Превышено время ожидания возврата в основную сеть wi-fi!</string>
     <string name="wizard_configure_timeout">Превышено время ожидания завершения конфигурации устройства!</string>

@@ -56,7 +56,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:fillViewport="true"
-            android:id="@+id/scroll"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="5dp"

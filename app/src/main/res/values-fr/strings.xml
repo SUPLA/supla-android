@@ -52,8 +52,6 @@
 
     <string name="channel_btn_open">Ouvrir</string>
     <string name="channel_btn_openclose">Ouvrir Fermer</string>
-    <string name="channel_btn_reveal">Ouvrir les volets</string>
-    <string name="channel_btn_shut">Fermer les volets</string>
     <string name="channel_btn_on">Allumer</string>
     <string name="channel_btn_off">Désactiver</string>
 
@@ -110,7 +108,6 @@
     <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau.</string>
     <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
     <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau Wi-Fi actuel est dépassé!</string>
-    <string name="wizard_regenabled_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé!</string>
     <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>

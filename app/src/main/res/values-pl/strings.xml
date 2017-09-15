@@ -53,8 +53,6 @@
 
     <string name="channel_btn_open">Otwórz</string>
     <string name="channel_btn_openclose">Otwórz Zamknij</string>
-    <string name="channel_btn_reveal">Odsłoń</string>
-    <string name="channel_btn_shut">Zasłoń</string>
     <string name="channel_btn_on">Włącz</string>
     <string name="channel_btn_off">Wyłącz</string>
 
@@ -113,7 +111,6 @@
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
     <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
     <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>
-    <string name="wizard_regenabled_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
     <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
     <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
     <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
