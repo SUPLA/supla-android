@@ -62,9 +62,6 @@
                 android:id="@+id/wizard_done_txt3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:gravity="right"
                 android:text="@string/wizard_iodev_name"
                 android:textSize="11sp" />
@@ -73,9 +70,6 @@
                 android:id="@+id/wizard_done_txt4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:gravity="right"
                 android:text="@string/wizard_iodev_firmware"
                 android:textSize="11sp" />
@@ -84,9 +78,6 @@
                 android:id="@+id/wizard_done_txt5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:gravity="right"
                 android:text="@string/wizard_iodev_guid"
                 android:textSize="11sp" />
@@ -95,9 +86,6 @@
                 android:id="@+id/wizard_done_txt6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:gravity="right"
                 android:text="@string/wizard_iodev_mac"
                 android:textSize="11sp" />
@@ -106,9 +94,6 @@
                 android:id="@+id/wizard_done_txt7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:gravity="right"
                 android:text="@string/wizard_iodev_laststate"
                 android:textSize="11sp" />
@@ -123,9 +108,6 @@
                 android:id="@+id/wizard_done_iodev_name"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textSize="11sp" />
@@ -134,9 +116,6 @@
                 android:id="@+id/wizard_done_iodev_firmware"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textSize="11sp" />
@@ -145,9 +124,6 @@
                 android:id="@+id/wizard_done_iodev_guid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textSize="11sp" />
@@ -156,9 +132,6 @@
                 android:id="@+id/wizard_done_iodev_mac"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textSize="11sp" />
@@ -167,9 +140,6 @@
                 android:id="@+id/wizard_done_iodev_laststate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/wizard_done_txt1"
-                android:layout_alignStart="@+id/wizard_done_txt1"
-                android:layout_below="@+id/wizard_done_txt1"
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textSize="11sp" />

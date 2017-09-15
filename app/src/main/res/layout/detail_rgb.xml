@@ -185,7 +185,6 @@
                         android:layout_gravity="right"
                         android:layout_marginBottom="@dimen/rgb_detail_state_margin"
                         android:layout_marginTop="@dimen/rgb_detail_state_margin"
-                        android:layout_weight="1"
                         android:scaleType="fitEnd"
                         android:src="@drawable/poweroff"
                         tools:ignore="ContentDescription" />
