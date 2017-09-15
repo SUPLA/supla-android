@@ -92,6 +92,8 @@ public class SuplaColorListPicker extends View {
 
     }
 
+    private Paint p = new Paint();
+    private RectF rectF = new RectF();
     private ArrayList<ListItem> Items = null;
     private float Space = 0;
     private float BorderWidth = 0;
@@ -272,7 +274,6 @@ public class SuplaColorListPicker extends View {
 
         if ( Items.size() == 0 ) return;
 
-        Paint p = new Paint();
         p.setAntiAlias(true);
 
         int bw = (int)(BorderWidth/2);
@@ -291,15 +292,17 @@ public class SuplaColorListPicker extends View {
             int r = left+width-bw;
             int b = height-bw;
 
-            canvas.drawRoundRect(new RectF(l, bw, r, b), 20, 20, p);
+            rectF.set(l, bw, r, b);
+            canvas.drawRoundRect(rectF, 20, 20, p);
 
             p.setColor(i == TouchedItem ? BorderColorSelected : BorderColor);
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(BorderWidth);
 
-            canvas.drawRoundRect(new RectF(l, bw, r, b), 20, 20, p);
+            canvas.drawRoundRect(rectF, 20, 20, p);
 
-            i.setRect(new RectF(left, 0, left+width, height));
+            rectF.set(left, 0, left+width, height);
+            i.setRect(rectF);
 
 
             if ( i.getPercent() > 0 ) {

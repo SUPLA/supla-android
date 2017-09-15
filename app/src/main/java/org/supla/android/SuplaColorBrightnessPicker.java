@@ -60,6 +60,7 @@ public class SuplaColorBrightnessPicker extends View {
     private PointerTop outerTop;
     private PointerTop innerTop;
 
+    private RectF rectF = new RectF();
 
     final static private double m160d = Math.toRadians(-160);
     final static private double m90d = Math.toRadians(-90);
@@ -238,7 +239,8 @@ public class SuplaColorBrightnessPicker extends View {
         if ( colorWheelVisible ) {
 
             cwPaint.setShader(cwShader);
-            canvas.drawOval(new RectF(-outerWheelRadius, -outerWheelRadius, outerWheelRadius, outerWheelRadius), cwPaint);
+            rectF.set(-outerWheelRadius, -outerWheelRadius, outerWheelRadius, outerWheelRadius);
+            canvas.drawOval(rectF, cwPaint);
             drawOuterPointerArrow(canvas, outerTop,
                     outerWheelPointerAngle,
                     outerWheelRadius,
@@ -256,7 +258,8 @@ public class SuplaColorBrightnessPicker extends View {
                 || colorBrightnessWheelVisible ) {
 
             bwPaint.setShader(bwShader);
-            canvas.drawOval(new RectF(-innerWheelRadius, -innerWheelRadius, innerWheelRadius, innerWheelRadius), bwPaint);
+            rectF.set(-innerWheelRadius, -innerWheelRadius, innerWheelRadius, innerWheelRadius);
+            canvas.drawOval(rectF, bwPaint);
 
             int negative;
             double arrowOffset;
