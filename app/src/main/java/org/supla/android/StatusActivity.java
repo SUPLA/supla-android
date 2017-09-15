@@ -170,22 +170,22 @@ public class StatusActivity extends NavigationActivity {
     @Override
     protected void OnDisconnectedMsg() {
         setStatusConnectingProgress(0);
-    };
+    }
 
     @Override
     protected void OnConnectingMsg() {
         setStatusConnectingProgress(25);
-    };
+    }
 
     @Override
     protected void OnConnectedMsg() {
         setStatusConnectingProgress(50);
-    };
+    }
 
     @Override
     protected void OnRegisteringMsg() {
         setStatusConnectingProgress(75);
-    };
+    }
 
     @Override
     protected void OnRegisteredMsg() {
@@ -196,7 +196,7 @@ public class StatusActivity extends NavigationActivity {
             showMain(this);
         }
 
-    };
+    }
 
     private void _OnRegisterErrorMsg(SuplaRegisterError error) {
         setStatusError(error.codeToString(this));
@@ -208,18 +208,18 @@ public class StatusActivity extends NavigationActivity {
         super.OnRegisterErrorMsg(error);
         _OnRegisterErrorMsg(error);
 
-    };
+    }
 
     @Override
     protected void OnVersionErrorMsg(SuplaVersionError error) {
         setStatusError(getResources().getString(R.string.status_version_error));
-    };
+    }
 
     @Override
     protected void OnConnErrorMsg(SuplaConnError error) {
         if ( error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND )
             setStatusError(getResources().getString(R.string.err_hostnotfound));
-    };
+    }
 
     @Override
     public void onBackPressed() {

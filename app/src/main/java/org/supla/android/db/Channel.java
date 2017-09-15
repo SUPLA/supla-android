@@ -164,15 +164,15 @@ public class Channel {
 
     public void setOnLine(boolean onLine) {
         OnLine = onLine;
-    };
+    }
 
     public boolean getOnLine() {
         return OnLine;
-    };
+    }
 
     public void setValue(ChannelValue value) {
         Value = value;
-    };
+    }
 
     public ChannelValue getValue() {
 
@@ -180,7 +180,7 @@ public class Channel {
             Value = new ChannelValue();
 
         return Value;
-    };
+    }
 
     public void setVisible(int visible) {
         Visible = visible;
@@ -204,7 +204,7 @@ public class Channel {
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION)));
-        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE)) == 0 ? false : true);
+        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE)) != 0);
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
 

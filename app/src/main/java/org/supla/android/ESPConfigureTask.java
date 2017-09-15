@@ -88,7 +88,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                 if ( inputs != null ) {
                     for (Element element : inputs) {
                         fieldMap.put(element.attr("name"), element.val());
-                    };
+                    }
                 }
 
                 Elements sel = doc.getElementsByTag("select");
@@ -100,7 +100,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                         if ( option != null && option.hasAttr("selected") ) {
                             fieldMap.put(element.attr("name"), option.val());
                         }
-                    };
+                    }
                 }
 
                 Elements h1 = doc.getElementsByTag("h1");
@@ -172,7 +172,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         try {
             Thread.sleep(2000);
 
-            Document doc = (Document) Jsoup.connect("http://192.168.4.1")
+            Document doc = Jsoup.connect("http://192.168.4.1")
                     .data(fieldMap)
                     .referrer("http://192.168.4.1").method(Connection.Method.POST).execute().parse();
 

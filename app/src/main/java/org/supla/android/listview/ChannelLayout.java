@@ -544,7 +544,7 @@ public class ChannelLayout extends LinearLayout {
                     onTouchUp(v);
 
                 return true;
-            };
+            }
         };
 
         left_btn.setOnTouchListener(tl);
@@ -598,11 +598,9 @@ public class ChannelLayout extends LinearLayout {
                 && content.getLeft() != left_btn.getWidth()  )
             return true;
 
-        if ( content.getLeft() < 0
-            && Math.abs(content.getLeft()) != right_btn.getWidth() )
-            return true;
+        return content.getLeft() < 0
+                && Math.abs(content.getLeft()) != right_btn.getWidth();
 
-        return false;
     }
 
     public int Slided() {

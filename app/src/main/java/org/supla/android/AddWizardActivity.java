@@ -465,7 +465,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         showPage(PAGE_STEP_1);
 
-    };
+    }
 
     @Override
     protected void onPause() {
@@ -478,7 +478,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         setPreloaderVisible(false);
         cleanUp();
-    };
+    }
 
     private void setStep(int step) {
 
@@ -652,8 +652,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         }
 
 
-    };
-
+    }
 
 
     private void startScan() {

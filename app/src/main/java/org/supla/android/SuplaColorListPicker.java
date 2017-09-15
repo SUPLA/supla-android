@@ -176,7 +176,7 @@ public class SuplaColorListPicker extends View {
             return Items.get(idx).getColor();
 
         return Color.TRANSPARENT;
-    };
+    }
 
     public void setItemColor(int idx, int color) {
 
@@ -185,7 +185,7 @@ public class SuplaColorListPicker extends View {
             invalidate();
         }
 
-    };
+    }
 
     public short getItemPercent(int idx) {
 
@@ -193,7 +193,7 @@ public class SuplaColorListPicker extends View {
             return Items.get(idx).getPercent();
 
         return 0;
-    };
+    }
 
     public void setItemPercent(int idx, short percent) {
 
@@ -202,7 +202,7 @@ public class SuplaColorListPicker extends View {
             invalidate();
         }
 
-    };
+    }
 
     public Object getExtraParam1(int idx) {
 
@@ -313,7 +313,7 @@ public class SuplaColorListPicker extends View {
                 int p_width = (int)(width-rl_margin);
 
                 l = (int)(left+bw+rl_margin);
-                r = (int)(left+p_width-bw);
+                r = left+p_width-bw;
 
                 b = r-l;
                 b *=  i.getPercent() / 100.00;
@@ -343,7 +343,7 @@ public class SuplaColorListPicker extends View {
         }
 
 
-    };
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

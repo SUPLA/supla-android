@@ -302,11 +302,11 @@ public class ChannelListView extends ListView {
                         int margin = getMargin();
 
                         if ( isDetailVisible() ) {
-                            if ( margin + (int)delta < -getWidth() )
+                            if ( margin + delta < -getWidth() )
                                 delta = -(margin+getWidth());
                         } else {
-                            if ( margin + (int)delta > -1 )
-                                delta-=(margin + (int)delta) + 1;
+                            if ( margin + delta > -1 )
+                                delta-=(margin + delta) + 1;
                         }
 
 
@@ -531,7 +531,7 @@ public class ChannelListView extends ListView {
 
             if ( v != null
                     && v instanceof ChannelLayout ) {
-                ((ChannelLayout)v).setBackgroundColor(color);
+                v.setBackgroundColor(color);
             }
 
         }
@@ -584,7 +584,7 @@ public class ChannelListView extends ListView {
             newCursor.moveToFirst();
             ((ListViewCursorAdapter)getAdapter()).changeCursor(newCursor);
             return;
-        };
+        }
 
         if ( newCursor == null || newCursor.isClosed() )
             return;

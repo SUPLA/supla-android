@@ -399,7 +399,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     channel.setVisible(1);
 
                     _updateChannel(db, channel);
-                };
+                }
 
 
                 if ( db != null ) {
@@ -455,13 +455,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.close();
 
-        return count > 0 ? true : false;
+        return count > 0;
     }
 
     public boolean setChannelsOffline() {
 
         String selection = SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE + " = ?";
-        String[] selectionArgs = { String.valueOf((int)1) };
+        String[] selectionArgs = { String.valueOf(1) };
 
         ContentValues values = new ContentValues();
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE, 0);
@@ -476,7 +476,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.close();
 
-        return count > 0 ? true : false;
+        return count > 0;
     }
 
     public int getChannelCount() {

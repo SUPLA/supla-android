@@ -69,7 +69,7 @@ public class BaseActivity extends Activity {
 
         SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
 
-    };
+    }
 
     @Override
     protected void onPause() {
@@ -183,16 +183,27 @@ public class BaseActivity extends Activity {
             SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
     }
 
-    protected void BeforeStatusMsg() {};
-    protected void OnDataChangedMsg(int ChannelId) {};
-    protected void OnConnectingMsg() {};
-    protected void OnRegisteringMsg() {};
-    protected void OnRegisteredMsg() {};
-    protected void OnRegisterErrorMsg(SuplaRegisterError error) {};
-    protected void OnDisconnectedMsg() {};
-    protected void OnConnectedMsg() {};
-    protected void OnVersionErrorMsg(SuplaVersionError error) {};
-    protected void OnEventMsg(SuplaEvent event) {};
-    protected void OnConnErrorMsg(SuplaConnError error) {};
-    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {};
+    protected void BeforeStatusMsg() {}
+
+    protected void OnDataChangedMsg(int ChannelId) {}
+
+    protected void OnConnectingMsg() {}
+
+    protected void OnRegisteringMsg() {}
+
+    protected void OnRegisteredMsg() {}
+
+    protected void OnRegisterErrorMsg(SuplaRegisterError error) {}
+
+    protected void OnDisconnectedMsg() {}
+
+    protected void OnConnectedMsg() {}
+
+    protected void OnVersionErrorMsg(SuplaVersionError error) {}
+
+    protected void OnEventMsg(SuplaEvent event) {}
+
+    protected void OnConnErrorMsg(SuplaConnError error) {}
+
+    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {}
 }

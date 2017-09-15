@@ -144,7 +144,7 @@ public class SuplaClient extends Thread {
 
         if ( activeNetworkInfo != null && activeNetworkInfo.isConnected() ) {
             synchronized (sc_lck) {
-                result = _supla_client != 0 ? scConnect(_supla_client) : false;
+                result = _supla_client != 0 && scConnect(_supla_client);
             }
         }
 
@@ -162,7 +162,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scConnected(_supla_client) : false;
+            result = _supla_client != 0 && scConnected(_supla_client);
         }
 
         return result;
@@ -173,7 +173,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scRegistered(_supla_client) : false;
+            result = _supla_client != 0 && scRegistered(_supla_client);
         }
 
         return result;
@@ -190,7 +190,7 @@ public class SuplaClient extends Thread {
 
     private boolean Iterate(int wait_usec) {
 
-        return _supla_client != 0 && scIterate(_supla_client, wait_usec) == true ? true : false;
+        return _supla_client != 0 && scIterate(_supla_client, wait_usec) == true;
 
     }
 
@@ -199,7 +199,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scOpen(_supla_client, ChannelID, Open) : false;
+            result = _supla_client != 0 && scOpen(_supla_client, ChannelID, Open);
         }
 
         return result;
@@ -211,18 +211,18 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scSetRGBW(_supla_client, ChannelID, Color, ColorBrightness, Brightness) : false;
+            result = _supla_client != 0 && scSetRGBW(_supla_client, ChannelID, Color, ColorBrightness, Brightness);
         }
 
         return result;
-    };
+    }
 
     public boolean GetRegistrationEnabled() {
 
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scGetRegistrationEnabled(_supla_client) : false;
+            result = _supla_client != 0 && scGetRegistrationEnabled(_supla_client);
         }
 
         return result;
@@ -399,7 +399,7 @@ public class SuplaClient extends Thread {
         Trace.d(log_tag, "Event");
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onEvent);
-        event.Owner = event.SenderID == _client_id ? true : false;
+        event.Owner = event.SenderID == _client_id;
         msg.setEvent(event);
         sendMessage(msg);
     }
@@ -542,7 +542,7 @@ public class SuplaClient extends Thread {
 
                 if ( Connect() ) {
 
-                    while( !canceled() && Iterate(100000) ) {};
+                    while( !canceled() && Iterate(100000) ) {}
 
                     if ( canceled() == false ) {
                         try {

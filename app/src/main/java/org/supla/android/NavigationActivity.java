@@ -71,7 +71,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         super.onResume();
         CurrentActivity = this;
-    };
+    }
 
     @Override
     protected void onPause() {
