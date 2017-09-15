@@ -75,7 +75,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         }
 
         int retryCount = 10;
-        Map<String, String> fieldMap = new HashMap<String, String>();
+        Map<String, String> fieldMap = new HashMap<>();
 
         while(retryCount > 0)
             try {

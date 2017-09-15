@@ -73,7 +73,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
         super();
 
         currentSectionIndex = 0;
-        Sections = new ArrayList<SectionItem>();
+        Sections = new ArrayList<>();
         setCursor(cursor);
         this.context = context;
 

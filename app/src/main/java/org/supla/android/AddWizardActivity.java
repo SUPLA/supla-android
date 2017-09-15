@@ -461,7 +461,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         Preferences prefs = new Preferences(this);
 
         cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled());
-        edPassword.setText(prefs.wizardGetPassword());
+        edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword() : "");
 
         showPage(PAGE_STEP_1);
 
@@ -556,16 +556,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 SSID = wifiInfo.getSSID();
                 NetworkID = wifiInfo.getNetworkId();
 
-                if (SSID.startsWith("\"") && SSID.endsWith("\"")){
-                    SSID = SSID.substring(1, SSID.length()-1);
+                if (SSID.startsWith("\"") && SSID.endsWith("\"")) {
+                    SSID = SSID.substring(1, SSID.length() - 1);
                 }
             }
         }
 
-        if ( !SSID.isEmpty() )
-            return manager.setWifiEnabled(true);
+        return !SSID.isEmpty() && manager.setWifiEnabled(true);
 
-        return false;
     }
 
     @Override

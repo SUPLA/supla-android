@@ -100,7 +100,7 @@ public class RateApp {
         boolean result = false;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long rt = prefs.getLong(PN_RATE_TIME, Long.valueOf(0));
+        long rt = prefs.getLong(PN_RATE_TIME, 0L);
 
         Date now = new Date();
 

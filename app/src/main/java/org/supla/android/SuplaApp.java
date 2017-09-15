@@ -33,7 +33,7 @@ import android.os.Vibrator;
 
 public class SuplaApp {
 
-    private ArrayList<Handler>msgReceivers = new ArrayList<Handler>();
+    private ArrayList<Handler>msgReceivers = new ArrayList<>();
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();

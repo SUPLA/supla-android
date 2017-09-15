@@ -111,7 +111,7 @@ public class SuplaColorListPicker extends View {
     };
 
     private void init() {
-        Items = new ArrayList<ListItem>();
+        Items = new ArrayList<>();
 
         Space = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 (float) 10, getResources().getDisplayMetrics());
