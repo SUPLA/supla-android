@@ -29,7 +29,6 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.io.Console;
 import java.util.ArrayList;
 
 public class SuplaColorListPicker extends View {

@@ -22,10 +22,8 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
 

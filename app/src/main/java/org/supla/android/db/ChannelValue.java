@@ -21,11 +21,9 @@ package org.supla.android.db;
 import android.database.Cursor;
 import android.util.Base64;
 
-import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class ChannelValue {

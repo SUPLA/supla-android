@@ -18,8 +18,6 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import java.util.Date;
-
 public class SuplaMinVersionRequired {
 
     public long CallType;

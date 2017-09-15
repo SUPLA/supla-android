@@ -18,13 +18,10 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.EditText;
 
-import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 

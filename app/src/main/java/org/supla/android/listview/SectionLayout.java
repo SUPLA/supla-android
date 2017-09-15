@@ -26,7 +26,6 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.R;
