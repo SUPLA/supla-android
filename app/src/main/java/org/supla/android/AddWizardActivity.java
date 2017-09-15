@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -146,10 +147,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tv = (TextView)findViewById(R.id.wizard_step2_txt1);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_step2_txt2);
-        tv.setTypeface(type);
-
         tvSSID = (TextView)findViewById(R.id.wizard_step2_txt2);
+        tvSSID.setTypeface(type);
         edPassword = (EditText)findViewById(R.id.wizard_password);
         cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
 
@@ -251,6 +250,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         return super.onTouchEvent(event);
     }
 
+    @SuppressLint("SetTextI18n")
     private void showPage(int id) {
 
         setStep(STEP_NONE);
@@ -632,7 +632,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             Preferences prefs = new Preferences(this);
             prefs.wizardSetSavePasswordEnabled(cbSavePassword.isChecked());
 
-            return;
         }
 
     }

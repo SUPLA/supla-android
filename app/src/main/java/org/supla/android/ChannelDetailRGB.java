@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -264,6 +265,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void pickerToInfoPanel() {
 
         lastColor = rgbPicker.getColor();
@@ -441,7 +443,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     @Override
     public void onColorTouched(SuplaColorListPicker sclPicker, int color, short percent) {
 
-        if ( color != Color.TRANSPARENT && rgbPicker.getColorBrightnessWheelVisible() == true  ) {
+        if ( color != Color.TRANSPARENT && rgbPicker.getColorBrightnessWheelVisible()) {
             rgbPicker.setColor(color);
             rgbPicker.setBrightnessValue(percent);
 
@@ -453,7 +455,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     @Override
     public void onEdit(SuplaColorListPicker sclPicker, int idx) {
 
-        if ( idx > 0 && rgbPicker.getColorBrightnessWheelVisible() == true ) {
+        if ( idx > 0 && rgbPicker.getColorBrightnessWheelVisible()) {
             sclPicker.setItemColor(idx, rgbPicker.getColor());
             sclPicker.setItemPercent(idx, (short)rgbPicker.getBrightnessValue());
 

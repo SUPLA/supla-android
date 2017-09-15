@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/detail_rgb_gb">
@@ -57,7 +58,8 @@
                 android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
                 android:text="KONTROLER RGB"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="@dimen/rgb_detail_title_text" />
+                android:textSize="@dimen/rgb_detail_title_text"
+                tools:ignore="HardcodedText" />
 
             <View
                 android:layout_width="match_parent"
@@ -96,7 +98,8 @@
                     android:gravity="right"
                     android:text="80%"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rgb_detail_info_text" />
+                    android:textSize="@dimen/rgb_detail_info_text"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <View
@@ -136,7 +139,8 @@
                     android:gravity="right"
                     android:text="0xFFFFFF"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rgb_detail_info_text" />
+                    android:textSize="@dimen/rgb_detail_info_text"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <View
@@ -183,7 +187,8 @@
                         android:layout_marginTop="@dimen/rgb_detail_state_margin"
                         android:layout_weight="1"
                         android:scaleType="fitEnd"
-                        android:src="@drawable/poweroff" />
+                        android:src="@drawable/poweroff"
+                        tools:ignore="ContentDescription" />
 
                 </FrameLayout>
 
@@ -219,7 +224,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/rounded_rgb_left_btn"
                 android:text="RGB"
-                android:textSize="@dimen/rgb_detail_tab_btn_text" />
+                android:textSize="@dimen/rgb_detail_tab_btn_text"
+                tools:ignore="HardcodedText" />
 
             <Button
                 android:id="@+id/rgbTabBtn_Dimmer"

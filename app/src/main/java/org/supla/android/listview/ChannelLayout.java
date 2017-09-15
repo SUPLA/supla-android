@@ -23,6 +23,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -342,7 +343,7 @@ public class ChannelLayout extends LinearLayout {
                     width, height);
 
 
-            if ( img2 == false ) {
+            if (!img2) {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT );
             } else {
                 lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
@@ -575,11 +576,11 @@ public class ChannelLayout extends LinearLayout {
         if ( Anim )
             return;
 
-        if ( LeftButtonEnabled == false
+        if (!LeftButtonEnabled
              && delta > 0 && content.getLeft()+delta > 0 )
             delta = content.getLeft()*-1;
 
-        if ( RightButtonEnabled == false
+        if (!RightButtonEnabled
              && delta < 0 && content.getLeft()+delta < 0 )
             delta = content.getLeft() * -1;
 
@@ -591,7 +592,7 @@ public class ChannelLayout extends LinearLayout {
 
     public boolean Sliding() {
 
-        if ( Anim == true )
+        if (Anim)
             return true;
 
         if ( content.getLeft() > 0
@@ -605,7 +606,7 @@ public class ChannelLayout extends LinearLayout {
 
     public int Slided() {
 
-        if ( Anim == true )
+        if (Anim)
             return 10;
 
         if ( content.getLeft() > 0 )
@@ -693,7 +694,7 @@ public class ChannelLayout extends LinearLayout {
 
     public void AnimateToRestingPosition(boolean start_pos) {
 
-        if ( start_pos == false
+        if (!start_pos
                 && Anim ) return;
 
 
@@ -709,7 +710,7 @@ public class ChannelLayout extends LinearLayout {
 
         if ( content.getLeft() > 0 ) {
 
-            if ( start_pos == false
+            if (!start_pos
                  && content.getLeft() >= left_btn.getWidth() / 2 ) {
 
                 params.content_left = left_btn.getWidth();
@@ -732,7 +733,7 @@ public class ChannelLayout extends LinearLayout {
 
         } else if ( content.getLeft() < 0 ) {
 
-            if ( start_pos == false
+            if (!start_pos
                  && content.getLeft()*-1 >= right_btn.getWidth() / 2 ) {
 
                 params.content_left = right_btn.getWidth()*-1;
@@ -859,6 +860,7 @@ public class ChannelLayout extends LinearLayout {
             content.setBackgroundColor(color);
     }
 
+    @SuppressLint("DefaultLocale")
     public void setChannelData(Channel channel) {
 
         Func = channel.getFunc();

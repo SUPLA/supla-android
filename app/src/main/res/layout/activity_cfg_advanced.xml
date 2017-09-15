@@ -44,7 +44,6 @@
         android:layout_below="@+id/cfg_label_svr_address"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:numeric="decimal"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:padding="5dp"

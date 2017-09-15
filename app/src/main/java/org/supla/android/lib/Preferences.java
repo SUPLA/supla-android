@@ -58,7 +58,7 @@ public class Preferences {
     public void setCfgVersion(int version) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putInt(pref_cfg_ver, version);
-        editor.commit();
+        editor.apply();
     }
 
     private byte[] getRandom(String pref_key, int size) {
@@ -76,7 +76,7 @@ public class Preferences {
 
             SharedPreferences.Editor editor = _prefs.edit();
             editor.putString(pref_key, Base64.encodeToString(result, Base64.DEFAULT));
-            editor.commit();
+            editor.apply();
 
         }
 
@@ -99,7 +99,7 @@ public class Preferences {
     public void setServerAddress(String ServerAddress) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_serveraddr, ServerAddress);
-        editor.commit();
+        editor.apply();
     }
 
     public int getAccessID() {
@@ -109,7 +109,7 @@ public class Preferences {
     public void setAccessID(int AccessID) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putInt(pref_accessid, AccessID);
-        editor.commit();
+        editor.apply();
     }
 
     public String getAccessIDpwd() {
@@ -120,7 +120,7 @@ public class Preferences {
 
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_accessidpwd, AccessIDpwd);
-        editor.commit();
+        editor.apply();
     }
 
     public String getEmail() {
@@ -131,21 +131,21 @@ public class Preferences {
 
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_email, email);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean configIsSet() {
 
         if ( isAdvancedCfg() )
-            return getServerAddress().equals("") == false && getAccessID() != 0 && getAccessIDpwd().equals("") == false;
+            return !getServerAddress().equals("") && getAccessID() != 0 && !getAccessIDpwd().equals("");
 
-        return getEmail().equals("") == false;
+        return !getEmail().equals("");
     }
 
     public void setAdvancedCfg(Boolean advanced) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putBoolean(pref_advanced, advanced);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean isAdvancedCfg() {
@@ -159,7 +159,7 @@ public class Preferences {
     public void setPreferedProtocolVersion(int version) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putInt(pref_proto_ver, version);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean wizardSavePasswordEnabled() {
@@ -169,7 +169,7 @@ public class Preferences {
     public void wizardSetSavePasswordEnabled(boolean enabled) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putBoolean(pref_wizard_save_password, enabled);
-        editor.commit();
+        editor.apply();
     }
 
     public String wizardGetPassword() {
@@ -179,7 +179,7 @@ public class Preferences {
     public void wizardSetPassword(String password) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_wizard_password, password);
-        editor.commit();
+        editor.apply();
     }
 
 }

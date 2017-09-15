@@ -210,7 +210,7 @@ public class CfgActivity extends NavigationActivity  {
         boolean changed = false;
         int AccessID = 0;
 
-        if ( false == prefs.getServerAddress().equals(edServerAddr.getText().toString()) ) {
+        if (!prefs.getServerAddress().equals(edServerAddr.getText().toString())) {
             prefs.setServerAddress(edServerAddr.getText().toString());
             changed = true;
         }
@@ -228,12 +228,12 @@ public class CfgActivity extends NavigationActivity  {
             changed = true;
         }
 
-        if ( false == prefs.getAccessIDpwd().equals(edAccessIDpwd.getText().toString()) ) {
+        if (!prefs.getAccessIDpwd().equals(edAccessIDpwd.getText().toString())) {
             prefs.setAccessIDpwd(edAccessIDpwd.getText().toString());
             changed = true;
         }
 
-        if ( false == prefs.getEmail().equals(edEmail.getText().toString()) ) {
+        if (!prefs.getEmail().equals(edEmail.getText().toString())) {
             prefs.setEmail(edEmail.getText().toString());
             changed = true;
         }

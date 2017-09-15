@@ -213,7 +213,7 @@ public class DbHelper extends SQLiteOpenHelper {
         };
 
         String selection = SuplaContract.AccessIDEntry.COLUMN_NAME_ACCESSID + " = ? AND " +
-                ( primary_key == true ? SuplaContract.LocationEntry._ID : SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID ) + " = ?";
+                (primary_key ? SuplaContract.LocationEntry._ID : SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID ) + " = ?";
 
         String[] selectionArgs = {
                 String.valueOf(accessid),
@@ -315,7 +315,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         };
 
-        String selection = ( primary_key == true ? SuplaContract.ChannelEntry._ID : SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID ) + " = ?" +
+        String selection = (primary_key ? SuplaContract.ChannelEntry._ID : SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID ) + " = ?" +
                 " AND " + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID +
                 " IN ( SELECT "+SuplaContract.LocationEntry._ID+" FROM "+SuplaContract.LocationEntry.TABLE_NAME+" WHERE "+SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID+" = ? )";
 

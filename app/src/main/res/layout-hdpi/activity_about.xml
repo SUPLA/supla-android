@@ -16,7 +16,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:text="version"
+        android:text="@string/version"
         android:textColor="@android:color/black"
         android:textSize="12sp" />
 
@@ -30,7 +30,7 @@
         android:background="@drawable/logosupla"
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="false"
-        android:contentDescription="logo" />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:layout_width="match_parent"
@@ -63,7 +63,9 @@
             android:layout_alignParentBottom="false"
             android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
-            android:layout_above="@+id/about_homepage">
+            android:layout_above="@+id/about_homepage"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentLeft="false">
 
         <TextView
             android:layout_width="match_parent"
@@ -72,7 +74,6 @@
             android:gravity="center_horizontal"
             android:textColor="@android:color/black"
             android:textSize="9sp"
-            android:singleLine="false"
             android:text="@string/about_app" />
 
         </ScrollView>

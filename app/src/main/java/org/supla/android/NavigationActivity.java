@@ -21,6 +21,7 @@ package org.supla.android;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -38,6 +39,7 @@ import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
 
 
+@SuppressLint("Registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String INTENTSENDER = "sender";

@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Vibrator;
@@ -97,6 +98,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         return inflateLayout(R.layout.detail_rs);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void OnChannelDataChanged() {
 
@@ -137,6 +139,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         OnChannelDataChanged();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onPercentChangeing(SuplaRollerShutter rs, float percent) {
         tvPercent.setText(Integer.toString((int)percent)+"%");

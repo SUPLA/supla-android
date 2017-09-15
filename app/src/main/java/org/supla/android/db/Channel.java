@@ -230,7 +230,7 @@ public class Channel {
     public boolean Diff(SuplaChannel channel) {
 
         return channel.Id != getChannelId()
-                || channel.Caption.equals(getCaption()) == false
+                || !channel.Caption.equals(getCaption())
                 || channel.OnLine != getOnLine()
                 || getValue().Diff(channel.Value);
 
@@ -239,7 +239,7 @@ public class Channel {
     public boolean Diff(Channel channel) {
 
         return channel.getChannelId() != getChannelId()
-                || channel.getCaption().equals(getCaption()) == false
+                || !channel.getCaption().equals(getCaption())
                 || channel.getOnLine() != getOnLine()
                 || getValue().Diff(channel.getValue());
 
@@ -252,7 +252,7 @@ public class Channel {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC, getFunc());
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE, getOnLine() == true ? 1 : 0);
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE, getOnLine() ? 1 : 0);
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VALUE, getValue().getChannelStringValue());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE, getValue().getChannelStringSubValue());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());

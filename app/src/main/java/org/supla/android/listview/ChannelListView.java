@@ -116,13 +116,13 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
 
-                    if ( (mDetailLayout instanceof ChannelDetailRGB) == false )
+                    if (!(mDetailLayout instanceof ChannelDetailRGB))
                         mDetailLayout = null;
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
 
-                    if ( (mDetailLayout instanceof ChannelDetailRS) == false )
+                    if (!(mDetailLayout instanceof ChannelDetailRS))
                         mDetailLayout = null;
 
                     break;
@@ -267,7 +267,7 @@ public class ChannelListView extends ListView {
                             && !detailSliding ) {
 
 
-                        if ( channelLayout.Sliding() == false
+                        if (!channelLayout.Sliding()
                                 && deltaY >= deltaX ) {
                             return super.onTouchEvent(ev);
                         }
@@ -316,7 +316,7 @@ public class ChannelListView extends ListView {
 
                             setMargin(getMargin()+delta);
 
-                            if ( detailSliding == false ) {
+                            if (!detailSliding) {
 
                                 int color = Color.WHITE;
 
@@ -353,7 +353,7 @@ public class ChannelListView extends ListView {
             AnimateDetailSliding(false);
 
             if ( channelLayout != null ) {
-                channelLayout.AnimateToRestingPosition(buttonSliding == false);
+                channelLayout.AnimateToRestingPosition(!buttonSliding);
                 lastCL = channelLayout;
                 channelLayout = null;
             }

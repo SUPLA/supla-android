@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+@SuppressLint("Registered")
 public class BaseActivity extends Activity {
 
     private Handler _sc_msg_handler = null;
@@ -179,8 +181,11 @@ public class BaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if ( _sc_msg_handler != null )
+        if ( _sc_msg_handler != null ) {
             SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
+            _sc_msg_handler = null;
+        }
+
     }
 
     protected void BeforeStatusMsg() {}

@@ -90,7 +90,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
             SectionItem s2 = S2.get(a);
 
             if ( s1.getPosition() != s2.getPosition()
-                    || s1.getCaption().equals(s2.getCaption()) == false )
+                    || !s1.getCaption().equals(s2.getCaption()))
                 return true;
         }
 
@@ -113,7 +113,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
                 do {
 
                     if ( caption == null
-                            || cursor.getString(col_idx).equals(caption) == false ) {
+                            || !cursor.getString(col_idx).equals(caption)) {
 
                         caption = cursor.getString(col_idx);
                         Sections.add(new SectionItem(Sections.size() + cursor.getPosition(), caption));
@@ -144,7 +144,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
     public int getCount() {
 
         if ( cursor != null
-                && cursor.isClosed() == false )
+                && !cursor.isClosed())
             return cursor.getCount() + Sections.size();
 
         return 0;

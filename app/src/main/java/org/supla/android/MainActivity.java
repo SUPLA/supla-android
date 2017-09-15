@@ -21,6 +21,7 @@ package org.supla.android;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
@@ -217,11 +218,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 return;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
 
 
-        if ( channel.getCaption().equals("") == false ) {
+        if (!channel.getCaption().equals("")) {
             msg = msg + " (" + channel.getCaption()+")";
         }
 
@@ -231,7 +232,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     private void ShowHideNotificationView(final boolean show) {
 
-        if ( show == false && NotificationView.getVisibility() == View.GONE )
+        if (!show && NotificationView.getVisibility() == View.GONE )
             return;
 
         float height = getResources().getDimension(R.dimen.channel_layout_height);
@@ -248,7 +249,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
 
-                        if (show == false) {
+                        if (!show) {
                             NotificationView.setVisibility(View.GONE);
                         }
                     }

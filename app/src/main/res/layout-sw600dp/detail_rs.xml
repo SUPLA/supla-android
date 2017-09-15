@@ -124,7 +124,8 @@
                 android:layout_marginBottom="1dp"
                 android:text="Rolety"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="45sp" />
+                android:textSize="45sp"
+                tools:ignore="HardcodedText" />
 
             <View
                 android:layout_width="match_parent"
@@ -156,7 +157,8 @@
                     android:gravity="right"
                     android:text="80%"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="35sp" />
+                    android:textSize="35sp"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
 

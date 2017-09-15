@@ -44,7 +44,7 @@ public class RateApp {
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(PN_RATE_TIME, rt);
-        editor.commit();
+        editor.apply();
 
     }
 

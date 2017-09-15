@@ -38,7 +38,7 @@ public class ChannelValue {
         if ( v1 == null && v2 != null ) return true;
         if ( v1 != null && v2 == null ) return true;
 
-        return Arrays.equals(v1, v2) == false;
+        return !Arrays.equals(v1, v2);
     }
 
     byte[] getChannelValue() {

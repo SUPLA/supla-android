@@ -55,9 +55,9 @@ public class SuplaClient extends Thread {
     private Context _context;
     private DbHelper DbH = null;
     private android.os.Handler _msgHandler;
-    private Object msgh_lck = new Object();
-    private Object sc_lck = new Object();
-    private static Object st_lck = new Object();
+    private final Object msgh_lck = new Object();
+    private final Object sc_lck = new Object();
+    private static final Object st_lck = new Object();
     private static SuplaRegisterError lastRegisterError = null;
 
     public native void CfgInit(SuplaCfg cfg);
@@ -190,7 +190,7 @@ public class SuplaClient extends Thread {
 
     private boolean Iterate(int wait_usec) {
 
-        return _supla_client != 0 && scIterate(_supla_client, wait_usec) == true;
+        return _supla_client != 0 && scIterate(_supla_client, wait_usec);
 
     }
 
@@ -374,7 +374,7 @@ public class SuplaClient extends Thread {
             _DataChanged = true;
         }
 
-        if ( channel.EOL == true
+        if (channel.EOL
                 && DbH.setChannelsVisible(0, 2) ) {
             _DataChanged = true;
         }
@@ -544,7 +544,7 @@ public class SuplaClient extends Thread {
 
                     while( !canceled() && Iterate(100000) ) {}
 
-                    if ( canceled() == false ) {
+                    if (!canceled()) {
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {}
@@ -558,7 +558,7 @@ public class SuplaClient extends Thread {
 
 
 
-            if (canceled() == false ) {
+            if (!canceled()) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {}

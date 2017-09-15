@@ -89,7 +89,7 @@ public class Location {
 
     public boolean Diff(SuplaLocation location) {
 
-        return location.Id != getLocationId() || location.Caption.equals(getCaption()) == false;
+        return location.Id != getLocationId() || !location.Caption.equals(getCaption());
 
     }
 

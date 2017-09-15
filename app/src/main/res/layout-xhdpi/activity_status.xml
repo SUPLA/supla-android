@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/activity_status_bg_err">
 
@@ -23,7 +24,8 @@
         android:layout_marginTop="100dp"
         android:background="@drawable/error"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/status_text"
@@ -35,7 +37,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="38dp"
         android:gravity="center_vertical|center_horizontal"
-        android:text="Connecting..."
+        android:text="@string/status_connecting"
         android:textColor="@android:color/black"
         android:textSize="19sp" />
 
@@ -53,6 +55,6 @@
         android:layout_centerHorizontal="true"
 
         android:layout_marginTop="30dp"
-        android:text="Settings" />
+        android:text="@string/settings" />
 
 </RelativeLayout>
