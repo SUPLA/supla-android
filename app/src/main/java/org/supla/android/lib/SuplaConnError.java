@@ -42,7 +42,7 @@ public class SuplaConnError {
 
      }
 
-     return resid != 0 ? context.getResources().getString(resid) : new Integer(Code).toString();
+     return resid != 0 ? context.getResources().getString(resid) : Integer.valueOf(Code).toString();
     }
 
 }

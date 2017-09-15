@@ -239,7 +239,7 @@ public class SuplaClient extends Thread {
     }
 
     private void onVersionError(SuplaVersionError versionError) {
-        Trace.d(log_tag, new Integer(versionError.Version).toString() + "," + new Integer(versionError.RemoteVersionMin).toString() + "," + new Integer(versionError.RemoteVersion).toString());
+        Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + "," + Integer.valueOf(versionError.RemoteVersionMin).toString() + "," + Integer.valueOf(versionError.RemoteVersion).toString());
 
         Preferences prefs = new Preferences(_context);
 
