@@ -144,7 +144,7 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-    private class CaptionView extends TextView {
+    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
 
 
         public CaptionView(Context context, int imgl_id) {
