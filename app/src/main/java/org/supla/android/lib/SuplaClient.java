@@ -463,9 +463,7 @@ public class SuplaClient extends Thread {
                 }
             }
 
-        } catch (URISyntaxException | ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException | JSONException e) {
+        } catch (URISyntaxException | IOException | JSONException e) {
             e.printStackTrace();
         }
 
