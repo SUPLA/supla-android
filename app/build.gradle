@@ -37,12 +37,13 @@ android {
     }
 
     buildToolsVersion '25.0.0'
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile files('src/main/libs/jsoup-1.10.3.jar')
 }
