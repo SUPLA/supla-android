@@ -334,7 +334,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         Preferences prefs = new Preferences(this);
 
-        if ( prefs.isAdvancedCfg() ) {
+        if ( prefs.isAdvancedCfg()
+                && SuplaApp.getApp().getSuplaClient() != null
+                && SuplaApp.getApp().getSuplaClient().GetProtoVersion() >= 7 ) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.add_wizard_is_not_available);
