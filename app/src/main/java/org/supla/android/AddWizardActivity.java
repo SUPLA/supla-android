@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -32,8 +33,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -109,11 +112,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private TextView tvIODevName;
     private TextView tvIODevFirmware;
-    private TextView tvIODevGUID;
     private TextView tvIODevMAC;
     private TextView tvIODevLastState;
 
-    private Button btnNext;
+    private Button btnNext1;
+    private Button btnNext2;
+    private Button btnNext3;
 
     private RelativeLayout rlStepContent;
 
@@ -196,6 +200,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tv = (TextView)findViewById(R.id.wizard_done_txt1);
         tv.setTypeface(type);
 
+        type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
+
         tv = (TextView)findViewById(R.id.wizard_done_txt2);
         tv.setTypeface(type);
 
@@ -204,14 +210,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         tv = (TextView)findViewById(R.id.wizard_done_txt4);
         tv.setTypeface(type);
-
+        
         tv = (TextView)findViewById(R.id.wizard_done_txt5);
         tv.setTypeface(type);
 
         tv = (TextView)findViewById(R.id.wizard_done_txt6);
-        tv.setTypeface(type);
-
-        tv = (TextView)findViewById(R.id.wizard_done_txt7);
         tv.setTypeface(type);
 
         tvIODevName = (TextView)findViewById(R.id.wizard_done_iodev_name);
@@ -220,17 +223,22 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tvIODevFirmware = (TextView)findViewById(R.id.wizard_done_iodev_firmware);
         tvIODevFirmware.setTypeface(type);
 
-        tvIODevGUID = (TextView)findViewById(R.id.wizard_done_iodev_guid);
-        tvIODevGUID.setTypeface(type);
-
         tvIODevMAC = (TextView)findViewById(R.id.wizard_done_iodev_mac);
         tvIODevMAC.setTypeface(type);
 
         tvIODevLastState = (TextView)findViewById(R.id.wizard_done_iodev_laststate);
         tvIODevLastState.setTypeface(type);
 
-        btnNext = (Button)findViewById(R.id.wizard_next);
-        btnNext.setOnClickListener(this);
+
+        btnNext1 = (Button)findViewById(R.id.wizard_next1);
+        btnNext1.setOnClickListener(this);
+
+        btnNext2 = (Button)findViewById(R.id.wizard_next2);
+        btnNext2.setOnClickListener(this);
+        btnNext2.setTypeface(type);
+
+        btnNext3 = (Button)findViewById(R.id.wizard_next3);
+        btnNext3.setOnClickListener(this);
 
         showMenuBar();
         RegisterMessageHandler();
@@ -250,6 +258,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         return super.onTouchEvent(event);
     }
 
+    private void setBtnEnabled(boolean enabled) {
+        btnNext1.setEnabled(enabled);
+        btnNext2.setEnabled(enabled);
+        btnNext3.setEnabled(enabled);
+    }
+
     @SuppressLint("SetTextI18n")
     private void showPage(int id) {
 
@@ -260,8 +274,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vError.setVisibility(View.GONE);
         vDone.setVisibility(View.GONE);
         setPreloaderVisible(false);
-        btnNext.setEnabled(true);
-        btnNext.setText(R.string.next, TextView.BufferType.NORMAL);
+        setBtnEnabled(true);
+        btnNext2.setText(R.string.next, TextView.BufferType.NORMAL);
 
         switch(id) {
             case PAGE_STEP_1:
@@ -282,17 +296,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
             case PAGE_STEP_3:
                 vStep3.setVisibility(View.VISIBLE);
-                btnNext.setText(R.string.start, TextView.BufferType.NORMAL);
+                btnNext2.setText(R.string.start, TextView.BufferType.NORMAL);
                 break;
 
             case PAGE_ERROR:
                 vError.setVisibility(View.VISIBLE);
-                btnNext.setText("OK", TextView.BufferType.NORMAL);
+                btnNext2.setText("OK", TextView.BufferType.NORMAL);
                 break;
 
             case PAGE_DONE:
                 vDone.setVisibility(View.VISIBLE);
-                btnNext.setText("OK", TextView.BufferType.NORMAL);
+                btnNext2.setText("OK", TextView.BufferType.NORMAL);
                 break;
         }
 
@@ -312,7 +326,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         tvIODevName.setText(result.deviceName, TextView.BufferType.NORMAL);
         tvIODevFirmware.setText(result.deviceFirmwareVersion, TextView.BufferType.NORMAL);
-        tvIODevGUID.setText(result.deviceGUID, TextView.BufferType.NORMAL);
         tvIODevMAC.setText(result.deviceMAC, TextView.BufferType.NORMAL);
         tvIODevLastState.setText(result.deviceLastState, TextView.BufferType.NORMAL);
 
@@ -348,6 +361,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         if ( visible ) {
 
+            btnNext1.setBackgroundResource(R.drawable.btnnextr2);
+
+            ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
+            params.width = (int)(Resources.getSystem().getDisplayMetrics().density * 15);
+            btnNext1.setLayoutParams(params);
+
             preloaderPos = 0;
 
             preloaderTimer = new Timer();
@@ -378,7 +397,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
 
 
-                            btnNext.setText(txt, TextView.BufferType.NORMAL);
+                            btnNext2.setText(txt, TextView.BufferType.NORMAL);
 
 
 
@@ -386,6 +405,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     });
                 }
             }, 0, 100 );
+
+        } else {
+
+            btnNext1.setBackgroundResource(R.drawable.btnnextr);
+            ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
+            params.width = (int)(Resources.getSystem().getDisplayMetrics().density * 40);
+            btnNext1.setLayoutParams(params);
+
         }
 
     }
@@ -570,10 +597,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v == btnNext ) {
+        if ( v == btnNext1 || v == btnNext2 || v == btnNext3 ) {
 
             setPreloaderVisible(true);
-            btnNext.setEnabled(false);
+            setBtnEnabled(false);
 
             switch(pageId) {
                 case PAGE_STEP_1:
@@ -595,7 +622,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     if ( edPassword.getText().toString().isEmpty() ) {
 
                         setPreloaderVisible(false);
-                        btnNext.setEnabled(true);
+                        setBtnEnabled(true);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_err));
@@ -610,7 +637,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     break;
                 case PAGE_STEP_3:
 
-                    btnNext.setText("....", TextView.BufferType.NORMAL);
+                    btnNext2.setText("....", TextView.BufferType.NORMAL);
                     setStep(STEP_CHECK_REGISTRATION_ENABLED);
                     SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
 

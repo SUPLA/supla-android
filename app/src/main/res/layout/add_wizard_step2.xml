@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/menubar">
 
     <CheckBox
         android:id="@+id/wizard_cb_save_pwd"
@@ -12,8 +14,9 @@
         android:layout_alignStart="@+id/wizard_password"
         android:layout_below="@+id/wizard_password"
         android:layout_marginTop="10dp"
-        android:buttonTint="@color/channel_btn"
+        android:buttonTint="@android:color/white"
         android:text="@string/wizard_remember_passwd"
+        android:textColor="@android:color/white"
         android:textSize="12sp" />
 
     <EditText
@@ -22,12 +25,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/wizard_step2_txt2"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="30dp"
+        android:background="@color/notification_bg"
         android:inputType="textPassword"
         android:padding="5dp"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/wizard_step2_txt1"
@@ -35,17 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView4"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="44dp"
         android:gravity="center_horizontal"
         android:text="@string/wizard_step2_txt1"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="140dp"
-        android:layout_height="107dp"
+        android:layout_height="140dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
@@ -61,9 +66,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/wizard_step2_txt1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 </RelativeLayout>

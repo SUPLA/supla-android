@@ -4,24 +4,66 @@
     android:layout_height="match_parent">
 
 
+    <FrameLayout
+        android:id="@+id/wizard_top_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/menubar">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.25"
+            android:background="@android:color/white">
+
+        </FrameLayout>
+    </FrameLayout>
+
     <RelativeLayout
         android:id="@+id/wizard_navigation"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="@color/menubar">
 
         <Button
-            android:id="@+id/wizard_next"
+            android:id="@+id/wizard_next3"
+            android:layout_width="15dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/wizard_next2"
+            android:layout_toStartOf="@+id/wizard_next2"
+            android:background="@drawable/btnnextl"
+            android:stateListAnimator="@null"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:textColor="@color/activity_status_bg_normal" />
+
+
+        <Button
+            android:id="@+id/wizard_next2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/rounded_wizard_btn"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/wizard_next1"
+            android:layout_toStartOf="@+id/wizard_next1"
+            android:background="@android:color/white"
+            android:stateListAnimator="@null"
             android:text="@string/next"
             android:textAllCaps="false"
             android:textColor="@color/activity_status_bg_normal" />
+
+        <Button
+            android:id="@+id/wizard_next1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="21dp"
+            android:background="@drawable/btnnextr"
+            android:stateListAnimator="@null" />
 
     </RelativeLayout>
 
@@ -32,21 +74,9 @@
         android:layout_above="@+id/wizard_navigation"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_below="@+id/wizard_top_line"
+        android:background="@color/menubar">
 
     </RelativeLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/wizard_step_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/activity_status_bg_normal">
-
-    </FrameLayout>
 
 </RelativeLayout>
