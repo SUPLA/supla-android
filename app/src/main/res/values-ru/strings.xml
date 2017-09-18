@@ -124,6 +124,7 @@
     <string name="wizard_result_compat_error">Устройство, с которым установлено соединение, не совместимо с данным мастером!</string>
     <string name="wizard_step1_txt1">Добро пожаловать в мастер добавления устройств, который поможет вам легко и быстро добавить новое устройство в систему.</string>
     <string name="wizard_step2_txt1">Введите пароль для вашей сети wi-fi, название которой</string>
+    <string name="device_reg_request_timeout">Превышено время ожидания информации о доступности регистрации устройств!</string>
 
 </resources>
 

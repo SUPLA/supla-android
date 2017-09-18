@@ -125,6 +125,7 @@
     <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
     <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
     <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
+    <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
     <string name="wizard_iodevice_notfound">No devices has been found! Check, if the device you want to configure is working in the configuration mode and try again.</string>
 

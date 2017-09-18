@@ -115,8 +115,10 @@
     <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
     <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
     <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
+    <string name="device_reg_request_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
 
     <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie.</string>
+
 
     <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
     <string name="wizard_iodev_data">Dane urządzenia</string>

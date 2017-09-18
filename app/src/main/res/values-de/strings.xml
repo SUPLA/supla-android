@@ -113,5 +113,6 @@
     <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
     <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
     <string name="wizard_step2_txt1">Geben Sie Ihr WiFi-Netzwerk-Passwort ein, dessen Name</string>
+    <string name="device_reg_request_timeout">﻿Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
 
 </resources>

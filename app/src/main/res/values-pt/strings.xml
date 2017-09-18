@@ -119,5 +119,6 @@
     <string name="wizard_result_compat_error">O dispositivo que conectou não é compatível com este assistente!</string>
     <string name="wizard_step1_txt1">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
     <string name="wizard_step2_txt1">Introduza a senha da sua rede WiFi cujo nome é o seguinte</string>
+    <string name="device_reg_request_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
 
 </resources>

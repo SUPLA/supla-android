@@ -498,7 +498,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 showError(R.string.wizard_wifi_timeout);
                 break;
             case STEP_CHECK_REGISTRATION_ENABLED:
-                showError(R.string.wizard_wifi_timeout);
+                showError(R.string.device_reg_request_timeout);
                 break;
             case STEP_SCAN:
                 showError(R.string.wizard_scan_timeout);
