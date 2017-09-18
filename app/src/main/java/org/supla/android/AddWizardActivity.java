@@ -364,7 +364,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             btnNext1.setBackgroundResource(R.drawable.btnnextr2);
 
             ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
-            params.width = (int)(Resources.getSystem().getDisplayMetrics().density * 15);
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
+
             btnNext1.setLayoutParams(params);
 
             preloaderPos = 0;
@@ -410,7 +411,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
             btnNext1.setBackgroundResource(R.drawable.btnnextr);
             ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
-            params.width = (int)(Resources.getSystem().getDisplayMetrics().density * 40);
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
             btnNext1.setLayoutParams(params);
 
         }

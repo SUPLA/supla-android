@@ -38,4 +38,6 @@
     <dimen name="rgb_detail_state_margin">5dp</dimen>
     <dimen name="rs_detail_title_text">20sp</dimen>
     <dimen name="rs_detail_info_text">12sp</dimen>
+    <dimen name="wizard_btnnextl_width">15dp</dimen>
+    <dimen name="wizard_btnnextr_width">40dp</dimen>
 </resources>

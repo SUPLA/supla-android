@@ -24,4 +24,8 @@
     <dimen name="rgb_detail_info_text">20sp</dimen>
     <dimen name="rgb_detail_info_text_margin">5dp</dimen>
     <dimen name="rgb_detail_state_margin">5dp</dimen>
+
+    <dimen name="wizard_btnnextl_width">25dp</dimen>
+    <dimen name="wizard_btnnextr_width">70dp</dimen>
+
 </resources>
