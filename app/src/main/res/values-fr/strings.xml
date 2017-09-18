@@ -119,6 +119,6 @@
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
     <string name="wizard_step2_txt1">Entrez le mot de passe de votre réseau Wi-Fi, dont le nom est</string>
-    <string name="device_reg_request_timeout">﻿Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
+    <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
 
 </resources>

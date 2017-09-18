@@ -119,6 +119,6 @@
     <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este creador!</string>
     <string name="wizard_step1_txt1">Bienvenido al creador de adición de dispositivos, que te ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
     <string name="wizard_step2_txt1">Introduce la contraseña a tu red WiFi, llamada</string>
-    <string name="device_reg_request_timeout">﻿¡Se ha superado el tiempo de espera a la información sobre la disponibilidad de registro de dispositivos!</string>
+    <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera a la información sobre la disponibilidad de registro de dispositivos!</string>
 
 </resources>
