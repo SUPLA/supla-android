@@ -332,31 +332,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void addDevice() {
 
-        Preferences prefs = new Preferences(this);
-
-        if ( prefs.isAdvancedCfg()
-                && SuplaApp.getApp().getSuplaClient() != null
-                && SuplaApp.getApp().getSuplaClient().GetProtoVersion() >= 7 ) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.add_wizard_is_not_available);
-
-            builder.setPositiveButton(
-                    "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            AlertDialog alert = builder.create();
-
-            alert.show();
-
-        } else {
-            showAddWizard();
-        }
-
+        showAddWizard();
     }
 
 

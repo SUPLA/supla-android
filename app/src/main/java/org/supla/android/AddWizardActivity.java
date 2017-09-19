@@ -20,12 +20,15 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -57,14 +60,15 @@ import java.util.regex.Pattern;
 
 public class AddWizardActivity extends NavigationActivity implements ESPConfigureTask.AsyncResponse {
 
-    private final int STEP_NONE                          = 0;
-    private final int STEP_CHECK_WIFI                    = 1;
-    private final int STEP_CHECK_REGISTRATION_ENABLED    = 2;
-    private final int STEP_SCAN                          = 3;
-    private final int STEP_CONNECT                       = 4;
-    private final int STEP_CONFIGURE                     = 5;
-    private final int STEP_RECONNECT                     = 6;
-    private final int STEP_DONE                          = 7;
+    private final int STEP_NONE                               = 0;
+    private final int STEP_CHECK_WIFI                         = 1;
+    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY1    = 2;
+    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY2    = 3;
+    private final int STEP_SCAN                               = 4;
+    private final int STEP_CONNECT                            = 5;
+    private final int STEP_CONFIGURE                          = 6;
+    private final int STEP_RECONNECT                          = 7;
+    private final int STEP_DONE                               = 8;
 
     private final int PAGE_STEP_1                     = 1;
     private final int PAGE_STEP_2                     = 2;
@@ -105,6 +109,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private TextView tvSSID;
     private EditText edPassword;
     private CheckBox cbSavePassword;
+
+    private TextView tvStep2Info;
 
     private ImageView ivDot;
 
@@ -153,6 +159,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         tvSSID = (TextView)findViewById(R.id.wizard_step2_txt2);
         tvSSID.setTypeface(type);
+
+        tvStep2Info = (TextView)findViewById(R.id.wizard_step2_txt3);
+        tvStep2Info.setTypeface(type);
+
         edPassword = (EditText)findViewById(R.id.wizard_password);
         cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
 
@@ -291,6 +301,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 }
 
                 tvSSID.setText("\""+SSID+"\"");
+                tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, SSID));
+
                 vStep2.setVisibility(View.VISIBLE);
                 break;
 
@@ -418,11 +430,38 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     }
 
+    private boolean internetWiFi() {
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        return ni != null && ni.isConnected() && ni.getTypeName().equalsIgnoreCase("WIFI");
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         cleanUp();
+
+        Preferences prefs = new Preferences(this);
+
+        if ( prefs.isAdvancedCfg() ) {
+
+            showError(R.string.add_wizard_is_not_available);
+            return;
+
+        } else if ( SuplaApp.getApp().getSuplaClient() == null
+                    || SuplaApp.getApp().getSuplaClient().GetProtoVersion() < 7 ) {
+
+            showError(R.string.wizard_server_compat_error);
+            return;
+
+        } else if ( !internetWiFi() ) {
+
+            showError(R.string.wizard_no_internetwifi);
+            return;
+        }
 
         watchDog = new Timer();
         watchDog.scheduleAtFixedRate( new TimerTask() {
@@ -440,8 +479,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             case STEP_CHECK_WIFI:
                                 timeout = 2;
                                 break;
-                            case STEP_CHECK_REGISTRATION_ENABLED:
-                                timeout = 5;
+                            case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
+                            case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
+                                timeout = 3;
                                 break;
                             case STEP_SCAN:
                             case STEP_CONNECT:
@@ -486,8 +526,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         }, 0, 100 );
 
 
-        Preferences prefs = new Preferences(this);
-
         cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled());
         edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword() : "");
 
@@ -525,7 +563,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             case STEP_CHECK_WIFI:
                 showError(R.string.wizard_wifi_timeout);
                 break;
-            case STEP_CHECK_REGISTRATION_ENABLED:
+            case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
+                setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY2);
+                SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
+                return;
+            case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
                 showError(R.string.device_reg_request_timeout);
                 break;
             case STEP_SCAN:
@@ -639,7 +681,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 case PAGE_STEP_3:
 
                     btnNext2.setText("....", TextView.BufferType.NORMAL);
-                    setStep(STEP_CHECK_REGISTRATION_ENABLED);
+                    setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY1);
                     SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
 
                     break;

@@ -102,12 +102,15 @@
     <string name="start">START</string>>
 
     <string name="wizard_step2_txt1">Wprowadź hasło do Twojej sieci WiFi, której nazwa to</string>
+    <string name="wizard_step2_txt3">*) Sieć %1$s będzie wykorzystywana przez urządzenie wykonawcze do łączena się z serwerem.</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
     <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
     <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
     <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
 
+    <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
+    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFI, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
     <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
     <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>

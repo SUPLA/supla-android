@@ -112,12 +112,15 @@
     <string name="start">START</string>>
 
     <string name="wizard_step2_txt1">Enter password to your WiFi Network named</string>
+    <string name="wizard_step2_txt3">*) %1$s network will be used by I/O devices to connect with server.</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
     <string name="wizard_step3_txt1">Power up your executive device. Configuration mode should be the default mode for the device, confirmed by a status diode flashing as</string>
     <string name="wizard_step3_txt2">If the device when switched on does not work in the configuration mode, press and hold <b>CONFIG</b> button for at least 5 seconds.</string>
     <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
+    <string name="wizard_server_compat_error">The connected Server does not support this function!</string>
+    <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
     <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
     <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
     <string name="wizard_wifi_timeout">Current WiFi Network Data timeout.</string>
