@@ -67,7 +67,7 @@ public class SuplaColorListPicker extends View {
         }
 
         public void setRect(RectF rect) {
-            Rect = rect;
+            Rect = rect == null ? null : new RectF(rect);
         }
 
         public RectF getRect() {
@@ -301,9 +301,7 @@ public class SuplaColorListPicker extends View {
 
             canvas.drawRoundRect(rectF, 20, 20, p);
 
-            rectF.set(left, 0, left+width, height);
             i.setRect(rectF);
-
 
             if ( i.getPercent() > 0 ) {
 
