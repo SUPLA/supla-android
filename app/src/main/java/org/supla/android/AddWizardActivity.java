@@ -76,7 +76,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private final int PAGE_ERROR                      = 4;
     private final int PAGE_DONE                       = 5;
 
-    private final int SCAN_RETRY                      = 3;
+    private final int SCAN_RETRY                      = 4;
 
     private int scanRetry;
 
@@ -484,6 +484,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                                 timeout = 3;
                                 break;
                             case STEP_SCAN:
+                                timeout = 40;
+                                break;
                             case STEP_CONNECT:
                             case STEP_CONFIGURE:
                                 timeout = 30;
