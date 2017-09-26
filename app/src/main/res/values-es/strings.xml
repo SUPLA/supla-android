@@ -123,5 +123,7 @@
     <string name="wizard_no_internetwifi">Antes de empezar, accede a internet conectándote a una red WiFI que también será la utilizada por el actuador para conectarse al servidor.</string>
     <string name="wizard_server_compat_error">¡El servidor al que te has conectado no es compatible con esta característica!</string>
     <string name="wizard_step2_txt3">*)El actuador usará la red %1$ para conectarse al servidor.</string>
+    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
+
 
 </resources>

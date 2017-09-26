@@ -123,5 +123,6 @@
     <string name="wizard_server_compat_error">Il server, con il quale è stata stabilita la connessione, non supporta questa funzione!</string>
     <string name="wizard_no_internetwifi">Prima di iniziare, collegati all’Internet tramite la rete WiFi che verrà utilizzata anche dal dispositivo di I/O per la connessione con il server.</string>
     <string name="wizard_step2_txt3">*) La rete %1$s verrà utilizzata dai dispositivi di input/output per la connessione con il server.</string>
+    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
 
 </resources>

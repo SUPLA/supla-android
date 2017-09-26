@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Random;
 
 public class Preferences {
@@ -162,23 +164,23 @@ public class Preferences {
         editor.apply();
     }
 
-    public boolean wizardSavePasswordEnabled() {
-        return _prefs.getBoolean(pref_wizard_save_password, true);
+    public boolean wizardSavePasswordEnabled(String SSID) {
+        return _prefs.getBoolean(pref_wizard_save_password+SSID, true);
     }
 
-    public void wizardSetSavePasswordEnabled(boolean enabled) {
+    public void wizardSetSavePasswordEnabled(String SSID, boolean enabled) {
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putBoolean(pref_wizard_save_password, enabled);
+        editor.putBoolean(pref_wizard_save_password+SSID, enabled);
         editor.apply();
     }
 
-    public String wizardGetPassword() {
-        return _prefs.getString(pref_wizard_password, "");
+    public String wizardGetPassword(String SSID) {
+        return _prefs.getString(pref_wizard_password+SSID, "");
     }
 
-    public void wizardSetPassword(String password) {
+    public void wizardSetPassword(String SSID, String password) {
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_wizard_password, password);
+        editor.putString(pref_wizard_password+SSID, password);
         editor.apply();
     }
 

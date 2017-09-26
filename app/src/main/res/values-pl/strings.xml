@@ -132,5 +132,6 @@
     <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>
     <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
     <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
+    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez nią uprawnienia.</string>
 
 </resources>

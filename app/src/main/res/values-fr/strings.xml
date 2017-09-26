@@ -123,5 +123,6 @@
     <string name="wizard_server_compat_error">Le serveur auquel vous êtes connecté ne prend pas en charge cette fonctionnalité!</string>
     <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
     <string name="wizard_step2_txt3">*) Le réseau %1$s sera utilisé par vos actionneurs pour vous connecter au serveur.</string>
+    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
 
 </resources>

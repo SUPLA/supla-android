@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,20 +27,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -59,6 +64,8 @@ import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 public class AddWizardActivity extends NavigationActivity implements ESPConfigureTask.AsyncResponse {
+
+    private final int WIZARD_PERMISSIONS_REQUEST = 1;
 
     private final int STEP_NONE                               = 0;
     private final int STEP_CHECK_WIFI                         = 1;
@@ -303,6 +310,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 tvSSID.setText("\""+SSID+"\"");
                 tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, SSID));
 
+                Preferences prefs = new Preferences(this);
+
+                cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(SSID));
+                edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword(SSID) : "");
+
                 vStep2.setVisibility(View.VISIBLE);
                 break;
 
@@ -438,6 +450,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         return ni != null && ni.isConnected() && ni.getTypeName().equalsIgnoreCase("WIFI");
     }
 
+    public String getApplicationName() {
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : getString(stringId);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -528,12 +546,54 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         }, 0, 100 );
 
 
-        cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled());
-        edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword() : "");
-
         showPage(PAGE_STEP_1);
 
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED
+              || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE)
+                != PackageManager.PERMISSION_GRANTED
+              || ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE)
+                != PackageManager.PERMISSION_GRANTED
+              || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_NETWORK_STATE)
+                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_WIFI_STATE)
+                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CHANGE_WIFI_STATE)
+                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+
+                showError(getResources().getString(R.string.wizard_not_enought_permissions, getApplicationName()));
+
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_NETWORK_STATE,
+                                Manifest.permission.ACCESS_WIFI_STATE,
+                                Manifest.permission.CHANGE_WIFI_STATE,
+                                Manifest.permission.ACCESS_FINE_LOCATION}, WIZARD_PERMISSIONS_REQUEST);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
     }
+
 
     @Override
     protected void onPause() {
@@ -541,7 +601,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         Preferences prefs = new Preferences(this);
         if ( cbSavePassword.isChecked() ) {
-            prefs.wizardSetPassword(cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+            prefs.wizardSetPassword(SSID, cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
         }
 
         setPreloaderVisible(false);
@@ -662,7 +722,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 case PAGE_STEP_2:
 
                     Preferences prefs = new Preferences(this);
-                        prefs.wizardSetPassword(cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+                        prefs.wizardSetPassword(SSID, cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
 
                     if ( edPassword.getText().toString().isEmpty() ) {
 
@@ -700,7 +760,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         if ( v == cbSavePassword ) {
             Preferences prefs = new Preferences(this);
-            prefs.wizardSetSavePasswordEnabled(cbSavePassword.isChecked());
+            prefs.wizardSetSavePasswordEnabled(SSID, cbSavePassword.isChecked());
 
         }
 
