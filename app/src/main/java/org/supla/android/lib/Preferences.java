@@ -40,6 +40,7 @@ public class Preferences {
     private static final String pref_proto_ver = "pref_proto_ver";
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
+    private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
 
     private SharedPreferences _prefs;
 
@@ -181,6 +182,16 @@ public class Preferences {
     public void wizardSetPassword(String SSID, String password) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_wizard_password+SSID, password);
+        editor.apply();
+    }
+
+    public String wizardGetSelectedWifi() {
+        return _prefs.getString(pref_wizard_selected_wifi, "");
+    }
+
+    public void wizardSetSelectedWifi(String SSID) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putString(pref_wizard_selected_wifi, SSID);
         editor.apply();
     }
 

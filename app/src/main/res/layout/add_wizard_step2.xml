@@ -19,15 +19,28 @@
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
+    <Spinner
+        android:id="@+id/wizard_wifi_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wizard_step2_txt1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:textSize="18sp" />
+
     <EditText
         android:id="@+id/wizard_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wizard_step2_txt2"
+        android:layout_below="@id/wizard_wifi_list"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@color/notification_bg"
         android:inputType="textPassword"
         android:padding="5dp"
@@ -41,7 +54,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="34dp"
         android:gravity="center_horizontal"
         android:text="@string/wizard_step2_txt1"
         android:textColor="@android:color/white"
@@ -70,19 +83,15 @@
         android:background="@drawable/wifi"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/wizard_step2_txt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/wizard_step2_txt1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+    <Button
+        android:id="@+id/wizard_look_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/wizard_cb_save_pwd"
+        android:layout_alignRight="@+id/wizard_password"
+        android:layout_centerHorizontal="false"
+        android:layout_marginBottom="-5dp"
+        android:background="@drawable/look" />
+
+
 </RelativeLayout>

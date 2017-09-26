@@ -144,7 +144,6 @@
     <string name="wizard_result_compat_error">The connected device is not compatible with this Wizard!</string>
     <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
     <string name="wizard_result_failed">Configuration Failed!</string>
-
-    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
+    <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
 
 </resources>

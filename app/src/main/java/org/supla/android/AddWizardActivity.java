@@ -41,29 +41,36 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
-public class AddWizardActivity extends NavigationActivity implements ESPConfigureTask.AsyncResponse {
+public class AddWizardActivity extends NavigationActivity implements ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
     private final int WIZARD_PERMISSIONS_REQUEST = 1;
 
@@ -101,7 +108,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private ESPConfigureTask espConfigTask = null;
     private WifiManager manager = null;
-    private String SSID;
     private int NetworkID;
 
     private int iodev_NetworkID = -1;
@@ -113,9 +119,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private View vError;
     private View vDone;
 
-    private TextView tvSSID;
+    private Spinner spWifiList;
     private EditText edPassword;
     private CheckBox cbSavePassword;
+    private Button btnViewPassword;
 
     private TextView tvStep2Info;
 
@@ -164,17 +171,32 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tv = (TextView)findViewById(R.id.wizard_step2_txt1);
         tv.setTypeface(type);
 
-        tvSSID = (TextView)findViewById(R.id.wizard_step2_txt2);
-        tvSSID.setTypeface(type);
+        spWifiList = (Spinner)findViewById(R.id.wizard_wifi_list);
+        spWifiList.setOnItemSelectedListener(this);
 
         tvStep2Info = (TextView)findViewById(R.id.wizard_step2_txt3);
         tvStep2Info.setTypeface(type);
 
         edPassword = (EditText)findViewById(R.id.wizard_password);
         cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
+        btnViewPassword = (Button)findViewById(R.id.wizard_look_button);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
+        } else {
+            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            spWifiList.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
+        } else {
+            spWifiList.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
+        }
 
         cbSavePassword.setTypeface(type);
         cbSavePassword.setOnClickListener(this);
+
+        btnViewPassword.setOnTouchListener(this);
 
         View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
             @Override
@@ -300,21 +322,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 break;
 
             case PAGE_STEP_2:
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
-                } else {
-                    edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
-                }
-
-                tvSSID.setText("\""+SSID+"\"");
-                tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, SSID));
-
-                Preferences prefs = new Preferences(this);
-
-                cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(SSID));
-                edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword(SSID) : "");
-
+                edPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 vStep2.setVisibility(View.VISIBLE);
                 break;
 
@@ -599,10 +607,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     protected void onPause() {
         super.onPause();
 
-        Preferences prefs = new Preferences(this);
-        if ( cbSavePassword.isChecked() ) {
-            prefs.wizardSetPassword(SSID, cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+        if ( pageId >= PAGE_STEP_2 ) {
+
+            Preferences prefs = new Preferences(this);
+
+            if ( cbSavePassword.isChecked() ) {
+                prefs.wizardSetPassword(getSelectedSSID(), cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+            }
+
+            prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
         }
+
 
         setPreloaderVisible(false);
         cleanUp();
@@ -678,7 +693,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private boolean checkWiFi() {
 
-        SSID = "";
+        String SSID = "";
         NetworkID = -1;
 
         if (manager.isWifiEnabled()) {
@@ -691,6 +706,46 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 if (SSID.startsWith("\"") && SSID.endsWith("\"")) {
                     SSID = SSID.substring(1, SSID.length() - 1);
                 }
+
+
+                ArrayList<String> spinnerArray = new ArrayList<String>();
+                List<WifiConfiguration> list = manager.getConfiguredNetworks();
+
+                String Selected = SSID;
+
+                Preferences prefs = new Preferences(this);
+                String prefSelected = prefs.wizardGetSelectedWifi();
+
+                for( WifiConfiguration i : list ) {
+                    if (i.SSID.startsWith("\"") && i.SSID.endsWith("\"")) {
+                        i.SSID = i.SSID.substring(1, i.SSID.length() - 1);
+                    }
+                }
+
+                if ( !prefSelected.isEmpty() ) {
+                    for( WifiConfiguration i : list ) {
+                        if ( prefSelected.equals(i.SSID)) {
+                            Selected = i.SSID;
+                            break;
+                        }
+                    }
+                }
+
+                spinnerArray.add(Selected);
+
+                if ( !Selected.equals(SSID) ) {
+                    spinnerArray.add(SSID);
+                }
+
+                for( WifiConfiguration i : list ) {
+                    if ( !i.SSID.equals(SSID) )
+                        spinnerArray.add(i.SSID);
+                }
+
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+                spWifiList.setAdapter(spinnerArrayAdapter);
+
+                onWifiSelectionChange();
             }
         }
 
@@ -720,9 +775,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     break;
                 case PAGE_STEP_2:
-
-                    Preferences prefs = new Preferences(this);
-                        prefs.wizardSetPassword(SSID, cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
 
                     if ( edPassword.getText().toString().isEmpty() ) {
 
@@ -760,8 +812,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         if ( v == cbSavePassword ) {
             Preferences prefs = new Preferences(this);
-            prefs.wizardSetSavePasswordEnabled(SSID, cbSavePassword.isChecked());
-
+            prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
         }
 
     }
@@ -846,6 +897,19 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         conf.SSID = "\"" + iodev_SSID + "\"";
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
 
+        iodev_NetworkID = -1;
+
+        List<WifiConfiguration> list = manager.getConfiguredNetworks();
+
+        for( WifiConfiguration item : list ) {
+            if ( item.SSID != null
+                    && (item.SSID.equals(iodev_SSID)
+                        || item.SSID.equals(conf.SSID)) ) {
+                iodev_NetworkID = item.networkId;
+                break;
+            }
+        }
+
         iodev_NetworkID = manager.addNetwork(conf);
 
         if ( iodev_NetworkID == -1 ) {
@@ -879,7 +943,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             stateChangedReceiver = null;
 
                             setStep(STEP_CONFIGURE);
-                            espConfigTask.execute(SSID, edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
+                            espConfigTask.execute(getSelectedSSID(), edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
 
                         }
 
@@ -989,5 +1053,56 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         registerReceiver(stateChangedReceiver, i);
         removeIODeviceNetwork();
 
+    }
+
+    private String getSelectedSSID() {
+
+        if ( spWifiList.getSelectedItem() != null ) {
+            return spWifiList.getSelectedItem().toString();
+        }
+
+        return "";
+    }
+
+    private void onWifiSelectionChange() {
+
+        Preferences prefs = new Preferences(this);
+
+        tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, getSelectedSSID()));
+
+        cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(getSelectedSSID()));
+        edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword(getSelectedSSID()) : "");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        onWifiSelectionChange();
+
+        Preferences prefs = new Preferences(this);
+        prefs.wizardSetSelectedWifi(getSelectedSSID());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if ( v == btnViewPassword ) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    break;
+            }
+        }
+
+        return false;
     }
 }
