@@ -117,6 +117,6 @@
     <string name="wizard_server_compat_error">Der Server, mit dem eine Verbindung herstellen wurde, unterstützt diese Funktion nicht!</string>
     <string name="wizard_no_internetwifi">Bevor Sie beginnen, stellen Sie eine Verbindung zum Internet über ein WiFi-Netzwerk her, das auch vom Ausführungsgerät verwendet wird, um eine Verbindung zum Server herzustellen.</string>
     <string name="wizard_step2_txt3">*) Das %1$s -Netzwerk wird von den Ausführungsgeräten verwendet, um eine Verbindung zum Server herzustellen.</string>
-    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
+    <string name="wizard_not_enought_permissions">Die Anwendung verfügt nicht über ausreichende Berechtigungen. Gehen Sie zur Anwendungsverwaltung in Systemeinstellungen über. Suchen Sie dann die %1$s -Anwendung und aktivieren Sie alle Berechtigungen, die sie erfordert.</string>
 
 </resources>
