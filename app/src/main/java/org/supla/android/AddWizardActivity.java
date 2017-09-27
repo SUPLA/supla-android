@@ -477,15 +477,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             showError(R.string.add_wizard_is_not_available);
             return;
 
-        } else if ( SuplaApp.getApp().getSuplaClient() == null
-                    || SuplaApp.getApp().getSuplaClient().GetProtoVersion() < 7 ) {
-
-            showError(R.string.wizard_server_compat_error);
-            return;
-
         } else if ( !internetWiFi() ) {
 
             showError(R.string.wizard_no_internetwifi);
+            return;
+
+        } else if ( SuplaApp.getApp().getSuplaClient() != null
+                    && SuplaApp.getApp().getSuplaClient().GetProtoVersion() < 7 ) {
+
+            showError(R.string.wizard_server_compat_error);
             return;
         }
 
