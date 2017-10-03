@@ -50,6 +50,8 @@
             android:layout_toLeftOf="@+id/wizard_next1"
             android:layout_toStartOf="@+id/wizard_next1"
             android:background="@android:color/white"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:stateListAnimator="@null"
             android:text="@string/next"
             android:textAllCaps="false"

@@ -29,7 +29,7 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
         android:background="@android:color/white"
-        android:padding="5dp"
+        android:padding="15dp"
         android:textSize="30sp" />
 
     <EditText
