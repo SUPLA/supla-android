@@ -57,6 +57,7 @@ public class SuplaClient extends Thread {
     private final Object sc_lck = new Object();
     private static final Object st_lck = new Object();
     private static SuplaRegisterError lastRegisterError = null;
+    private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
 
     public native void CfgInit(SuplaCfg cfg);
     private native long scInit(SuplaCfg cfg);
@@ -240,6 +241,7 @@ public class SuplaClient extends Thread {
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + "," + Integer.valueOf(versionError.RemoteVersionMin).toString() + "," + Integer.valueOf(versionError.RemoteVersion).toString());
 
+        regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
 
 
@@ -294,6 +296,7 @@ public class SuplaClient extends Thread {
     private void onRegistering() {
         Trace.d(log_tag, "Registering");
 
+        regTryCounter++;
         sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onRegistering));
     }
 
@@ -301,6 +304,7 @@ public class SuplaClient extends Thread {
 
         Trace.d(log_tag, "Registered");
 
+        regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
 
         if (  prefs.getPreferedProtocolVersion() != SuplaConst.PROTOCOL_HIGHEST_VERSION
@@ -326,6 +330,7 @@ public class SuplaClient extends Thread {
     private void onRegisterError(SuplaRegisterError registerError) {
         Trace.d(log_tag, registerError.codeToString(_context));
 
+        regTryCounter = 0;
         synchronized (st_lck) {
             lastRegisterError = registerError;
         }
@@ -513,6 +518,11 @@ public class SuplaClient extends Thread {
                     if ( prefs.isAdvancedCfg() ) {
                         cfg.AccessID = prefs.getAccessID();
                         cfg.AccessIDpwd = prefs.getAccessIDpwd();
+
+                        if ( regTryCounter >= 2 ) {
+                            prefs.setPreferedProtocolVersion(4); // supla-server v1.0 for Raspberry Compatibility fix
+                        }
+
                     } else {
                         cfg.Email = prefs.getEmail();
                         if ( !cfg.Email.isEmpty() && cfg.Host.isEmpty() ) {
