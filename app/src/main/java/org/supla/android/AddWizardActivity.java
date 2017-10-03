@@ -482,11 +482,13 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             showError(R.string.wizard_no_internetwifi);
             return;
 
-        } else if ( SuplaApp.getApp().getSuplaClient() != null
-                    && SuplaApp.getApp().getSuplaClient().GetProtoVersion() < 7 ) {
+        } else if ( SuplaApp.getApp().getSuplaClient() != null ) {
+            int version = SuplaApp.getApp().getSuplaClient().GetProtoVersion();
 
-            showError(R.string.wizard_server_compat_error);
-            return;
+            if (version > 0 && version < 7) {
+                showError(R.string.wizard_server_compat_error);
+                return;
+            }
         }
 
         watchDog = new Timer();
@@ -503,7 +505,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                         switch(step) {
                             case STEP_CHECK_WIFI:
-                                timeout = 2;
+                                timeout = 10;
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
@@ -707,45 +709,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     SSID = SSID.substring(1, SSID.length() - 1);
                 }
 
+                spinnerLoad(SSID);
 
-                ArrayList<String> spinnerArray = new ArrayList<String>();
-                List<WifiConfiguration> list = manager.getConfiguredNetworks();
-
-                String Selected = SSID;
-
-                Preferences prefs = new Preferences(this);
-                String prefSelected = prefs.wizardGetSelectedWifi();
-
-                for( WifiConfiguration i : list ) {
-                    if (i.SSID.startsWith("\"") && i.SSID.endsWith("\"")) {
-                        i.SSID = i.SSID.substring(1, i.SSID.length() - 1);
-                    }
-                }
-
-                if ( !prefSelected.isEmpty() ) {
-                    for( WifiConfiguration i : list ) {
-                        if ( prefSelected.equals(i.SSID)) {
-                            Selected = i.SSID;
-                            break;
-                        }
-                    }
-                }
-
-                spinnerArray.add(Selected);
-
-                if ( !Selected.equals(SSID) ) {
-                    spinnerArray.add(SSID);
-                }
-
-                for( WifiConfiguration i : list ) {
-                    if ( !i.SSID.equals(SSID) )
-                        spinnerArray.add(i.SSID);
-                }
-
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
-                spWifiList.setAdapter(spinnerArrayAdapter);
-
-                onWifiSelectionChange();
             }
         }
 
@@ -767,9 +732,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     setStep(STEP_CHECK_WIFI);
 
-                    if ( checkWiFi() ) {
-                        showPage(PAGE_STEP_2);
-                    } else {
+                    if ( !checkWiFi() ) {
                         showError(R.string.wizard_wifi_error);
                     }
 
@@ -834,10 +797,72 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     }
 
+    private boolean espNetworkName(final String SSID) {
+
+        Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
+
+        return  ( SSID.startsWith("SUPLA-")
+                    || SSID.startsWith("ZAMEL-")
+                    || SSID.startsWith("NICE-") )
+                && mPattern.matcher(SSID).find();
+    }
 
     private void startScan() {
 
         unregisterReceivers();
+
+        scanResultReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent i) {
+
+                unregisterReceiver(scanResultReceiver);
+                scanResultReceiver = null;
+
+
+                List<ScanResult> scanned = manager.getScanResults();
+                boolean match = false;
+
+                for (int a = 0; a < scanned.size(); a++) {
+
+                    iodev_SSID = scanned.get(a).SSID;
+
+                    if (espNetworkName(iodev_SSID)) {
+                        match = true;
+                        connect();
+                        break;
+                    }
+
+                }
+
+                if (!match) {
+
+                    if (scanRetry > 0) {
+                        scanRetry--;
+                        startScan();
+                    } else {
+                        showError(R.string.wizard_iodevice_notfound);
+                    }
+
+
+                }
+
+            }
+        };
+
+        IntentFilter i = new IntentFilter();
+        i.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+
+        registerReceiver(scanResultReceiver, i);
+
+        manager.startScan();
+
+    }
+
+    private void spinnerLoad(final String SSID) {
+
+        unregisterReceivers();
+
+        final Context context = this;
 
         scanResultReceiver = new BroadcastReceiver(){
             @Override
@@ -848,35 +873,39 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                 Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
                 List<ScanResult> scanned  =  manager.getScanResults();
-                boolean match = false;
 
-                for(int a=0;a<scanned.size();a++) {
+                ArrayList<String> spinnerArray = new ArrayList<String>();
 
-                    iodev_SSID = scanned.get(a).SSID;
-                    if ( ( iodev_SSID.startsWith("SUPLA-")
-                            || iodev_SSID.startsWith("ZAMEL-")
-                            || iodev_SSID.startsWith("NICE-") )
-                            && mPattern.matcher(iodev_SSID).find() ) {
+                Preferences prefs = new Preferences(context);
+                String prefSelected = prefs.wizardGetSelectedWifi();
 
-                        match = true;
-                        connect();
-                        break;
+                String Selected = SSID;
+
+                if ( !prefSelected.isEmpty() ) {
+                    for( ScanResult sr : scanned ) {
+                        if ( prefSelected.equals(sr.SSID)) {
+                            Selected = sr.SSID;
+                            break;
+                        }
                     }
-
                 }
 
-                if ( !match ) {
+                spinnerArray.add(Selected);
 
-                    if ( scanRetry > 0 ) {
-                        scanRetry--;
-                        startScan();
-                    } else {
-                        showError(R.string.wizard_iodevice_notfound);
-                    }
-
-
+                if ( !Selected.equals(SSID) ) {
+                    spinnerArray.add(SSID);
                 }
 
+                for( ScanResult sr : scanned ) {
+                    if ( !sr.SSID.equals(SSID) && !espNetworkName(SSID) )
+                        spinnerArray.add(sr.SSID);
+                }
+
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerArray);
+                spWifiList.setAdapter(spinnerArrayAdapter);
+                onWifiSelectionChange();
+
+                showPage(PAGE_STEP_2);
             }
         };
 
@@ -910,7 +939,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             }
         }
 
-        iodev_NetworkID = manager.addNetwork(conf);
+        if ( iodev_NetworkID == -1 ) {
+            iodev_NetworkID = manager.addNetwork(conf);
+        }
 
         if ( iodev_NetworkID == -1 ) {
             showError(R.string.wizard_addnetwork_error);
