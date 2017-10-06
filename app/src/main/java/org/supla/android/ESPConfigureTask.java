@@ -194,6 +194,8 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                     e.printStackTrace();
                 }
 
+
+
                 result.resultCode = RESULT_SUCCESS;
                 return result;
             }

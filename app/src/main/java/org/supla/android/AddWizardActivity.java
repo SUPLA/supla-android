@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -31,7 +32,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -65,7 +69,9 @@ import org.supla.android.lib.SuplaRegistrationEnabled;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
@@ -797,7 +803,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     }
 
-    private boolean espNetworkName(final String SSID) {
+    private boolean espNetworkName(String SSID) {
+
+        if (SSID.startsWith("\"") && SSID.endsWith("\"")) {
+            SSID = SSID.substring(1, SSID.length() - 1);
+        }
 
         Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
 
@@ -897,7 +907,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 }
 
                 for( ScanResult sr : scanned ) {
-                    if ( !sr.SSID.equals(SSID) && !espNetworkName(SSID) )
+
+                    Set<String> set = new HashSet<String>(spinnerArray);
+
+                    if ( !sr.SSID.equals(SSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID) )
                         spinnerArray.add(sr.SSID);
                 }
 
@@ -915,6 +928,42 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         registerReceiver(scanResultReceiver, i);
 
         manager.startScan();
+
+    }
+
+    private void unbindNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm.bindProcessToNetwork(null);
+        } else  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cm.setProcessDefaultNetwork(null);
+        }
+
+    }
+
+    private void bindNetwork() {
+
+        final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Network[] ns = cm.getAllNetworks();
+            for (Network n : ns) {
+
+                NetworkCapabilities c = cm.getNetworkCapabilities(n);
+
+                if (c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        cm.bindProcessToNetwork(n);
+                    } else  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        cm.setProcessDefaultNetwork(n);
+                    }
+
+                }
+
+            }
+        }
+
 
     }
 
@@ -964,11 +1013,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
+                    //Trace.d("Status", info.getState().toString());
+
                     if ( info != null
                             && info.isConnected() ) {
 
                         WifiInfo wifiInfo = manager.getConnectionInfo();
                         if (wifiInfo != null && wifiInfo.getNetworkId() == iodev_NetworkID ) {
+
+                            bindNetwork();
 
                             unregisterReceiver(stateChangedReceiver);
                             stateChangedReceiver = null;
@@ -984,6 +1037,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 }
         };
 
+
         IntentFilter i = new IntentFilter();
         i.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
@@ -992,13 +1046,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         manager.enableNetwork(iodev_NetworkID, true);
         manager.reconnect();
 
-
     }
 
 
     public void removeIODeviceNetwork() {
 
         if ( iodev_NetworkID != -1 ) {
+
+            unbindNetwork();
 
             manager.disconnect();
             manager.removeNetwork(iodev_NetworkID);
