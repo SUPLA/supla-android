@@ -43,6 +43,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
@@ -381,6 +382,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             blinkTimer.cancel();
             blinkTimer = null;
         }
+
 
         removeConfigTask();
         unregisterReceivers();
@@ -758,6 +760,18 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     } else {
                         showPage(PAGE_STEP_3);
+
+                        // Autostart after 20 sec.
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if ( pageId == PAGE_STEP_3 && preloaderTimer == null ) {
+                                    onClick(btnNext1);
+                                }
+
+                            }
+                        }, 20000);
                     }
 
                     break;
