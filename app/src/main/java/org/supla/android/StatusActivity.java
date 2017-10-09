@@ -38,7 +38,8 @@ import org.supla.android.lib.SuplaVersionError;
 public class StatusActivity extends NavigationActivity {
 
     private int mode;
-    private Button btn;
+    private Button btnSettings;
+    private Button btnRetry;
     private TextView msg;
     private ImageView img;
     private RelativeLayout layout;
@@ -61,14 +62,17 @@ public class StatusActivity extends NavigationActivity {
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
         msg.setTypeface(type);
 
-        btn = (Button)findViewById(R.id.status_btn);
+        btnSettings = (Button)findViewById(R.id.status_btn);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-        btn.setTypeface(type);
-        btn.setTransformationMethod(null);
-        btn.setText(getResources().getText(R.string.settings));
-        btn.setOnClickListener(this);
+        btnSettings.setTypeface(type);
+        btnSettings.setTransformationMethod(null);
+        btnSettings.setText(getResources().getText(R.string.settings));
+        btnSettings.setOnClickListener(this);
 
-        layout = (RelativeLayout)btn.getParent();
+        btnRetry = (Button)findViewById(R.id.retry_btn);
+        btnRetry.setOnClickListener(this);
+
+        layout = (RelativeLayout)msg.getParent();
 
         setStatusConnectingProgress(0);
         RegisterMessageHandler();
@@ -101,14 +105,15 @@ public class StatusActivity extends NavigationActivity {
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btn.setBackground(getResources().getDrawable(R.drawable.rounded_black_btn));
+                btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_black_btn));
                 img.setBackground(getResources().getDrawable(R.drawable.error));
             } else {
-                btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_black_btn));
+                btnSettings.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_black_btn));
                 img.setBackgroundDrawable(getResources().getDrawable(R.drawable.error));
             }
 
-            btn.setTextColor(Color.WHITE);
+            btnRetry.setVisibility(View.VISIBLE);
+            btnSettings.setTextColor(Color.WHITE);
             msg.setTextColor(Color.BLACK);
             msg.setText(message);
             progress.setVisibility(View.INVISIBLE);
@@ -125,14 +130,15 @@ public class StatusActivity extends NavigationActivity {
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                btn.setBackground(getResources().getDrawable(R.drawable.rounded_white_btn));
+                btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_white_btn));
                 img.setBackground(getResources().getDrawable(R.drawable.logosuplawhite));
             } else {
-                btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_white_btn));
+                btnSettings.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_white_btn));
                 img.setBackgroundDrawable(getResources().getDrawable(R.drawable.logosuplawhite));
             }
 
-            btn.setTextColor(getResources().getColor(R.color.activity_status_bg_normal));
+            btnRetry.setVisibility(View.GONE);
+            btnSettings.setTextColor(getResources().getColor(R.color.activity_status_bg_normal));
             msg.setTextColor(Color.WHITE);
             msg.setText(getResources().getText(R.string.status_connecting));
             progress.setVisibility(View.VISIBLE);
@@ -155,8 +161,10 @@ public class StatusActivity extends NavigationActivity {
 
         super.onClick(v);
 
-        if ( v == btn ) {
+        if ( v == btnSettings ) {
             NavigationActivity.showCfg(this);
+        } else if ( v == btnRetry ) {
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
         }
     }
 

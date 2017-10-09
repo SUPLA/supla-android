@@ -41,20 +41,54 @@
         android:textColor="@android:color/black"
         android:textSize="19sp" />
 
-    <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:bottomRightRadius="10dp"
-        android:bottomLeftRadius="10dp"
-        android:topLeftRadius="10dp"
-        android:topRightRadius="10dp"
-        android:layout_width="160dp"
-        android:layout_height="35dp"
-        android:id="@+id/status_btn"
-        android:textColor="@android:color/white"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/status_text"
-        android:layout_centerHorizontal="true"
-
         android:layout_marginTop="30dp"
-        android:text="@string/settings" />
+        android:layout_centerHorizontal="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/status_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="160dp"
+                android:layout_height="35dp"
+                android:layout_centerHorizontal="true"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:bottomLeftRadius="10dp"
+
+                android:bottomRightRadius="10dp"
+                android:text="@string/settings"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+
+            <Button
+                android:id="@+id/retry_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerHorizontal="true"
+
+                android:layout_weight="1"
+                android:background="@drawable/retry"
+                android:bottomLeftRadius="10dp"
+
+                android:bottomRightRadius="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+    </FrameLayout>
 </RelativeLayout>
