@@ -23,6 +23,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import org.supla.android.SuplaApp;
+import org.supla.android.Trace;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Random;
@@ -156,13 +159,19 @@ public class Preferences {
     }
 
     public int getPreferedProtocolVersion() {
-        return _prefs.getInt(pref_proto_ver, SuplaConst.PROTOCOL_HIGHEST_VERSION);
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.GetMaxProtoVersion());
     }
 
     public void setPreferedProtocolVersion(int version) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putInt(pref_proto_ver, version);
         editor.apply();
+    }
+
+    public void setPreferedProtocolVersion() {
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        setPreferedProtocolVersion(client == null ? 0 : client.GetMaxProtoVersion());
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {

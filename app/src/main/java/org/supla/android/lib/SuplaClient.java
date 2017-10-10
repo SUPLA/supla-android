@@ -72,6 +72,7 @@ public class SuplaClient extends Thread {
     private native boolean scSetRGBW(long _supla_client, int ChannelID, int Color, int ColorBrightness, int Brightness);
     private native boolean scGetRegistrationEnabled(long _supla_client);
     private native int scGetProtoVersion(long _supla_client);
+    private native int scGetMaxProtoVersion(long _supla_client);
 
     public SuplaClient(Context context) {
 
@@ -238,6 +239,17 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public int GetMaxProtoVersion() {
+
+        int result = 0;
+
+        synchronized (sc_lck) {
+            result = _supla_client != 0 ? scGetMaxProtoVersion(_supla_client) : 0;
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + "," + Integer.valueOf(versionError.RemoteVersionMin).toString() + "," + Integer.valueOf(versionError.RemoteVersion).toString());
 
@@ -307,9 +319,10 @@ public class SuplaClient extends Thread {
         regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
 
-        if (  prefs.getPreferedProtocolVersion() != SuplaConst.PROTOCOL_HIGHEST_VERSION
+        if (  GetMaxProtoVersion() > 0
+                && prefs.getPreferedProtocolVersion() < GetMaxProtoVersion()
                 && registerResult.Version > prefs.getPreferedProtocolVersion() ) {
-            prefs.setPreferedProtocolVersion(SuplaConst.PROTOCOL_HIGHEST_VERSION);
+            prefs.setPreferedProtocolVersion(registerResult.Version);
         }
 
         _client_id = registerResult.ClientID;
@@ -536,7 +549,6 @@ public class SuplaClient extends Thread {
                     }
 
                     cfg.protocol_version = prefs.getPreferedProtocolVersion();
-
                     Init(cfg);
 
 

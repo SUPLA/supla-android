@@ -20,8 +20,6 @@ package org.supla.android.lib;
 
 public class SuplaConst {
 
-    public static final int PROTOCOL_HIGHEST_VERSION  = 0;
-
     public final static int SUPLA_GUID_SIZE = 16;
     public final static int SUPLA_AUTHKEY_SIZE = 16;
     public final static int SUPLA_CLIENT_NAME_MAXSIZE = 201;
