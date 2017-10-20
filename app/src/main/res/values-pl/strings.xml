@@ -120,7 +120,7 @@
     <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
     <string name="device_reg_request_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
 
-    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie.</string>
+    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
     <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
