@@ -99,7 +99,7 @@
     <string name="next">Weiter</string>
     <string name="wizard_addnetwork_error">Die Konfiguration des WiFi-Netzwerkes kann nicht hinzugefügt werden!</string>
     <string name="wizard_result_conn_error">Es gelang nicht, die Verbindung mit dem Gerät herzustellen!</string>
-    <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut.</string>
+    <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut. WICHTIG - Bei manchen Android-Versionen muss das GPS aktiviert sein, damit die Apps die WiFi-Netzwerke durchsuchen könnten. Stellen Sie daher sicher, dass das GPS eingeschaltet ist.</string>
     <string name="wizard_step3_txt1">Schließen Sie Ihr Betätigungsgerät an das Stromnetz an. Das Gerät soll standardmäßig im Konfigurationsmodus funktionieren, dies mit einer blinkenden Leuchtdiode signalisierend</string>
     <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten!</string>
     <string name="wizard_connect_timeout">Für die Herstellung der Verbindung mit dem Betätigungsgerät wurde das Zeitlimit überschritten!</string>

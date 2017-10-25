@@ -105,7 +105,7 @@
     <string name="next">Continuar</string>
     <string name="wizard_addnetwork_error">Impossível adicionar uma configuração da rede WiFi!</string>
     <string name="wizard_result_conn_error">Impossível conectar um dispositivo!</string>
-    <string name="wizard_iodevice_notfound">Nenhum dispositivo foi encontardo! Certifique-se que um dispositivo que quer configurar trabalha no modo de configuração e tente novamente.</string>
+    <string name="wizard_iodevice_notfound">Nenhum dispositivo foi encontardo! Certifique-se que um dispositivo que quer configurar trabalha no modo de configuração e tente novamente. NOTA – Algumas versões de Android exigem que o GPS esteja ativo para as aplicações poderem pesquisar a rede WiFi. Certifique-se também se o GPS está ligado.</string>
     <string name="wizard_step3_txt1">Lique o seu atuador à rede elétrica. O dispositivo deveria trabalhar no modo de configuração por defeito assinalando-o com um diodo do estatuto a piscar no modo seguinte</string>
     <string name="wizard_wifi_timeout">O tempo-limite de dados sobre a rede corrente WiFi foi excedido!</string>
     <string name="wizard_connect_timeout">O tempo-limite de conexão a um atuador foi excedido!</string>

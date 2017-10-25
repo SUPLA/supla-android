@@ -105,7 +105,7 @@
     <string name="next">Avanti</string>
     <string name="wizard_addnetwork_error">Impossibile aggiungere la configurazione della rete WiFi!</string>
     <string name="wizard_result_conn_error">Impossibile stabilire una connessione con il dispositivo!</string>
-    <string name="wizard_iodevice_notfound">Nessun dispositivo trovato! Assicurati che il dispositivo che vuoi configurare, lavora in modalità di configurazione e poi riprova.</string>
+    <string name="wizard_iodevice_notfound">Nessun dispositivo trovato! Assicurati che il dispositivo che vuoi configurare, lavora in modalità di configurazione e poi riprova. IMPORTANTE – Alcune versioni di Android richiedono che il GPS sia acceso al fine di permettere alle applicazioni di effettuare la ricerca nella rete WiFi. Per questo motivo assicuraTi anche che il GPS sia accesso.</string>
     <string name="wizard_step3_txt1">Collega il Tuo dispositivo di input/output all’alimentazione. Il dispositivo deve lavorare di default in modalità di configurazione facendo lampeggiare un diodo dello status nel seguente modo</string>
     <string name="wizard_wifi_timeout">Il tempo di attesa per i dati sulla rete corrente WiFi è stato superato!</string>
     <string name="wizard_connect_timeout">Il tempo di attesa per lo stabilimento della connessione con il dispositivo di input/output è stato superato!</string>
