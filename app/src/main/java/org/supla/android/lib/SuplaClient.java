@@ -257,9 +257,9 @@ public class SuplaClient extends Thread {
         Preferences prefs = new Preferences(_context);
 
 
-        if ( prefs.isAdvancedCfg()
-                && versionError.Version > versionError.RemoteVersion
+        if ( (prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
                 && versionError.RemoteVersion >= 5
+                && versionError.Version > versionError.RemoteVersion
                 && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion ) {
 
                 // set prefered to lower
