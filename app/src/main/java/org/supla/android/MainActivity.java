@@ -156,7 +156,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         }
 
-
         cLV.Refresh(DbH_ListView.getChannelListCursor(), false);
     }
 
@@ -186,7 +185,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if ( channel == null ) return;
 
-        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc(), 1);
+        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc(), channel.getAltIcon(), 1);
 
         if ( ImgIdx == -1 ) return;
 

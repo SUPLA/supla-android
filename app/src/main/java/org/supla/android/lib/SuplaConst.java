@@ -73,6 +73,14 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING          = 200;
     public final static int SUPLA_CHANNELFNC_DEPTHSENSOR                   = 210;
     public final static int SUPLA_CHANNELFNC_DISTANCESENSOR                = 220;
+    public final static int SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW          = 230;
+    public final static int SUPLA_CHANNELFNC_MAILSENSOR                    = 240;
+    public final static int SUPLA_CHANNELFNC_WINDSENSOR                    = 250;
+    public final static int SUPLA_CHANNELFNC_PRESSURESENSOR                = 260;
+    public final static int SUPLA_CHANNELFNC_RAINSENSOR                    = 270;
+    public final static int SUPLA_CHANNELFNC_WEIGHTSENSOR                  = 280;
+    public final static int SUPLA_CHANNELFNC_WEATHER_STATION               = 290;
+    public final static int SUPLA_CHANNELFNC_STAIRCASETIMER                = 300;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;

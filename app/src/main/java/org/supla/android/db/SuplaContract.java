@@ -60,6 +60,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VALUE = "value";
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // LocationEntry.COLUMN_NAME_ID
+        public static final String COLUMN_NAME_ALTICON = "alticon";
+        public static final String COLUMN_NAME_FLAGS = "flags";
+        public static final String COLUMN_NAME_PROTOCOLVERSION = "protocolversion";
     }
 
     public static abstract class ColorListItemEntry implements BaseColumns {

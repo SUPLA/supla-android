@@ -46,6 +46,8 @@
     <string name="channel_func_rsopeningsensor">Czujnik otwacia rolet</string>
     <string name="channel_func_depthsensor">Czujnik głębokości</string>
     <string name="channel_func_distancesensor">Czujnik odległości</string>
+    <string name="channel_func_windowopeningsensor">Czujnik otwarcia okna</string>
+    <string name="channel_func_mailsensor">Czujnik poczty</string>
 
     <string name="rgb_brightness">Jasność</string>
     <string name="rgb_color">Kolor</string>

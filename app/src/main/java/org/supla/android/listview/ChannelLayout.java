@@ -184,7 +184,7 @@ public class ChannelLayout extends LinearLayout {
         return tv;
     }
 
-    public static int getImageIdx(int StateUp, int func, int img) {
+    public static int getImageIdx(int StateUp, int func, int altIcon, int img) {
 
         int img_idx = -1;
 
@@ -199,7 +199,16 @@ public class ChannelLayout extends LinearLayout {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                img_idx = StateUp == 1 ? R.drawable.gateclosed : R.drawable.gateopen;
+                switch(altIcon) {
+                    case 1:
+                        img_idx = StateUp == 1 ? R.drawable.gatealt1closed : R.drawable.gatealt1open;
+                        break;
+                    case 2:
+                        img_idx = StateUp == 1 ? R.drawable.barierclosed : R.drawable.barieropen;
+                        break;
+                    default:
+                        img_idx = StateUp == 1 ? R.drawable.gateclosed : R.drawable.gateopen;
+                }
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
@@ -214,10 +223,35 @@ public class ChannelLayout extends LinearLayout {
                 img_idx = StateUp == 1 ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                img_idx = StateUp == 1 ? R.drawable.poweron : R.drawable.poweroff;
+
+                switch(altIcon) {
+                    case 1:
+                        img_idx = StateUp == 1 ? R.drawable.tvon : R.drawable.tvoff;
+                        break;
+                    case 2:
+                        img_idx = StateUp == 1 ? R.drawable.radioon : R.drawable.radiooff;
+                        break;
+                    case 3:
+                        img_idx = StateUp == 1 ? R.drawable.pcon : R.drawable.pcoff;
+                        break;
+                    case 4:
+                        img_idx = StateUp == 1 ? R.drawable.fanon : R.drawable.fanoff;
+                        break;
+                    default:
+                        img_idx = StateUp == 1 ? R.drawable.poweron : R.drawable.poweroff;
+                }
+
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                img_idx = StateUp == 1 ? R.drawable.lighton : R.drawable.lightoff;
+
+                switch(altIcon) {
+                    case 1:
+                        img_idx = StateUp == 1 ? R.drawable.xmastreeon : R.drawable.xmastreeoff;
+                        break;
+                    default:
+                        img_idx = StateUp == 1 ? R.drawable.lighton : R.drawable.lightoff;
+                }
+
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 img_idx = R.drawable.thermometer;
@@ -263,6 +297,14 @@ public class ChannelLayout extends LinearLayout {
             case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
                 img_idx = R.drawable.distancesensor;
                 break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                img_idx = StateUp == 1 ? R.drawable.windowclosed : R.drawable.windowopen;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+                img_idx = StateUp == 1 ? R.drawable.mail : R.drawable.nomail;
+                break;
         }
 
         return img_idx;
@@ -276,6 +318,7 @@ public class ChannelLayout extends LinearLayout {
         private TextView Text2;
         private int Func;
         private int StateUp;
+        private int AltIcon;
 
 
         public ChannelImageLayout(Context context) {
@@ -430,14 +473,15 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
-        public void setFunc(int func, int stateUp) {
+        public void setFunc(int func, int altIcon, int stateUp) {
 
-            if ( Func == func && StateUp == stateUp )
+            if ( Func == func && StateUp == stateUp && AltIcon == altIcon )
                 return;
 
             StateUp = stateUp;
+            AltIcon = altIcon;
 
-            int img1_idx = getImageIdx(StateUp, func, 1);
+            int img1_idx = getImageIdx(StateUp, func, altIcon, 1);
 
             if ( img1_idx == -1 ) {
                 Img1.setVisibility(View.INVISIBLE);
@@ -446,7 +490,7 @@ public class ChannelLayout extends LinearLayout {
                 Img1.setVisibility(View.VISIBLE);
             }
 
-            int img2_idx = getImageIdx(StateUp, func, 2);
+            int img2_idx = getImageIdx(StateUp, func, altIcon, 2);
 
             if ( img2_idx == -1 ) {
                 Img2.setVisibility(View.INVISIBLE);
@@ -863,10 +907,11 @@ public class ChannelLayout extends LinearLayout {
     @SuppressLint("DefaultLocale")
     public void setChannelData(Channel channel) {
 
+
         Func = channel.getFunc();
         ChannelID = channel.getChannelId();
 
-        imgl.setFunc(Func, channel.StateUp());
+        imgl.setFunc(Func, channel.getAltIcon(), channel.StateUp());
         left_dot.setOn(channel.getOnLine());
         left_dot.setRing(false);
         right_dot.setOn(channel.getOnLine());

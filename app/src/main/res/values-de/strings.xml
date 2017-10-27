@@ -45,6 +45,8 @@
     <string name="channel_func_rsopeningsensor">Rolladen-Öffnungssensor</string>
     <string name="channel_func_depthsensor">Tiefensensor</string>
     <string name="channel_func_distancesensor">Abstandssensor</string>
+    <string name="channel_func_windowopeningsensor">Fensteröffnungssensor</string>
+    <string name="channel_func_mailsensor">Posteinwurferkennung</string>
 
     <string name="rgb_brightness">Helligkeit</string>
     <string name="rgb_color">Farbe</string>

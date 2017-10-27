@@ -35,7 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase rdb = null;
     private Context context;
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "supla.db";
 
     public DbHelper(Context context) {
@@ -44,16 +44,23 @@ public class DbHelper extends SQLiteOpenHelper {
         rdb = getReadableDatabase();
     }
 
+    private void execSQL(SQLiteDatabase db, String sql) {
+        Trace.d("sql-statments", sql);
+        db.execSQL(sql);
+    }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    private void createAccessIdTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_ACCESSID_TABLE = "CREATE TABLE " + SuplaContract.AccessIDEntry.TABLE_NAME + " ("+
                 SuplaContract.AccessIDEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.AccessIDEntry.COLUMN_NAME_ACCESSID + " INTEGER NOT NULL," +
                 SuplaContract.AccessIDEntry.COLUMN_NAME_SERVERADDRESS + " TEXT NOT NULL)";
 
+        execSQL(db, SQL_CREATE_ACCESSID_TABLE);
 
+    }
+
+    private void createLocationTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + SuplaContract.LocationEntry.TABLE_NAME + " ("+
                 SuplaContract.LocationEntry._ID + " INTEGER PRIMARY KEY," +
@@ -64,7 +71,72 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID + ") REFERENCES " +
                 SuplaContract.AccessIDEntry.TABLE_NAME + " (" + SuplaContract.AccessIDEntry._ID + "))";
 
+        execSQL(db, SQL_CREATE_LOCATION_TABLE);
+    }
 
+    private void createChannelTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ("+
+                SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE + " TEXT," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VALUE + " TEXT," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL," +
+                " FOREIGN KEY (" + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ") REFERENCES " +
+                SuplaContract.LocationEntry.TABLE_NAME + " (" + SuplaContract.LocationEntry._ID + "))";
+
+
+        execSQL(db, SQL_CREATE_CHANNEL_TABLE);
+
+    }
+
+    private void createColorTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " ("+
+                SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + " INTEGER NOT NULL," +
+                " FOREIGN KEY (" + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + ") REFERENCES " +
+                SuplaContract.ChannelEntry.TABLE_NAME + " (" + SuplaContract.ChannelEntry._ID + "))";
+
+        execSQL(db, SQL_CREATE_COLOR_TABLE);
+
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        createAccessIdTable(db);
+        createLocationTable(db);
+        createChannelTable(db);
+        createColorTable(db);
+    }
+
+    private void upgradeToV2(SQLiteDatabase db) {
+        createColorTable(db);
+    }
+
+    private void downgradeToV1(SQLiteDatabase db) {
+        execSQL(db, "DROP TABLE IF EXISTS "+SuplaContract.ColorListItemEntry.TABLE_NAME);
+    }
+
+    private void upgradeToV3(SQLiteDatabase db) {
+        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON+" INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS+" INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION+" INTEGER NOT NULL default 0");
+    }
+
+    private void downgradeToV2(SQLiteDatabase db) {
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME  + " RENAME TO " + SuplaContract.ChannelEntry.TABLE_NAME  + "_old");
 
         final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ("+
                 SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
@@ -79,52 +151,72 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ") REFERENCES " +
                 SuplaContract.LocationEntry.TABLE_NAME + " (" + SuplaContract.LocationEntry._ID + "))";
 
+        execSQL(db, SQL_CREATE_CHANNEL_TABLE);
 
+        final String SQL_COPY = "INSERT INTO " + SuplaContract.ChannelEntry.TABLE_NAME + " ("+
+                SuplaContract.ChannelEntry._ID + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VALUE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ")" +
+                " SELECT " + SuplaContract.ChannelEntry._ID + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VALUE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + "," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID +
+                " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + "_old";
 
-        Trace.d("sql-statments", SQL_CREATE_ACCESSID_TABLE);
-        Trace.d("sql-statments", SQL_CREATE_LOCATION_TABLE);
-        Trace.d("sql-statments", SQL_CREATE_CHANNEL_TABLE);
+        execSQL(db, SQL_COPY);
+        execSQL(db,  "DROP TABLE IF EXISTS "+SuplaContract.ChannelEntry.TABLE_NAME+"_old");
 
-        db.execSQL(SQL_CREATE_ACCESSID_TABLE);
-        db.execSQL(SQL_CREATE_LOCATION_TABLE);
-        db.execSQL(SQL_CREATE_CHANNEL_TABLE);
-
-        upgradeToV2(db);
 
     }
 
-    private void upgradeToV2(SQLiteDatabase db) {
-
-        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " ("+
-                SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + " INTEGER NOT NULL," +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " INTEGER NOT NULL," +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + " INTEGER NOT NULL," +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + " INTEGER NOT NULL," +
-                " FOREIGN KEY (" + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL + ") REFERENCES " +
-                SuplaContract.ChannelEntry.TABLE_NAME + " (" + SuplaContract.ChannelEntry._ID + "))";
-
-        Trace.d("sql-statments", SQL_CREATE_COLOR_TABLE);
-        db.execSQL(SQL_CREATE_COLOR_TABLE);
-    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if ( oldVersion == 2 && newVersion == 1 ) {
+        if ( newVersion < oldVersion ) {
 
-            final String SQL_DROP_COLOR_TABLE = "DROP TABLE IF EXISTS "+SuplaContract.ColorListItemEntry.TABLE_NAME;
-            Trace.d("sql-statments", SQL_DROP_COLOR_TABLE);
-            db.execSQL(SQL_DROP_COLOR_TABLE);
+            for(int nv=oldVersion;nv>newVersion;nv--) {
 
+                switch (nv) {
+                    case 3:
+                        downgradeToV2(db);
+                        break;
+                    case 2:
+                        downgradeToV1(db);
+                        break;
+                }
+            }
         }
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if ( oldVersion == 1 && newVersion == 2 ) {
-            upgradeToV2(db);
+        if ( oldVersion < newVersion ) {
+
+            for(int nv=oldVersion;nv<newVersion;nv++) {
+
+                switch (nv) {
+                    case 1:
+                        upgradeToV2(db);
+                        break;
+                    case 2:
+                        upgradeToV3(db);
+                        break;
+                }
+            }
         }
 
     }
@@ -312,6 +404,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelEntry.COLUMN_NAME_VALUE,
                 SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID,
+                SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON,
+                SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS,
+                SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION,
 
         };
 
@@ -381,6 +476,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     channel.AssignSuplaChannel(suplaChannel);
                     channel.setVisible(1);
                     channel.setLocationId(location.getId());
+                    channel.setAltIcon(suplaChannel.AltIcon);
+                    channel.setFlags(suplaChannel.Flags);
+                    channel.setProtocolVersion(suplaChannel.ProtocolVersion);
 
                     db = getWritableDatabase();
                     db.insert(
@@ -397,6 +495,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     channel.AssignSuplaChannel(suplaChannel);
                     channel.setLocationId(location.getId());
                     channel.setVisible(1);
+                    channel.setAltIcon(suplaChannel.AltIcon);
+                    channel.setFlags(suplaChannel.Flags);
+                    channel.setProtocolVersion(suplaChannel.ProtocolVersion);
 
                     _updateChannel(db, channel);
                 }
@@ -513,6 +614,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_VALUE
                 +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE
                 +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS
+                +", C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION
 
                 + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"

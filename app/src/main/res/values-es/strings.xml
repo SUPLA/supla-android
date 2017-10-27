@@ -45,6 +45,8 @@
     <string name="channel_func_rsopeningsensor">Sensor de apertura de las persianas</string>
     <string name="channel_func_depthsensor">Sensor de profundidad</string>
     <string name="channel_func_distancesensor">Sensor de distancia</string>
+    <string name="channel_func_windowopeningsensor">Dectector de apertura de ventanas</string>
+    <string name="channel_func_mailsensor">Sensor de correo</string>
 
     <string name="rgb_brightness">Brillo</string>
     <string name="rgb_color">Color</string>

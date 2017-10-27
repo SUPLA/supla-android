@@ -54,6 +54,8 @@
     <string name="channel_func_rsopeningsensor">Roller shutter opening sensor</string>
     <string name="channel_func_depthsensor">Depth sensor</string>
     <string name="channel_func_distancesensor">Distance sensor</string>
+    <string name="channel_func_windowopeningsensor">Window opening sensor</string>
+    <string name="channel_func_mailsensor">Mail sensor</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
@@ -145,5 +147,6 @@
     <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
     <string name="wizard_result_failed">Configuration Failed!</string>
     <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
+
 
 </resources>

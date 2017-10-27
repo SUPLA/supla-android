@@ -45,6 +45,8 @@
     <string name="channel_func_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
     <string name="channel_func_depthsensor">датчик глубины</string>
     <string name="channel_func_distancesensor">датчик расстояния</string>
+    <string name="channel_func_windowopeningsensor">Датчик открытия окна</string>
+    <string name="channel_func_mailsensor">Сигнализатор наличия почты</string>
 
     <string name="rgb_brightness">Яркость</string>
     <string name="rgb_color">Цвет</string>

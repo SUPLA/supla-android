@@ -45,6 +45,8 @@
     <string name="channel_func_rsopeningsensor">Capteur d\u0027ouverture des volet</string>
     <string name="channel_func_depthsensor">Capteur de profondeur</string>
     <string name="channel_func_distancesensor">Capteur de distance</string>
+    <string name="channel_func_windowopeningsensor">Capteur d\'ouverture de fenêtre</string>
+    <string name="channel_func_mailsensor">Détecteur de courrier</string>
 
     <string name="rgb_brightness">Luminosité</string>
     <string name="rgb_color">Couleur</string>

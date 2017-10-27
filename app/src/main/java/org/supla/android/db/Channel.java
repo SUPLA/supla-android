@@ -40,6 +40,9 @@ public class Channel {
     private ChannelValue Value;
     private int Visible;
     private long LocationId;
+    private int AltIcon;
+    private int Flags;
+    private int ProtocolVersion;
 
     public void setId(long id) {
         Id = id;
@@ -139,6 +142,12 @@ public class Channel {
                 case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
                     idx = R.string.channel_func_distancesensor;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                    idx = R.string.channel_func_windowopeningsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+                    idx = R.string.channel_func_mailsensor;
+                    break;
             }
 
 
@@ -205,6 +214,9 @@ public class Channel {
         setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE)) != 0);
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
+        setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON)));
+        setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
+        setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
 
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
@@ -230,6 +242,9 @@ public class Channel {
         return channel.Id != getChannelId()
                 || !channel.Caption.equals(getCaption())
                 || channel.OnLine != getOnLine()
+                || channel.Flags != getFlags()
+                || channel.AltIcon != getAltIcon()
+                || channel.ProtocolVersion != getProtocolVersion()
                 || getValue().Diff(channel.Value);
 
     }
@@ -239,6 +254,9 @@ public class Channel {
         return channel.getChannelId() != getChannelId()
                 || !channel.getCaption().equals(getCaption())
                 || channel.getOnLine() != getOnLine()
+                || channel.getFlags() != getFlags()
+                || channel.getAltIcon() != getAltIcon()
+                || channel.getProtocolVersion() != getProtocolVersion()
                 || getValue().Diff(channel.getValue());
 
     }
@@ -255,6 +273,9 @@ public class Channel {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE, getValue().getChannelStringSubValue());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
 
         return values;
     }
@@ -455,6 +476,30 @@ public class Channel {
 
         return hiValue() ? 1 : 0;
 
+    }
+
+    public void setAltIcon(int altIcon) {
+        AltIcon = altIcon;
+    }
+
+    public int getAltIcon() {
+        return AltIcon;
+    }
+
+    public void setFlags(int flags) {
+        Flags = flags;
+    }
+
+    public int getFlags() {
+        return Flags;
+    }
+
+    public void setProtocolVersion(int protocolVersion) {
+        ProtocolVersion = protocolVersion;
+    }
+
+    public int getProtocolVersion() {
+        return ProtocolVersion;
     }
 
 }

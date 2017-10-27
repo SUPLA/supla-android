@@ -45,6 +45,8 @@
     <string name="channel_func_rsopeningsensor">Sensore di apertura di avvolgibili</string>
     <string name="channel_func_depthsensor">Sensore di profondità</string>
     <string name="channel_func_distancesensor">Sensore di distanza</string>
+    <string name="channel_func_windowopeningsensor">Sensore di apertura finestra</string>
+    <string name="channel_func_mailsensor">Rilevatore di posta</string>
 
     <string name="rgb_brightness">Luminosità</string>
     <string name="rgb_color">Colore</string>

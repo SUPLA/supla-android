@@ -25,6 +25,9 @@ public class SuplaChannel {
     public int Id;
     public int LocationID;
     public int Func;
+    public int AltIcon;
+    public int Flags;
+    public int ProtocolVersion;
     public boolean OnLine;
 
     public SuplaChannelValue Value;
