@@ -779,7 +779,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     btnNext2.setText("....", TextView.BufferType.NORMAL);
                     setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY1);
-                    SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
+                    SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
 
                     break;
                 case PAGE_ERROR:
