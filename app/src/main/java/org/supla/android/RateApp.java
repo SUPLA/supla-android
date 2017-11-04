@@ -64,7 +64,7 @@ public class RateApp {
 
                         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.supla.android")));
 
-                        moreTime(36500);
+                        moreTime(3650);
                         dialog.cancel();
 
                     }
@@ -84,7 +84,7 @@ public class RateApp {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        moreTime(36500);
+                        moreTime(3650);
                         dialog.cancel();
 
                     }
