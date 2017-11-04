@@ -1005,6 +1005,8 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
 
                     left_dot.setVisibility(View.VISIBLE);
                     left_dot.setRing(true);
