@@ -24,8 +24,10 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rlButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/rlInfo"
         android:layout_alignParentTop="false"
         android:layout_below="@+id/rlRS"
         android:layout_marginLeft="5dp"
@@ -99,6 +101,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rlInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -144,8 +147,8 @@
                     android:layout_weight="1"
                     android:text="@string/rs_percent_caption"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rs_detail_info_text"
-                    android:textIsSelectable="true" />
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/rs_detail_info_text" />
 
                 <TextView
                     android:id="@+id/rsDetailPercent"
@@ -154,8 +157,8 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text="80%"
-                    android:textSize="@dimen/rs_detail_info_text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/rs_detail_info_text"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 

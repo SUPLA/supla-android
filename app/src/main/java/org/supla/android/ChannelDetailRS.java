@@ -25,6 +25,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
@@ -32,7 +33,7 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
-public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener {
+public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
 
     private SuplaRollerShutter rs;
     private TextView tvTitle;
@@ -90,6 +91,9 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         tvTitle = (TextView)findViewById(R.id.rsDetailTitle);
         tvTitle.setTypeface(type);
+
+        addOnLayoutChangeListener(this);
+
     }
 
     @Override
@@ -195,6 +199,21 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         SuplaApp.Vibrate(getContext());
 
         return true;
+    }
+
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+
+        RelativeLayout rlButtons = (RelativeLayout)findViewById(R.id.rlButtons);
+
+        int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
+
+        if ( margin < 0 ) {
+            RelativeLayout rlRS = (RelativeLayout)findViewById(R.id.rlRS);
+            rlRS.getLayoutParams().height += margin;
+            rlRS.requestLayout();
+        }
+
     }
 }
 
