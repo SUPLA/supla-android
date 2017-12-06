@@ -321,7 +321,8 @@ public class SuplaClient extends Thread {
 
         if (  GetMaxProtoVersion() > 0
                 && prefs.getPreferedProtocolVersion() < GetMaxProtoVersion()
-                && registerResult.Version > prefs.getPreferedProtocolVersion() ) {
+                && registerResult.Version > prefs.getPreferedProtocolVersion()
+                && registerResult.Version <=  GetMaxProtoVersion() ) {
             prefs.setPreferedProtocolVersion(registerResult.Version);
         }
 
