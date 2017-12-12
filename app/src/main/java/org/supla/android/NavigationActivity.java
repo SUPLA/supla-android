@@ -56,13 +56,13 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private Button MiSettings;
     private Button MiAbout;
     private Button MiDonate;
-    private Button MiFeedback;
+    private Button MiHelp;
     private Button MiAddDevice;
 
     private Button SettingsButton;
     private Button AboutButton;
     private Button DonateButton;
-    private Button FeedbackButton;
+    private Button HelpButton;
     private Button HomepageButton;
     private Button AddDeviceButton;
 
@@ -134,26 +134,26 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MiSettings = (Button)MenuItemsLayout.findViewById(R.id.menuitem_settings);
             MiAbout = (Button)MenuItemsLayout.findViewById(R.id.menuitem_about);
             MiDonate = (Button)MenuItemsLayout.findViewById(R.id.menuitem_donate);
-            MiFeedback = (Button)MenuItemsLayout.findViewById(R.id.menuitem_feedback);
+            MiHelp = (Button)MenuItemsLayout.findViewById(R.id.menuitem_help);
             MiAddDevice = (Button)MenuItemsLayout.findViewById(R.id.menuitem_add);
 
             MiSettings.setOnClickListener(this);
             MiAbout.setOnClickListener(this);
             MiDonate.setOnClickListener(this);
-            MiFeedback.setOnClickListener(this);
+            MiHelp.setOnClickListener(this);
             MiAddDevice.setOnClickListener(this);
 
             SettingsButton = (Button)MenuItemsLayout.findViewById(R.id.btn_settings);
             AboutButton = (Button)MenuItemsLayout.findViewById(R.id.btn_about);
             DonateButton = (Button)MenuItemsLayout.findViewById(R.id.btn_donate);
-            FeedbackButton = (Button)MenuItemsLayout.findViewById(R.id.btn_feedback);
+            HelpButton = (Button)MenuItemsLayout.findViewById(R.id.btn_help);
             HomepageButton = (Button)MenuItemsLayout.findViewById(R.id.btn_homepage);
             AddDeviceButton = (Button)MenuItemsLayout.findViewById(R.id.btn_add);
 
             SettingsButton.setOnClickListener(this);
             AboutButton.setOnClickListener(this);
             DonateButton.setOnClickListener(this);
-            FeedbackButton.setOnClickListener(this);
+            HelpButton.setOnClickListener(this);
             HomepageButton.setOnClickListener(this);
             AddDeviceButton.setOnClickListener(this);
 
@@ -161,7 +161,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             SettingsButton.setTypeface(type);
             AboutButton.setTypeface(type);
             DonateButton.setTypeface(type);
-            FeedbackButton.setTypeface(type);
+            HelpButton.setTypeface(type);
             AddDeviceButton.setTypeface(type);
 
             type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
@@ -170,7 +170,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             SettingsButton.setTransformationMethod(null);
             AboutButton.setTransformationMethod(null);
             DonateButton.setTransformationMethod(null);
-            FeedbackButton.setTransformationMethod(null);
+            HelpButton.setTransformationMethod(null);
             HomepageButton.setTransformationMethod(null);
             AddDeviceButton.setTransformationMethod(null);
 
@@ -325,6 +325,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void openForumpage() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.forumpage_url)));
+        startActivity(browserIntent);
+    }
+
     public void donate() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
         startActivity(browserIntent);
@@ -419,14 +424,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             donate();
 
-        } else if ( v == MiFeedback || v == FeedbackButton ) {
+        } else if ( v == MiHelp || v == HelpButton ) {
 
-            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("text/plain");
-
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ getResources().getString(R.string.feedback_email) });
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject));
-            startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.feedback_title)));
+            openForumpage();
 
         } else if ( v == HomepageButton ) {
 

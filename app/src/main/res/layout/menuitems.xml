@@ -116,17 +116,17 @@
         <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/menuitem_feedback"
+            android:id="@+id/menuitem_help"
             android:layout_gravity="left|top"
             android:clickable="true"
-            android:background="@drawable/feedback"
+            android:background="@drawable/help"
             style="?android:attr/borderlessButtonStyle"
             android:layout_below="@+id/donate_line"
             android:layout_toLeftOf="@+id/donate_line"
             android:layout_toStartOf="@+id/donate_line" />
 
         <View
-            android:layout_below="@id/menuitem_feedback"
+            android:layout_below="@id/menuitem_help"
             android:layout_height="0.25dp"
             android:layout_width="wrap_content"
             android:background="@color/menuseparator"
@@ -135,7 +135,7 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_below="@id/menuitem_feedback"
+            android:layout_below="@id/menuitem_help"
             android:layout_height="35dp"
             android:id="@+id/btn_homepage"
             android:background="@color/menubar"
@@ -149,15 +149,15 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:id="@+id/btn_feedback"
+            android:id="@+id/btn_help"
             android:background="@color/menubar"
-            android:text="@string/feedback"
+            android:text="@string/help"
             android:textColor="@android:color/white"
             android:layout_below="@+id/donate_line"
             android:layout_alignLeft="@+id/donate_line"
             android:layout_alignStart="@+id/donate_line"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_alignBottom="@+id/menuitem_feedback"
+            android:layout_alignBottom="@+id/menuitem_help"
             android:layout_marginLeft="5dp"
             android:gravity="center|left"
             android:layout_marginTop="1dp"

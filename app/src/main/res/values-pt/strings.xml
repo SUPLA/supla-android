@@ -126,5 +126,6 @@
     <string name="wizard_no_internetwifi">Antes de iniciar, conecte-se à Internet através da rede WiFi que também será utilizada por um atuador para se conectar ao servidor.</string>
     <string name="wizard_step2_txt3">*) A rede %1$s será utilizada por atuadores para se conectarem ao servidor.</string>
     <string name="wizard_not_enought_permissions">A aplicação não dispõe de poderes suficientes. Vá para a gestão das aplicações nas configurações do sistema. A seguir, encontre a aplicação %1$s e ative todos os poderes requeridos por ela.</string>
+    <string name="help">Ajuda</string>
 
 </resources>
