@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.Window;
 import org.supla.android.db.DbHelper;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /*
@@ -39,11 +40,13 @@ public class RateApp {
     private void moreTime(int days) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Date now = new Date();
-        long rt = new Date(now.getTime() + (days * 0x5265C00)).getTime();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, days);
 
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(PN_RATE_TIME, rt);
+        editor.putLong(PN_RATE_TIME, cal.getTime().getTime());
         editor.apply();
 
     }
