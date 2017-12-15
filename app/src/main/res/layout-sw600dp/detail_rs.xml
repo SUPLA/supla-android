@@ -24,8 +24,10 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rlButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/rlInfo"
         android:layout_alignParentTop="false"
         android:layout_below="@+id/rlRS"
         android:layout_marginLeft="5dp"
@@ -99,6 +101,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rlInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
