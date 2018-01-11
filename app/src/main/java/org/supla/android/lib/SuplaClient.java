@@ -47,7 +47,8 @@ import java.net.URISyntaxException;
 public class SuplaClient extends Thread {
 
     private int _client_id;
-    private long _supla_client = 0;
+    private long _supla_client_ptr = 0;
+    private long _supla_client_ptr_counter = 0;
     private boolean _canceled = false;
     private static final String log_tag = "SuplaClientThread";
     private Context _context;
@@ -104,11 +105,41 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            if ( _supla_client  == 0 ) {
-                _supla_client = scInit(cfg);
+            if ( _supla_client_ptr == 0 ) {
+                _supla_client_ptr_counter = 0;
+                _supla_client_ptr = scInit(cfg);
             }
 
-            result = _supla_client != 0;
+            result = _supla_client_ptr != 0;
+        }
+
+        return result;
+    }
+
+    private long LockClientPtr() {
+        long result = 0;
+
+        synchronized (sc_lck) {
+            if ( _supla_client_ptr != 0 ) {
+                _supla_client_ptr_counter++;
+                result = _supla_client_ptr;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean UnlockClientPtr() {
+
+        boolean result = false;
+
+        synchronized (sc_lck) {
+            if ( _supla_client_ptr != 0
+                    && _supla_client_ptr_counter > 0 ) {
+
+                _supla_client_ptr_counter--;
+                result = true;
+            }
         }
 
         return result;
@@ -116,11 +147,28 @@ public class SuplaClient extends Thread {
 
     private void Free() {
 
-        synchronized (sc_lck) {
-            if ( _supla_client != 0 )
-                scFree(_supla_client);
-            _supla_client = 0;
+        boolean freed = false;
+
+        while (!freed) {
+
+            synchronized (sc_lck) {
+                if ( _supla_client_ptr != 0
+                        && _supla_client_ptr_counter == 0 ) {
+                    scFree(_supla_client_ptr);
+                    _supla_client_ptr = 0;
+                }
+
+
+                freed = _supla_client_ptr == 0;
+            }
+
+            if ( !freed ) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {}
+            }
         }
+
 
     }
 
@@ -128,8 +176,11 @@ public class SuplaClient extends Thread {
 
         int result = 0;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 ? scGetId(_supla_client) : 0;
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -143,8 +194,11 @@ public class SuplaClient extends Thread {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if ( activeNetworkInfo != null && activeNetworkInfo.isConnected() ) {
-            synchronized (sc_lck) {
-                result = _supla_client != 0 && scConnect(_supla_client);
+            LockClientPtr();
+            try{
+                result = _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
+            } finally {
+                UnlockClientPtr();
             }
         }
 
@@ -161,8 +215,11 @@ public class SuplaClient extends Thread {
 
         boolean result = false;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 && scConnected(_supla_client);
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -173,7 +230,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 && scRegistered(_supla_client);
+            result = _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
         }
 
         return result;
@@ -181,16 +238,20 @@ public class SuplaClient extends Thread {
 
     public void Disconnect() {
 
-        synchronized (sc_lck) {
-            if ( _supla_client != 0 )
-                scDisconnect(_supla_client);
+        LockClientPtr();
+        try{
+            if ( _supla_client_ptr != 0 ) {
+                scDisconnect(_supla_client_ptr);
+            }
+        } finally {
+            UnlockClientPtr();
         }
 
     }
 
     private boolean Iterate(int wait_usec) {
 
-        return _supla_client != 0 && scIterate(_supla_client, wait_usec);
+        return _supla_client_ptr != 0 && scIterate(_supla_client_ptr, wait_usec);
 
     }
 
@@ -198,8 +259,11 @@ public class SuplaClient extends Thread {
 
         boolean result = false;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 && scOpen(_supla_client, ChannelID, Open);
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ChannelID, Open);
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -210,8 +274,11 @@ public class SuplaClient extends Thread {
 
         boolean result = false;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 && scSetRGBW(_supla_client, ChannelID, Color, ColorBrightness, Brightness);
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 && scSetRGBW(_supla_client_ptr, ChannelID, Color, ColorBrightness, Brightness);
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -221,8 +288,11 @@ public class SuplaClient extends Thread {
 
         boolean result = false;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 && scGetRegistrationEnabled(_supla_client);
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 && scGetRegistrationEnabled(_supla_client_ptr);
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -233,7 +303,7 @@ public class SuplaClient extends Thread {
         int result = 0;
 
         synchronized (sc_lck) {
-            result = _supla_client != 0 ? scGetProtoVersion(_supla_client) : 0;
+            result = _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
         }
 
         return result;
@@ -243,8 +313,11 @@ public class SuplaClient extends Thread {
 
         int result = 0;
 
-        synchronized (sc_lck) {
-            result = _supla_client != 0 ? scGetMaxProtoVersion(_supla_client) : 0;
+        LockClientPtr();
+        try{
+            result = _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
