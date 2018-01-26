@@ -29,7 +29,6 @@
 
 
         <activity android:name=".StartActivity"
-            android:screenOrientation="sensorPortrait"
             android:noHistory="true">
 
             <intent-filter>
@@ -40,27 +39,22 @@
         </activity>
 
         <activity android:name=".StatusActivity"
-            android:screenOrientation="sensorPortrait"
             android:launchMode="singleTop">
         </activity>
 
         <activity android:name=".MainActivity"
-                  android:screenOrientation="sensorPortrait"
                   android:launchMode="singleTop">
         </activity>
 
         <activity android:name=".CfgActivity"
-                  android:screenOrientation="sensorPortrait"
                   android:launchMode="singleTop">
         </activity>
 
         <activity android:name=".AboutActivity"
-                  android:screenOrientation="sensorPortrait"
                   android:launchMode="singleTop">
         </activity>
 
         <activity android:name=".AddWizardActivity"
-            android:screenOrientation="sensorPortrait"
             android:launchMode="singleTop">
         </activity>
     </application>
