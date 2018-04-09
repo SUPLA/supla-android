@@ -3,7 +3,7 @@
     <string name="app_name">SUPLA</string>
     <string name="feedback_title">Odeslat email</string>
     <string name="donate_title">Podporujte projekt</string>
-    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="version">verze</string>
     <string name="feedback">Feedback</string>
     <string name="about">O programu</string>
