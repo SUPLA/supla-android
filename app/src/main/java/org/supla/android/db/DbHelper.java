@@ -168,19 +168,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void upgradeToV4(SQLiteDatabase db) {
 
-        createColorTable(db, "_new");
-        final String SQL_COPY = "INSERT INTO "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_new ("+
+        execSQL(db, "ALTER TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+" RENAME TO "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
+        createColorTable(db);
+
+        final String SQL_COPY = "INSERT INTO "+SuplaContract.ColorListItemEntry.TABLE_NAME+" ("+
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID+","+
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX+","+
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR+","+
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS+") "+
-                "SELECT c._id, c.channelid, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item ci ON c.id = ci.channel";
+                "SELECT c.channelid, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item_old ci ON c._id = ci.channel";
 
         execSQL(db, SQL_COPY);
-
-
-        execSQL(db, "DROP TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME);
-        execSQL(db, "ALTER TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_new RENAME TO "+SuplaContract.ColorListItemEntry.TABLE_NAME);
+        
+        execSQL(db, "DROP TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
 
         execSQL(db, "DROP TABLE accessid");
         execSQL(db, "DROP TABLE "+SuplaContract.LocationEntry.TABLE_NAME);
