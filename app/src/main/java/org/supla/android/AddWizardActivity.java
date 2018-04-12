@@ -652,7 +652,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 break;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                 setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY2);
-                SuplaApp.getApp().getSuplaClient().GetRegistrationEnabled();
+                SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
                 return;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
                 showError(R.string.device_reg_request_timeout);
