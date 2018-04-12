@@ -283,7 +283,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean Open(int ChannelID, int Open) {
-        return Open(ChannelID, true, Open);
+        return Open(ChannelID, false, Open);
     }
 
     public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness) {
