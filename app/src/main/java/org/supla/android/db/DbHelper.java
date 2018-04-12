@@ -179,7 +179,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "SELECT c.channelid, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item_old ci ON c._id = ci.channel";
 
         execSQL(db, SQL_COPY);
-        
+
         execSQL(db, "DROP TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
 
         execSQL(db, "DROP TABLE accessid");
