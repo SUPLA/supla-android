@@ -24,15 +24,6 @@ public class SuplaContract {
 
     public SuplaContract() {}
 
-    public static abstract class AccessIDEntry implements BaseColumns {
-
-        public static final String TABLE_NAME = "accessid";
-
-        public static final String _ID = "_id";  // Primary Key
-        public static final String COLUMN_NAME_ACCESSID = "accessid"; // SuplaCfg.AccessID
-        public static final String COLUMN_NAME_SERVERADDRESS = "serveraddress"; // SuplaCfg.Host
-
-    }
 
     public static abstract class LocationEntry implements BaseColumns {
 
@@ -42,9 +33,6 @@ public class SuplaContract {
         public static final String COLUMN_NAME_LOCATIONID = "locationid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_VISIBLE = "visible";
-        public static final String COLUMN_NAME_ACCESSID = "accessid"; // AccessIDEntry.COLUMN_NAME_ID
-
-
     }
 
     public static abstract class ChannelEntry implements BaseColumns {
@@ -55,14 +43,40 @@ public class SuplaContract {
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_FUNC = "func";
-        public static final String COLUMN_NAME_ONLINE = "online";
-        public static final String COLUMN_NAME_SUBVALUE = "subvalue";
-        public static final String COLUMN_NAME_VALUE = "value";
         public static final String COLUMN_NAME_VISIBLE = "visible";
-        public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // LocationEntry.COLUMN_NAME_ID
+        public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_ALTICON = "alticon";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_PROTOCOLVERSION = "protocolversion";
+    }
+
+    public static abstract class ChannelValueEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "channel_value";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_ONLINE = "online";
+        public static final String COLUMN_NAME_SUBVALUE = "subvalue";
+        public static final String COLUMN_NAME_VALUE = "value";
+    }
+
+    public static abstract class ChannelViewEntry implements BaseColumns {
+
+        public static final String VIEW_NAME = "channel_v1";
+
+        public static final String _ID = ChannelEntry._ID;
+        public static final String COLUMN_NAME_CHANNELID = ChannelEntry.COLUMN_NAME_CHANNELID;
+        public static final String COLUMN_NAME_CAPTION = ChannelEntry.COLUMN_NAME_CAPTION;
+        public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
+        public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
+        public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
+        public static final String COLUMN_NAME_FUNC = ChannelEntry.COLUMN_NAME_FUNC;
+        public static final String COLUMN_NAME_VISIBLE = ChannelEntry.COLUMN_NAME_VISIBLE;
+        public static final String COLUMN_NAME_LOCATIONID = ChannelEntry.COLUMN_NAME_LOCATIONID;
+        public static final String COLUMN_NAME_ALTICON = ChannelEntry.COLUMN_NAME_ALTICON;
+        public static final String COLUMN_NAME_FLAGS = ChannelEntry.COLUMN_NAME_FLAGS;
+        public static final String COLUMN_NAME_PROTOCOLVERSION = ChannelEntry.COLUMN_NAME_PROTOCOLVERSION;
     }
 
     public static abstract class ColorListItemEntry implements BaseColumns {
@@ -70,7 +84,8 @@ public class SuplaContract {
         public static final String TABLE_NAME = "color_list_item";
 
         public static final String _ID = "_id"; // Primary Key
-        public static final String COLUMN_NAME_CHANNEL = "channel"; // ChannelEntry._ID
+        public static final String COLUMN_NAME_CFGID = "cfgid";
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_IDX = "idx";
         public static final String COLUMN_NAME_COLOR = "color";
         public static final String COLUMN_NAME_BRIGHTNESS = "brightness";

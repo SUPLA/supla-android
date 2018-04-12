@@ -24,7 +24,7 @@ import android.database.Cursor;
 public class ColorListItem {
 
     private long Id;
-    private long Channel;
+    private int ChannelId;
     private int Idx;
     private int Color;
     private short Brightness;
@@ -37,12 +37,12 @@ public class ColorListItem {
         Id = id;
     }
 
-    public long getChannel() {
-        return Channel;
+    public int getChannelId() {
+        return ChannelId;
     }
 
-    public void setChannel(long channel) {
-        Channel = channel;
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
     public int getIdx() {
@@ -72,7 +72,7 @@ public class ColorListItem {
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ColorListItemEntry._ID)));
-        setChannel(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL)));
+        setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID)));
         setIdx(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX)));
         setColor(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR)));
         setBrightness(cursor.getShort(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS)));
@@ -81,7 +81,7 @@ public class ColorListItem {
     public void AssignColorListItem(ColorListItem cli) {
 
         setId(cli.getId());
-        setChannel(cli.getChannel());
+        setChannelId(cli.getChannelId());
         setIdx(cli.getIdx());
         setColor(cli.getColor());
         setBrightness(cli.getBrightness());
@@ -92,7 +92,7 @@ public class ColorListItem {
 
         ContentValues values = new ContentValues();
 
-        values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNEL, getChannel());
+        values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX, getIdx());
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR, getColor());
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS, getBrightness());

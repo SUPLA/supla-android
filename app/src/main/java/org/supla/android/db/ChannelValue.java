@@ -18,15 +18,21 @@ package org.supla.android.db;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
+import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.Arrays;
 
 public class ChannelValue {
+
+    private long Id;
+    private int ChannelId;
+    private boolean OnLine;
     private byte[] Value;
     private byte[] SubValue;
 
@@ -37,6 +43,22 @@ public class ChannelValue {
         if ( v1 != null && v2 == null ) return true;
 
         return !Arrays.equals(v1, v2);
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
+    }
+
+    public int getChannelId() {
+        return ChannelId;
     }
 
     byte[] getChannelValue() {
@@ -77,30 +99,47 @@ public class ChannelValue {
         setChannelSubValue(Base64.decode(value, Base64.DEFAULT));
     }
 
+    public ContentValues getContentValues() {
+
+        ContentValues values = new ContentValues();
+
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID, getChannelId());
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE, getOnLine());
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE, getChannelStringValue());
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE, getChannelStringSubValue());
+
+        return values;
+    }
+
     public void AssignCursorData(Cursor cursor) {
 
-        setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VALUE)));
-        setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelValueEntry._ID)));
+        setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID)));
+        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE)) != 0);
+        setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE)));
+        setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE)));
 
     }
 
     public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
-
         setChannelValue(channelValue.Value);
         setChannelSubValue(channelValue.SubValue);
-
     }
 
     public boolean Diff(SuplaChannelValue channelValue) {
-
         return ValueDiff(channelValue.Value, Value) || ValueDiff(channelValue.SubValue, SubValue);
-
     }
 
     public boolean Diff(ChannelValue channelValue) {
-
         return ValueDiff(channelValue.Value, Value) || ValueDiff(channelValue.SubValue, SubValue);
+    }
 
+    public void setOnLine(boolean onLine) {
+        OnLine = onLine;
+    }
+
+    public boolean getOnLine() {
+        return OnLine;
     }
 
 }

@@ -68,7 +68,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     int lastColorBrightness;
     int lastBrightness;
 
-    long channel_id;
+    int channel_id;
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
     final static private long MIN_UPDATE_DELAY = 2000;
@@ -230,7 +230,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         if ( rgbPicker.getColorWheelVisible() )
             rgbPicker.setColor(channel.getColor());
 
-        channel_id = channel.getId();
+        channel_id = channel.getChannelId();
 
         for(int a=1;a<6;a++) {
             ColorListItem cli = DBH.getColorListItem(channel_id, a);
@@ -458,11 +458,10 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             sclPicker.setItemColor(idx, rgbPicker.getColor());
             sclPicker.setItemPercent(idx, (short)rgbPicker.getBrightnessValue());
 
-
             if ( channel_id != 0 ) {
 
                 ColorListItem cli = new ColorListItem();
-                cli.setChannel(channel_id);
+                cli.setChannelId(channel_id);
                 cli.setIdx(idx);
                 cli.setColor(rgbPicker.getColor());
                 cli.setBrightness((short)rgbPicker.getBrightnessValue());

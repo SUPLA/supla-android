@@ -61,18 +61,31 @@ public class SuplaClient extends Thread {
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
 
     public native void CfgInit(SuplaCfg cfg);
+
     private native long scInit(SuplaCfg cfg);
+
     private native void scFree(long _supla_client);
+
     private native int scGetId(long _supla_client);
+
     private native boolean scConnect(long _supla_client);
+
     private native boolean scConnected(long _supla_client);
+
     private native boolean scRegistered(long _supla_client);
+
     private native void scDisconnect(long _supla_client);
+
     private native boolean scIterate(long _supla_client, int wait_usec);
-    private native boolean scOpen(long _supla_client, int ChannelID, int Open);
-    private native boolean scSetRGBW(long _supla_client, int ChannelID, int Color, int ColorBrightness, int Brightness);
+
+    private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
+
+    private native boolean scSetRGBW(long _supla_client, int ID, int Group, int Color, int ColorBrightness, int Brightness);
+
     private native boolean scGetRegistrationEnabled(long _supla_client);
+
     private native int scGetProtoVersion(long _supla_client);
+
     private native int scGetMaxProtoVersion(long _supla_client);
 
     public SuplaClient(Context context) {
@@ -92,10 +105,10 @@ public class SuplaClient extends Thread {
 
     public void sendMessage(SuplaClientMsg msg) {
 
-        if ( canceled() ) return;
+        if (canceled()) return;
 
         synchronized (msgh_lck) {
-            if ( _msgHandler != null )
+            if (_msgHandler != null)
                 _msgHandler.sendMessage(_msgHandler.obtainMessage(msg.getType(), msg));
         }
     }
@@ -105,7 +118,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            if ( _supla_client_ptr == 0 ) {
+            if (_supla_client_ptr == 0) {
                 _supla_client_ptr_counter = 0;
                 _supla_client_ptr = scInit(cfg);
             }
@@ -120,7 +133,7 @@ public class SuplaClient extends Thread {
         long result = 0;
 
         synchronized (sc_lck) {
-            if ( _supla_client_ptr != 0 ) {
+            if (_supla_client_ptr != 0) {
                 _supla_client_ptr_counter++;
                 result = _supla_client_ptr;
             }
@@ -134,8 +147,8 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         synchronized (sc_lck) {
-            if ( _supla_client_ptr != 0
-                    && _supla_client_ptr_counter > 0 ) {
+            if (_supla_client_ptr != 0
+                    && _supla_client_ptr_counter > 0) {
 
                 _supla_client_ptr_counter--;
                 result = true;
@@ -152,8 +165,8 @@ public class SuplaClient extends Thread {
         while (!freed) {
 
             synchronized (sc_lck) {
-                if ( _supla_client_ptr != 0
-                        && _supla_client_ptr_counter == 0 ) {
+                if (_supla_client_ptr != 0
+                        && _supla_client_ptr_counter == 0) {
                     scFree(_supla_client_ptr);
                     _supla_client_ptr = 0;
                 }
@@ -162,10 +175,11 @@ public class SuplaClient extends Thread {
                 freed = _supla_client_ptr == 0;
             }
 
-            if ( !freed ) {
+            if (!freed) {
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
         }
 
@@ -177,7 +191,7 @@ public class SuplaClient extends Thread {
         int result = 0;
 
         LockClientPtr();
-        try{
+        try {
             result = _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
         } finally {
             UnlockClientPtr();
@@ -193,9 +207,9 @@ public class SuplaClient extends Thread {
         ConnectivityManager connectivityManager = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if ( activeNetworkInfo != null && activeNetworkInfo.isConnected() ) {
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
             LockClientPtr();
-            try{
+            try {
                 result = _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
             } finally {
                 UnlockClientPtr();
@@ -206,9 +220,8 @@ public class SuplaClient extends Thread {
     }
 
 
-
     public void Reconnect() {
-        if ( Connected() ) Disconnect();
+        if (Connected()) Disconnect();
     }
 
     public boolean Connected() {
@@ -216,7 +229,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         LockClientPtr();
-        try{
+        try {
             result = _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
         } finally {
             UnlockClientPtr();
@@ -239,8 +252,8 @@ public class SuplaClient extends Thread {
     public void Disconnect() {
 
         LockClientPtr();
-        try{
-            if ( _supla_client_ptr != 0 ) {
+        try {
+            if (_supla_client_ptr != 0) {
                 scDisconnect(_supla_client_ptr);
             }
         } finally {
@@ -255,13 +268,13 @@ public class SuplaClient extends Thread {
 
     }
 
-    public boolean Open(int ChannelID, int Open) {
+    public boolean Open(int ID, boolean Group, int Open) {
 
         boolean result = false;
 
         LockClientPtr();
-        try{
-            result = _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ChannelID, Open);
+        try {
+            result = _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
         } finally {
             UnlockClientPtr();
         }
@@ -269,19 +282,26 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean Open(int ChannelID, int Open) {
+        return Open(ChannelID, true, Open);
+    }
 
-    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness) {
+    public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness) {
 
         boolean result = false;
 
         LockClientPtr();
-        try{
-            result = _supla_client_ptr != 0 && scSetRGBW(_supla_client_ptr, ChannelID, Color, ColorBrightness, Brightness);
+        try {
+            result = _supla_client_ptr != 0 && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color, ColorBrightness, Brightness);
         } finally {
             UnlockClientPtr();
         }
 
         return result;
+    }
+
+    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness) {
+        return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness);
     }
 
     public boolean GetRegistrationEnabled() {
@@ -289,7 +309,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         LockClientPtr();
-        try{
+        try {
             result = _supla_client_ptr != 0 && scGetRegistrationEnabled(_supla_client_ptr);
         } finally {
             UnlockClientPtr();
@@ -314,7 +334,7 @@ public class SuplaClient extends Thread {
         int result = 0;
 
         LockClientPtr();
-        try{
+        try {
             result = _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
         } finally {
             UnlockClientPtr();
@@ -330,15 +350,15 @@ public class SuplaClient extends Thread {
         Preferences prefs = new Preferences(_context);
 
 
-        if ( (prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
+        if ((prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
                 && versionError.RemoteVersion >= 5
                 && versionError.Version > versionError.RemoteVersion
-                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion ) {
+                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion) {
 
-                // set prefered to lower
-                prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
-                Reconnect();
-                return;
+            // set prefered to lower
+            prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
+            Reconnect();
+            return;
         }
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onVersionError);
@@ -362,7 +382,7 @@ public class SuplaClient extends Thread {
         msg.setConnError(connError);
         sendMessage(msg);
 
-        if ( connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND ) {
+        if (connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
             cancel();
         }
     }
@@ -392,19 +412,21 @@ public class SuplaClient extends Thread {
         regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
 
-        if (  GetMaxProtoVersion() > 0
+        if (GetMaxProtoVersion() > 0
                 && prefs.getPreferedProtocolVersion() < GetMaxProtoVersion()
                 && registerResult.Version > prefs.getPreferedProtocolVersion()
-                && registerResult.Version <=  GetMaxProtoVersion() ) {
+                && registerResult.Version <= GetMaxProtoVersion()) {
             prefs.setPreferedProtocolVersion(registerResult.Version);
         }
 
         _client_id = registerResult.ClientID;
 
-        Trace.d(log_tag, "registerResult.ChannelCount="+Integer.toString(registerResult.ChannelCount));
+        Trace.d(log_tag, "Protocol Version=" + Integer.toString(registerResult.Version));
+        Trace.d(log_tag, "registerResult.ChannelCount=" + Integer.toString(registerResult.ChannelCount));
+        Trace.d(log_tag, "registerResult.ChannelGroupCount=" + Integer.toString(registerResult.ChannelGroupCount));
 
-        if ( registerResult.ChannelCount == 0
-                && DbH.setChannelsVisible(0, 2) ) {
+        if (registerResult.ChannelCount == 0
+                && DbH.setChannelsVisible(0, 2)) {
 
             onDataChanged();
         }
@@ -441,13 +463,12 @@ public class SuplaClient extends Thread {
 
     private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
 
-        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: "+Long.toString(minVersionRequired.CallType)+" MinVersion: "+Integer.toString(minVersionRequired.MinVersion));
+        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: " + Long.toString(minVersionRequired.CallType) + " MinVersion: " + Integer.toString(minVersionRequired.MinVersion));
 
     }
 
     private void LocationUpdate(SuplaLocation location) {
-
-        if ( DbH.updateLocation(location) ) {
+        if (DbH.updateLocation(location)) {
             Trace.d(log_tag, "Location updated");
             onDataChanged();
         }
@@ -458,28 +479,43 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Function"+Integer.toString(channel.Func)+"  channel ID: "+Integer.toString(channel.Id) +" channel Location ID: "+Integer.toString(channel.LocationID)+" OnLine: "+Boolean.toString(channel.OnLine)+" AltIcon: "+Integer.toString(channel.AltIcon));
+        Trace.d(log_tag, "Channel Function" + Integer.toString(channel.Func) + "  channel ID: " + Integer.toString(channel.Id) + " channel Location ID: " + Integer.toString(channel.LocationID) + " OnLine: " + Boolean.toString(channel.OnLine) + " AltIcon: " + Integer.toString(channel.AltIcon));
 
-        if ( DbH.updateChannel(channel) ) {
+        // Update channel value before update the channel
+        if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
+            _DataChanged = true;
+        }
+
+        if (DbH.updateChannel(channel)) {
             _DataChanged = true;
         }
 
         if (channel.EOL
-                && DbH.setChannelsVisible(0, 2) ) {
+                && DbH.setChannelsVisible(0, 2)) {
             _DataChanged = true;
         }
 
-        if ( _DataChanged ) {
+        if (_DataChanged) {
             Trace.d(log_tag, "Channel updated");
             onDataChanged(channel.Id);
         }
 
     }
 
+    private void ChannelGroupUpdate(SuplaChannelGroup channel_group) {
+
+
+    }
+
+    private void ChannelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
+
+
+    }
+
     private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
-        if ( DbH.updateChannelValue(channelValueUpdate) ) {
-            Trace.d(log_tag, "Channel id"+Integer.toString(channelValueUpdate.Id)+" value updated"+" OnLine: "+Boolean.toString(channelValueUpdate.OnLine));
+        if (DbH.updateChannelValue(channelValueUpdate)) {
+            Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id) + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine));
             onDataChanged(channelValueUpdate.Id);
         }
 
@@ -543,13 +579,13 @@ public class SuplaClient extends Thread {
             request.setURI(new URI(builder.build().toString()));
             HttpResponse response = client.execute(request);
 
-            if ( response != null ) {
+            if (response != null) {
                 String json = EntityUtils.toString(response.getEntity());
 
                 JSONTokener tokener = new JSONTokener(json);
                 JSONObject jsonResult = new JSONObject(tokener);
 
-                if ( jsonResult.getString("email").equals(email) ) {
+                if (jsonResult.getString("email").equals(email)) {
                     result = jsonResult.getString("server");
                 }
             }
@@ -565,7 +601,7 @@ public class SuplaClient extends Thread {
 
         DbH = new DbHelper(_context);
 
-        while(!canceled()) {
+        while (!canceled()) {
 
             synchronized (st_lck) {
                 lastRegisterError = null;
@@ -575,21 +611,20 @@ public class SuplaClient extends Thread {
 
             boolean _DataChanged = false;
 
-            if ( DbH.setChannelsVisible(2, 1) ) {
+            if (DbH.setChannelsVisible(2, 1)) {
                 _DataChanged = true;
             }
 
-            if ( DbH.setChannelsOffline() ) {
+            if (DbH.setChannelsOffline()) {
                 _DataChanged = true;
             }
 
-            if ( _DataChanged ) {
+            if (_DataChanged) {
                 onDataChanged();
             }
 
 
-            try
-            {
+            try {
                 {
                     SuplaCfg cfg = new SuplaCfg();
                     CfgInit(cfg);
@@ -600,22 +635,22 @@ public class SuplaClient extends Thread {
                     cfg.clientGUID = prefs.getClientGUID();
                     cfg.AuthKey = prefs.getAuthKey();
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
-                    cfg.SoftVer = "Android"+Build.VERSION.RELEASE+"/"+ BuildConfig.VERSION_NAME;
+                    cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-                    if ( prefs.isAdvancedCfg() ) {
+                    if (prefs.isAdvancedCfg()) {
                         cfg.AccessID = prefs.getAccessID();
                         cfg.AccessIDpwd = prefs.getAccessIDpwd();
 
-                        if ( regTryCounter >= 2 ) {
+                        if (regTryCounter >= 2) {
                             prefs.setPreferedProtocolVersion(4); // supla-server v1.0 for Raspberry Compatibility fix
                         }
 
                     } else {
                         cfg.Email = prefs.getEmail();
-                        if ( !cfg.Email.isEmpty() && cfg.Host.isEmpty() ) {
+                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
-                            if ( !cfg.Host.isEmpty() ) {
+                            if (!cfg.Host.isEmpty()) {
                                 prefs.setServerAddress(cfg.Host);
                             }
                         }
@@ -628,14 +663,16 @@ public class SuplaClient extends Thread {
 
                 }
 
-                if ( Connect() ) {
+                if (Connect()) {
 
-                    while( !canceled() && Iterate(100000) ) {}
+                    while (!canceled() && Iterate(100000)) {
+                    }
 
                     if (!canceled()) {
                         try {
                             Thread.sleep(5000);
-                        } catch (InterruptedException e) {}
+                        } catch (InterruptedException e) {
+                        }
                     }
 
                 }
@@ -645,11 +682,11 @@ public class SuplaClient extends Thread {
             }
 
 
-
             if (!canceled()) {
                 try {
                     Thread.sleep(2000);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
         }
 

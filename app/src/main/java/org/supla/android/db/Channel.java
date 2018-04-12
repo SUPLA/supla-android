@@ -24,6 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.supla.android.R;
+import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
 
@@ -36,7 +37,6 @@ public class Channel {
     private int ChannelId;
     private String Caption;
     private int Func;
-    private boolean OnLine;
     private ChannelValue Value;
     private int Visible;
     private long LocationId;
@@ -169,12 +169,8 @@ public class Channel {
         return Func;
     }
 
-    public void setOnLine(boolean onLine) {
-        OnLine = onLine;
-    }
-
     public boolean getOnLine() {
-        return OnLine;
+        return Value != null && Value.getOnLine();
     }
 
     public void setValue(ChannelValue value) {
@@ -211,7 +207,6 @@ public class Channel {
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION)));
-        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE)) != 0);
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON)));
@@ -221,7 +216,6 @@ public class Channel {
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
         setValue(cv);
-
     }
 
 
@@ -229,7 +223,6 @@ public class Channel {
 
         setChannelId(channel.Id);
         setCaption(channel.Caption);
-        setOnLine(channel.OnLine);
         setFunc(channel.Func);
 
         getValue().AssignSuplaChannelValue(channel.Value);
@@ -268,9 +261,6 @@ public class Channel {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC, getFunc());
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ONLINE, getOnLine() ? 1 : 0);
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VALUE, getValue().getChannelStringValue());
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_SUBVALUE, getValue().getChannelStringSubValue());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());

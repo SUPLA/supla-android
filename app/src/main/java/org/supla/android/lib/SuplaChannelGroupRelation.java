@@ -18,15 +18,9 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-public class SuplaRegisterResult {
+public class SuplaChannelGroupRelation {
+    public boolean EOL;
 
-    public int ResultCode;
-    public int ClientID;
-    public int LocationCount;
-    public int ChannelCount;
-    public int ChannelGroupCount;
-    public int Flags;
-    public int ActivityTimeout;
-    public int Version;
-    public int VersionMin;
+    public int ChannelGroupID;
+    public int ChannelID;
 }

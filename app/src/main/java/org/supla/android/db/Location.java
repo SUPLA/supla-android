@@ -28,7 +28,6 @@ public class Location {
     private int LocationId;
     private String Caption;
     private int Visible;
-    private long AccessId;
 
     public void setId(long id) {
         Id = id;
@@ -62,21 +61,12 @@ public class Location {
         return Visible;
     }
 
-    public void setAccessId(long accessId) {
-        AccessId = accessId;
-    }
-
-    public long getAccessId() {
-        return AccessId;
-    }
-
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
         setLocationId(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE)));
-        setAccessId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID)));
 
     }
 
@@ -100,7 +90,6 @@ public class Location {
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE, getVisible());
-        values.put(SuplaContract.LocationEntry.COLUMN_NAME_ACCESSID, getAccessId());
 
         return values;
     }
