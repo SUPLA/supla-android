@@ -382,7 +382,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         Cursor c = db.query(
-                SuplaContract.ChannelViewEntry.VIEW_NAME,
+                SuplaContract.ChannelValueEntry.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
