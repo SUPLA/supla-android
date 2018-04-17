@@ -113,6 +113,7 @@ public class SuplaContract {
 
         public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_VISIBLE = "visible";
 
     }
 }

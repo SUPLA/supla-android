@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import org.supla.android.Trace;
 import org.supla.android.lib.Preferences;
@@ -174,7 +175,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " ("+
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
-                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL)";
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_REL_TABLE);
         createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID);
@@ -230,6 +232,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelValueTable(db);
         createChannelView(db);
         createChannelGroupTable(db);
+
         createChannelGroupRelationTable(db);
     }
 
@@ -564,18 +567,18 @@ public class DbHelper extends SQLiteOpenHelper {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
     }
 
-    public boolean setChannelsVisible(int Visible, int WhereVisible) {
+    private boolean setVisible(String table, String field, int Visible, int WhereVisible) {
 
-        String selection = SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " = ?";
+        String selection = field + " = ?";
         String[] selectionArgs = { String.valueOf(WhereVisible) };
 
         ContentValues values = new ContentValues();
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, Visible);
+        values.put(field, Visible);
 
         SQLiteDatabase db = getWritableDatabase();
 
         int count = db.update(
-                SuplaContract.ChannelEntry.TABLE_NAME,
+                table,
                 values,
                 selection,
                 selectionArgs);
@@ -583,6 +586,24 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return count > 0;
+
+    }
+
+    public boolean setChannelsVisible(int Visible, int WhereVisible) {
+        return setVisible(SuplaContract.ChannelEntry.TABLE_NAME,
+                SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, Visible, WhereVisible);
+    }
+
+    public boolean setChannelGroupsVisible(int Visible, int WhereVisible) {
+
+        return setVisible(SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, Visible, WhereVisible);
+    }
+
+    public boolean setChannelGroupRelationsVisible(int Visible, int WhereVisible) {
+
+        return setVisible(SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE, Visible, WhereVisible);
     }
 
     public boolean setChannelsOffline() {
