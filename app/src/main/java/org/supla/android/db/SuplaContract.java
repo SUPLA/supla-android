@@ -91,6 +91,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_BRIGHTNESS = "brightness";
     }
 
+
     public static abstract class ChannelGroupEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "channelgroup";
@@ -104,5 +105,14 @@ public class SuplaContract {
         public static final String COLUMN_NAME_ALTICON = "alticon";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_TOTALVALUE = "totalvalue";
+    }
+
+    public static abstract class ChannelGroupRelationEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "channelgroup_rel";
+
+        public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+
     }
 }

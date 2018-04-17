@@ -170,6 +170,21 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelGroupTable(db, "");
     }
 
+    private void createChannelGroupRelationTable(SQLiteDatabase db, String suffix) {
+
+        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " ("+
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL)";
+
+        execSQL(db, SQL_CREATE_CHANNELGROUP_REL_TABLE);
+        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID);
+        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID);
+    }
+
+    private void createChannelGroupRelationTable(SQLiteDatabase db) {
+        createChannelGroupRelationTable(db, "");
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -178,6 +193,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelView(db);
         createColorTable(db);
         createChannelGroupTable(db);
+        createChannelGroupRelationTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -214,6 +230,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelValueTable(db);
         createChannelView(db);
         createChannelGroupTable(db);
+        createChannelGroupRelationTable(db);
     }
 
 
