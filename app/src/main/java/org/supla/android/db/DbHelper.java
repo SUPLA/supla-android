@@ -147,6 +147,29 @@ public class DbHelper extends SQLiteOpenHelper {
         createColorTable(db, "");
     }
 
+
+    private void createChannelGroupTable(SQLiteDatabase db, String suffix) {
+
+        final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " ("+
+                SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE + " TEXT)";
+
+        execSQL(db, SQL_CREATE_CHANNELGROUP_TABLE);
+        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME, SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID);
+        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME, SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID);
+    }
+
+    private void createChannelGroupTable(SQLiteDatabase db) {
+        createChannelGroupTable(db, "");
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -154,6 +177,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelValueTable(db);
         createChannelView(db);
         createColorTable(db);
+        createChannelGroupTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -167,7 +191,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV4(SQLiteDatabase db) {
-
         execSQL(db, "ALTER TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+" RENAME TO "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
         createColorTable(db);
 
@@ -190,6 +213,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelTable(db);
         createChannelValueTable(db);
         createChannelView(db);
+        createChannelGroupTable(db);
     }
 
 

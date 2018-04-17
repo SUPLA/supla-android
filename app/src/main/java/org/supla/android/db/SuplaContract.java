@@ -90,4 +90,19 @@ public class SuplaContract {
         public static final String COLUMN_NAME_COLOR = "color";
         public static final String COLUMN_NAME_BRIGHTNESS = "brightness";
     }
+
+    public static abstract class ChannelGroupEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "channelgroup";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
+        public static final String COLUMN_NAME_CAPTION = "caption";
+        public static final String COLUMN_NAME_FUNC = "func";
+        public static final String COLUMN_NAME_VISIBLE = "visible";
+        public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id
+        public static final String COLUMN_NAME_ALTICON = "alticon";
+        public static final String COLUMN_NAME_FLAGS = "flags";
+        public static final String COLUMN_NAME_TOTALVALUE = "totalvalue";
+    }
 }
