@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SUPLA</string>
     <string name="feedback_title">Odeslat email</string>
     <string name="donate_title">Podporujte projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
@@ -10,7 +9,7 @@
     <string name="settings">Nastavení</string>
     <string name="add_device">Přidat zařízení</string>
     <string name="help">Pomoc</string>
-    <string name="status_connecting">Připojování ...</string>
+    <string name="status_connecting">Připojování …</string>
     <string name="status_unknown_err">Neznámá chyba</string>
     <string name="status_temporarily_unavailable">Služba dočasně nedostupná</string>
     <string name="status_bad_credentials">Chybné pověření</string>
@@ -65,7 +64,7 @@
     <string name="email">ADRESA E-MAIL</string>
     <string name="advanced_settings">Pokročilá nastavení</string>
     <string name="create_account"><u>Vytvořte účet</u></string>
-    <string name="about_app">This program is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  as published by the Free Software Foundation; either version 2  of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful,  but WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  GNU General Public License for more details.   You should have received a copy of the GNU General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  as published by the Free Software Foundation; either version 2  of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful,  but WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  GNU General Public License for more details.   You should have received a copy of the GNU General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA 02111-1307, USA</string>
     <string name="rate_msg">Pokud se vám tato aplikace líbí, chvíli si ji ohodnoťte. Děkujeme za podporu!</string>
     <string name="rate_now">Ohodnoťte teď</string>
     <string name="rate_later">Později</string>
