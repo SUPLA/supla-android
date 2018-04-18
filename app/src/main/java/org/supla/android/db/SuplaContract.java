@@ -99,6 +99,7 @@ public class SuplaContract {
         public static final String _ID = "_id"; // Primary Key
         public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
+        public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
         public static final String COLUMN_NAME_FUNC = "func";
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id

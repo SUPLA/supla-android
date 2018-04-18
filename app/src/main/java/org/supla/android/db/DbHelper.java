@@ -28,6 +28,8 @@ import android.provider.BaseColumns;
 import org.supla.android.Trace;
 import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelGroup;
+import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
@@ -155,6 +157,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
@@ -232,7 +235,6 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelValueTable(db);
         createChannelView(db);
         createChannelGroupTable(db);
-
         createChannelGroupRelationTable(db);
     }
 
@@ -565,6 +567,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateChannelValue(SuplaChannelValueUpdate channelValue) {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
+    }
+
+    public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
+
+
+        return false;
+    }
+
+    public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
+
+
+        return false;
     }
 
     private boolean setVisible(String table, String field, int Visible, int WhereVisible) {
