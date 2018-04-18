@@ -86,7 +86,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     public boolean getOnLine() {
-        return getOnLinePercent() == 100;
+        return getOnLinePercent() > 0;
     }
 
     public void setAltIcon(int altIcon) {

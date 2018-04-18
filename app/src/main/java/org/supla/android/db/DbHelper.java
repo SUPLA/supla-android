@@ -370,6 +370,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String[] selectionArgs2 = {
                 String.valueOf(id1),
+                String.valueOf(id2),
         };
 
         Cursor c = db.query(
@@ -498,6 +499,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 groupId,
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID,
                 channelId);
+
     }
 
     private void updateDbItem(SQLiteDatabase db, DbItem item, String idField, String tableName, long id) {
@@ -651,7 +653,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ChannelGroupRelation cgrel = getChannelGroupRelation(suplaChannelGroupRelation.ChannelGroupID, suplaChannelGroupRelation.ChannelID);
 
-        if (cgrel== null) {
+        if (cgrel == null) {
 
             cgrel = new ChannelGroupRelation();
             cgrel.Assign(suplaChannelGroupRelation);
