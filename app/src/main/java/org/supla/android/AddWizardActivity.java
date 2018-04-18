@@ -20,12 +20,9 @@ package org.supla.android;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -35,8 +32,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkRequest;
-import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -47,12 +42,9 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -256,7 +248,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         tv = (TextView)findViewById(R.id.wizard_done_txt4);
         tv.setTypeface(type);
-        
+
         tv = (TextView)findViewById(R.id.wizard_done_txt5);
         tv.setTypeface(type);
 
@@ -300,7 +292,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             edPassword.clearFocus();
 
         }
-        
+
         return super.onTouchEvent(event);
     }
 

@@ -24,10 +24,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 import org.supla.android.SuplaApp;
-import org.supla.android.Trace;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.Random;
 
 public class Preferences {

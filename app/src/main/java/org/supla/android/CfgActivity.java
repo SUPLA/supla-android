@@ -35,7 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
-import org.supla.android.lib.SuplaConst;
 
 public class CfgActivity extends NavigationActivity  {
 
