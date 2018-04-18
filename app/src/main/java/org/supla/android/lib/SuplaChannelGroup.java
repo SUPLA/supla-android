@@ -18,13 +18,6 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-public class SuplaChannelGroup {
-    public boolean EOL;
+public class SuplaChannelGroup extends SuplaChannelBase {
 
-    public int Id;
-    public int LocationID;
-    public int Func;
-    public int AltIcon;
-    public int Flags;
-    public String Caption;
 }

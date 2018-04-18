@@ -29,6 +29,7 @@ public class SuplaClientMsg {
     private SuplaEvent Event;
     private SuplaRegistrationEnabled RegistrationEnabled;
     private int ChannelId;
+    private int ChannelGroupId;
 
     public final static int onDataChanged         = 1;
     public final static int onConnecting          = 2;
@@ -46,6 +47,7 @@ public class SuplaClientMsg {
         Type = type;
         Sender = sender;
         ChannelId = 0;
+        ChannelGroupId = 0;
     }
 
     public SuplaClient getSender() {
@@ -98,6 +100,14 @@ public class SuplaClientMsg {
 
     public int getChannelId() {
         return ChannelId;
+    }
+
+    public void setChannelGroupId(int channelGroupId) {
+        ChannelGroupId = channelGroupId;
+    }
+
+    public int getChannelGroupId() {
+        return ChannelGroupId;
     }
 
     public void setChannelId(int channelId) {

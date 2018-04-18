@@ -180,7 +180,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         DbHelper DbH = new DbHelper(this);
 
-        Channel channel = DbH.getChannel(event.ChannelID, false);
+        Channel channel = DbH.getChannel(event.ChannelID);
 
         if ( channel == null ) return;
 

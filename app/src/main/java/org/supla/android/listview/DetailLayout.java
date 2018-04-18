@@ -103,7 +103,7 @@ public abstract class DetailLayout extends FrameLayout {
     public Channel getChannelFromDatabase() {
 
         if ( getChannelId() != 0 )
-           return DBH.getChannel(mChannelId, false);
+           return DBH.getChannel(mChannelId);
 
         return null;
     }

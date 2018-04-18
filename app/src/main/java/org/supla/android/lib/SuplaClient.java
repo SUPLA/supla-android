@@ -497,18 +497,52 @@ public class SuplaClient extends Thread {
 
         if (_DataChanged) {
             Trace.d(log_tag, "Channel updated");
-            onDataChanged(channel.Id);
+            onDataChanged(channel.Id, 0);
         }
 
     }
 
     private void ChannelGroupUpdate(SuplaChannelGroup channel_group) {
 
+        boolean _DataChanged = false;
+
+        Trace.d(log_tag, "Channel Group Function" + Integer.toString(channel_group.Func) + "  group ID: " + Integer.toString(channel_group.Id) + " group Location ID: " + Integer.toString(channel_group.LocationID) + " AltIcon: " + Integer.toString(channel_group.AltIcon));
+
+        if (DbH.updateChannelGroup(channel_group)) {
+            _DataChanged = true;
+        }
+
+        if (channel_group.EOL
+                && DbH.setChannelGroupsVisible(0, 2)) {
+            _DataChanged = true;
+        }
+
+        if (_DataChanged) {
+            Trace.d(log_tag, "Channel Group updated");
+            onDataChanged(0, channel_group.Id);
+        }
 
     }
 
     private void ChannelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
 
+        boolean _DataChanged = false;
+
+        Trace.d(log_tag, "Channel Group Relation group ID: " + Integer.toString(channelgroup_relation.ChannelGroupID) + " channel ID: " + Integer.toString(channelgroup_relation.ChannelID));
+
+        if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
+            _DataChanged = true;
+        }
+
+        if (channelgroup_relation.EOL
+                && DbH.setChannelGroupRelationsVisible(0, 2)) {
+            _DataChanged = true;
+        }
+
+        if (_DataChanged) {
+            Trace.d(log_tag, "Channel Group Relation updated");
+            onDataChanged(0, channelgroup_relation.ChannelGroupID);
+        }
 
     }
 
@@ -516,7 +550,7 @@ public class SuplaClient extends Thread {
 
         if (DbH.updateChannelValue(channelValueUpdate)) {
             Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id) + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine));
-            onDataChanged(channelValueUpdate.Id);
+            onDataChanged(channelValueUpdate.Id, 0);
         }
 
     }
@@ -530,17 +564,18 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onDataChanged(int ChannelId) {
+    private void onDataChanged(int ChannelId, int GroupId) {
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
         msg.setChannelId(ChannelId);
+        msg.setChannelGroupId(GroupId);
 
         sendMessage(msg);
 
     }
 
     private void onDataChanged() {
-        onDataChanged(0);
+        onDataChanged(0, 0);
     }
 
     public synchronized boolean canceled() {
@@ -612,6 +647,14 @@ public class SuplaClient extends Thread {
             boolean _DataChanged = false;
 
             if (DbH.setChannelsVisible(2, 1)) {
+                _DataChanged = true;
+            }
+
+            if (DbH.setChannelGroupsVisible(2, 1)) {
+                _DataChanged = true;
+            }
+
+            if (DbH.setChannelGroupRelationsVisible(2, 1)) {
                 _DataChanged = true;
             }
 
