@@ -23,10 +23,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 import org.supla.android.Trace;
-import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
@@ -54,13 +52,13 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void createIndex(SQLiteDatabase db, String tableName, String fieldName) {
-        final String SQL_CREATE_INDEX = "CREATE INDEX "+tableName+"_" +fieldName +"_index ON "+tableName+"("+fieldName+")";
+        final String SQL_CREATE_INDEX = "CREATE INDEX " + tableName + "_" + fieldName + "_index ON " + tableName + "(" + fieldName + ")";
         execSQL(db, SQL_CREATE_INDEX);
     }
 
     private void createLocationTable(SQLiteDatabase db) {
 
-        final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + SuplaContract.LocationEntry.TABLE_NAME + " ("+
+        final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + SuplaContract.LocationEntry.TABLE_NAME + " (" +
                 SuplaContract.LocationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -72,7 +70,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " ("+
+        final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -94,7 +92,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelValueTable(SQLiteDatabase db) {
 
-        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME + " ("+
+        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelValueEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + " INTEGER NOT NULL," +
@@ -109,23 +107,23 @@ public class DbHelper extends SQLiteOpenHelper {
     private void createChannelView(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME + " AS " +
-                "SELECT C."+SuplaContract.ChannelEntry._ID + ", " +
-                "C."+SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION +", " +
-                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE +", " +
-                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE +", " +
-                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS +", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS +", " +
+                "SELECT C." + SuplaContract.ChannelEntry._ID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
+                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
+                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
+                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
                 "FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C " +
                 "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON " +
-                "C."+ SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID;
 
 
@@ -135,7 +133,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createColorTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " ("+
+        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " INTEGER NOT NULL," +
@@ -153,7 +151,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelGroupTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " ("+
+        final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -176,7 +174,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelGroupRelationTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " ("+
+        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " (" +
+                SuplaContract.ChannelGroupRelationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL)";
@@ -206,29 +205,29 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV3(SQLiteDatabase db) {
-        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON+" INTEGER NOT NULL default 0");
-        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS+" INTEGER NOT NULL default 0");
-        execSQL(db, "ALTER TABLE "+SuplaContract.ChannelEntry.TABLE_NAME+" ADD COLUMN "+SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION+" INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL default 0");
     }
 
     private void upgradeToV4(SQLiteDatabase db) {
-        execSQL(db, "ALTER TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+" RENAME TO "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
         createColorTable(db);
 
-        final String SQL_COPY = "INSERT INTO "+SuplaContract.ColorListItemEntry.TABLE_NAME+" ("+
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID+","+
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX+","+
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR+","+
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS+") "+
+        final String SQL_COPY = "INSERT INTO " + SuplaContract.ColorListItemEntry.TABLE_NAME + " (" +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + "," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + "," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + "," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + ") " +
                 "SELECT c.channelid, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item_old ci ON c._id = ci.channel";
 
         execSQL(db, SQL_COPY);
 
-        execSQL(db, "DROP TABLE "+SuplaContract.ColorListItemEntry.TABLE_NAME+"_old");
+        execSQL(db, "DROP TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
 
         execSQL(db, "DROP TABLE accessid");
-        execSQL(db, "DROP TABLE "+SuplaContract.LocationEntry.TABLE_NAME);
-        execSQL(db, "DROP TABLE "+SuplaContract.ChannelEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.LocationEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelEntry.TABLE_NAME);
 
         createLocationTable(db);
         createChannelTable(db);
@@ -246,9 +245,9 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if ( oldVersion < newVersion ) {
+        if (oldVersion < newVersion) {
 
-            for(int nv=oldVersion;nv<newVersion;nv++) {
+            for (int nv = oldVersion; nv < newVersion; nv++) {
 
                 switch (nv) {
                     case 1:
@@ -266,7 +265,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public Location getLocation(long id, boolean primary_key) {
+    public Location getLocation(int locationId) {
 
         Location result = null;
         SQLiteDatabase db = getReadableDatabase();
@@ -278,10 +277,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE
         };
 
-        String selection = (primary_key ? SuplaContract.LocationEntry._ID : SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID ) + " = ?";
+        String selection = SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = ?";
 
         String[] selectionArgs = {
-                String.valueOf(id),
+                String.valueOf(locationId),
         };
 
         Cursor c = db.query(
@@ -295,7 +294,7 @@ public class DbHelper extends SQLiteOpenHelper {
         );
 
 
-        if ( c.getCount() > 0 ) {
+        if (c.getCount() > 0) {
 
             c.moveToFirst();
 
@@ -312,10 +311,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateLocation(SuplaLocation suplaLocation) {
 
-        Location location = getLocation(suplaLocation.Id, false);
+        Location location = getLocation(suplaLocation.Id);
         SQLiteDatabase db = null;
 
-        if ( location == null ) {
+        if (location == null) {
 
             location = new Location();
             location.AssignSuplaLocation(suplaLocation);
@@ -327,7 +326,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     null,
                     location.getContentValues());
 
-        } else if ( location.Diff(suplaLocation) ) {
+        } else if (location.Diff(suplaLocation)) {
 
             db = getWritableDatabase();
 
@@ -335,7 +334,7 @@ public class DbHelper extends SQLiteOpenHelper {
             location.setVisible(1);
 
             String selection = SuplaContract.LocationEntry._ID + " LIKE ?";
-            String[] selectionArgs = { String.valueOf(location.getId()) };
+            String[] selectionArgs = {String.valueOf(location.getId())};
 
             db.update(
                     SuplaContract.LocationEntry.TABLE_NAME,
@@ -345,7 +344,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         }
 
-        if ( db != null ) {
+        if (db != null) {
             db.close();
             return true;
         }
@@ -354,11 +353,68 @@ public class DbHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public Channel getChannel(long id, boolean primary_key) {
+    private DbItem getItem(String ClassName, String[] projection, String tableName, String id1Field, int id1, String id2Field, int id2) {
 
-        Channel result = null;
+        DbItem result = null;
         SQLiteDatabase db = getReadableDatabase();
 
+        String selection = id1Field + " = ?";
+
+        if (id2 != 0) {
+            selection += " AND " + id2Field + " = ?";
+        }
+
+        String[] selectionArgs1 = {
+                String.valueOf(id1),
+        };
+
+        String[] selectionArgs2 = {
+                String.valueOf(id1),
+        };
+
+        Cursor c = db.query(
+                tableName,
+                projection,
+                selection,
+                id2 == 0 ? selectionArgs1 : selectionArgs2,
+                null,
+                null,
+                null
+        );
+
+
+        if (c.getCount() > 0) {
+
+            c.moveToFirst();
+
+            try {
+                result = (DbItem) Class.forName(ClassName).newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (result != null) {
+                result.AssignCursorData(c);
+            }
+
+        }
+
+        c.close();
+        db.close();
+
+        return result;
+
+    }
+
+    private DbItem getItem(String ClassName, String[] projection, String tableName, String id1Field, int id1) {
+        return getItem(ClassName, projection, tableName, id1Field, id1, "", 0);
+    }
+
+    public Channel getChannel(int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID,
@@ -376,41 +432,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
         };
 
-        String selection = (primary_key ? SuplaContract.ChannelViewEntry._ID : SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID ) + " = ?";
-
-        String[] selectionArgs = {
-                String.valueOf(id),
-        };
-
-        Cursor c = db.query(
-                SuplaContract.ChannelViewEntry.VIEW_NAME,
+        return (Channel) getItem("org.supla.android.db.Channel",
                 projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
+                SuplaContract.ChannelViewEntry.VIEW_NAME,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID,
+                channelId);
 
-
-        if ( c.getCount() > 0 ) {
-
-            c.moveToFirst();
-
-            result = new Channel();
-            result.AssignCursorData(c);
-        }
-
-        c.close();
-        db.close();
-
-        return result;
     }
 
-    public ChannelValue getChannelValue(int channelId) {
 
-        ChannelValue result = null;
-        SQLiteDatabase db = getReadableDatabase();
+    public ChannelValue getChannelValue(int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelValueEntry._ID,
@@ -420,56 +451,63 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE,
         };
 
-        String selection = SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " = ?";
+        return (ChannelValue) getItem("org.supla.android.db.ChannelValue",
+                projection,
+                SuplaContract.ChannelValueEntry.TABLE_NAME,
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID,
+                channelId);
 
-        String[] selectionArgs = {
-                String.valueOf(channelId),
+    }
+
+    public ChannelGroup getChannelGroup(int groupId) {
+
+        String[] projection = {
+                SuplaContract.ChannelGroupEntry._ID,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE,
         };
 
-
-        Cursor c = db.query(
-                SuplaContract.ChannelValueEntry.TABLE_NAME,
+        return (ChannelGroup) getItem("org.supla.android.db.ChannelGroup",
                 projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
+                SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID,
+                groupId);
 
-        if ( c.getCount() > 0 ) {
-            c.moveToFirst();
-
-            result = new ChannelValue();
-            result.AssignCursorData(c);
-        }
-
-        c.close();
-        db.close();
-
-        return result;
     }
 
-    private void _updateChannel(SQLiteDatabase db, Channel channel) {
+    public ChannelGroupRelation getChannelGroupRelation(int groupId, int channelId) {
 
-        String selection = SuplaContract.ChannelEntry._ID + " = ?";
-        String[] selectionArgs = { String.valueOf(channel.getId()) };
+        String[] projection = {
+                SuplaContract.ChannelGroupRelationEntry._ID,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE,
+        };
 
-        db.update(
-                SuplaContract.ChannelEntry.TABLE_NAME,
-                channel.getContentValues(),
-                selection,
-                selectionArgs);
+        return (ChannelGroupRelation) getItem("org.supla.android.db.ChannelGroupRelation",
+                projection,
+                SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID,
+                groupId,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID,
+                channelId);
     }
 
-    private void _updateChannelValue(SQLiteDatabase db, ChannelValue cvalue) {
+    private void updateDbItem(SQLiteDatabase db, DbItem item, String idField, String tableName, long id) {
 
-        String selection = SuplaContract.ChannelValueEntry._ID + " = ?";
-        String[] selectionArgs = { String.valueOf(cvalue.getId()) };
+        String selection = idField + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
 
         db.update(
-                SuplaContract.ChannelValueEntry.TABLE_NAME,
-                cvalue.getContentValues(),
+                tableName,
+                item.getContentValues(),
                 selection,
                 selectionArgs);
     }
@@ -477,52 +515,45 @@ public class DbHelper extends SQLiteOpenHelper {
     public boolean updateChannel(SuplaChannel suplaChannel) {
 
 
-            Location location = getLocation(suplaChannel.LocationID, false);
-            SQLiteDatabase db = null;
+        Location location = getLocation(suplaChannel.LocationID);
+        SQLiteDatabase db = null;
 
-            if ( location != null ) {
+        if (location != null) {
 
-                Channel channel = getChannel(suplaChannel.Id, false);
+            Channel channel = getChannel(suplaChannel.Id);
 
-                if ( channel == null ) {
+            if (channel == null) {
 
-                    channel = new Channel();
-                    channel.AssignSuplaChannel(suplaChannel);
-                    channel.setVisible(1);
-                    channel.setLocationId(suplaChannel.LocationID);
-                    channel.setAltIcon(suplaChannel.AltIcon);
-                    channel.setFlags(suplaChannel.Flags);
-                    channel.setProtocolVersion(suplaChannel.ProtocolVersion);
+                channel = new Channel();
+                channel.Assign(suplaChannel);
+                channel.setVisible(1);
 
-                    db = getWritableDatabase();
-                    db.insert(
-                            SuplaContract.ChannelEntry.TABLE_NAME,
-                            null,
-                            channel.getContentValues());
+                db = getWritableDatabase();
+                db.insert(
+                        SuplaContract.ChannelEntry.TABLE_NAME,
+                        null,
+                        channel.getContentValues());
 
-                } else if ( channel.Diff(suplaChannel)
-                            || channel.getLocationId() != suplaChannel.LocationID
-                            || channel.getVisible() != 1 ) {
+            } else if (channel.Diff(suplaChannel)
+                    || channel.getLocationId() != suplaChannel.LocationID
+                    || channel.getVisible() != 1) {
 
-                    db = getWritableDatabase();
+                db = getWritableDatabase();
 
-                    channel.AssignSuplaChannel(suplaChannel);
-                    channel.setLocationId(suplaChannel.LocationID);
-                    channel.setVisible(1);
-                    channel.setAltIcon(suplaChannel.AltIcon);
-                    channel.setFlags(suplaChannel.Flags);
-                    channel.setProtocolVersion(suplaChannel.ProtocolVersion);
+                channel.Assign(suplaChannel);
+                channel.setVisible(1);
 
-                    _updateChannel(db, channel);
-                }
-
-
-                if ( db != null ) {
-                    db.close();
-                    return true;
-                }
-
+                updateDbItem(db, channel, SuplaContract.ChannelEntry._ID,
+                        SuplaContract.ChannelEntry.TABLE_NAME, channel.getId());
             }
+
+
+            if (db != null) {
+                db.close();
+                return true;
+            }
+
+        }
 
 
         return false;
@@ -533,7 +564,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = null;
         ChannelValue value = getChannelValue(channelId);
 
-        if ( value == null ) {
+        if (value == null) {
 
             value = new ChannelValue();
             value.AssignSuplaChannelValue(suplaChannelValue);
@@ -546,18 +577,19 @@ public class DbHelper extends SQLiteOpenHelper {
                     null,
                     value.getContentValues());
 
-        } else if ( value.Diff(suplaChannelValue)
-                || value.getOnLine() != onLine ) {
+        } else if (value.Diff(suplaChannelValue)
+                || value.getOnLine() != onLine) {
 
             db = getWritableDatabase();
 
             value.AssignSuplaChannelValue(suplaChannelValue);
             value.setOnLine(onLine);
 
-            _updateChannelValue(db, value);
+            updateDbItem(db, value, SuplaContract.ChannelValueEntry._ID,
+                    SuplaContract.ChannelValueEntry.TABLE_NAME, value.getChannelId());
         }
 
-        if ( db != null ) {
+        if (db != null) {
             db.close();
             return true;
         }
@@ -571,12 +603,81 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
 
+        Location location = getLocation(suplaChannelGroup.LocationID);
+        SQLiteDatabase db = null;
+
+        if (location != null) {
+
+            ChannelGroup cgroup = getChannelGroup(suplaChannelGroup.Id);
+
+            if (cgroup == null) {
+
+                cgroup = new ChannelGroup();
+                cgroup.Assign(suplaChannelGroup);
+                cgroup.setVisible(1);
+
+                db = getWritableDatabase();
+                db.insert(
+                        SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                        null,
+                        cgroup.getContentValues());
+
+            } else if (cgroup.Diff(suplaChannelGroup)
+                    || cgroup.getLocationId() != suplaChannelGroup.LocationID
+                    || cgroup.getVisible() != 1) {
+
+                db = getWritableDatabase();
+
+                cgroup.Assign(suplaChannelGroup);
+                cgroup.setVisible(1);
+
+                updateDbItem(db, cgroup, SuplaContract.ChannelGroupEntry._ID,
+                        SuplaContract.ChannelGroupEntry.TABLE_NAME, cgroup.getId());
+            }
+
+            if (db != null) {
+                db.close();
+                return true;
+            }
+
+        }
 
         return false;
     }
 
     public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
 
+        SQLiteDatabase db = null;
+
+        ChannelGroupRelation cgrel = getChannelGroupRelation(suplaChannelGroupRelation.ChannelGroupID, suplaChannelGroupRelation.ChannelID);
+
+        if (cgrel== null) {
+
+            cgrel = new ChannelGroupRelation();
+            cgrel.Assign(suplaChannelGroupRelation);
+            cgrel.setVisible(1);
+
+            db = getWritableDatabase();
+            db.insert(
+                    SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                    null,
+                    cgrel.getContentValues());
+
+        } else if (cgrel.getVisible() != 1) {
+
+            db = getWritableDatabase();
+
+            cgrel.Assign(suplaChannelGroupRelation);
+            cgrel.setVisible(1);
+
+            updateDbItem(db, cgrel, SuplaContract.ChannelGroupRelationEntry._ID,
+                    SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, cgrel.getId());
+        }
+
+        if (db != null) {
+            db.close();
+            return true;
+        }
 
         return false;
     }
@@ -584,7 +685,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private boolean setVisible(String table, String field, int Visible, int WhereVisible) {
 
         String selection = field + " = ?";
-        String[] selectionArgs = { String.valueOf(WhereVisible) };
+        String[] selectionArgs = {String.valueOf(WhereVisible)};
 
         ContentValues values = new ContentValues();
         values.put(field, Visible);
@@ -623,7 +724,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public boolean setChannelsOffline() {
 
         String selection = SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + " = ?";
-        String[] selectionArgs = { String.valueOf(1) };
+        String[] selectionArgs = {String.valueOf(1)};
 
         ContentValues values = new ContentValues();
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE, 0);
@@ -662,40 +763,40 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         String sql = "SELECT "
-                +"C."+ SuplaContract.ChannelViewEntry._ID + " "
-                     + SuplaContract.ChannelViewEntry._ID
-                +", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
-                +", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                + "C." + SuplaContract.ChannelViewEntry._ID + " "
+                + SuplaContract.ChannelViewEntry._ID
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
 
                 + " FROM " + SuplaContract.ChannelViewEntry.VIEW_NAME + " C"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
                 + " ON C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " = L."
-                           + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
                 + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
-                + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION+", "
-                               + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC+" DESC, "
-                               + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
+                + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
 
         return rdb.rawQuery(sql, null);
     }
@@ -735,7 +836,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 null
         );
 
-        if ( c.getCount() > 0 ) {
+        if (c.getCount() > 0) {
 
             c.moveToFirst();
 
@@ -755,7 +856,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
 
-        if ( cli == null ) {
+        if (cli == null) {
 
             db = getWritableDatabase();
             db.insert(
@@ -768,7 +869,7 @@ public class DbHelper extends SQLiteOpenHelper {
             cli.AssignColorListItem(item);
 
             String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + " = ? ) AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
-            String[] selectionArgs = { String.valueOf(cli.getChannelId()), String.valueOf(cli.getIdx()) };
+            String[] selectionArgs = {String.valueOf(cli.getChannelId()), String.valueOf(cli.getIdx())};
 
             db.update(
                     SuplaContract.ColorListItemEntry.TABLE_NAME,
