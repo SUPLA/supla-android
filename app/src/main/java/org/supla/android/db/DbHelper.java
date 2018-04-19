@@ -32,6 +32,8 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
 
+import java.util.ArrayList;
+
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -89,6 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private void createChannelTable(SQLiteDatabase db) {
         createChannelTable(db, "");
     }
+
 
     private void createChannelValueTable(SQLiteDatabase db) {
 
@@ -189,6 +192,40 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelGroupRelationTable(db, "");
     }
 
+
+    private void createChannelGroupValueView(SQLiteDatabase db, String suffix) {
+
+        final String SQL_CREATE_CHANNELGROUP_VALUE_VIEW =
+                "CREATE VIEW " + SuplaContract.ChannelGroupViewEntry.VIEW_NAME + " AS " +
+        "SELECT G."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_GROUPID+" "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_GROUPID+", "
+                +"G."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_FUNC+" "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_FUNC+", "
+                +"R."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_CHANNELID+ " "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_CHANNELID+ ", "
+                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_ONLINE+ " "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_ONLINE+ ", "
+                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_SUBVALUE+ " "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_SUBVALUE+ ", "
+                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_VALUE+ " "
+                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_VALUE+ " "
+        +" FROM "+ SuplaContract.ChannelGroupRelationEntry.TABLE_NAME+ " R "
+        +" JOIN "+ SuplaContract.ChannelGroupEntry.TABLE_NAME+" G ON G."
+                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " = R."
+                 + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
+        +" JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " V ON V."
+                 + SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " = R."
+                 + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
+        +" WHERE R." + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
+                + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0";
+
+        execSQL(db, SQL_CREATE_CHANNELGROUP_VALUE_VIEW);
+    }
+
+    private void createChannelGroupValueView(SQLiteDatabase db) {
+        createChannelGroupValueView(db, "");
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -198,6 +235,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createColorTable(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
+        createChannelGroupValueView(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -235,6 +273,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelView(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
+        createChannelGroupValueView(db);
     }
 
 
@@ -883,6 +922,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         db.close();
+    }
+
+    public Integer[] updateChannelGroups() {
+
+        ArrayList<Integer>result = new ArrayList<Integer>();
+
+        return result.toArray(new Integer[0]);
     }
 
 }

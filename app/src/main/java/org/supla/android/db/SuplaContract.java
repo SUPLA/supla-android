@@ -84,7 +84,6 @@ public class SuplaContract {
         public static final String TABLE_NAME = "color_list_item";
 
         public static final String _ID = "_id"; // Primary Key
-        public static final String COLUMN_NAME_CFGID = "cfgid";
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_IDX = "idx";
         public static final String COLUMN_NAME_COLOR = "color";
@@ -116,6 +115,19 @@ public class SuplaContract {
         public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_VISIBLE = "visible";
+
+    }
+
+    public static abstract class ChannelGroupViewEntry implements BaseColumns {
+
+        public static final String VIEW_NAME = "channelgroup_v1";
+
+        public static final String COLUMN_NAME_GROUPID = ChannelGroupEntry.COLUMN_NAME_GROUPID;
+        public static final String COLUMN_NAME_FUNC = ChannelGroupEntry.COLUMN_NAME_FUNC;
+        public static final String COLUMN_NAME_CHANNELID = ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID;
+        public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
+        public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
+        public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
 
     }
 }
