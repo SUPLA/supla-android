@@ -502,6 +502,15 @@ public class SuplaClient extends Thread {
 
     }
 
+    private void OnChannelGroupValueChanged() {
+        Integer[] groupIds = DbH.updateChannelGroups();
+        for (int a = 0; a < groupIds.length; a++) {
+
+            int groupId = groupIds[a].intValue();
+            onDataChanged(0, groupId);
+        }
+    }
+
     private void ChannelGroupUpdate(SuplaChannelGroup channel_group) {
 
         boolean _DataChanged = false;
@@ -515,6 +524,10 @@ public class SuplaClient extends Thread {
         if (channel_group.EOL
                 && DbH.setChannelGroupsVisible(0, 2)) {
             _DataChanged = true;
+        }
+
+        if (channel_group.EOL) {
+            OnChannelGroupValueChanged();
         }
 
         if (_DataChanged) {
@@ -553,6 +566,9 @@ public class SuplaClient extends Thread {
             onDataChanged(channelValueUpdate.Id, 0);
         }
 
+        if (channelValueUpdate.EOL) {
+            OnChannelGroupValueChanged();
+        }
     }
 
     private void onEvent(SuplaEvent event) {

@@ -21,18 +21,28 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import org.supla.android.lib.SuplaConst;
 
 public class ChannelGroup extends ChannelBase {
 
-    protected int _getOnLine() {
-        return 0;
-    }
+    private String TotalValue;
+    private int OnLine;
 
-    protected void setOnLine(int onLine) {
+    private int BufferOnLineCount;
+    private int BufferOnLine;
+    private int BufferCounter;
+    private String BufferTotalValue;
+
+    protected int _getOnLine() {
+        return OnLine;
     }
 
     public int getGroupId() {
         return getRemoteId();
+    }
+
+    public String getTotalValue() {
+        return TotalValue;
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -40,8 +50,9 @@ public class ChannelGroup extends ChannelBase {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC)));
-        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE)));
+        OnLine = cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION)));
+        TotalValue = cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
@@ -55,6 +66,7 @@ public class ChannelGroup extends ChannelBase {
 
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID, getRemoteId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION, getCaption());
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE, getTotalValue());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE, getOnLinePercent());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC, getFunc());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, getVisible());
@@ -63,6 +75,94 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
 
         return values;
+
+    }
+
+    public boolean DiffWithBuffer() {
+
+        return OnLine != BufferOnLine
+                || TotalValue == null
+                || !TotalValue.equals(BufferTotalValue);
+    }
+
+    public void resetBuffer() {
+        BufferTotalValue = "";
+        BufferOnLine = 0;
+        BufferOnLineCount = 0;
+        BufferCounter = 0;
+    }
+
+    public void assignBuffer() {
+
+        OnLine = BufferOnLine;
+        TotalValue = BufferTotalValue;
+
+        resetBuffer();
+    }
+
+    public void addValueToBuffer(ChannelValue value) {
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                break;
+            default:
+                return;
+        }
+
+        BufferCounter++;
+        if (value.getOnLine()) {
+            BufferOnLineCount++;
+        }
+
+        BufferOnLine = BufferOnLineCount * 100 / BufferCounter;
+
+        if (!BufferTotalValue.isEmpty()) {
+            BufferTotalValue += "|";
+        }
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                BufferTotalValue += Integer.toString(value.getSubValueHi() ? 1 : 0);
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                BufferTotalValue += Integer.toString(value.getPercent());
+                BufferTotalValue += ":";
+                BufferTotalValue += Integer.toString(value.getSubValueHi() ? 1 : 0);
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                BufferTotalValue += Integer.toString(value.getBrightness());
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                BufferTotalValue += Integer.toString(value.getColor());
+                BufferTotalValue += ":";
+                BufferTotalValue += Integer.toString(value.getColorBrightness());
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                BufferTotalValue += Integer.toString(value.getColor());
+                BufferTotalValue += ":";
+                BufferTotalValue += Integer.toString(value.getColorBrightness());
+                BufferTotalValue += ":";
+                BufferTotalValue += Integer.toString(value.getBrightness());
+                break;
+        }
 
     }
 }

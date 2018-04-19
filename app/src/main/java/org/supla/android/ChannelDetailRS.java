@@ -109,7 +109,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         float p = channel.getPercent();
 
-        if ( p < 100 && channel.getSubValueHi() == 1 )
+        if ( p < 100 && channel.getSubValueHi() == true )
             p = 100;
 
         tvTitle.setText(channel.getNotEmptyCaption(getContext()));

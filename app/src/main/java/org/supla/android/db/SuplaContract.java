@@ -118,10 +118,11 @@ public class SuplaContract {
 
     }
 
-    public static abstract class ChannelGroupViewEntry implements BaseColumns {
+    public static abstract class ChannelGroupValueViewEntry implements BaseColumns {
 
-        public static final String VIEW_NAME = "channelgroup_v1";
+        public static final String VIEW_NAME = "channelgroupvalue_v1";
 
+        public static final String _ID = ChannelValueEntry._ID;
         public static final String COLUMN_NAME_GROUPID = ChannelGroupEntry.COLUMN_NAME_GROUPID;
         public static final String COLUMN_NAME_FUNC = ChannelGroupEntry.COLUMN_NAME_FUNC;
         public static final String COLUMN_NAME_CHANNELID = ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID;

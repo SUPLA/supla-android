@@ -196,28 +196,30 @@ public class DbHelper extends SQLiteOpenHelper {
     private void createChannelGroupValueView(SQLiteDatabase db, String suffix) {
 
         final String SQL_CREATE_CHANNELGROUP_VALUE_VIEW =
-                "CREATE VIEW " + SuplaContract.ChannelGroupViewEntry.VIEW_NAME + " AS " +
-        "SELECT G."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_GROUPID+" "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_GROUPID+", "
-                +"G."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_FUNC+" "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_FUNC+", "
-                +"R."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_CHANNELID+ " "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_CHANNELID+ ", "
-                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_ONLINE+ " "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_ONLINE+ ", "
-                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_SUBVALUE+ " "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_SUBVALUE+ ", "
-                +"V."+SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_VALUE+ " "
-                +SuplaContract.ChannelGroupViewEntry.COLUMN_NAME_VALUE+ " "
-        +" FROM "+ SuplaContract.ChannelGroupRelationEntry.TABLE_NAME+ " R "
-        +" JOIN "+ SuplaContract.ChannelGroupEntry.TABLE_NAME+" G ON G."
-                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " = R."
-                 + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
-        +" JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " V ON V."
-                 + SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " = R."
-                 + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
-        +" WHERE R." + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
-                + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0";
+                "CREATE VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME + " AS " +
+                        "SELECT V." + SuplaContract.ChannelGroupValueViewEntry._ID + " "
+                        + SuplaContract.ChannelGroupValueViewEntry._ID+ ", "
+                        +" G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + ", "
+                        + "G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC + ", "
+                        + "R." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID + ", "
+                        + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE + ", "
+                        + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE + ", "
+                        + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE + " "
+                        + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + " R "
+                        + " JOIN " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " G ON G."
+                        + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " = R."
+                        + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
+                        + " JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " V ON V."
+                        + SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " = R."
+                        + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
+                        + " WHERE R." + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
+                        + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_VALUE_VIEW);
     }
@@ -279,6 +281,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
     }
 
     @Override
@@ -626,8 +629,9 @@ public class DbHelper extends SQLiteOpenHelper {
             value.AssignSuplaChannelValue(suplaChannelValue);
             value.setOnLine(onLine);
 
+
             updateDbItem(db, value, SuplaContract.ChannelValueEntry._ID,
-                    SuplaContract.ChannelValueEntry.TABLE_NAME, value.getChannelId());
+                    SuplaContract.ChannelValueEntry.TABLE_NAME, value.getId());
         }
 
         if (db != null) {
@@ -640,6 +644,25 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateChannelValue(SuplaChannelValueUpdate channelValue) {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
+    }
+
+    public void updateChannelGroup(SQLiteDatabase db, ChannelGroup channelGroup) {
+
+        SQLiteDatabase _db = db;
+        if (_db == null) {
+            _db = getWritableDatabase();
+        }
+
+        updateDbItem(_db, channelGroup, SuplaContract.ChannelGroupEntry._ID,
+                SuplaContract.ChannelGroupEntry.TABLE_NAME, channelGroup.getId());
+
+        if (db == null) {
+            _db.close();
+        }
+    }
+
+    public void updateChannelGroup(ChannelGroup channelGroup) {
+        updateChannelGroup(null, channelGroup);
     }
 
     public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
@@ -672,8 +695,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 cgroup.Assign(suplaChannelGroup);
                 cgroup.setVisible(1);
 
-                updateDbItem(db, cgroup, SuplaContract.ChannelGroupEntry._ID,
-                        SuplaContract.ChannelGroupEntry.TABLE_NAME, cgroup.getId());
+                updateChannelGroup(db, cgroup);
             }
 
             if (db != null) {
@@ -926,7 +948,73 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public Integer[] updateChannelGroups() {
 
-        ArrayList<Integer>result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<Integer>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                SuplaContract.ChannelGroupValueViewEntry._ID,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE,
+        };
+
+        Cursor c = db.query(
+                SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID
+        );
+
+        ChannelGroup cgroup = null;
+
+        while (c.moveToNext()) {
+
+            int GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+
+            if (cgroup == null) {
+                cgroup = getChannelGroup(GroupId);
+                if (cgroup == null) {
+                    break;
+                }
+
+                cgroup.resetBuffer();
+            }
+
+            if (cgroup.getGroupId() == GroupId) {
+                ChannelValue val = new ChannelValue();
+                val.AssignCursorDataFromGroupView(c);
+                cgroup.addValueToBuffer(val);
+            }
+
+            if (!c.isLast()) {
+                c.moveToNext();
+                GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+                c.moveToPrevious();
+            }
+
+            if (c.isLast() || cgroup.getGroupId() != GroupId) {
+                if (cgroup.DiffWithBuffer()) {
+                    cgroup.assignBuffer();
+                    updateChannelGroup(cgroup);
+                    result.add(cgroup.getGroupId());
+                }
+
+                if (!c.isLast()) {
+                    cgroup = null;
+                }
+            }
+
+        }
+
+        c.close();
+        db.close();
 
         return result.toArray(new Integer[0]);
     }

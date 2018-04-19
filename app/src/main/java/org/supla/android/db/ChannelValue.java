@@ -121,6 +121,16 @@ public class ChannelValue extends DbItem {
 
     }
 
+    public void AssignCursorDataFromGroupView(Cursor cursor) {
+
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry._ID)));
+        setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID)));
+        setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE)) != 0);
+        setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE)));
+        setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE)));
+
+    }
+
     public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
         setChannelValue(channelValue.Value);
         setChannelSubValue(channelValue.SubValue);
@@ -280,15 +290,15 @@ public class ChannelValue extends DbItem {
         return false;
     }
 
-    public byte getSubValueHi() {
+    public boolean getSubValueHi() {
 
         byte[] sub_value = getChannelSubValue();
         if (sub_value.length > 0
                 && sub_value[0] == 1) {
-            return 1;
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
 }

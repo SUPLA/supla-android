@@ -151,8 +151,8 @@ public class Channel extends ChannelBase {
         return Value != null ? Value.getColor() : 0;
     }
 
-    public byte getSubValueHi() {
-        return Value != null ? Value.getSubValueHi() : 0;
+    public boolean getSubValueHi() {
+        return Value != null ? Value.getSubValueHi() : false;
     }
 
     public int StateUp() {
@@ -166,7 +166,7 @@ public class Channel extends ChannelBase {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
 
-                    return getSubValueHi();
+                    return getSubValueHi() ? 1 : 0;
 
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
