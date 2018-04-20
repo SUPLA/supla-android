@@ -12,4 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/channelsListView" />
+
+    <org.supla.android.listview.ChannelListView
+        android:id="@+id/channelGroupListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </RelativeLayout>

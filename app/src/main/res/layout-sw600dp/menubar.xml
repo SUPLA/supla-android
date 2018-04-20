@@ -30,5 +30,17 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:textSize="50sp" />
+
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/groupbutton"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:background="@drawable/groupoff"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginTop="1dp" />
     </FrameLayout>
 </RelativeLayout>

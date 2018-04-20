@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private ViewGroup Content;
 
     private Button MenuButton;
+    private Button GroupButton;
 
     private Button MiSettings;
     private Button MiAbout;
@@ -116,6 +118,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuButton = (Button)findViewById(R.id.menubutton);
             MenuButton.setVisibility(View.GONE);
             MenuButton.setOnClickListener(this);
+
+            GroupButton = (Button)findViewById(R.id.groupbutton);
+            GroupButton.setVisibility(View.GONE);
+            GroupButton.setOnClickListener(this);
+            GroupButton.setTag(Integer.valueOf(0));
 
         }
 
@@ -214,12 +221,16 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     public void showMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.VISIBLE);
+        GroupButton.setVisibility(View.VISIBLE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
+        GroupButton.setVisibility(View.GONE);
     }
+
+    protected void onGroupButtonTouch(boolean On) {}
 
     public boolean menuIsVisible() {
         return getMenuItemsLayout().getVisibility() == View.VISIBLE;
@@ -404,6 +415,26 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 hideMenu(true);
             else
                 showMenu(true);
+
+        } else if ( v == GroupButton ) {
+
+            int img;
+
+            if (GroupButton.getTag() == Integer.valueOf(0)) {
+                GroupButton.setTag(Integer.valueOf(1));
+                img = R.drawable.groupon;
+            } else {
+                GroupButton.setTag(Integer.valueOf(0));
+                img = R.drawable.groupoff;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                GroupButton.setBackground(getResources().getDrawable(img));
+            } else {
+                GroupButton.setBackgroundDrawable(getResources().getDrawable(img));
+            }
+
+            onGroupButtonTouch(img == R.drawable.groupon);
 
         } else if ( v == MiSettings || v == SettingsButton) {
 
