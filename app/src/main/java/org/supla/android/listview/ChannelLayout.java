@@ -47,7 +47,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaConst;
 
 
-public class ChannelLayout extends LinearLayout {
+public class ChannelLayout extends ChannelBaseLayout {
 
     private int ChannelID;
     private int Func;
