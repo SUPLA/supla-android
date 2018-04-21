@@ -864,6 +864,42 @@ public class DbHelper extends SQLiteOpenHelper {
         return rdb.rawQuery(sql, null);
     }
 
+    public Cursor getGroupListCursor() {
+
+
+        String sql = "SELECT "
+                + "G." + SuplaContract.ChannelGroupEntry._ID + " "
+                + SuplaContract.ChannelGroupEntry._ID
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS
+
+                + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " G"
+                + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
+                + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = L."
+                + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
+                + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " DESC, "
+                + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION;
+
+
+        return rdb.rawQuery(sql, null);
+    }
 
     public ColorListItem getColorListItem(int channelId, int idx) {
 
