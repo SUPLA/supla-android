@@ -196,6 +196,7 @@ public abstract class ChannelBase extends DbItem {
     public void Assign(SuplaChannelBase base) {
 
         setRemoteId(base.Id);
+        setLocationId(base.LocationID);
         setCaption(base.Caption);
         setFunc(base.Func);
         setFlags(base.Flags);
