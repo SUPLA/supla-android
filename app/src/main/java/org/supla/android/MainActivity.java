@@ -116,6 +116,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         return false;
     }
 
+    private boolean SetGroupListCursorAdapter() {
+
+        if ( cgroupListViewCursorAdapter == null ) {
+
+            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor());
+            cgroupLV.setAdapter(cgroupListViewCursorAdapter);
+
+            return true;
+
+        } else if ( cgroupListViewCursorAdapter.getCursor() == null ) {
+
+            cgroupListViewCursorAdapter.changeCursor(DbH_ListView.getGroupListCursor());
+        }
+
+        return false;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -132,8 +149,16 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
         }
 
+        if ( !SetGroupListCursorAdapter() ) {
+            cgroupLV.setSelection(0);
+            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+        }
 
-        channelLV.hideDetail(false);
+        if ( channelLV.getVisibility() == View.VISIBLE ) {
+            channelLV.hideDetail(false);
+        } else {
+            cgroupLV.hideDetail(false);
+        }
 
         RateApp ra = new RateApp(this);
         ra.showDialog(1000);
@@ -147,20 +172,27 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnDataChangedMsg(int ChannelId) {
+    protected void OnDataChangedMsg(int ChannelId, int GroupId) {
 
-        if ( channelLV.detail_getChannelId() == ChannelId ) {
+        if ( ChannelId > 0 ) {
 
-            Channel c = channelLV.detail_getChannel();
+            if ( channelLV.detail_getChannelId() == ChannelId ) {
 
-            if ( c != null && !c.getOnLine() )
-                channelLV.hideDetail(false);
-            else
-                channelLV.detail_OnChannelDataChanged();
+                Channel c = channelLV.detail_getChannel();
 
+                if ( c != null && !c.getOnLine() )
+                    channelLV.hideDetail(false);
+                else
+                    channelLV.detail_OnChannelDataChanged();
+
+            }
+
+            channelLV.Refresh(DbH_ListView.getChannelListCursor(), false);
+
+        } else if ( GroupId > 0 ) {
+            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), false);
         }
 
-        channelLV.Refresh(DbH_ListView.getChannelListCursor(), false);
     }
 
     @Override
@@ -174,6 +206,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     protected void OnConnectingMsg () {
         SetListCursorAdapter();
+        SetGroupListCursorAdapter();
     }
 
     @Override
