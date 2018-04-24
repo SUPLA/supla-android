@@ -29,6 +29,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
@@ -67,11 +69,11 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         rs = (SuplaRollerShutter) findViewById(R.id.rs1);
         rs.setOnPercentTouchListener(this);
 
-        btnUp = (Button)findViewById(R.id.rsBtnUp);
-        btnDown = (Button)findViewById(R.id.rsBtnDown);
-        btnStop = (Button)findViewById(R.id.rsBtnStop);
-        btnOpen = (Button)findViewById(R.id.rsBtnOpen);
-        btnClose = (Button)findViewById(R.id.rsBtnClose);
+        btnUp = (Button) findViewById(R.id.rsBtnUp);
+        btnDown = (Button) findViewById(R.id.rsBtnDown);
+        btnStop = (Button) findViewById(R.id.rsBtnStop);
+        btnOpen = (Button) findViewById(R.id.rsBtnOpen);
+        btnClose = (Button) findViewById(R.id.rsBtnClose);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
@@ -79,17 +81,17 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
 
-        Typeface type = Typeface.createFromAsset(getContext().getAssets(),"fonts/OpenSans-Bold.ttf");
+        Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
 
-        tvPercentCaption = (TextView)findViewById(R.id.rsDetailPercentCaption);
+        tvPercentCaption = (TextView) findViewById(R.id.rsDetailPercentCaption);
         tvPercentCaption.setTypeface(type);
 
-        tvPercent = (TextView)findViewById(R.id.rsDetailPercent);
+        tvPercent = (TextView) findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        type = Typeface.createFromAsset(getContext().getAssets(),"fonts/Quicksand-Regular.ttf");
+        type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
 
-        tvTitle = (TextView)findViewById(R.id.rsDetailTitle);
+        tvTitle = (TextView) findViewById(R.id.rsDetailTitle);
         tvTitle.setTypeface(type);
 
         addOnLayoutChangeListener(this);
@@ -101,29 +103,35 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         return inflateLayout(R.layout.detail_rs);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void OnChannelDataChanged() {
+        if (!isGroup()) {
+            Channel channel = (Channel)getChannelFromDatabase();
 
-        Channel channel = getChannelFromDatabase();
+            float p = channel.getPercent();
 
-        float p = channel.getPercent();
+            if (p < 100 && channel.getSubValueHi() == true)
+                p = 100;
 
-        if ( p < 100 && channel.getSubValueHi() == true )
-            p = 100;
+            tvTitle.setText(channel.getNotEmptyCaption(getContext()));
 
-        tvTitle.setText(channel.getNotEmptyCaption(getContext()));
+            rs.setPercent(p);
 
-        rs.setPercent(p);
-
-        if ( p < 0 ) {
-            tvPercent.setText(R.string.calibration);
+            if (p < 0) {
+                tvPercent.setText(R.string.calibration);
+            } else {
+                tvPercent.setText(Integer.toString((int) p) + "%");
+            }
         } else {
-            tvPercent.setText(Integer.toString((int)p)+"%");
+            ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
+            tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
+            rs.setPercent(0);
+            tvPercent.setText("---");
         }
+
     }
 
-    public void setData(Channel channel) {
+    public void setData(ChannelBase channel) {
 
         super.setData(channel);
         OnChannelDataChanged();
@@ -135,17 +143,18 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if ( client == null || !isDetailVisible() )
+        if (client == null || !isDetailVisible())
             return;
 
-        client.Open(getChannelId(), (int)(10+percent));
+        Trace.d("XYZ", "XYZ");
+        client.Open(getRemoteId(), isGroup(), (int) (10 + percent));
         OnChannelDataChanged();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onPercentChangeing(SuplaRollerShutter rs, float percent) {
-        tvPercent.setText(Integer.toString((int)percent)+"%");
+        tvPercent.setText(Integer.toString((int) percent) + "%");
     }
 
     @Override
@@ -153,11 +162,11 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         int action = event.getAction();
 
-        switch(action) {
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-            break;
+                break;
 
             default:
                 return false;
@@ -166,33 +175,33 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if ( client == null )
+        if (client == null)
             return false;
 
-        if ( v == btnUp ) {
+        if (v == btnUp) {
 
-            client.Open(getChannelId(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
+            client.Open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
 
-        } else if ( v == btnDown ) {
+        } else if (v == btnDown) {
 
-            client.Open(getChannelId(), action == MotionEvent.ACTION_DOWN ? 1 : 0);
+            client.Open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 1 : 0);
 
-        } else if ( v == btnStop ) {
+        } else if (v == btnStop) {
 
-            if ( action == MotionEvent.ACTION_DOWN )
-                client.Open(getChannelId(), 0);
+            if (action == MotionEvent.ACTION_DOWN)
+                client.Open(getRemoteId(), isGroup(), 0);
             else return false;
 
-        } else if ( v == btnOpen ) {
+        } else if (v == btnOpen) {
 
-            if ( action == MotionEvent.ACTION_DOWN )
-                client.Open(getChannelId(), 10);
+            if (action == MotionEvent.ACTION_DOWN)
+                client.Open(getRemoteId(), isGroup(), 10);
             else return false;
 
-        } else if ( v == btnClose ) {
+        } else if (v == btnClose) {
 
-            if ( action == MotionEvent.ACTION_DOWN )
-                client.Open(getChannelId(), 110);
+            if (action == MotionEvent.ACTION_DOWN)
+                client.Open(getRemoteId(), isGroup(), 110);
             else return false;
         }
 
@@ -204,12 +213,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
 
-        RelativeLayout rlButtons = (RelativeLayout)findViewById(R.id.rlButtons);
+        RelativeLayout rlButtons = (RelativeLayout) findViewById(R.id.rlButtons);
 
         int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
 
-        if ( margin < 0 ) {
-            RelativeLayout rlRS = (RelativeLayout)findViewById(R.id.rlRS);
+        if (margin < 0) {
+            RelativeLayout rlRS = (RelativeLayout) findViewById(R.id.rlRS);
             rlRS.getLayoutParams().height += margin;
             rlRS.requestLayout();
         }

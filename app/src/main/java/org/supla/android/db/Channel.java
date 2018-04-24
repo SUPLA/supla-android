@@ -103,6 +103,7 @@ public class Channel extends ChannelBase {
 
     }
 
+
     public boolean Diff(SuplaChannel channel) {
 
         return super.Diff(channel)
@@ -155,48 +156,19 @@ public class Channel extends ChannelBase {
         return Value != null ? Value.getSubValueHi() : false;
     }
 
-    public int StateUp() {
-
-        if (getOnLine()) {
-            switch (getFunc()) {
-
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-
-                    return getSubValueHi() ? 1 : 0;
-
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-
-                    return 1;
-
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                    return getBrightness() > 0 ? 1 : 0;
-
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    return getColorBrightness() > 0 ? 1 : 0;
-
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING: {
-                    int result = 0;
-
-                    if (getBrightness() > 0)
-                        result |= 0x1;
-
-                    if (getColorBrightness() > 0)
-                        result |= 0x2;
-
-                    return result;
-                }
-
-
-            }
-        }
-
-        return getOnLine() && Value != null && Value.hiValue() ? 1 : 0;
+    public int getImageIdx(WhichOne whichImage) {
+        return super.getImageIdx(whichImage, Value);
+    }
+    public int getImageIdx() {
+        return super.getImageIdx(WhichOne.First, Value);
     }
 
+    public String getHumanReadableValue(WhichOne whichOne) {
+        return super.getHumanReadableValue(whichOne, Value);
+    }
+    public String getHumanReadableValue() {
+        return super.getHumanReadableValue(WhichOne.First, Value);
+    }
 
 }
 

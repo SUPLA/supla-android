@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelBase;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
@@ -61,27 +62,27 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       // Trace.d("MainActivity", "Created!");
+        // Trace.d("MainActivity", "Created!");
 
         notif_handler = null;
         notif_nrunnable = null;
 
         setContentView(R.layout.activity_main);
 
-        NotificationView = (RelativeLayout)Inflate(R.layout.notification, null);
+        NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);
 
 
-        RelativeLayout NotifBgLayout = (RelativeLayout)NotificationView.findViewById(R.id.notif_bg_layout);
+        RelativeLayout NotifBgLayout = (RelativeLayout) NotificationView.findViewById(R.id.notif_bg_layout);
         NotifBgLayout.setOnClickListener(this);
         NotifBgLayout.setBackgroundColor(getResources().getColor(R.color.notification_bg));
 
         getRootLayout().addView(NotificationView);
 
-        notif_img = (ImageView)NotificationView.findViewById(R.id.notif_img);
-        notif_text = (TextView)NotificationView.findViewById(R.id.notif_txt);
+        notif_img = (ImageView) NotificationView.findViewById(R.id.notif_img);
+        notif_text = (TextView) NotificationView.findViewById(R.id.notif_txt);
 
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         notif_text.setTypeface(type);
 
         channelLV = (ChannelListView) findViewById(R.id.channelsListView);
@@ -89,6 +90,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         channelLV.setOnDetailListener(this);
 
         cgroupLV = (ChannelListView) findViewById(R.id.channelGroupListView);
+        cgroupLV.setOnChannelButtonTouchListener(this);
+        cgroupLV.setOnDetailListener(this);
 
         DbH_ListView = new DbHelper(this);
 
@@ -101,14 +104,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     private boolean SetListCursorAdapter() {
 
-        if ( channelListViewCursorAdapter == null ) {
+        if (channelListViewCursorAdapter == null) {
 
             channelListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
             channelLV.setAdapter(channelListViewCursorAdapter);
 
             return true;
 
-        } else if ( channelListViewCursorAdapter.getCursor() == null ) {
+        } else if (channelListViewCursorAdapter.getCursor() == null) {
 
             channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor());
         }
@@ -118,14 +121,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     private boolean SetGroupListCursorAdapter() {
 
-        if ( cgroupListViewCursorAdapter == null ) {
+        if (cgroupListViewCursorAdapter == null) {
 
-            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor());
+            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor(), true);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
 
             return true;
 
-        } else if ( cgroupListViewCursorAdapter.getCursor() == null ) {
+        } else if (cgroupListViewCursorAdapter.getCursor() == null) {
 
             cgroupListViewCursorAdapter.changeCursor(DbH_ListView.getGroupListCursor());
         }
@@ -144,17 +147,17 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         super.onResume();
 
-        if ( !SetListCursorAdapter() ) {
+        if (!SetListCursorAdapter()) {
             channelLV.setSelection(0);
             channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
         }
 
-        if ( !SetGroupListCursorAdapter() ) {
+        if (!SetGroupListCursorAdapter()) {
             cgroupLV.setSelection(0);
             cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
         }
 
-        if ( channelLV.getVisibility() == View.VISIBLE ) {
+        if (channelLV.getVisibility() == View.VISIBLE) {
             channelLV.hideDetail(false);
         } else {
             cgroupLV.hideDetail(false);
@@ -167,30 +170,38 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     protected void onDestroy() {
-       // Trace.d("MainActivity", "Destroyed!");
+        // Trace.d("MainActivity", "Destroyed!");
         super.onDestroy();
     }
 
     @Override
     protected void OnDataChangedMsg(int ChannelId, int GroupId) {
 
-        if ( ChannelId > 0 ) {
+        ChannelListView LV = null;
+        int Id = 0;
 
-            if ( channelLV.detail_getChannelId() == ChannelId ) {
+        if (ChannelId > 0) {
+            Id = ChannelId;
+            LV = channelLV;
+        } else if (GroupId > 0) {
+            Id = GroupId;
+            LV = cgroupLV;
+        }
 
-                Channel c = channelLV.detail_getChannel();
+        if (LV != null) {
 
-                if ( c != null && !c.getOnLine() )
-                    channelLV.hideDetail(false);
+            if (LV.detail_getRemoteId() == Id) {
+
+                ChannelBase cbase = LV.detail_getChannel();
+
+                if (cbase != null && !cbase.getOnLine())
+                    LV.hideDetail(false);
                 else
-                    channelLV.detail_OnChannelDataChanged();
-
+                    LV.detail_OnChannelDataChanged();
             }
 
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), false);
-
-        } else if ( GroupId > 0 ) {
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), false);
+            LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
+                    DbH_ListView.getGroupListCursor(), false);
         }
 
     }
@@ -198,13 +209,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     protected void OnDisconnectedMsg() {
 
-        if ( channelListViewCursorAdapter != null )
-           channelListViewCursorAdapter.changeCursor(null);
+        if (channelListViewCursorAdapter != null)
+            channelListViewCursorAdapter.changeCursor(null);
 
     }
 
     @Override
-    protected void OnConnectingMsg () {
+    protected void OnConnectingMsg() {
         SetListCursorAdapter();
         SetGroupListCursorAdapter();
     }
@@ -213,21 +224,21 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     protected void OnEventMsg(SuplaEvent event) {
         super.OnEventMsg(event);
 
-        if ( event.Owner || event.ChannelID == 0 ) return;
+        if (event.Owner || event.ChannelID == 0) return;
 
         DbHelper DbH = new DbHelper(this);
 
         Channel channel = DbH.getChannel(event.ChannelID);
 
-        if ( channel == null ) return;
+        if (channel == null) return;
 
-        int ImgIdx = ChannelLayout.getImageIdx(channel.StateUp(), channel.getFunc(), channel.getAltIcon(), 1);
+        int ImgIdx = channel.getImageIdx();
 
-        if ( ImgIdx == -1 ) return;
+        if (ImgIdx == -1) return;
 
         String msg;
 
-        switch(event.Event) {
+        switch (event.Event) {
             case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
                 msg = getResources().getString(R.string.event_openedthegateway);
                 break;
@@ -258,7 +269,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
         if (!channel.getCaption().equals("")) {
-            msg = msg + " (" + channel.getCaption()+")";
+            msg = msg + " (" + channel.getCaption() + ")";
         }
 
 
@@ -267,7 +278,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     private void ShowHideNotificationView(final boolean show) {
 
-        if (!show && NotificationView.getVisibility() == View.GONE )
+        if (!show && NotificationView.getVisibility() == View.GONE)
             return;
 
         float height = getResources().getDimension(R.dimen.channel_layout_height);
@@ -291,7 +302,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 });
 
 
-
     }
 
     public void ShowNotificationMessage(String msg, int img) {
@@ -301,8 +311,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         ShowHideNotificationView(true);
 
-        if ( notif_handler != null
-                && notif_nrunnable != null ) {
+        if (notif_handler != null
+                && notif_nrunnable != null) {
             notif_handler.removeCallbacks(notif_nrunnable);
         }
 
@@ -331,7 +341,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v.getParent() == NotificationView ) {
+        if (v.getParent() == NotificationView) {
             HideNotificationMessage();
         }
     }
@@ -347,39 +357,39 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
-        @Override
-    public void onChannelButtonTouch(boolean left, boolean up, int channelId, int channelFunc) {
+    @Override
+    public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
 
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if ( client == null )
+        if (client == null)
             return;
 
 
-        if ( !up
-             || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER  )   {
+        if (!up
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
 
             SuplaApp.Vibrate(this);
         }
 
 
-        if ( up ) {
+        if (up) {
 
-            if ( channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER )
-                client.Open(channelId, 0);
+            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
+                client.Open(channelId, clv == cgroupLV,  0);
 
         } else {
 
             int Open = 0;
 
-            if ( left ) {
+            if (left) {
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
             } else {
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            client.Open(channelId, Open);
+            client.Open(channelId, clv == cgroupLV, Open);
 
         }
 
@@ -388,7 +398,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onBackPressed() {
 
-        if ( channelLV.isDetailVisible() ) {
+        if (channelLV.isDetailVisible()) {
             channelLV.hideDetail(true);
         } else {
             gotoMain();

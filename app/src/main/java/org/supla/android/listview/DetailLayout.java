@@ -30,7 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
 
 
@@ -38,7 +39,8 @@ public abstract class DetailLayout extends FrameLayout {
 
     private ChannelListView cLV;
     private View mContentView;
-    private int mChannelId;
+    private int mRemoteId;
+    private boolean Group;
     protected DbHelper DBH;
 
     public DetailLayout(Context context, ChannelListView cLV) {
@@ -65,11 +67,11 @@ public abstract class DetailLayout extends FrameLayout {
 
     protected void init() {
 
-        mChannelId = 0;
+        mRemoteId = 0;
         DBH = new DbHelper(getContext());
         mContentView = getContentView();
 
-        if ( mContentView != null ) {
+        if (mContentView != null) {
 
             if (mContentView.getBackground() instanceof ColorDrawable) {
                 setBackgroundColor(((ColorDrawable) mContentView.getBackground().mutate()).getColor());
@@ -83,15 +85,18 @@ public abstract class DetailLayout extends FrameLayout {
     }
 
     protected View inflateLayout(int id) {
-        LayoutInflater inflater = (LayoutInflater)   getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return inflater.inflate(id, null);
     }
 
 
     public abstract View getContentView();
+
     public abstract void OnChannelDataChanged();
-    public void setData(Channel channel) {
-        mChannelId = channel == null ? 0 : channel.getChannelId();
+
+    public void setData(ChannelBase cbase) {
+        mRemoteId = cbase == null ? 0 : cbase.getRemoteId();
+        Group = mRemoteId != 0 && cbase instanceof ChannelGroup;
     }
 
     @Override
@@ -100,10 +105,12 @@ public abstract class DetailLayout extends FrameLayout {
         return cLV.onTouchEvent(ev);
     }
 
-    public Channel getChannelFromDatabase() {
+    public ChannelBase getChannelFromDatabase() {
 
-        if ( getChannelId() != 0 )
-           return DBH.getChannel(mChannelId);
+        if (getRemoteId() != 0) {
+            return isGroup() ? DBH.getChannelGroup(mRemoteId)
+                    : DBH.getChannel(getRemoteId());
+        }
 
         return null;
     }
@@ -111,28 +118,27 @@ public abstract class DetailLayout extends FrameLayout {
     public int getMargin() {
 
         ViewGroup.LayoutParams lp = getLayoutParams();
-        return ((MarginLayoutParams)lp).leftMargin;
+        return ((MarginLayoutParams) lp).leftMargin;
 
     }
 
     public void setMargin(int margin) {
 
         ViewGroup.LayoutParams lp = getLayoutParams();
-        ((ViewGroup.MarginLayoutParams)lp).setMargins(margin,0,-margin,0);
+        ((ViewGroup.MarginLayoutParams) lp).setMargins(margin, 0, -margin, 0);
         setLayoutParams(lp);
 
     }
 
-    public int getChannelId() {
-        return mChannelId;
+    public int getRemoteId() {
+        return mRemoteId;
     }
+
+    public boolean isGroup() { return Group; }
 
     public boolean isDetailVisible() {
         return cLV.isDetailVisible();
     }
-
-
-
 
 
 }

@@ -34,7 +34,7 @@ public class ChannelGroup extends ChannelBase {
     private String BufferTotalValue;
 
     protected int _getOnLine() {
-        return OnLine;
+        return 100;
     }
 
     public int getGroupId() {
@@ -50,10 +50,10 @@ public class ChannelGroup extends ChannelBase {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC)));
+        setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE)));
         OnLine = cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION)));
         TotalValue = cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE));
-        setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
@@ -165,4 +165,20 @@ public class ChannelGroup extends ChannelBase {
         }
 
     }
-}
+
+    public int getImageIdx(WhichOne whichImage) {
+        return super.getImageIdx(whichImage, null);
+    }
+    public int getImageIdx() {
+        return super.getImageIdx(WhichOne.First, null);
+    }
+
+    public String getHumanReadableValue(WhichOne whichOne) {
+        return null;
+    }
+    public String getHumanReadableValue() {
+        return null;
+    }
+
+
+    }

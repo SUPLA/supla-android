@@ -118,6 +118,7 @@ public class SuplaContract {
 
     }
 
+
     public static abstract class ChannelGroupValueViewEntry implements BaseColumns {
 
         public static final String VIEW_NAME = "channelgroupvalue_v1";

@@ -25,6 +25,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelGroup;
+
 import java.util.ArrayList;
 
 
@@ -34,6 +37,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
     private Cursor cursor;
     private ArrayList<SectionItem> Sections;
     private int currentSectionIndex;
+    private boolean Group;
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
@@ -68,14 +72,22 @@ public class ListViewCursorAdapter extends BaseAdapter {
 
     }
 
-    public ListViewCursorAdapter(Context context, Cursor cursor) {
-        super();
-
+    private void init(Context context, Cursor cursor) {
         currentSectionIndex = 0;
         Sections = new ArrayList<>();
         setCursor(cursor);
         this.context = context;
+    }
 
+    public ListViewCursorAdapter(Context context, Cursor cursor) {
+        super();
+        init(context, cursor);
+    }
+
+    public ListViewCursorAdapter(Context context, Cursor cursor, boolean group) {
+        super();
+        init(context, cursor);
+        Group = group;
     }
 
     private boolean SectionsDiff(ArrayList<SectionItem> S1, ArrayList<SectionItem> S2) {
@@ -287,13 +299,20 @@ public class ListViewCursorAdapter extends BaseAdapter {
 
         } else if ( obj instanceof Cursor ) {
 
-            if ( convertView == null || !(convertView instanceof ChannelLayout) ) {
-                convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
+            if ( convertView == null || !(convertView instanceof ChannelBaseLayout) ) {
+                convertView = new ChannelBaseLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
             }
 
-            Channel channel = new Channel();
-            channel.AssignCursorData((Cursor)obj);
-            setData((ChannelLayout) convertView, channel);
+            ChannelBase cbase = null;
+
+            if (isGroup()) {
+                cbase = new ChannelGroup();
+            } else {
+                cbase = new Channel();
+            }
+
+            cbase.AssignCursorData((Cursor)obj);
+            setData((ChannelBaseLayout) convertView, cbase);
         }
 
 
@@ -301,8 +320,8 @@ public class ListViewCursorAdapter extends BaseAdapter {
     }
 
 
-    public void setData(ChannelLayout channelLayout, Channel channel) {
-        channelLayout.setChannelData(channel);
+    public void setData(ChannelBaseLayout channelBaseLayout, ChannelBase cbase) {
+        channelBaseLayout.setChannelData(cbase);
     }
 
     public Cursor getCursor() {
@@ -319,4 +338,9 @@ public class ListViewCursorAdapter extends BaseAdapter {
         notifyDataSetInvalidated();
 
     }
+
+    public boolean isGroup() {
+        return Group;
+    }
+
 }

@@ -198,8 +198,8 @@ public class DbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_CHANNELGROUP_VALUE_VIEW =
                 "CREATE VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME + " AS " +
                         "SELECT V." + SuplaContract.ChannelGroupValueViewEntry._ID + " "
-                        + SuplaContract.ChannelGroupValueViewEntry._ID+ ", "
-                        +" G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + " "
+                        + SuplaContract.ChannelGroupValueViewEntry._ID + ", "
+                        + " G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + " "
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + ", "
                         + "G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC + " "
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC + ", "
@@ -886,7 +886,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
-                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
 
                 + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " G"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
@@ -1010,44 +1012,46 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ChannelGroup cgroup = null;
 
-        while (c.moveToNext()) {
+        if (c.moveToFirst())
+            do {
 
-            int GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+                int GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
 
-            if (cgroup == null) {
-                cgroup = getChannelGroup(GroupId);
                 if (cgroup == null) {
-                    break;
+                    cgroup = getChannelGroup(GroupId);
+                    if (cgroup == null) {
+                        break;
+                    }
+
+                    cgroup.resetBuffer();
                 }
 
-                cgroup.resetBuffer();
-            }
-
-            if (cgroup.getGroupId() == GroupId) {
-                ChannelValue val = new ChannelValue();
-                val.AssignCursorDataFromGroupView(c);
-                cgroup.addValueToBuffer(val);
-            }
-
-            if (!c.isLast()) {
-                c.moveToNext();
-                GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
-                c.moveToPrevious();
-            }
-
-            if (c.isLast() || cgroup.getGroupId() != GroupId) {
-                if (cgroup.DiffWithBuffer()) {
-                    cgroup.assignBuffer();
-                    updateChannelGroup(cgroup);
-                    result.add(cgroup.getGroupId());
+                if (cgroup.getGroupId() == GroupId) {
+                    ChannelValue val = new ChannelValue();
+                    val.AssignCursorDataFromGroupView(c);
+                    cgroup.addValueToBuffer(val);
                 }
 
                 if (!c.isLast()) {
-                    cgroup = null;
+                    c.moveToNext();
+                    GroupId = c.getInt(c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+                    c.moveToPrevious();
                 }
-            }
 
-        }
+                if (c.isLast() || cgroup.getGroupId() != GroupId) {
+                    if (cgroup.DiffWithBuffer()) {
+                        cgroup.assignBuffer();
+                        updateChannelGroup(cgroup);
+                        Trace.d("UpdateChannelGroup", Integer.toString(cgroup.getGroupId()));
+                        result.add(cgroup.getGroupId());
+                    }
+
+                    if (!c.isLast()) {
+                        cgroup = null;
+                    }
+                }
+
+            } while (c.moveToNext());
 
         c.close();
         db.close();
