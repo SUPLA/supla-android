@@ -21,7 +21,10 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
 import org.supla.android.lib.SuplaConst;
+
+import java.util.ArrayList;
 
 public class ChannelGroup extends ChannelBase {
 
@@ -166,9 +169,24 @@ public class ChannelGroup extends ChannelBase {
 
     }
 
+    public ArrayList<Integer> getIntegersFromTotalValue() {
+        ArrayList<Integer> result = new ArrayList<>();
+        String[] items = getTotalValue().split("|");
+
+        for (int a = 0; a < items.length; a++) {
+            try {
+                result.add(Integer.valueOf(items[a]));
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        return result;
+    }
+
     public int getImageIdx(WhichOne whichImage) {
         return super.getImageIdx(whichImage, null);
     }
+
     public int getImageIdx() {
         return super.getImageIdx(WhichOne.First, null);
     }
@@ -176,9 +194,10 @@ public class ChannelGroup extends ChannelBase {
     public String getHumanReadableValue(WhichOne whichOne) {
         return null;
     }
+
     public String getHumanReadableValue() {
         return null;
     }
 
 
-    }
+}
