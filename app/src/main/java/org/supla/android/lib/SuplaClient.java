@@ -41,6 +41,7 @@ import org.supla.android.db.DbHelper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 
 @SuppressWarnings("JniMissingFunction")
@@ -648,6 +649,32 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    private void setVisible(int Visible, int WhereVisible) {
+
+        boolean _DataChanged = false;
+
+        if (DbH.setChannelsVisible(Visible, WhereVisible)) {
+            _DataChanged = true;
+        }
+
+        if (DbH.setChannelGroupsVisible(Visible, WhereVisible)) {
+            _DataChanged = true;
+        }
+
+        if (DbH.setChannelGroupRelationsVisible(Visible, WhereVisible)) {
+            _DataChanged = true;
+        }
+
+        if (DbH.setChannelsOffline()) {
+            _DataChanged = true;
+        }
+
+        if (_DataChanged) {
+            onDataChanged();
+        }
+
+    }
+
     public void run() {
 
         DbH = new DbHelper(_context);
@@ -659,28 +686,8 @@ public class SuplaClient extends Thread {
             }
 
             onConnecting();
-
-            boolean _DataChanged = false;
-
-            if (DbH.setChannelsVisible(2, 1)) {
-                _DataChanged = true;
-            }
-
-            if (DbH.setChannelGroupsVisible(2, 1)) {
-                _DataChanged = true;
-            }
-
-            if (DbH.setChannelGroupRelationsVisible(2, 1)) {
-                _DataChanged = true;
-            }
-
-            if (DbH.setChannelsOffline()) {
-                _DataChanged = true;
-            }
-
-            if (_DataChanged) {
-                onDataChanged();
-            }
+            setVisible(0,2); // Cleanup
+            setVisible(2,1);
 
 
             try {
@@ -724,8 +731,7 @@ public class SuplaClient extends Thread {
 
                 if (Connect()) {
 
-                    while (!canceled() && Iterate(100000)) {
-                    }
+                    while (!canceled() && Iterate(100000)) {}
 
                     if (!canceled()) {
                         try {
