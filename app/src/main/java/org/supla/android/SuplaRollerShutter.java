@@ -4,12 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -36,6 +40,7 @@ public class SuplaRollerShutter extends View {
     private float Percent = 0;
     private float virtPercent = 0;
     private int WindowColor = Color.BLACK;
+    private int MarkerColor = Color.RED;
     private int RollerShutterColor = Color.BLACK;
     private int SunColor = Color.BLACK;
     private float Spaceing;
@@ -47,9 +52,11 @@ public class SuplaRollerShutter extends View {
     private Paint paint = new Paint();
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
+    private ArrayList<Integer> Markers = null;
 
     public interface OnTouchListener {
         void onPercentChanged(SuplaRollerShutter rs, float percent);
+
         void onPercentChangeing(SuplaRollerShutter rs, float percent);
     }
 
@@ -106,6 +113,24 @@ public class SuplaRollerShutter extends View {
         invalidate();
     }
 
+    int getMarkerColor() {
+        return MarkerColor;
+    }
+
+    void setMarkerColor(int markerColor) {
+        MarkerColor = markerColor;
+        invalidate();
+    }
+
+    void setMarkers(ArrayList<Integer> markers) {
+        if (markers == null) {
+            Markers = null;
+        } else {
+            Markers = new ArrayList<>(markers);
+        }
+        invalidate();
+    }
+
     int getSunColor() {
         return SunColor;
     }
@@ -130,9 +155,9 @@ public class SuplaRollerShutter extends View {
 
     void setPercent(float percent) {
 
-        if ( percent < 0 )
+        if (percent < 0)
             percent = 0;
-        else if ( percent > 100 )
+        else if (percent > 100)
             percent = 100;
 
         Percent = percent;
@@ -163,10 +188,10 @@ public class SuplaRollerShutter extends View {
         int bgColor = Color.TRANSPARENT;
 
         if (getBackground() instanceof ColorDrawable) {
-             bgColor = ((ColorDrawable) getBackground().mutate()).getColor();
+            bgColor = ((ColorDrawable) getBackground().mutate()).getColor();
         }
 
-        if ( bgColor == Color.TRANSPARENT )
+        if (bgColor == Color.TRANSPARENT)
             bgColor = Color.WHITE;
 
         canvas.drawColor(bgColor);
@@ -176,14 +201,14 @@ public class SuplaRollerShutter extends View {
         paint.setAntiAlias(true);
 
         paint.setStrokeWidth(FrameLineWidth);
-        float hFLW = FrameLineWidth/2;
+        float hFLW = FrameLineWidth / 2;
 
-        float lrMargin = FrameLineWidth * (float)0.5;
+        float lrMargin = FrameLineWidth * (float) 0.5;
 
-        float left = hFLW+lrMargin;
+        float left = hFLW + lrMargin;
         float top = hFLW;
-        float right = getWidth()-hFLW-lrMargin;
-        float bottom = getHeight()-hFLW;
+        float right = getWidth() - hFLW - lrMargin;
+        float bottom = getHeight() - hFLW;
 
         rectf.set(left, top, right, bottom);
         canvas.drawRoundRect(rectf, 1, 1, paint);
@@ -195,67 +220,99 @@ public class SuplaRollerShutter extends View {
 
         hFLW = Spaceing / 2;
 
-        float w = (right-left) / 2 - Spaceing/2;
-        float h = (bottom-top) / 2 - Spaceing/2;
+        float w = (right - left) / 2 - Spaceing / 2;
+        float h = (bottom - top) / 2 - Spaceing / 2;
 
-        rectf.set(left+hFLW, top+hFLW, left+w-hFLW, top-hFLW+h);
+        rectf.set(left + hFLW, top + hFLW, left + w - hFLW, top - hFLW + h);
         canvas.drawRect(rectf, paint);
-        rectf.set(right-w+hFLW, top+hFLW, right-hFLW, top-hFLW+h);
+        rectf.set(right - w + hFLW, top + hFLW, right - hFLW, top - hFLW + h);
         canvas.drawRect(rectf, paint);
-        rectf.set(left+hFLW, bottom-h+hFLW, left+w-hFLW, bottom-hFLW);
+        rectf.set(left + hFLW, bottom - h + hFLW, left + w - hFLW, bottom - hFLW);
         canvas.drawRect(rectf, paint);
-        rectf.set(right-w+hFLW, bottom-h+hFLW, right-hFLW, bottom-hFLW);
+        rectf.set(right - w + hFLW, bottom - h + hFLW, right - hFLW, bottom - hFLW);
         canvas.drawRect(rectf, paint);
 
-        left  = right-w+Spaceing;
-        top = top+Spaceing;
-        right = right-Spaceing;
-        bottom = top-Spaceing+h;
+        left = right - w + Spaceing;
+        top = top + Spaceing;
+        right = right - Spaceing;
+        bottom = top - Spaceing + h;
 
-        w = (right-left)/6;
-        h = (bottom-top)/6;
+        w = (right - left) / 6;
+        h = (bottom - top) / 6;
 
-        if ( w < h )
+        if (w < h)
             h = w;
 
-        paint.setStrokeWidth(FrameLineWidth/(float)1.5);
+        paint.setStrokeWidth(FrameLineWidth / (float) 1.5);
         paint.setColor(SunColor);
 
-        float x = right-h*(float)2;
-        float y = top+h*(float)2;
+        float x = right - h * (float) 2;
+        float y = top + h * (float) 2;
 
         canvas.drawCircle(x, y, h, paint);
 
-        float ray_n = h + (h*(float)0.2);
-        float ray_m = h*(float)0.4;
+        float ray_n = h + (h * (float) 0.2);
+        float ray_m = h * (float) 0.4;
 
-        for(int a=0;a<360;a+=30) {
+        for (int a = 0; a < 360; a += 30) {
 
             double r = Math.toRadians(a);
 
-            float ray_x = (float)(x + Math.cos(r)*(ray_n));
-            float ray_y = (float)(y + Math.sin(r)*(ray_n));
+            float ray_x = (float) (x + Math.cos(r) * (ray_n));
+            float ray_y = (float) (y + Math.sin(r) * (ray_n));
 
             canvas.drawLine(ray_x,
                     ray_y,
-                    (float)(ray_x + Math.cos(r)*(ray_m)),
-                    (float)(ray_y + Math.sin(r)*(ray_m)),
+                    (float) (ray_x + Math.cos(r) * (ray_m)),
+                    (float) (ray_y + Math.sin(r) * (ray_m)),
                     paint);
 
         }
 
         float percent = Moving ? virtPercent : Percent;
 
-        if ( percent == 0 || LouverCount <= 0 )
+        if (percent == 0 && Markers != null && !Markers.isEmpty()) {
+
+            Path markerPath = new Path();
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            float markerHalfHeight = Spaceing + FrameLineWidth / 2;
+            float markerArrowWidth = Spaceing * 2;
+            float markerWidth = getWidth() / 20 + markerArrowWidth;
+            float markerMargin = FrameLineWidth / 2;
+
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(MarkerColor);
+            paint.setStrokeWidth(metrics.density);
+
+            float pos;
+
+            for (int a = 0; a < Markers.size(); a++) {
+                pos = (float) ((getHeight() - markerHalfHeight * 2) * Markers.get(a) / 100.00) + markerHalfHeight;
+
+                markerPath.reset();
+
+                markerPath.moveTo(markerMargin, (float) pos);
+                markerPath.lineTo(markerMargin + markerArrowWidth, (float) pos - markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerWidth, (float) pos - markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerWidth, (float) pos + markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerArrowWidth, (float) pos + markerHalfHeight);
+                markerPath.lineTo(markerMargin, (float) pos);
+
+                canvas.drawPath(markerPath, paint);
+
+            }
+        }
+
+        if (percent == 0 || LouverCount <= 0)
             return;
 
-        if ( percent > 100 )
+        if (percent > 100)
             percent = 100;
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(bgColor);
 
-        h = getHeight()*percent/100;
+        h = getHeight() * percent / 100;
 
         rectf.set(0, 0, getWidth(), h);
         canvas.drawRect(rectf, paint);
@@ -264,19 +321,19 @@ public class SuplaRollerShutter extends View {
         paint.setColor(Moving ? (WindowColor & 0x00ffffff) | (50 << 24) : WindowColor);
         paint.setStrokeWidth(FrameLineWidth);
 
-        hFLW = FrameLineWidth/2;
+        hFLW = FrameLineWidth / 2;
 
-        float LouverHeight = (getHeight()- LouverSpaceing * (LouverCount-1)) / LouverCount - FrameLineWidth;
-        h-=hFLW;
+        float LouverHeight = (getHeight() - LouverSpaceing * (LouverCount - 1)) / LouverCount - FrameLineWidth;
+        h -= hFLW;
 
-        for(int a=0;a<LouverCount;a++) {
+        for (int a = 0; a < LouverCount; a++) {
 
-            if ( h < 0 )
+            if (h < 0)
                 break;
 
-            rectf.set(hFLW, h-LouverHeight, getWidth()-hFLW, h);
+            rectf.set(hFLW, h - LouverHeight, getWidth() - hFLW, h);
             canvas.drawRect(rectf, paint);
-            h=h-LouverHeight-LouverSpaceing-FrameLineWidth;
+            h = h - LouverHeight - LouverSpaceing - FrameLineWidth;
 
         }
 
@@ -285,9 +342,9 @@ public class SuplaRollerShutter extends View {
 
         paint.setStrokeWidth(h);
 
-        h/=2;
+        h /= 2;
 
-        canvas.drawLine(h,0,getWidth(),0, paint);
+        canvas.drawLine(h, 0, getWidth(), 0, paint);
 
     }
 
@@ -304,7 +361,7 @@ public class SuplaRollerShutter extends View {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
 
-                if ( mOnTouchListener != null ) {
+                if (mOnTouchListener != null) {
                     mOnTouchListener.onPercentChanged(this, virtPercent);
                 }
 
@@ -317,23 +374,23 @@ public class SuplaRollerShutter extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 Moving = true;
-                float delta = y-MoveY;
+                float delta = y - MoveY;
 
-                if ( Math.abs(x-MoveX) < Math.abs(delta)  ) {
+                if (Math.abs(x - MoveX) < Math.abs(delta)) {
 
                     float p = Math.abs(delta) * 100 / getHeight();
 
-                    if ( delta > 0 )
+                    if (delta > 0)
                         virtPercent += p;
-                     else
+                    else
                         virtPercent -= p;
 
-                    if ( virtPercent < 0 )
+                    if (virtPercent < 0)
                         virtPercent = 0;
-                    else if ( virtPercent > 100 )
+                    else if (virtPercent > 100)
                         virtPercent = 100;
 
-                    if ( mOnTouchListener != null ) {
+                    if (mOnTouchListener != null) {
                         mOnTouchListener.onPercentChangeing(this, virtPercent);
                     }
 

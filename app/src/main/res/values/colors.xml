@@ -6,6 +6,7 @@
     <color name="channel_cell">#fafbfc</color>
     <color name="detail_rgb_gb">#ffe804</color>
     <color name="detail_rs_bg">#fffafafa</color>
+    <color name="detail_rs_marker">#12a71e</color>
     <color name="activity_bg">#fafbfc</color>
     <color name="activity_status_bg_err">#fee700</color>
     <color name="activity_status_bg_normal">#12a71e</color>
