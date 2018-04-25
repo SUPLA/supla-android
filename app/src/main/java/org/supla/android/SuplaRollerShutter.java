@@ -291,12 +291,12 @@ public class SuplaRollerShutter extends View {
 
                 markerPath.reset();
 
-                markerPath.moveTo(markerMargin, (float) pos);
-                markerPath.lineTo(markerMargin + markerArrowWidth, (float) pos - markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerWidth, (float) pos - markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerWidth, (float) pos + markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerArrowWidth, (float) pos + markerHalfHeight);
-                markerPath.lineTo(markerMargin, (float) pos);
+                markerPath.moveTo(markerMargin, pos);
+                markerPath.lineTo(markerMargin + markerArrowWidth, pos - markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerWidth, pos - markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerWidth, pos + markerHalfHeight);
+                markerPath.lineTo(markerMargin + markerArrowWidth, pos + markerHalfHeight);
+                markerPath.lineTo(markerMargin, pos);
 
                 canvas.drawPath(markerPath, paint);
 
