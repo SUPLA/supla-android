@@ -280,8 +280,6 @@ public class SuplaRollerShutter extends View {
             float markerWidth = getWidth() / 20 + markerArrowWidth;
             float markerMargin = FrameLineWidth / 2;
 
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(MarkerColor);
             paint.setStrokeWidth(metrics.density);
 
             float pos;
@@ -289,16 +287,28 @@ public class SuplaRollerShutter extends View {
             for (int a = 0; a < Markers.size(); a++) {
                 pos = (float) ((getHeight() - markerHalfHeight * 2) * Markers.get(a) / 100.00) + markerHalfHeight;
 
-                markerPath.reset();
+                for(short b=0;b<2;b++) {
 
-                markerPath.moveTo(markerMargin, pos);
-                markerPath.lineTo(markerMargin + markerArrowWidth, pos - markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerWidth, pos - markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerWidth, pos + markerHalfHeight);
-                markerPath.lineTo(markerMargin + markerArrowWidth, pos + markerHalfHeight);
-                markerPath.lineTo(markerMargin, pos);
+                    if (b == 0) {
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setColor(MarkerColor);
+                    } else {
+                        paint.setStyle(Paint.Style.STROKE);
+                        paint.setColor(Color.WHITE);
+                    }
+                    
+                    markerPath.reset();
 
-                canvas.drawPath(markerPath, paint);
+                    markerPath.moveTo(markerMargin, pos);
+                    markerPath.lineTo(markerMargin + markerArrowWidth, pos - markerHalfHeight);
+                    markerPath.lineTo(markerMargin + markerWidth, pos - markerHalfHeight);
+                    markerPath.lineTo(markerMargin + markerWidth, pos + markerHalfHeight);
+                    markerPath.lineTo(markerMargin + markerArrowWidth, pos + markerHalfHeight);
+                    markerPath.lineTo(markerMargin, pos);
+
+                    canvas.drawPath(markerPath, paint);
+                }
+
 
             }
         }
