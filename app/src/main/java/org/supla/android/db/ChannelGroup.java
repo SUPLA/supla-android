@@ -128,6 +128,10 @@ public class ChannelGroup extends ChannelBase {
 
         BufferOnLine = BufferOnLineCount * 100 / BufferCounter;
 
+        if (!value.getOnLine()) {
+            return;
+        }
+        
         if (!BufferTotalValue.isEmpty()) {
             BufferTotalValue += "|";
         }
