@@ -19,6 +19,7 @@ package org.supla.android;
  */
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -35,6 +36,10 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
 
     private SuplaRollerShutter rs;
@@ -46,6 +51,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnStop;
     private Button btnOpen;
     private Button btnClose;
+    private Timer delayTimer1;
+    private boolean withoutDelay;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -67,6 +74,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         super.init();
         rs = (SuplaRollerShutter) findViewById(R.id.rs1);
+        rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
         rs.setOnPercentTouchListener(this);
 
         btnUp = (Button) findViewById(R.id.rsBtnUp);
@@ -95,7 +103,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvTitle.setTypeface(type);
 
         addOnLayoutChangeListener(this);
-
+        delayTimer1 = null;
+        withoutDelay = false;
     }
 
     @Override
@@ -105,16 +114,20 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
     @Override
     public void OnChannelDataChanged() {
+
+        if (delayTimer1 != null) {
+            delayTimer1.cancel();
+            delayTimer1 = null;
+        }
+
         if (!isGroup()) {
-            Channel channel = (Channel)getChannelFromDatabase();
+            Channel channel = (Channel) getChannelFromDatabase();
 
-            float p = channel.getPercent();
-
-            if (p < 100 && channel.getSubValueHi() == true)
-                p = 100;
+            byte p = channel.getRollerShutterPosition();
 
             tvTitle.setText(channel.getNotEmptyCaption(getContext()));
 
+            rs.setMarkers(null);
             rs.setPercent(p);
 
             if (p < 0) {
@@ -126,12 +139,67 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
             rs.setPercent(0);
-            tvPercent.setText("---");
+
+            ArrayList<Integer> positions = cgroup.getRollerShutterPositions();
+
+            int percent = -1;
+
+            for (int a = 0; a < positions.size(); a++) {
+                int p = positions.get(a).intValue();
+                if (p < 0) {
+                    positions.remove(a);
+                    a--;
+                } else if (percent == -1) {
+                    percent = p;
+                } else if (percent != -2 && percent != p) {
+                    percent = -2;
+                }
+            }
+
+            if (percent >= 0) {
+
+                rs.setMarkers(positions);
+
+                delayTimer1 = new Timer();
+                delayTimer1.schedule(new DelayTask(percent) {
+                    @Override
+                    public void run() {
+                        if (getContext() instanceof Activity) {
+                            ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    rs.setMarkers(null);
+                                    rs.setPercent(percent);
+                                    tvPercent.setText(Integer.toString(percent) + "%");
+                                }
+                            });
+                        }
+                    }
+
+                }, withoutDelay ? 0 : 2000);
+
+            } else if (percent == -1) {
+                // All of RS wait for calibration
+                rs.setPercent(0);
+                rs.setMarkers(null);
+                tvPercent.setText(R.string.calibration);
+            } else {
+                rs.setPercent(0);
+                rs.setMarkers(positions);
+                tvPercent.setText("---");
+            }
+
+            withoutDelay = false;
         }
 
     }
 
     public void setData(ChannelBase channel) {
+
+        if (channel != null && channel.getRemoteId() != getRemoteId()) {
+            withoutDelay = true;
+        }
 
         super.setData(channel);
         OnChannelDataChanged();
@@ -223,6 +291,19 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             rlRS.requestLayout();
         }
 
+    }
+
+    private class DelayTask extends TimerTask {
+        int percent;
+
+        public DelayTask(int percent) {
+            this.percent = percent;
+        }
+
+        @Override
+        public void run() {
+            // You can do anything you want with param
+        }
     }
 }
 

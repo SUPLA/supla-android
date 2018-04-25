@@ -21,7 +21,6 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -178,6 +177,32 @@ public class ChannelGroup extends ChannelBase {
                 result.add(Integer.valueOf(items[a]));
             } catch (NumberFormatException e) {
             }
+        }
+
+        return result;
+    }
+
+    public ArrayList<Integer> getRollerShutterPositions() {
+        ArrayList<Integer> result = new ArrayList<>();
+        String[] items = getTotalValue().split("\\|");
+
+        for (int a = 0; a < items.length; a++) {
+            String[] n = items[a].split(":");
+            if (n.length == 2) {
+                try {
+                    int pos = Integer.valueOf(n[0]).intValue();
+                    int sensor = Integer.valueOf(n[1]).intValue();
+
+                    if (pos < 100 && sensor == 1) {
+                        pos = 100;
+                    }
+
+                    result.add(Integer.valueOf(pos));
+                } catch (NumberFormatException e) {
+                }
+            }
+
+
         }
 
         return result;

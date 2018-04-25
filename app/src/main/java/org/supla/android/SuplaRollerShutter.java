@@ -296,7 +296,7 @@ public class SuplaRollerShutter extends View {
                         paint.setStyle(Paint.Style.STROKE);
                         paint.setColor(Color.WHITE);
                     }
-                    
+
                     markerPath.reset();
 
                     markerPath.moveTo(markerMargin, pos);

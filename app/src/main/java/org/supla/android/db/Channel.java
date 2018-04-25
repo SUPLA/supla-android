@@ -21,11 +21,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
 import org.supla.android.lib.SuplaChannel;
-import org.supla.android.lib.SuplaConst;
-
-import java.nio.ByteBuffer;
 
 
 public class Channel extends ChannelBase {
@@ -136,8 +132,14 @@ public class Channel extends ChannelBase {
         return Value != null ? Value.getDistance() : -1;
     }
 
-    public byte getPercent() {
-        return Value != null ? Value.getPercent() : 0;
+    public byte getRollerShutterPosition() {
+
+        byte p = Value != null ? Value.getPercent() : 0;
+
+        if (p < 100 && getSubValueHi() == true)
+            p = 100;
+
+        return p;
     }
 
     public byte getColorBrightness() {
