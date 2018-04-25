@@ -605,7 +605,7 @@ public class SuplaClient extends Thread {
 
     public static SuplaRegisterError getLastRegisterError() {
 
-        SuplaRegisterError result
+        SuplaRegisterError result;
 
         synchronized (st_lck) {
             result = lastRegisterError;
