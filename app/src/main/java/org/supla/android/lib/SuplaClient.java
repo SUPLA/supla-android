@@ -116,7 +116,7 @@ public class SuplaClient extends Thread {
 
     private boolean Init(SuplaCfg cfg) {
 
-        boolean result = false;
+        boolean result;
 
         synchronized (sc_lck) {
             if (_supla_client_ptr == 0) {
@@ -189,7 +189,7 @@ public class SuplaClient extends Thread {
 
     public int GetId() {
 
-        int result = 0;
+        int result;
 
         LockClientPtr();
         try {
@@ -206,7 +206,7 @@ public class SuplaClient extends Thread {
         boolean result = false;
 
         ConnectivityManager connectivityManager = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
             LockClientPtr();
@@ -227,7 +227,7 @@ public class SuplaClient extends Thread {
 
     public boolean Connected() {
 
-        boolean result = false;
+        boolean result;
 
         LockClientPtr();
         try {
@@ -241,7 +241,7 @@ public class SuplaClient extends Thread {
 
     public boolean Registered() {
 
-        boolean result = false;
+        boolean result;
 
         synchronized (sc_lck) {
             result = _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
@@ -271,7 +271,7 @@ public class SuplaClient extends Thread {
 
     public boolean Open(int ID, boolean Group, int Open) {
 
-        boolean result = false;
+        boolean result;
 
         LockClientPtr();
         try {
@@ -289,7 +289,7 @@ public class SuplaClient extends Thread {
 
     public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness) {
 
-        boolean result = false;
+        boolean result;
 
         LockClientPtr();
         try {
@@ -307,7 +307,7 @@ public class SuplaClient extends Thread {
 
     public boolean GetRegistrationEnabled() {
 
-        boolean result = false;
+        boolean result;
 
         LockClientPtr();
         try {
@@ -321,7 +321,7 @@ public class SuplaClient extends Thread {
 
     public int GetProtoVersion() {
 
-        int result = 0;
+        int result;
 
         synchronized (sc_lck) {
             result = _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
@@ -332,7 +332,7 @@ public class SuplaClient extends Thread {
 
     public int GetMaxProtoVersion() {
 
-        int result = 0;
+        int result;
 
         LockClientPtr();
         try {
@@ -605,7 +605,7 @@ public class SuplaClient extends Thread {
 
     public static SuplaRegisterError getLastRegisterError() {
 
-        SuplaRegisterError result = null;
+        SuplaRegisterError result
 
         synchronized (st_lck) {
             result = lastRegisterError;

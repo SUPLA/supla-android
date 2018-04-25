@@ -398,7 +398,7 @@ public class ChannelListView extends ListView {
                 && margin == -getWidth())) && !force)
             return;
 
-        int offset = 0;
+        int offset;
         int m = margin;
 
         if (isDetailVisible())

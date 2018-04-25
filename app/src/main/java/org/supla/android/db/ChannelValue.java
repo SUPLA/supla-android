@@ -282,23 +282,17 @@ public class ChannelValue extends DbItem {
 
         byte[] value = getChannelValue();
 
-        if (value.length > 0
-                && value[0] == 1) {
-            return true;
-        }
+        return value.length > 0
+                && value[0] == 1;
 
-        return false;
     }
 
     public boolean getSubValueHi() {
 
         byte[] sub_value = getChannelSubValue();
-        if (sub_value.length > 0
-                && sub_value[0] == 1) {
-            return true;
-        }
+        return sub_value.length > 0
+                && sub_value[0] == 1;
 
-        return false;
     }
 
 }

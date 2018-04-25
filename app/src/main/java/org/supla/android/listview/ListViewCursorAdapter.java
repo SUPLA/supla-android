@@ -303,7 +303,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
                 convertView = new ChannelBaseLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
             }
 
-            ChannelBase cbase = null;
+            ChannelBase cbase;
 
             if (isGroup()) {
                 cbase = new ChannelGroup();

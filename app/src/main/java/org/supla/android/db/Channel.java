@@ -153,7 +153,7 @@ public class Channel extends ChannelBase {
     }
 
     public boolean getSubValueHi() {
-        return Value != null ? Value.getSubValueHi() : false;
+        return Value != null && Value.getSubValueHi();
     }
 
     public int getImageIdx(WhichOne whichImage) {

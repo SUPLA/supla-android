@@ -400,7 +400,7 @@ public class SuplaColorBrightnessPicker extends View {
 
     private double calculateAngle(double pointerAngle, double inRads) {
 
-        double delta = 0;
+        double delta;
 
         if ( Math.abs(lastTouchedAngle - inRads) > Math.PI ) {
 

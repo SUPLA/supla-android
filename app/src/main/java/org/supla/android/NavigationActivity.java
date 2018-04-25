@@ -99,7 +99,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     protected View Inflate(int resID, ViewGroup root) {
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(resID, root);
+        return inflater == null ? null : inflater.inflate(resID, root);
     }
 
     private RelativeLayout getMenuBarLayout() {

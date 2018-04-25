@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 import org.supla.android.lib.Preferences;
 
-public class CfgActivity extends NavigationActivity  {
+public class CfgActivity extends NavigationActivity {
 
     private View vBasic;
     private View vAdvanced;
@@ -50,7 +50,7 @@ public class CfgActivity extends NavigationActivity  {
 
     private Button btnSaveBasic, btnSaveAdv, btnCreate;
 
-    static final short CFG_LAYOUT_ADVANCED  =  0;
+    static final short CFG_LAYOUT_ADVANCED = 0;
     static final short CFG_LAYOUT_BASIC = 1;
 
     @Override
@@ -79,13 +79,13 @@ public class CfgActivity extends NavigationActivity  {
         vAdvanced.setVisibility(View.VISIBLE);
         rlContent.addView(vAdvanced);
 
-        cbAdvanced = (CheckBox)findViewById(R.id.cfg_cb_advanced);
+        cbAdvanced = (CheckBox) findViewById(R.id.cfg_cb_advanced);
         cbAdvanced.setOnClickListener(this);
 
-        edServerAddr = (EditText)findViewById(R.id.edServerAddr);
-        edAccessID = (EditText)findViewById(R.id.edAccessID);
-        edAccessIDpwd = (EditText)findViewById(R.id.edAccessIDpwd);
-        edEmail = (EditText)findViewById(R.id.cfg_email);
+        edServerAddr = (EditText) findViewById(R.id.edServerAddr);
+        edAccessID = (EditText) findViewById(R.id.edAccessID);
+        edAccessIDpwd = (EditText) findViewById(R.id.edAccessIDpwd);
+        edEmail = (EditText) findViewById(R.id.cfg_email);
 
         edServerAddr.setOnFocusChangeListener(fcl);
         edAccessID.setOnFocusChangeListener(fcl);
@@ -98,28 +98,28 @@ public class CfgActivity extends NavigationActivity  {
         edAccessIDpwd.setTypeface(type);
         edEmail.setTypeface(type);
 
-        btnCreate = (Button)findViewById(R.id.cfg_create_account);
+        btnCreate = (Button) findViewById(R.id.cfg_create_account);
         btnCreate.setOnClickListener(this);
 
         type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
-        TextView v = (TextView)findViewById(R.id.cfg_label_svr_address);
+        TextView v = (TextView) findViewById(R.id.cfg_label_svr_address);
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.cfg_label_access_id);
+        v = (TextView) findViewById(R.id.cfg_label_access_id);
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.cfg_label_access_pwd);
+        v = (TextView) findViewById(R.id.cfg_label_access_pwd);
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.cfg_label_email);
+        v = (TextView) findViewById(R.id.cfg_label_email);
         v.setTypeface(type);
 
 
         type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
-        v = (TextView)findViewById(R.id.cfg_label_title_basic);
+        v = (TextView) findViewById(R.id.cfg_label_title_basic);
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.cfg_label_title_adv);
+        v = (TextView) findViewById(R.id.cfg_label_title_adv);
         v.setTypeface(type);
 
         btnCreate.setTypeface(type, Typeface.BOLD);
@@ -137,16 +137,17 @@ public class CfgActivity extends NavigationActivity  {
             edEmail.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
         }
 
-        btnSaveBasic = (Button)findViewById(R.id.cfg_save_basic);
+        btnSaveBasic = (Button) findViewById(R.id.cfg_save_basic);
         btnSaveBasic.setOnClickListener(this);
 
-        btnSaveAdv = (Button)findViewById(R.id.cfg_save_adv);
+        btnSaveAdv = (Button) findViewById(R.id.cfg_save_adv);
         btnSaveAdv.setOnClickListener(this);
 
         edEmail.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start,
@@ -157,7 +158,7 @@ public class CfgActivity extends NavigationActivity  {
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                if ( getCurrentFocus() == edEmail ) {
+                if (getCurrentFocus() == edEmail) {
                     edServerAddr.setText("");
                 }
 
@@ -167,14 +168,16 @@ public class CfgActivity extends NavigationActivity  {
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 
     private void cbAdvancedClicked() {
 
-        if ( cbAdvanced.isChecked() ) {
+        if (cbAdvanced.isChecked()) {
             vBasic.setVisibility(View.GONE);
             vAdvanced.setVisibility(View.VISIBLE);
         } else {
@@ -188,18 +191,18 @@ public class CfgActivity extends NavigationActivity  {
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v == cbAdvanced ) {
+        if (v == cbAdvanced) {
             cbAdvancedClicked();
             return;
         }
 
-        if ( v == btnCreate ) {
+        if (v == btnCreate) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.create_url)));
             startActivity(browserIntent);
             return;
         }
 
-        if ( v != btnSaveBasic && v != btnSaveAdv ) return;
+        if (v != btnSaveBasic && v != btnSaveAdv) return;
 
         btnSaveBasic.setEnabled(false);
         btnSaveAdv.setEnabled(false);
@@ -207,7 +210,7 @@ public class CfgActivity extends NavigationActivity  {
         Preferences prefs = new Preferences(this);
 
         boolean changed = false;
-        int AccessID = 0;
+        int AccessID;
 
         if (!prefs.getServerAddress().equals(edServerAddr.getText().toString())) {
             prefs.setServerAddress(edServerAddr.getText().toString());
@@ -218,11 +221,11 @@ public class CfgActivity extends NavigationActivity  {
 
             AccessID = Integer.parseInt(edAccessID.getText().toString());
 
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             AccessID = 0;
         }
 
-        if ( AccessID != prefs.getAccessID() ) {
+        if (AccessID != prefs.getAccessID()) {
             prefs.setAccessID(AccessID);
             changed = true;
         }
@@ -237,13 +240,13 @@ public class CfgActivity extends NavigationActivity  {
             changed = true;
         }
 
-        if ( prefs.isAdvancedCfg() != cbAdvanced.isChecked() ) {
+        if (prefs.isAdvancedCfg() != cbAdvanced.isChecked()) {
             prefs.setAdvancedCfg(cbAdvanced.isChecked());
             changed = true;
         }
 
 
-        if ( changed ) {
+        if (changed) {
 
             prefs.setPreferedProtocolVersion();
 
@@ -269,7 +272,7 @@ public class CfgActivity extends NavigationActivity  {
         Preferences prefs = new Preferences(this);
 
         edServerAddr.setText(prefs.getServerAddress(), EditText.BufferType.EDITABLE);
-        edAccessID.setText(prefs.getAccessID() == 0 ? "" : Integer.toString(prefs.getAccessID()) );
+        edAccessID.setText(prefs.getAccessID() == 0 ? "" : Integer.toString(prefs.getAccessID()));
         edAccessIDpwd.setText(prefs.getAccessIDpwd(), EditText.BufferType.EDITABLE);
         edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
 
@@ -278,7 +281,7 @@ public class CfgActivity extends NavigationActivity  {
 
         String sender = getIntent().getStringExtra(INTENTSENDER);
 
-        if ( sender != null && sender.equals(INTENTSENDER_MAIN)) {
+        if (sender != null && sender.equals(INTENTSENDER_MAIN)) {
             showMenuBar();
         } else {
             hideMenuBar();

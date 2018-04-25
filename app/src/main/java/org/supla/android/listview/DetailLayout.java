@@ -86,7 +86,7 @@ public abstract class DetailLayout extends FrameLayout {
 
     protected View inflateLayout(int id) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(id, null);
+        return inflater == null ? null : inflater.inflate(id, null);
     }
 
 

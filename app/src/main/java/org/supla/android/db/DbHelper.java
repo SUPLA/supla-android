@@ -809,7 +809,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String selection = "SELECT count(*) FROM " + SuplaContract.ChannelEntry.TABLE_NAME;
 
-        int count = 0;
+        int count;
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(selection, null);

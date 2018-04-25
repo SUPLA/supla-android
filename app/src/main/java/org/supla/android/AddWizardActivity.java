@@ -73,23 +73,23 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private final int WIZARD_PERMISSIONS_REQUEST = 1;
 
-    private final int STEP_NONE                               = 0;
-    private final int STEP_CHECK_WIFI                         = 1;
-    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY1    = 2;
-    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY2    = 3;
-    private final int STEP_SCAN                               = 4;
-    private final int STEP_CONNECT                            = 5;
-    private final int STEP_CONFIGURE                          = 6;
-    private final int STEP_RECONNECT                          = 7;
-    private final int STEP_DONE                               = 8;
+    private final int STEP_NONE = 0;
+    private final int STEP_CHECK_WIFI = 1;
+    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY1 = 2;
+    private final int STEP_CHECK_REGISTRATION_ENABLED_TRY2 = 3;
+    private final int STEP_SCAN = 4;
+    private final int STEP_CONNECT = 5;
+    private final int STEP_CONFIGURE = 6;
+    private final int STEP_RECONNECT = 7;
+    private final int STEP_DONE = 8;
 
-    private final int PAGE_STEP_1                     = 1;
-    private final int PAGE_STEP_2                     = 2;
-    private final int PAGE_STEP_3                     = 3;
-    private final int PAGE_ERROR                      = 4;
-    private final int PAGE_DONE                       = 5;
+    private final int PAGE_STEP_1 = 1;
+    private final int PAGE_STEP_2 = 2;
+    private final int PAGE_STEP_3 = 3;
+    private final int PAGE_ERROR = 4;
+    private final int PAGE_DONE = 5;
 
-    private final int SCAN_RETRY                      = 4;
+    private final int SCAN_RETRY = 4;
 
     private int scanRetry;
 
@@ -149,7 +149,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         setContentView(R.layout.activity_wizard);
 
-        rlStepContent = (RelativeLayout)findViewById(R.id.wizard_step_content);
+        rlStepContent = (RelativeLayout) findViewById(R.id.wizard_step_content);
 
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
 
@@ -157,28 +157,28 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vStep1.setVisibility(View.GONE);
         rlStepContent.addView(vStep1);
 
-        TextView tv = (TextView)findViewById(R.id.wizard_step1_txt1);
+        TextView tv = (TextView) findViewById(R.id.wizard_step1_txt1);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_step1_txt2);
+        tv = (TextView) findViewById(R.id.wizard_step1_txt2);
         tv.setTypeface(type);
 
         vStep2 = Inflate(R.layout.add_wizard_step2, null);
         vStep2.setVisibility(View.GONE);
         rlStepContent.addView(vStep2);
 
-        tv = (TextView)findViewById(R.id.wizard_step2_txt1);
+        tv = (TextView) findViewById(R.id.wizard_step2_txt1);
         tv.setTypeface(type);
 
-        spWifiList = (Spinner)findViewById(R.id.wizard_wifi_list);
+        spWifiList = (Spinner) findViewById(R.id.wizard_wifi_list);
         spWifiList.setOnItemSelectedListener(this);
 
-        tvStep2Info = (TextView)findViewById(R.id.wizard_step2_txt3);
+        tvStep2Info = (TextView) findViewById(R.id.wizard_step2_txt3);
         tvStep2Info.setTypeface(type);
 
-        edPassword = (EditText)findViewById(R.id.wizard_password);
-        cbSavePassword = (CheckBox)findViewById(R.id.wizard_cb_save_pwd);
-        btnViewPassword = (Button)findViewById(R.id.wizard_look_button);
+        edPassword = (EditText) findViewById(R.id.wizard_password);
+        cbSavePassword = (CheckBox) findViewById(R.id.wizard_cb_save_pwd);
+        btnViewPassword = (Button) findViewById(R.id.wizard_look_button);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
@@ -201,8 +201,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
                 }
             }
         };
@@ -213,69 +215,69 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vStep3.setVisibility(View.GONE);
         rlStepContent.addView(vStep3);
 
-        tv = (TextView)findViewById(R.id.wizard_step3_txt1);
+        tv = (TextView) findViewById(R.id.wizard_step3_txt1);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_step3_txt2);
+        tv = (TextView) findViewById(R.id.wizard_step3_txt2);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_step3_txt3);
+        tv = (TextView) findViewById(R.id.wizard_step3_txt3);
         tv.setTypeface(type);
 
-        ivDot = (ImageView)findViewById(R.id.wizard_dot);
+        ivDot = (ImageView) findViewById(R.id.wizard_dot);
 
         vError = Inflate(R.layout.add_wizard_error, null);
         vError.setVisibility(View.GONE);
         rlStepContent.addView(vError);
 
-        tvErrorMsg = (TextView)findViewById(R.id.wizard_error_txt);
+        tvErrorMsg = (TextView) findViewById(R.id.wizard_error_txt);
         tvErrorMsg.setTypeface(type);
 
         vDone = Inflate(R.layout.add_wizard_done, null);
         vDone.setVisibility(View.GONE);
         rlStepContent.addView(vDone);
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt1);
+        tv = (TextView) findViewById(R.id.wizard_done_txt1);
         tv.setTypeface(type);
 
         type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt2);
+        tv = (TextView) findViewById(R.id.wizard_done_txt2);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt3);
+        tv = (TextView) findViewById(R.id.wizard_done_txt3);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt4);
+        tv = (TextView) findViewById(R.id.wizard_done_txt4);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt5);
+        tv = (TextView) findViewById(R.id.wizard_done_txt5);
         tv.setTypeface(type);
 
-        tv = (TextView)findViewById(R.id.wizard_done_txt6);
+        tv = (TextView) findViewById(R.id.wizard_done_txt6);
         tv.setTypeface(type);
 
-        tvIODevName = (TextView)findViewById(R.id.wizard_done_iodev_name);
+        tvIODevName = (TextView) findViewById(R.id.wizard_done_iodev_name);
         tvIODevName.setTypeface(type);
 
-        tvIODevFirmware = (TextView)findViewById(R.id.wizard_done_iodev_firmware);
+        tvIODevFirmware = (TextView) findViewById(R.id.wizard_done_iodev_firmware);
         tvIODevFirmware.setTypeface(type);
 
-        tvIODevMAC = (TextView)findViewById(R.id.wizard_done_iodev_mac);
+        tvIODevMAC = (TextView) findViewById(R.id.wizard_done_iodev_mac);
         tvIODevMAC.setTypeface(type);
 
-        tvIODevLastState = (TextView)findViewById(R.id.wizard_done_iodev_laststate);
+        tvIODevLastState = (TextView) findViewById(R.id.wizard_done_iodev_laststate);
         tvIODevLastState.setTypeface(type);
 
 
-        btnNext1 = (Button)findViewById(R.id.wizard_next1);
+        btnNext1 = (Button) findViewById(R.id.wizard_next1);
         btnNext1.setOnClickListener(this);
 
-        btnNext2 = (Button)findViewById(R.id.wizard_next2);
+        btnNext2 = (Button) findViewById(R.id.wizard_next2);
         btnNext2.setOnClickListener(this);
         btnNext2.setTypeface(type);
 
-        btnNext3 = (Button)findViewById(R.id.wizard_next3);
+        btnNext3 = (Button) findViewById(R.id.wizard_next3);
         btnNext3.setOnClickListener(this);
 
         showMenuBar();
@@ -285,9 +287,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if ( pageId == PAGE_STEP_2
+        if (pageId == PAGE_STEP_2
                 && event.getAction() == MotionEvent.ACTION_DOWN
-                && edPassword.hasFocus() ) {
+                && edPassword.hasFocus()) {
 
             edPassword.clearFocus();
 
@@ -315,7 +317,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         setBtnEnabled(true);
         btnNext2.setText(R.string.next, TextView.BufferType.NORMAL);
 
-        switch(id) {
+        switch (id) {
             case PAGE_STEP_1:
                 vStep1.setVisibility(View.VISIBLE);
                 break;
@@ -365,12 +367,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void cleanUp() {
 
-        if ( watchDog != null ) {
+        if (watchDog != null) {
             watchDog.cancel();
             watchDog = null;
         }
 
-        if ( blinkTimer != null ) {
+        if (blinkTimer != null) {
             blinkTimer.cancel();
             blinkTimer = null;
         }
@@ -384,14 +386,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void setPreloaderVisible(boolean visible) {
 
-        if ( preloaderTimer != null ) {
+        if (preloaderTimer != null) {
             preloaderPos = -1;
             preloaderTimer.cancel();
             preloaderTimer = null;
         }
 
 
-        if ( visible ) {
+        if (visible) {
 
             btnNext1.setBackgroundResource(R.drawable.btnnextr2);
 
@@ -403,41 +405,37 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             preloaderPos = 0;
 
             preloaderTimer = new Timer();
-            preloaderTimer.scheduleAtFixedRate( new TimerTask() {
+            preloaderTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
 
-                    runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
 
-                            if ( preloaderPos == -1 ) {
+                            if (preloaderPos == -1) {
                                 return;
                             }
 
                             String txt = "";
 
-                            for(int a=0;a<10;a++) {
+                            for (int a = 0; a < 10; a++) {
                                 txt += preloaderPos == a ? "|" : ".";
                             }
 
 
                             preloaderPos++;
-                            if ( preloaderPos > 9 ) {
+                            if (preloaderPos > 9) {
                                 preloaderPos = 0;
                             }
-
 
 
                             btnNext2.setText(txt, TextView.BufferType.NORMAL);
 
 
-
                         }
                     });
                 }
-            }, 0, 100 );
+            }, 0, 100);
 
         } else {
 
@@ -454,8 +452,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isConnected() && ni.getTypeName().equalsIgnoreCase("WIFI");
+        if (cm != null) {
+            NetworkInfo ni = cm.getActiveNetworkInfo();
+            return ni != null && ni.isConnected() && ni.getTypeName().equalsIgnoreCase("WIFI");
+        }
+
+        return false;
     }
 
     public String getApplicationName() {
@@ -472,17 +474,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         Preferences prefs = new Preferences(this);
 
-        if ( prefs.isAdvancedCfg() ) {
+        if (prefs.isAdvancedCfg()) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
 
-        } else if ( !internetWiFi() ) {
+        } else if (!internetWiFi()) {
 
             showError(R.string.wizard_no_internetwifi);
             return;
 
-        } else if ( SuplaApp.getApp().getSuplaClient() != null ) {
+        } else if (SuplaApp.getApp().getSuplaClient() != null) {
             int version = SuplaApp.getApp().getSuplaClient().GetProtoVersion();
 
             if (version > 0 && version < 7) {
@@ -492,18 +494,16 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         }
 
         watchDog = new Timer();
-        watchDog.scheduleAtFixedRate( new TimerTask() {
+        watchDog.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
+                runOnUiThread(new Runnable() {
+                    public void run() {
 
                         int timeout = 0;
 
-                        switch(step) {
+                        switch (step) {
                             case STEP_CHECK_WIFI:
                                 timeout = 10;
                                 break;
@@ -523,9 +523,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                                 break;
                         }
 
-                        if ( timeout > 0
+                        if (timeout > 0
                                 && step_time != null
-                                &&  (System.currentTimeMillis() - step_time.getTime())/1000 >= timeout  ) {
+                                && (System.currentTimeMillis() - step_time.getTime()) / 1000 >= timeout) {
 
                             onWatchDogTimeout();
                         }
@@ -533,27 +533,25 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     }
                 });
             }
-        }, 0, 1000 );
+        }, 0, 1000);
 
 
         blinkTimer = new Timer();
-        blinkTimer.scheduleAtFixedRate( new TimerTask() {
+        blinkTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
+                runOnUiThread(new Runnable() {
+                    public void run() {
 
-                        if ( pageId == PAGE_STEP_3 ) {
-                         ivDot.setVisibility(ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+                        if (pageId == PAGE_STEP_3) {
+                            ivDot.setVisibility(ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
                         }
 
                     }
                 });
             }
-        }, 0, 100 );
+        }, 0, 100);
 
 
         showPage(PAGE_STEP_1);
@@ -561,21 +559,21 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
                 != PackageManager.PERMISSION_GRANTED
-              || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE)
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE)
                 != PackageManager.PERMISSION_GRANTED
-              || ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE)
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE)
                 != PackageManager.PERMISSION_GRANTED
-              || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_NETWORK_STATE)
-                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_WIFI_STATE)
-                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CHANGE_WIFI_STATE)
-                  || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -609,11 +607,11 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     protected void onPause() {
         super.onPause();
 
-        if ( pageId >= PAGE_STEP_2 ) {
+        if (pageId >= PAGE_STEP_2) {
 
             Preferences prefs = new Preferences(this);
 
-            if ( cbSavePassword.isChecked() ) {
+            if (cbSavePassword.isChecked()) {
                 prefs.wizardSetPassword(getSelectedSSID(), cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
             }
 
@@ -627,7 +625,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void setStep(int step) {
 
-        if ( step == STEP_DONE || step == STEP_NONE ) {
+        if (step == STEP_DONE || step == STEP_NONE) {
             step_time = null;
         } else {
             step_time = new Date();
@@ -638,7 +636,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void onWatchDogTimeout() {
 
-        switch(step) {
+        switch (step) {
             case STEP_CHECK_WIFI:
                 showError(R.string.wizard_wifi_timeout);
                 break;
@@ -672,12 +670,12 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void unregisterReceivers() {
 
-        if ( stateChangedReceiver != null ) {
+        if (stateChangedReceiver != null) {
             unregisterReceiver(stateChangedReceiver);
             stateChangedReceiver = null;
         }
 
-        if ( scanResultReceiver != null ) {
+        if (scanResultReceiver != null) {
             unregisterReceiver(scanResultReceiver);
             scanResultReceiver = null;
         }
@@ -686,7 +684,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void removeConfigTask() {
 
-        if ( espConfigTask != null ) {
+        if (espConfigTask != null) {
             espConfigTask.cancel(true);
             espConfigTask = null;
         }
@@ -722,24 +720,24 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v == btnNext1 || v == btnNext2 || v == btnNext3 ) {
+        if (v == btnNext1 || v == btnNext2 || v == btnNext3) {
 
             setPreloaderVisible(true);
             setBtnEnabled(false);
 
-            switch(pageId) {
+            switch (pageId) {
                 case PAGE_STEP_1:
 
                     setStep(STEP_CHECK_WIFI);
 
-                    if ( !checkWiFi() ) {
+                    if (!checkWiFi()) {
                         showError(R.string.wizard_wifi_error);
                     }
 
                     break;
                 case PAGE_STEP_2:
 
-                    if ( edPassword.getText().toString().isEmpty() ) {
+                    if (edPassword.getText().toString().isEmpty()) {
 
                         setPreloaderVisible(false);
                         setBtnEnabled(true);
@@ -758,7 +756,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             @Override
                             public void run() {
 
-                                if ( pageId == PAGE_STEP_3 && preloaderTimer == null ) {
+                                if (pageId == PAGE_STEP_3 && preloaderTimer == null) {
                                     onClick(btnNext1);
                                 }
 
@@ -785,7 +783,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             return;
         }
 
-        if ( v == cbSavePassword ) {
+        if (v == cbSavePassword) {
             Preferences prefs = new Preferences(this);
             prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
         }
@@ -796,7 +794,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         super.OnRegistrationEnabled(registrationEnabled);
 
-        if ( registrationEnabled.IsIODeviceRegistrationEnabled() ) {
+        if (registrationEnabled.IsIODeviceRegistrationEnabled()) {
 
             setStep(STEP_SCAN);
             scanRetry = SCAN_RETRY;
@@ -817,9 +815,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
 
-        return  ( SSID.startsWith("SUPLA-")
-                    || SSID.startsWith("ZAMEL-")
-                    || SSID.startsWith("NICE-") )
+        return (SSID.startsWith("SUPLA-")
+                || SSID.startsWith("ZAMEL-")
+                || SSID.startsWith("NICE-"))
                 && mPattern.matcher(SSID).find();
     }
 
@@ -880,15 +878,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         final Context context = this;
 
-        scanResultReceiver = new BroadcastReceiver(){
+        scanResultReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context c, Intent i){
+            public void onReceive(Context c, Intent i) {
 
                 unregisterReceiver(scanResultReceiver);
                 scanResultReceiver = null;
 
                 Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
-                List<ScanResult> scanned  =  manager.getScanResults();
+                List<ScanResult> scanned = manager.getScanResults();
 
                 ArrayList<String> spinnerArray = new ArrayList<String>();
 
@@ -897,9 +895,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                 String Selected = SSID;
 
-                if ( !prefSelected.isEmpty() ) {
-                    for( ScanResult sr : scanned ) {
-                        if ( prefSelected.equals(sr.SSID)) {
+                if (!prefSelected.isEmpty()) {
+                    for (ScanResult sr : scanned) {
+                        if (prefSelected.equals(sr.SSID)) {
                             Selected = sr.SSID;
                             break;
                         }
@@ -908,15 +906,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                 spinnerArray.add(Selected);
 
-                if ( !Selected.equals(SSID) ) {
+                if (!Selected.equals(SSID)) {
                     spinnerArray.add(SSID);
                 }
 
-                for( ScanResult sr : scanned ) {
+                for (ScanResult sr : scanned) {
 
                     Set<String> set = new HashSet<String>(spinnerArray);
 
-                    if ( !sr.SSID.equals(SSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID) )
+                    if (!sr.SSID.equals(SSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID))
                         spinnerArray.add(sr.SSID);
                 }
 
@@ -938,11 +936,14 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     }
 
     private void unbindNetwork() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cm.bindProcessToNetwork(null);
-        } else  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                cm.bindProcessToNetwork(null);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ConnectivityManager.setProcessDefaultNetwork(null);
         }
 
@@ -951,17 +952,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private void bindNetwork() {
 
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (cm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Network[] ns = cm.getAllNetworks();
             for (Network n : ns) {
 
                 NetworkCapabilities c = cm.getNetworkCapabilities(n);
 
-                if (c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ) {
+                if (c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         cm.bindProcessToNetwork(n);
-                    } else  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ConnectivityManager.setProcessDefaultNetwork(n);
                     }
 
@@ -985,20 +986,20 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         List<WifiConfiguration> list = manager.getConfiguredNetworks();
 
-        for( WifiConfiguration item : list ) {
-            if ( item.SSID != null
+        for (WifiConfiguration item : list) {
+            if (item.SSID != null
                     && (item.SSID.equals(iodev_SSID)
-                        || item.SSID.equals(conf.SSID)) ) {
+                    || item.SSID.equals(conf.SSID))) {
                 iodev_NetworkID = item.networkId;
                 break;
             }
         }
 
-        if ( iodev_NetworkID == -1 ) {
+        if (iodev_NetworkID == -1) {
             iodev_NetworkID = manager.addNetwork(conf);
         }
 
-        if ( iodev_NetworkID == -1 ) {
+        if (iodev_NetworkID == -1) {
             showError(R.string.wizard_addnetwork_error);
             return;
         }
@@ -1013,34 +1014,34 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         final Preferences prefs = new Preferences(this);
 
-        stateChangedReceiver = new BroadcastReceiver(){
-                @Override
-                public void onReceive(Context c, Intent i){
+        stateChangedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent i) {
 
-                    NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
-                    //Trace.d("Status", info.getState().toString());
+                //Trace.d("Status", info.getState().toString());
 
-                    if ( info != null
-                            && info.isConnected() ) {
+                if (info != null
+                        && info.isConnected()) {
 
-                        WifiInfo wifiInfo = manager.getConnectionInfo();
-                        if (wifiInfo != null && wifiInfo.getNetworkId() == iodev_NetworkID ) {
+                    WifiInfo wifiInfo = manager.getConnectionInfo();
+                    if (wifiInfo != null && wifiInfo.getNetworkId() == iodev_NetworkID) {
 
-                            bindNetwork();
+                        bindNetwork();
 
-                            unregisterReceiver(stateChangedReceiver);
-                            stateChangedReceiver = null;
+                        unregisterReceiver(stateChangedReceiver);
+                        stateChangedReceiver = null;
 
-                            setStep(STEP_CONFIGURE);
-                            espConfigTask.execute(getSelectedSSID(), edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
-
-                        }
+                        setStep(STEP_CONFIGURE);
+                        espConfigTask.execute(getSelectedSSID(), edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
 
                     }
 
-
                 }
+
+
+            }
         };
 
 
@@ -1057,7 +1058,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     public void removeIODeviceNetwork() {
 
-        if ( iodev_NetworkID != -1 ) {
+        if (iodev_NetworkID != -1) {
 
             unbindNetwork();
 
@@ -1082,33 +1083,33 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         unregisterReceivers();
 
-        if ( result.resultCode == ESPConfigureTask.RESULT_SUCCESS ) {
+        if (result.resultCode == ESPConfigureTask.RESULT_SUCCESS) {
 
             setStep(STEP_RECONNECT);
 
-            if ( blinkTimer != null ) {
+            if (blinkTimer != null) {
                 blinkTimer.cancel();
                 blinkTimer = null;
 
                 ivDot.setVisibility(View.VISIBLE);
             }
 
-            stateChangedReceiver = new BroadcastReceiver(){
+            stateChangedReceiver = new BroadcastReceiver() {
                 @Override
-                public void onReceive(Context c, Intent i){
+                public void onReceive(Context c, Intent i) {
 
                     NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
-                    if ( info != null
-                            && info.isConnected() ) {
+                    if (info != null
+                            && info.isConnected()) {
 
                         WifiInfo wifiInfo = manager.getConnectionInfo();
-                        if (wifiInfo != null && wifiInfo.getNetworkId() == NetworkID ) {
+                        if (wifiInfo != null && wifiInfo.getNetworkId() == NetworkID) {
 
                             unregisterReceiver(stateChangedReceiver);
                             stateChangedReceiver = null;
 
-                            if ( SuplaApp.getApp().getSuplaClient() != null ) {
+                            if (SuplaApp.getApp().getSuplaClient() != null) {
                                 SuplaApp.getApp().getSuplaClient().Reconnect();
                             }
 
@@ -1149,7 +1150,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private String getSelectedSSID() {
 
-        if ( spWifiList.getSelectedItem() != null ) {
+        if (spWifiList.getSelectedItem() != null) {
             return spWifiList.getSelectedItem().toString();
         }
 
@@ -1183,7 +1184,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        if ( v == btnViewPassword ) {
+        if (v == btnViewPassword) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
