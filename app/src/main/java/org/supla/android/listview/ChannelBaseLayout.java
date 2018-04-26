@@ -56,7 +56,7 @@ public class ChannelBaseLayout extends LinearLayout {
     private FrameLayout right_btn;
     private FrameLayout left_btn;
 
-    private ChannelImageLayout  imgl;
+    private ChannelImageLayout imgl;
 
     private TextView left_btn_text;
     private TextView right_btn_text;
@@ -74,7 +74,7 @@ public class ChannelBaseLayout extends LinearLayout {
     private boolean DetailSliderEnabled;
 
 
-    private class AnimParams  {
+    private class AnimParams {
         public int content_left;
         public int content_right;
         public int left_btn_rotation;
@@ -103,7 +103,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
             int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
 
-            if ( right ) {
+            if (right) {
                 lp.rightMargin = margin;
                 lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
             } else {
@@ -131,7 +131,7 @@ public class ChannelBaseLayout extends LinearLayout {
             super.onDraw(canvas);
 
             canvas.drawColor(Color.TRANSPARENT);
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 2 - (getRing() ? paint.getStrokeWidth()/2 : 0), paint);
+            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 2 - (getRing() ? paint.getStrokeWidth() / 2 : 0), paint);
 
         }
 
@@ -150,7 +150,7 @@ public class ChannelBaseLayout extends LinearLayout {
             super(context);
 
 
-            Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/OpenSans-Bold.ttf");
+            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
             setTypeface(type);
             setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_caption_text));
             setTextColor(getResources().getColor(R.color.channel_caption_text));
@@ -158,7 +158,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-            if ( imgl_id != -1 )
+            if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
             lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
@@ -172,7 +172,7 @@ public class ChannelBaseLayout extends LinearLayout {
         TextView tv = new TextView(context);
         tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
 
         tv.setTypeface(type);
 
@@ -214,7 +214,7 @@ public class ChannelBaseLayout extends LinearLayout {
             Img.setId(ViewHelper.generateViewId());
             addView(Img);
 
-            return  Img;
+            return Img;
         }
 
         private TextView newTextView(Context context) {
@@ -222,7 +222,7 @@ public class ChannelBaseLayout extends LinearLayout {
             TextView Text = new TextView(context);
             Text.setId(ViewHelper.generateViewId());
 
-            Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/OpenSans-Regular.ttf");
+            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
             Text.setTypeface(type);
             Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_temp_text));
             Text.setTextColor(getResources().getColor(R.color.channel_temp_text));
@@ -259,7 +259,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
 
             if (!img2) {
-                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT );
+                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             } else {
                 lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
             }
@@ -279,17 +279,17 @@ public class ChannelBaseLayout extends LinearLayout {
 
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
-            if ( Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ) {
+            if (Func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
 
-                width*=2.5;
+                width *= 2.5;
 
-            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ) {
+            } else if (Func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
 
-                width*=4.3;
-            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-                    || Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR  ) {
+                width *= 4.3;
+            } else if (Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+                    || Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
 
-                width*=2.8;
+                width *= 2.8;
 
             }
 
@@ -303,9 +303,7 @@ public class ChannelBaseLayout extends LinearLayout {
             setLayoutParams(lp);
 
 
-
-
-            if ( Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR ) {
+            if (Func == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
 
                 RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
                         getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width), getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
@@ -327,7 +325,7 @@ public class ChannelBaseLayout extends LinearLayout {
                 Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
 
-            } else if ( Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ) {
+            } else if (Func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR) {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
@@ -347,37 +345,43 @@ public class ChannelBaseLayout extends LinearLayout {
 
         public void setImage(int img1Idx, int img2Idx) {
 
-            if ( Img1Idx == img1Idx && Img2Idx == img2Idx )
+            if (Img1Idx == img1Idx && Img2Idx == img2Idx)
                 return;
 
             Img1Idx = img1Idx;
             Img2Idx = img2Idx;
 
-            if ( Img1Idx == -1 ) {
+            if (Img1Idx == -1) {
                 Img1.setVisibility(View.INVISIBLE);
             } else {
                 Img1.setImageResource(Img1Idx);
                 Img1.setVisibility(View.VISIBLE);
             }
 
-            if ( Img2Idx == -1 ) {
+            if (Img2Idx == -1) {
                 Img2.setVisibility(View.INVISIBLE);
             } else {
                 Img2.setImageResource(Img2Idx);
                 Img2.setVisibility(View.VISIBLE);
             }
 
-            if (Slided() == 0) {
-                SetDimensions();
+        }
+
+        private void setText(String text, TextView tv) {
+            if (text == null) {
+                text = "";
+            }
+            if (!text.equals(tv.getText())) {
+                tv.setText(text);
             }
         }
 
         public void setText1(String text) {
-            Text1.setText(text == null ? "" : text);
+            setText(text, Text1);
         }
 
         public void setText2(String text) {
-            Text2.setText(text == null ? "" : text);
+            setText(text, Text2);
         }
 
     }
@@ -449,9 +453,9 @@ public class ChannelBaseLayout extends LinearLayout {
 
                 int action = event.getAction();
 
-                if ( action == MotionEvent.ACTION_DOWN )
+                if (action == MotionEvent.ACTION_DOWN)
                     onTouchDown(v);
-                else if ( action == MotionEvent.ACTION_UP )
+                else if (action == MotionEvent.ACTION_UP)
                     onTouchUp(v);
 
                 return true;
@@ -483,15 +487,15 @@ public class ChannelBaseLayout extends LinearLayout {
 
     public void Slide(int delta) {
 
-        if ( Anim )
+        if (Anim)
             return;
 
         if (!LeftButtonEnabled
-                && delta > 0 && content.getLeft()+delta > 0 )
-            delta = content.getLeft()*-1;
+                && delta > 0 && content.getLeft() + delta > 0)
+            delta = content.getLeft() * -1;
 
         if (!RightButtonEnabled
-                && delta < 0 && content.getLeft()+delta < 0 )
+                && delta < 0 && content.getLeft() + delta < 0)
             delta = content.getLeft() * -1;
 
         content.layout(content.getLeft() + delta, content.getTop(), content.getWidth() + content.getLeft() + delta, content.getHeight());
@@ -500,13 +504,19 @@ public class ChannelBaseLayout extends LinearLayout {
 
     }
 
+    public void hideButtonImmediately() {
+        if (Slided() > 0) {
+            Slide(content.getLeft() * -1);
+        }
+    }
+
     public boolean Sliding() {
 
         if (Anim)
             return true;
 
-        if ( content.getLeft() > 0
-                && content.getLeft() != left_btn.getWidth()  )
+        if (content.getLeft() > 0
+                && content.getLeft() != left_btn.getWidth())
             return true;
 
         return content.getLeft() < 0
@@ -519,10 +529,10 @@ public class ChannelBaseLayout extends LinearLayout {
         if (Anim)
             return 10;
 
-        if ( content.getLeft() > 0 )
+        if (content.getLeft() > 0)
             return 1;
 
-        if ( content.getLeft() < 0 )
+        if (content.getLeft() < 0)
             return 2;
 
         return 0;
@@ -530,17 +540,18 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void UpdateLeftBtn() {
 
-        float pr = content.getLeft()*100/ left_btn.getWidth();
+        float pr = content.getLeft() * 100 / left_btn.getWidth();
 
-        if ( pr <= 0 ) pr = 0; else if ( pr > 100 ) pr = 100;
+        if (pr <= 0) pr = 0;
+        else if (pr > 100) pr = 100;
 
         left_btn.setRotationY(90 - 90 * pr / 100);
 
         int left = content.getLeft() / 2 - left_btn.getWidth() / 2;
         int right = left_btn.getWidth() + (content.getLeft() / 2 - left_btn.getWidth() / 2);
 
-        if ( left > 0 ) left  = 0;
-        if ( right > left_btn.getWidth() ) right = left_btn.getWidth();
+        if (left > 0) left = 0;
+        if (right > left_btn.getWidth()) right = left_btn.getWidth();
 
         left_btn.layout(left, 0, right, left_btn.getHeight());
 
@@ -548,8 +559,8 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void onTouchUpDown(boolean up, View v) {
 
-        if ( ParentListView != null
-                && ParentListView.getOnChannelButtonTouchListener() != null ) {
+        if (ParentListView != null
+                && ParentListView.getOnChannelButtonTouchListener() != null) {
             ParentListView.getOnChannelButtonTouchListener().onChannelButtonTouch(ParentListView, v == left_btn, up, ID, Func);
         }
 
@@ -557,7 +568,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void onTouchDown(View v) {
 
-        if ( v == left_btn || v == right_btn ) {
+        if (v == left_btn || v == right_btn) {
             v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
         }
 
@@ -567,7 +578,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void onTouchUp(View v) {
 
-        if ( v == left_btn || v == right_btn ) {
+        if (v == left_btn || v == right_btn) {
 
             final View _v = v;
 
@@ -587,16 +598,17 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void UpdateRightBtn() {
 
-        float pr = (content.getLeft()*-1)*100/ right_btn.getWidth();
+        float pr = (content.getLeft() * -1) * 100 / right_btn.getWidth();
 
-        if ( pr <= 0 ) pr = 0; else if ( pr > 100 ) pr = 100;
+        if (pr <= 0) pr = 0;
+        else if (pr > 100) pr = 100;
 
         right_btn.setRotationY(-90 + 90 * pr / 100);
 
-        int left = getWidth() + ( content.getLeft() / 2 - right_btn.getWidth() / 2);
+        int left = getWidth() + (content.getLeft() / 2 - right_btn.getWidth() / 2);
 
-        if ( content.getLeft()*-1 > right_btn.getWidth() )
-            left  = getWidth()-right_btn.getWidth();
+        if (content.getLeft() * -1 > right_btn.getWidth())
+            left = getWidth() - right_btn.getWidth();
 
         right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
 
@@ -605,7 +617,7 @@ public class ChannelBaseLayout extends LinearLayout {
     public void AnimateToRestingPosition(boolean start_pos) {
 
         if (!start_pos
-                && Anim ) return;
+                && Anim) return;
 
 
         ObjectAnimator btn_animr = null;
@@ -615,16 +627,16 @@ public class ChannelBaseLayout extends LinearLayout {
         final AnimParams params = new AnimParams();
 
         params.left_btn_rotation = 90;
-        params.left_btn_left = left_btn.getWidth()*-1;
+        params.left_btn_left = left_btn.getWidth() * -1;
         params.left_btn_right = 0;
 
-        if ( content.getLeft() > 0 ) {
+        if (content.getLeft() > 0) {
 
             if (!start_pos
-                    && content.getLeft() >= left_btn.getWidth() / 2 ) {
+                    && content.getLeft() >= left_btn.getWidth() / 2) {
 
                 params.content_left = left_btn.getWidth();
-                params.content_right = getWidth()+left_btn.getWidth();
+                params.content_right = getWidth() + left_btn.getWidth();
 
                 btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 0f);
                 btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), 0);
@@ -636,18 +648,18 @@ public class ChannelBaseLayout extends LinearLayout {
                 params.content_right = content.getWidth();
 
                 btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 90f);
-                btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), left_btn.getWidth()/2*-1);
+                btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), left_btn.getWidth() / 2 * -1);
                 content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
 
             }
 
-        } else if ( content.getLeft() < 0 ) {
+        } else if (content.getLeft() < 0) {
 
             if (!start_pos
-                    && content.getLeft()*-1 >= right_btn.getWidth() / 2 ) {
+                    && content.getLeft() * -1 >= right_btn.getWidth() / 2) {
 
-                params.content_left = right_btn.getWidth()*-1;
-                params.content_right = getWidth()-right_btn.getWidth();
+                params.content_left = right_btn.getWidth() * -1;
+                params.content_right = getWidth() - right_btn.getWidth();
 
                 btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), 0f);
                 btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(), params.content_right);
@@ -659,7 +671,7 @@ public class ChannelBaseLayout extends LinearLayout {
                 params.content_right = content.getWidth();
 
                 btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), -90f);
-                btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(), getWidth()+right_btn.getWidth()/2);
+                btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(), getWidth() + right_btn.getWidth() / 2);
                 content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
 
             }
@@ -667,7 +679,7 @@ public class ChannelBaseLayout extends LinearLayout {
         }
 
 
-        if ( content_animx != null) {
+        if (content_animx != null) {
 
             AnimatorSet as = new AnimatorSet();
             as.playTogether(btn_animr, btn_animx, content_animx);
@@ -716,7 +728,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void setRightButtonEnabled(boolean rightButtonEnabled) {
 
-        if ( RightButtonEnabled != rightButtonEnabled ) {
+        if (RightButtonEnabled != rightButtonEnabled) {
             AnimateToRestingPosition(true);
             RightButtonEnabled = rightButtonEnabled;
         }
@@ -731,7 +743,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void setLeftButtonEnabled(boolean leftButtonEnabled) {
 
-        if ( LeftButtonEnabled != leftButtonEnabled ) {
+        if (LeftButtonEnabled != leftButtonEnabled) {
             AnimateToRestingPosition(true);
             LeftButtonEnabled = leftButtonEnabled;
         }
@@ -740,7 +752,7 @@ public class ChannelBaseLayout extends LinearLayout {
 
     private void setDetailSliderEnabled(boolean detailSliderEnabled) {
 
-        if ( detailSliderEnabled ) {
+        if (detailSliderEnabled) {
             setRightButtonEnabled(false);
         }
 
@@ -766,17 +778,24 @@ public class ChannelBaseLayout extends LinearLayout {
 
         super.setBackgroundColor(color);
 
-        if ( content != null )
+        if (content != null)
             content.setBackgroundColor(color);
     }
 
+
     public void setChannelData(ChannelBase cbase) {
 
+        int OldFunc = Func;
         Func = cbase.getFunc();
         ID = cbase.getRemoteId();
 
+
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
+
+        if (OldFunc != Func) {
+            imgl.SetDimensions();
+        }
 
         left_dot.setOn(cbase.getOnLine());
         left_dot.setRing(false);
@@ -787,7 +806,7 @@ public class ChannelBaseLayout extends LinearLayout {
             int lidx = -1;
             int ridx = -1;
 
-            switch(Func) {
+            switch (Func) {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
 
@@ -826,7 +845,7 @@ public class ChannelBaseLayout extends LinearLayout {
             boolean renabled = false;
             boolean dslider = false;
 
-            switch(Func) {
+            switch (Func) {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
