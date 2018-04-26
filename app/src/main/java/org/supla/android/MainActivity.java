@@ -362,6 +362,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        clv.hideButton(false);
 
         if (client == null)
             return;

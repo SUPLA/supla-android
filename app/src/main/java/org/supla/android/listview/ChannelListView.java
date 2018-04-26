@@ -384,6 +384,17 @@ public class ChannelListView extends ListView {
 
     }
 
+    public void hideButton(boolean immediately) {
+        if (lastCL != null) {
+            if (immediately) {
+                lastCL.hideButtonImmediately();
+            } else {
+                lastCL.AnimateToRestingPosition(true);
+            }
+
+            lastCL = null;
+        }
+    }
 
     public void AnimateDetailSliding(boolean force) {
 
