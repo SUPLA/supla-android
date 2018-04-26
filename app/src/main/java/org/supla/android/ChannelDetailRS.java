@@ -43,7 +43,7 @@ import java.util.TimerTask;
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
 
     private SuplaRollerShutter rs;
-    private SuplaLinearOnlineStatus lstatus;
+    private SuplaOnlineStatus lstatus;
     private TextView tvTitle;
     private TextView tvPercentCaption;
     private TextView tvPercent;
@@ -77,7 +77,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
         rs.setOnPercentTouchListener(this);
 
-        lstatus = (SuplaLinearOnlineStatus) findViewById(R.id.lstatus);
+        lstatus = (SuplaOnlineStatus) findViewById(R.id.lstatus);
         lstatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
         lstatus.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 

@@ -29,9 +29,16 @@ import android.view.View;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-public class SuplaLinearOnlineStatus extends View {
+public class SuplaOnlineStatus extends View {
 
-    private boolean Horizontal = false;
+    public enum ShapeType {
+        LinearVertical,
+        LinearHorizontal,
+        Dot,
+        Ring,
+    }
+
+    private ShapeType shapeType = ShapeType.LinearVertical;
     private float Percent = 50;
     private int OnlineColor = Color.GREEN;
     private int OfflineColor = Color.RED;
@@ -42,29 +49,25 @@ public class SuplaLinearOnlineStatus extends View {
     private float FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             (float) 1, metrics);
 
-    public SuplaLinearOnlineStatus(Context context) {
+    public SuplaOnlineStatus(Context context) {
         super(context);
     }
 
-    public SuplaLinearOnlineStatus(Context context, @Nullable AttributeSet attrs) {
+    public SuplaOnlineStatus(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SuplaLinearOnlineStatus(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuplaOnlineStatus(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public SuplaLinearOnlineStatus(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public void setHorizontal(boolean horizontal) {
-        Horizontal = horizontal;
+    public void setShapeType(ShapeType shapeType) {
+        this.shapeType = shapeType;
         invalidate();
     }
 
-    public boolean getHorizontal() {
-        return Horizontal;
+    public ShapeType getShapeType() {
+        return shapeType;
     }
 
     public void setPercent(float percent) {
@@ -109,10 +112,11 @@ public class SuplaLinearOnlineStatus extends View {
         paint.setColor(getOnlineColor());
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(FrameLineWidth);
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
         float percentPoint;
 
-        if (getHorizontal()) {
+        if (shapeType == ShapeType.LinearHorizontal) {
             percentPoint = getWidth() * Percent / 100;
 
             rectf.set(0, 0, percentPoint, getHeight());
@@ -121,7 +125,7 @@ public class SuplaLinearOnlineStatus extends View {
             paint.setColor(getOfflineColor());
             rectf.set(percentPoint, 0, getWidth(), getHeight());
             canvas.drawRect(rectf, paint);
-        } else {
+        } else if (shapeType == ShapeType.LinearVertical) {
             percentPoint = getHeight() * Percent / 100;
 
             rectf.set(0, 0, getWidth(), percentPoint);
@@ -130,6 +134,21 @@ public class SuplaLinearOnlineStatus extends View {
             paint.setColor(getOfflineColor());
             rectf.set(0, percentPoint, getWidth(), getHeight());
             canvas.drawRect(rectf, paint);
+        } else {
+            float size = getWidth();
+            if (size > getHeight()) {
+                size = getHeight();
+            }
+            size = size / 2;
+
+            paint.setColor(Percent > 0 ? getOnlineColor() : getOfflineColor());
+            paint.setStyle(shapeType == ShapeType.Ring ? Paint.Style.STROKE : Paint.Style.FILL);
+
+            canvas.drawColor(Color.TRANSPARENT);
+            canvas.drawCircle(getWidth() / 2, getHeight() / 2,
+                    size - (shapeType == ShapeType.Ring ? FrameLineWidth/2 : 0),
+                    paint);
+            return;
         }
 
 
