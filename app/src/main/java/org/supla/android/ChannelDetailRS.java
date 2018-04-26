@@ -53,7 +53,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnOpen;
     private Button btnClose;
     private Timer delayTimer1;
-    private boolean withoutDelay;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -109,7 +108,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         addOnLayoutChangeListener(this);
         delayTimer1 = null;
-        withoutDelay = false;
     }
 
     @Override
@@ -117,8 +115,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         return inflateLayout(R.layout.detail_rs);
     }
 
-    @Override
-    public void OnChannelDataChanged() {
+    private void OnChannelDataChanged(boolean withoutDelay) {
 
         if (delayTimer1 != null) {
             delayTimer1.cancel();
@@ -206,15 +203,14 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
     }
 
+    @Override
+    public void OnChannelDataChanged() {
+        OnChannelDataChanged(false);
+    }
+
     public void setData(ChannelBase channel) {
-
-        if (channel != null && channel.getRemoteId() != getRemoteId()) {
-            withoutDelay = true;
-        }
-
         super.setData(channel);
-        OnChannelDataChanged();
-
+        OnChannelDataChanged(true);
     }
 
     @Override
