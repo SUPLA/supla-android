@@ -53,6 +53,8 @@ public class SuplaRollerShutter extends View {
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
     private ArrayList<Integer> Markers = null;
+    Path markerPath = new Path();
+    DisplayMetrics metrics = getResources().getDisplayMetrics();
 
     public interface OnTouchListener {
         void onPercentChanged(SuplaRollerShutter rs, float percent);
@@ -273,8 +275,6 @@ public class SuplaRollerShutter extends View {
 
         if (percent == 0 && Markers != null && !Markers.isEmpty()) {
 
-            Path markerPath = new Path();
-            DisplayMetrics metrics = getResources().getDisplayMetrics();
             float markerHalfHeight = Spaceing + FrameLineWidth / 2;
             float markerArrowWidth = Spaceing * 2;
             float markerWidth = getWidth() / 20 + markerArrowWidth;
