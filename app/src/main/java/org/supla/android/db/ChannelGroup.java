@@ -36,7 +36,7 @@ public class ChannelGroup extends ChannelBase {
     private String BufferTotalValue;
 
     protected int _getOnLine() {
-        return 100;
+        return OnLine;
     }
 
     public int getGroupId() {
@@ -131,7 +131,7 @@ public class ChannelGroup extends ChannelBase {
         if (!value.getOnLine()) {
             return;
         }
-        
+
         if (!BufferTotalValue.isEmpty()) {
             BufferTotalValue += "|";
         }

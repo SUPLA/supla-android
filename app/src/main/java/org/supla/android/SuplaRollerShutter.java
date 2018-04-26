@@ -65,10 +65,10 @@ public class SuplaRollerShutter extends View {
     private void init() {
 
         FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 2, getResources().getDisplayMetrics());
+                (float) 2, metrics);
 
         Spaceing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 3, getResources().getDisplayMetrics());
+                (float) 3, metrics);
 
         LouverSpaceing = Spaceing;
     }
@@ -348,7 +348,7 @@ public class SuplaRollerShutter extends View {
         }
 
         h = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 0.5, getResources().getDisplayMetrics());
+                (float) 0.5, metrics);
 
         paint.setStrokeWidth(h);
 

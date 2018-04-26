@@ -43,6 +43,7 @@ import java.util.TimerTask;
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
 
     private SuplaRollerShutter rs;
+    private SuplaLinearOnlineStatus lstatus;
     private TextView tvTitle;
     private TextView tvPercentCaption;
     private TextView tvPercent;
@@ -76,6 +77,10 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         rs = (SuplaRollerShutter) findViewById(R.id.rs1);
         rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
         rs.setOnPercentTouchListener(this);
+
+        lstatus = (SuplaLinearOnlineStatus) findViewById(R.id.lstatus);
+        lstatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+        lstatus.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 
         btnUp = (Button) findViewById(R.id.rsBtnUp);
         btnDown = (Button) findViewById(R.id.rsBtnDown);
@@ -121,6 +126,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         }
 
         if (!isGroup()) {
+            lstatus.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
 
             byte p = channel.getRollerShutterPosition();
@@ -136,9 +142,13 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
                 tvPercent.setText(Integer.toString((int) p) + "%");
             }
         } else {
+            lstatus.setVisibility(View.VISIBLE);
+
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
             rs.setPercent(0);
+
+            lstatus.setPercent(cgroup.getOnLinePercent());
 
             ArrayList<Integer> positions = cgroup.getRollerShutterPositions();
 
@@ -159,6 +169,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             if (percent >= 0) {
 
                 rs.setMarkers(positions);
+                tvPercent.setText("---");
 
                 delayTimer1 = new Timer();
                 delayTimer1.schedule(new DelayTask(percent) {

@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/detail_rs_bg">
 
+    <org.supla.android.SuplaLinearOnlineStatus
+        android:id="@+id/lstatus"
+        android:layout_width="10dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
 
     <RelativeLayout
         android:id="@+id/rlRS"
