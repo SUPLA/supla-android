@@ -45,7 +45,7 @@ public class ChannelGroup extends ChannelBase {
     }
 
     public String getTotalValue() {
-        return TotalValue;
+        return TotalValue == null ? "" : TotalValue;
     }
 
     public void AssignCursorData(Cursor cursor) {
