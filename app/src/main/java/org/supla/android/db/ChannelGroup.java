@@ -213,6 +213,68 @@ public class ChannelGroup extends ChannelBase {
         return result;
     }
 
+    public ArrayList<Double> getDoubleValues() {
+
+        ArrayList<Double> result = new ArrayList<>();
+        String[] items = getTotalValue().split("\\|");
+
+        for (int a = 0; a < items.length; a++) {
+
+            try {
+                result.add(Double.valueOf(items[a]));
+            } catch (NumberFormatException e) {
+            }
+
+        }
+        return result;
+    }
+
+    private ArrayList<Double> getRGBWValues(int idx) {
+
+        ArrayList<Double> result = new ArrayList<>();
+        String[] items = getTotalValue().split("\\|");
+
+        for (int a = 0; a < items.length; a++) {
+            String[] n = items[a].split(":");
+            if (idx < n.length) {
+                try {
+                    result.add(Double.valueOf(n[idx]));
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<Double> getColors() {
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                return getRGBWValues(0);
+        }
+        return null;
+    }
+
+    public ArrayList<Double> getColorBrightness() {
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                return getRGBWValues(1);
+        }
+        return null;
+    }
+
+    public ArrayList<Double> getBrightness() {
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                return getDoubleValues();
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                return getRGBWValues(2);
+        }
+        return null;
+    }
+
     public int getActivePercent(int idx) {
         ArrayList<Integer> result = new ArrayList<>();
         String[] items = getTotalValue().split("\\|");
@@ -277,8 +339,8 @@ public class ChannelGroup extends ChannelBase {
                     n = items[a].split(":");
                     if (n.length == 2) {
                         try {
-                            if ( Integer.valueOf(n[0]).intValue() >= 100 // percent
-                                 || Integer.valueOf(n[1]).intValue() > 0 ) { // sensor
+                            if (Integer.valueOf(n[0]).intValue() >= 100 // percent
+                                    || Integer.valueOf(n[1]).intValue() > 0) { // sensor
                                 sum++;
                             }
                         } catch (NumberFormatException e) {

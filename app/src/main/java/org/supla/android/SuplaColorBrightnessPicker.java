@@ -15,6 +15,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -39,12 +41,12 @@ import android.view.View;
 
 public class SuplaColorBrightnessPicker extends View {
 
-    static private final int[] Colors = new int[] {
+    static private final int[] Colors = new int[]{
             0xFFFF0000, 0xFFFF00FF,
             0xFF0000FF, 0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000
     };
 
-    private int[] BW = new int[] {
+    private int[] BW = new int[]{
             Color.BLACK,
             Color.WHITE,
             Color.WHITE
@@ -89,6 +91,8 @@ public class SuplaColorBrightnessPicker extends View {
     private Path innerArrowPath;
     private Paint innerArrowPaint;
 
+    private Paint paint;
+
     private Paint cwPaint;   // color wheel paint
     private Shader cwShader; // color wheel shader
 
@@ -111,9 +115,14 @@ public class SuplaColorBrightnessPicker extends View {
     private Rect bounds;
     private Paint textPaint;
 
+    private ArrayList<Double> ColorMarkers;
+    private ArrayList<Double> BrightnessMarkers;
+
     public interface OnColorBrightnessChangeListener {
         void onColorChanged(SuplaColorBrightnessPicker scbPicker, int color);
+
         void onBrightnessChanged(SuplaColorBrightnessPicker scbPicker, double brightness);
+
         void onChangeFinished();
     }
 
@@ -139,6 +148,8 @@ public class SuplaColorBrightnessPicker extends View {
         bwBrightnessWheelVisible = false;
         colorBrightnessWheelVisible = false;
 
+        paint = new Paint();
+
         cwShader = new SweepGradient(0, 0, Colors, null);
         cwPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         cwPaint.setStyle(Paint.Style.STROKE);
@@ -154,13 +165,13 @@ public class SuplaColorBrightnessPicker extends View {
         innerTop = new PointerTop();
 
         outerWheelPointerAngle = Math.toRadians(-90);
-        selectedColor = calculateColor((float)outerWheelPointerAngle, Colors);
+        selectedColor = calculateColor((float) outerWheelPointerAngle, Colors);
 
         innerArrowPath = new Path();
         innerArrowPaint = new Paint();
 
         innerWheelPointerAngle = Math.toRadians(-90);
-        selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+        selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
         selectedBrightness = 0;
 
         gradientRotationMatrix = new Matrix();
@@ -230,13 +241,55 @@ public class SuplaColorBrightnessPicker extends View {
         setMeasuredDimension(size, size);
     }
 
+    private void drawMarkers(Canvas canvas, float radius, float markerSize, ArrayList<Double> markers, boolean brightness) {
+
+        double angle;
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(markerSize / 4);
+
+        if (markers == null) {
+            return;
+        }
+
+        for (int a = 0; a < markers.size(); a++) {
+
+            double v = markers.get(a);
+            if (brightness) {
+                if (v < 0.5) {
+                    v = 0.5;
+                } else if (v > 99.5) {
+                    v = 99.5;
+                }
+
+                angle = brightnessToAngle(v);
+            } else {
+                angle = colorToAngle((int) v);
+            }
+
+            float x = (float) Math.cos(angle) * radius;
+            float y = (float) Math.sin(angle) * radius;
+
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.FILL);
+
+            canvas.drawCircle(x, y, markerSize, paint);
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.BLACK);
+
+            canvas.drawCircle(x, y, markerSize, paint);
+
+        }
+
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
 
         canvas.translate(centerX, centerY);
 
 
-        if ( colorWheelVisible ) {
+        if (colorWheelVisible) {
 
             cwPaint.setShader(cwShader);
             rectF.set(-outerWheelRadius, -outerWheelRadius, outerWheelRadius, outerWheelRadius);
@@ -245,17 +298,19 @@ public class SuplaColorBrightnessPicker extends View {
                     outerWheelPointerAngle,
                     outerWheelRadius,
                     outerWheelWidth,
-                    -(outerArrowHeight_a/4),
+                    -(outerArrowHeight_a / 4),
                     outerArrowHeight_a,
                     outerArrowHeight_b,
                     selectedColor,
                     outerArrowPath,
                     outerArrowPaint);
 
+            drawMarkers(canvas, outerWheelRadius,
+                    outerWheelWidth / 6, ColorMarkers, false);
         }
 
-        if ( bwBrightnessWheelVisible
-                || colorBrightnessWheelVisible ) {
+        if (bwBrightnessWheelVisible
+                || colorBrightnessWheelVisible) {
 
             bwPaint.setShader(bwShader);
             rectF.set(-innerWheelRadius, -innerWheelRadius, innerWheelRadius, innerWheelRadius);
@@ -264,7 +319,7 @@ public class SuplaColorBrightnessPicker extends View {
             int negative;
             double arrowOffset;
 
-            if ( colorWheelVisible ) {
+            if (colorWheelVisible) {
                 negative = -1;
                 arrowOffset = innerArrowHeight_a / 4 - innerWheelWidth;
             } else {
@@ -277,20 +332,22 @@ public class SuplaColorBrightnessPicker extends View {
                     innerWheelRadius,
                     innerWheelWidth,
                     arrowOffset,
-                    negative*innerArrowHeight_a,
-                    negative*innerArrowHeight_b,
+                    negative * innerArrowHeight_a,
+                    negative * innerArrowHeight_b,
                     selectedBrightnessColor,
                     innerArrowPath,
                     innerArrowPaint);
 
-            if ( percentVisible ) {
+            if (percentVisible) {
 
-                String text = Integer.toString((int)selectedBrightness) + "%";
+                String text = Integer.toString((int) selectedBrightness) + "%";
 
                 textPaint.getTextBounds(text, 0, text.length(), bounds);
-                canvas.drawText(text, -(bounds.width()/2), bounds.height()/2, textPaint);
+                canvas.drawText(text, -(bounds.width() / 2), bounds.height() / 2, textPaint);
             }
 
+            drawMarkers(canvas, innerWheelRadius, innerWheelWidth / 6,
+                    BrightnessMarkers, true);
 
         }
 
@@ -300,26 +357,26 @@ public class SuplaColorBrightnessPicker extends View {
 
     private void drawOuterPointerArrow(Canvas canvas, PointerTop top, double topAngle, float wheelRadius, float wheelWidth, double arrowOffset, double arrowHeight_a, double arrowHeight_b, int color, Path arrowPath, Paint arrowPaint) {
 
-        top.X = Math.cos(topAngle) * (wheelRadius+wheelWidth/2+arrowOffset);
-        top.Y = Math.sin(topAngle) * (wheelRadius+wheelWidth/2+arrowOffset);
+        top.X = Math.cos(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
+        top.Y = Math.sin(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
 
-        top.Height =  Math.abs(arrowHeight_a+ arrowHeight_b);
+        top.Height = Math.abs(arrowHeight_a + arrowHeight_b);
 
         double arrowRad = Math.toRadians(40);
 
-        double leftX = top.X + Math.cos(topAngle+arrowRad)*arrowHeight_a;
-        double leftY = top.Y + Math.sin(topAngle+arrowRad)*arrowHeight_a;
+        double leftX = top.X + Math.cos(topAngle + arrowRad) * arrowHeight_a;
+        double leftY = top.Y + Math.sin(topAngle + arrowRad) * arrowHeight_a;
 
-        double rightX = top.X + Math.cos(topAngle-arrowRad)*arrowHeight_a;
-        double rightY = top.Y + Math.sin(topAngle-arrowRad)*arrowHeight_a;
+        double rightX = top.X + Math.cos(topAngle - arrowRad) * arrowHeight_a;
+        double rightY = top.Y + Math.sin(topAngle - arrowRad) * arrowHeight_a;
 
         double backRad = topAngle;
 
-        double backLeftX = leftX + Math.cos(backRad)*arrowHeight_b;
-        double backLeftY = leftY + Math.sin(backRad)*arrowHeight_b;
+        double backLeftX = leftX + Math.cos(backRad) * arrowHeight_b;
+        double backLeftY = leftY + Math.sin(backRad) * arrowHeight_b;
 
-        double backRightX = rightX + Math.cos(backRad)*arrowHeight_b;
-        double backRightY = rightY + Math.sin(backRad)*arrowHeight_b;
+        double backRightX = rightX + Math.cos(backRad) * arrowHeight_b;
+        double backRightY = rightY + Math.sin(backRad) * arrowHeight_b;
 
         arrowPath.reset();
         arrowPath.moveTo((float) top.X, (float) top.Y);
@@ -346,7 +403,7 @@ public class SuplaColorBrightnessPicker extends View {
     private void setBWcolor() {
         int color = colorBrightnessWheelVisible ? selectedColor : Color.WHITE;
 
-        if ( BW[1] != color ) {
+        if (BW[1] != color) {
             BW[1] = color;
             BW[2] = color;
 
@@ -370,23 +427,23 @@ public class SuplaColorBrightnessPicker extends View {
         centerX = this.getWidth() / 2;
         centerY = this.getHeight() / 2;
 
-        if ( colorWheelVisible
-                && ( bwBrightnessWheelVisible || colorBrightnessWheelVisible ) ) {
+        if (colorWheelVisible
+                && (bwBrightnessWheelVisible || colorBrightnessWheelVisible)) {
             outerWheelWidth = wheelWidth / 2;
         } else {
             outerWheelWidth = wheelWidth;
         }
 
         innerWheelWidth = outerWheelWidth;
-        outerWheelRadius = Math.min(centerX, centerY) - outerWheelWidth / 2 - (int)(arrowHeight);
+        outerWheelRadius = Math.min(centerX, centerY) - outerWheelWidth / 2 - (int) (arrowHeight);
 
-        if ( colorWheelVisible ) {
+        if (colorWheelVisible) {
             innerWheelRadius = outerWheelRadius - innerWheelWidth;
         } else {
             innerWheelRadius = outerWheelRadius;
         }
 
-        textPaint.setTextSize((int)(innerWheelRadius*0.4));
+        textPaint.setTextSize((int) (innerWheelRadius * 0.4));
         cwPaint.setStrokeWidth(outerWheelWidth);
         bwPaint.setStrokeWidth(innerWheelWidth);
     }
@@ -395,19 +452,19 @@ public class SuplaColorBrightnessPicker extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
         _onSizeChanged();
-        super.onSizeChanged(w,h,oldw,oldh);
+        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     private double calculateAngle(double pointerAngle, double inRads) {
 
         double delta;
 
-        if ( Math.abs(lastTouchedAngle - inRads) > Math.PI ) {
+        if (Math.abs(lastTouchedAngle - inRads) > Math.PI) {
 
-            delta = 2*Math.PI - Math.abs(lastTouchedAngle) - Math.abs(inRads);
+            delta = 2 * Math.PI - Math.abs(lastTouchedAngle) - Math.abs(inRads);
 
-            if ( lastTouchedAngle > 0 && inRads < 0 ) {
-                delta*=-1;
+            if (lastTouchedAngle > 0 && inRads < 0) {
+                delta *= -1;
             }
 
         } else {
@@ -416,11 +473,11 @@ public class SuplaColorBrightnessPicker extends View {
 
         double result = (pointerAngle - delta);
 
-        if ( Math.abs(result) > Math.PI ) {
+        if (Math.abs(result) > Math.PI) {
 
             result = Math.PI - (Math.abs(result) % Math.PI);
 
-            if ( lastTouchedAngle < inRads ) {
+            if (lastTouchedAngle < inRads) {
                 result *= -1;
             }
         }
@@ -433,13 +490,13 @@ public class SuplaColorBrightnessPicker extends View {
 
         double d = Math.toDegrees(innerWheelPointerAngle) + 90;
 
-        if ( d < 0 )
+        if (d < 0)
             d = d + 360;
 
-        if ( d >= 359.99 )
+        if (d >= 359.99)
             d = 360;
 
-        selectedBrightness = ( d / 360 ) * 100;
+        selectedBrightness = (d / 360) * 100;
     }
 
     @Override
@@ -459,34 +516,34 @@ public class SuplaColorBrightnessPicker extends View {
                 colorWheelMove = false;
                 brightnessWheelMove = false;
 
-                if ( mOnChangeListener != null )
+                if (mOnChangeListener != null)
                     mOnChangeListener.onChangeFinished();
 
                 break;
 
             case MotionEvent.ACTION_DOWN:
 
-                double sqrt = Math.sqrt(x*x + y*y);
+                double sqrt = Math.sqrt(x * x + y * y);
 
 
-                if ( colorWheelVisible
+                if (colorWheelVisible
                         && Math.abs(outerTop.X - x) <= outerTop.Height
                         && Math.abs(outerTop.Y - y) <= outerTop.Height
-                        && sqrt >= outerWheelRadius-outerWheelWidth/2
-                        && sqrt <= outerWheelRadius+(outerArrowHeight_a+outerArrowHeight_b)*2  ) {
+                        && sqrt >= outerWheelRadius - outerWheelWidth / 2
+                        && sqrt <= outerWheelRadius + (outerArrowHeight_a + outerArrowHeight_b) * 2) {
 
                     colorWheelMove = true;
                     brightnessWheelMove = false;
 
-                } else if ( ( bwBrightnessWheelVisible || colorBrightnessWheelVisible )
-                            && Math.abs(innerTop.X - x) <= innerTop.Height
-                            && Math.abs(innerTop.Y - y) <= innerTop.Height
-                            && (( colorWheelVisible
-                                && sqrt <= innerWheelRadius-innerWheelWidth/2
-                                && sqrt >= innerWheelRadius-(innerArrowHeight_a+innerArrowHeight_b)*2 )
-                                || (!colorWheelVisible
-                                && sqrt <= innerWheelRadius+(innerArrowHeight_a+innerArrowHeight_b)*2
-                                && sqrt >= innerWheelRadius-innerWheelWidth/2 ))  ) {
+                } else if ((bwBrightnessWheelVisible || colorBrightnessWheelVisible)
+                        && Math.abs(innerTop.X - x) <= innerTop.Height
+                        && Math.abs(innerTop.Y - y) <= innerTop.Height
+                        && ((colorWheelVisible
+                        && sqrt <= innerWheelRadius - innerWheelWidth / 2
+                        && sqrt >= innerWheelRadius - (innerArrowHeight_a + innerArrowHeight_b) * 2)
+                        || (!colorWheelVisible
+                        && sqrt <= innerWheelRadius + (innerArrowHeight_a + innerArrowHeight_b) * 2
+                        && sqrt >= innerWheelRadius - innerWheelWidth / 2))) {
 
                     colorWheelMove = false;
                     brightnessWheelMove = true;
@@ -495,48 +552,48 @@ public class SuplaColorBrightnessPicker extends View {
 
                 lastTouchedAngle = inRads;
 
-                if ( !getMoving() )
+                if (!getMoving())
                     return super.onTouchEvent(event);
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
 
-                if ( colorWheelMove ) {
+                if (colorWheelMove) {
 
                     outerWheelPointerAngle = calculateAngle(outerWheelPointerAngle, inRads);
 
-                    int newColor = calculateColor((float)outerWheelPointerAngle, Colors);
+                    int newColor = calculateColor((float) outerWheelPointerAngle, Colors);
 
-                    if ( newColor != selectedColor ) {
+                    if (newColor != selectedColor) {
 
                         selectedColor = newColor;
                         setBWcolor();
                         invalidate();
 
-                        if ( mOnChangeListener != null )
+                        if (mOnChangeListener != null)
                             mOnChangeListener.onColorChanged(this, selectedColor);
 
                     }
 
-                } else if ( brightnessWheelMove ) {
+                } else if (brightnessWheelMove) {
 
                     double newAngle = calculateAngle(innerWheelPointerAngle, inRads);
 
-                    if ( newAngle >= m160d
-                            && newAngle <= m20d ) {
+                    if (newAngle >= m160d
+                            && newAngle <= m20d) {
 
-                        if ( innerWheelPointerAngle > newAngle ) {
+                        if (innerWheelPointerAngle > newAngle) {
 
-                            if ( innerWheelPointerAngle >= m90d
-                                    && newAngle < m90d ) {
+                            if (innerWheelPointerAngle >= m90d
+                                    && newAngle < m90d) {
                                 newAngle = m90d;
                             }
 
-                        } else if ( innerWheelPointerAngle < newAngle ) {
+                        } else if (innerWheelPointerAngle < newAngle) {
 
-                            if ( innerWheelPointerAngle <= m90_01d
-                                    && newAngle > m90_01d ) {
+                            if (innerWheelPointerAngle <= m90_01d
+                                    && newAngle > m90_01d) {
                                 newAngle = m90_01d;
                             }
 
@@ -544,23 +601,23 @@ public class SuplaColorBrightnessPicker extends View {
 
                     }
 
-                    if ( innerWheelPointerAngle != newAngle ) {
+                    if (innerWheelPointerAngle != newAngle) {
 
                         innerWheelPointerAngle = newAngle;
 
                         calculateBrightness();
                         invalidate();
 
-                        if ( mOnChangeListener != null )
+                        if (mOnChangeListener != null)
                             mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
 
                     }
 
                 }
 
-                if ( (colorWheelMove || brightnessWheelMove)
-                        && ( bwBrightnessWheelVisible || colorBrightnessWheelVisible )  ) {
-                    selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+                if ((colorWheelMove || brightnessWheelMove)
+                        && (bwBrightnessWheelVisible || colorBrightnessWheelVisible)) {
+                    selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
                 }
 
                 lastTouchedAngle = inRads;
@@ -577,19 +634,19 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setColor(int color) {
 
-        if ( (color & 0xFFFFFF) == 0xFFFFFF )
+        if ((color & 0xFFFFFF) == 0xFFFFFF)
             color = 0xFFFFFFFF;
 
-        if ( selectedColor != color ) {
+        if (selectedColor != color) {
 
             selectedColor = color;
             setBWcolor();
             outerWheelPointerAngle = colorToAngle(color);
 
-            if ( color == Color.WHITE )
+            if (color == Color.WHITE)
                 selectedColor = color;
             else
-                selectedColor = calculateColor((float)outerWheelPointerAngle, Colors);
+                selectedColor = calculateColor((float) outerWheelPointerAngle, Colors);
 
             setBWcolor();
             setBrightnessValue(selectedBrightness);
@@ -603,9 +660,9 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setColorWheelVisible(boolean visible) {
 
-        if ( visible != colorWheelVisible ) {
+        if (visible != colorWheelVisible) {
 
-            if ( visible ) {
+            if (visible) {
                 bwBrightnessWheelVisible = false;
                 colorBrightnessWheelVisible = false;
             } else {
@@ -626,9 +683,9 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setBWBrightnessWheelVisible(boolean visible) {
 
-        if ( visible != bwBrightnessWheelVisible ) {
+        if (visible != bwBrightnessWheelVisible) {
 
-            if ( visible ) {
+            if (visible) {
                 colorBrightnessWheelVisible = false;
                 colorWheelVisible = false;
             } else {
@@ -639,7 +696,7 @@ public class SuplaColorBrightnessPicker extends View {
             bwBrightnessWheelVisible = visible;
 
             setBWcolor();
-            selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+            selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
 
             _onSizeChanged();
             invalidate();
@@ -649,9 +706,9 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setColorBrightnessWheelVisible(boolean visible) {
 
-        if ( visible != colorBrightnessWheelVisible ) {
+        if (visible != colorBrightnessWheelVisible) {
 
-            if ( visible ) {
+            if (visible) {
                 colorWheelVisible = true;
                 bwBrightnessWheelVisible = false;
             }
@@ -659,7 +716,7 @@ public class SuplaColorBrightnessPicker extends View {
             colorBrightnessWheelVisible = visible;
 
             setBWcolor();
-            selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+            selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
 
             _onSizeChanged();
             invalidate();
@@ -668,7 +725,7 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public void setPercentVisible(boolean visible) {
-        if ( percentVisible != visible ) {
+        if (percentVisible != visible) {
             percentVisible = visible;
             invalidate();
         }
@@ -678,28 +735,35 @@ public class SuplaColorBrightnessPicker extends View {
         return selectedBrightness;
     }
 
-    public void setBrightnessValue(double value) {
+    private double brightnessToAngle(double value) {
 
-        if ( value < 0 )
+        double result = 0;
+
+        if (value < 0)
             value = 0;
-        else if ( value > 100 )
+        else if (value > 100)
             value = 100;
 
 
-        if ( value == 100 ) {
-            innerWheelPointerAngle = m90_01d;
+        if (value == 100) {
+            result = m90_01d;
         } else {
 
-            double a = 360*value/100;
+            double a = 360 * value / 100;
 
-            if ( a > 180 )
-                a-=360;
+            if (a > 180)
+                a -= 360;
 
-            innerWheelPointerAngle = Math.toRadians(a)+m90d;
+            result = Math.toRadians(a) + m90d;
         }
 
+        return result;
+    }
 
-        selectedBrightnessColor = calculateColor((float)(innerWheelPointerAngle-m90d), BW);
+    public void setBrightnessValue(double value) {
+
+        innerWheelPointerAngle = brightnessToAngle(value);
+        selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
         selectedBrightness = value;
         invalidate();
 
@@ -740,6 +804,24 @@ public class SuplaColorBrightnessPicker extends View {
 
     public boolean getMoving() {
         return colorWheelMove || brightnessWheelMove;
+    }
+
+    public void setColorMarkers(ArrayList<Double> colorMarkers) {
+        ColorMarkers = colorMarkers == null ? null : new ArrayList<>(colorMarkers);
+        invalidate();
+    }
+
+    public ArrayList<Double> getColorMarkers() {
+        return new ArrayList<>(ColorMarkers);
+    }
+
+    public void setBrightnessMarkers(ArrayList<Double> brightnessMarkers) {
+        BrightnessMarkers = brightnessMarkers == null ? null : new ArrayList<>(brightnessMarkers);
+        invalidate();
+    }
+
+    public ArrayList<Double> getBrightnessMarkers() {
+        return new ArrayList<>(BrightnessMarkers);
     }
 
 }

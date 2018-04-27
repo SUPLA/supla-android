@@ -67,12 +67,7 @@
                 android:textSize="@dimen/rgb_detail_title_text"
                 tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                android:background="@android:color/black" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,32 +75,6 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/rgbDetailBrightnessCaption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
-                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                    android:layout_weight="1"
-                    android:text="@string/rgb_brightness"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textIsSelectable="true"
-                    android:textSize="@dimen/rgb_detail_info_text" />
-
-                <TextView
-                    android:id="@+id/rgbDetailBrightness"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
-                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="80%"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rgb_detail_info_text"
-                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <View
@@ -144,6 +113,7 @@
 
 
                 <FrameLayout
+                    android:id="@+id/rgbDetailStateImageFrame"
                     android:layout_width="25dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center|right"

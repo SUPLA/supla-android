@@ -30,6 +30,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,10 +55,8 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private Button tabDimmer;
     private ViewGroup tabs;
     private TextView tvTitle;
-    private TextView tvBrightnessCaption;
-    private TextView tvBrightness;
+
     private TextView tvStateCaption;
-    private View brightnessLine;
     private ImageView stateImage;
     private long remoteUpdateTime;
     private long changeFinishedTime;
@@ -121,18 +121,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabRGB.setOnClickListener(this);
         tabDimmer.setOnClickListener(this);
 
-
         Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
         tabRGB.setTypeface(type);
         tabDimmer.setTypeface(type);
-
-        tvBrightnessCaption = (TextView) findViewById(R.id.rgbDetailBrightnessCaption);
-        tvBrightnessCaption.setTypeface(type);
-
-        tvBrightness = (TextView) findViewById(R.id.rgbDetailBrightness);
-        tvBrightness.setTypeface(type);
-
-        brightnessLine = findViewById(R.id.rgbBrightnessLine);
 
         tvStateCaption = (TextView) findViewById(R.id.rgbDetailStateCaption);
         tvStateCaption.setTypeface(type);
@@ -202,24 +193,62 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private void channelDataToViews() {
 
         int id = 0;
+        rgbPicker.setColorMarkers(null);
+        rgbPicker.setBrightnessMarkers(null);
 
         if (isGroup()) {
-            ChannelGroup cgroup = (ChannelGroup)getChannelFromDatabase();
+            ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
+
+            stateImage.setVisibility(View.GONE);
+            tvStateCaption.setVisibility(View.GONE);
+
             status.setVisibility(View.VISIBLE);
             status.setPercent(cgroup.getOnLinePercent());
 
-            if (cgroup.getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
+            ArrayList<Double> markers;
 
-            } else {
+            if (rgbPicker.getColorBrightnessWheelVisible()
+                    || rgbPicker.getBWBrightnessWheelVisible()) {
 
+                markers = rgbPicker.getColorBrightnessWheelVisible() ? cgroup.getColorBrightness()
+                        : cgroup.getBrightness();
+
+                if (markers != null) {
+                    if (markers.size() == 1) {
+                        if (markers.get(0).intValue() != (int) rgbPicker.getBrightnessValue()) {
+                            rgbPicker.setBrightnessValue(markers.get(0));
+                        }
+                    } else {
+                        rgbPicker.setBrightnessMarkers(markers);
+                    }
+                }
             }
 
+            if (rgbPicker.getColorWheelVisible()) {
+
+                markers = cgroup.getColors();
+
+                if (markers != null) {
+                    if (markers.size() == 1) {
+                        if (markers.get(0).intValue() != (int) rgbPicker.getColor()) {
+                            rgbPicker.setColor(markers.get(0).intValue());
+                        }
+                    } else {
+                        rgbPicker.setColorMarkers(markers);
+                    }
+                }
+            }
+
+
         } else {
-            Channel channel = (Channel)getChannelFromDatabase();
+            Channel channel = (Channel) getChannelFromDatabase();
 
             tvTitle.setText(channel.getNotEmptyCaption(getContext()));
             status.setVisibility(View.GONE);
+
+            stateImage.setVisibility(View.VISIBLE);
+            tvStateCaption.setVisibility(View.VISIBLE);
 
             if (rgbPicker.getColorBrightnessWheelVisible()
                     && (int) rgbPicker.getBrightnessValue() != (int) channel.getColorBrightness())
@@ -272,11 +301,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private void pickerToInfoPanel() {
 
         lastColor = rgbPicker.getColor();
+
         int brightness = (int) rgbPicker.getBrightnessValue();
-
-        tvBrightness.setText(Integer.toString(brightness) + "%");
-
-        stateImage.setImageResource(rgbPicker.getBrightnessValue() > 0 ? R.drawable.poweron : R.drawable.poweroff);
+        stateImage.setImageResource(brightness > 0 ? R.drawable.poweron : R.drawable.poweroff);
 
         if (rgbPicker.getColorWheelVisible())
             lastColorBrightness = brightness;
