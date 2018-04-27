@@ -244,14 +244,13 @@ public abstract class ChannelBase extends DbItem {
         return value.hiValue() ? 1 : 0;
     }
 
-    protected int getImageIdx(WhichOne whichImage, ChannelValue value) {
+    protected int getImageIdx(WhichOne whichImage, int active) {
 
         if (whichImage != WhichOne.First
                 && getFunc() != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
             return -1;
 
         int img_idx = -1;
-        int active = imgActive(value);
 
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
@@ -371,9 +370,15 @@ public abstract class ChannelBase extends DbItem {
         return img_idx;
     }
 
+    protected int getImageIdx(WhichOne whichImage, ChannelValue value) {
+        return getImageIdx(whichImage, imgActive(value));
+    }
+
     public abstract int getImageIdx(WhichOne whichImage);
 
-    public abstract int getImageIdx();
+    public int getImageIdx() {
+        return getImageIdx(WhichOne.First);
+    }
 
     @SuppressLint("DefaultLocale")
     protected String getHumanReadableValue(WhichOne whichOne, ChannelValue value) {

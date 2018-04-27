@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/detail_rs_bg">
 
-    <org.supla.android.SuplaOnlineStatus
-        android:id="@+id/lstatus"
+    <org.supla.android.SuplaChannelStatus
+        android:id="@+id/rsstatus"
         android:layout_width="20dp"
         android:layout_height="100dp"
         android:layout_marginLeft="10dp"

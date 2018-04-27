@@ -47,8 +47,8 @@ public class ChannelListView extends ListView {
 
     private float LastXtouch = -1;
     private float LastYtouch = -1;
-    private ChannelBaseLayout channelBaseLayout = null;
-    private ChannelBaseLayout lastCL = null;
+    private ChannelLayout channelLayout = null;
+    private ChannelLayout lastCL = null;
     private boolean buttonSliding = false;
     private Cursor _newCursor;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
@@ -224,7 +224,7 @@ public class ChannelListView extends ListView {
         float deltaX = Math.abs(X - LastXtouch);
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN
-                || channelBaseLayout != null) {
+                || channelLayout != null) {
 
             View view = null;
             if (isDetailVisible()) {
@@ -234,7 +234,7 @@ public class ChannelListView extends ListView {
                 view = getChildAt(pointToPosition((int) ev.getX(), (int) ev.getY()) - getFirstVisiblePosition());
             }
 
-            if (view instanceof ChannelBaseLayout) {
+            if (view instanceof ChannelLayout) {
 
                 if (action == MotionEvent.ACTION_DOWN) {
 
@@ -242,20 +242,20 @@ public class ChannelListView extends ListView {
                     LastYtouch = ev.getY();
 
                     if (!isDetailVisible()) {
-                        channelBaseLayout = (ChannelBaseLayout) view;
+                        channelLayout = (ChannelLayout) view;
                     }
 
                     buttonSliding = false;
                     detailSliding = false;
                     detailTouchDown = false;
 
-                    if (lastCL != null && lastCL != channelBaseLayout) {
+                    if (lastCL != null && lastCL != channelLayout) {
                         lastCL.AnimateToRestingPosition(true);
                         lastCL = null;
                     }
 
-                    if (channelBaseLayout != null
-                            && channelBaseLayout.getDetailSliderEnabled()) {
+                    if (channelLayout != null
+                            && channelLayout.getDetailSliderEnabled()) {
 
 
                         Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
@@ -281,24 +281,24 @@ public class ChannelListView extends ListView {
 
                 } else if (action == MotionEvent.ACTION_MOVE) {
 
-                    if (channelBaseLayout.getButtonsEnabled()
+                    if (channelLayout.getButtonsEnabled()
                             && !detailSliding) {
 
 
-                        if (!channelBaseLayout.Sliding()
+                        if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
                             return super.onTouchEvent(ev);
                         }
 
                         if (X != LastXtouch) {
-                            channelBaseLayout.Slide((int) (X - LastXtouch));
+                            channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
                         }
 
                         LastXtouch = X;
                         LastYtouch = Y;
 
-                        if (channelBaseLayout.Sliding()) {
+                        if (channelLayout.Sliding()) {
                             return true;
                         }
 
@@ -341,8 +341,8 @@ public class ChannelListView extends ListView {
                         color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
                     }
 
-                    if (channelBaseLayout != null)
-                        channelBaseLayout.setBackgroundColor(color);
+                    if (channelLayout != null)
+                        channelLayout.setBackgroundColor(color);
 
                     setVisibility(View.VISIBLE);
                     mDetailLayout.setBackgroundColor(color);
@@ -368,10 +368,10 @@ public class ChannelListView extends ListView {
 
             AnimateDetailSliding(false);
 
-            if (channelBaseLayout != null) {
-                channelBaseLayout.AnimateToRestingPosition(!buttonSliding);
-                lastCL = channelBaseLayout;
-                channelBaseLayout = null;
+            if (channelLayout != null) {
+                channelLayout.AnimateToRestingPosition(!buttonSliding);
+                lastCL = channelLayout;
+                channelLayout = null;
             }
 
             LastXtouch = -1;
@@ -557,7 +557,7 @@ public class ChannelListView extends ListView {
             View v = getChildAt(i);
 
             if (v != null
-                    && v instanceof ChannelBaseLayout) {
+                    && v instanceof ChannelLayout) {
                 v.setBackgroundColor(color);
             }
 
@@ -582,8 +582,8 @@ public class ChannelListView extends ListView {
 
 
             if (v != null
-                    && v instanceof ChannelBaseLayout
-                    && ((ChannelBaseLayout) v).Slided() > 0) {
+                    && v instanceof ChannelLayout
+                    && ((ChannelLayout) v).Slided() > 0) {
                 return true;
             }
 
@@ -624,7 +624,7 @@ public class ChannelListView extends ListView {
             View v = getChildAt(i - start);
             Object obj = getItemAtPosition(i);
 
-            if (v instanceof ChannelBaseLayout
+            if (v instanceof ChannelLayout
                     && obj instanceof Cursor) {
 
 
@@ -650,7 +650,7 @@ public class ChannelListView extends ListView {
 
                     if (new_obj.getId() == old_obj.getId()) {
                         requestLayout_Locked = true;
-                        ((ListViewCursorAdapter) getAdapter()).setData((ChannelBaseLayout) v, new_obj);
+                        ((ListViewCursorAdapter) getAdapter()).setData((ChannelLayout) v, new_obj);
                         requestLayout_Locked = false;
                     }
 

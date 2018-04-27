@@ -47,30 +47,26 @@ import java.util.TimerTask;
 
 public class ChannelDetailRGB extends DetailLayout implements View.OnClickListener, SuplaColorBrightnessPicker.OnColorBrightnessChangeListener, SuplaColorListPicker.OnColorListTouchListener {
 
-    SuplaColorBrightnessPicker rgbPicker;
-    SuplaColorListPicker clPicker;
-    Button tabRGB;
-    Button tabDimmer;
-    ViewGroup tabs;
-    TextView tvTitle;
-    TextView tvBrightnessCaption;
-    TextView tvBrightness;
-    TextView tvColorCaption;
-    TextView tvColor;
-    TextView tvStateCaption;
-    View colorLine;
-    View brightnessLine;
-    ImageView stateImage;
-    long remoteUpdateTime;
-    long changeFinishedTime;
-    Timer delayTimer1;
-    Timer delayTimer2;
+    private SuplaColorBrightnessPicker rgbPicker;
+    private SuplaColorListPicker clPicker;
+    private Button tabRGB;
+    private Button tabDimmer;
+    private ViewGroup tabs;
+    private TextView tvTitle;
+    private TextView tvBrightnessCaption;
+    private TextView tvBrightness;
+    private TextView tvStateCaption;
+    private View brightnessLine;
+    private ImageView stateImage;
+    private long remoteUpdateTime;
+    private long changeFinishedTime;
+    private Timer delayTimer1;
+    private Timer delayTimer2;
+    private SuplaChannelStatus status;
 
-    int lastColor;
-    int lastColorBrightness;
-    int lastBrightness;
-
-    int channel_id;
+    private int lastColor;
+    private int lastColorBrightness;
+    private int lastBrightness;
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
     final static private long MIN_UPDATE_DELAY = 2000;
@@ -98,6 +94,10 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabs = (ViewGroup) findViewById(R.id.rlTabs);
 
         Resources r = getResources();
+
+        status = (SuplaChannelStatus) findViewById(R.id.rgbstatus);
+        status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+        status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 
         clPicker = (SuplaColorListPicker) findViewById(R.id.clPicker);
         clPicker.addItem(Color.WHITE, (short) 100);
@@ -134,14 +134,6 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         brightnessLine = findViewById(R.id.rgbBrightnessLine);
 
-        tvColorCaption = (TextView) findViewById(R.id.rgbDetailColorCaption);
-        tvColorCaption.setTypeface(type);
-
-        tvColor = (TextView) findViewById(R.id.rgbDetailColor);
-        tvColor.setTypeface(type);
-
-        colorLine = findViewById(R.id.rgbColorLine);
-
         tvStateCaption = (TextView) findViewById(R.id.rgbDetailStateCaption);
         tvStateCaption.setTypeface(type);
 
@@ -159,19 +151,12 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         delayTimer2 = null;
     }
 
-    private void setColorVisibility(int Visibility) {
-
-        colorLine.setVisibility(Visibility);
-        tvColorCaption.setVisibility(Visibility);
-        tvColor.setVisibility(Visibility);
-    }
 
     private void showRGB() {
 
         rgbPicker.setColorWheelVisible(true);
         rgbPicker.setColorBrightnessWheelVisible(true);
         clPicker.setVisibility(View.VISIBLE);
-        setColorVisibility(View.VISIBLE);
 
         channelDataToViews();
     }
@@ -180,7 +165,6 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         rgbPicker.setBWBrightnessWheelVisible(true);
         clPicker.setVisibility(View.GONE);
-        setColorVisibility(View.GONE);
 
         channelDataToViews();
     }
@@ -217,10 +201,25 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
     private void channelDataToViews() {
 
-        if (!isGroup()) {
+        int id = 0;
+
+        if (isGroup()) {
+            ChannelGroup cgroup = (ChannelGroup)getChannelFromDatabase();
+            tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
+            status.setVisibility(View.VISIBLE);
+            status.setPercent(cgroup.getOnLinePercent());
+
+            if (cgroup.getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
+
+            } else {
+
+            }
+
+        } else {
             Channel channel = (Channel)getChannelFromDatabase();
 
             tvTitle.setText(channel.getNotEmptyCaption(getContext()));
+            status.setVisibility(View.GONE);
 
             if (rgbPicker.getColorBrightnessWheelVisible()
                     && (int) rgbPicker.getBrightnessValue() != (int) channel.getColorBrightness())
@@ -233,23 +232,23 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             if (rgbPicker.getColorWheelVisible())
                 rgbPicker.setColor(channel.getColor());
 
-            channel_id = channel.getChannelId();
-
-            for (int a = 1; a < 6; a++) {
-                ColorListItem cli = DBH.getColorListItem(channel_id, a);
-
-                if (cli != null) {
-                    clPicker.setItemColor(a, cli.getColor());
-                    clPicker.setItemPercent(a, cli.getBrightness());
-                } else {
-                    clPicker.setItemColor(a, Color.TRANSPARENT);
-                    clPicker.setItemPercent(a, (short) 0);
-                }
-            }
-
-
-            pickerToInfoPanel();
         }
+
+
+        for (int a = 1; a < 6; a++) {
+            ColorListItem cli = DBH.getColorListItem(getRemoteId(), isGroup(), a);
+
+            if (cli != null) {
+                clPicker.setItemColor(a, cli.getColor());
+                clPicker.setItemPercent(a, cli.getBrightness());
+            } else {
+                clPicker.setItemColor(a, Color.TRANSPARENT);
+                clPicker.setItemPercent(a, (short) 0);
+            }
+        }
+
+
+        pickerToInfoPanel();
 
     }
 
@@ -277,7 +276,6 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         tvBrightness.setText(Integer.toString(brightness) + "%");
 
-        tvColor.setText(String.format("#%06X", (0xFFFFFF & lastColor)));
         stateImage.setImageResource(rgbPicker.getBrightnessValue() > 0 ? R.drawable.poweron : R.drawable.poweroff);
 
         if (rgbPicker.getColorWheelVisible())
@@ -463,10 +461,11 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             sclPicker.setItemColor(idx, rgbPicker.getColor());
             sclPicker.setItemPercent(idx, (short) rgbPicker.getBrightnessValue());
 
-            if (channel_id != 0) {
+            if (getRemoteId() != 0) {
 
                 ColorListItem cli = new ColorListItem();
-                cli.setChannelId(channel_id);
+                cli.setRemoteId(getRemoteId());
+                cli.setGroup(isGroup());
                 cli.setIdx(idx);
                 cli.setColor(rgbPicker.getColor());
                 cli.setBrightness((short) rgbPicker.getBrightnessValue());

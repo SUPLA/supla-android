@@ -299,8 +299,8 @@ public class ListViewCursorAdapter extends BaseAdapter {
 
         } else if ( obj instanceof Cursor ) {
 
-            if ( convertView == null || !(convertView instanceof ChannelBaseLayout) ) {
-                convertView = new ChannelBaseLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
+            if ( convertView == null || !(convertView instanceof ChannelLayout) ) {
+                convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
             }
 
             ChannelBase cbase;
@@ -312,7 +312,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
             }
 
             cbase.AssignCursorData((Cursor)obj);
-            setData((ChannelBaseLayout) convertView, cbase);
+            setData((ChannelLayout) convertView, cbase);
         }
 
 
@@ -320,8 +320,8 @@ public class ListViewCursorAdapter extends BaseAdapter {
     }
 
 
-    public void setData(ChannelBaseLayout channelBaseLayout, ChannelBase cbase) {
-        channelBaseLayout.setChannelData(cbase);
+    public void setData(ChannelLayout channelLayout, ChannelBase cbase) {
+        channelLayout.setChannelData(cbase);
     }
 
     public Cursor getCursor() {

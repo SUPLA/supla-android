@@ -84,7 +84,8 @@ public class SuplaContract {
         public static final String TABLE_NAME = "color_list_item";
 
         public static final String _ID = "_id"; // Primary Key
-        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_REMOTEID = "remoteid"; // SuplaChannel.Id or SuplaChannelGroup.Id
+        public static final String COLUMN_NAME_GROUP = "isgroup";
         public static final String COLUMN_NAME_IDX = "idx";
         public static final String COLUMN_NAME_COLOR = "color";
         public static final String COLUMN_NAME_BRIGHTNESS = "brightness";

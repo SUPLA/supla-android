@@ -29,7 +29,7 @@ import android.view.View;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-public class SuplaOnlineStatus extends View {
+public class SuplaChannelStatus extends View {
 
     public enum ShapeType {
         LinearVertical,
@@ -42,6 +42,7 @@ public class SuplaOnlineStatus extends View {
     private float Percent = 50;
     private int OnlineColor = Color.GREEN;
     private int OfflineColor = Color.RED;
+    private boolean mSingleColor = false;
     private int BorderlineColor = Color.BLACK;
     private RectF rectf = new RectF();
     private Paint paint = new Paint();
@@ -49,15 +50,15 @@ public class SuplaOnlineStatus extends View {
     private float FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             (float) 1, metrics);
 
-    public SuplaOnlineStatus(Context context) {
+    public SuplaChannelStatus(Context context) {
         super(context);
     }
 
-    public SuplaOnlineStatus(Context context, @Nullable AttributeSet attrs) {
+    public SuplaChannelStatus(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SuplaOnlineStatus(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuplaChannelStatus(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -102,14 +103,27 @@ public class SuplaOnlineStatus extends View {
         invalidate();
     }
 
+    public void setSingleColor(boolean singleColor) {
+        mSingleColor = singleColor;
+        invalidate();
+    }
+
+    public boolean getSingleColor() {
+        return mSingleColor;
+    }
+
     public int getBorderLineColor() {
         return BorderlineColor;
+    }
+
+    public float getBorderLineWidth() {
+        return FrameLineWidth;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 
-        paint.setColor(getOnlineColor());
+        paint.setColor(getOfflineColor());
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(FrameLineWidth);
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -117,21 +131,25 @@ public class SuplaOnlineStatus extends View {
         float percentPoint;
 
         if (shapeType == ShapeType.LinearHorizontal) {
-            percentPoint = getWidth() * Percent / 100;
+            percentPoint = getWidth() * (100 - Percent) / 100;
 
-            rectf.set(0, 0, percentPoint, getHeight());
-            canvas.drawRect(rectf, paint);
+            if (!getSingleColor()) {
+                rectf.set(0, 0, percentPoint, getHeight());
+                canvas.drawRect(rectf, paint);
+            }
 
-            paint.setColor(getOfflineColor());
+            paint.setColor(getOnlineColor());
             rectf.set(percentPoint, 0, getWidth(), getHeight());
             canvas.drawRect(rectf, paint);
         } else if (shapeType == ShapeType.LinearVertical) {
-            percentPoint = getHeight() * Percent / 100;
+            percentPoint = getHeight() * (100 - Percent) / 100;
 
-            rectf.set(0, 0, getWidth(), percentPoint);
-            canvas.drawRect(rectf, paint);
+            if (!getSingleColor()) {
+                rectf.set(0, 0, getWidth(), percentPoint);
+                canvas.drawRect(rectf, paint);
+            }
 
-            paint.setColor(getOfflineColor());
+            paint.setColor(getOnlineColor());
             rectf.set(0, percentPoint, getWidth(), getHeight());
             canvas.drawRect(rectf, paint);
         } else {
@@ -146,7 +164,7 @@ public class SuplaOnlineStatus extends View {
 
             canvas.drawColor(Color.TRANSPARENT);
             canvas.drawCircle(getWidth() / 2, getHeight() / 2,
-                    size - (shapeType == ShapeType.Ring ? FrameLineWidth/2 : 0),
+                    size - (shapeType == ShapeType.Ring ? FrameLineWidth / 2 : 0),
                     paint);
             return;
         }

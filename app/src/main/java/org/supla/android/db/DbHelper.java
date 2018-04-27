@@ -138,13 +138,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_COLOR_TABLE);
-        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME, SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID);
+        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME, SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID);
+        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME, SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP);
     }
 
     private void createColorTable(SQLiteDatabase db) {
@@ -252,14 +254,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void upgradeToV4(SQLiteDatabase db) {
         execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
+
         createColorTable(db);
 
         final String SQL_COPY = "INSERT INTO " + SuplaContract.ColorListItemEntry.TABLE_NAME + " (" +
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + "," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + "," +
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + "," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + "," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR + "," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + ") " +
-                "SELECT c.channelid, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item_old ci ON c._id = ci.channel";
+                "SELECT c.channelid, 0, ci.idx, ci.color, ci.brightness FROM channel c JOIN color_list_item_old ci ON c._id = ci.channel";
 
         execSQL(db, SQL_COPY);
 
@@ -276,12 +280,12 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
         createChannelGroupValueView(db);
+
     }
 
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
     @Override
@@ -903,7 +907,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return rdb.rawQuery(sql, null);
     }
 
-    public ColorListItem getColorListItem(int channelId, int idx) {
+    public ColorListItem getColorListItem(int id, boolean group, int idx) {
 
         ColorListItem result = null;
         SQLiteDatabase db = getReadableDatabase();
@@ -911,18 +915,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String[] projection = {
                 SuplaContract.ColorListItemEntry._ID,
-                SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP,
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX,
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR,
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS,
 
         };
 
-        String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + " = ?" +
+        String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " = ?" +
+                " AND " + SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " = ?" +
                 " AND " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
 
         String[] selectionArgs = {
-                String.valueOf(channelId),
+                String.valueOf(id),
+                String.valueOf(group ? 1 : 0),
                 String.valueOf(idx),
         };
 
@@ -953,8 +960,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void updateColorListItemValue(ColorListItem item) {
 
-        ColorListItem cli = getColorListItem(item.getChannelId(), item.getIdx());
-
+        ColorListItem cli = getColorListItem(item.getRemoteId(), item.getGroup(), item.getIdx());
         SQLiteDatabase db = getWritableDatabase();
 
         if (cli == null) {
@@ -969,8 +975,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
             cli.AssignColorListItem(item);
 
-            String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID + " = ? ) AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
-            String[] selectionArgs = {String.valueOf(cli.getChannelId()), String.valueOf(cli.getIdx())};
+            String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " = ? )"+
+                    " AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " = ? " +
+                    " AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
+
+            String[] selectionArgs = {
+                    String.valueOf(cli.getRemoteId()),
+                    String.valueOf(cli.getGroup()),
+                    String.valueOf(cli.getIdx())
+            };
 
             db.update(
                     SuplaContract.ColorListItemEntry.TABLE_NAME,

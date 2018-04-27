@@ -43,7 +43,7 @@ import java.util.TimerTask;
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
 
     private SuplaRollerShutter rs;
-    private SuplaOnlineStatus lstatus;
+    private SuplaChannelStatus status;
     private TextView tvTitle;
     private TextView tvPercentCaption;
     private TextView tvPercent;
@@ -77,9 +77,9 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
         rs.setOnPercentTouchListener(this);
 
-        lstatus = (SuplaOnlineStatus) findViewById(R.id.lstatus);
-        lstatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
-        lstatus.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
+        status = (SuplaChannelStatus) findViewById(R.id.rsstatus);
+        status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+        status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 
         btnUp = (Button) findViewById(R.id.rsBtnUp);
         btnDown = (Button) findViewById(R.id.rsBtnDown);
@@ -123,7 +123,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         }
 
         if (!isGroup()) {
-            lstatus.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
 
             byte p = channel.getRollerShutterPosition();
@@ -139,13 +139,13 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
                 tvPercent.setText(Integer.toString((int) p) + "%");
             }
         } else {
-            lstatus.setVisibility(View.VISIBLE);
+            status.setVisibility(View.VISIBLE);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
             rs.setPercent(0);
 
-            lstatus.setPercent(cgroup.getOnLinePercent());
+            status.setPercent(cgroup.getOnLinePercent());
 
             ArrayList<Integer> positions = cgroup.getRollerShutterPositions();
 

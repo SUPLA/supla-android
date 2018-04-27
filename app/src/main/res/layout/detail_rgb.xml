@@ -31,6 +31,13 @@
 
     </RelativeLayout>
 
+    <org.supla.android.SuplaChannelStatus
+        android:id="@+id/rgbstatus"
+        android:layout_width="10dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="80dp" />
+
     <RelativeLayout
         android:id="@+id/rlInfo"
         android:layout_width="match_parent"
@@ -115,40 +122,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/rgbDetailColorCaption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
-                    android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                    android:layout_weight="1"
-                    android:text="@string/rgb_color"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rgb_detail_info_text" />
-
-                <TextView
-                    android:id="@+id/rgbDetailColor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/rgb_detail_info_text_margin"
-                    android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                    android:layout_marginTop="@dimen/rgb_detail_info_text_margin"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="0xFFFFFF"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/rgb_detail_info_text"
-                    tools:ignore="HardcodedText" />
             </LinearLayout>
-
-            <View
-                android:id="@+id/rgbColorLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/rgb_detail_tab_btn_margin"
-                android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
-                android:background="@android:color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -171,7 +145,7 @@
 
                 <FrameLayout
                     android:layout_width="25dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_gravity="center|right"
                     android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
                     android:layout_weight="1">

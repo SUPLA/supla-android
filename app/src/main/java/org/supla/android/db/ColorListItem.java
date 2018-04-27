@@ -24,7 +24,8 @@ import android.database.Cursor;
 public class ColorListItem {
 
     private long Id;
-    private int ChannelId;
+    private int RemoteId;
+    private boolean Group;
     private int Idx;
     private int Color;
     private short Brightness;
@@ -37,13 +38,17 @@ public class ColorListItem {
         Id = id;
     }
 
-    public int getChannelId() {
-        return ChannelId;
+    public int getRemoteId() {
+        return RemoteId;
     }
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
+    public void setRemoteId(int remoteId) {
+        RemoteId = remoteId;
     }
+
+    public boolean getGroup() { return Group; };
+
+    public void setGroup(boolean group) { Group = group; };
 
     public int getIdx() {
         return Idx;
@@ -72,7 +77,8 @@ public class ColorListItem {
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ColorListItemEntry._ID)));
-        setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID)));
+        setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID)));
+        setGroup(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP)) > 0);
         setIdx(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX)));
         setColor(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR)));
         setBrightness(cursor.getShort(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS)));
@@ -81,7 +87,8 @@ public class ColorListItem {
     public void AssignColorListItem(ColorListItem cli) {
 
         setId(cli.getId());
-        setChannelId(cli.getChannelId());
+        setRemoteId(cli.getRemoteId());
+        setGroup(cli.getGroup());
         setIdx(cli.getIdx());
         setColor(cli.getColor());
         setBrightness(cli.getBrightness());
@@ -92,7 +99,8 @@ public class ColorListItem {
 
         ContentValues values = new ContentValues();
 
-        values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_CHANNELID, getChannelId());
+        values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID, getRemoteId());
+        values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP, getGroup() ? 1 : 0);
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX, getIdx());
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR, getColor());
         values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS, getBrightness());

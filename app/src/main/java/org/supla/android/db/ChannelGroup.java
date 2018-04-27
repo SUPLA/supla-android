@@ -21,6 +21,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -212,12 +213,109 @@ public class ChannelGroup extends ChannelBase {
         return result;
     }
 
-    public int getImageIdx(WhichOne whichImage) {
-        return super.getImageIdx(whichImage, null);
+    public int getActivePercent(int idx) {
+        ArrayList<Integer> result = new ArrayList<>();
+        String[] items = getTotalValue().split("\\|");
+
+        int sum = 0;
+        int count = 0;
+        String[] n = null;
+
+        for (int a = 0; a < items.length; a++) {
+
+            switch (getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                    try {
+                        sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;
+                    } catch (NumberFormatException e) {
+                    }
+                    count++;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                    n = items[a].split(":");
+                    if (n.length == 2) {
+                        try {
+                            sum += Integer.valueOf(n[1]).intValue() > 0 ? 1 : 0;
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+
+                    count++;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                    n = items[a].split(":");
+                    if (n.length == 3) {
+                        try {
+                            if (idx == 0 || idx == 1) {
+                                sum += Integer.valueOf(n[1]).intValue() > 0 ? 1 : 0;
+                            }
+
+                            if (idx == 0 || idx == 2) {
+                                sum += Integer.valueOf(n[2]).intValue() > 0 ? 1 : 0;
+                            }
+
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+
+                    if (idx == 0) {
+                        count += 2;
+                    } else {
+                        count++;
+                    }
+
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                    n = items[a].split(":");
+                    if (n.length == 2) {
+                        try {
+                            if ( Integer.valueOf(n[0]).intValue() >= 100 // percent
+                                 || Integer.valueOf(n[1]).intValue() > 0 ) { // sensor
+                                sum++;
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+                    count++;
+                    break;
+            }
+
+
+        }
+
+        return count == 0 ? 0 : sum * 100 / count;
     }
 
-    public int getImageIdx() {
-        return super.getImageIdx(WhichOne.First, null);
+    public int getActivePercent() {
+        return getActivePercent(0);
+    }
+
+    public int getImageIdx(WhichOne whichImage) {
+        int active = 0;
+
+        if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
+
+            if (getActivePercent(2) >= 100) {
+                active = 0x1;
+            }
+
+            if (getActivePercent(1) >= 100) {
+                active |= 0x2;
+            }
+
+        } else {
+            active = getActivePercent() >= 100 ? 1 : 0;
+        }
+
+        return super.getImageIdx(whichImage, active);
     }
 
     public String getHumanReadableValue(WhichOne whichOne) {
