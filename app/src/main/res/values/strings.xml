@@ -31,7 +31,7 @@
     <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
     <string name="status_device_disabled">Device is disabled</string>
     <string name="status_accessid_disabled">Access Identifier is disabled</string>
-    
+
     <string name="err_hostnotfound">Host not found</string>
     <string name="err_cantconnecttohost">Can\'t connect to host</string>
 
@@ -108,7 +108,7 @@
     <string name="calibration">[Calibration]</string>
 
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings</string>
-    <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „I/O Devices” at  %1$s and enable the Device Add Button.</string>
+    <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
     <string name="wizard_step1_txt1">Welcome to the Device Add Wizard which will in an easy and simple way help you to add new device to the system.</string>
     <string name="wizard_step1_txt2">Press <b>Next</b> to continue.</string>

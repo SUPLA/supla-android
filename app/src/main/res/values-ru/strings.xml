@@ -38,7 +38,7 @@
     <string name="channel_func_garagedooropeningsensor">Датчик открытия гаражных ворот</string>
     <string name="channel_func_dooropeningsensor">Датчик открытия двери</string>
     <string name="channel_func_rsopeningsensor">Датчик открытия роллет</string>
-    <string name="channel_func_humidity">Влажность</string>  
+    <string name="channel_func_humidity">Влажность</string>
     <string name="channel_func_humidityandtemperature">Температура и влажность</string>
     <string name="channel_func_dimmer">Диммер</string>
     <string name="channel_func_rgblighting">Контроллер освещения RGB  </string>
@@ -119,7 +119,7 @@
     <string name="wizard_reconnect_timeout">Превышено время ожидания возврата в основную сеть wi-fi!</string>
     <string name="wizard_configure_timeout">Превышено время ожидания завершения конфигурации устройства!</string>
     <string name="wizard_scan_timeout">Превышено время ожидания завершения поиска сети wi-fi!</string>
-    <string name="device_registration_disabled">Регистрация устройств ввода/вывода в настоящее время отключена. Для продолжения перейдите на сайт %1$s и во вкладке ”Устройства” включите добавление устройств.</string>
+    <string name="device_registration_disabled">Регистрация устройств ввода/вывода в настоящее время отключена. Для продолжения перейдите на сайт %1$s и во вкладке ”Моя SUPLA” включите добавление устройств.</string>
     <string name="wizard_remember_passwd">Запомнить пароль</string>
     <string name="wizard_wifi_error">Сеть wi-fi отключена или не удается определить ее идентификатор или имя!</string>
     <string name="start">START</string>

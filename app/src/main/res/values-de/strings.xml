@@ -108,7 +108,7 @@
     <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
     <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>
     <string name="wizard_scan_timeout">Für den Abschluss des Browsens des WiFi-Netzes wurde das Zeitlimit abgeschlossen!</string>
-    <string name="device_registration_disabled">Die Registrierung der Ein-/Ausgabegeräte ist momentan deaktiviert. Um fortzusetzen, kommen Sie zur Website %1$s und im Bereich \"E/A Geräte\" aktivieren Sie die Funktion \"Geräte hinzufügen\".</string>
+    <string name="device_registration_disabled">Die Registrierung der Ein-/Ausgabegeräte ist momentan deaktiviert. Um fortzusetzen, kommen Sie zur Website %1$s und im Bereich Meine SUPLA aktivieren Sie die Funktion Geräte hinzufügen.</string>
     <string name="wizard_remember_passwd">Passwort speichern</string>
     <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
     <string name="start">START</string>

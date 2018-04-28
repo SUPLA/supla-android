@@ -114,7 +114,7 @@
     <string name="wizard_reconnect_timeout">O tempo-limite de volta para a rede básica WiFi foi excedido!</string>
     <string name="wizard_configure_timeout">O tempo-limite de configuração de um dispositivo foi excedido!</string>
     <string name="wizard_scan_timeout">O tempo-limite de pesquisa da rede WiFi foi excedido!</string>
-    <string name="device_registration_disabled">O registo de dispositivos de entrada/saída está atualmente desligado. Para continuar vá para a página %1$s e ligue adicionar dispositivos no marcador “Dispositivos de I/O ”.</string>
+    <string name="device_registration_disabled">O registo de dispositivos de entrada/saída está atualmente desligado. Para continuar vá para a página %1$s e ligue adicionar dispositivos no marcador “Meu SUPLA”.</string>
     <string name="wizard_remember_passwd">Recordar a senha</string>
     <string name="wizard_wifi_error">A rede WiFi está desligada ou impossível ler o identificador ou o nome dela!</string>
     <string name="start">START</string>

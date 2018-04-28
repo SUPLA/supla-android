@@ -114,7 +114,7 @@
     <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera al retorno a la red WiFi fundamental!</string>
     <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera a la finalización de la configuración del dispositivo!</string>
     <string name="wizard_scan_timeout">¡Se ha superado el tiempo de espera a la finalización de la búsqueda de redes WiFi!</string>
-    <string name="device_registration_disabled">El registro de dispositivos de entrada/salida está actualmente deshabilitado. Para continuar ve a la página %1$s y en la pestaña \"Dispositivos E/S\" activa la adición de dispositivos.</string>
+    <string name="device_registration_disabled">El registro de dispositivos de entrada/salida está actualmente deshabilitado. Para continuar ve a la página %1$s y en la pestaña Mi SUPLA activa la adición de dispositivos.</string>
     <string name="wizard_remember_passwd">Recordar la contraseña</string>
     <string name="wizard_wifi_error">¡La red WiFi está desactivada o no se puede leer su identificador o su nombre!</string>
     <string name="start">START</string>

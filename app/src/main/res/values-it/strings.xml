@@ -114,7 +114,7 @@
     <string name="wizard_reconnect_timeout">Il tempo di attesa per il ritorno alla rete basilare WiFi è stato superato!</string>
     <string name="wizard_configure_timeout">Il tempo di attesa per la terminazione della configurazione del dispositivo è stato superato!</string>
     <string name="wizard_scan_timeout">Il tempo di attesa per la ricerca nella rete WiFi è stato superato!</string>
-    <string name="device_registration_disabled">La registrazione dei dispositivi di input/output è attualmente disabilitata. Per continuare vai sulla pagina %1$s e abilita la funzione per aggiungere i dispositivi nella sezione ”Dispositivi di input/output”.</string>
+    <string name="device_registration_disabled">La registrazione dei dispositivi di input/output è attualmente disabilitata. Per continuare vai sulla pagina %1$s e abilita la funzione per aggiungere i dispositivi nella sezione ”Mio SUPLA”.</string>
     <string name="wizard_remember_passwd">Ricorda la password</string>
     <string name="start">START</string>
     <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>

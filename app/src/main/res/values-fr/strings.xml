@@ -114,7 +114,7 @@
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
     <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
-    <string name="device_registration_disabled">Enregistrement des dispositifs d\'entrée/sortie  est actuellement désactivé. Pour continuer, allez à %1$s et activez l\'ajout de dispositifs dans l\'onglet \"Dispositifs d\'E/S\".</string>
+    <string name="device_registration_disabled">Enregistrement des dispositifs d\'entrée/sortie est actuellement désactivé. Pour continuer, allez à %1$s et activez l\'ajout de dispositifs dans l\'onglet Ma SUPLA.</string>
     <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
     <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
     <string name="start">DÉMARRER</string>
