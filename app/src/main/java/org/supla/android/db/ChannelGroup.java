@@ -142,7 +142,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                BufferTotalValue += Integer.toString(value.getSubValueHi() ? 1 : 0);
+                BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
@@ -152,7 +152,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 BufferTotalValue += Integer.toString(value.getPercent());
                 BufferTotalValue += ":";
-                BufferTotalValue += Integer.toString(value.getSubValueHi() ? 1 : 0);
+                BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 BufferTotalValue += Integer.toString(value.getBrightness());

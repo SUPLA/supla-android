@@ -287,12 +287,22 @@ public class ChannelValue extends DbItem {
 
     }
 
-    public boolean getSubValueHi() {
+    public byte getSubValueHi() {
+
+        byte result = 0;
 
         byte[] sub_value = getChannelSubValue();
-        return sub_value.length > 0
-                && sub_value[0] == 1;
+        if ( sub_value.length > 0
+                && sub_value[0] == 1 ) {
+            result = 0x1;
+        }
 
+        if ( sub_value.length > 1
+                && sub_value[1] == 1 ) {
+            result |= 0x2;
+        }
+
+        return result;
     }
 
 }

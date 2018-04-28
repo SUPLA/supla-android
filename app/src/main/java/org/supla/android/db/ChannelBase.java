@@ -215,7 +215,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
 
-                return value.getSubValueHi() ? 1 : 0;
+                return value.getSubValueHi();
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
@@ -259,15 +259,27 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = active == 1 ? R.drawable.gatealt1closed : R.drawable.gatealt1open;
+
+                        if ( _50percent ) {
+                            img_idx = R.drawable.gatealt1closed50percent;
+                        } else {
+                            img_idx = active > 0 ? R.drawable.gatealt1closed : R.drawable.gatealt1open;
+                        }
+
                         break;
                     case 2:
-                        img_idx = active == 1 ? R.drawable.barierclosed : R.drawable.barieropen;
+                        img_idx = active > 0 ? R.drawable.barierclosed : R.drawable.barieropen;
                         break;
                     default:
-                        img_idx = active == 1 ? R.drawable.gateclosed : R.drawable.gateopen;
+                        if ( _50percent ) {
+                            img_idx = R.drawable.gateclosed50percent;
+                        } else {
+                            img_idx = active > 0 ? R.drawable.gateclosed : R.drawable.gateopen;
+                        }
+
                 }
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
