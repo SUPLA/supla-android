@@ -487,6 +487,12 @@ public class ChannelLayout extends LinearLayout {
             delta = content.getLeft() * -1;
 
         content.layout(content.getLeft() + delta, content.getTop(), content.getWidth() + content.getLeft() + delta, content.getHeight());
+
+        int bcolor = getResources().getColor(R.color.channel_btn);
+
+        left_btn.setBackgroundColor(bcolor);
+        right_btn.setBackgroundColor(bcolor);
+
         UpdateLeftBtn();
         UpdateRightBtn();
 
