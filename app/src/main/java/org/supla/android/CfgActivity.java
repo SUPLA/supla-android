@@ -197,8 +197,7 @@ public class CfgActivity extends NavigationActivity {
         }
 
         if (v == btnCreate) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.create_url)));
-            startActivity(browserIntent);
+            showCreateAccount();
             return;
         }
 

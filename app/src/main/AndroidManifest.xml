@@ -59,6 +59,11 @@
                   android:launchMode="singleTop">
         </activity>
 
+        <activity android:name=".CreateAccountActivity"
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleTop">
+        </activity>
+
         <activity android:name=".AddWizardActivity"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleTop">

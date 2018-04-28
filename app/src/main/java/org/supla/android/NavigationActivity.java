@@ -390,6 +390,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         showActivity(this, AboutActivity.class, 0);
     }
 
+    public void showCreateAccount() {
+        showActivity(this, CreateAccountActivity.class, 0);
+    }
+
     public void showAddWizard() {
         showActivity(this, AddWizardActivity.class, 0);
     }
