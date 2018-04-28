@@ -200,7 +200,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             }
 
             LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
-                    DbH_ListView.getGroupListCursor(), false);
+                    DbH_ListView.getGroupListCursor(), true);
         }
 
     }

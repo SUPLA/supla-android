@@ -335,8 +335,11 @@ public class ListViewCursorAdapter extends BaseAdapter {
         }
 
         setCursor(cursor);
-        notifyDataSetInvalidated();
-
+        if (cursor == null) {
+            notifyDataSetInvalidated();
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     public boolean isGroup() {
