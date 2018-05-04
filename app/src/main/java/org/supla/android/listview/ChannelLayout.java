@@ -842,6 +842,7 @@ public class ChannelLayout extends LinearLayout {
 
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
 
                     ridx = R.string.channel_btn_on;
                     lidx = R.string.channel_btn_off;
@@ -879,6 +880,7 @@ public class ChannelLayout extends LinearLayout {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

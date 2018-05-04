@@ -127,5 +127,6 @@
     <string name="wizard_step2_txt3">*) Le réseau %1$s sera utilisé par vos actionneurs pour vous connecter au serveur.</string>
     <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
     <string name="help">Aide</string>
+    <string name="channel_func_staircasetimer">Minuterie d\'escalier</string>
 
 </resources>

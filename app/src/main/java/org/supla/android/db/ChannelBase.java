@@ -185,6 +185,9 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
                     idx = R.string.channel_func_mailsensor;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                    idx = R.string.channel_func_staircasetimer;
+                    break;
             }
 
             if (idx == -1)
@@ -322,6 +325,16 @@ public abstract class ChannelBase extends DbItem {
                         break;
                     default:
                         img_idx = active == 1 ? R.drawable.lighton : R.drawable.lightoff;
+                }
+
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = active == 1 ? R.drawable.staircasetimeron_1 : R.drawable.staircasetimeroff_1;
+                        break;
+                    default:
+                        img_idx = active == 1 ? R.drawable.staircasetimeron : R.drawable.staircasetimeroff;
                 }
 
                 break;

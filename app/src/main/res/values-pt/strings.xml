@@ -127,5 +127,6 @@
     <string name="wizard_step2_txt3">*) A rede %1$s será utilizada por atuadores para se conectarem ao servidor.</string>
     <string name="wizard_not_enought_permissions">A aplicação não dispõe de poderes suficientes. Vá para a gestão das aplicações nas configurações do sistema. A seguir, encontre a aplicação %1$s e ative todos os poderes requeridos por ela.</string>
     <string name="help">Ajuda</string>
+    <string name="channel_func_staircasetimer">Comutador de escada</string>
 
 </resources>

@@ -127,5 +127,6 @@
     <string name="wizard_step2_txt3">*) La rete %1$s verrà utilizzata dai dispositivi di input/output per la connessione con il server.</string>
     <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
     <string name="help">Aiuto</string>
+    <string name="channel_func_staircasetimer">Temporizzatore luce scale</string>
 
 </resources>

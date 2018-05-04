@@ -104,4 +104,5 @@
     <string name="wizard_result_conn_error">Negalima užmegzti ryšio su įrenginiu!</string>
     <string name="wizard_result_failed">Nepavyko sėkmingai baigti konfigūravimo!</string>
     <string name="wizard_not_enought_permissions">Programa neturi pakankamai teisių. Sistemos nustatymuose eikite prie programų valdymo. Tada raskite programą %1$s ir įjunkite visas būtinas jai teises.</string>
+    <string name="channel_func_staircasetimer">Laiptų automatas</string>
 </resources>

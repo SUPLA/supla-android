@@ -103,4 +103,5 @@
     <string name="wizard_result_conn_error">Nelze se připojit k zařízení!</string>
     <string name="wizard_result_failed">Konfigurace se nezdařila!</string>
     <string name="wizard_not_enought_permissions">Aplikace nemá dostatečná oprávnění. Přejděte do správy aplikací v nastavení systému. Poté najděte aplikaci %1$s a aktivujte všechna požadovaná oprávnění.</string>
+    <string name="channel_func_staircasetimer">Schodišťový automat</string>
 </resources>

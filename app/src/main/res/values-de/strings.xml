@@ -121,5 +121,6 @@
     <string name="wizard_step2_txt3">*) Das %1$s -Netzwerk wird von den Ausführungsgeräten verwendet, um eine Verbindung zum Server herzustellen.</string>
     <string name="wizard_not_enought_permissions">Die Anwendung verfügt nicht über ausreichende Berechtigungen. Gehen Sie zur Anwendungsverwaltung in Systemeinstellungen über. Suchen Sie dann die %1$s -Anwendung und aktivieren Sie alle Berechtigungen, die sie erfordert.</string>
     <string name="help">Hilfe</string>
+    <string name="channel_func_staircasetimer">Treppenlichtsensor</string>
 
 </resources>

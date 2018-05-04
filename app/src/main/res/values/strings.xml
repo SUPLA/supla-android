@@ -58,6 +58,7 @@
     <string name="channel_func_distancesensor">Distance sensor</string>
     <string name="channel_func_windowopeningsensor">Window opening sensor</string>
     <string name="channel_func_mailsensor">Mail sensor</string>
+    <string name="channel_func_staircasetimer">Staircase timer</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
