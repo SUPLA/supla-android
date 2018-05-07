@@ -476,7 +476,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         if (  CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity)
-                && !(CurrentActivity instanceof AddWizardActivity )) {
+                && !(CurrentActivity instanceof AddWizardActivity )
+                && !(CurrentActivity instanceof CreateAccountActivity )) {
             showStatus(this);
         }
     }
