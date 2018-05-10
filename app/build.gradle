@@ -9,7 +9,7 @@ android {
         applicationId "org.supla.android"
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 39
+        versionCode 40
         versionName "2.2"
 
         sourceSets.main {
@@ -36,7 +36,7 @@ android {
         }
     }
 
-    //lintOptions { checkReleaseBuilds false }
+    lintOptions { checkReleaseBuilds false }
 
     buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'

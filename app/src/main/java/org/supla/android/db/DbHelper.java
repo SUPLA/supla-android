@@ -975,13 +975,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
             cli.AssignColorListItem(item);
 
-            String selection = "( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " = ? )"+
-                    " AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " = ? " +
-                    " AND ( " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ? )";
+            String selection = SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " = ? "+
+                    " AND " + SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " = ? " +
+                    " AND " + SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX + " = ?";
 
             String[] selectionArgs = {
                     String.valueOf(cli.getRemoteId()),
-                    String.valueOf(cli.getGroup()),
+                    String.valueOf(cli.getGroup() ? 1 : 0),
                     String.valueOf(cli.getIdx())
             };
 
