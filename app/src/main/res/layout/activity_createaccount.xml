@@ -13,5 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" >
+    </WebView>
+
+    <ProgressBar
+        android:id="@+id/caProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:indeterminateOnly="true"
+        tools:layout_editor_absoluteX="133dp"
+        tools:layout_editor_absoluteY="247dp"
+        android:secondaryProgressTint="@color/activity_bg" />
+
 </RelativeLayout>

@@ -19,20 +19,24 @@ package org.supla.android;
  */
 
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 public class CreateAccountActivity extends NavigationActivity {
 
     private WebView mWebView;
+    private ProgressBar progress;
 
     private WebViewClient webViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
 
-            view.loadUrl("javascript:(function() { " +
-                    "document.getElementsByClassName('login-footer')[0].style.display='none'; })()");
+            view.loadUrl("javascript:(function() {$(document.body).addClass('in-app-register');})()");
 
+            progress.setVisibility(View.GONE);
+            mWebView.setVisibility(View.VISIBLE);
         }
     };
 
@@ -42,6 +46,10 @@ public class CreateAccountActivity extends NavigationActivity {
         setContentView(R.layout.activity_createaccount);
         mWebView = (WebView) findViewById(R.id.webBrowser);
         mWebView.getSettings().setJavaScriptEnabled(true);
+
+        progress = (ProgressBar)findViewById(R.id.caProgressBar);
+        progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
+
         showMenuBar();
     }
 
@@ -54,7 +62,9 @@ public class CreateAccountActivity extends NavigationActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        progress.setVisibility(View.VISIBLE);
         mWebView.setWebViewClient(webViewClient);
+        mWebView.setVisibility(View.GONE);
         mWebView.loadUrl("https://cloud.supla.org/auth/create");
     }
 }
