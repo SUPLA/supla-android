@@ -553,6 +553,10 @@ public class SuplaClient extends Thread {
             _DataChanged = true;
         }
 
+        if (channelgroup_relation.EOL) {
+            OnChannelGroupValueChanged();
+        }
+
         if (_DataChanged) {
             Trace.d(log_tag, "Channel Group Relation updated");
             onDataChanged(0, channelgroup_relation.ChannelGroupID);
