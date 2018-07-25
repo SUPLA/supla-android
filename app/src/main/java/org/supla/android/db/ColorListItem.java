@@ -21,22 +21,13 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class ColorListItem {
+public class ColorListItem extends DbItem {
 
-    private long Id;
     private int RemoteId;
     private boolean Group;
     private int Idx;
     private int Color;
     private short Brightness;
-
-    public long getId() {
-        return Id;
-    }
-
-    public void setId(long id) {
-        Id = id;
-    }
 
     public int getRemoteId() {
         return RemoteId;
