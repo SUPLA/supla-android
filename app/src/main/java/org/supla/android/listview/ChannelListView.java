@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 
 import org.supla.android.ChannelDetailRGB;
 import org.supla.android.ChannelDetailRS;
+import org.supla.android.ChannelDetailEM;
 import org.supla.android.R;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -129,6 +130,13 @@ public class ChannelListView extends ListView {
                         mDetailLayout = null;
 
                     break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+
+                    if (!(mDetailLayout instanceof ChannelDetailEM))
+                        mDetailLayout = null;
+
+                    break;
             }
 
         }
@@ -144,6 +152,9 @@ public class ChannelListView extends ListView {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                    mDetailLayout = new ChannelDetailEM(getContext(), this);
                     break;
             }
 

@@ -81,6 +81,7 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_WEIGHTSENSOR                  = 280;
     public final static int SUPLA_CHANNELFNC_WEATHER_STATION               = 290;
     public final static int SUPLA_CHANNELFNC_STAIRCASETIMER                = 300;
+    public final static int SUPLA_CHANNELFNC_ELECTRICITY_METER             = 310;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;

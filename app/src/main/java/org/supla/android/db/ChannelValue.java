@@ -193,7 +193,7 @@ public class ChannelValue extends DbItem {
 
                 byte[] t = getChannelValue();
 
-                if (t.length > 0) {
+                if (t.length >= 4) {
 
                     byte[] i = new byte[4];
                     i[0] = t[3];
@@ -294,6 +294,24 @@ public class ChannelValue extends DbItem {
         }
 
         return result;
+    }
+
+    public double getTotalForwardActiveEnergy() {
+
+        byte[] t = getChannelValue();
+
+        if (t.length >= 5) {
+
+            byte[] i = new byte[4];
+            i[0] = t[4];
+            i[1] = t[3];
+            i[2] = t[2];
+            i[3] = t[1];
+
+            return ByteBuffer.wrap(i).getInt() / 100.00;
+        }
+
+        return 0.00;
     }
 
 }

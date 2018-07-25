@@ -188,6 +188,9 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                     idx = R.string.channel_func_staircasetimer;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                    idx = R.string.channel_func_electricitymeter;
+                    break;
             }
 
             if (idx == -1)
@@ -390,6 +393,10 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
                 img_idx = active == 1 ? R.drawable.mail : R.drawable.nomail;
                 break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                img_idx = R.drawable.electricitymeter;
+                break;
         }
 
         return img_idx;
@@ -473,6 +480,13 @@ public abstract class ChannelBase extends DbItem {
 
                 } else {
                     return "--- m";
+                }
+
+            case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                if (getOnLine()) {
+                    return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
+                } else {
+                    return "--- kWh";
                 }
 
         }

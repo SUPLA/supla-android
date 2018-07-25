@@ -138,4 +138,20 @@
     <string name="help">Pomoc</string>
     <string name="channel_func_staircasetimer">Automat schodowy</string>
 
+    <string name="channel_func_electricitymeter">Licznik energii elektrycznej</string>
+    <string name="em_total_forward_avtive_energy">Moc czynna pobrana</string>
+    <string name="em_reverse_active_energy">Moc czynna zwrócona</string>
+    <string name="em_total_forward_reactive_energy">Moc bierna pobrana</string>
+    <string name="em_total_reverse_reactive_energy">Moc bierna zwrócona</string>
+    <string name="em_frequency">Częstotliwość</string>
+    <string name="em_voltage">Napięcie</string>
+    <string name="em_current">Natężenie</string>
+    <string name="em_power_active">Moc czynna</string>
+    <string name="em_power_reactive">Moc bierna</string>
+    <string name="em_power_factor">Współczynnik mocy</string>
+    <string name="em_phase_angle">Kąt fazowy</string>
+    <string name="em_power_apparent">Moc pozorna</string>
+    <string name="em_phase1">Faza 1</string>
+    <string name="em_phase2">Faza 2</string>
+    <string name="em_phase3">Faza 3</string>
 </resources>

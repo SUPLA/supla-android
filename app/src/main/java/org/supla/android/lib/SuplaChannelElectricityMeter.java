@@ -31,14 +31,14 @@ public class SuplaChannelElectricityMeter implements Serializable {
             this.PhaseAngle = PhaseAngle / 100000.00;
         }
 
-        double getFreq() { return Freq; };
-        double getVoltage() { return Voltage; };
-        double getCurrent() { return Current; };
-        double getPowerActive() { return PowerActive; };
-        double getPowerReactive() { return PowerReactive; };
-        double getPowerApparent() { return PowerApparent; };
-        double getPowerFactor() { return PowerFactor; };
-        double getPhaseAngle() { return PhaseAngle; };
+        public double getFreq() { return Freq; };
+        public double getVoltage() { return Voltage; };
+        public double getCurrent() { return Current; };
+        public double getPowerActive() { return PowerActive; };
+        public double getPowerReactive() { return PowerReactive; };
+        public double getPowerApparent() { return PowerApparent; };
+        public double getPowerFactor() { return PowerFactor; };
+        public double getPhaseAngle() { return PhaseAngle; };
     }
 
     public class Summary implements Serializable {
@@ -56,10 +56,18 @@ public class SuplaChannelElectricityMeter implements Serializable {
             this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
         }
 
-        double getTotalForwardActiveEnergy() { return TotalForwardActiveEnergy; };
-        double getTotalReverseActiveEnergy() { return TotalReverseActiveEnergy; };
-        double getTotalForwardReactiveEnergy() { return TotalForwardReactiveEnergy; };
-        double getTotalReverseReactiveEnergy() { return TotalReverseReactiveEnergy; };
+        Summary(double TotalForwardActiveEnergy, double TotalReverseActiveEnergy,
+                double TotalForwardReactiveEnergy, double TotalReverseReactiveEnergy) {
+            this.TotalForwardActiveEnergy = TotalForwardActiveEnergy;
+            this.TotalReverseActiveEnergy = TotalReverseActiveEnergy;
+            this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy;
+            this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
+        }
+
+        public double getTotalForwardActiveEnergy() { return TotalForwardActiveEnergy; };
+        public double getTotalReverseActiveEnergy() { return TotalReverseActiveEnergy; };
+        public double getTotalForwardReactiveEnergy() { return TotalForwardReactiveEnergy; };
+        public double getTotalReverseReactiveEnergy() { return TotalReverseReactiveEnergy; };
     }
 
     private List<Summary>sumList;
@@ -123,9 +131,35 @@ public class SuplaChannelElectricityMeter implements Serializable {
         return null;
     }
 
+    public Summary getSummary() {
+        Summary SummaryP1 = getSummary(1);
+        Summary SummaryP2 = getSummary(2);
+        Summary SummaryP3 = getSummary(3);
+
+        return new Summary(SummaryP1.getTotalForwardActiveEnergy()
+                +SummaryP2.getTotalForwardActiveEnergy()
+                +SummaryP3.getTotalForwardActiveEnergy(),
+                SummaryP1.getTotalReverseActiveEnergy()
+                +SummaryP2.getTotalReverseActiveEnergy()
+                +SummaryP3.getTotalReverseActiveEnergy(),
+                SummaryP1.getTotalForwardReactiveEnergy()
+                +SummaryP2.getTotalForwardReactiveEnergy()
+                +SummaryP3.getTotalForwardReactiveEnergy(),
+                SummaryP1.getTotalReverseReactiveEnergy()
+                +SummaryP2.getTotalReverseReactiveEnergy()
+                +SummaryP3.getTotalReverseReactiveEnergy()
+        );
+    }
+
     public Summary getSummary(int Phase) {
-        if (Phase >= 1 && Phase <= 3 && sumList.size() >= Phase) {
-            return sumList.get(Phase-1);
+        if (Phase >= 1 && Phase <= 3 ) {
+            if (sumList.size() >= Phase) {
+                return sumList.get(Phase-1);
+            }
+            return new Summary(0.00,
+                    0.00,
+                    0.00,
+                    0.00);
         }
         return null;
     }

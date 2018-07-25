@@ -226,7 +226,8 @@ public class ChannelLayout extends LinearLayout {
 
                 width *= 4.3;
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
 
                 width *= 2.8;
 
@@ -268,6 +269,12 @@ public class ChannelLayout extends LinearLayout {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
+
             } else {
 
                 SetImgDimensions(Img1, false, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
@@ -912,6 +919,15 @@ public class ChannelLayout extends LinearLayout {
                     left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
                     right_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
+
+                    break;
+
+
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+
+                    left_onlineStatus.setVisibility(View.INVISIBLE);
+                    right_onlineStatus.setVisibility(View.VISIBLE);
+                    dslider = true;
 
                     break;
 
