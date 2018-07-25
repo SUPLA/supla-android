@@ -61,6 +61,16 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VALUE = "value";
     }
 
+    public static abstract class ChannelExtendedValueEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "channel_extendedvalue";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TYPE = "type";
+        public static final String COLUMN_NAME_VALUE = "value";
+    }
+
     public static abstract class ChannelViewEntry implements BaseColumns {
 
         public static final String VIEW_NAME = "channel_v1";

@@ -38,7 +38,9 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -574,6 +576,41 @@ public class SuplaClient extends Thread {
         if (channelValueUpdate.EOL) {
             OnChannelGroupValueChanged();
         }
+    }
+
+    private void ChannelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
+
+        if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id)) {
+            onDataChanged(channelExtendedValueUpdate.Id, 0);
+        }
+        /*
+        if (channelExtendedValueUpdate.Value.ElectricityMeterValue != null) {
+
+
+            SuplaChannelElectricityMeter.Summary sum = channelExtendedValueUpdate.Value.ElectricityMeterValue.getSummary(1);
+            if (sum!=null) {
+                Trace.d(log_tag, "TotalForwardActiveEnergy: "+Double.toString(sum.getTotalForwardActiveEnergy())+" kWh");
+                Trace.d(log_tag, "TotalReverseActiveEnergy: "+Double.toString(sum.getTotalReverseActiveEnergy())+" kWh");
+                Trace.d(log_tag, "TotalForwardReactiveEnergy: "+Double.toString(sum.getTotalForwardReactiveEnergy())+ "kvar");
+                Trace.d(log_tag, "TotalReverseReactiveEnergy: "+Double.toString(sum.getTotalReverseReactiveEnergy())+ "kvar");
+            }
+
+
+            SuplaChannelElectricityMeter.Measurement m = channelExtendedValueUpdate.Value.ElectricityMeterValue.getMeasurement(1, 0);
+            if (m != null) {
+                Trace.d(log_tag, "Freq: "+Double.toString(m.getFreq())+ " Hz");
+                Trace.d(log_tag, "Voltage: "+Double.toString(m.getVoltage())+ " V");
+                Trace.d(log_tag, "Current: "+Double.toString(m.getCurrent())+ " A");
+                Trace.d(log_tag, "PowerActive: "+Double.toString(m.getPowerActive())+ " W");
+                Trace.d(log_tag, "PowerReactive: "+Double.toString(m.getPowerReactive())+ " var");
+                Trace.d(log_tag, "PowerApparent: "+Double.toString(m.getPowerApparent())+ " VA");
+                Trace.d(log_tag, "PowerFactor: "+Double.toString(m.getPowerFactor()));
+                Trace.d(log_tag, "PhaseAngle: "+Double.toString(m.getPhaseAngle()));
+            }
+
+        }
+        */
+
     }
 
     private void onEvent(SuplaEvent event) {

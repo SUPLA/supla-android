@@ -131,4 +131,21 @@ public class SuplaConst {
     public final static int SUPLA_RESULT_FALSE                =   0;
     public final static int SUPLA_RESULT_TRUE                 =   1;
 
+
+    public final static int EM_VAR_FREQ = 0x0001;
+    public final static int EM_VAR_VOLTAGE = 0x0002;
+    public final static int EM_VAR_CURRENT = 0x0004;
+    public final static int EM_VAR_POWER_ACTIVE = 0x0008;
+    public final static int EM_VAR_POWER_REACTIVE = 0x0010;
+    public final static int EM_VAR_POWER_APPARENT = 0x0020;
+    public final static int EM_VAR_POWER_FACTOR = 0x0040;
+    public final static int EM_VAR_PHASE_ANGLE = 0x0080;
+    public final static int EM_VAR_FORWARD_ACTIVE_ENERGY = 0x0100;
+    public final static int EM_VAR_REVERSE_ACTIVE_ENERGY = 0x0200;
+    public final static int EM_VAR_FORWARD_REACTIVE_ENERGY = 0x0400;
+    public final static int EM_VAR_REVERSE_REACTIVE_ENERGY = 0x0800;
+    public final static int EM_VAR_ALL = 0xFFFF;
+
+    public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
+
 }

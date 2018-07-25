@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
@@ -39,7 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase rdb = null;
     private Context context;
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "supla.db";
 
     public DbHelper(Context context) {
@@ -105,6 +106,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
         createIndex(db, SuplaContract.ChannelValueEntry.TABLE_NAME, SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID);
+    }
+
+    private void createChannelExtendedValueTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE = "CREATE TABLE " +
+                SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " (" +
+                SuplaContract.ChannelExtendedValueEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + " INTEGER NOT NULL," +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + " BLOB)";
+
+
+        execSQL(db, SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE);
+        createIndex(db, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID);
     }
 
     private void createChannelView(SQLiteDatabase db) {
@@ -283,6 +299,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    private void upgradeToV5(SQLiteDatabase db) {
+        createChannelExtendedValueTable(db);
+    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -304,6 +323,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 3:
                         upgradeToV4(db);
+                        break;
+                    case 4:
+                        upgradeToV5(db);
                         break;
                 }
             }
@@ -648,6 +670,56 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateChannelValue(SuplaChannelValueUpdate channelValue) {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
+    }
+
+    public ChannelExtendedValue getChannelExtendedValue(int channelId) {
+
+        String[] projection = {
+                SuplaContract.ChannelExtendedValueEntry._ID,
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE,
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
+        };
+
+        return (ChannelExtendedValue) getItem("org.supla.android.db.ChannelExtendedValue",
+                projection,
+                SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
+                channelId);
+
+    }
+
+    public boolean updateChannelExtendedValue(SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
+
+        SQLiteDatabase db = null;
+        ChannelExtendedValue value = getChannelExtendedValue(channelId);
+
+        if (value == null) {
+
+            value = new ChannelExtendedValue();
+            value.setExtendedValue(suplaChannelExtendedValue);
+            value.setChannelId(channelId);
+
+            db = getWritableDatabase();
+            db.insert(
+                    SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+                    null,
+                    value.getContentValues());
+
+        } else {
+
+            db = getWritableDatabase();
+            value.setExtendedValue(suplaChannelExtendedValue);
+            updateDbItem(db, value, SuplaContract.ChannelExtendedValueEntry._ID,
+                    SuplaContract.ChannelExtendedValueEntry.TABLE_NAME, value.getId());
+        }
+
+        if (db != null) {
+            db.close();
+            return true;
+        }
+
+        return false;
     }
 
     public void updateChannelGroup(SQLiteDatabase db, ChannelGroup channelGroup) {
