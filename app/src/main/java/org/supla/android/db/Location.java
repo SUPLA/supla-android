@@ -23,19 +23,11 @@ import android.database.Cursor;
 
 import org.supla.android.lib.SuplaLocation;
 
-public class Location {
-    private long Id;
+public class Location extends DbItem {
+
     private int LocationId;
     private String Caption;
     private int Visible;
-
-    public void setId(long id) {
-        Id = id;
-    }
-
-    public long getId() {
-        return Id;
-    }
 
     public void setLocationId(int locationId) {
         LocationId = locationId;

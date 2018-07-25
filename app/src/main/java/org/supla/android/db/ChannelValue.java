@@ -30,7 +30,6 @@ import java.util.Arrays;
 
 public class ChannelValue extends DbItem {
 
-    private long Id;
     private int ChannelId;
     private boolean OnLine;
     private byte[] Value;
@@ -43,14 +42,6 @@ public class ChannelValue extends DbItem {
         if (v1 != null && v2 == null) return true;
 
         return !Arrays.equals(v1, v2);
-    }
-
-    public void setId(long id) {
-        Id = id;
-    }
-
-    public long getId() {
-        return Id;
     }
 
     public void setChannelId(int channelId) {
