@@ -256,6 +256,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
         createChannelGroupValueView(db);
+        createChannelExtendedValueTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
