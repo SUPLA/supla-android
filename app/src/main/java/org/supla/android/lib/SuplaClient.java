@@ -38,12 +38,9 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 
 
 @SuppressWarnings("JniMissingFunction")
@@ -90,6 +87,8 @@ public class SuplaClient extends Thread {
     private native int scGetProtoVersion(long _supla_client);
 
     private native int scGetMaxProtoVersion(long _supla_client);
+
+    private native boolean scOAuthTokenRequest(long _supla_client);
 
     public SuplaClient(Context context) {
 
@@ -346,6 +345,21 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+
+    public boolean OAuthTokenRequest() {
+
+        boolean result;
+
+        LockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 ? scOAuthTokenRequest(_supla_client_ptr) : false;
+        } finally {
+            UnlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + "," + Integer.valueOf(versionError.RemoteVersionMin).toString() + "," + Integer.valueOf(versionError.RemoteVersion).toString());
 
@@ -591,6 +605,14 @@ public class SuplaClient extends Thread {
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onEvent);
         event.Owner = event.SenderID == _client_id;
         msg.setEvent(event);
+        sendMessage(msg);
+    }
+
+    private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
+        Trace.d(log_tag, "OAuthToken");
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
+        msg.setOAuthToken(token);
         sendMessage(msg);
     }
 

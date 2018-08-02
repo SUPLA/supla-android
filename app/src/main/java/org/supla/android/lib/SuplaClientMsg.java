@@ -28,6 +28,7 @@ public class SuplaClientMsg {
     private SuplaConnError ConnError;
     private SuplaEvent Event;
     private SuplaRegistrationEnabled RegistrationEnabled;
+    private SuplaOAuthToken OAuthToken;
     private int ChannelId;
     private int ChannelGroupId;
 
@@ -42,6 +43,7 @@ public class SuplaClientMsg {
     public final static int onEvent               = 9;
     public final static int onConnError           = 10;
     public final static int onRegistrationEnabled = 11;
+    public final static int onOAuthTokenRequestResult = 12;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -120,5 +122,13 @@ public class SuplaClientMsg {
 
     void setRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
         RegistrationEnabled = registrationEnabled;
+    }
+
+    void setOAuthToken(SuplaOAuthToken token) {
+        OAuthToken = token;
+    }
+
+    SuplaOAuthToken getOAuthToken() {
+        return OAuthToken;
     }
 }
