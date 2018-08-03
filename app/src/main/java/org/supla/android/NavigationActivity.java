@@ -318,13 +318,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showMenu(boolean Animated) {
-
         showHideMenu(true, Animated);
 
     }
 
     public void hideMenu(boolean Animated) {
-
         showHideMenu(false, Animated);
     }
 
@@ -439,6 +437,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             }
 
             onGroupButtonTouch(img == R.drawable.groupon);
+
+            SuplaOAuthClientTask oatask = new SuplaOAuthClientTask();
+            oatask.execute();
 
         } else if ( v == MiSettings || v == SettingsButton) {
 

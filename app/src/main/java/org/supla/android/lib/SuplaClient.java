@@ -39,8 +39,10 @@ import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 
 @SuppressWarnings("JniMissingFunction")
@@ -620,6 +622,14 @@ public class SuplaClient extends Thread {
 
     private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
         Trace.d(log_tag, "OAuthToken");
+
+        if (token.getUrl() == null) {
+            Preferences prefs = new Preferences(_context);
+            try {
+                token.setUrl(new URL("https://"+prefs.getServerAddress()));
+            } catch (MalformedURLException e) {
+            }
+        }
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
         msg.setOAuthToken(token);

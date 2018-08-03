@@ -1,5 +1,6 @@
 package org.supla.android.lib;
 
+import android.content.Context;
 import android.util.Base64;
 
 import org.supla.android.Trace;
@@ -9,6 +10,7 @@ import java.net.URL;
 
 public class SuplaOAuthToken {
 
+    private URL Url;
     private long Birthday;
     private int ResultCode;
     private int ExpiresIn;
@@ -23,6 +25,7 @@ public class SuplaOAuthToken {
 
     public SuplaOAuthToken(SuplaOAuthToken token) {
         if (token != null) {
+            Url = token.Url;
             ResultCode = token.ResultCode;
             Birthday = token.Birthday;
             ExpiresIn = token.ExpiresIn;
@@ -30,34 +33,42 @@ public class SuplaOAuthToken {
         }
     }
 
-    int getResultCode() {
+    public int getResultCode() {
         return ResultCode;
     }
 
-    int getExpiresIn() {
+    public int getExpiresIn() {
         return getExpiresIn();
     }
 
-    String getToken() {
+    public String getToken() {
         return Token;
     }
 
-    URL getUrl() {
-        URL result = null;
+    public URL getUrl() {
+
+        if (Url != null) {
+            return Url;
+        }
 
         String[] t = Token.split("\\.");
         if (t.length > 1) {
             byte [] data = Base64.decode(t[t.length-1], Base64.DEFAULT);
             if (data!=null) {
                 try {
-                    result = new URL(new String(data));
+                    Url = new URL(new String(data));
                 } catch (MalformedURLException e) {
-                    return null;
+                    Url = null;
                 }
             }
         }
 
-        return result;
+
+        return Url;
+    }
+
+    public void setUrl(URL url) {
+        Url = url;
     }
 
     public boolean isAlive() {

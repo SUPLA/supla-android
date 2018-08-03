@@ -18,6 +18,7 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +30,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import java.util.ArrayList;
 import android.os.Vibrator;
 
-public class SuplaApp {
+public class SuplaApp extends Application {
 
     private ArrayList<Handler>msgReceivers = new ArrayList<>();
 
