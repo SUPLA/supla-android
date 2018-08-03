@@ -26,6 +26,16 @@ public class SuplaConnError {
 
     public int Code;
 
+    public SuplaConnError() {
+
+    }
+
+    public SuplaConnError(SuplaConnError error) {
+        if (error != null) {
+            Code = error.Code;
+        }
+    }
+
     public String codeToString(Context context) {
 
      int resid = 0;

@@ -65,7 +65,7 @@ public class SuplaClientMsg {
     }
 
     public void setVersionError(SuplaVersionError versionError) {
-        VersionError = versionError;
+        VersionError = versionError == null ? null : new SuplaVersionError(versionError);
     }
 
     public SuplaRegisterResult getRegisterResult() {
@@ -73,7 +73,7 @@ public class SuplaClientMsg {
     }
 
     public void setRegisterResult(SuplaRegisterResult registerResult) {
-        RegisterResult = registerResult;
+        RegisterResult = registerResult == null ? null : new SuplaRegisterResult(registerResult);
     }
 
     public SuplaRegisterError getRegisterError() {
@@ -81,7 +81,7 @@ public class SuplaClientMsg {
     }
 
     public void setRegisterError(SuplaRegisterError registerError) {
-        RegisterError = registerError;
+        RegisterError = registerError == null ? null : new SuplaRegisterError(registerError);
     }
 
     public SuplaConnError getConnError() {
@@ -89,7 +89,7 @@ public class SuplaClientMsg {
     }
 
     public void setConnError(SuplaConnError connError) {
-        ConnError = connError;
+        ConnError = connError == null ? null : new SuplaConnError(connError);
     }
 
     public SuplaEvent getEvent() {
@@ -97,7 +97,7 @@ public class SuplaClientMsg {
     }
 
     public void setEvent(SuplaEvent event) {
-        Event = event;
+        Event = event == null ? null : new SuplaEvent(event);
     }
 
     public int getChannelId() {
@@ -121,11 +121,12 @@ public class SuplaClientMsg {
     }
 
     void setRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
-        RegistrationEnabled = registrationEnabled;
+        RegistrationEnabled = registrationEnabled
+                == null ? null : new SuplaRegistrationEnabled(registrationEnabled);
     }
 
     void setOAuthToken(SuplaOAuthToken token) {
-        OAuthToken = token;
+        OAuthToken = token == null ? null : new SuplaOAuthToken(token);
     }
 
     SuplaOAuthToken getOAuthToken() {

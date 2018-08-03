@@ -24,6 +24,17 @@ public class SuplaRegistrationEnabled {
     public long ClientTimestamp;
     public long IODeviceTimestamp;
 
+    public SuplaRegistrationEnabled() {
+
+    };
+
+    public SuplaRegistrationEnabled(SuplaRegistrationEnabled regen) {
+        if (regen!=null) {
+            ClientTimestamp = regen.ClientTimestamp;
+            IODeviceTimestamp = regen.IODeviceTimestamp;
+        }
+    }
+
     public Date ClientRegistrationExpirationDate() {
         if ( ClientTimestamp > 0 ) {
             return new Date(ClientTimestamp * 1000L);

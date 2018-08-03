@@ -23,4 +23,16 @@ public class SuplaVersionError {
     public int RemoteVersionMin;
     public int RemoteVersion;
 
+    public SuplaVersionError() {
+
+    };
+
+    public SuplaVersionError(SuplaVersionError err) {
+        if (err != null) {
+            Version = err.Version;
+            RemoteVersionMin = err.RemoteVersionMin;
+            RemoteVersion = err.RemoteVersion;
+        }
+    }
+
 }

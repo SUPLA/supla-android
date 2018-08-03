@@ -11,10 +11,19 @@ public class SuplaOAuthToken {
     private int ResultCode;
     private int ExpiresIn;
     private String Token;
-    SuplaOAuthToken(int resultCode, int expiresIn, String token) {
+
+    public SuplaOAuthToken(int resultCode, int expiresIn, String token) {
         ResultCode = resultCode;
         ExpiresIn = expiresIn;
         Token = token;
+    }
+
+    public SuplaOAuthToken(SuplaOAuthToken token) {
+        if (token != null) {
+            ResultCode = token.ResultCode;
+            ExpiresIn = token.ExpiresIn;
+            Token = token.Token == null ? null : new String(token.Token);
+        }
     }
 
     int getResultCode() {

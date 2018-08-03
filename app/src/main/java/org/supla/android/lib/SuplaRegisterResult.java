@@ -29,4 +29,22 @@ public class SuplaRegisterResult {
     public int ActivityTimeout;
     public int Version;
     public int VersionMin;
+
+    public SuplaRegisterResult() {
+
+    };
+
+    public SuplaRegisterResult(SuplaRegisterResult result) {
+        if (result!=null) {
+            ResultCode = result.ResultCode;
+            ClientID = result.ClientID;
+            LocationCount = result.LocationCount;
+            ChannelCount = result.ChannelCount;
+            ChannelGroupCount = result.ChannelGroupCount;
+            Flags = result.Flags;
+            ActivityTimeout = result.ActivityTimeout;
+            Version = result.Version;
+            VersionMin = result.VersionMin;
+        }
+    }
 }

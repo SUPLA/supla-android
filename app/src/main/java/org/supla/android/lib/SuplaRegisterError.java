@@ -27,6 +27,16 @@ public class SuplaRegisterError {
 
     public int ResultCode;
 
+    SuplaRegisterError() {
+
+    }
+
+    SuplaRegisterError(SuplaRegisterError err) {
+        if (err != null) {
+            ResultCode = err.ResultCode;
+        }
+    }
+
     public static String getHostname(Context context) {
 
      Preferences prefs = new Preferences(context);

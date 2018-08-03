@@ -27,4 +27,18 @@ public class SuplaEvent {
     public int SenderID;
     public String SenderName;
 
+    public SuplaEvent() {
+
+    }
+
+    public SuplaEvent(SuplaEvent event) {
+        if (event!=null) {
+            Owner = event.Owner;
+            Event = event.Event;
+            ChannelID = event.ChannelID;
+            DurationMS = event.DurationMS;
+            SenderID = event.SenderID;
+            SenderName = event.SenderName == null ? null : new String(event.SenderName);
+        }
+    }
 }
