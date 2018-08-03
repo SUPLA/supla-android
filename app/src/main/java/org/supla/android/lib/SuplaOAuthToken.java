@@ -33,8 +33,8 @@ public class SuplaOAuthToken {
         URL result = null;
 
         String[] t = Token.split("\\.");
-        if (t.length == 2) {
-            byte [] data = Base64.decode(t[1], Base64.DEFAULT);
+        if (t.length > 1) {
+            byte [] data = Base64.decode(t[t.length-1], Base64.DEFAULT);
             if (data!=null) {
                 try {
                     result = new URL(new String(data));
