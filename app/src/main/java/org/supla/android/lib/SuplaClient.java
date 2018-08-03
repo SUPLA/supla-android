@@ -59,6 +59,7 @@ public class SuplaClient extends Thread {
     private static final Object st_lck = new Object();
     private static SuplaRegisterError lastRegisterError = null;
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
+    private long lastTokenRequest = 0;
 
     public native void CfgInit(SuplaCfg cfg);
 
@@ -350,9 +351,18 @@ public class SuplaClient extends Thread {
 
         boolean result;
 
+        long now = System.currentTimeMillis();
+        if (now-lastTokenRequest <= 5000 ) {
+            Trace.d(log_tag, "Token already requested: "+Long.toString(now-lastTokenRequest));
+            return false;
+        }
+
         LockClientPtr();
         try {
             result = _supla_client_ptr != 0 ? scOAuthTokenRequest(_supla_client_ptr) : false;
+            if (result) {
+                lastTokenRequest = now;
+            }
         } finally {
             UnlockClientPtr();
         }

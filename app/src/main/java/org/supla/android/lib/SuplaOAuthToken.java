@@ -8,12 +8,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SuplaOAuthToken {
+
+    private long Birthday;
     private int ResultCode;
     private int ExpiresIn;
     private String Token;
 
     public SuplaOAuthToken(int resultCode, int expiresIn, String token) {
         ResultCode = resultCode;
+        Birthday = System.currentTimeMillis() / 1000L;
         ExpiresIn = expiresIn;
         Token = token;
     }
@@ -21,6 +24,7 @@ public class SuplaOAuthToken {
     public SuplaOAuthToken(SuplaOAuthToken token) {
         if (token != null) {
             ResultCode = token.ResultCode;
+            Birthday = token.Birthday;
             ExpiresIn = token.ExpiresIn;
             Token = token.Token == null ? null : new String(token.Token);
         }
@@ -54,6 +58,10 @@ public class SuplaOAuthToken {
         }
 
         return result;
+    }
+
+    public boolean isAlive() {
+        return Birthday+ExpiresIn - (System.currentTimeMillis() / 1000L) >= 20;
     }
 
 }

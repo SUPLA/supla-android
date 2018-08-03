@@ -24,6 +24,7 @@ import android.os.Message;
 
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
+import org.supla.android.lib.SuplaOAuthToken;
 
 import java.util.ArrayList;
 import android.os.Vibrator;
@@ -34,9 +35,11 @@ public class SuplaApp {
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();
+    private static final Object _lck3 = new Object();
 
     private static SuplaClient _SuplaClient = null;
     private static SuplaApp _SuplaApp = null;
+    ArrayList<SuplaOAuthClientTask> _OAuthClientTasks = new ArrayList<SuplaOAuthClientTask>();
 
     private Handler _sc_msg_handler = new Handler() {
         @Override
@@ -45,6 +48,14 @@ public class SuplaApp {
             SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
 
             if ( _msg != null ) {
+
+                if (_msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
+                    synchronized (_lck3) {
+                        for(int a=0;a<_OAuthClientTasks.size();a++) {
+                            _OAuthClientTasks.get(0).setToken(_msg.getOAuthToken());
+                        }
+                    }
+                }
 
                 synchronized (_lck2) {
 
@@ -145,5 +156,33 @@ public class SuplaApp {
             v.vibrate(100);
     }
 
+    public SuplaOAuthToken RegisterOAuthClientTask(SuplaOAuthClientTask task) {
+        SuplaOAuthToken result = null;
+        synchronized (_lck3) {
+            for(int a=0;a<_OAuthClientTasks.size();a++) {
+                result = _OAuthClientTasks.get(a).getTokenWhenIsAlive();
+                if (result!=null) {
+                    break;
+                }
+            }
 
+            _OAuthClientTasks.add(task);
+        }
+
+        return result;
+    }
+
+    public void UnregisterOAuthClientTask(SuplaOAuthClientTask task) {
+        synchronized (_lck3) {
+            _OAuthClientTasks.remove(task);
+        }
+    }
+
+    public void CancelAllOAuthClientTasks(boolean mayInterruptIfRunning) {
+        synchronized (_lck3) {
+            for(int a=0;a<_OAuthClientTasks.size();a++) {
+                _OAuthClientTasks.get(a).cancel(mayInterruptIfRunning);
+            }
+        }
+    }
 }

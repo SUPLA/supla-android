@@ -120,16 +120,16 @@ public class SuplaClientMsg {
         return RegistrationEnabled;
     }
 
-    void setRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+    public void setRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
         RegistrationEnabled = registrationEnabled
                 == null ? null : new SuplaRegistrationEnabled(registrationEnabled);
     }
 
-    void setOAuthToken(SuplaOAuthToken token) {
+    public void setOAuthToken(SuplaOAuthToken token) {
         OAuthToken = token == null ? null : new SuplaOAuthToken(token);
     }
 
-    SuplaOAuthToken getOAuthToken() {
+    public SuplaOAuthToken getOAuthToken() {
         return OAuthToken;
     }
 }
