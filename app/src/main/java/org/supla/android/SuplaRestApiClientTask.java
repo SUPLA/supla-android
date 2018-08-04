@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaOAuthToken;
@@ -25,21 +23,21 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 
-public class SuplaOAuthClientTask extends AsyncTask {
+public class SuplaRestApiClientTask extends AsyncTask {
 
     private SuplaOAuthToken Token;
-    private static final String log_tag = "SuplaOAuthClientTask";
+    private static final String log_tag = "SuplaRestApiClientTask";
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Token = SuplaApp.getApp().RegisterOAuthClientTask(this);
+        Token = SuplaApp.getApp().RegisterRestApiClientTask(this);
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        SuplaApp.getApp().UnregisterOAuthClientTask(this);
+        SuplaApp.getApp().UnregisterRestApiClientTask(this);
     }
 
 
@@ -226,6 +224,6 @@ public class SuplaOAuthClientTask extends AsyncTask {
 
         ApiRequestResult r = apiRequest("channels/2944/measurement-logs");
         return null;
-        
+
     }
 }
