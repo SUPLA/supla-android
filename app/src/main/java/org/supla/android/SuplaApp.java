@@ -26,6 +26,7 @@ import android.os.Message;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
 import android.os.Vibrator;

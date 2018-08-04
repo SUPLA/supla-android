@@ -1,10 +1,14 @@
-package org.supla.android;
+package org.supla.android.restapi;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 
 import org.json.JSONTokener;
+import org.supla.android.SuplaApp;
+import org.supla.android.Trace;
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaOAuthToken;
 
@@ -23,23 +27,51 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
 
-public class SuplaRestApiClientTask extends AsyncTask {
+public abstract class SuplaRestApiClientTask extends AsyncTask {
 
+    protected static final String log_tag = "SuplaRestApiClientTask";
+    private Context _context;
+    private int ChannelId = 0;
     private SuplaOAuthToken Token;
-    private static final String log_tag = "SuplaRestApiClientTask";
+    private DbHelper DbH = null;
+    private IAsyncResults delegate;
+
+    public SuplaRestApiClientTask(Context context) {
+        _context = context;
+    }
+
+    public interface IAsyncResults {
+        void onRestApiTaskStarted(SuplaRestApiClientTask task);
+        void onRestApiTaskFinished(SuplaRestApiClientTask task);
+    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         Token = SuplaApp.getApp().RegisterRestApiClientTask(this);
+
+        if (delegate!=null) {
+            delegate.onRestApiTaskStarted(this);
+        }
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         SuplaApp.getApp().UnregisterRestApiClientTask(this);
+
+        if (delegate!=null) {
+            delegate.onRestApiTaskFinished(this);
+        }
     }
 
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
+    }
+
+    public int getChannelId() {
+        return ChannelId;
+    }
 
     public synchronized void setToken(SuplaOAuthToken token) {
         Token = token == null ? null : new SuplaOAuthToken(token);
@@ -71,7 +103,15 @@ public class SuplaRestApiClientTask extends AsyncTask {
         }
     }
 
-    private class ApiRequestResult {
+    protected DbHelper getDbH() {
+        if (DbH == null) {
+            DbH = new DbHelper(_context);
+        }
+
+        return DbH;
+    }
+
+    protected class ApiRequestResult {
 
         private Object JObj;
         private int Code;
@@ -167,8 +207,8 @@ public class SuplaRestApiClientTask extends AsyncTask {
             conn.connect();
             try
             {
-                //Trace.d(log_tag, "CODE: "+conn.getResponseCode());
-                //Trace.d(log_tag, "URL: "+url.toString());
+                Trace.d(log_tag, "CODE: "+conn.getResponseCode());
+                Trace.d(log_tag, "URL: "+url.toString());
 
                 int TotalCount = 0;
                 try
@@ -194,6 +234,7 @@ public class SuplaRestApiClientTask extends AsyncTask {
                 }
 
                 //Trace.d(log_tag, sb.toString());
+                //Trace.d(log_tag, "Result size: "+Integer.toString(sb.length()));
                 Object obj = new JSONTokener(sb.toString()).nextValue();
                 result = new ApiRequestResult(obj, conn.getResponseCode(), TotalCount);
 
@@ -214,16 +255,9 @@ public class SuplaRestApiClientTask extends AsyncTask {
         return result;
     }
 
-    private ApiRequestResult apiRequest(String endpint) {
+    protected ApiRequestResult apiRequest(String endpint) {
 
         return apiRequest(true, endpint);
     }
 
-    @Override
-    protected Object doInBackground(Object[] objects) {
-
-        ApiRequestResult r = apiRequest("channels/2944/measurement-logs");
-        return null;
-
-    }
 }

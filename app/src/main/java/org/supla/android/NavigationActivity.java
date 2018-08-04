@@ -36,7 +36,6 @@ import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
 
-
 @SuppressLint("Registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener {
 
@@ -437,9 +436,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             }
 
             onGroupButtonTouch(img == R.drawable.groupon);
-
-            SuplaOAuthClientTask oatask = new SuplaOAuthClientTask();
-            oatask.execute();
 
         } else if ( v == MiSettings || v == SettingsButton) {
 

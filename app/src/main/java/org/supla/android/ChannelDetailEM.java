@@ -14,6 +14,7 @@ import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelElectricityMeter;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 
 public class ChannelDetailEM extends DetailLayout implements View.OnClickListener {
 
@@ -203,6 +204,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer)v.getTag();
             channelExtendedDataToViews();
+
+
+            DownloadElectricityMeterMeasurements demm = new DownloadElectricityMeterMeasurements(this.getContext());
+            demm.setChannelId(getRemoteId());
+            demm.execute();
         }
     }
 }
