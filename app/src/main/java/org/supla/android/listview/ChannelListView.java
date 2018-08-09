@@ -552,11 +552,15 @@ public class ChannelListView extends ListView {
     }
 
     private void onDetailShow() {
+        mDetailLayout.onDetailShow();
+
         if (onDetailListener != null)
             onDetailListener.onChannelDetailShow();
     }
 
     private void onDetailHide() {
+        mDetailLayout.onDetailHide();
+
         if (onDetailListener != null)
             onDetailListener.onChannelDetailHide();
     }

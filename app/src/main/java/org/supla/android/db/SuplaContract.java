@@ -167,5 +167,21 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_RAE = "phase3_rae";
         public static final String COLUMN_NAME_PHASE3_FRE = "phase3_fre";
         public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
+
+    }
+
+    public static abstract class ElectricityMeterLogViewEntry implements BaseColumns {
+
+        public static final String VIEW_NAME = "em_log_v1";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+        public static final String COLUMN_NAME_DATE = "date_dt";
+
+        public static final String COLUMN_NAME_PHASE1_FAE = "phase1_fae";
+        public static final String COLUMN_NAME_PHASE2_FAE = "phase2_fae";
+        public static final String COLUMN_NAME_PHASE3_FAE = "phase3_fae";
+
     }
 }

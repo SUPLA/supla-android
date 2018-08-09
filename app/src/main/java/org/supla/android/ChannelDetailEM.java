@@ -1,6 +1,8 @@
 package org.supla.android;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -8,16 +10,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelElectricityMeter;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
-public class ChannelDetailEM extends DetailLayout implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.Currency;
 
+public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults {
+/*
     private Integer phase;
 
     private TextView tvTotalForwardActiveEnergy;
@@ -43,6 +57,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Button btnPhase1;
     private Button btnPhase2;
     private Button btnPhase3;
+*/
+    DownloadElectricityMeterMeasurements demm = null;
+    HorizontalBarChart chart;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -62,7 +79,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     protected void init() {
         super.init();
-
+/*
         phase = new Integer(1);
 
         tvTotalForwardActiveEnergy = (TextView)findViewById(R.id.emtv_TotalForwardActiveEnergy);
@@ -96,12 +113,17 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         btnPhase1.setTag(new Integer(1));
         btnPhase2.setTag(new Integer(2));
         btnPhase3.setTag(new Integer(3));
+*/
+
+        chart = (HorizontalBarChart) findViewById(R.id.em_chart);
+
 
     }
 
     public void channelExtendedDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
+        /*
         tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
         ChannelExtendedValue cev = DBH.getChannelExtendedValue(getRemoteId());
@@ -170,17 +192,58 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvPhaseReverseReactiveEnergy.setText(String.format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
             }
         }
+        */
     }
 
     public void setData(ChannelBase channel) {
 
         super.setData(channel);
         channelExtendedDataToViews();
+
+
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(1, 10));
+        entries.add(new BarEntry(2, 1));
+        entries.add(new BarEntry(3, 2));
+        entries.add(new BarEntry(4, 3));
+        entries.add(new BarEntry(5, 4));
+        entries.add(new BarEntry(6, 5));
+
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("January");
+        labels.add("February");
+        labels.add("March");
+        labels.add("April");
+        labels.add("May");
+        labels.add("June");
+
+        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(dataset);
+
+
+        BarData data = new BarData(dataSets);
+
+        chart.setData(data);
+
+        SQLiteDatabase db = DBH.getReadableDatabase();
+        try {
+            Cursor c = DBH.getElectricityMeasurements(db);
+
+            if (c!=null) {
+                Trace.d("EM", "LogCount: "+Integer.toString(c.getCount()));
+            }
+        } finally {
+            db.close();
+        }
+
     }
 
     @Override
     public View getContentView() {
-        return inflateLayout(R.layout.detail_em);
+        //return inflateLayout(R.layout.detail_em);
+        return inflateLayout(R.layout.detail_chart);
     }
 
     @Override
@@ -201,15 +264,45 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        /*
         if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer)v.getTag();
             channelExtendedDataToViews();
-
-
-            DownloadElectricityMeterMeasurements demm = new DownloadElectricityMeterMeasurements(this.getContext());
-            demm.setChannelId(getRemoteId());
-            demm.execute();
         }
+        */
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+
+        SuplaApp.getApp().CancelAllRestApiClientTasks(true);
+
+        demm = new DownloadElectricityMeterMeasurements(this.getContext());
+        demm.setChannelId(getRemoteId());
+        demm.setDelegate(this);
+        demm.execute();
+
+    }
+
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+        if (demm!=null) {
+            SuplaApp.getApp().CancelAllRestApiClientTasks(true);
+            demm.setDelegate(null);
+        }
+    }
+
+    @Override
+    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
+        Trace.d("EM", "DOWNLOAD STARTED");
+    }
+
+    @Override
+    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
+        Trace.d("EM", "DOWNLOAD FINISHED");
+        demm = null;
     }
 }
 

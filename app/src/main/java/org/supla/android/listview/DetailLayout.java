@@ -140,5 +140,7 @@ public abstract class DetailLayout extends FrameLayout {
         return cLV.isDetailVisible();
     }
 
+    public void onDetailShow() {};
+    public void onDetailHide() {};
 
 }

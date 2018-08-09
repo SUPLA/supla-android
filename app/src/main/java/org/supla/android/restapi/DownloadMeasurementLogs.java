@@ -1,11 +1,13 @@
 package org.supla.android.restapi;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
+import org.supla.android.db.DbHelper;
 
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
@@ -17,7 +19,16 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     }
 
     abstract protected long getMaxTimestamp();
-    abstract protected void SaveMeasurementItem(long timestamp, JSONObject obj) throws JSONException;
+    abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp, JSONObject obj) throws JSONException;
+
+    protected void AfterDownload() {};
+
+    protected long getLong(JSONObject obj, String name) throws JSONException {
+        if (!obj.isNull(name)) {
+            return obj.getLong(name);
+        }
+        return 0;
+    }
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -49,36 +60,50 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             Trace.d(log_tag, "ArrayLength: "+Integer.toString(arr.length()));
 
             if (arr.length() == 0) {
-                return null;
+                break;
             }
 
-            for(int a=0;a<arr.length();a++) {
+            SQLiteDatabase db = getDbH().getWritableDatabase();
+            try {
+                db.beginTransaction();
 
-                try {
-                    JSONObject obj = obj = arr.getJSONObject(a);
-                    long timestamp = obj.getLong("date_timestamp");
+                for(int a=0;a<arr.length();a++) {
 
-                    if (timestamp <= 0) {
+                    try {
+                        JSONObject obj = obj = arr.getJSONObject(a);
+                        long timestamp = obj.getLong("date_timestamp");
+
+                        if (timestamp <= 0) {
+                            return null;
+                        }
+
+                        if (timestamp < BeforeTimestamp || BeforeTimestamp == 0) {
+                            BeforeTimestamp = timestamp;
+                        }
+
+                        SaveMeasurementItem(db, timestamp, obj);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                         return null;
                     }
 
-                    if (timestamp < BeforeTimestamp || BeforeTimestamp == 0) {
-                        BeforeTimestamp = timestamp;
+                    if (isCancelled()) {
+                        break;
                     }
-
-                    SaveMeasurementItem(timestamp, obj);
-
-                } catch (JSONException e) {
-                    return null;
                 }
 
-                if (isCancelled()) {
-                    break;
-                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+                db.close();
             }
 
         } while (!isCancelled());
 
+        if (!isCancelled()) {
+            AfterDownload();
+        }
 
         return null;
     }

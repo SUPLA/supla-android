@@ -73,6 +73,14 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         return ChannelId;
     }
 
+    public IAsyncResults getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(IAsyncResults delegate) {
+        this.delegate = delegate;
+    }
+
     public synchronized void setToken(SuplaOAuthToken token) {
         Token = token == null ? null : new SuplaOAuthToken(token);
         notify();
