@@ -168,6 +168,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_FRE = "phase3_fre";
         public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
 
+        public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
     }
 
     public static abstract class ElectricityMeterLogViewEntry implements BaseColumns {

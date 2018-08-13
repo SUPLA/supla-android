@@ -21,6 +21,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.SuplaContract;
 import org.supla.android.lib.SuplaChannelElectricityMeter;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
@@ -202,20 +203,64 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(1, 10));
-        entries.add(new BarEntry(2, 1));
-        entries.add(new BarEntry(3, 2));
-        entries.add(new BarEntry(4, 3));
-        entries.add(new BarEntry(5, 4));
-        entries.add(new BarEntry(6, 5));
 
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
+
+        DBH = new DbHelper(getContext(), true);
+        SQLiteDatabase db = DBH.getReadableDatabase();
+        try {
+            Cursor c = DBH.getElectricityMeasurements(db, channel.getRemoteId());
+
+            if (c!=null) {
+
+                int t_ci = c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP);
+
+                if (c.moveToFirst()) {
+
+                    long prev_timestamp = 0;
+                    long discance = c.getLong(t_ci);
+
+                    do {
+                        long timestamp = c.getLong(t_ci);
+
+                        if (prev_timestamp!=0 && timestamp-prev_timestamp < discance) {
+                            discance = timestamp-prev_timestamp;
+                        }
+
+                        prev_timestamp = timestamp;
+                    }while (c.moveToNext());
+
+                    long min = 0;
+
+                    if (discance <= 0) {
+                        discance = 1;
+                    }
+
+                    Trace.d("Distance: ", Long.toString(discance));
+                    c.moveToFirst();
+
+                    do {
+                        long timestamp = c.getLong(t_ci);
+                        if (min == 0) {
+                            min = timestamp;
+                            timestamp = 0;
+                        } else {
+                            timestamp-=min;
+                        }
+                        float phase1 = (float)c.getDouble(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
+
+                        entries.add(new BarEntry(timestamp/discance,  phase1));
+                        Trace.d("Position", Long.toString(c.getPosition())+" Timestamp: "+Long.toString(timestamp)+" M: "+Double.toString(phase1));
+
+                    }while (c.moveToNext());
+                }
+
+                c.close();
+                Trace.d("EM", "LogCount: "+Integer.toString(c.getCount()));
+            }
+        } finally {
+            db.close();
+        }
+
 
         BarDataSet dataset = new BarDataSet(entries, "# of Calls");
 
@@ -226,17 +271,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         BarData data = new BarData(dataSets);
 
         chart.setData(data);
-
-        SQLiteDatabase db = DBH.getReadableDatabase();
-        try {
-            Cursor c = DBH.getElectricityMeasurements(db);
-
-            if (c!=null) {
-                Trace.d("EM", "LogCount: "+Integer.toString(c.getCount()));
-            }
-        } finally {
-            db.close();
-        }
 
     }
 

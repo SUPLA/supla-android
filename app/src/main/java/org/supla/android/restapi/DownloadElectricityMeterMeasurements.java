@@ -7,33 +7,43 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
+import org.supla.android.db.ElectricityMeasurementItem;
 
 
 public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLogs {
+
+    ElectricityMeasurementItem younger_emi;
 
     public DownloadElectricityMeterMeasurements(Context context) {
         super(context);
     }
 
     protected long getMaxTimestamp() {
-        return getDbH().getElectricityMeterMaxTimestamp(getChannelId());
+        return getMeasurementsDbH().getElectricityMeterMaxTimestamp(getChannelId());
     }
 
     protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                        JSONObject obj) throws JSONException {
-        getDbH().addElectricityMeasurement(db, getChannelId(), timestamp,
-                getLong(obj,"phase1_fae"),
-                getLong(obj,"phase1_rae"),
-                getLong(obj,"phase1_fre"),
-                getLong(obj,"phase1_rre"),
-                getLong(obj,"phase2_fae"),
-                getLong(obj,"phase2_rae"),
-                getLong(obj,"phase2_fre"),
-                getLong(obj,"phase2_rre"),
-                getLong(obj,"phase3_fae"),
-                getLong(obj,"phase3_rae"),
-                getLong(obj,"phase3_fre"),
-                getLong(obj,"phase3_rre"));
+
+        ElectricityMeasurementItem emi = new ElectricityMeasurementItem();
+        emi.AssignJSONObject(obj);
+        emi.setChannelId(getChannelId());
+
+
+        if (younger_emi!=null) {
+            if (emi.getTimestamp() >= younger_emi.getTimestamp()) {
+                throw new JSONException("Wrong timestamp order!");
+            }
+
+            if (!younger_emi.isCalculated()) {
+                younger_emi.Calculate(emi);
+                if (younger_emi.isCalculated()) {
+                    getMeasurementsDbH().addElectricityMeasurement(db, younger_emi);
+                }
+            }
+        }
+
+        younger_emi = emi;
     }
 
 }

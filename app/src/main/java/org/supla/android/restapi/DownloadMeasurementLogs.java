@@ -23,13 +23,6 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     protected void AfterDownload() {};
 
-    protected long getLong(JSONObject obj, String name) throws JSONException {
-        if (!obj.isNull(name)) {
-            return obj.getLong(name);
-        }
-        return 0;
-    }
-
     @Override
     protected Object doInBackground(Object[] objects) {
 
@@ -42,7 +35,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         do {
             ApiRequestResult result = apiRequest("channels/"
                     +Integer.toString(getChannelId())
-                    +"/measurement-logs?beforeTimestamp="
+                    +"/measurement-logs?order=DESC&beforeTimestamp="
                     +Long.toString(BeforeTimestamp)
                     +"&afterTimestamp="
                     +Long.toString(AfterTimestamp));
@@ -63,7 +56,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 break;
             }
 
-            SQLiteDatabase db = getDbH().getWritableDatabase();
+            long t = System.currentTimeMillis();
+
+            SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
             try {
                 db.beginTransaction();
 
@@ -98,6 +93,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 db.endTransaction();
                 db.close();
             }
+
+            Trace.d(log_tag, "TIME: "+Long.toString(System.currentTimeMillis()-t));
 
         } while (!isCancelled());
 

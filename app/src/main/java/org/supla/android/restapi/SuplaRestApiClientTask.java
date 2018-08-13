@@ -33,6 +33,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private Context _context;
     private int ChannelId = 0;
     private SuplaOAuthToken Token;
+    private DbHelper MDbH = null;
     private DbHelper DbH = null;
     private IAsyncResults delegate;
 
@@ -117,6 +118,14 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         }
 
         return DbH;
+    }
+
+    protected DbHelper getMeasurementsDbH() {
+        if (MDbH == null) {
+            MDbH = new DbHelper(_context, true);
+        }
+
+        return MDbH;
     }
 
     protected class ApiRequestResult {

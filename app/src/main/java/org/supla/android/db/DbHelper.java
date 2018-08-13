@@ -42,6 +42,14 @@ public class DbHelper extends SQLiteOpenHelper {
     private Context context;
     private static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "supla.db";
+    public static final String M_DATABASE_NAME = "supla_measurements.db";
+
+    public DbHelper(Context context, boolean measurements) {
+        super(context, measurements ? M_DATABASE_NAME : DATABASE_NAME,
+                null, DATABASE_VERSION);
+        this.context = context;
+        rdb = getReadableDatabase();
+    }
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -253,18 +261,19 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " BIGINT NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " BIGINT NULL)";
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_EMLOG_TABLE);
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
@@ -273,6 +282,17 @@ public class DbHelper extends SQLiteOpenHelper {
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP);
 
+        createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
+                +" )";
+
+        execSQL(db, SQL_CREATE_INDEX);
     }
 
     private void createElectricityMeterLogTable(SQLiteDatabase db) {
@@ -298,8 +318,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE+", "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
-                + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME;
-
+                + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " > 0";
 
         execSQL(db, SQL_CREATE_EM_VIEW);
     }
@@ -1235,18 +1257,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return max;
     }
 
-    private void putNullOrLong(ContentValues values, String name, long value) {
-        if (value == 0) {
-            values.putNull(name);
-        } else {
-            values.put(name, value);
-        }
-    }
 
-    public int getElectricityMeasurementId(SQLiteDatabase _db, int channelId, long timestamp) {
+    private int getElectricityMeasurementId(SQLiteDatabase db, int channelId, long timestamp) {
         int result = 0;
-        SQLiteDatabase db = _db == null ? getReadableDatabase() : _db;
-
 
         String[] projection = {
                 SuplaContract.ElectricityMeterLogEntry._ID,
@@ -1262,7 +1275,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 String.valueOf(timestamp)
         };
 
-
         Cursor c = db.query(
                 SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 projection,
@@ -1274,83 +1286,105 @@ public class DbHelper extends SQLiteOpenHelper {
         );
 
         if (c.getCount() > 0) {
+            c.moveToFirst();
             result = c.getInt(c.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID));
         }
 
         c.close();
-
-        if (_db == null) {
-            db.close();
-        }
-
         return result;
     }
 
-    public void addElectricityMeasurement(SQLiteDatabase _db,
-                                          int channelId, long timestamp,
-                                          long phase1_fae, long phase1_rae,
-                                          long phase1_fre, long phase1_rre,
-                                          long phase2_fae, long phase2_rae,
-                                          long phase2_fre, long phase2_rre,
-                                          long phase3_fae, long phase3_rae,
-                                          long phase3_fre, long phase3_rre) {
+    private ElectricityMeasurementItem getYoungerElectricityMeasurement(
+            SQLiteDatabase db, int channelId, long timestamp) {
 
-        if (getElectricityMeasurementId(_db, channelId, timestamp) != 0) return;
+        String[] projection = {
+                SuplaContract.ElectricityMeterLogEntry._ID,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+        };
 
-        ContentValues values = new ContentValues();
+        String selection = SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
+                + " = ? AND " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
+                + " > ?";
 
-        values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId);
-        values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP, timestamp);
+        String[] selectionArgs = {
+                String.valueOf(channelId),
+                String.valueOf(timestamp)
+        };
 
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE, phase1_fae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE, phase1_rae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE, phase1_fre);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE, phase1_rre);
-
-
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE, phase2_fae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE, phase2_rae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE, phase2_fre);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE, phase2_rre);
-
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE, phase3_fae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE, phase3_rae);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE, phase3_fre);
-        putNullOrLong(values,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE, phase3_rre);
-
-        SQLiteDatabase db = _db == null ? getWritableDatabase() : _db;
-        db.insert(
+        Cursor c = db.query(
                 SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                null, values);
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+                "1"
+        );
 
-        if (_db == null) {
-            db.close();
+        ElectricityMeasurementItem emi = null;
+        if (c.getCount() > 0) {
+            emi = new ElectricityMeasurementItem();
+            c.moveToFirst();
+            emi.AssignCursorData(c);
         }
 
+        c.close();
+
+        return emi;
     }
 
-    public Cursor getElectricityMeasurements(SQLiteDatabase db) {
+    private void updateElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
+        String selection = SuplaContract.ElectricityMeterLogEntry._ID;
 
-        String sql = "SELECT SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE+"), "
+        String[] selectionArgs = {
+                String.valueOf(emi.getId())
+        };
+
+        db.update(
+                SuplaContract.ColorListItemEntry.TABLE_NAME,
+                emi.getContentValues(),
+                selection,
+                selectionArgs);
+    }
+
+    public void addElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
+        db.insert(
+                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                null, emi.getContentValues());
+    }
+
+    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId) {
+
+        String sql = "SELECT SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE+")"+
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE + ", "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "
-                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE
+                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
                 + " FROM " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME
+                + " WHERE "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId)
                 +" GROUP BY "
-                +" strftime('%Y-%m-%dT00:00:00.000', "+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE+")"
+                +" strftime('%Y-%m-%dT%H:00:00.000', "+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE+")"
                 +" ORDER BY "
-                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP;
+                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                +" ASC "
+                +" LIMIT 100";
 
 
         return db.rawQuery(sql, null);
