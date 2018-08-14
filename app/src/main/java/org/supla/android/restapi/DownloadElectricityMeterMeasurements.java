@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.ElectricityMeasurementItem;
 
 
 public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLogs {
 
-    ElectricityMeasurementItem younger_emi;
+    private ElectricityMeasurementItem older_emi = null;
+    private ElectricityMeasurementItem younger_emi = null;
+    private boolean added = false;
 
     public DownloadElectricityMeterMeasurements(Context context) {
         super(context);
@@ -22,68 +25,60 @@ public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLog
         return getMeasurementsDbH().getElectricityMeterMaxTimestamp(getChannelId());
     }
 
-    protected void SaveMeasurementItem(SQLiteDatabase db, ElectricityMeasurementItem emi) throws JSONException {
+    protected void SaveMeasurementItem(SQLiteDatabase db,
+                                       long timestamp, JSONObject obj) throws JSONException {
 
+        younger_emi = new ElectricityMeasurementItem();
+        younger_emi.AssignJSONObject(obj);
+        younger_emi.setChannelId(getChannelId());
 
-        if (younger_emi!=null) {
-            if (emi.getTimestamp() >= younger_emi.getTimestamp()) {
+        if (older_emi==null) {
+            older_emi = getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(db,
+                    younger_emi.getChannelId(),
+                    younger_emi.getTimestamp());
+
+            if (older_emi!=null) {
+                getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(db,
+                        younger_emi.getChannelId());
+            }
+        }
+
+        if (older_emi!=null) {
+            if (younger_emi.getTimestamp() < older_emi.getTimestamp()) {
                 throw new JSONException("Wrong timestamp order!");
             }
 
-            if (!younger_emi.isCalculated()) {
-                younger_emi.Calculate(emi);
-                if (younger_emi.isCalculated()) {
+            ElectricityMeasurementItem cemi = new ElectricityMeasurementItem(younger_emi);
+            cemi.Calculate(older_emi);
 
-                    long diff = younger_emi.getTimestamp() - emi.getTimestamp();
+            long diff = cemi.getTimestamp() - older_emi.getTimestamp();
 
-                    if (diff >= 1200 ) {
 
-                        long n = diff / 600;
-                        younger_emi.DivideBy(n);
+            if (diff >= 1200 ) {
 
-                        for(int a=0;a<n;a++) {
-                            getMeasurementsDbH().addElectricityMeasurement(db, younger_emi);
-                            younger_emi.setTimestamp(younger_emi.getTimestamp()-600);
-                        }
+                long n = diff / 600;
+                cemi.DivideBy(n);
 
-                        Trace.d(log_tag, "Difference: "+Long.toString(younger_emi.getTimestamp() - emi.getTimestamp()));
-                    } else {
-                        getMeasurementsDbH().addElectricityMeasurement(db, younger_emi);
-                    }
-
+                for(int a=0;a<n;a++) {
+                    getMeasurementsDbH().addElectricityMeasurement(db, cemi);
+                    cemi.setTimestamp(cemi.getTimestamp()-600);
                 }
+
+            } else {
+                getMeasurementsDbH().addElectricityMeasurement(db, cemi);
             }
+
+            added = true;
         }
 
-        if (younger_emi == null && !emi.isCalculated()) {
-            getMeasurementsDbH().addElectricityMeasurement(db, emi);
-        }
-
-        younger_emi = emi;
-    }
-
-    protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp, JSONObject obj) throws JSONException {
-        ElectricityMeasurementItem emi = new ElectricityMeasurementItem();
-        emi.AssignJSONObject(obj);
-        emi.setChannelId(getChannelId());
-
-        SaveMeasurementItem(db, emi);
+        older_emi = younger_emi;
     }
 
     protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {
         super.noRemoteDataAvailable(db);
-
-        if (younger_emi!=null) {
-            ElectricityMeasurementItem emi =
-                    getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(db,
-                    getChannelId(),
-                    younger_emi.getTimestamp());
-
-            if (emi!=null) {
-                Trace.d(log_tag, "!!getOlderElectricityMeasurement!!");
-                SaveMeasurementItem(db, emi);
-                getMeasurementsDbH().deleteElectricityMeasurementItem(db, emi.getId());
-            }
+        if (older_emi != null
+                && added) {
+            getMeasurementsDbH().addElectricityMeasurement(db, older_emi);
         }
     }
 

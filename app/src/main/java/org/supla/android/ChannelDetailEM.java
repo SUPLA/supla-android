@@ -229,7 +229,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                         float phase1 = (float)c.getDouble(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
                         long timestamp = c.getLong(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
 
-                        Trace.d("EM"+Integer.toString(n), new Date(timestamp*1000).toString()+" : "+Long.toString(timestamp));
+                        //Trace.d("EM"+Integer.toString(n), new Date(timestamp*1000).toString()+" : "+Long.toString(timestamp));
                         entries.add(new BarEntry(n,  phase1));
 
 
@@ -252,7 +252,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         BarData data = new BarData(dataSets);
 
-        //chart.getXAxis().setValueFormatter(this);
+        chart.getXAxis().setValueFormatter(this);
         chart.setData(data);
 
     }
@@ -324,7 +324,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return "A";
+        return "2018-01-02 14:53";
     }
 }
 

@@ -11,7 +11,6 @@ import org.supla.android.db.DbHelper;
 
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
-    private long BeforeTimestamp = 0;
     private long AfterTimestamp = 0;
 
     public DownloadMeasurementLogs(Context context) {
@@ -19,9 +18,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     }
 
     abstract protected long getMaxTimestamp();
-    abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp, JSONObject obj) throws JSONException;
+    abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
+                                                JSONObject obj) throws JSONException;
     protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
-
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -35,8 +34,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         do {
             ApiRequestResult result = apiRequest("channels/"
                     +Integer.toString(getChannelId())
-                    +"/measurement-logs?order=DESC&beforeTimestamp="
-                    +Long.toString(BeforeTimestamp)
+                    +"/measurement-logs?order=ASC"
                     +"&afterTimestamp="
                     +Long.toString(AfterTimestamp));
 
@@ -50,30 +48,22 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
             JSONArray arr = (JSONArray)result.getJObj();
 
-            Trace.d(log_tag, "ArrayLength: "+Integer.toString(arr.length()));
-
             long t = System.currentTimeMillis();
 
             SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
             try {
 
-                Trace.d(log_tag, "begin transaction");
                 db.beginTransaction();
+                try {
 
-                if (arr.length() <= 0) {
-                    try {
+                    if (arr.length() <= 0) {
                         noRemoteDataAvailable(db);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return null;
+                        db.setTransactionSuccessful();
+                        break;
                     }
-                    Trace.d(log_tag, "noRemoteDataAvailable");
-                    break;
-                }
 
-                for(int a=0;a<arr.length();a++) {
+                    for(int a=0;a<arr.length();a++) {
 
-                    try {
                         JSONObject obj = obj = arr.getJSONObject(a);
                         long timestamp = obj.getLong("date_timestamp");
 
@@ -81,28 +71,26 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                             return null;
                         }
 
-                        if (timestamp < BeforeTimestamp || BeforeTimestamp == 0) {
-                            BeforeTimestamp = timestamp;
+                        if (timestamp > AfterTimestamp) {
+                            AfterTimestamp = timestamp;
                         }
 
                         SaveMeasurementItem(db, timestamp, obj);
 
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return null;
+                        if (isCancelled()) {
+                            break;
+                        }
                     }
 
-                    if (isCancelled()) {
-                        break;
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
                 }
 
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
                 db.close();
-                Trace.d(log_tag, "end transaction");
             }
 
             Trace.d(log_tag, "TIME: "+Long.toString(System.currentTimeMillis()-t));

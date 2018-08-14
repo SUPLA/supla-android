@@ -24,6 +24,17 @@ public class ElectricityMeasurementItem extends DbItem {
         rre = new double[3];
     }
 
+    public ElectricityMeasurementItem(ElectricityMeasurementItem emi) {
+        ChannelId = emi.ChannelId;
+        Timestamp = emi.Timestamp;
+        fae = emi.fae.clone();
+        rae = emi.rae.clone();
+        fre = emi.fre.clone();
+        rre = emi.rre.clone();
+        Calculated = emi.Calculated;
+        Divided = emi.Divided;
+    }
+
     public int getChannelId() {
         return ChannelId;
     }

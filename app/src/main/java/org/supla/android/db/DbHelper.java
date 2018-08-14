@@ -1220,7 +1220,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     if (cgroup.DiffWithBuffer()) {
                         cgroup.assignBuffer();
                         updateChannelGroup(cgroup);
-                        Trace.d("UpdateChannelGroup", Integer.toString(cgroup.getGroupId()));
                         result.add(cgroup.getGroupId());
                     }
 
@@ -1263,7 +1262,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
-
         String[] projection = {
                 SuplaContract.ElectricityMeterLogEntry._ID,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
@@ -1317,8 +1315,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void addElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
-        Trace.d("DB", "ADD-TIMESTAMP:"+Long.toString(emi.getTimestamp()));
-
         db.insertWithOnConflict(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
@@ -1345,13 +1341,16 @@ public class DbHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql, null);
     }
 
-    public void deleteElectricityMeasurementItem(SQLiteDatabase db, long id) {
+    public void deleteUncalculatedElectricityMeasurements(SQLiteDatabase db, int channelId) {
         String[] args = {
-                String.valueOf(id),
+                String.valueOf(channelId),
         };
 
         db.delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                SuplaContract.ElectricityMeterLogEntry._ID + " = ?",
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                        + " = 0 AND "
+                        + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
                 args);
     }
 }
