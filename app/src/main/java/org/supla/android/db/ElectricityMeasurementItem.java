@@ -15,6 +15,7 @@ public class ElectricityMeasurementItem extends DbItem {
     private double[] fre;
     private double[] rre;
     private boolean Calculated;
+    private boolean Divided;
 
     public ElectricityMeasurementItem() {
         fae = new double[3];
@@ -101,6 +102,10 @@ public class ElectricityMeasurementItem extends DbItem {
 
     public boolean isCalculated() {
         return Calculated;
+    }
+
+    public boolean isDivided() {
+        return Divided;
     }
 
     private void putNullOrDouble(ContentValues values, String name, double value) {
@@ -231,5 +236,18 @@ public class ElectricityMeasurementItem extends DbItem {
         }
 
         Calculated = true;
+    }
+
+    public void DivideBy(long div) {
+        if (Divided) return;
+
+        for(int phase = 1; phase <= 3; phase++) {
+            setFae(phase, getFae(phase) / div);
+            setRae(phase, getRae(phase) / div);
+            setFre(phase, getFre(phase) / div);
+            setRre(phase, getRre(phase) / div);
+        }
+
+        Divided = true;
     }
 }

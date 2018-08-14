@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import org.supla.android.db.Channel;
@@ -30,8 +32,10 @@ import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Date;
+import java.util.TimeZone;
 
-public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults {
+public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults, IAxisValueFormatter {
 /*
     private Integer phase;
 
@@ -216,40 +220,18 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
                 if (c.moveToFirst()) {
 
-                    long prev_timestamp = 0;
-                    long discance = c.getLong(t_ci);
-
-                    do {
-                        long timestamp = c.getLong(t_ci);
-
-                        if (prev_timestamp!=0 && timestamp-prev_timestamp < discance) {
-                            discance = timestamp-prev_timestamp;
-                        }
-
-                        prev_timestamp = timestamp;
-                    }while (c.moveToNext());
-
-                    long min = 0;
-
-                    if (discance <= 0) {
-                        discance = 1;
-                    }
-
-                    Trace.d("Distance: ", Long.toString(discance));
                     c.moveToFirst();
+                    int n=0;
 
                     do {
-                        long timestamp = c.getLong(t_ci);
-                        if (min == 0) {
-                            min = timestamp;
-                            timestamp = 0;
-                        } else {
-                            timestamp-=min;
-                        }
-                        float phase1 = (float)c.getDouble(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
 
-                        entries.add(new BarEntry(timestamp/discance,  phase1));
-                        Trace.d("Position", Long.toString(c.getPosition())+" Timestamp: "+Long.toString(timestamp)+" M: "+Double.toString(phase1));
+                        n++;
+                        float phase1 = (float)c.getDouble(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
+                        long timestamp = c.getLong(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
+
+                        Trace.d("EM"+Integer.toString(n), new Date(timestamp*1000).toString()+" : "+Long.toString(timestamp));
+                        entries.add(new BarEntry(n,  phase1));
+
 
                     }while (c.moveToNext());
                 }
@@ -270,6 +252,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         BarData data = new BarData(dataSets);
 
+        //chart.getXAxis().setValueFormatter(this);
         chart.setData(data);
 
     }
@@ -337,6 +320,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD FINISHED");
         demm = null;
+    }
+
+    @Override
+    public String getFormattedValue(float value, AxisBase axis) {
+        return "A";
     }
 }
 

@@ -20,8 +20,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     abstract protected long getMaxTimestamp();
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp, JSONObject obj) throws JSONException;
+    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
 
-    protected void AfterDownload() {};
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -52,15 +52,24 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
             Trace.d(log_tag, "ArrayLength: "+Integer.toString(arr.length()));
 
-            if (arr.length() == 0) {
-                break;
-            }
-
             long t = System.currentTimeMillis();
 
             SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
             try {
+
+                Trace.d(log_tag, "begin transaction");
                 db.beginTransaction();
+
+                if (arr.length() <= 0) {
+                    try {
+                        noRemoteDataAvailable(db);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                    Trace.d(log_tag, "noRemoteDataAvailable");
+                    break;
+                }
 
                 for(int a=0;a<arr.length();a++) {
 
@@ -78,6 +87,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
                         SaveMeasurementItem(db, timestamp, obj);
 
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return null;
@@ -92,15 +102,13 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             } finally {
                 db.endTransaction();
                 db.close();
+                Trace.d(log_tag, "end transaction");
             }
 
             Trace.d(log_tag, "TIME: "+Long.toString(System.currentTimeMillis()-t));
 
         } while (!isCancelled());
 
-        if (!isCancelled()) {
-            AfterDownload();
-        }
 
         return null;
     }

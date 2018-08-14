@@ -289,7 +289,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + "_unique_index ON "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 + "(" + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + ", "
-                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
                 +" )";
 
         execSQL(db, SQL_CREATE_INDEX);
@@ -1248,6 +1249,9 @@ public class DbHelper extends SQLiteOpenHelper {
         int max;
 
         SQLiteDatabase db = getReadableDatabase();
+
+        //execSQL(db, "DELETE FROM "+SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+
         Cursor c = db.rawQuery(selection, null);
         c.moveToFirst();
         max = c.getInt(0);
@@ -1257,44 +1261,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return max;
     }
 
-
-    private int getElectricityMeasurementId(SQLiteDatabase db, int channelId, long timestamp) {
-        int result = 0;
-
-        String[] projection = {
-                SuplaContract.ElectricityMeterLogEntry._ID,
-
-        };
-
-        String selection = SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
-                + " = ? AND " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
-                + " = ?";
-
-        String[] selectionArgs = {
-                String.valueOf(channelId),
-                String.valueOf(timestamp)
-        };
-
-        Cursor c = db.query(
-                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            result = c.getInt(c.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID));
-        }
-
-        c.close();
-        return result;
-    }
-
-    private ElectricityMeasurementItem getYoungerElectricityMeasurement(
+    public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
 
         String[] projection = {
@@ -1318,7 +1285,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String selection = SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
                 + " = ? AND " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
-                + " > ?";
+                + " < ? AND " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " = 0";
 
         String[] selectionArgs = {
                 String.valueOf(channelId),
@@ -1332,7 +1300,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 selectionArgs,
                 null,
                 null,
-                null,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP +" DESC",
                 "1"
         );
 
@@ -1348,24 +1316,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return emi;
     }
 
-    private void updateElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
-        String selection = SuplaContract.ElectricityMeterLogEntry._ID;
-
-        String[] selectionArgs = {
-                String.valueOf(emi.getId())
-        };
-
-        db.update(
-                SuplaContract.ColorListItemEntry.TABLE_NAME,
-                emi.getContentValues(),
-                selection,
-                selectionArgs);
-    }
-
     public void addElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
-        db.insert(
-                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                null, emi.getContentValues());
+        Trace.d("DB", "ADD-TIMESTAMP:"+Long.toString(emi.getTimestamp()));
+
+        db.insertWithOnConflict(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId) {
@@ -1380,13 +1335,23 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " = "
                 + Integer.toString(channelId)
                 +" GROUP BY "
-                +" strftime('%Y-%m-%dT%H:00:00.000', "+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE+")"
+                +" strftime('%Y-%m-%dT%H:%M:00.000', "+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE+")"
                 +" ORDER BY "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
-                +" ASC "
+                +" DESC "
                 +" LIMIT 100";
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public void deleteElectricityMeasurementItem(SQLiteDatabase db, long id) {
+        String[] args = {
+                String.valueOf(id),
+        };
+
+        db.delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry._ID + " = ?",
+                args);
     }
 }
