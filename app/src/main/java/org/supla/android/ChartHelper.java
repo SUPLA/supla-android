@@ -33,9 +33,7 @@ public class ChartHelper implements IAxisValueFormatter {
     private ChartType ctype = ChartType.Bar_Hourly;
     private BarChart barChart;
     private PieChart pieChart;
-    private long timestampMin;
-    private long timestampMax;
-    private long timestampStep;
+    private ArrayList<String> values = new ArrayList<>();
     private int xValueMax;
 
     public ChartHelper(Context context) {
@@ -44,32 +42,14 @@ public class ChartHelper implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        double ts = timestampMin + ((value - 1) * timestampStep);
-        if (ts > timestampMax) {
-            ts = timestampMax;
+
+        value -= 1;
+
+        if (value >= 0 && value < values.size()) {
+            return values.get((int) value);
         }
 
-        SimpleDateFormat spf = null;
-
-        switch (ctype) {
-            case Bar_Minutely:
-                spf = new SimpleDateFormat("HH:mm");
-                break;
-            case Bar_Hourly:
-                spf = new SimpleDateFormat("HH");
-                break;
-            case Bar_Daily:
-                spf = new SimpleDateFormat("yy-MM-dd");
-                break;
-            case Bar_Monthly:
-                spf = new SimpleDateFormat("MMM");
-                break;
-            case Bar_Yearly:
-                spf = new SimpleDateFormat("yyyy");
-                break;
-        }
-
-        return spf == null ? "" : spf.format(new java.util.Date((long) ts * 1000));
+        return "";
     }
 
     public BarChart getBarChart() {
@@ -102,23 +82,30 @@ public class ChartHelper implements IAxisValueFormatter {
         desc.setText("");
         barChart.setDescription(desc);
 
+        SimpleDateFormat spf = new SimpleDateFormat("HH:mm");
+
         String DateFormat = "%Y-%m-%dT%H:%M:00.000";
         switch (ctype) {
             case Bar_Hourly:
                 DateFormat = "%Y-%m-%dT%H:00:00.000";
+                spf = new SimpleDateFormat("HH");
                 break;
             case Bar_Daily:
                 DateFormat = "%Y-%m-%dT00:00:00.000";
+                spf = new SimpleDateFormat("yy-MM-dd");
                 break;
             case Bar_Monthly:
                 DateFormat = "%Y-%m-01T00:00:00.000";
+                spf = new SimpleDateFormat("MMM");
                 break;
             case Bar_Yearly:
                 DateFormat = "%Y-01-01T00:00:00.000";
+                spf = new SimpleDateFormat("yyyy");
                 break;
         }
 
         ArrayList<BarEntry> entries = new ArrayList<>();
+        values.clear();
 
         DbHelper DBH = new DbHelper(context, true);
         SQLiteDatabase db = DBH.getReadableDatabase();
@@ -129,8 +116,6 @@ public class ChartHelper implements IAxisValueFormatter {
 
                 if (c.moveToFirst()) {
 
-                    timestampMin = c.getLong(c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
                     int n = 0;
 
                     do {
@@ -149,14 +134,13 @@ public class ChartHelper implements IAxisValueFormatter {
                         entries.add(new BarEntry(n, phases));
                         xValueMax = n;
 
-                        if (c.isLast()) {
-                            timestampMax = c.getLong(
-                                    c.getColumnIndex(
-                                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
-                        }
+                        long timestamp = c.getLong(c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
+
+                        values.add(spf.format(new java.util.Date(timestamp * 1000)));
+
                     } while (c.moveToNext());
 
-                    timestampStep = (timestampMax - timestampMin) / n;
                 }
 
                 c.close();
