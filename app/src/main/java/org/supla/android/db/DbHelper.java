@@ -1325,8 +1325,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE + ", "
                 + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ")" +
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ", "
-                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "
-                +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                + " MAX(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "
+                + " MAX(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
                 + " FROM " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME
                 + " WHERE "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
