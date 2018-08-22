@@ -38,11 +38,11 @@ import java.util.ArrayList;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    private SQLiteDatabase rdb = null;
+    private static final String DATABASE_NAME = "supla.db";
     private Context context;
     private static final int DATABASE_VERSION = 6;
-    public static final String DATABASE_NAME = "supla.db";
-    public static final String M_DATABASE_NAME = "supla_measurements.db";
+    private static final String M_DATABASE_NAME = "supla_measurements.db";
+    private SQLiteDatabase rdb;
 
     public DbHelper(Context context, boolean measurements) {
         super(context, measurements ? M_DATABASE_NAME : DATABASE_NAME,
@@ -394,8 +394,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
-        execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+        //execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        //execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
     }
 
     @Override
@@ -427,7 +427,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public Location getLocation(int locationId) {
+    private Location getLocation(int locationId) {
 
         Location result = null;
         SQLiteDatabase db = getReadableDatabase();
@@ -604,7 +604,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public ChannelValue getChannelValue(int channelId) {
+    private ChannelValue getChannelValue(int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelValueEntry._ID,
@@ -645,7 +645,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public ChannelGroupRelation getChannelGroupRelation(int groupId, int channelId) {
+    private ChannelGroupRelation getChannelGroupRelation(int groupId, int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelGroupRelationEntry._ID,
@@ -785,7 +785,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean updateChannelExtendedValue(SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
 
-        SQLiteDatabase db = null;
+        SQLiteDatabase db;
         ChannelExtendedValue value = getChannelExtendedValue(channelId);
 
         if (value == null) {
@@ -808,15 +808,12 @@ public class DbHelper extends SQLiteOpenHelper {
                     SuplaContract.ChannelExtendedValueEntry.TABLE_NAME, value.getId());
         }
 
-        if (db != null) {
-            db.close();
-            return true;
-        }
+        db.close();
+        return true;
 
-        return false;
     }
 
-    public void updateChannelGroup(SQLiteDatabase db, ChannelGroup channelGroup) {
+    private void updateChannelGroup(SQLiteDatabase db, ChannelGroup channelGroup) {
 
         SQLiteDatabase _db = db;
         if (_db == null) {
@@ -831,7 +828,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateChannelGroup(ChannelGroup channelGroup) {
+    private void updateChannelGroup(ChannelGroup channelGroup) {
         updateChannelGroup(null, channelGroup);
     }
 
@@ -1314,15 +1311,20 @@ public class DbHelper extends SQLiteOpenHelper {
         return emi;
     }
 
-    public void addElectricityMeasurement(SQLiteDatabase db, ElectricityMeasurementItem emi) {
+    public void addElectricityMeasurement(SQLiteDatabase db,
+                                          ElectricityMeasurementItem emi) {
         db.insertWithOnConflict(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId) {
+    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
 
         String sql = "SELECT SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE+")"+
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE + ", "
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE + ", "
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ", "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
                 + " FROM " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME
@@ -1331,11 +1333,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " = "
                 + Integer.toString(channelId)
                 +" GROUP BY "
-                +" strftime('%Y-%m-%dT%H:%M:00.000', "+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE+")"
+                + " strftime('"
+                + GroupByDateFormat
+                + "', " + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")"
                 +" ORDER BY "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
-                +" DESC "
-                +" LIMIT 100";
+                + " ASC ";
 
 
         return db.rawQuery(sql, null);

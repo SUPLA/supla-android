@@ -21,4 +21,8 @@
     <color name="menubar">#12a71e</color>
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
+
+    <color name="phase1">#90ebfe</color>
+    <color name="phase2">#fff691</color>
+    <color name="phase3">#fed191</color>
 </resources>

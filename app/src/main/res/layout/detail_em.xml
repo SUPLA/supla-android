@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/emrl_Main"
     android:layout_width="match_parent"
@@ -9,7 +8,7 @@
     android:visibility="visible">
 
     <RelativeLayout
-        android:id="@+id/emInfo"
+        android:id="@+id/emrlBottomInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -55,13 +54,13 @@
     </RelativeLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/emrl_Summary"
+        android:id="@+id/emrlTopSummary"
         android:layout_width="match_parent"
         android:layout_height="172dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:visibility="visible">
 
         <View
@@ -82,6 +81,8 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
             android:background="@drawable/electricitymeter"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
             android:visibility="visible" />
 
         <LinearLayout
@@ -91,6 +92,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/imageView6"
+            android:layout_alignParentRight="true"
             android:orientation="vertical">
 
             <TextView
@@ -150,16 +152,42 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/emGraphImg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignEnd="@+id/emrlTopSummary"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignRight="@+id/emrlTopSummary"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/graphoff"
+            tools:ignore="NotSibling" />
+
+        <ProgressBar
+            android:id="@+id/emProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:layout_alignBaseline="@+id/emGraphImg"
+            android:layout_alignBottom="@+id/emGraphImg"
+            android:layout_alignLeft="@+id/emGraphImg"
+            android:layout_alignRight="@+id/emGraphImg"
+            android:layout_marginBottom="-10dp"
+            android:indeterminateOnly="true"
+            android:scaleY="5"
+            android:secondaryProgressTint="@color/activity_bg" />
     </RelativeLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/emrlPhaseButtons"
+        android:id="@+id/emrlButtons1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignBaseline="@+id/emrl_Summary"
-        android:layout_below="@+id/emrl_Summary"
+        android:layout_alignBaseline="@+id/emrlTopSummary"
+        android:layout_below="@+id/emrlTopSummary"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:visibility="visible">
@@ -168,9 +196,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/emrlPhaseButtons"
+            android:layout_alignParentLeft="true"
             android:layout_marginStart="0dp"
-            android:orientation="horizontal">
+            android:layout_alignTop="@+id/emrlButtons1"
+            android:layout_marginLeft="0dp"
+            android:orientation="horizontal"
+            tools:ignore="NotSibling">
 
             <Button
                 android:id="@+id/embtn_Phase1"
@@ -204,20 +235,51 @@
         </LinearLayout>
     </RelativeLayout>
 
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/emrlPhaseDetails"
+        android:id="@+id/emrlButtons2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/emrlTopSummary"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="visible">
+
+        <Spinner
+            android:id="@+id/emSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/emrlDetails"
         android:layout_width="match_parent"
         android:layout_height="211dp"
-        android:layout_alignBaseline="@+id/emrlPhaseButtons"
-        android:layout_below="@+id/emrlPhaseButtons"
+        android:layout_above="@+id/emrlBottomInfo"
+        android:layout_below="@+id/emrlButtons1"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:visibility="visible">
 
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/emBarChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/emPieChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
         <LinearLayout
+            android:id="@+id/emllDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -347,7 +409,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="﻿74.672960 W"
+                    android:text="74.672960 W"
                     android:textSize="12sp" />
 
                 <TextView
@@ -355,7 +417,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="﻿-28.250560 var"
+                    android:text="-28.250560 var"
                     android:textSize="12sp" />
 
                 <TextView
@@ -363,7 +425,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="﻿92.860160 VA"
+                    android:text="92.860160 VA"
                     android:textSize="12sp" />
 
                 <TextView
@@ -371,7 +433,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="﻿0.804000"
+                    android:text="0.804000"
                     android:textSize="12sp" />
 
                 <TextView
@@ -379,7 +441,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="﻿0.034150"
+                    android:text="0.034150"
                     android:textSize="12sp" />
 
                 <TextView

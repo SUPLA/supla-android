@@ -1,42 +1,40 @@
 package org.supla.android;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.charts.PieChart;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.DbHelper;
-import org.supla.android.db.SuplaContract;
 import org.supla.android.lib.SuplaChannelElectricityMeter;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults, IAxisValueFormatter {
-/*
+import static java.lang.String.format;
+
+public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults, AdapterView.OnItemSelectedListener {
+
     private Integer phase;
 
     private TextView tvTotalForwardActiveEnergy;
@@ -62,9 +60,17 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Button btnPhase1;
     private Button btnPhase2;
     private Button btnPhase3;
-*/
-    DownloadElectricityMeterMeasurements demm = null;
-    HorizontalBarChart chart;
+
+    final Handler mHandler = new Handler();
+    ChartHelper chartHelper;
+    private ImageView ivGraph;
+    private LinearLayout llDetails;
+    private RelativeLayout rlButtons1;
+    private RelativeLayout rlButtons2;
+    private Spinner emSpinner;
+    private ProgressBar emProgress;
+    private Timer timer1;
+    private DownloadElectricityMeterMeasurements demm = null;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -84,8 +90,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     protected void init() {
         super.init();
-/*
-        phase = new Integer(1);
+
+        phase = 1;
 
         tvTotalForwardActiveEnergy = (TextView)findViewById(R.id.emtv_TotalForwardActiveEnergy);
         tvTotalReverseActiveEnergy = (TextView)findViewById(R.id.emtv_TotalReverseActiveEnergy);
@@ -115,20 +121,75 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         btnPhase2.setOnClickListener(this);
         btnPhase3.setOnClickListener(this);
 
-        btnPhase1.setTag(new Integer(1));
-        btnPhase2.setTag(new Integer(2));
-        btnPhase3.setTag(new Integer(3));
-*/
+        btnPhase1.setTag(1);
+        btnPhase2.setTag(2);
+        btnPhase3.setTag(3);
 
-        chart = (HorizontalBarChart) findViewById(R.id.em_chart);
+        llDetails = (LinearLayout) findViewById(R.id.emllDetails);
+        rlButtons1 = (RelativeLayout) findViewById(R.id.emrlButtons1);
+        rlButtons2 = (RelativeLayout) findViewById(R.id.emrlButtons2);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_spinner_item,
+                new String[]{"Minuty", "Godziny", "Dni", "Miesiące", "Lata",
+                        "Ranking godzin", "Ranking dni", "Ranking miesięcy",
+                        "Zużycie wg. faz"});
 
+        emSpinner = (Spinner) findViewById(R.id.emSpinner);
+        emSpinner.setAdapter(adapter);
+        emSpinner.setOnItemSelectedListener(this);
+
+        chartHelper = new ChartHelper(getContext());
+        chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
+        chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
+
+        ivGraph = (ImageView) findViewById(R.id.emGraphImg);
+        ivGraph.bringToFront();
+        ivGraph.setOnClickListener(this);
+
+        emProgress = (ProgressBar) findViewById(R.id.emProgressBar);
+
+        showChart(false);
+    }
+
+    private void showChart(boolean show) {
+
+        int img;
+
+        if (show) {
+            llDetails.setVisibility(GONE);
+            chartHelper.setVisibility(VISIBLE);
+            rlButtons1.setVisibility(INVISIBLE);
+            rlButtons2.setVisibility(VISIBLE);
+            img = R.drawable.graphon;
+            ivGraph.setTag(1);
+
+            onItemSelected(null, null,
+                    emSpinner.getSelectedItemPosition(),
+                    emSpinner.getSelectedItemId());
+
+        } else {
+            llDetails.setVisibility(VISIBLE);
+            chartHelper.setVisibility(GONE);
+            rlButtons1.setVisibility(VISIBLE);
+            rlButtons2.setVisibility(INVISIBLE);
+            img = R.drawable.graphoff;
+            ivGraph.setTag(null);
+        }
+
+        Drawable d = getResources().getDrawable(img);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ivGraph.setBackground(d);
+        } else {
+            ivGraph.setBackgroundDrawable(d);
+        }
     }
 
     public void channelExtendedDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
-        /*
+
         tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
         ChannelExtendedValue cev = DBH.getChannelExtendedValue(getRemoteId());
@@ -164,16 +225,16 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
             SuplaChannelElectricityMeter.Summary sum = em.getSummary();
 
-            tvTotalForwardActiveEnergy.setText(String.format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
-            tvTotalReverseActiveEnergy.setText(String.format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
-            tvTotalForwardReactiveEnergy.setText(String.format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
-            tvTotalReverseReactiveEnergy.setText(String.format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
+            tvTotalForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
+            tvTotalReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
+            tvTotalForwardReactiveEnergy.setText(format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
+            tvTotalReverseReactiveEnergy.setText(format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
 
-            SuplaChannelElectricityMeter.Measurement m = em.getMeasurement(phase.intValue(), 0);
+            SuplaChannelElectricityMeter.Measurement m = em.getMeasurement(phase, 0);
             if (m!= null) {
 
                 Button btn = null;
-                switch(phase.intValue()) {
+                switch (phase) {
                     case 1: btn = btnPhase1; break;
                     case 2: btn = btnPhase2; break;
                     case 3: btn = btnPhase3; break;
@@ -181,86 +242,32 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
                 setBtnBackground(btn, m.getVoltage() > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
 
-                tvFreq.setText(String.format("%.2f Hz", m.getFreq()));
-                tvVoltage.setText(String.format("%.2f V", m.getVoltage()));
-                tvCurrent.setText(String.format("%.3f A", m.getCurrent()));
-                tvPowerActive.setText(String.format("%.5f W", m.getPowerActive()));
-                tvPowerReactive.setText(String.format("%.5f var", m.getPowerReactive()));
-                tvPowerApparent.setText(String.format("%.5f VA", m.getPowerApparent()));
-                tvPowerFactor.setText(String.format("%.3f", m.getPowerFactor()));
-                tvPhaseAngle.setText(String.format("%.5f", m.getPhaseAngle()));
+                tvFreq.setText(format("%.2f Hz", m.getFreq()));
+                tvVoltage.setText(format("%.2f V", m.getVoltage()));
+                tvCurrent.setText(format("%.3f A", m.getCurrent()));
+                tvPowerActive.setText(format("%.5f W", m.getPowerActive()));
+                tvPowerReactive.setText(format("%.5f var", m.getPowerReactive()));
+                tvPowerApparent.setText(format("%.5f VA", m.getPowerApparent()));
+                tvPowerFactor.setText(format("%.3f", m.getPowerFactor()));
+                tvPhaseAngle.setText(format("%.5f", m.getPhaseAngle()));
 
-                sum = em.getSummary(phase.intValue());
-                tvPhaseForwardActiveEnergy.setText(String.format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
-                tvPhaseReverseActiveEnergy.setText(String.format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
-                tvPhaseForwardReactiveEnergy.setText(String.format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
-                tvPhaseReverseReactiveEnergy.setText(String.format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
+                sum = em.getSummary(phase);
+                tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
+                tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
+                tvPhaseForwardReactiveEnergy.setText(format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
+                tvPhaseReverseReactiveEnergy.setText(format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
             }
         }
-        */
     }
 
     public void setData(ChannelBase channel) {
-
         super.setData(channel);
         channelExtendedDataToViews();
-
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-
-
-        DBH = new DbHelper(getContext(), true);
-        SQLiteDatabase db = DBH.getReadableDatabase();
-        try {
-            Cursor c = DBH.getElectricityMeasurements(db, channel.getRemoteId());
-
-            if (c!=null) {
-
-                int t_ci = c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP);
-
-                if (c.moveToFirst()) {
-
-                    c.moveToFirst();
-                    int n=0;
-
-                    do {
-
-                        n++;
-                        float phase1 = (float)c.getDouble(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
-                        long timestamp = c.getLong(c.getColumnIndex(SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
-
-                        //Trace.d("EM"+Integer.toString(n), new Date(timestamp*1000).toString()+" : "+Long.toString(timestamp));
-                        entries.add(new BarEntry(n,  phase1));
-
-
-                    }while (c.moveToNext());
-                }
-
-                c.close();
-                Trace.d("EM", "LogCount: "+Integer.toString(c.getCount()));
-            }
-        } finally {
-            db.close();
-        }
-
-
-        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(dataset);
-
-
-        BarData data = new BarData(dataSets);
-
-        chart.getXAxis().setValueFormatter(this);
-        chart.setData(data);
-
     }
 
     @Override
     public View getContentView() {
-        //return inflateLayout(R.layout.detail_em);
-        return inflateLayout(R.layout.detail_chart);
+        return inflateLayout(R.layout.detail_em);
     }
 
     @Override
@@ -281,30 +288,62 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        /*
-        if (v instanceof Button && v.getTag() instanceof Integer) {
+        if (v == ivGraph) {
+            showChart(v.getTag() == null);
+        } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer)v.getTag();
             channelExtendedDataToViews();
         }
-        */
+    }
+
+    private void runDownloadTask() {
+        if (demm == null) {
+            demm = new DownloadElectricityMeterMeasurements(this.getContext());
+            demm.setChannelId(getRemoteId());
+            demm.setDelegate(this);
+            demm.execute();
+        }
     }
 
     @Override
     public void onDetailShow() {
         super.onDetailShow();
 
+        emProgress.setVisibility(INVISIBLE);
+        showChart(false);
+
         SuplaApp.getApp().CancelAllRestApiClientTasks(true);
 
-        demm = new DownloadElectricityMeterMeasurements(this.getContext());
-        demm.setChannelId(getRemoteId());
-        demm.setDelegate(this);
-        demm.execute();
+        if (timer1 == null) {
+            timer1 = new Timer();
+            timer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            runDownloadTask();
+                        }
+                    };
+
+                    mHandler.post(r);
+                }
+            }, 0, 30000);
+        }
+
 
     }
 
     @Override
     public void onDetailHide() {
         super.onDetailHide();
+
+        showChart(false);
+
+        if (timer1 != null) {
+            timer1.cancel();
+            timer1 = null;
+        }
+
         if (demm!=null) {
             SuplaApp.getApp().CancelAllRestApiClientTasks(true);
             demm.setDelegate(null);
@@ -314,17 +353,67 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD STARTED");
+        emProgress.setVisibility(VISIBLE);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD FINISHED");
+        emProgress.setVisibility(INVISIBLE);
+        chartHelper.loadElectricityMeasurements(getRemoteId());
         demm = null;
     }
 
     @Override
-    public String getFormattedValue(float value, AxisBase axis) {
-        return "2018-01-02 14:53";
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        if (ivGraph == null || ivGraph.getTag() == null) {
+            return;
+        }
+
+        ChartHelper.ChartType ctype = ChartHelper.ChartType.Bar_Minutely;
+
+       /*
+                       new String[] {"Minuty", "Godziny", "Dni", "Miesiące", "Lata",
+                        "Ranking godzin", "Ranking dni", "Ranking miesięcy",
+                        "Zużycie wg. faz"});
+       * */
+
+        switch (position) {
+            case 1:
+                ctype = ChartHelper.ChartType.Bar_Hourly;
+                break;
+            case 2:
+                ctype = ChartHelper.ChartType.Bar_Daily;
+                break;
+            case 3:
+                ctype = ChartHelper.ChartType.Bar_Monthly;
+                break;
+            case 4:
+                ctype = ChartHelper.ChartType.Bar_Yearly;
+                break;
+            case 5:
+                ctype = ChartHelper.ChartType.Pie_HourRank;
+                break;
+            case 6:
+                ctype = ChartHelper.ChartType.Pie_DayRank;
+                break;
+            case 7:
+                ctype = ChartHelper.ChartType.Pie_MonthRank;
+                break;
+            case 8:
+                ctype = ChartHelper.ChartType.Pie_PhaseRank;
+                break;
+        }
+
+        chartHelper.loadElectricityMeasurements(getRemoteId(), ctype);
+        chartHelper.setVisibility(VISIBLE);
+        chartHelper.animate();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
 
