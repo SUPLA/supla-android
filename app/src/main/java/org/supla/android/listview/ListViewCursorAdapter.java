@@ -23,11 +23,12 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.db.DbHelper;
+import org.supla.android.db.Location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     private ArrayList<SectionItem> Sections;
     private int currentSectionIndex;
     private boolean Group;
+    private DbHelper dbHelper;
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
@@ -81,6 +83,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         currentSectionIndex = 0;
         Sections = new ArrayList<>();
         sectionCollapsed = new HashMap<>();
+        dbHelper = new DbHelper(context);
         setCursor(cursor);
         this.context = context;
     }
@@ -324,14 +327,13 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             SectionItem channelSection = getSectionAtPosition(position);
             setData((ChannelLayout) convertView, cbase, channelSection);
 
-            if(sectionCollapsed.containsKey(channelSection.caption)) {
-                if(sectionCollapsed.get(channelSection.caption)) {
-                    return new LinearLayout(context);
+            Location location = dbHelper.getLocation(channelSection.caption);
+            if(location!=null) {
+                if(location.getCollapsing()==1) {
+                    return new View(context);
                 }
             }
-
         }
-
 
         return convertView;
     }
@@ -365,11 +367,12 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     @Override
     public void onSectionLayoutTouch(String caption) {
-        if(sectionCollapsed.containsKey(caption)) {
-            boolean collapsed = sectionCollapsed.get(caption);
-            sectionCollapsed.put(caption, !collapsed);
-            notifyDataSetChanged();
-        }
+        Location location = dbHelper.getLocation(caption);
+        int newValue = location.getCollapsing() == 1 ? 0 : 1;
+
+        location.setCollapsing(newValue);
+        dbHelper.updateLocation(location);
+        notifyDataSetChanged();
     }
 
 }

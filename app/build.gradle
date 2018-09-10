@@ -36,6 +36,20 @@ android {
         }
     }
 
+    flavorDimensions "version"
+    productFlavors {
+        beta {
+            // Assigns this product flavor to the "version" flavor dimension.
+            // This property is optional if you are using only one dimension.
+            dimension "version"
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
+        }
+        full {
+        }
+    }
+
+
     lintOptions { checkReleaseBuilds false }
 
     buildToolsVersion '27.0.3'
