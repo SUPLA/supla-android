@@ -1,7 +1,5 @@
 package org.supla.android.lib;
 
-import org.supla.android.Trace;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +26,40 @@ public class SuplaChannelElectricityMeter implements Serializable {
             this.PowerReactive = PowerReactive / 100000.00;
             this.PowerApparent = PowerApparent / 100000.00;
             this.PowerFactor = PowerFactor / 1000.00;
-            this.PhaseAngle = PhaseAngle / 100000.00;
+            this.PhaseAngle = PhaseAngle / 10.00;
         }
 
-        public double getFreq() { return Freq; };
-        public double getVoltage() { return Voltage; };
-        public double getCurrent() { return Current; };
-        public double getPowerActive() { return PowerActive; };
-        public double getPowerReactive() { return PowerReactive; };
-        public double getPowerApparent() { return PowerApparent; };
-        public double getPowerFactor() { return PowerFactor; };
-        public double getPhaseAngle() { return PhaseAngle; };
+        public double getFreq() {
+            return Freq;
+        }
+
+        public double getVoltage() {
+            return Voltage;
+        }
+
+        public double getCurrent() {
+            return Current;
+        }
+
+        public double getPowerActive() {
+            return PowerActive;
+        }
+
+        public double getPowerReactive() {
+            return PowerReactive;
+        }
+
+        public double getPowerApparent() {
+            return PowerApparent;
+        }
+
+        public double getPowerFactor() {
+            return PowerFactor;
+        }
+
+        public double getPhaseAngle() {
+            return PhaseAngle;
+        }
     }
 
     public class Summary implements Serializable {
@@ -64,10 +85,21 @@ public class SuplaChannelElectricityMeter implements Serializable {
             this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
         }
 
-        public double getTotalForwardActiveEnergy() { return TotalForwardActiveEnergy; };
-        public double getTotalReverseActiveEnergy() { return TotalReverseActiveEnergy; };
-        public double getTotalForwardReactiveEnergy() { return TotalForwardReactiveEnergy; };
-        public double getTotalReverseReactiveEnergy() { return TotalReverseReactiveEnergy; };
+        public double getTotalForwardActiveEnergy() {
+            return TotalForwardActiveEnergy;
+        }
+
+        public double getTotalReverseActiveEnergy() {
+            return TotalReverseActiveEnergy;
+        }
+
+        public double getTotalForwardReactiveEnergy() {
+            return TotalForwardReactiveEnergy;
+        }
+
+        public double getTotalReverseReactiveEnergy() {
+            return TotalReverseReactiveEnergy;
+        }
     }
 
     private List<Summary>sumList;
