@@ -249,7 +249,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvPowerReactive.setText(format("%.5f var", m.getPowerReactive()));
                 tvPowerApparent.setText(format("%.5f VA", m.getPowerApparent()));
                 tvPowerFactor.setText(format("%.3f", m.getPowerFactor()));
-                tvPhaseAngle.setText(format("%.5f", m.getPhaseAngle()));
+                tvPhaseAngle.setText(format("%.2f\u00B0", m.getPhaseAngle()));
 
                 sum = em.getSummary(phase);
                 tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
