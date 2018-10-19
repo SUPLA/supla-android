@@ -68,21 +68,34 @@ public class SuplaChannelElectricityMeter implements Serializable {
         private double TotalReverseActiveEnergy;
         private double TotalForwardReactiveEnergy;
         private double TotalReverseReactiveEnergy;
+        private double TotalCost;
+        private double PricePerUnit;
+        private String Currency;
 
         Summary(long TotalForwardActiveEnergy, long TotalReverseActiveEnergy,
-                long TotalForwardReactiveEnergy, long TotalReverseReactiveEnergy) {
+                long TotalForwardReactiveEnergy, long TotalReverseReactiveEnergy,
+                int TotalCost, int PricePerUnit, String Currency) {
             this.TotalForwardActiveEnergy = TotalForwardActiveEnergy / 100000.00;
             this.TotalReverseActiveEnergy = TotalReverseActiveEnergy / 100000.00;
             this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy / 100000.00;
             this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
+
+            this.TotalCost = TotalCost / 100.00;
+            this.PricePerUnit = PricePerUnit / 10000.00;
+            this.Currency = Currency;
         }
 
         Summary(double TotalForwardActiveEnergy, double TotalReverseActiveEnergy,
-                double TotalForwardReactiveEnergy, double TotalReverseReactiveEnergy) {
+                double TotalForwardReactiveEnergy, double TotalReverseReactiveEnergy,
+                int TotalCost, int PricePerUnit, String Currency) {
             this.TotalForwardActiveEnergy = TotalForwardActiveEnergy;
             this.TotalReverseActiveEnergy = TotalReverseActiveEnergy;
             this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy;
             this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
+
+            this.TotalCost = TotalCost;
+            this.PricePerUnit = PricePerUnit;
+            this.Currency = Currency;
         }
 
         public double getTotalForwardActiveEnergy() {
@@ -99,6 +112,18 @@ public class SuplaChannelElectricityMeter implements Serializable {
 
         public double getTotalReverseReactiveEnergy() {
             return TotalReverseReactiveEnergy;
+        }
+
+        public double getTotalCost() {
+            return TotalCost;
+        }
+
+        public double getPricePerUnit() {
+            return PricePerUnit;
+        }
+
+        public String getCurrency() {
+            return Currency;
         }
     }
 
