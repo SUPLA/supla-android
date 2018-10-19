@@ -22,7 +22,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.lib.SuplaChannelElectricityMeter;
+import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
@@ -221,16 +221,16 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 && cev.getExtendedValue() != null
                 && cev.getExtendedValue().ElectricityMeterValue != null) {
 
-            SuplaChannelElectricityMeter em = cev.getExtendedValue().ElectricityMeterValue;
+            SuplaChannelElectricityMeterValue em = cev.getExtendedValue().ElectricityMeterValue;
 
-            SuplaChannelElectricityMeter.Summary sum = em.getSummary();
+            SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
             tvTotalForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
             tvTotalReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
             tvTotalForwardReactiveEnergy.setText(format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
             tvTotalReverseReactiveEnergy.setText(format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
 
-            SuplaChannelElectricityMeter.Measurement m = em.getMeasurement(phase, 0);
+            SuplaChannelElectricityMeterValue.Measurement m = em.getMeasurement(phase, 0);
             if (m!= null) {
 
                 Button btn = null;

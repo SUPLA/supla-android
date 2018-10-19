@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuplaChannelElectricityMeter implements Serializable {
+public class SuplaChannelElectricityMeterValue implements Serializable {
     public class Measurement implements Serializable {
         private double Freq; // Hz
         private double Voltage; // V
@@ -135,7 +135,7 @@ public class SuplaChannelElectricityMeter implements Serializable {
     private int MeasuredValues;
     private int Period;
 
-    SuplaChannelElectricityMeter(int MeasuredValues, int Period) {
+    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period) {
         sumList = new ArrayList<>();
         mp1List = new ArrayList<>();
         mp2List = new ArrayList<>();

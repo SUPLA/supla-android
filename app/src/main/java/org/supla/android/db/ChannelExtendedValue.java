@@ -20,7 +20,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.supla.android.lib.SuplaChannelElectricityMeter;
+import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -71,8 +71,8 @@ public class ChannelExtendedValue extends DbItem {
                     ByteArrayInputStream byteStream = new ByteArrayInputStream(value);
                     ObjectInputStream objectStream = new ObjectInputStream(byteStream);
                     Object obj = objectStream.readObject();
-                    if (obj!=null && obj instanceof SuplaChannelElectricityMeter) {
-                        ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeter)obj;
+                    if (obj != null && obj instanceof SuplaChannelElectricityMeterValue) {
+                        ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

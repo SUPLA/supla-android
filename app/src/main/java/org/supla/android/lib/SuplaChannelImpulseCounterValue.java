@@ -2,7 +2,7 @@ package org.supla.android.lib;
 
 import java.io.Serializable;
 
-public class SuplaChannelImpulseCounter implements Serializable {
+public class SuplaChannelImpulseCounterValue implements Serializable {
 
     private long Counter;
     private double CalculatedValue;
@@ -10,8 +10,8 @@ public class SuplaChannelImpulseCounter implements Serializable {
     private double PricePerUnit;
     private String Currency;
 
-    SuplaChannelImpulseCounter(long Counter, long CalculatedValue,
-                               int TotalCost, int PricePerUnit, String Currency) {
+    SuplaChannelImpulseCounterValue(long Counter, long CalculatedValue,
+                                    int TotalCost, int PricePerUnit, String Currency) {
 
         this.Counter = Counter;
         this.CalculatedValue = CalculatedValue / 1000;

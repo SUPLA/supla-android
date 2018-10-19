@@ -20,8 +20,8 @@ package org.supla.android.lib;
 
 public class SuplaChannelExtendedValue {
     public int Type;
-    public SuplaChannelElectricityMeter ElectricityMeterValue;
-    public SuplaChannelImpulseCounter ImpulseCounter;
+    public SuplaChannelElectricityMeterValue ElectricityMeterValue;
+    public SuplaChannelImpulseCounterValue ImpulseCounterValue;
     public byte[] Value;
 
     public SuplaChannelExtendedValue() {
