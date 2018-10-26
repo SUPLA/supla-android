@@ -62,80 +62,20 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         }
     }
 
-    public class Summary implements Serializable {
-        // Unit - kWh
-        private double TotalForwardActiveEnergy;
-        private double TotalReverseActiveEnergy;
-        private double TotalForwardReactiveEnergy;
-        private double TotalReverseReactiveEnergy;
-        private double TotalCost;
-        private double PricePerUnit;
-        private String Currency;
+    private double TotalCost;
 
-        Summary(long TotalForwardActiveEnergy, long TotalReverseActiveEnergy,
-                long TotalForwardReactiveEnergy, long TotalReverseReactiveEnergy,
-                int TotalCost, int PricePerUnit, String Currency) {
-            this.TotalForwardActiveEnergy = TotalForwardActiveEnergy / 100000.00;
-            this.TotalReverseActiveEnergy = TotalReverseActiveEnergy / 100000.00;
-            this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy / 100000.00;
-            this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
-
-            this.TotalCost = TotalCost / 100.00;
-            this.PricePerUnit = PricePerUnit / 10000.00;
-            this.Currency = Currency;
-        }
-
-        Summary(double TotalForwardActiveEnergy, double TotalReverseActiveEnergy,
-                double TotalForwardReactiveEnergy, double TotalReverseReactiveEnergy,
-                int TotalCost, int PricePerUnit, String Currency) {
-            this.TotalForwardActiveEnergy = TotalForwardActiveEnergy;
-            this.TotalReverseActiveEnergy = TotalReverseActiveEnergy;
-            this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy;
-            this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
-
-            this.TotalCost = TotalCost;
-            this.PricePerUnit = PricePerUnit;
-            this.Currency = Currency;
-        }
-
-        public double getTotalForwardActiveEnergy() {
-            return TotalForwardActiveEnergy;
-        }
-
-        public double getTotalReverseActiveEnergy() {
-            return TotalReverseActiveEnergy;
-        }
-
-        public double getTotalForwardReactiveEnergy() {
-            return TotalForwardReactiveEnergy;
-        }
-
-        public double getTotalReverseReactiveEnergy() {
-            return TotalReverseReactiveEnergy;
-        }
-
-        public double getTotalCost() {
-            return TotalCost;
-        }
-
-        public double getPricePerUnit() {
-            return PricePerUnit;
-        }
-
-        public String getCurrency() {
-            return Currency;
-        }
-    }
-
-    private List<Summary>sumList;
-    private List<Measurement>mp1List;
-    private List<Measurement>mp2List;
-    private List<Measurement>mp3List;
+    private List<Summary> sumList;
+    private List<Measurement> mp1List;
+    private List<Measurement> mp2List;
+    private List<Measurement> mp3List;
 
     private int MeasuredValues;
     private int Period;
+    private double PricePerUnit;
+    private String Currency;
 
-    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period) {
+    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
+                                      int TotalCost, int PricePerUnit, String Currency) {
         sumList = new ArrayList<>();
         mp1List = new ArrayList<>();
         mp2List = new ArrayList<>();
@@ -143,6 +83,28 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
 
         this.MeasuredValues = MeasuredValues;
         this.Period = Period;
+        this.TotalCost = TotalCost / 100.00;
+        this.PricePerUnit = PricePerUnit / 10000.00;
+        this.Currency = Currency;
+    }
+
+
+    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
+                                      double TotalCost, double PricePerUnit, String Currency) {
+        sumList = new ArrayList<>();
+        mp1List = new ArrayList<>();
+        mp2List = new ArrayList<>();
+        mp3List = new ArrayList<>();
+
+        this.MeasuredValues = MeasuredValues;
+        this.Period = Period;
+        this.TotalCost = TotalCost;
+        this.PricePerUnit = PricePerUnit;
+        this.Currency = Currency;
+    }
+
+    public double getTotalCost() {
+        return TotalCost;
     }
 
     public void addSummary(int Phase, Summary Sum) {
@@ -168,6 +130,56 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
 
     public int getPeriod() {
         return Period;
+    }
+
+    public double getPricePerUnit() {
+        return PricePerUnit;
+    }
+
+    public String getCurrency() {
+        return Currency;
+    }
+
+    public class Summary implements Serializable {
+        // Unit - kWh
+        private double TotalForwardActiveEnergy;
+        private double TotalReverseActiveEnergy;
+        private double TotalForwardReactiveEnergy;
+        private double TotalReverseReactiveEnergy;
+
+
+        Summary(long TotalForwardActiveEnergy, long TotalReverseActiveEnergy,
+                long TotalForwardReactiveEnergy, long TotalReverseReactiveEnergy) {
+            this.TotalForwardActiveEnergy = TotalForwardActiveEnergy / 100000.00;
+            this.TotalReverseActiveEnergy = TotalReverseActiveEnergy / 100000.00;
+            this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy / 100000.00;
+            this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
+        }
+
+        Summary(double TotalForwardActiveEnergy, double TotalReverseActiveEnergy,
+                double TotalForwardReactiveEnergy, double TotalReverseReactiveEnergy) {
+            this.TotalForwardActiveEnergy = TotalForwardActiveEnergy;
+            this.TotalReverseActiveEnergy = TotalReverseActiveEnergy;
+            this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy;
+            this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
+        }
+
+        public double getTotalForwardActiveEnergy() {
+            return TotalForwardActiveEnergy;
+        }
+
+        public double getTotalReverseActiveEnergy() {
+            return TotalReverseActiveEnergy;
+        }
+
+        public double getTotalForwardReactiveEnergy() {
+            return TotalForwardReactiveEnergy;
+        }
+
+        public double getTotalReverseReactiveEnergy() {
+            return TotalReverseReactiveEnergy;
+        }
+
     }
 
     public int getMeasurementSize(int Phase) {
