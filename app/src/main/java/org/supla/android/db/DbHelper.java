@@ -148,6 +148,8 @@ public class DbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE VIEW "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME + " AS " +
                 "SELECT C." + SuplaContract.ChannelEntry._ID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
@@ -160,6 +162,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
@@ -666,6 +672,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
 

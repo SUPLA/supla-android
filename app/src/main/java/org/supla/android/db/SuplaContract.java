@@ -81,6 +81,7 @@ public class SuplaContract {
         public static final String VIEW_NAME = "channel_v1";
 
         public static final String _ID = ChannelEntry._ID;
+        public static final String COLUMN_NAME_DEVICEID = ChannelEntry.COLUMN_NAME_DEVICEID;
         public static final String COLUMN_NAME_CHANNELID = ChannelEntry.COLUMN_NAME_CHANNELID;
         public static final String COLUMN_NAME_CAPTION = ChannelEntry.COLUMN_NAME_CAPTION;
         public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
@@ -91,6 +92,8 @@ public class SuplaContract {
         public static final String COLUMN_NAME_LOCATIONID = ChannelEntry.COLUMN_NAME_LOCATIONID;
         public static final String COLUMN_NAME_ALTICON = ChannelEntry.COLUMN_NAME_ALTICON;
         public static final String COLUMN_NAME_USERICON = ChannelEntry.COLUMN_NAME_USERICON;
+        public static final String COLUMN_NAME_MANUFACTURERID = ChannelEntry.COLUMN_NAME_MANUFACTURERID;
+        public static final String COLUMN_NAME_PRODUCTID = ChannelEntry.COLUMN_NAME_PRODUCTID;
         public static final String COLUMN_NAME_FLAGS = ChannelEntry.COLUMN_NAME_FLAGS;
         public static final String COLUMN_NAME_PROTOCOLVERSION = ChannelEntry.COLUMN_NAME_PROTOCOLVERSION;
     }
