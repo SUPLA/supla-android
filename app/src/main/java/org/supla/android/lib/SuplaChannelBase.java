@@ -26,6 +26,7 @@ public class SuplaChannelBase {
     public int LocationID;
     public int Func;
     public int AltIcon;
+    public int UserIcon;
     public int Flags;
     public boolean OnLine;
     public String Caption;
