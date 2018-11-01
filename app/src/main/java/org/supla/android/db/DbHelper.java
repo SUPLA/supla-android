@@ -63,38 +63,48 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void createIndex(SQLiteDatabase db, String tableName, String fieldName) {
-        final String SQL_CREATE_INDEX = "CREATE INDEX " + tableName + "_" + fieldName + "_index ON " + tableName + "(" + fieldName + ")";
+        final String SQL_CREATE_INDEX = "CREATE INDEX " + tableName + "_"
+                + fieldName + "_index ON " + tableName + "(" + fieldName + ")";
         execSQL(db, SQL_CREATE_INDEX);
     }
 
     private void createLocationTable(SQLiteDatabase db) {
 
-        final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + SuplaContract.LocationEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE "
+                + SuplaContract.LocationEntry.TABLE_NAME + " (" +
                 SuplaContract.LocationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
-        createIndex(db, SuplaContract.LocationEntry.TABLE_NAME, SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID);
+        createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
+                SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID);
     }
 
     private void createChannelTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " (" +
+        final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE "
+                + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + " INTEGER NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + " SMALLINT NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + " SMALLINT NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_CHANNEL_TABLE);
-        createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME, SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID);
-        createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME, SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID);
+        createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME,
+                SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID);
+        createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME,
+                SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID);
     }
 
     private void createChannelTable(SQLiteDatabase db) {
@@ -104,7 +114,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelValueTable(SQLiteDatabase db) {
 
-        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE TABLE "
+                + SuplaContract.ChannelValueEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelValueEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + " INTEGER NOT NULL," +
@@ -113,7 +124,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
-        createIndex(db, SuplaContract.ChannelValueEntry.TABLE_NAME, SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID);
+        createIndex(db, SuplaContract.ChannelValueEntry.TABLE_NAME,
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID);
     }
 
     private void createChannelExtendedValueTable(SQLiteDatabase db) {
@@ -133,7 +145,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelView(SQLiteDatabase db) {
 
-        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME + " AS " +
+        final String SQL_CREATE_CHANNELVALUE_TABLE = "CREATE VIEW "
+                + SuplaContract.ChannelViewEntry.VIEW_NAME + " AS " +
                 "SELECT C." + SuplaContract.ChannelEntry._ID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
@@ -145,6 +158,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
@@ -160,7 +175,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createColorTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
+        final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE "
+                + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " INTEGER NOT NULL," +
@@ -169,8 +185,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_COLOR_TABLE);
-        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME, SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID);
-        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME, SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP);
+        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID);
+        createIndex(db, SuplaContract.ColorListItemEntry.TABLE_NAME,
+                SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP);
     }
 
     private void createColorTable(SQLiteDatabase db) {
@@ -180,7 +198,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createChannelGroupTable(SQLiteDatabase db, String suffix) {
 
-        final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " (" +
+        final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE "
+                + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " (" +
                 SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -189,12 +208,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL," +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE + " TEXT)";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_TABLE);
-        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME, SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID);
-        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME, SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID);
+        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID);
+        createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID);
     }
 
     private void createChannelGroupTable(SQLiteDatabase db) {
@@ -210,8 +232,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_REL_TABLE);
-        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID);
-        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME, SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID);
+        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID);
+        createIndex(db, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID);
     }
 
     private void createChannelGroupRelationTable(SQLiteDatabase db) {
@@ -244,7 +268,8 @@ public class DbHelper extends SQLiteOpenHelper {
                         + " JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " V ON V."
                         + SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " = R."
                         + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
-                        + " WHERE R." + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
+                        + " WHERE R." + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
+                        + " > 0 AND "
                         + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_VALUE_VIEW);
@@ -273,7 +298,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED + " INTEGER NOT NULL)";
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED +
+                " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_EMLOG_TABLE);
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
@@ -347,13 +373,22 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV3(SQLiteDatabase db) {
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL default 0");
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL default 0");
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL default 0");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON
+                + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS
+                + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION
+                + " INTEGER NOT NULL default 0");
     }
 
     private void upgradeToV4(SQLiteDatabase db) {
-        execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME + " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
+        execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME +
+                " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
 
         createColorTable(db);
 
@@ -390,12 +425,51 @@ public class DbHelper extends SQLiteOpenHelper {
     private void upgradeToV6(SQLiteDatabase db) {
         createElectricityMeterLogTable(db);
         createElectricityMeterLogView(db);
+        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        createChannelView(db);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID
+                + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID
+                + " SMALLINT NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID
+                + " SMALLINT NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " INTEGER NOT NULL default 0");
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
-        //execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+  /*
+        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID);
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
+                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON);
+                        */
     }
 
     @Override
@@ -515,7 +589,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    private DbItem getItem(String ClassName, String[] projection, String tableName, String id1Field, int id1, String id2Field, int id2) {
+    private DbItem getItem(String ClassName, String[] projection, String tableName,
+                           String id1Field, int id1, String id2Field, int id2) {
 
         DbItem result = null;
         SQLiteDatabase db = getReadableDatabase();
@@ -573,7 +648,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    private DbItem getItem(String ClassName, String[] projection, String tableName, String id1Field, int id1) {
+    private DbItem getItem(String ClassName, String[] projection, String tableName,
+                           String id1Field, int id1) {
         return getItem(ClassName, projection, tableName, id1Field, id1, "", 0);
     }
 
@@ -664,7 +740,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    private void updateDbItem(SQLiteDatabase db, DbItem item, String idField, String tableName, long id) {
+    private void updateDbItem(SQLiteDatabase db, DbItem item, String idField, String tableName,
+                              long id) {
 
         String selection = idField + " = ?";
         String[] selectionArgs = {String.valueOf(id)};
@@ -723,7 +800,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean updateChannelValue(SuplaChannelValue suplaChannelValue, int channelId, boolean onLine) {
+    public boolean updateChannelValue(SuplaChannelValue suplaChannelValue, int channelId,
+                                      boolean onLine) {
 
         SQLiteDatabase db = null;
         ChannelValue value = getChannelValue(channelId);
@@ -783,7 +861,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean updateChannelExtendedValue(SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
+    public boolean updateChannelExtendedValue(SuplaChannelExtendedValue suplaChannelExtendedValue,
+                                              int channelId) {
 
         SQLiteDatabase db;
         ChannelExtendedValue value = getChannelExtendedValue(channelId);
@@ -879,7 +958,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = null;
 
-        ChannelGroupRelation cgrel = getChannelGroupRelation(suplaChannelGroupRelation.ChannelGroupID, suplaChannelGroupRelation.ChannelID);
+        ChannelGroupRelation cgrel = getChannelGroupRelation(suplaChannelGroupRelation.ChannelGroupID,
+                suplaChannelGroupRelation.ChannelID);
 
         if (cgrel == null) {
 

@@ -40,14 +40,19 @@ public class SuplaContract {
         public static final String TABLE_NAME = "channel";
 
         public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_DEVICEID = "deviceid";
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_FUNC = "func";
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_ALTICON = "alticon";
+        public static final String COLUMN_NAME_USERICON = "usericon";
+        public static final String COLUMN_NAME_MANUFACTURERID = "manufacturerid";
+        public static final String COLUMN_NAME_PRODUCTID = "productid";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_PROTOCOLVERSION = "protocolversion";
+
     }
 
     public static abstract class ChannelValueEntry implements BaseColumns {
@@ -85,6 +90,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VISIBLE = ChannelEntry.COLUMN_NAME_VISIBLE;
         public static final String COLUMN_NAME_LOCATIONID = ChannelEntry.COLUMN_NAME_LOCATIONID;
         public static final String COLUMN_NAME_ALTICON = ChannelEntry.COLUMN_NAME_ALTICON;
+        public static final String COLUMN_NAME_USERICON = ChannelEntry.COLUMN_NAME_USERICON;
         public static final String COLUMN_NAME_FLAGS = ChannelEntry.COLUMN_NAME_FLAGS;
         public static final String COLUMN_NAME_PROTOCOLVERSION = ChannelEntry.COLUMN_NAME_PROTOCOLVERSION;
     }
@@ -114,6 +120,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_ALTICON = "alticon";
+        public static final String COLUMN_NAME_USERICON = "usericon";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_TOTALVALUE = "totalvalue";
     }
