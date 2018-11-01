@@ -457,25 +457,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-  /*
+        /*
         execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
-
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
-                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID);
-
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
-                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON);
-
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
-                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID);
-
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
-                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID);
-
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
-                + " DROP COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON);
-                        */
+        */
     }
 
     @Override
