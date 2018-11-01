@@ -48,20 +48,43 @@ import java.net.URL;
 @SuppressWarnings("JniMissingFunction")
 public class SuplaClient extends Thread {
 
+    private static final String log_tag = "SuplaClientThread";
+    private static final Object st_lck = new Object();
+    private static SuplaRegisterError lastRegisterError = null;
+
+    static {
+        System.loadLibrary("suplaclient");
+    }
+
+    private final Object msgh_lck = new Object();
+    private final Object sc_lck = new Object();
     private int _client_id;
     private long _supla_client_ptr = 0;
     private long _supla_client_ptr_counter = 0;
     private boolean _canceled = false;
-    private static final String log_tag = "SuplaClientThread";
     private Context _context;
     private DbHelper DbH = null;
     private android.os.Handler _msgHandler;
-    private final Object msgh_lck = new Object();
-    private final Object sc_lck = new Object();
-    private static final Object st_lck = new Object();
-    private static SuplaRegisterError lastRegisterError = null;
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
     private long lastTokenRequest = 0;
+
+    public SuplaClient(Context context) {
+
+        super();
+        _context = context;
+
+    }
+
+    public static SuplaRegisterError getLastRegisterError() {
+
+        SuplaRegisterError result;
+
+        synchronized (st_lck) {
+            result = lastRegisterError;
+        }
+
+        return result;
+    }
 
     public native void CfgInit(SuplaCfg cfg);
 
@@ -83,7 +106,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
 
-    private native boolean scSetRGBW(long _supla_client, int ID, int Group, int Color, int ColorBrightness, int Brightness);
+    private native boolean scSetRGBW(long _supla_client, int ID, int Group,
+                                     int Color, int ColorBrightness, int Brightness);
 
     private native boolean scGetRegistrationEnabled(long _supla_client);
 
@@ -92,14 +116,6 @@ public class SuplaClient extends Thread {
     private native int scGetMaxProtoVersion(long _supla_client);
 
     private native boolean scOAuthTokenRequest(long _supla_client);
-
-    public SuplaClient(Context context) {
-
-        super();
-        _context = context;
-
-    }
-
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -209,8 +225,10 @@ public class SuplaClient extends Thread {
 
         boolean result = false;
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo =
+                connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
             LockClientPtr();
@@ -223,7 +241,6 @@ public class SuplaClient extends Thread {
 
         return result;
     }
-
 
     public void Reconnect() {
         if (Connected()) Disconnect();
@@ -297,7 +314,9 @@ public class SuplaClient extends Thread {
 
         LockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color, ColorBrightness, Brightness);
+            result = _supla_client_ptr != 0
+                    && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
+                    ColorBrightness, Brightness);
         } finally {
             UnlockClientPtr();
         }
@@ -348,20 +367,20 @@ public class SuplaClient extends Thread {
         return result;
     }
 
-
     public boolean OAuthTokenRequest() {
 
         boolean result;
 
         long now = System.currentTimeMillis();
         if (now-lastTokenRequest <= 5000 ) {
-            Trace.d(log_tag, "Token already requested: "+Long.toString(now-lastTokenRequest));
+            Trace.d(log_tag, "Token already requested: "
+                    + Long.toString(now - lastTokenRequest));
             return false;
         }
 
         LockClientPtr();
         try {
-            result = _supla_client_ptr != 0 ? scOAuthTokenRequest(_supla_client_ptr) : false;
+            result = _supla_client_ptr != 0 && scOAuthTokenRequest(_supla_client_ptr);
             if (result) {
                 lastTokenRequest = now;
             }
@@ -373,7 +392,9 @@ public class SuplaClient extends Thread {
     }
 
     private void onVersionError(SuplaVersionError versionError) {
-        Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + "," + Integer.valueOf(versionError.RemoteVersionMin).toString() + "," + Integer.valueOf(versionError.RemoteVersion).toString());
+        Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
+                + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
+                + Integer.valueOf(versionError.RemoteVersion).toString());
 
         regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
@@ -450,9 +471,12 @@ public class SuplaClient extends Thread {
 
         _client_id = registerResult.ClientID;
 
-        Trace.d(log_tag, "Protocol Version=" + Integer.toString(registerResult.Version));
-        Trace.d(log_tag, "registerResult.ChannelCount=" + Integer.toString(registerResult.ChannelCount));
-        Trace.d(log_tag, "registerResult.ChannelGroupCount=" + Integer.toString(registerResult.ChannelGroupCount));
+        Trace.d(log_tag, "Protocol Version="
+                + Integer.toString(registerResult.Version));
+        Trace.d(log_tag, "registerResult.ChannelCount="
+                + Integer.toString(registerResult.ChannelCount));
+        Trace.d(log_tag, "registerResult.ChannelGroupCount="
+                + Integer.toString(registerResult.ChannelGroupCount));
 
         if (registerResult.ChannelCount == 0
                 && DbH.setChannelsVisible(0, 2)) {
@@ -492,7 +516,9 @@ public class SuplaClient extends Thread {
 
     private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
 
-        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: " + Long.toString(minVersionRequired.CallType) + " MinVersion: " + Integer.toString(minVersionRequired.MinVersion));
+        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: "
+                + Long.toString(minVersionRequired.CallType) + " MinVersion: "
+                + Integer.toString(minVersionRequired.MinVersion));
 
     }
 
@@ -508,7 +534,11 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Function" + Integer.toString(channel.Func) + "  channel ID: " + Integer.toString(channel.Id) + " channel Location ID: " + Integer.toString(channel.LocationID) + " OnLine: " + Boolean.toString(channel.OnLine) + " AltIcon: " + Integer.toString(channel.AltIcon));
+        Trace.d(log_tag, "Channel Function" + Integer.toString(channel.Func)
+                + "  channel ID: " + Integer.toString(channel.Id)
+                + " channel Location ID: " + Integer.toString(channel.LocationID)
+                + " OnLine: " + Boolean.toString(channel.OnLine)
+                + " AltIcon: " + Integer.toString(channel.AltIcon));
 
         // Update channel value before update the channel
         if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
@@ -544,7 +574,11 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Group Function" + Integer.toString(channel_group.Func) + "  group ID: " + Integer.toString(channel_group.Id) + " group Location ID: " + Integer.toString(channel_group.LocationID) + " AltIcon: " + Integer.toString(channel_group.AltIcon));
+        Trace.d(log_tag, "Channel Group Function"
+                + Integer.toString(channel_group.Func) + "  group ID: "
+                + Integer.toString(channel_group.Id) + " group Location ID: "
+                + Integer.toString(channel_group.LocationID) + " AltIcon: "
+                + Integer.toString(channel_group.AltIcon));
 
         if (DbH.updateChannelGroup(channel_group)) {
             _DataChanged = true;
@@ -570,7 +604,9 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Group Relation group ID: " + Integer.toString(channelgroup_relation.ChannelGroupID) + " channel ID: " + Integer.toString(channelgroup_relation.ChannelID));
+        Trace.d(log_tag, "Channel Group Relation group ID: "
+                + Integer.toString(channelgroup_relation.ChannelGroupID)
+                + " channel ID: " + Integer.toString(channelgroup_relation.ChannelID));
 
         if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
             _DataChanged = true;
@@ -595,7 +631,8 @@ public class SuplaClient extends Thread {
     private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if (DbH.updateChannelValue(channelValueUpdate)) {
-            Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id) + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine));
+            Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id)
+                    + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine));
             onDataChanged(channelValueUpdate.Id, 0);
         }
 
@@ -606,7 +643,8 @@ public class SuplaClient extends Thread {
 
     private void ChannelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
 
-        if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id)) {
+        if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
+                channelExtendedValueUpdate.Id)) {
             onDataChanged(channelExtendedValueUpdate.Id, 0);
         }
     }
@@ -631,7 +669,8 @@ public class SuplaClient extends Thread {
             }
         }
 
-        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onOAuthTokenRequestResult);
         msg.setOAuthToken(token);
         sendMessage(msg);
     }
@@ -656,17 +695,6 @@ public class SuplaClient extends Thread {
 
     public synchronized void cancel() {
         _canceled = true;
-    }
-
-    public static SuplaRegisterError getLastRegisterError() {
-
-        SuplaRegisterError result;
-
-        synchronized (st_lck) {
-            result = lastRegisterError;
-        }
-
-        return result;
     }
 
     private String autodiscoverGetHost(String email) {
@@ -763,7 +791,8 @@ public class SuplaClient extends Thread {
                         cfg.AccessIDpwd = prefs.getAccessIDpwd();
 
                         if (regTryCounter >= 2) {
-                            prefs.setPreferedProtocolVersion(4); // supla-server v1.0 for Raspberry Compatibility fix
+                            // supla-server v1.0 for Raspberry Compatibility fix
+                            prefs.setPreferedProtocolVersion(4);
                         }
 
                     } else {
@@ -812,9 +841,5 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
-    }
-
-    static {
-        System.loadLibrary("suplaclient");
     }
 }
