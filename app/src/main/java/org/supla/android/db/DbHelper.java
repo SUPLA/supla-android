@@ -663,6 +663,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC,
@@ -673,6 +674,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
 
