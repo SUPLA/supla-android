@@ -59,6 +59,7 @@ public class ChannelGroup extends ChannelBase {
         TotalValue = cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
+        setUserIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
 
     }
@@ -75,6 +76,7 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON, getAltIcon());
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIcon());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
 
         return values;

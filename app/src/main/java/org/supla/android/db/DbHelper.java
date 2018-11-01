@@ -704,6 +704,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE,
         };
@@ -1071,6 +1072,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "C." + SuplaContract.ChannelViewEntry._ID + " "
                 + SuplaContract.ChannelViewEntry._ID
                 + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " "
@@ -1089,6 +1092,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
@@ -1126,6 +1135,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON
+                + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " "
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " "

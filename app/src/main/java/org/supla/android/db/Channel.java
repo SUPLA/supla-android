@@ -21,6 +21,8 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
 
 
@@ -28,11 +30,13 @@ public class Channel extends ChannelBase {
 
     private ChannelValue Value;
     private int ProtocolVersion;
+    private short ManufacturerID;
+    private short ProductID;
+    private int DeviceID;
 
     public int getChannelId() {
         return getRemoteId();
     }
-
 
     public void setProtocolVersion(int protocolVersion) {
         ProtocolVersion = protocolVersion;
@@ -40,6 +44,30 @@ public class Channel extends ChannelBase {
 
     public int getProtocolVersion() {
         return ProtocolVersion;
+    }
+
+    public short getManufacturerID() {
+        return ManufacturerID;
+    }
+
+    public void setManufacturerID(short manufacturerID) {
+        ManufacturerID = manufacturerID;
+    }
+
+    public short getProductID() {
+        return ProductID;
+    }
+
+    public void setProductID(short productID) {
+        ProductID = productID;
+    }
+
+    public int getDeviceID() {
+        return DeviceID;
+    }
+
+    public void setDeviceID(int deviceID) {
+        DeviceID = deviceID;
     }
 
     protected int _getOnLine() {
@@ -61,12 +89,16 @@ public class Channel extends ChannelBase {
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
+        setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON)));
+        setUserIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON)));
+        setManufacturerID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID)));
+        setProductID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
         setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
 
@@ -80,11 +112,15 @@ public class Channel extends ChannelBase {
         ContentValues values = new ContentValues();
 
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID, getChannelId());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID, getDeviceID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC, getFunc());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON, getUserIcon());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID, getManufacturerID());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
 
@@ -92,18 +128,27 @@ public class Channel extends ChannelBase {
     }
 
     public void Assign(SuplaChannel channel) {
-
         super.Assign(channel);
+        setDeviceID(channel.DeviceID);
         setProtocolVersion(channel.ProtocolVersion);
-        getValue().AssignSuplaChannelValue(channel.Value);
+        setManufacturerID(channel.ManufacturerID);
+        setProductID(channel.ProductID);
 
+        Trace.d("DeviceID", Integer.toString(getDeviceID()));
+        Trace.d("ProtocolVersion", Integer.toString(getProtocolVersion()));
+        Trace.d("ManufacturerID", Integer.toString(getManufacturerID()));
+        Trace.d("ProductID", Integer.toString(getProductID()));
+
+        getValue().AssignSuplaChannelValue(channel.Value);
     }
 
 
     public boolean Diff(SuplaChannel channel) {
-
         return super.Diff(channel)
+                || channel.DeviceID != getDeviceID()
                 || channel.ProtocolVersion != getProtocolVersion()
+                || channel.ManufacturerID != getManufacturerID()
+                || channel.ProductID != getProductID()
                 || getValue().Diff(channel.Value);
 
     }
@@ -111,7 +156,10 @@ public class Channel extends ChannelBase {
     public boolean Diff(Channel channel) {
 
         return super.Diff(channel)
+                || channel.getDeviceID() != getDeviceID()
                 || channel.getProtocolVersion() != getProtocolVersion()
+                || channel.getManufacturerID() != getManufacturerID()
+                || channel.getProductID() != getProductID()
                 || getValue().Diff(channel.getValue());
 
     }

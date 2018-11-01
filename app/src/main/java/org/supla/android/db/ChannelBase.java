@@ -33,6 +33,7 @@ public abstract class ChannelBase extends DbItem {
     private int Visible;
     private long LocationId;
     private int AltIcon;
+    private int UserIcon;
     private int Flags;
 
     public void setRemoteId(int id) {
@@ -97,6 +98,14 @@ public abstract class ChannelBase extends DbItem {
 
     public int getAltIcon() {
         return AltIcon;
+    }
+
+    public int getUserIcon() {
+        return UserIcon;
+    }
+
+    public void setUserIcon(int userIcon) {
+        UserIcon = userIcon;
     }
 
     public void setFlags(int flags) {
@@ -504,6 +513,7 @@ public abstract class ChannelBase extends DbItem {
         setFunc(base.Func);
         setFlags(base.Flags);
         setAltIcon(base.AltIcon);
+        setUserIcon(base.UserIcon);
 
     }
 
@@ -513,7 +523,8 @@ public abstract class ChannelBase extends DbItem {
                 || !base.Caption.equals(getCaption())
                 || base.OnLine != getOnLine()
                 || base.Flags != getFlags()
-                || base.AltIcon != getAltIcon();
+                || base.AltIcon != getAltIcon()
+                || base.UserIcon != getUserIcon();
 
     }
 
@@ -523,7 +534,8 @@ public abstract class ChannelBase extends DbItem {
                 || !base.getCaption().equals(getCaption())
                 || base.getOnLine() != getOnLine()
                 || base.getFlags() != getFlags()
-                || base.getAltIcon() != getAltIcon();
+                || base.getAltIcon() != getAltIcon()
+                || base.getUserIcon() != getUserIcon();
     }
 
 }
