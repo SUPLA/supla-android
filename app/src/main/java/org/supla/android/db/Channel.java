@@ -22,7 +22,6 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannel;
 
 
@@ -133,11 +132,6 @@ public class Channel extends ChannelBase {
         setProtocolVersion(channel.ProtocolVersion);
         setManufacturerID(channel.ManufacturerID);
         setProductID(channel.ProductID);
-
-        Trace.d("DeviceID", Integer.toString(getDeviceID()));
-        Trace.d("ProtocolVersion", Integer.toString(getProtocolVersion()));
-        Trace.d("ManufacturerID", Integer.toString(getManufacturerID()));
-        Trace.d("ProductID", Integer.toString(getProductID()));
 
         getValue().AssignSuplaChannelValue(channel.Value);
     }
