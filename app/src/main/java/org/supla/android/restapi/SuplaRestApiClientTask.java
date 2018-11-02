@@ -23,8 +23,12 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 
 public abstract class SuplaRestApiClientTask extends AsyncTask {
@@ -170,7 +174,6 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                 .appendPath("2.2.0")
                 .appendEncodedPath(endpint);
 
-
         try {
             url = new URL(builder.build().toString());
         } catch (MalformedURLException e) {
@@ -198,7 +201,34 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
             return null;
         }
         try {
-            sc.init(null, null, new java.security.SecureRandom());
+            TrustManager[] trustAllNonSuplaCerts = null;
+
+            if (!url.getAuthority().contains(".supla.org")) {
+                trustAllNonSuplaCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                return null;
+                            }
+
+                            public void checkClientTrusted(
+                                    java.security.cert.X509Certificate[] certs, String authType) {
+                            }
+
+                            public void checkServerTrusted(
+                                    java.security.cert.X509Certificate[] certs, String authType) {
+                            }
+                        }
+                };
+
+                conn.setHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                });
+            }
+
+            sc.init(null, trustAllNonSuplaCerts, new java.security.SecureRandom());
         } catch (KeyManagementException e) {
             e.printStackTrace();
             return null;
