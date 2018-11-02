@@ -82,6 +82,9 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_WEATHER_STATION               = 290;
     public final static int SUPLA_CHANNELFNC_STAIRCASETIMER                = 300;
     public final static int SUPLA_CHANNELFNC_ELECTRICITY_METER             = 310;
+    public final static int SUPLA_CHANNELFNC_GAS_METER = 320;
+    public final static int SUPLA_CHANNELFNC_WATER_METER = 330;
+
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
@@ -148,5 +151,6 @@ public class SuplaConst {
     public final static int EM_VAR_ALL = 0xFFFF;
 
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
+    public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
 
 }
