@@ -864,7 +864,6 @@ public class DbHelper extends SQLiteOpenHelper {
         ChannelExtendedValue value = getChannelExtendedValue(channelId);
 
         if (value == null) {
-
             value = new ChannelExtendedValue();
             value.setExtendedValue(suplaChannelExtendedValue);
             value.setChannelId(channelId);
@@ -874,9 +873,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
                     null,
                     value.getContentValues());
-
         } else {
-
             db = getWritableDatabase();
             value.setExtendedValue(suplaChannelExtendedValue);
             updateDbItem(db, value, SuplaContract.ChannelExtendedValueEntry._ID,

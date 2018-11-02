@@ -642,7 +642,6 @@ public class SuplaClient extends Thread {
     }
 
     private void ChannelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-
         if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
                 channelExtendedValueUpdate.Id)) {
             onDataChanged(channelExtendedValueUpdate.Id, 0);

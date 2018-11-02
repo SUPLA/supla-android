@@ -139,6 +139,9 @@
     <string name="channel_func_staircasetimer">Automat schodowy</string>
 
     <string name="channel_func_electricitymeter">Licznik energii elektrycznej</string>
+    <string name="channel_func_gasmeter">Licznik gazu</string>
+    <string name="channel_func_watermeter">Licznik wody</string>
+
     <string name="em_total_forward_avtive_energy">Moc czynna pobrana</string>
     <string name="em_reverse_active_energy">Moc czynna zwrócona</string>
     <string name="em_total_forward_reactive_energy">Moc bierna pobrana</string>
