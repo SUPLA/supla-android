@@ -19,9 +19,7 @@ package org.supla.android.db;
  */
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 
 import org.supla.android.R;
 import org.supla.android.lib.SuplaChannelBase;
@@ -466,7 +464,7 @@ public abstract class ChannelBase extends DbItem {
                         } else {
                             distance *= 10;
 
-                            return String.format("%i mm", (int) distance);
+                            return String.format("%d mm", (int) distance);
                         }
                     }
 
