@@ -665,7 +665,7 @@ public class ChannelListView extends ListView {
 
                     if (new_obj.getId() == old_obj.getId()) {
                         requestLayout_Locked = true;
-                        ((ListViewCursorAdapter) getAdapter()).setData((ChannelLayout) v, new_obj);
+                        ((ListViewCursorAdapter) getAdapter()).setData((ChannelLayout) v, new_obj, ((ListViewCursorAdapter) getAdapter()).getSectionAtPosition(i));
                         requestLayout_Locked = false;
                     }
 

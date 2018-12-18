@@ -27,20 +27,27 @@ import android.widget.BaseAdapter;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.db.DbHelper;
+import org.supla.android.db.Location;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class ListViewCursorAdapter extends BaseAdapter {
+public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.OnSectionLayoutTouchListener {
 
     private Context context;
     private Cursor cursor;
     private ArrayList<SectionItem> Sections;
     private int currentSectionIndex;
     private boolean Group;
+    private DbHelper dbHelper;
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
+
+    public Map<String, Boolean> sectionCollapsed;
 
 
     public class SectionItem {
@@ -75,6 +82,8 @@ public class ListViewCursorAdapter extends BaseAdapter {
     private void init(Context context, Cursor cursor) {
         currentSectionIndex = 0;
         Sections = new ArrayList<>();
+        sectionCollapsed = new HashMap<>();
+        dbHelper = new DbHelper(context);
         setCursor(cursor);
         this.context = context;
     }
@@ -293,6 +302,9 @@ public class ListViewCursorAdapter extends BaseAdapter {
             if ( ((SectionItem)obj).view == null ) {
                 ((SectionItem)obj).view = new SectionLayout(context);
                 ((SectionItem)obj).view.setCaption(((SectionItem)obj).getCaption());
+                ((SectionItem)obj).view.setOnSectionLayoutTouchListener(this);
+
+                sectionCollapsed.put(((SectionItem) obj).caption, true);
             }
 
             convertView = ((SectionItem)obj).view;
@@ -312,15 +324,22 @@ public class ListViewCursorAdapter extends BaseAdapter {
             }
 
             cbase.AssignCursorData((Cursor)obj);
-            setData((ChannelLayout) convertView, cbase);
-        }
+            SectionItem channelSection = getSectionAtPosition(position);
+            setData((ChannelLayout) convertView, cbase, channelSection);
 
+            Location location = dbHelper.getLocation(channelSection.caption);
+            if(location!=null) {
+                if(location.getCollapsing()==1) {
+                    return new View(context);
+                }
+            }
+        }
 
         return convertView;
     }
 
 
-    public void setData(ChannelLayout channelLayout, ChannelBase cbase) {
+    public void setData(ChannelLayout channelLayout, ChannelBase cbase, SectionItem channelSection) {
         channelLayout.setChannelData(cbase);
     }
 
@@ -344,6 +363,16 @@ public class ListViewCursorAdapter extends BaseAdapter {
 
     public boolean isGroup() {
         return Group;
+    }
+
+    @Override
+    public void onSectionLayoutTouch(String caption) {
+        Location location = dbHelper.getLocation(caption);
+        int newValue = location.getCollapsing() == 1 ? 0 : 1;
+
+        location.setCollapsing(newValue);
+        dbHelper.updateLocation(location);
+        notifyDataSetChanged();
     }
 
 }

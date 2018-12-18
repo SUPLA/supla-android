@@ -23,6 +23,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
@@ -32,7 +33,12 @@ import org.supla.android.R;
 
 public class SectionLayout extends LinearLayout {
 
+    public interface OnSectionLayoutTouchListener {
+        void onSectionLayoutTouch(String caption);
+    }
+
     private TextView Caption;
+    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
 
     public SectionLayout(Context context) {
         super(context);
@@ -68,7 +74,7 @@ public class SectionLayout extends LinearLayout {
         Caption = new TextView(context);
         Caption.setLayoutParams(lp);
 
-        Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/Quicksand-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
         Caption.setTypeface(type);
         Caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_section_text));
         Caption.setTextColor(getResources().getColor(R.color.channel_section_text));
@@ -76,6 +82,7 @@ public class SectionLayout extends LinearLayout {
 
         addView(Caption);
         addView(new LineView(context));
+
     }
 
     public void setCaption(String caption) {
@@ -83,4 +90,21 @@ public class SectionLayout extends LinearLayout {
         Caption.setText(caption);
 
     }
+
+    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener listener) {
+        onSectionLayoutTouchListener = listener;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            onSectionLayoutTouchListener.onSectionLayoutTouch(Caption.getText().toString());
+        }
+
+        //return super.onTouchEvent(event);
+        return true;
+    }
 }
+
+

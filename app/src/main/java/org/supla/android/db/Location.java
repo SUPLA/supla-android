@@ -28,6 +28,7 @@ public class Location extends DbItem {
     private int LocationId;
     private String Caption;
     private int Visible;
+    private int collapsing; //0 - channels visible 1 - channels collapsed
 
     public void setLocationId(int locationId) {
         LocationId = locationId;
@@ -53,13 +54,21 @@ public class Location extends DbItem {
         return Visible;
     }
 
+    public int getCollapsing() {
+        return collapsing;
+    }
+
+    public void setCollapsing(int collapsing) {
+        this.collapsing = collapsing;
+    }
+
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
         setLocationId(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE)));
-
+        setCollapsing(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING)));
     }
 
     public void AssignSuplaLocation(SuplaLocation location) {
@@ -82,6 +91,7 @@ public class Location extends DbItem {
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE, getVisible());
+        values.put(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING, getCollapsing());
 
         return values;
     }

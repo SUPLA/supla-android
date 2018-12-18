@@ -75,7 +75,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
-                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL)";
+                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING + " INTEGER NOT NULL default 0)";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
@@ -501,7 +502,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry._ID,
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
-                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE
+                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
         };
 
         String selection = SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = ?";
@@ -509,6 +511,48 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {
                 String.valueOf(locationId),
         };
+
+        Cursor c = db.query(
+                SuplaContract.LocationEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+
+        if (c.getCount() > 0) {
+
+            c.moveToFirst();
+
+            result = new Location();
+            result.AssignCursorData(c);
+        }
+
+        c.close();
+        db.close();
+
+        return result;
+    }
+
+    public Location getLocation(String caption) {
+
+        Location result = null;
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                SuplaContract.LocationEntry._ID,
+                SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID,
+                SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
+                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
+        };
+
+        String selection = SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " = ?";
+
+        String[] selectionArgs = {caption};
 
         Cursor c = db.query(
                 SuplaContract.LocationEntry.TABLE_NAME,
@@ -559,6 +603,34 @@ public class DbHelper extends SQLiteOpenHelper {
 
             location.AssignSuplaLocation(suplaLocation);
             location.setVisible(1);
+
+            String selection = SuplaContract.LocationEntry._ID + " LIKE ?";
+            String[] selectionArgs = {String.valueOf(location.getId())};
+
+            db.update(
+                    SuplaContract.LocationEntry.TABLE_NAME,
+                    location.getContentValues(),
+                    selection,
+                    selectionArgs);
+
+        }
+
+        if (db != null) {
+            db.close();
+            return true;
+        }
+
+
+        return false;
+    }
+
+    public boolean updateLocation(Location location) {
+
+        SQLiteDatabase db = null;
+
+        if (location != null) {
+
+            db = getWritableDatabase();
 
             String selection = SuplaContract.LocationEntry._ID + " LIKE ?";
             String[] selectionArgs = {String.valueOf(location.getId())};
