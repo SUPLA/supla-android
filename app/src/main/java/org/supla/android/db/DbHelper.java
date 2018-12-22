@@ -454,6 +454,10 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
+                + " INTEGER NOT NULL default 0");
     }
 
     @Override
