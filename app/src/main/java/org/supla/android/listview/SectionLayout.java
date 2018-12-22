@@ -34,9 +34,10 @@ import org.supla.android.R;
 public class SectionLayout extends LinearLayout {
 
     public interface OnSectionLayoutTouchListener {
-        void onSectionLayoutTouch(String caption);
+        void onSectionLayoutTouch(String caption, int locationId);
     }
 
+    private int locationId;
     private TextView Caption;
     private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
 
@@ -86,9 +87,11 @@ public class SectionLayout extends LinearLayout {
     }
 
     public void setCaption(String caption) {
-
         Caption.setText(caption);
+    }
 
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 
     public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener listener) {
@@ -99,7 +102,7 @@ public class SectionLayout extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(Caption.getText().toString());
+            onSectionLayoutTouchListener.onSectionLayoutTouch(Caption.getText().toString(), locationId);
         }
 
         //return super.onTouchEvent(event);

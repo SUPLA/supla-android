@@ -51,13 +51,16 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
 
     public class SectionItem {
-
+        private int locationId;
+        private int collapsed;
         private String caption;
         private int position;
         private SectionLayout view;
 
-        public SectionItem(int position, String caption) {
+        public SectionItem(int position, int locationId, int collapsed, String caption) {
             this.position = position;
+            this.locationId = locationId;
+            this.collapsed = collapsed;
             this.caption = caption;
         }
 
@@ -67,6 +70,14 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
         public String getCaption() {
             return caption;
+        }
+
+        public int getLocationId() {
+            return locationId;
+        }
+
+        public int getCollapsed() {
+            return collapsed;
         }
 
         public SectionLayout getView() {
@@ -127,16 +138,21 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                 && !cursor.isClosed() ) {
 
             String caption = null;
-            int col_idx = cursor.getColumnIndex("section");
+            int section_col_idx = cursor.getColumnIndex("section");
 
             if ( cursor.moveToFirst() )
                 do {
 
                     if ( caption == null
-                            || !cursor.getString(col_idx).equals(caption)) {
+                            || !cursor.getString(section_col_idx).equals(caption)) {
 
-                        caption = cursor.getString(col_idx);
-                        Sections.add(new SectionItem(Sections.size() + cursor.getPosition(), caption));
+                        caption = cursor.getString(section_col_idx);
+                        Sections.add(
+                                new SectionItem(Sections.size() + cursor.getPosition(),
+                                        cursor.getInt(cursor.getColumnIndex("locationid")),
+                                        cursor.getInt(cursor.getColumnIndex("collapsed")),
+                                        caption)
+                        );
                     }
 
                 }while (cursor.moveToNext());
@@ -302,6 +318,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             if ( ((SectionItem)obj).view == null ) {
                 ((SectionItem)obj).view = new SectionLayout(context);
                 ((SectionItem)obj).view.setCaption(((SectionItem)obj).getCaption());
+                ((SectionItem)obj).view.setLocationId(((SectionItem)obj).getLocationId());
                 ((SectionItem)obj).view.setOnSectionLayoutTouchListener(this);
 
                 sectionCollapsed.put(((SectionItem) obj).caption, true);
@@ -316,22 +333,23 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             }
 
             ChannelBase cbase;
+            int _collapsed = 0;
 
             if (isGroup()) {
                 cbase = new ChannelGroup();
+                _collapsed = 0x2;
             } else {
                 cbase = new Channel();
+                _collapsed = 0x1;
             }
 
             cbase.AssignCursorData((Cursor)obj);
             SectionItem channelSection = getSectionAtPosition(position);
             setData((ChannelLayout) convertView, cbase, channelSection);
 
-            Location location = dbHelper.getLocation(channelSection.caption);
-            if(location!=null) {
-                if(location.getCollapsing()==1) {
-                    return new View(context);
-                }
+            int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
+            if ((collapsed & _collapsed) > 0) {
+                return new View(context);
             }
         }
 
@@ -366,11 +384,20 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     }
 
     @Override
-    public void onSectionLayoutTouch(String caption) {
-        Location location = dbHelper.getLocation(caption);
-        int newValue = location.getCollapsing() == 1 ? 0 : 1;
+    public void onSectionLayoutTouch(String caption, int locationId) {
 
-        location.setCollapsing(newValue);
+        int _collapsed = isGroup() ? 0x2 : 0x1;
+
+        Location location = dbHelper.getLocation(locationId);
+        int collapsed = location.getCollapsed();
+
+        if ((collapsed & _collapsed) > 0) {
+            collapsed ^= _collapsed;
+        } else {
+            collapsed |= _collapsed;
+        }
+
+        location.setCollapsed(collapsed);
         dbHelper.updateLocation(location);
         notifyDataSetChanged();
     }

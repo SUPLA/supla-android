@@ -33,7 +33,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_LOCATIONID = "locationid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_VISIBLE = "visible";
-        public static final String COLUMN_NAME_COLLAPSING = "collapsing";
+        public static final String COLUMN_NAME_COLLAPSED = "collapsed";
     }
 
     public static abstract class ChannelEntry implements BaseColumns {

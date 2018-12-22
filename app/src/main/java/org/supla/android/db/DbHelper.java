@@ -76,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
-                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING + " INTEGER NOT NULL default 0)";
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " INTEGER NOT NULL default 0)";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
@@ -456,7 +456,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " INTEGER NOT NULL default 0");
 
         execSQL(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
-                + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
+                + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
     }
 
@@ -497,7 +497,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    private Location getLocation(int locationId) {
+    public Location getLocation(int locationId) {
 
         Location result = null;
         SQLiteDatabase db = getReadableDatabase();
@@ -507,7 +507,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
-                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
         };
 
         String selection = SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = ?";
@@ -540,49 +540,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return result;
     }
-
-    public Location getLocation(String caption) {
-
-        Location result = null;
-        SQLiteDatabase db = getReadableDatabase();
-
-        String[] projection = {
-                SuplaContract.LocationEntry._ID,
-                SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID,
-                SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
-                SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
-                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSING
-        };
-
-        String selection = SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " = ?";
-
-        String[] selectionArgs = {caption};
-
-        Cursor c = db.query(
-                SuplaContract.LocationEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-
-        if (c.getCount() > 0) {
-
-            c.moveToFirst();
-
-            result = new Location();
-            result.AssignCursorData(c);
-        }
-
-        c.close();
-        db.close();
-
-        return result;
-    }
-
 
     public boolean updateLocation(SuplaLocation suplaLocation) {
 
@@ -1145,6 +1102,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "C." + SuplaContract.ChannelViewEntry._ID + " "
                 + SuplaContract.ChannelViewEntry._ID
                 + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID + " "
@@ -1194,6 +1152,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "G." + SuplaContract.ChannelGroupEntry._ID + " "
                 + SuplaContract.ChannelGroupEntry._ID
                 + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " "
