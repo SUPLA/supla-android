@@ -45,7 +45,9 @@ public class CreateAccountActivity extends NavigationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createaccount);
         mWebView = (WebView) findViewById(R.id.webBrowser);
+
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
 
         progress = (ProgressBar)findViewById(R.id.caProgressBar);
         progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
@@ -65,6 +67,6 @@ public class CreateAccountActivity extends NavigationActivity {
         progress.setVisibility(View.VISIBLE);
         mWebView.setWebViewClient(webViewClient);
         mWebView.setVisibility(View.GONE);
-        mWebView.loadUrl("https://cloud.supla.org/auth/create");
+        mWebView.loadUrl(getResources().getString(R.string.create_url));
     }
 }

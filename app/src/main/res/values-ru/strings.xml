@@ -3,6 +3,7 @@
     <string name="feedback_title">Написать отзыв</string>
     <string name="donate_title">Donate</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=ru</string>
 
     <string name="version">версия</string>
 

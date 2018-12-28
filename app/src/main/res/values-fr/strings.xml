@@ -3,6 +3,7 @@
     <string name="feedback_title">Envoyer un e-mail</string>
     <string name="donate_title">Faire un don</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=fr</string>
 
     <string name="version">version</string>
 

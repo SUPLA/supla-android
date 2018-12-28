@@ -5,6 +5,8 @@
     <string name="feedback_title">Siųsti el. laišką</string>
     <string name="donate_title">Paremti projektą</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\\u0026hosted_button_id=L4N7RSWME6LG2</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=lt</string>
+
     <string name="version">versija</string>
     <string name="feedback">Grįžtamasis ryšis</string>
     <string name="about">Apie programą</string>
