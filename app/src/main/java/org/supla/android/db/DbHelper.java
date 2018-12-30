@@ -91,6 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + " INTEGER NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
@@ -448,6 +449,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " SMALLINT NOT NULL default 0");
 
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE
+                + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID
                 + " SMALLINT NOT NULL default 0");
 
@@ -684,6 +689,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE,
@@ -1109,6 +1115,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE + " "

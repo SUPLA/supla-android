@@ -28,6 +28,7 @@ import org.supla.android.lib.SuplaChannel;
 public class Channel extends ChannelBase {
 
     private ChannelValue Value;
+    private int Type;
     private int ProtocolVersion;
     private short ManufacturerID;
     private short ProductID;
@@ -35,6 +36,12 @@ public class Channel extends ChannelBase {
 
     public int getChannelId() {
         return getRemoteId();
+    }
+
+    public int getType() { return Type; };
+
+    public void setType(int type) {
+        Type = type;
     }
 
     public void setProtocolVersion(int protocolVersion) {
@@ -90,6 +97,7 @@ public class Channel extends ChannelBase {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
         setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
+        setType(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_TYPE)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC)));
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
@@ -114,6 +122,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID, getDeviceID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC, getFunc());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_TYPE, getType());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());
@@ -129,6 +138,7 @@ public class Channel extends ChannelBase {
     public void Assign(SuplaChannel channel) {
         super.Assign(channel);
         setDeviceID(channel.DeviceID);
+        setType(channel.Type);
         setProtocolVersion(channel.ProtocolVersion);
         setManufacturerID(channel.ManufacturerID);
         setProductID(channel.ProductID);
@@ -139,6 +149,7 @@ public class Channel extends ChannelBase {
 
     public boolean Diff(SuplaChannel channel) {
         return super.Diff(channel)
+                || channel.Type != getType()
                 || channel.DeviceID != getDeviceID()
                 || channel.ProtocolVersion != getProtocolVersion()
                 || channel.ManufacturerID != getManufacturerID()
@@ -150,6 +161,7 @@ public class Channel extends ChannelBase {
     public boolean Diff(Channel channel) {
 
         return super.Diff(channel)
+                || channel.getType() != getType()
                 || channel.getDeviceID() != getDeviceID()
                 || channel.getProtocolVersion() != getProtocolVersion()
                 || channel.getManufacturerID() != getManufacturerID()

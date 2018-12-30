@@ -20,6 +20,7 @@ package org.supla.android.lib;
 
 public class SuplaChannel extends SuplaChannelBase {
 
+    public int Type;
     public int ProtocolVersion;
     public short ManufacturerID;
     public short ProductID;
