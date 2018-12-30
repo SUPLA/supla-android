@@ -157,6 +157,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ", " +
@@ -433,8 +434,6 @@ public class DbHelper extends SQLiteOpenHelper {
     private void upgradeToV6(SQLiteDatabase db) {
         createElectricityMeterLogTable(db);
         createElectricityMeterLogView(db);
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
-        createChannelView(db);
 
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID
@@ -463,6 +462,9 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
+
+        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        createChannelView(db);
     }
 
     @Override
