@@ -47,7 +47,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_TYPE = "type";
         public static final String COLUMN_NAME_FUNC = "func";
         public static final String COLUMN_NAME_VISIBLE = "visible";
-        public static final String COLUMN_NAME_LOCATIONID = "locatonid"; // SuplaLocation.Id
+        public static final String COLUMN_NAME_LOCATIONID = "locationid"; // SuplaLocation.Id
         public static final String COLUMN_NAME_ALTICON = "alticon";
         public static final String COLUMN_NAME_USERICON = "usericon";
         public static final String COLUMN_NAME_MANUFACTURERID = "manufacturerid";
