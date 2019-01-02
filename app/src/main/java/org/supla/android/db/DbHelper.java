@@ -1355,10 +1355,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return result.toArray(new Integer[0]);
     }
 
+    public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
 
-    public int getElectricityMeterMaxTimestamp(int channelId) {
-
-        String selection = "SELECT MAX("
+        String selection = "SELECT "+
+                (min ? "MIN" : "MAX")
+                +"("
                 +SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP+") FROM "
                 +SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 +" WHERE "+SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
@@ -1466,6 +1467,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public void deleteElectricityMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
     }
 
     public void deleteUncalculatedElectricityMeasurements(SQLiteDatabase db, int channelId) {

@@ -1,13 +1,10 @@
 package org.supla.android.restapi;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.supla.android.Trace;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.ElectricityMeasurementItem;
 
 
@@ -21,8 +18,16 @@ public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLog
         super(context);
     }
 
+    protected long getMinTimestamp() {
+        return getMeasurementsDbH().getElectricityMeterMeasurementTimestamp(getChannelId(), true);
+    }
+
     protected long getMaxTimestamp() {
-        return getMeasurementsDbH().getElectricityMeterMaxTimestamp(getChannelId());
+        return getMeasurementsDbH().getElectricityMeterMeasurementTimestamp(getChannelId(), false);
+    }
+
+    protected void EraseMeasurements(SQLiteDatabase db) {
+        getMeasurementsDbH().deleteElectricityMeasurements(db, getChannelId());
     }
 
     protected void SaveMeasurementItem(SQLiteDatabase db,

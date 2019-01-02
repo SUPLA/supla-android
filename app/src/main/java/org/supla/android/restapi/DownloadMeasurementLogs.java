@@ -17,7 +17,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         super(context);
     }
 
+    abstract protected long getMinTimestamp();
     abstract protected long getMaxTimestamp();
+    abstract protected void EraseMeasurements(SQLiteDatabase db);
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
     protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
@@ -29,10 +31,44 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             return null;
         }
 
+        ApiRequestResult result = apiRequest("channels/"
+                +Integer.toString(getChannelId())
+                +"/measurement-logs?order=ASC"
+                +"&limit=2&offset=0");
+
+        if (result!=null && result.getCode() == 200) {
+            boolean doErase = false;
+            if (result.getTotalCount() == 0) {
+                doErase = true;
+            } else if (result.getJObj() instanceof JSONArray) {
+                JSONArray arr = (JSONArray)result.getJObj();
+                boolean found = false;
+                long min = getMinTimestamp();
+                for(int a=0;a<arr.length();a++) {
+                    try {
+                        JSONObject obj = arr.getJSONObject(a);
+                        if (min == obj.getLong("date_timestamp")) {
+                            found = true;
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                doErase = !found;
+            }
+
+            if (doErase) {
+                SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
+                EraseMeasurements(db);
+                db.close();
+            }
+        }
+
         AfterTimestamp = getMaxTimestamp();
 
         do {
-            ApiRequestResult result = apiRequest("channels/"
+            result = apiRequest("channels/"
                     +Integer.toString(getChannelId())
                     +"/measurement-logs?order=ASC"
                     +"&afterTimestamp="
