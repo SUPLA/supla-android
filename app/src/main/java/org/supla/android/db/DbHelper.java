@@ -151,7 +151,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.VIEW_NAME + " AS " +
                 "SELECT C." + SuplaContract.ChannelEntry._ID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
@@ -162,14 +161,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
                 "FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C " +

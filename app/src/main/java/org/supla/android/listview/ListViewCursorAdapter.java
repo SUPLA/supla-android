@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -43,6 +44,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     private int currentSectionIndex;
     private boolean Group;
     private DbHelper dbHelper;
+    private SectionLayout.OnSectionLayoutTouchListener onSectionLayoutTouchListener;
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
@@ -149,7 +151,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                         caption = cursor.getString(section_col_idx);
                         Sections.add(
                                 new SectionItem(Sections.size() + cursor.getPosition(),
-                                        cursor.getInt(cursor.getColumnIndex("locationid")),
+                                        cursor.getInt(cursor.getColumnIndex("locatonid")),
                                         cursor.getInt(cursor.getColumnIndex("collapsed")),
                                         caption)
                         );
@@ -328,10 +330,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
         } else if ( obj instanceof Cursor ) {
 
-            if ( convertView == null || !(convertView instanceof ChannelLayout) ) {
-                convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
-            }
-
             ChannelBase cbase;
             int _collapsed = 0;
 
@@ -343,14 +341,28 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                 _collapsed = 0x1;
             }
 
+            int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
+            if ((collapsed & _collapsed) > 0) {
+
+                if (convertView == null
+                        || !(convertView instanceof  View)
+                        || convertView.getVisibility() != View.GONE) {
+                    convertView = new View(context);
+                    convertView.setVisibility(View.GONE);
+                }
+
+                return convertView;
+            }
+
+            if ( convertView == null
+                    || !(convertView instanceof ChannelLayout)
+                    || convertView.getVisibility() == View.GONE  ) {
+                convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
+            }
+
             cbase.AssignCursorData((Cursor)obj);
             SectionItem channelSection = getSectionAtPosition(position);
             setData((ChannelLayout) convertView, cbase, channelSection);
-
-            int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
-            if ((collapsed & _collapsed) > 0) {
-                return new View(context);
-            }
         }
 
         return convertView;
@@ -384,22 +396,14 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     }
 
     @Override
-    public void onSectionLayoutTouch(String caption, int locationId) {
-
-        int _collapsed = isGroup() ? 0x2 : 0x1;
-
-        Location location = dbHelper.getLocation(locationId);
-        int collapsed = location.getCollapsed();
-
-        if ((collapsed & _collapsed) > 0) {
-            collapsed ^= _collapsed;
-        } else {
-            collapsed |= _collapsed;
+    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
+        if (onSectionLayoutTouchListener != null) {
+            onSectionLayoutTouchListener.onSectionLayoutTouch(this, caption, locationId);
         }
+    }
 
-        location.setCollapsed(collapsed);
-        dbHelper.updateLocation(location);
-        notifyDataSetChanged();
+    public void setOnSectionLayoutTouchListener(SectionLayout.OnSectionLayoutTouchListener listener) {
+        onSectionLayoutTouchListener = listener;
     }
 
 }

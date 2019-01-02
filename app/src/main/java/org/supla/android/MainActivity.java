@@ -33,17 +33,22 @@ import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
+import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.db.DbHelper;
+import org.supla.android.listview.SectionLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends NavigationActivity implements OnClickListener, ChannelListView.OnChannelButtonTouchListener, ChannelListView.OnDetailListener {
+public class MainActivity extends NavigationActivity implements OnClickListener,
+        ChannelListView.OnChannelButtonTouchListener,
+        ChannelListView.OnDetailListener,
+        SectionLayout.OnSectionLayoutTouchListener {
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
@@ -106,6 +111,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (channelListViewCursorAdapter == null) {
 
             channelListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
+            channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             channelLV.setAdapter(channelListViewCursorAdapter);
 
             return true;
@@ -123,6 +129,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (cgroupListViewCursorAdapter == null) {
 
             cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor(), true);
+            cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
 
             return true;
@@ -417,5 +424,38 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuButton();
     }
 
+    @Override
+    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
+
+        int _collapsed = 0;
+        DbHelper dbHelper = new DbHelper(this);
+
+        if (sender == channelLV.getAdapter()) {
+            _collapsed = 0x1;
+        } else if (sender == cgroupLV.getAdapter()) {
+            _collapsed = 0x2;
+        } else {
+            return;
+        }
+
+        Location location = dbHelper.getLocation(locationId);
+        int collapsed = location.getCollapsed();
+
+        if ((collapsed & _collapsed) > 0) {
+            collapsed ^= _collapsed;
+        } else {
+            collapsed |= _collapsed;
+        }
+
+        location.setCollapsed(collapsed);
+        dbHelper.updateLocation(location);
+
+        if (sender == channelLV.getAdapter()) {
+            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+        } else {
+            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+        }
+
+    }
 }
 

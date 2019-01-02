@@ -34,7 +34,7 @@ import org.supla.android.R;
 public class SectionLayout extends LinearLayout {
 
     public interface OnSectionLayoutTouchListener {
-        void onSectionLayoutTouch(String caption, int locationId);
+        void onSectionLayoutTouch(Object sender, String caption, int locationId);
     }
 
     private int locationId;
@@ -102,7 +102,7 @@ public class SectionLayout extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(Caption.getText().toString(), locationId);
+            onSectionLayoutTouchListener.onSectionLayoutTouch(this, Caption.getText().toString(), locationId);
         }
 
         //return super.onTouchEvent(event);
