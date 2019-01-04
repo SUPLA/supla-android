@@ -1104,7 +1104,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "C." + SuplaContract.ChannelViewEntry._ID + " "
                 + SuplaContract.ChannelViewEntry._ID
                 + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
-                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " "
+                + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID + " "
@@ -1156,7 +1157,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "G." + SuplaContract.ChannelGroupEntry._ID + " "
                 + SuplaContract.ChannelGroupEntry._ID
                 + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS section"
-                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                + ", L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " "
+                + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " "
