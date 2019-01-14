@@ -218,7 +218,8 @@ public class ChannelLayout extends LinearLayout {
 
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
-            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR) {
 
                 width *= 2.5;
 
@@ -271,6 +272,11 @@ public class ChannelLayout extends LinearLayout {
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
 
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR) {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
