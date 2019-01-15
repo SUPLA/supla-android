@@ -45,6 +45,7 @@
     <string name="channel_func_thermometer">Thermometer</string>
     <string name="channel_func_humidity">Humidity</string>
     <string name="channel_func_humidityandtemperature">Temperature and Humidity</string>
+    <string name="channel_func_pressuresensor" translatable="false">Pressure sensor</string>
     <string name="channel_func_dimmer">Dimmer</string>
     <string name="channel_func_rgblighting">RGB Lighting</string>
     <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>

@@ -168,6 +168,9 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                     idx = R.string.channel_func_humidityandtemperature;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
+                    idx = R.string.channel_func_pressuresensor;
+                    break;
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                     idx = R.string.channel_func_noliquidsensor;
                     break;
@@ -363,6 +366,9 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 img_idx = whichImage == WhichOne.First ? R.drawable.thermometer : R.drawable.humidity;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
+                img_idx = R.drawable.pressure;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                 img_idx = active == 1 ? R.drawable.liquid : R.drawable.noliquid;
                 break;
@@ -469,6 +475,15 @@ public abstract class ChannelBase extends DbItem {
                     return String.format("%.1f", value.getTemp(getFunc())) + (char) 0x00B0;
                 } else {
                     return "---";
+                }
+
+            case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
+                if (getOnLine()) {
+                    double pressure = value.getDouble(-1);
+                    return String.format("%d hPa", (int) pressure);
+
+                } else {
+                    return "--- hPa";
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
