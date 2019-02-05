@@ -79,6 +79,7 @@ public class SectionLayout extends LinearLayout {
         Caption.setTypeface(type);
         Caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_section_text));
         Caption.setTextColor(getResources().getColor(R.color.channel_section_text));
+        setBackgroundColor(getResources().getColor(R.color.channel_section_bg));
         Caption.setGravity(Gravity.CENTER_VERTICAL);
 
         addView(Caption);
