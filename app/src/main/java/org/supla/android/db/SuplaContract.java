@@ -198,4 +198,15 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_FAE = "phase3_fae";
 
     }
+
+    public static abstract class UserIconsEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "user_icons";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_REMOTEID = "remoteid";
+        public static final String COLUMN_NAME_IMAGE1 = "image1";
+        public static final String COLUMN_NAME_IMAGE2 = "image2";
+        public static final String COLUMN_NAME_IMAGE3 = "image3";
+    }
 }
