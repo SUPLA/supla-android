@@ -937,6 +937,15 @@ public class ChannelLayout extends LinearLayout {
 
                     break;
 
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+
+                    left_onlineStatus.setVisibility(View.INVISIBLE);
+                    right_onlineStatus.setVisibility(View.VISIBLE);
+                    dslider = true;
+
+                    break;
+
                 default:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
