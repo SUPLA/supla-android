@@ -63,6 +63,8 @@
     <string name="channel_func_electricitymeter">Electricity Meter</string>
     <string name="channel_func_gasmeter">Gas Meter</string>
     <string name="channel_func_watermeter">Water Meter</string>
+    <string name="channel_func_thermostat">Thermostat</string>
+    <string name="channel_func_thermostat_hp_homeplus">Home+ Heater</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>

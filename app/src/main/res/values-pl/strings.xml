@@ -159,4 +159,6 @@
     <string name="em_phase1">Faza 1</string>
     <string name="em_phase2">Faza 2</string>
     <string name="em_phase3">Faza 3</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
 </resources>

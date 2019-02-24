@@ -154,4 +154,6 @@ public class SuplaConst {
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
 
+    public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
+
 }

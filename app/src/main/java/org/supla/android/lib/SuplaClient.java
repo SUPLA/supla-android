@@ -117,6 +117,9 @@ public class SuplaClient extends Thread {
 
     private native boolean scOAuthTokenRequest(long _supla_client);
 
+    private native boolean scDeviceCalCfgRequest(long _supla_client, int ChannelID,
+                                                 int Command, int DataType, byte[] Data);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -384,6 +387,20 @@ public class SuplaClient extends Thread {
             if (result) {
                 lastTokenRequest = now;
             }
+        } finally {
+            UnlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean DeviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
+        boolean result;
+
+        LockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
+                    ChannelID, Command, DataType, Data);
         } finally {
             UnlockClientPtr();
         }

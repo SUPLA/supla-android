@@ -207,6 +207,12 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
                     idx = R.string.channel_func_watermeter;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                    idx = R.string.channel_func_thermostat;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+                    idx = R.string.channel_func_thermostat_hp_homeplus;
+                    break;
             }
 
             if (idx == -1)
@@ -423,6 +429,14 @@ public abstract class ChannelBase extends DbItem {
 
             case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
                 img_idx = R.drawable.watermeter;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                img_idx = R.drawable.thermostat;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+                img_idx = R.drawable.thermostat_hp_homeplus;
                 break;
         }
 
