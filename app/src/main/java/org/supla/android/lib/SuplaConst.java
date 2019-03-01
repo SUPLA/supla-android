@@ -85,7 +85,7 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_GAS_METER = 320;
     public final static int SUPLA_CHANNELFNC_WATER_METER = 330;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT = 400;
-    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS = 410;
+    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
@@ -153,7 +153,21 @@ public class SuplaConst {
 
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
+    public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
 
     public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO = 2;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_COOL = 3;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_HEAT = 4;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL = 5;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_ECO = 6;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO = 7;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_DRY = 8;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_FANONY = 9;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_PURIFIER = 10;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_SCHEDULE = 11;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_TIME = 12;
+    public final static int SUPLA_THERMOSTAT_CMD_SET_TEMPERATURE = 13;
+
 
 }

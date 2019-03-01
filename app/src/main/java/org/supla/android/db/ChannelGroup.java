@@ -382,11 +382,11 @@ public class ChannelGroup extends ChannelBase {
         return super.getImageIdx(whichImage, active);
     }
 
-    public String getHumanReadableValue(WhichOne whichOne) {
+    public CharSequence getHumanReadableValue(WhichOne whichOne) {
         return null;
     }
 
-    public String getHumanReadableValue() {
+    public CharSequence getHumanReadableValue() {
         return null;
     }
 

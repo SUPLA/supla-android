@@ -147,7 +147,7 @@ public class ChannelListView extends ListView {
 
                     break;
 
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
 
                     if (!(mDetailLayout instanceof ChannelDetailThermostatHP))
                         mDetailLayout = null;
@@ -175,7 +175,7 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     mDetailLayout = new ChannelDetailThermostat(getContext(), this);
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
                     break;
             }

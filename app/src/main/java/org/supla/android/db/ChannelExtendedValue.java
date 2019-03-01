@@ -22,6 +22,8 @@ import android.database.Cursor;
 
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaChannelExtendedValue;
+import org.supla.android.lib.SuplaChannelImpulseCounterValue;
+import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaConst;
 
 import java.io.ByteArrayInputStream;
@@ -54,6 +56,20 @@ public class ChannelExtendedValue extends DbItem {
         return ExtendedValue == null ? 0 : ExtendedValue.Type;
     }
 
+    private Object ByteArrayToObject(byte[] value) {
+        try {
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(value);
+            ObjectInputStream objectStream = new ObjectInputStream(byteStream);
+            return objectStream.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
@@ -64,26 +80,43 @@ public class ChannelExtendedValue extends DbItem {
 
         ExtendedValue.Type = cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE));
         byte[] value = cursor.getBlob(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
+        Object obj = ByteArrayToObject(value);
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
-                try {
-                    ByteArrayInputStream byteStream = new ByteArrayInputStream(value);
-                    ObjectInputStream objectStream = new ObjectInputStream(byteStream);
-                    Object obj = objectStream.readObject();
-                    if (obj != null && obj instanceof SuplaChannelElectricityMeterValue) {
-                        ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                if (obj != null && obj instanceof SuplaChannelElectricityMeterValue) {
+                    ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
+                }
+                break;
+            case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
+                if (obj != null && obj instanceof SuplaChannelImpulseCounterValue) {
+                    ExtendedValue.ImpulseCounterValue = (SuplaChannelImpulseCounterValue) obj;
+                }
+                break;
+            case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
+                if (obj != null && obj instanceof SuplaChannelThermostatValue) {
+                    ExtendedValue.ThermostatValue = (SuplaChannelThermostatValue) obj;
                 }
                 break;
             default:
                 ExtendedValue.Value = value;
                 break;
         }
+    }
+
+    private byte[] ObjectToByteArray(Object obj) {
+        byte[] value = new byte[0];
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
+            objectStream.writeObject(obj);
+            objectStream.close();
+            value = byteStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return value;
     }
 
     public ContentValues getContentValues() {
@@ -97,15 +130,13 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
-                try {
-                    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-                    ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
-                    objectStream.writeObject(ExtendedValue.ElectricityMeterValue);
-                    objectStream.close();
-                    value = byteStream.toByteArray();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                value = ObjectToByteArray(ExtendedValue.ElectricityMeterValue);
+                break;
+            case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
+                value = ObjectToByteArray(ExtendedValue.ImpulseCounterValue);
+                break;
+            case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
+                value = ObjectToByteArray(ExtendedValue.ThermostatValue);
                 break;
             default:
                 if (ExtendedValue != null && ExtendedValue.Value != null) {

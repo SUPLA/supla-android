@@ -46,6 +46,7 @@ public class ChannelDetailThermostat extends DetailLayout implements View.OnClic
 
     @Override
     public void onClick(View view) {
+
     }
 }
 

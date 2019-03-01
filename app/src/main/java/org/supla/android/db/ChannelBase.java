@@ -20,6 +20,8 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 
 import org.supla.android.R;
 import org.supla.android.lib.SuplaChannelBase;
@@ -210,7 +212,7 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     idx = R.string.channel_func_thermostat;
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     idx = R.string.channel_func_thermostat_hp_homeplus;
                     break;
             }
@@ -435,7 +437,7 @@ public abstract class ChannelBase extends DbItem {
                 img_idx = R.drawable.thermostat;
                 break;
 
-            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HP_HOMEPLUS:
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 img_idx = R.drawable.thermostat_hp_homeplus;
                 break;
         }
@@ -454,7 +456,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    protected String getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
         if (value == null) {
             return "";
@@ -539,14 +541,45 @@ public abstract class ChannelBase extends DbItem {
                     return "--- kWh";
                 }
 
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+
+                String measured;
+                String preset;
+
+                if (getOnLine()
+                        && value.getMeasuredTemp(getFunc()) > -273) {
+                    measured = String.format("%.2f", value.getMeasuredTemp(getFunc()))
+                            + (char) 0x00B0;
+                } else {
+                    measured = "---" + (char) 0x00B0;
+                };
+
+                if (getOnLine()
+                        && value.getPresetTemp(getFunc()) > -273) {
+                    preset = "/"+Integer.toString((int)value.getPresetTemp(getFunc()))
+                            + (char) 0x00B0;
+                } else {
+                    preset = "/---"+ (char) 0x00B0;
+                };
+
+                SpannableString ss =  new SpannableString(measured+preset);
+                ss.setSpan(new RelativeSizeSpan(0.7f),
+                        measured.length(),
+                        measured.length()+preset.length(),
+                        0); // set size
+
+
+                return ss;
+
         }
 
 
         return null;
     }
 
-    public abstract String getHumanReadableValue(WhichOne whichOne);
-    public abstract String getHumanReadableValue();
+    public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
+    public abstract CharSequence getHumanReadableValue();
 
     public void Assign(SuplaChannelBase base) {
 

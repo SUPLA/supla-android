@@ -216,10 +216,10 @@ public class Channel extends ChannelBase {
         return super.getImageIdx(whichImage, Value);
     }
 
-    public String getHumanReadableValue(WhichOne whichOne) {
+    public CharSequence getHumanReadableValue(WhichOne whichOne) {
         return super.getHumanReadableValue(whichOne, Value);
     }
-    public String getHumanReadableValue() {
+    public CharSequence getHumanReadableValue() {
         return super.getHumanReadableValue(WhichOne.First, Value);
     }
 

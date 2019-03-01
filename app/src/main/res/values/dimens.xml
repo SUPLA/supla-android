@@ -24,6 +24,8 @@
     <dimen name="channel_depthimgtext_height">50dp</dimen>
     <dimen name="channel_emimgtext_width">100dp</dimen>
     <dimen name="channel_emimgtext_height">50dp</dimen>
+    <dimen name="channel_thimgtext_width">100dp</dimen>
+    <dimen name="channel_thimgtext_height">50dp</dimen>
     <dimen name="channel_distanceimgtext_width">150dp</dimen>
     <dimen name="channel_distanceimgtext_height">50dp</dimen>
     <dimen name="channel_distanceimg_width">150dp</dimen>
