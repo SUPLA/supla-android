@@ -27,7 +27,7 @@ import org.supla.android.db.SuplaContract;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class ChartHelper implements IAxisValueFormatter {
+public class ElectricityChartHelper implements IAxisValueFormatter {
 
     private Context context;
     private ChartType ctype = ChartType.Bar_Hourly;
@@ -36,7 +36,7 @@ public class ChartHelper implements IAxisValueFormatter {
     private ArrayList<String> values = new ArrayList<>();
     private int xValueMax;
 
-    public ChartHelper(Context context) {
+    public ElectricityChartHelper(Context context) {
         this.context = context;
     }
 
