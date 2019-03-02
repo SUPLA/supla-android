@@ -199,6 +199,19 @@ public class SuplaContract {
 
     }
 
+    public static abstract class ThermostatLogEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "th_log";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+
+        public static final String COLUMN_NAME_ON = "ison";
+        public static final String COLUMN_NAME_MEASUREDTEMPERATURE = "measured";
+        public static final String COLUMN_NAME_PRESETTEMPERATURE = "preset";
+    }
+
     public static abstract class UserIconsEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "user_icons";

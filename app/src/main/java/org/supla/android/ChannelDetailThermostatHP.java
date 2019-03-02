@@ -15,13 +15,15 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.restapi.DownloadThermostatMeasurements;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.logging.Handler;
 
-public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, SuplaRestApiClientTask.IAsyncResults {
 
     public final static int STATUS_POWERON = 0x01;
     public final static int STATUS_PROGRAMMODE = 0x04;
@@ -44,6 +46,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private TextView tvWaterTemp;
     private SeekBar sbTemperature;
     private long refreshLock = 0;
+    private DownloadThermostatMeasurements dtm;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -184,10 +187,25 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     }
 
+    private void runDownloadTask() {
+        if (dtm != null && !dtm.isAlive(90)) {
+            dtm.cancel(true);
+            dtm = null;
+        }
+
+        if (dtm == null) {
+            dtm = new DownloadThermostatMeasurements(this.getContext());
+            dtm.setChannelId(getRemoteId());
+            dtm.setDelegate(this);
+            dtm.execute();
+        };
+    }
+
     @Override
     public void onDetailShow() {
         super.onDetailShow();
         OnChannelDataChanged();
+        runDownloadTask();
     }
 
     private void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
@@ -285,6 +303,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                     (Double)tvPresetTemp.getTag());
         }
 
+    }
+
+    @Override
+    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
+
+    }
+
+    @Override
+    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
+        dtm = null;
     }
 }
 

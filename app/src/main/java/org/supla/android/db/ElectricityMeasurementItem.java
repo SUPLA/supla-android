@@ -6,10 +6,8 @@ import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ElectricityMeasurementItem extends DbItem {
+public class ElectricityMeasurementItem extends MeasurementItem {
 
-    private int ChannelId;
-    private long Timestamp;
     private double[] fae;
     private double[] rae;
     private double[] fre;
@@ -33,22 +31,6 @@ public class ElectricityMeasurementItem extends DbItem {
         rre = emi.rre.clone();
         Calculated = emi.Calculated;
         Divided = emi.Divided;
-    }
-
-    public int getChannelId() {
-        return ChannelId;
-    }
-
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
-    }
-
-    public long getTimestamp() {
-        return Timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        Timestamp = timestamp;
     }
 
     public void setFae(int phase, double fae) {
@@ -117,21 +99,6 @@ public class ElectricityMeasurementItem extends DbItem {
 
     public boolean isDivided() {
         return Divided;
-    }
-
-    private void putNullOrDouble(ContentValues values, String name, double value) {
-        if (value == 0) {
-            values.putNull(name);
-        } else {
-            values.put(name, value);
-        }
-    }
-
-    protected long getLong(JSONObject obj, String name) throws JSONException {
-        if (!obj.isNull(name)) {
-            return obj.getLong(name);
-        }
-        return 0;
     }
 
     public void AssignJSONObject(JSONObject obj) throws JSONException {
