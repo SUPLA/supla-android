@@ -36,12 +36,14 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     protected static final String log_tag = "SuplaRestApiClientTask";
     private Context _context;
     private int ChannelId = 0;
+    private long ActivityTime = 0;
     private SuplaOAuthToken Token;
     private DbHelper MDbH = null;
     private DbHelper DbH = null;
     private IAsyncResults delegate;
 
     public SuplaRestApiClientTask(Context context) {
+        keepAlive();
         _context = context;
     }
 
@@ -93,6 +95,14 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
     public synchronized SuplaOAuthToken getTokenWhenIsAlive() {
         return Token != null && Token.isAlive() ? new SuplaOAuthToken(Token) : null;
+    }
+
+    public synchronized boolean isAlive(int timeout) {
+        return isCancelled() && ActivityTime - (System.currentTimeMillis() / 1000L) < timeout;
+    }
+
+    public synchronized void keepAlive() {
+        ActivityTime = System.currentTimeMillis() / 1000L;
     }
 
     private void makeTokenRequest() {

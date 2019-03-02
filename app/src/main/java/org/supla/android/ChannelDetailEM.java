@@ -297,6 +297,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     }
 
     private void runDownloadTask() {
+        if (demm != null && !demm.isAlive(90)) {
+            demm.cancel(true);
+            demm = null;
+        }
+
         if (demm == null) {
             demm = new DownloadElectricityMeterMeasurements(this.getContext());
             demm.setChannelId(getRemoteId());

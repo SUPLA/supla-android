@@ -116,6 +116,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                         if (isCancelled()) {
                             break;
                         }
+
+                        keepAlive();
                     }
 
                 } catch (JSONException e) {
