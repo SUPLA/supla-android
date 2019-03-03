@@ -1,15 +1,16 @@
 package org.supla.android;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Looper;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+
+import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
@@ -18,12 +19,9 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeMap;
-import java.util.logging.Handler;
 
-public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, SuplaRestApiClientTask.IAsyncResults {
+public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
+        SuplaRestApiClientTask.IAsyncResults {
 
     public final static int STATUS_POWERON = 0x01;
     public final static int STATUS_PROGRAMMODE = 0x04;
@@ -34,19 +32,19 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public final static int BTN_SET_ON = 1;
     public final static int BTN_SET_TOGGLE = 2;
 
-    private Timer delayTimer1 = null;
-
     private Button btnOnOff;
     private Button btnNormal;
     private Button btnEco;
     private Button btnAuto;
     private Button btnTurbo;
-    private TextView tvMeasuredTemp;
-    private TextView tvPresetTemp;
-    private TextView tvWaterTemp;
-    private SeekBar sbTemperature;
+    private Button btnPlus;
+    private Button btnMinus;
+    private TextView tvTemperature;
     private long refreshLock = 0;
+    private int presetTemperature = 0;
+    private Double measuredTemperature = 0.00;
     private DownloadThermostatMeasurements dtm;
+    private ThermostatChartHelper chartHelper;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -68,6 +66,12 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     protected void init() {
         super.init();
 
+        tvTemperature = findViewById(R.id.hpTvTemperature);
+
+        Typeface type = Typeface.createFromAsset(getContext().getAssets(),
+                "fonts/OpenSans-Regular.ttf");
+        tvTemperature.setTypeface(type);
+
         btnOnOff = findViewById(R.id.hpBtnOnOff);
         btnOnOff.setOnClickListener(this);
         btnOnOff.setTag(Integer.valueOf(0));
@@ -88,14 +92,14 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         btnTurbo.setOnClickListener(this);
         btnTurbo.setTag(Integer.valueOf(0));
 
-        tvMeasuredTemp = findViewById(R.id.hpTvMeasuredTemp);
-        tvPresetTemp = findViewById(R.id.hpTvPresetTemp);
-        tvWaterTemp = findViewById(R.id.hpTvWaterTemp);
+        btnPlus = findViewById(R.id.hpBtnPlus);
+        btnPlus.setOnClickListener(this);
 
-        sbTemperature = findViewById(R.id.hpSbTemperature);
-        sbTemperature.setOnSeekBarChangeListener(this);
-        sbTemperature.setMax(100);
-        sbTemperature.setProgress(50);
+        btnMinus = findViewById(R.id.hpBtnMinus);
+        btnMinus.setOnClickListener(this);
+
+        chartHelper = new ThermostatChartHelper(getContext());
+        chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
     }
 
     @Override
@@ -112,35 +116,52 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         tv.setTag(temp);
     }
 
-    private byte setBtnOnOff(Button btn, int setOn, String textOn, String textOff) {
+    private byte setBtnAppearance(Button btn, int setOn, int textOn, int textOff) {
 
         if (setOn == BTN_SET_TOGGLE) {
-            setOn = ((Integer)btn.getTag()).intValue() == 1 ? BTN_SET_OFF : BTN_SET_ON;
+            setOn = btnIsOn(btn) ? BTN_SET_OFF : BTN_SET_ON;
         }
 
         if (setOn == BTN_SET_ON) {
             btn.setTag(1);
-            btn.setBackgroundColor(Color.GREEN);
-            if (textOn != null) {
+            btn.setBackgroundResource(R.drawable.hp_button_on);
+            if (textOn != 0) {
                 btn.setText(textOn);
             }
             return 1;
         } else {
             btn.setTag(0);
-            btn.setBackgroundColor(Color.RED);
-            if (textOff != null) {
+            btn.setBackgroundResource(R.drawable.hp_button_off);
+            if (textOff != 0) {
                 btn.setText(textOn);
             }
         }
         return 0;
     }
 
-    private byte setBtnOnOff(Button btn, int setOn) {
-        return setBtnOnOff(btn, setOn, null, null);
+    private byte setBtnAppearance(Button btn, int setOn) {
+        return setBtnAppearance(btn, setOn, 0, 0);
+    }
+
+    private byte setBtnAppearance(Button btn, boolean setOn) {
+        return setBtnAppearance(btn, setOn ? BTN_SET_ON : BTN_SET_OFF, 0, 0);
+    }
+
+    private boolean btnIsOn(Button btn) {
+        return ((Integer)btn.getTag()).intValue() == 1;
+    }
+
+    private void displayTemperature() {
+        CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
+                measuredTemperature,
+                new Double(presetTemperature));
+
+        tvTemperature.setText(t);
     }
 
     @Override
     public void OnChannelDataChanged() {
+
         if (refreshLock > System.currentTimeMillis()) {
             return;
         }
@@ -151,39 +172,35 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             return;
         }
 
-        setTemperatureTextView(tvMeasuredTemp,
-                cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0));
-        setTemperatureTextView(tvPresetTemp,
-                cev.getExtendedValue().ThermostatValue.getPresetTemperature(0));
-        setTemperatureTextView(tvWaterTemp,
-                cev.getExtendedValue().ThermostatValue.getPresetTemperature(1));
+        Double temp = cev.getExtendedValue().ThermostatValue.getPresetTemperature(0);
+        presetTemperature = temp != null ? temp.intValue() : 0;
+        measuredTemperature = cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0);
+
+        displayTemperature();
 
         Double ecoReduction = cev.getExtendedValue().ThermostatValue.getPresetTemperature(3);
+        if (ecoReduction != null) {
+            setBtnAppearance(btnEco, ecoReduction > 0.0);
+        }
 
+        Integer flags = cev.getExtendedValue().ThermostatValue.getFlags(4);
 
-            if (ecoReduction != null) {
-                if (ecoReduction > 0) {
-                    btnEco.setTag(1);
-                    btnEco.setBackgroundColor(Color.GREEN);
-                } else {
-                    btnEco.setTag(0);
-                    btnEco.setBackgroundColor(Color.RED);
-                }
-            }
+        if (flags != null) {
+            setBtnAppearance(btnOnOff,(flags & STATUS_POWERON), R.string.hp_on, R.string.hp_off);
+            setBtnAppearance(btnAuto, (flags & STATUS_PROGRAMMODE) > 0);
+        }
 
-            Integer flags = cev.getExtendedValue().ThermostatValue.getFlags(4);
+        Integer turbo = cev.getExtendedValue().ThermostatValue.getValues(4);
+        if (turbo != null) {
+            setBtnAppearance(btnTurbo, turbo > 0);
+        }
 
-            if (flags != null) {
-                setBtnOnOff(btnOnOff,(flags & STATUS_POWERON) > 0 ? BTN_SET_ON : BTN_SET_OFF,
-                        "Włączony", "Wyłączony");
-
-                setBtnOnOff(btnAuto, (flags & STATUS_PROGRAMMODE) > 0 ? BTN_SET_ON : BTN_SET_OFF);
-            }
-
-            Integer turbo = cev.getExtendedValue().ThermostatValue.getValues(4);
-            if (turbo != null) {
-                setBtnOnOff(btnTurbo, turbo > 0 ? BTN_SET_ON : BTN_SET_OFF);
-            }
+        if (!btnIsOn(btnOnOff) || btnIsOn(btnEco)
+                || btnIsOn(btnTurbo) || btnIsOn(btnAuto)) {
+            setBtnAppearance(btnNormal, false);
+        } else {
+            setBtnAppearance(btnNormal, true);
+        }
 
     }
 
@@ -205,6 +222,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public void onDetailShow() {
         super.onDetailShow();
         OnChannelDataChanged();
+        chartHelper.loadThermostatMeasurements(getRemoteId());
         runDownloadTask();
     }
 
@@ -232,32 +250,78 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
     }
 
+    private void setAllButtonsOff(Button skip) {
+        if (skip != btnNormal) {
+            setBtnAppearance(btnNormal, BTN_SET_OFF);
+        }
+
+        if (skip != btnEco) {
+            setBtnAppearance(btnEco, BTN_SET_OFF);
+        }
+
+        if (skip != btnTurbo) {
+            setBtnAppearance(btnTurbo, BTN_SET_OFF);
+        }
+
+        if (skip != btnAuto) {
+            setBtnAppearance(btnAuto, BTN_SET_OFF);
+        }
+    }
+
+    private void setAllButtonsOff() {
+        setAllButtonsOff(null);
+    }
+
     @Override
     public void onClick(View view) {
+        refreshLock = System.currentTimeMillis()+2000;
 
-        refreshLock = System.currentTimeMillis()+1500;
-        // ... timer
+        byte on = 0;
 
+        if (view == btnPlus) {
+            presetTemperature++;
+            if (presetTemperature > 30) {
+                presetTemperature = 30;
+            }
 
-        byte on;
+            setTemperature(0, (double) presetTemperature);
+            displayTemperature();
+        } else if (view == btnMinus) {
+            presetTemperature--;
+            if (presetTemperature < 10) {
+                presetTemperature = 10;
+            }
 
-        if (view == btnOnOff) {
-            on = setBtnOnOff(btnOnOff, BTN_SET_TOGGLE, "Włączony", "Wyłączony");
+            setTemperature(0, (double) presetTemperature);
+            displayTemperature();
+        } else if (view == btnOnOff) {
+            on = setBtnAppearance(btnOnOff, BTN_SET_TOGGLE,  R.string.hp_on,  R.string.hp_off);
+            if (on == 0) {
+                setAllButtonsOff();
+            }
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_TURNON, on);
         } else if (view == btnNormal) {
-            setBtnOnOff(btnNormal, BTN_SET_ON);
+            setBtnAppearance(btnNormal, BTN_SET_ON);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL, null);
+            setAllButtonsOff(btnNormal);
         } else if (view == btnEco) {
-            on = setBtnOnOff(btnEco, BTN_SET_TOGGLE);
+            on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
                     (byte)(on > 0 ? 5 : 0));
         } else if (view == btnAuto) {
-            on = setBtnOnOff(btnAuto, BTN_SET_TOGGLE);
+            on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO, on);
         } else if (view == btnTurbo) {
-            on = setBtnOnOff(btnTurbo, BTN_SET_TOGGLE);
+            on = setBtnAppearance(btnTurbo, BTN_SET_TOGGLE);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO,
                     (byte)(on > 0 ? 3 : 0));
+        }
+
+        if (on == 1 && (view == btnNormal
+                || view == btnEco
+                || view == btnAuto
+                || view == btnTurbo)) {
+            setAllButtonsOff((Button) view);
         }
     }
 
@@ -283,29 +347,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        refreshLock = System.currentTimeMillis()+1500;
-        Double temp = (double)(10 + i * 20 / 100);
-        setTemperatureTextView(tvPresetTemp, temp);
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        if (tvPresetTemp.getTag() instanceof Double
-                && (Double)tvPresetTemp.getTag() >= 10
-                && (Double)tvPresetTemp.getTag() <= 30) {
-            setTemperature(0,
-                    (Double)tvPresetTemp.getTag());
-        }
-
-    }
-
-    @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
 
     }
@@ -313,6 +354,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         dtm = null;
+        chartHelper.loadThermostatMeasurements(getRemoteId());
     }
 }
 

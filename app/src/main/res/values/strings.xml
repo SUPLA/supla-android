@@ -157,6 +157,12 @@
     <string name="em_phase1">Phase 1</string>
     <string name="em_phase2">Phase 2</string>
     <string name="em_phase3">Phase 3</string>
-
+    <string name="hp_on">ON</string>
+    <string name="hp_off">OFF</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Room temperature</string>
 
 </resources>

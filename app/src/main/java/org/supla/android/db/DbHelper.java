@@ -1568,4 +1568,25 @@ public class DbHelper extends SQLiteOpenHelper {
         db.insertWithOnConflict(SuplaContract.ThermostatLogEntry.TABLE_NAME,
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
+
+    public Cursor getThermostatMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+
+        String sql = "SELECT "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.ThermostatLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId)
+                + " AND CURRENT_TIMESTAMP - "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + " < 86400"
+                +" ORDER BY "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
+    }
 }

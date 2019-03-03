@@ -20,7 +20,9 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
 import org.supla.android.R;
@@ -456,6 +458,35 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+                                                              Double presetTemp) {
+        String measured;
+        String preset;
+
+        if (measuredTemp != null && measuredTemp > -273) {
+            measured = String.format("%.2f", measuredTemp)
+                    + (char) 0x00B0;
+        } else {
+            measured = "---" + (char) 0x00B0;
+        };
+
+        if (presetTemp != null && presetTemp > -273) {
+            preset = "/"+Integer.toString(presetTemp.intValue())
+                    + (char) 0x00B0;
+        } else {
+            preset = "/---"+ (char) 0x00B0;
+        };
+
+        SpannableString ss =  new SpannableString(measured+preset);
+        ss.setSpan(new RelativeSizeSpan(0.7f),
+                measured.length(),
+                measured.length()+preset.length(),
+                0); // set size
+
+        return ss;
+    }
+
+    @SuppressLint("DefaultLocale")
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
         if (value == null) {
@@ -544,33 +575,9 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
 
-                String measured;
-                String preset;
-
-                if (getOnLine()
-                        && value.getMeasuredTemp(getFunc()) > -273) {
-                    measured = String.format("%.2f", value.getMeasuredTemp(getFunc()))
-                            + (char) 0x00B0;
-                } else {
-                    measured = "---" + (char) 0x00B0;
-                };
-
-                if (getOnLine()
-                        && value.getPresetTemp(getFunc()) > -273) {
-                    preset = "/"+Integer.toString((int)value.getPresetTemp(getFunc()))
-                            + (char) 0x00B0;
-                } else {
-                    preset = "/---"+ (char) 0x00B0;
-                };
-
-                SpannableString ss =  new SpannableString(measured+preset);
-                ss.setSpan(new RelativeSizeSpan(0.7f),
-                        measured.length(),
-                        measured.length()+preset.length(),
-                        0); // set size
-
-
-                return ss;
+                return getHumanReadableThermostatTemperature(
+                        getOnLine() ? value.getMeasuredTemp(getFunc()) : null,
+                        getOnLine() ? value.getPresetTemp(getFunc()) : null);
 
         }
 
