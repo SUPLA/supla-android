@@ -22,6 +22,7 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;

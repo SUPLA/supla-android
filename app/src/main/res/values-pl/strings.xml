@@ -161,4 +161,16 @@
     <string name="em_phase3">Faza 3</string>
     <string name="channel_func_thermostat">Termostat</string>
     <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
+    <string name="hp_on">WŁĄCZONY</string>
+    <string name="hp_off">WYŁĄCZONY</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Temperatura w pomieszczeniu</string>
+    <string name="hp_cfg_turbo_time">Czas trwania trybu TURBO</string>
+    <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
+    <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
+    <string name="hp_cfg_temp_comfort">Temperatura komfort w trybie AUTO</string>
+    <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
 </resources>

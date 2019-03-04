@@ -8,7 +8,7 @@
     android:visibility="visible">
 
     <RelativeLayout
-        android:id="@+id/hpBottomInfo"
+        android:id="@+id/hpFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -257,7 +257,7 @@
         android:id="@+id/emrlDetails"
         android:layout_width="match_parent"
         android:layout_height="211dp"
-        android:layout_above="@+id/hpBottomInfo"
+        android:layout_above="@+id/hpFooter"
         android:layout_below="@+id/emrlButtons1"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"

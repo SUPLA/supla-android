@@ -659,25 +659,6 @@ public class SuplaClient extends Thread {
     }
 
     private void ChannelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-        if (channelExtendedValueUpdate.Value.ThermostatValue != null) {
-
-
-            Double t0 = channelExtendedValueUpdate.Value.ThermostatValue.getMeasuredTemperature(0);
-            Trace.d("EXTENDED0", t0 == null ? "NULL" : t0.toString());
-
-            Double t1 = channelExtendedValueUpdate.Value.ThermostatValue.getPresetTemperature(0);
-            Trace.d("EXTENDED1", t1 == null ? "NULL" : t1.toString());
-
-            Double t2 = channelExtendedValueUpdate.Value.ThermostatValue.getMeasuredTemperature(2);
-            Trace.d("EXTENDED2", t2 == null ? "NULL" : t2.toString());
-
-            Double t3 = channelExtendedValueUpdate.Value.ThermostatValue.getMeasuredTemperature(3);
-            Trace.d("EXTENDED3", t1 == null ? "NULL" : t3.toString());
-            Trace.d("EXTENDED-", "------");
-
-            Integer flags = channelExtendedValueUpdate.Value.ThermostatValue.getFlags(0);
-
-        }
         if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
                 channelExtendedValueUpdate.Id)) {
             onDataChanged(channelExtendedValueUpdate.Id, 0);

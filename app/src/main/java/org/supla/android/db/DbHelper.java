@@ -939,6 +939,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db;
         ChannelExtendedValue value = getChannelExtendedValue(channelId);
 
+
         if (value == null) {
             value = new ChannelExtendedValue();
             value.setExtendedValue(suplaChannelExtendedValue);
@@ -1580,8 +1581,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
                 + " = "
                 + Integer.toString(channelId)
-                + " AND CURRENT_TIMESTAMP - "
-                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + " < 86400"
                 +" ORDER BY "
                 + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";

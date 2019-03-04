@@ -164,5 +164,10 @@
     <string name="hp_turbo">TURBO</string>
     <string name="hp_auto">AUTO</string>
     <string name="hp_room_temperature">Room temperature</string>
+    <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
+    <string name="hp_cfg_water_max">Maximum water temperature</string>
+    <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
+    <string name="hp_cfg_temp_comfort">Comfort temperature in AUTO mode</string>
+    <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
 
 </resources>

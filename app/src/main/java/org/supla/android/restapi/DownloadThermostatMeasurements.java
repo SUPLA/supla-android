@@ -15,7 +15,12 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         super(context);
     }
 
+    protected int itemsLimitPerRequest() {
+        return 100;
+    }
+
     protected long getMinTimestamp() {
+        //return 0;
         return getMeasurementsDbH().getThermostatMeasurementTimestamp(getChannelId(), true);
     }
 
@@ -36,7 +41,6 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
 
         getMeasurementsDbH().addThermostatMeasurement(db, thi);
 
-        Trace.d("DOWNLOAD", Double.toString(thi.getMeasuredTemperature()));
     }
 
 }

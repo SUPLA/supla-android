@@ -41,6 +41,8 @@ public class Preferences {
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
     private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
+    private static final String pref_hp_turbo_time = "pref_hp_turbo_time";
+    private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
 
     private SharedPreferences _prefs;
 
@@ -199,6 +201,26 @@ public class Preferences {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_wizard_selected_wifi, SSID);
         editor.apply();
+    }
+
+    public void setHeatpolTurboTime(int time) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putInt(pref_hp_turbo_time, time);
+        editor.apply();
+    }
+
+    public int getHeatpolTurboTime() {
+        return _prefs.getInt(pref_hp_turbo_time, 1);
+    }
+
+    public void setHeatpolEcoReduction(int temp) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putInt(pref_hp_eco_reduction, temp);
+        editor.apply();
+    }
+
+    public int getHeatpolEcoReduction() {
+        return _prefs.getInt(pref_hp_eco_reduction, 5);
     }
 
 }

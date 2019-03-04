@@ -17,7 +17,6 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import org.supla.android.db.DbHelper;
-import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         barChart.getXAxis().setValueFormatter(this);
-        barChart.getXAxis().setGranularity(0.5f);
+        barChart.getXAxis().setGranularity(1f);
         barChart.getAxisLeft().setDrawLabels(false);
 
         Description desc = barChart.getDescription();
@@ -207,4 +206,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         barChart.invalidate();
     }
 
+    public void moveToEnd(float maxXRange1, float maxXRange2) {
+        barChart.setVisibleXRangeMaximum(maxXRange1);
+        barChart.moveViewToX(barChart.getXChartMax());
+        barChart.setVisibleXRangeMaximum(maxXRange2);
+    }
 }

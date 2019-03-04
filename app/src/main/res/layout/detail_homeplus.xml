@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:visibility="visible">
 
         <View
@@ -43,21 +43,440 @@
             android:layout_marginTop="0dp"
             android:background="@drawable/heatpollogo" />
 
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentTop="true"
+        <Button
+            android:id="@+id/hpBtnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/hpHeader"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginEnd="29dp"
-            android:layout_marginRight="29dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginRight="0dp"
             android:background="@drawable/settings2" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/hpBottomInfo"
+        android:id="@+id/hpSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/hpFooter"
+        android:layout_below="@+id/hpHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hpTvCaptionTurbo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/hp_cfg_turbo_time" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/hpBtnTurboMinus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_minus" />
+
+                <TextView
+                    android:id="@+id/hpTvTurbo"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/hpBtnTurboPlus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_plus" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hpTvCaptionWaterMax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/hp_cfg_water_max" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/hpBtnWaterMaxMinus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_minus" />
+
+                <TextView
+                    android:id="@+id/hpTvWaterMax"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/hpBtnWaterMaxPlus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_plus" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hpTvEcoReductionCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/hp_cfg_eco_reduction" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/hpBtnEcoReductionMinus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_minus" />
+
+                <TextView
+                    android:id="@+id/hpTvEcoReduction"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/hpBtnEcoReductionPlus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_plus" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hpTvAutoCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/hp_cfg_temp_comfort" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/hpBtnAutoMinus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_minus" />
+
+                <TextView
+                    android:id="@+id/hpTvAuto"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/hpBtnAutoPlus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_plus" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hpTvEcoCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/hp_cfg_temp_eco" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/hpBtnEcoMinus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_minus" />
+
+                <TextView
+                    android:id="@+id/hpTvEco"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/hpBtnEcoPlus"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/hp_plus" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/hpContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/hpFooter"
+        android:layout_below="@+id/hpHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/hpTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/hpTvTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:text="0.00"
+                android:textSize="50sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/hpMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/hpTemperature"
+
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/hpButtons"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/hpBtnLL2"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/hpBtnLL1"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/hpBtnOnOff"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/hp_button_off"
+                            android:text="@string/hp_off"
+                            android:textColor="@android:color/white" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/hpBtnNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="3dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/hp_button_off"
+                                android:text="@string/hp_normal"
+                                android:textColor="@android:color/white" />
+
+                            <Button
+                                android:id="@+id/hpBtnEco"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginEnd="0dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/hp_button_off"
+                                android:text="@string/hp_eco"
+                                android:textColor="@android:color/white" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/hpBtnTurbo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="3dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/hp_button_off"
+                                android:text="@string/hp_turbo"
+                                android:textColor="@android:color/white" />
+
+                            <Button
+                                android:id="@+id/hpBtnAuto"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/hp_button_off"
+                                android:text="@string/hp_auto"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hpBtnLL1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/hpBtnPlus"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginBottom="20dp"
+                                android:background="@drawable/hp_plus" />
+
+                            <Button
+                                android:id="@+id/hpBtnMinus"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="20dp"
+                                android:background="@drawable/hp_minus" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/hpButtons"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/hpProgressBar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:indeterminateOnly="true"
+                    android:scaleY="1"
+                    android:secondaryProgressTint="@color/activity_bg" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/emBarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/hpFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -102,179 +521,4 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/hpTemperature"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_below="@+id/hpHeader"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/hpTvTemperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:text="0.00"
-            android:textSize="50sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/hpMain"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/hpBottomInfo"
-        android:layout_below="@+id/hpTemperature"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:visibility="visible">
-
-        <RelativeLayout
-            android:id="@+id/hpButtons"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:gravity="center_vertical"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/hpBtnLL2"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/hpBtnLL1"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/hpBtnOnOff"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/hp_button_off"
-                        android:text="@string/hp_off"
-                        android:textColor="@android:color/white" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/hpBtnNormal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="3dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/hp_button_off"
-                            android:text="@string/hp_normal"
-                            android:textColor="@android:color/white" />
-
-                        <Button
-                            android:id="@+id/hpBtnEco"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/hp_button_off"
-                            android:text="@string/hp_eco"
-                            android:textColor="@android:color/white" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/hpBtnTurbo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="3dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/hp_button_off"
-                            android:text="@string/hp_turbo"
-                            android:textColor="@android:color/white" />
-
-                        <Button
-                            android:id="@+id/hpBtnAuto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/hp_button_off"
-                            android:text="@string/hp_auto"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hpBtnLL1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="vertical">
-
-                        <Button
-                            android:id="@+id/hpBtnPlus"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/hp_plus" />
-
-                        <Button
-                            android:id="@+id/hpBtnMinus"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/hp_minus" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/hpButtons"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/emBarChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible" />
-            </FrameLayout>
-        </LinearLayout>
-
-    </RelativeLayout>
 </RelativeLayout>
