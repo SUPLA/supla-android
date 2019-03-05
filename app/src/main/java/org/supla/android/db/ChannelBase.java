@@ -436,11 +436,37 @@ public abstract class ChannelBase extends DbItem {
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-                img_idx = R.drawable.thermostat;
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.thermostat_1;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.thermostat_2;
+                        break;
+                    case 3:
+                        img_idx = R.drawable.thermostat_3;
+                        break;
+                    default:
+                        img_idx = R.drawable.thermostat;
+                }
+
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                img_idx = R.drawable.thermostat_hp_homeplus;
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.thermostat_hp_homeplus_1;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.thermostat_hp_homeplus_2;
+                        break;
+                    case 3:
+                        img_idx = R.drawable.thermostat_hp_homeplus_3;
+                        break;
+                    default:
+                        img_idx = R.drawable.thermostat_hp_homeplus;
+                }
+
                 break;
         }
 
