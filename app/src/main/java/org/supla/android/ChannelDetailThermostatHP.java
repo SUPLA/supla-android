@@ -509,7 +509,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
                         if (btnIsOn(btnEco)) {
                             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
-                                    (byte)(item.getValue() * 10));
+                                    (byte)(item.getValue()));
                         }
                         break;
                 }
@@ -562,7 +562,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         } else if (view == btnEco) {
             on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
-                    (byte)(on > 0 ? getCfgValue(CfgItem.ID_ECO_REDUCTION) : 0));
+                    (byte)(on > 0 ? getCfgValue(CfgItem.ID_ECO_REDUCTION) * 10 : 0));
         } else if (view == btnAuto) {
             on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO, on);
