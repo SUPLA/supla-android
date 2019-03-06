@@ -509,7 +509,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
                         if (btnIsOn(btnEco)) {
                             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
-                                    (byte)item.getValue());
+                                    (byte)(item.getValue() * 10));
                         }
                         break;
                 }
