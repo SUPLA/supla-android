@@ -430,30 +430,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         runDownloadTask();
     }
 
-    private void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-        if (client == null || !isDetailVisible()) {
-            return;
-        }
-
-        client.DeviceCalCfgRequest(getRemoteId(), cmd, dataType, data);
-    }
-
-    private void deviceCalCfgRequest(int cmd, Byte data) {
-
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-        if (client == null || !isDetailVisible()) {
-            return;
-        }
-
-        byte[] arr = new byte[1];
-        arr[0] = data == null ? 0 : data.byteValue();
-
-        deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
-    }
-
     private void setAllButtonsOff(Button skip) {
         if (skip != btnNormal) {
             setBtnAppearance(btnNormal, BTN_SET_OFF);
