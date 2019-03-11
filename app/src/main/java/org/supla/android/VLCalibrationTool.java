@@ -30,6 +30,16 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int DRIVE_YES = 1;
     private final static int DRIVE_NO = 2;
 
+    private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
+    private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
+    private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
+    private final static int VL_MSG_SET_MODE = 0x58;
+    private final static int VL_MSG_SET_MINIMUM = 0x59;
+    private final static int VL_MSG_SET_MAXIMUM = 0x5A;
+    private final static int VL_MSG_SET_DRIVE = 0x5B;
+    private final static int VL_MSG_SET_DRIVE_LEVEL = 0x5C;
+    private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
+
     private Button getBtn(int resid) {
         Button btn = Parent.findViewById(resid);
         btn.setOnClickListener(this);
@@ -156,26 +166,13 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
-    private void deviceCalCfgRequest(int cmd, Byte data) {
-
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-        if (client == null
-                || Parent == null
-                || !Parent.isDetailVisible()) {
-            return;
-        }
-
-        byte[] arr = new byte[1];
-        arr[0] = data == null ? 0 : data.byteValue();
-
-        deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
-    }
-
     public void onClick(View v) {
         int mode = viewToMode(v);
         if (mode != MODE_UNKNOWN) {
             setMode(mode);
+            if (Parent!=null) {
+                Parent.deviceCalCfgRequest(VL_MSG_SET_MODE, new Byte((byte)(mode & 0xFF)));
+            }
         }
 
         int drive = viewToDrive(v);
