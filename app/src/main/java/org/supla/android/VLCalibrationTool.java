@@ -1,10 +1,12 @@
 package org.supla.android;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
 
-import org.supla.android.lib.SuplaClient;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener {
     private ChannelDetailRGB Parent;
@@ -18,6 +20,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private Button btnOpRange;
     private Button btnDrive;
     private SuplaRangeCalibrationWheel calibrationWheel;
+    private long uiRefreshLockTime = 0;
 
     private final static int MODE_UNKNOWN = -1;
     private final static int MODE_AUTO = 0;
@@ -39,6 +42,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int VL_MSG_SET_DRIVE = 0x5B;
     private final static int VL_MSG_SET_DRIVE_LEVEL = 0x5C;
     private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
+
+    private Timer delayTimer1 = null;
 
     private Button getBtn(int resid) {
         Button btn = Parent.findViewById(resid);
@@ -166,8 +171,14 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
+    private void LockUIrefresh() {
+        uiRefreshLockTime = System.currentTimeMillis()+2000;
+    }
+
     public void onClick(View v) {
         int mode = viewToMode(v);
+        LockUIrefresh();
+
         if (mode != MODE_UNKNOWN) {
             setMode(mode);
             if (Parent!=null) {
@@ -178,6 +189,12 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         int drive = viewToDrive(v);
         if (drive != DRIVE_UNKNOWN) {
             setDrive(drive);
+            if (Parent!=null) {
+                Parent.deviceCalCfgRequest(VL_MSG_SET_DRIVE, new Byte((byte)(drive & 0xFF)));
+            }
+            if (drive == DRIVE_YES) {
+                onDriveChanged(calibrationWheel);
+            }
         }
 
         if (v == btnOpRange) {
@@ -192,13 +209,25 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         setDrive(DRIVE_AUTO);
     }
 
-    @Override
-    public void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel) {
+    private void sendDelayed(int msg) {
+//        Trace.d("VL", "Send range value. Min: "+Boolean.toString(minimum)+" Min:"+Double.toString(calibrationWheel.getMinimum())+" Max:"+Double.toString(calibrationWheel.getMaximum()));
 
+        if (delayTimer1!=null) {
+            delayTimer1.cancel();
+            delayTimer1 = null;
+        }
+        
+    }
+
+    @Override
+    public void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum) {
+        LockUIrefresh();
+        sendDelayed(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
     }
 
     @Override
     public void onDriveChanged(SuplaRangeCalibrationWheel calibrationWheel) {
-
+        LockUIrefresh();
+        sendDelayed(VL_MSG_SET_DRIVE);
     }
 }

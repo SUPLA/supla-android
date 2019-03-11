@@ -68,7 +68,7 @@ public class SuplaRangeCalibrationWheel extends View {
 
 
     public interface OnChangeListener {
-        void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel);
+        void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum);
         void onDriveChanged(SuplaRangeCalibrationWheel calibrationWheel);
     }
 
@@ -435,6 +435,18 @@ public class SuplaRangeCalibrationWheel extends View {
                 touchPoint.x-wheelCenterX);
     }
 
+    private void onRangeChanged(boolean  minimum) {
+        if (onChangeListener!=null) {
+            onChangeListener.onRangeChanged(this, minimum);
+        }
+    }
+
+    private void onDriveChanged() {
+        if (onChangeListener!=null) {
+            onChangeListener.onDriveChanged(this);
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -454,10 +466,16 @@ public class SuplaRangeCalibrationWheel extends View {
 
             case MotionEvent.ACTION_DOWN:
                 if (touched==TOUCHED_NONE) {
-                    if (btnTouched(btnLeftCenter, touchPoint)) {
+                    if (!driveVisible && btnTouched(btnLeftCenter, touchPoint)) {
                         touched = TOUCHED_LEFT;
+                        onRangeChanged(true);
                     } else if (btnTouched(btnRightCenter, touchPoint)) {
                         touched = TOUCHED_RIGHT;
+                        if (driveVisible) {
+                            onDriveChanged();
+                        } else {
+                            onRangeChanged(false);
+                        }
                     }
 
                     if (touched!=TOUCHED_NONE) {
@@ -488,20 +506,14 @@ public class SuplaRangeCalibrationWheel extends View {
                         diff = (diff*100.0/360.0)*maxRange/100/numerOfTurns;
                         if (touched==TOUCHED_LEFT) {
                             setMinimum(getMinimum()-diff, false);
-                            if (onChangeListener!=null) {
-                                onChangeListener.onRangeChanged(this);
-                            }
+                            onRangeChanged(true);
                         } else {
                             if (driveVisible) {
                                 setDriveValue(getDriveValue()+diff);
-                                if (onChangeListener!=null) {
-                                    onChangeListener.onDriveChanged(this);
-                                }
+                                onDriveChanged();
                             } else {
                                 setMaximum(getMaximum()+diff, false);
-                                if (onChangeListener!=null) {
-                                    onChangeListener.onRangeChanged(this);
-                                }
+                                onRangeChanged(false);
                             }
                         }
                     }
