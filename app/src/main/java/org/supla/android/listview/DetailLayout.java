@@ -170,6 +170,10 @@ public abstract class DetailLayout extends FrameLayout {
         deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
     }
 
+    public void deviceCalCfgRequest(int cmd) {
+        deviceCalCfgRequest(cmd, 0, null);
+    }
+
     public void deviceCalCfgRequest(int cmd, Short data) {
         byte[] arr = new byte[2];
         if (data!=null) {

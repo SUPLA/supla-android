@@ -533,7 +533,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_TURNON, on);
         } else if (view == btnNormal) {
             setBtnAppearance(btnNormal, BTN_SET_ON);
-            deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL, null);
+            deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL);
             setAllButtonsOff(btnNormal);
         } else if (view == btnEco) {
             on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
