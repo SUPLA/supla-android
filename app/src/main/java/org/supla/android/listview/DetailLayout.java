@@ -38,6 +38,7 @@ import org.supla.android.db.DbHelper;
 public abstract class DetailLayout extends FrameLayout {
 
     private ChannelListView cLV;
+    private ChannelBase channelBase;
     private View mContentView;
     private int mRemoteId;
     private boolean Group;
@@ -68,6 +69,8 @@ public abstract class DetailLayout extends FrameLayout {
     protected void init() {
 
         mRemoteId = 0;
+        channelBase = null;
+
         DBH = new DbHelper(getContext());
         mContentView = getContentView();
 
@@ -95,6 +98,7 @@ public abstract class DetailLayout extends FrameLayout {
     public abstract void OnChannelDataChanged();
 
     public void setData(ChannelBase cbase) {
+        channelBase = cbase;
         mRemoteId = cbase == null ? 0 : cbase.getRemoteId();
         Group = mRemoteId != 0 && cbase instanceof ChannelGroup;
     }
@@ -132,6 +136,10 @@ public abstract class DetailLayout extends FrameLayout {
 
     public int getRemoteId() {
         return mRemoteId;
+    }
+
+    public ChannelBase getChannelBase() {
+        return channelBase;
     }
 
     public boolean isGroup() { return Group; }
