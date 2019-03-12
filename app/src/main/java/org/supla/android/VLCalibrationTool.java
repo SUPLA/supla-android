@@ -43,7 +43,31 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int VL_MSG_SET_DRIVE_LEVEL = 0x5C;
     private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
 
+    private final static int UI_REFRESH_LOCK_TIME = 2000;
+    private final static int MIN_DELAY_TIME = 500;
+
     private Timer delayTimer1 = null;
+    private long lastCalCfgTime = 0;
+
+    class DelayedTask extends TimerTask {
+        private int msg;
+
+        DelayedTask(int msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public void run() {
+            if (Parent != null && Parent.getContext() instanceof Activity) {
+                ((Activity) Parent.getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        calCfgDelayed(msg);
+                    }
+                });
+            }
+        }
+    }
 
     private Button getBtn(int resid) {
         Button btn = Parent.findViewById(resid);
@@ -172,26 +196,39 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void LockUIrefresh() {
-        uiRefreshLockTime = System.currentTimeMillis()+2000;
+        uiRefreshLockTime = System.currentTimeMillis()+UI_REFRESH_LOCK_TIME;
+    }
+
+    private void calCfgRequest(int cmd, Byte bdata, Short sdata) {
+        if (Parent==null) {
+            return;
+        }
+
+        LockUIrefresh();
+        lastCalCfgTime = System.currentTimeMillis();
+
+        if (bdata != null) {
+            Parent.deviceCalCfgRequest(cmd, bdata);
+        } else if (sdata != null) {
+            Parent.deviceCalCfgRequest(cmd, sdata);
+        } else {
+            Parent.deviceCalCfgRequest(cmd);
+        }
     }
 
     public void onClick(View v) {
         int mode = viewToMode(v);
-        LockUIrefresh();
 
         if (mode != MODE_UNKNOWN) {
             setMode(mode);
-            if (Parent!=null) {
-                Parent.deviceCalCfgRequest(VL_MSG_SET_MODE, new Byte((byte)(mode & 0xFF)));
-            }
+            calCfgRequest(VL_MSG_SET_MODE, (byte)(mode & 0xFF), null);
         }
 
         int drive = viewToDrive(v);
         if (drive != DRIVE_UNKNOWN) {
             setDrive(drive);
-            if (Parent!=null) {
-                Parent.deviceCalCfgRequest(VL_MSG_SET_DRIVE, new Byte((byte)(drive & 0xFF)));
-            }
+            calCfgRequest(VL_MSG_SET_MODE, (byte)(drive & 0xFF), null);
+
             if (drive == DRIVE_YES) {
                 onDriveChanged(calibrationWheel);
             }
@@ -209,12 +246,42 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         setDrive(DRIVE_AUTO);
     }
 
-    private void sendDelayed(int msg) {
-//        Trace.d("VL", "Send range value. Min: "+Boolean.toString(minimum)+" Min:"+Double.toString(calibrationWheel.getMinimum())+" Max:"+Double.toString(calibrationWheel.getMaximum()));
-
+    private void calCfgDelayed(int msg) {
         if (delayTimer1!=null) {
             delayTimer1.cancel();
             delayTimer1 = null;
+        }
+
+        if (System.currentTimeMillis() - lastCalCfgTime >= MIN_DELAY_TIME) {
+            Trace.d("VL", "MSG: "+Integer.toString(msg));
+            switch (msg) {
+                case VL_MSG_SET_MINIMUM:
+                    calCfgRequest(msg, null,
+                            new Short((short)calibrationWheel.getMinimum()));
+                    break;
+                case VL_MSG_SET_MAXIMUM:
+                    calCfgRequest(msg, null,
+                            new Short((short)calibrationWheel.getMaximum()));
+                    break;
+                case VL_MSG_SET_DRIVE_LEVEL:
+                    calCfgRequest(msg, null,
+                            new Short((short)calibrationWheel.getDriveLevel()));
+                    break;
+            }
+        } else {
+
+            long delayTime = 1;
+
+            if (System.currentTimeMillis() - lastCalCfgTime < MIN_DELAY_TIME)
+                delayTime = MIN_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
+
+            delayTimer1 = new Timer();
+
+            if (delayTime < 1) {
+                delayTime = 1;
+            }
+
+            delayTimer1.schedule(new DelayedTask(msg), delayTime, 1000);
         }
         
     }
@@ -222,12 +289,12 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     @Override
     public void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum) {
         LockUIrefresh();
-        sendDelayed(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
+        calCfgDelayed(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
     }
 
     @Override
     public void onDriveChanged(SuplaRangeCalibrationWheel calibrationWheel) {
         LockUIrefresh();
-        sendDelayed(VL_MSG_SET_DRIVE);
+        calCfgDelayed(VL_MSG_SET_DRIVE);
     }
 }

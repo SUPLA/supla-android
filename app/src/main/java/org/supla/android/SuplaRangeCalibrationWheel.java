@@ -61,7 +61,7 @@ public class SuplaRangeCalibrationWheel extends View {
     private double maximum = maxRange;
     private double leftEdge = 0;
     private double rightEdge = maxRange;
-    private double driveValue = 0;
+    private double driveLevel = 0;
     private boolean driveVisible = false;
 
     private OnChangeListener onChangeListener = null;
@@ -154,8 +154,8 @@ public class SuplaRangeCalibrationWheel extends View {
             minimum = leftEdge;
         }
 
-        if (minimum > driveValue) {
-            driveValue = minimum;
+        if (minimum > driveLevel) {
+            driveLevel = minimum;
         }
 
         this.minimum = minimum;
@@ -181,8 +181,8 @@ public class SuplaRangeCalibrationWheel extends View {
             maximum = rightEdge;
         }
 
-        if (maximum < driveValue) {
-            driveValue = maximum;
+        if (maximum < driveLevel) {
+            driveLevel = maximum;
         }
 
         this.maximum = maximum;
@@ -239,23 +239,23 @@ public class SuplaRangeCalibrationWheel extends View {
         setMaximum(getMaximum());
     }
 
-    public void setDriveValue(double driveValue) {
-        if (driveValue < minimum) {
-            driveValue = minimum;
+    public void setDriveLevel(double driveLevel) {
+        if (driveLevel < minimum) {
+            driveLevel = minimum;
         }
 
-        if (driveValue > maximum) {
-            driveValue = maximum;
+        if (driveLevel > maximum) {
+            driveLevel = maximum;
         }
 
-        this.driveValue = driveValue;
+        this.driveLevel = driveLevel;
         if (driveVisible) {
             invalidate();
         }
     }
 
-    public double getDriveValue() {
-        return driveValue;
+    public double getDriveLevel() {
+        return driveLevel;
     }
 
     public void setDriveVisible(boolean driveVisible) {
@@ -372,8 +372,8 @@ public class SuplaRangeCalibrationWheel extends View {
         );
 
         if (driveVisible) {
-            vleft = left + (float)((right-left) * driveValue *100F/maxRange/100F);
-            if (driveValue >= (maximum-minimum) / 2) {
+            vleft = left + (float)((right-left) * driveLevel *100F/maxRange/100F);
+            if (driveLevel >= (maximum-minimum) / 2) {
                 vleft-=borderLineWidth;
             } else {
                 vleft+=borderLineWidth;
@@ -509,7 +509,7 @@ public class SuplaRangeCalibrationWheel extends View {
                             onRangeChanged(true);
                         } else {
                             if (driveVisible) {
-                                setDriveValue(getDriveValue()+diff);
+                                setDriveLevel(getDriveLevel()+diff);
                                 onDriveChanged();
                             } else {
                                 setMaximum(getMaximum()+diff, false);
