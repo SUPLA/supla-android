@@ -111,7 +111,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_rs);
     }
 

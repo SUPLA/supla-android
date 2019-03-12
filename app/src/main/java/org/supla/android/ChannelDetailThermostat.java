@@ -35,7 +35,7 @@ public class ChannelDetailThermostat extends DetailLayout implements View.OnClic
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_thermostat);
     }
 

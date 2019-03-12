@@ -74,7 +74,7 @@ public abstract class DetailLayout extends FrameLayout {
         channelBase = null;
 
         DBH = new DbHelper(getContext());
-        mContentView = getContentView();
+        mContentView = inflateContentView();
 
         if (mContentView != null) {
 
@@ -89,13 +89,16 @@ public abstract class DetailLayout extends FrameLayout {
 
     }
 
-    protected View inflateLayout(int id) {
+    public View inflateLayout(int id) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return inflater == null ? null : inflater.inflate(id, null);
     }
 
+    public View getContentView() {
+        return mContentView;
+    }
 
-    public abstract View getContentView();
+    public abstract View inflateContentView();
 
     public abstract void OnChannelDataChanged();
 

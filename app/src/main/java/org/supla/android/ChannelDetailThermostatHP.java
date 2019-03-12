@@ -264,7 +264,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_homeplus);
     }
 
