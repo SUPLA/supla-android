@@ -1,15 +1,19 @@
 package org.supla.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener {
-    private ChannelDetailRGB Parent;
+    private ChannelDetailRGB detailRGB;
+    private Button btnOK;
     private Button btnDmAuto;
     private Button btnDm1;
     private Button btnDm2;
@@ -20,6 +24,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private Button btnOpRange;
     private Button btnDrive;
     private SuplaRangeCalibrationWheel calibrationWheel;
+    private RelativeLayout mainView;
     private long uiRefreshLockTime = 0;
 
     private final static int MODE_UNKNOWN = -1;
@@ -58,8 +63,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
         @Override
         public void run() {
-            if (Parent != null && Parent.getContext() instanceof Activity) {
-                ((Activity) Parent.getContext()).runOnUiThread(new Runnable() {
+            if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
+                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         calCfgDelayed(msg);
@@ -69,41 +74,37 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
-    private Button getBtn(int resid) {
-        Button btn = Parent.findViewById(resid);
-        btn.setOnClickListener(this);
-        return btn;
+    public VLCalibrationTool(ChannelDetailRGB detailRGB) {
+
+        this.detailRGB = detailRGB;
+        mainView = (RelativeLayout)detailRGB.inflateLayout(R.layout.vl_calibration);
+        mainView.setVisibility(View.GONE);
+        detailRGB.addView(mainView);
+
+        btnOK = getBtn(R.id.vlBtnOK);
+        btnDmAuto = getBtn(R.id.vlCfgDmAuto);
+        btnDm1 = getBtn(R.id.vlCfgDm1);
+        btnDm2 = getBtn(R.id.vlCfgDm2);
+        btnDm3 = getBtn(R.id.vlCfgDm3);
+
+        btnDriveAuto = getBtn(R.id.vlCfgDriveAuto);
+        btnDriveYes = getBtn(R.id.vlCfgDriveYes);
+        btnDriveNo = getBtn(R.id.vlCfgDriveNo);
+        btnOpRange = getBtn(R.id.vlCfgOpRange);
+        btnDrive = getBtn(R.id.vlCfgDrive);
+        calibrationWheel = mainView.findViewById(R.id.vlCfgCalibrationWheel);
+        calibrationWheel.setOnChangeListener(this);
+
     }
 
-    public void setParent(ChannelDetailRGB parent) {
-        Parent = parent;
-        if (parent==null) {
-            btnDmAuto = null;
-            btnDm1 = null;
-            btnDm2 = null;
-            btnDm3 = null;
+    public View getMainView() {
+        return getMainView();
+    }
 
-            btnDriveAuto = null;
-            btnDriveYes = null;
-            btnDriveNo = null;
-            btnOpRange = null;
-            btnDrive = null;
-            calibrationWheel = null;
-        } else {
-            btnDmAuto = getBtn(R.id.vlCfgDmAuto);
-            btnDm1 = getBtn(R.id.vlCfgDm1);
-            btnDm2 = getBtn(R.id.vlCfgDm2);
-            btnDm3 = getBtn(R.id.vlCfgDm3);
-
-            btnDriveAuto = getBtn(R.id.vlCfgDriveAuto);
-            btnDriveYes = getBtn(R.id.vlCfgDriveYes);
-            btnDriveNo = getBtn(R.id.vlCfgDriveNo);
-            btnOpRange = getBtn(R.id.vlCfgOpRange);
-            btnDrive = getBtn(R.id.vlCfgDrive);
-            calibrationWheel = parent.findViewById(R.id.vlCfgCalibrationWheel);
-            calibrationWheel.setOnChangeListener(this);
-        }
-
+    private Button getBtn(int resid) {
+        Button btn = mainView.findViewById(resid);
+        btn.setOnClickListener(this);
+        return btn;
     }
 
     private int viewToMode(View btn) {
@@ -200,7 +201,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void calCfgRequest(int cmd, Byte bdata, Short sdata) {
-        if (Parent==null) {
+        if (detailRGB ==null) {
             return;
         }
 
@@ -208,17 +209,22 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         lastCalCfgTime = System.currentTimeMillis();
 
         if (bdata != null) {
-            Parent.deviceCalCfgRequest(cmd, bdata);
+            detailRGB.deviceCalCfgRequest(cmd, bdata);
         } else if (sdata != null) {
-            Parent.deviceCalCfgRequest(cmd, sdata);
+            detailRGB.deviceCalCfgRequest(cmd, sdata);
         } else {
-            Parent.deviceCalCfgRequest(cmd);
+            detailRGB.deviceCalCfgRequest(cmd);
         }
     }
 
     public void onClick(View v) {
-        int mode = viewToMode(v);
 
+        if (v == btnOK) {
+            Hide();
+            return;
+        }
+
+        int mode = viewToMode(v);
         if (mode != MODE_UNKNOWN) {
             setMode(mode);
             calCfgRequest(VL_MSG_SET_MODE, (byte)(mode & 0xFF), null);
@@ -241,9 +247,25 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
-    public void onShow() {
+    public void Show() {
+        SuperuserAuthorizationDialog Dialog =
+                new SuperuserAuthorizationDialog(detailRGB.getContext());
+        Dialog.show();
+        /*
         setMode(MODE_AUTO);
         setDrive(DRIVE_AUTO);
+        detailRGB.getContentView().setVisibility(View.GONE);
+        mainView.setVisibility(View.VISIBLE);
+        */
+    }
+
+    public void Hide() {
+        mainView.setVisibility(View.GONE);
+        detailRGB.getContentView().setVisibility(View.VISIBLE);
+    }
+
+    public boolean isVisible() {
+        return mainView.getVisibility() == View.VISIBLE;
     }
 
     private void calCfgDelayed(int msg) {

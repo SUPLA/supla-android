@@ -57,7 +57,6 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private ViewGroup tabs;
     private TextView tvTitle;
     private Button btnSettings;
-    private RelativeLayout rlVLSettings;
     private RelativeLayout rlMain;
     private VLCalibrationTool vlCalibrationTool = null;
 
@@ -126,12 +125,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabRGB.setOnClickListener(this);
         tabDimmer.setOnClickListener(this);
 
-        btnSettings = findViewById(R.id.rgbSettings);
+        btnSettings = findViewById(R.id.rgbBtnSettings);
         btnSettings.setOnClickListener(this);
         btnSettings.setVisibility(GONE);
-
-        rlVLSettings = findViewById(R.id.rlRgbVLSettings);
-        rlVLSettings.setVisibility(GONE);
 
         rlMain = findViewById(R.id.rlRgbMain);
         rlMain.setVisibility(VISIBLE);
@@ -176,7 +172,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     }
 
     public void onDetailShow() {
-        rlVLSettings.setVisibility(GONE);
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
         rlMain.setVisibility(VISIBLE);
     }
 
@@ -192,7 +190,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
                 tabs.setVisibility(View.GONE);
 
                 if (vlCalibrationTool != null) {
-                    vlCalibrationTool.setParent(null);
+                    vlCalibrationTool.Hide();
                     vlCalibrationTool = null;
                 }
 
@@ -200,8 +198,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
                     Channel c = (Channel)channel;
                     if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_VL
                             && c.getProductID() == 1) {
-                        vlCalibrationTool = new VLCalibrationTool();
-                        vlCalibrationTool.setParent(this);
+                        vlCalibrationTool = new VLCalibrationTool(this);
                         btnSettings.setVisibility(VISIBLE);
                     }
                 }
@@ -318,7 +315,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_rgb);
     }
 
@@ -423,15 +420,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             pickerToInfoPanel();
             sendNewValues(true, true);
             onChangeFinished();
-        } else if (v == btnSettings) {
-            if (rlVLSettings.getVisibility() == GONE) {
-                rlVLSettings.setVisibility(VISIBLE);
-                rlMain.setVisibility(GONE);
-                vlCalibrationTool.onShow();
-            } else {
-                rlVLSettings.setVisibility(GONE);
-                rlMain.setVisibility(VISIBLE);
-            }
+        } else if (v == btnSettings
+                && vlCalibrationTool != null) {
+            vlCalibrationTool.Show();
         }
 
         if (v == tabDimmer || v == tabRGB) {
