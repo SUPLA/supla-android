@@ -1,17 +1,20 @@
 package org.supla.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import org.supla.android.lib.SuplaClientMsg;
+import org.supla.android.lib.SuplaConst;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener {
+public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
     private ChannelDetailRGB detailRGB;
     private Button btnOK;
     private Button btnDmAuto;
@@ -25,21 +28,14 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private Button btnDrive;
     private SuplaRangeCalibrationWheel calibrationWheel;
     private RelativeLayout mainView;
+    private SuperuserAuthorizationDialog authDialog;
     private long uiRefreshLockTime = 0;
-
-    private final static int MODE_UNKNOWN = -1;
-    private final static int MODE_AUTO = 0;
-    private final static int MODE_1 = 1;
-    private final static int MODE_2 = 2;
-    private final static int MODE_3 = 3;
-
-    private final static int DRIVE_UNKNOWN = -1;
-    private final static int DRIVE_AUTO = 0;
-    private final static int DRIVE_YES = 1;
-    private final static int DRIVE_NO = 2;
+    private VLCfgParameters cfgParameters;
 
     private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
     private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
+    private final static int VL_MSG_CONFIGURATION_QUERY = 0x15;
+    private final static int VL_MSG_CONFIGURATION_REPORT = 0x51;
     private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
     private final static int VL_MSG_SET_MODE = 0x58;
     private final static int VL_MSG_SET_MINIMUM = 0x59;
@@ -49,15 +45,19 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
 
     private final static int UI_REFRESH_LOCK_TIME = 2000;
-    private final static int MIN_DELAY_TIME = 500;
+    private final static int MIN_SEND_DELAY_TIME = 500;
+    private final static int DISPLAY_DELAY_TIME = 1000;
 
     private Timer delayTimer1 = null;
-    private long lastCalCfgTime = 0;
+    private Timer delayTimer2 = null;
 
-    class DelayedTask extends TimerTask {
+    private long lastCalCfgTime = 0;
+    private Handler _sc_msg_handler = null;
+
+    class DisplayDelayedTask extends TimerTask {
         private int msg;
 
-        DelayedTask(int msg) {
+        DisplayDelayedTask(int msg) {
             this.msg = msg;
         }
 
@@ -94,7 +94,71 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         btnDrive = getBtn(R.id.vlCfgDrive);
         calibrationWheel = mainView.findViewById(R.id.vlCfgCalibrationWheel);
         calibrationWheel.setOnChangeListener(this);
+        cfgParameters = new VLCfgParameters();
+    }
 
+    private void registerMessageHandler() {
+        if ( _sc_msg_handler != null)
+            return;
+
+        _sc_msg_handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
+                if (_msg != null
+                        && _msg.getType() == SuplaClientMsg.onCalCfgResult
+                        && detailRGB != null
+                        && detailRGB.isDetailVisible()
+                        && _msg.getChannelId() == detailRGB.getRemoteId()) {
+                    onCalCfgResult(_msg.getCommand(), _msg.getResult(), _msg.getData());
+                }
+            }
+        };
+
+        SuplaApp.getApp().addMsgReceiver(_sc_msg_handler);
+    }
+
+    private void unregisterMessageHandler() {
+        if ( _sc_msg_handler != null ) {
+            SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
+            _sc_msg_handler = null;
+        }
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(boolean Success, int Code) {
+        if (Success) {
+            registerMessageHandler();
+            calCfgRequest(VL_MSG_CONFIGURATION_MODE);
+        } else {
+            unregisterMessageHandler();
+        }
+    }
+
+    @Override
+    public void authorizationCanceled() {
+        unregisterMessageHandler();
+    }
+
+    private void onCalCfgResult(int Command, int Result, byte[] Data) {
+        switch (Command) {
+            case VL_MSG_CONFIGURATION_ACK:
+                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && authDialog != null) {
+                    authDialog.close();
+                    authDialog = null;
+
+                    displayCfgParameters(true);
+                    detailRGB.getContentView().setVisibility(View.GONE);
+                    mainView.setVisibility(View.VISIBLE);
+                }
+                break;
+            case VL_MSG_CONFIGURATION_REPORT:
+                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE) {
+                    cfgParameters.setParams(Data);
+                    displayCfgParameters(false);
+                }
+                break;
+        }
     }
 
     public View getMainView() {
@@ -109,27 +173,27 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
     private int viewToMode(View btn) {
         if (btn == btnDmAuto) {
-            return MODE_AUTO;
+            return VLCfgParameters.MODE_AUTO;
         } else if (btn == btnDm1) {
-            return MODE_1;
+            return VLCfgParameters.MODE_1;
         } else if (btn == btnDm2) {
-            return MODE_2;
+            return VLCfgParameters.MODE_2;
         } else if (btn == btnDm3) {
-            return MODE_3;
+            return VLCfgParameters.MODE_3;
         }
-        return MODE_UNKNOWN;
+        return VLCfgParameters.MODE_UNKNOWN;
     }
 
     private int viewToDrive(View btn) {
         if (btn == btnDriveAuto) {
-            return DRIVE_AUTO;
+            return VLCfgParameters.DRIVE_AUTO;
         } else if (btn == btnDriveYes) {
-            return DRIVE_YES;
+            return VLCfgParameters.DRIVE_YES;
         } else if (btn == btnDriveNo) {
-            return DRIVE_NO;
+            return VLCfgParameters.DRIVE_NO;
         }
 
-        return DRIVE_UNKNOWN;
+        return VLCfgParameters.DRIVE_UNKNOWN;
     }
 
     private void setBtnApparance(Button btn, int resid, int textColor) {
@@ -144,16 +208,16 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         setBtnApparance(btnDm3, R.drawable.vl_right_btn_off, Color.BLACK);
 
         switch (mode) {
-            case MODE_AUTO:
+            case VLCfgParameters.MODE_AUTO:
                 setBtnApparance(btnDmAuto, R.drawable.vl_left_btn_on, Color.WHITE);
                 break;
-            case MODE_1:
+            case VLCfgParameters.MODE_1:
                 setBtnApparance(btnDm1, R.drawable.vl_middle_btn_on, Color.WHITE);
                 break;
-            case MODE_2:
+            case VLCfgParameters.MODE_2:
                 setBtnApparance(btnDm2, R.drawable.vl_middle_btn_on, Color.WHITE);
                 break;
-            case MODE_3:
+            case VLCfgParameters.MODE_3:
                 setBtnApparance(btnDm3, R.drawable.vl_right_btn_on, Color.WHITE);
                 break;
         }
@@ -165,18 +229,18 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         setBtnApparance(btnDriveNo, R.drawable.vl_right_btn_off, Color.BLACK);
 
         switch (drive) {
-            case DRIVE_AUTO:
+            case VLCfgParameters.DRIVE_AUTO:
                 setBtnApparance(btnDriveAuto, R.drawable.vl_left_btn_on, Color.WHITE);
                 break;
-            case DRIVE_YES:
+            case VLCfgParameters.DRIVE_YES:
                 setBtnApparance(btnDriveYes, R.drawable.vl_middle_btn_on, Color.WHITE);
                 break;
-            case DRIVE_NO:
+            case VLCfgParameters.DRIVE_NO:
                 setBtnApparance(btnDriveNo, R.drawable.vl_right_btn_on, Color.WHITE);
                 break;
         }
 
-        if (drive == DRIVE_YES) {
+        if (drive == VLCfgParameters.DRIVE_YES) {
             btnDrive.setVisibility(View.VISIBLE);
         } else {
             btnDrive.setVisibility(View.INVISIBLE);
@@ -193,6 +257,51 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
             setBtnApparance(btnOpRange, R.drawable.vl_tab_off, Color.BLACK);
             setBtnApparance(btnDrive, R.drawable.vl_tab_on, Color.WHITE);
             calibrationWheel.setDriveVisible(true);
+        }
+    }
+
+    private void displayCfgParameters(boolean force) {
+        if (delayTimer2!=null) {
+            delayTimer2.cancel();
+            delayTimer2 = null;
+        }
+
+        if (force || System.currentTimeMillis() - lastCalCfgTime >= DISPLAY_DELAY_TIME) {
+            setMode(cfgParameters.getMode());
+            setDrive(cfgParameters.getDrive());
+            calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
+            calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
+            calibrationWheel.setMinimum(cfgParameters.getMinimum());
+            calibrationWheel.setMaximum(cfgParameters.getMaximum());
+            calibrationWheel.setDriveLevel(cfgParameters.getDriveLevel());
+        } else {
+
+            long delayTime = 1;
+
+            if (System.currentTimeMillis() - lastCalCfgTime < DISPLAY_DELAY_TIME)
+                delayTime = DISPLAY_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
+
+            delayTimer2 = new Timer();
+
+            if (delayTime < 1) {
+                delayTime = 1;
+            }
+
+            delayTimer2.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
+                        ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                displayCfgParameters(false);
+                            }
+                        });
+                    }
+                }
+            }, delayTime, 1000);
         }
     }
 
@@ -217,6 +326,10 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
+    private void calCfgRequest(int cmd) {
+        calCfgRequest(cmd, null, null);
+    }
+
     public void onClick(View v) {
 
         if (v == btnOK) {
@@ -225,17 +338,17 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
 
         int mode = viewToMode(v);
-        if (mode != MODE_UNKNOWN) {
+        if (mode != VLCfgParameters.MODE_UNKNOWN) {
             setMode(mode);
             calCfgRequest(VL_MSG_SET_MODE, (byte)(mode & 0xFF), null);
         }
 
         int drive = viewToDrive(v);
-        if (drive != DRIVE_UNKNOWN) {
+        if (drive != VLCfgParameters.DRIVE_UNKNOWN) {
             setDrive(drive);
-            calCfgRequest(VL_MSG_SET_MODE, (byte)(drive & 0xFF), null);
+            calCfgRequest(VL_MSG_SET_DRIVE, (byte)(drive & 0xFF), null);
 
-            if (drive == DRIVE_YES) {
+            if (drive == VLCfgParameters.DRIVE_YES) {
                 onDriveChanged(calibrationWheel);
             }
         }
@@ -248,18 +361,19 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     public void Show() {
-        SuperuserAuthorizationDialog Dialog =
+        if (authDialog!=null) {
+            authDialog.close();
+            authDialog = null;
+        }
+
+        authDialog =
                 new SuperuserAuthorizationDialog(detailRGB.getContext());
-        Dialog.show();
-        /*
-        setMode(MODE_AUTO);
-        setDrive(DRIVE_AUTO);
-        detailRGB.getContentView().setVisibility(View.GONE);
-        mainView.setVisibility(View.VISIBLE);
-        */
+        authDialog.setOnAuthorizarionResultListener(this);
+        authDialog.show();
     }
 
     public void Hide() {
+        unregisterMessageHandler();
         mainView.setVisibility(View.GONE);
         detailRGB.getContentView().setVisibility(View.VISIBLE);
     }
@@ -274,8 +388,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
             delayTimer1 = null;
         }
 
-        if (System.currentTimeMillis() - lastCalCfgTime >= MIN_DELAY_TIME) {
-            Trace.d("VL", "MSG: "+Integer.toString(msg));
+        if (System.currentTimeMillis() - lastCalCfgTime >= MIN_SEND_DELAY_TIME) {
             switch (msg) {
                 case VL_MSG_SET_MINIMUM:
                     calCfgRequest(msg, null,
@@ -294,8 +407,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
             long delayTime = 1;
 
-            if (System.currentTimeMillis() - lastCalCfgTime < MIN_DELAY_TIME)
-                delayTime = MIN_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
+            if (System.currentTimeMillis() - lastCalCfgTime < MIN_SEND_DELAY_TIME)
+                delayTime = MIN_SEND_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
 
             delayTimer1 = new Timer();
 
@@ -303,7 +416,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
                 delayTime = 1;
             }
 
-            delayTimer1.schedule(new DelayedTask(msg), delayTime, 1000);
+            delayTimer1.schedule(new DisplayDelayedTask(msg), delayTime, 1000);
         }
         
     }
@@ -317,6 +430,6 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     @Override
     public void onDriveChanged(SuplaRangeCalibrationWheel calibrationWheel) {
         LockUIrefresh();
-        calCfgDelayed(VL_MSG_SET_DRIVE);
+        calCfgDelayed(VL_MSG_SET_DRIVE_LEVEL);
     }
 }

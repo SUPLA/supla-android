@@ -77,8 +77,7 @@ public class Channel extends ChannelBase {
     }
 
     protected int _getOnLine() {
-        return 100;
-        //return Value != null && Value.getOnLine() ? 100 : 0;
+        return Value != null && Value.getOnLine() ? 100 : 0;
     }
 
     public void setValue(ChannelValue value) {

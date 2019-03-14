@@ -169,5 +169,6 @@
     <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
     <string name="hp_cfg_temp_comfort">Comfort temperature in AUTO mode</string>
     <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
+    <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
 </resources>

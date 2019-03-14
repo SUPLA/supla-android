@@ -500,6 +500,10 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     @Override
     public void OnChannelDataChanged() {
         updateDelayed();
+
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
     }
 
 

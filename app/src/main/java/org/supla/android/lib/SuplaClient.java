@@ -121,6 +121,9 @@ public class SuplaClient extends Thread {
     private native boolean scDeviceCalCfgRequest(long _supla_client, int ChannelID,
                                                  int Command, int DataType, byte[] Data);
 
+    private native boolean scSuperUserAuthorizationRequest(long _supla_client,
+                                                           String email, String password);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -390,6 +393,21 @@ public class SuplaClient extends Thread {
             if (result) {
                 lastTokenRequest = now;
             }
+        } finally {
+            UnlockClientPtr();
+        }
+
+        return result;
+    }
+
+
+    public boolean SuperUserAuthorizationRequest(String email, String password) {
+        boolean result;
+
+        LockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scSuperUserAuthorizationRequest(_supla_client_ptr,
+                    email, password);
         } finally {
             UnlockClientPtr();
         }
@@ -697,7 +715,20 @@ public class SuplaClient extends Thread {
     }
 
     private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
-        Trace.d("onDeviceCalCfgResult", "ChannelId: "+Integer.toString(ChannelId)+" Command: "+Integer.toString(Command)+" Result: "+Integer.toString(Result));
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onCalCfgResult);
+        msg.setChannelId(ChannelId);
+        msg.setCommand(Command);
+        msg.setResult(Result);
+        msg.setData(Data);
+        sendMessage(msg);
+    }
+    private void onSuperUserAuthorizationResult(boolean authorized, int code) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSuperuserAuthorizationResult);
+        msg.setSuccess(authorized);
+        msg.setCode(code);
+        sendMessage(msg);
     }
 
     private void onDataChanged(int ChannelId, int GroupId) {
