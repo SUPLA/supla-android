@@ -68,10 +68,7 @@ public class VLCfgParameters {
         Mode = data[8];
         Drive = data[9];
         DriveLevel = getShort(data, 10);
-
-        Trace.d("VLLOG", "Mode"  + Byte.toString(Mode));
-        Trace.d("VLLOG", "Drive"  + Byte.toString(Drive));
-
+        
         return true;
     }
 }
