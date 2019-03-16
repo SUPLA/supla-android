@@ -40,7 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
 
@@ -356,10 +356,10 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_EM_VIEW);
     }
 
-    private void createThermostatLogTable(SQLiteDatabase db, String suffix) {
+    private void createThermostatLogTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_THLOG_TABLE = "CREATE TABLE " +
-                SuplaContract.ThermostatLogEntry.TABLE_NAME + suffix + " (" +
+                SuplaContract.ThermostatLogEntry.TABLE_NAME + " (" +
                 SuplaContract.ThermostatLogEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
@@ -385,8 +385,26 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_INDEX);
     }
 
-    private void createThermostatLogTable(SQLiteDatabase db) {
-        createThermostatLogTable(db, "");
+    private void createUserIconsTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " +
+                SuplaContract.UserIconsEntry.TABLE_NAME + " (" +
+                SuplaContract.UserIconsEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB)";
+
+        execSQL(db, SQL_CREATE_IMAGE_TABLE);
+        createIndex(db, SuplaContract.UserIconsEntry.TABLE_NAME ,
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.UserIconsEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.UserIconsEntry.TABLE_NAME
+                + "(" + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
     }
 
     @Override
@@ -403,6 +421,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createElectricityMeterLogTable(db);
         createElectricityMeterLogView(db);
         createThermostatLogTable(db);
+        createUserIconsTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -499,6 +518,11 @@ public class DbHelper extends SQLiteOpenHelper {
         createThermostatLogTable(db);
     }
 
+    private void upgradeToV8(SQLiteDatabase db) {
+        createUserIconsTable(db);
+    }
+
+
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /*
@@ -532,6 +556,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 6:
                         upgradeToV7(db);
+                        break;
+                    case 7:
+                        upgradeToV8(db);
                         break;
                 }
             }

@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
 
-public abstract class DownloadUserIcons extends SuplaRestApiClientTask {
+public class DownloadUserIcons extends SuplaRestApiClientTask {
 
     public DownloadUserIcons(Context context) {
         super(context);
@@ -16,12 +16,18 @@ public abstract class DownloadUserIcons extends SuplaRestApiClientTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-
-        if (getChannelId() <=0) {
-            return null;
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
+        Trace.d("DownloadUserIcons", "DownloadUserIcons");
 
         return null;
+    }
+
+    public int downloadCount() {
+        return 0;
     }
 }
