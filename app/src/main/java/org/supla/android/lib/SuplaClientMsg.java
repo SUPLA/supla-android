@@ -31,6 +31,11 @@ public class SuplaClientMsg {
     private SuplaOAuthToken OAuthToken;
     private int ChannelId;
     private int ChannelGroupId;
+    private boolean Success;
+    private int Code;
+    private int Command;
+    private int Result;
+    private byte[] data;
 
     public final static int onDataChanged         = 1;
     public final static int onConnecting          = 2;
@@ -44,6 +49,9 @@ public class SuplaClientMsg {
     public final static int onConnError           = 10;
     public final static int onRegistrationEnabled = 11;
     public final static int onOAuthTokenRequestResult = 12;
+    public final static int onCalCfgResult = 13;
+    public final static int onSuperuserAuthorizationResult = 14;
+
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -131,5 +139,45 @@ public class SuplaClientMsg {
 
     public SuplaOAuthToken getOAuthToken() {
         return OAuthToken;
+    }
+
+    public boolean isSuccess() {
+        return Success;
+    }
+
+    public void setSuccess(boolean success) {
+        Success = success;
+    }
+
+    public int getCode() {
+        return Code;
+    }
+
+    public void setCode(int code) {
+        Code = code;
+    }
+
+    public int getCommand() {
+        return Command;
+    }
+
+    public void setCommand(int command) {
+        Command = command;
+    }
+
+    public int getResult() {
+        return Result;
+    }
+
+    public void setResult(int result) {
+        Result = result;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 }

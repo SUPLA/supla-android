@@ -107,7 +107,8 @@ public class SuplaClient extends Thread {
     private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
 
     private native boolean scSetRGBW(long _supla_client, int ID, int Group,
-                                     int Color, int ColorBrightness, int Brightness);
+                                     int Color, int ColorBrightness, int Brightness,
+                                     int TurnOnOff);
 
     private native boolean scGetRegistrationEnabled(long _supla_client);
 
@@ -119,6 +120,9 @@ public class SuplaClient extends Thread {
 
     private native boolean scDeviceCalCfgRequest(long _supla_client, int ChannelID,
                                                  int Command, int DataType, byte[] Data);
+
+    private native boolean scSuperUserAuthorizationRequest(long _supla_client,
+                                                           String email, String password);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -311,7 +315,8 @@ public class SuplaClient extends Thread {
         return Open(ChannelID, false, Open);
     }
 
-    public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness) {
+    public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness,
+                           boolean TurnOnOff) {
 
         boolean result;
 
@@ -319,7 +324,7 @@ public class SuplaClient extends Thread {
         try {
             result = _supla_client_ptr != 0
                     && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
-                    ColorBrightness, Brightness);
+                    ColorBrightness, Brightness, TurnOnOff ? 1 : 0);
         } finally {
             UnlockClientPtr();
         }
@@ -327,8 +332,9 @@ public class SuplaClient extends Thread {
         return result;
     }
 
-    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness) {
-        return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness);
+    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness,
+                           boolean TurnOnOff) {
+        return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness, TurnOnOff);
     }
 
     public boolean GetRegistrationEnabled() {
@@ -387,6 +393,21 @@ public class SuplaClient extends Thread {
             if (result) {
                 lastTokenRequest = now;
             }
+        } finally {
+            UnlockClientPtr();
+        }
+
+        return result;
+    }
+
+
+    public boolean SuperUserAuthorizationRequest(String email, String password) {
+        boolean result;
+
+        LockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scSuperUserAuthorizationRequest(_supla_client_ptr,
+                    email, password);
         } finally {
             UnlockClientPtr();
         }
@@ -648,8 +669,10 @@ public class SuplaClient extends Thread {
     private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if (DbH.updateChannelValue(channelValueUpdate)) {
+
             Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id)
-                    + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine));
+                    + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine)
+                    + " value[0]: "+Byte.toString(channelValueUpdate.Value.Value[0]));
             onDataChanged(channelValueUpdate.Id, 0);
         }
 
@@ -692,7 +715,20 @@ public class SuplaClient extends Thread {
     }
 
     private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
-        Trace.d("onDeviceCalCfgResult", "ChannelId: "+Integer.toString(ChannelId)+" Command: "+Integer.toString(Command)+" Result: "+Integer.toString(Result));
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onCalCfgResult);
+        msg.setChannelId(ChannelId);
+        msg.setCommand(Command);
+        msg.setResult(Result);
+        msg.setData(Data);
+        sendMessage(msg);
+    }
+    private void onSuperUserAuthorizationResult(boolean authorized, int code) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSuperuserAuthorizationResult);
+        msg.setSuccess(authorized);
+        msg.setCode(code);
+        sendMessage(msg);
     }
 
     private void onDataChanged(int ChannelId, int GroupId) {

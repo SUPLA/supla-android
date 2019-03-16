@@ -47,6 +47,10 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_REGISTRATION_DISABLED     = 17;
     public final static int SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED     = 18;
     public final static int SUPLA_RESULTCODE_AUTHKEY_ERROR             = 19;
+    public final static int SUPLA_RESULTCODE_NO_LOCATION_AVAILABLE     = 20;
+    public final static int SUPLA_RESULTCODE_USER_CONFLICT             = 21;
+    public final static int SUPLA_RESULTCODE_UNAUTHORIZED              = 22;
+    public final static int SUPLA_RESULTCODE_AUTHORIZED                = 23;
 
     public final static int SUPLA_CHANNELFNC_NONE                          =  0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK     = 10;
@@ -168,6 +172,16 @@ public class SuplaConst {
     public final static int SUPLA_THERMOSTAT_CMD_SET_SCHEDULE = 11;
     public final static int SUPLA_THERMOSTAT_CMD_SET_TIME = 12;
     public final static int SUPLA_THERMOSTAT_CMD_SET_TEMPERATURE = 13;
+
+    public final static int SUPLA_MFR_UNKNOWN = 0;
+    public final static int SUPLA_MFR_ACSOFTWARE = 1;
+    public final static int SUPLA_MFR_TRANSCOM = 2;
+    public final static int SUPLA_MFR_LOGI = 3;
+    public final static int SUPLA_MFR_ZAMEL = 4;
+    public final static int SUPLA_MFR_NICE = 5;
+    public final static int SUPLA_MFR_ITEAD = 6;
+    public final static int SUPLA_MFR_VL = 7;
+    public final static int SUPLA_MFR_HEATPOL = 8;
 
 
 }
