@@ -22,6 +22,7 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.db.DbHelper;
 import org.supla.android.listview.SectionLayout;
+import org.supla.android.restapi.DownloadUserIcons;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,13 +51,14 @@ import java.util.Date;
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
-        SectionLayout.OnSectionLayoutTouchListener {
+        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults {
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
     private ListViewCursorAdapter channelListViewCursorAdapter;
     private ListViewCursorAdapter cgroupListViewCursorAdapter;
     private DbHelper DbH_ListView;
+    private DownloadUserIcons downloadUserIcons = null;
 
     private RelativeLayout NotificationView;
     private Handler notif_handler;
@@ -169,6 +173,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupLV.hideDetail(false);
         }
 
+        runDownloadTask();
+
         RateApp ra = new RateApp(this);
         ra.showDialog(1000);
 
@@ -178,6 +184,19 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     protected void onDestroy() {
         // Trace.d("MainActivity", "Destroyed!");
         super.onDestroy();
+    }
+
+    private void runDownloadTask() {
+        if (downloadUserIcons != null && !downloadUserIcons.isAlive(90)) {
+            downloadUserIcons.cancel(true);
+            downloadUserIcons = null;
+        }
+
+        if (downloadUserIcons == null) {
+            downloadUserIcons = new DownloadUserIcons(this);
+            downloadUserIcons.setDelegate(this);
+            downloadUserIcons.execute();
+        }
     }
 
     @Override
@@ -208,8 +227,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
             LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
                     DbH_ListView.getGroupListCursor(), true);
+
         }
 
+    }
+
+    @Override
+    protected void OnRegisteredMsg() {
+        runDownloadTask();
     }
 
     @Override
@@ -456,6 +481,27 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
         }
 
+    }
+
+    @Override
+    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
+
+    }
+
+    @Override
+    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
+        if (downloadUserIcons!=null) {
+            if (downloadUserIcons.downloadCount() > 0) {
+                if (channelLV!=null) {
+                    channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+                }
+
+                if (cgroupLV!=null) {
+                    cgroupLV.Refresh( DbH_ListView.getGroupListCursor(), true);
+                }
+            }
+            downloadUserIcons = null;
+        }
     }
 }
 

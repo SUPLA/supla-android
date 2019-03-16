@@ -232,6 +232,9 @@ public class ChannelLayout extends LinearLayout {
 
                 width *= 2.8;
 
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+                width *= 3;
             }
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
@@ -280,18 +283,27 @@ public class ChannelLayout extends LinearLayout {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+                       || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_thimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_thimgtext_height));
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             } else {
 
                 SetImgDimensions(Img1, false, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
                 SetTextDimensions(Text1, Img1, mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
                         || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
 
+                SetImgDimensions(Img2, true, 0);
+                SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+
             }
 
 
-            SetImgDimensions(Img2, true, 0);
-            SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+
 
         }
 
@@ -319,7 +331,7 @@ public class ChannelLayout extends LinearLayout {
 
         }
 
-        private void setText(String text, TextView tv) {
+        private void setText(CharSequence text, TextView tv) {
             if (text == null) {
                 text = "";
             }
@@ -328,11 +340,11 @@ public class ChannelLayout extends LinearLayout {
             }
         }
 
-        public void setText1(String text) {
+        public void setText1(CharSequence text) {
             setText(text, Text1);
         }
 
-        public void setText2(String text) {
+        public void setText2(CharSequence text) {
             setText(text, Text2);
         }
 
@@ -930,6 +942,15 @@ public class ChannelLayout extends LinearLayout {
 
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+
+                    left_onlineStatus.setVisibility(View.INVISIBLE);
+                    right_onlineStatus.setVisibility(View.VISIBLE);
+                    dslider = true;
+
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

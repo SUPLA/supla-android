@@ -40,7 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
 
@@ -356,6 +356,57 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_EM_VIEW);
     }
 
+    private void createThermostatLogTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_THLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.ThermostatLogEntry.TABLE_NAME + " (" +
+                SuplaContract.ThermostatLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_ON + " INTEGER NOT NULL," +
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE
+                + " DECIMAL(5,2) NULL," +
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE
+                + " DECIMAL(5,2) NULL)";
+
+        execSQL(db, SQL_CREATE_THLOG_TABLE);
+        createIndex(db, SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.ThermostatLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.ThermostatLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
+    private void createUserIconsTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " +
+                SuplaContract.UserIconsEntry.TABLE_NAME + " (" +
+                SuplaContract.UserIconsEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB)";
+
+        execSQL(db, SQL_CREATE_IMAGE_TABLE);
+        createIndex(db, SuplaContract.UserIconsEntry.TABLE_NAME ,
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.UserIconsEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.UserIconsEntry.TABLE_NAME
+                + "(" + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -369,6 +420,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelExtendedValueTable(db);
         createElectricityMeterLogTable(db);
         createElectricityMeterLogView(db);
+        createThermostatLogTable(db);
+        createUserIconsTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -461,6 +514,15 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelView(db);
     }
 
+    private void upgradeToV7(SQLiteDatabase db) {
+        createThermostatLogTable(db);
+    }
+
+    private void upgradeToV8(SQLiteDatabase db) {
+        createUserIconsTable(db);
+    }
+
+
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /*
@@ -491,6 +553,12 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 5:
                         upgradeToV6(db);
+                        break;
+                    case 6:
+                        upgradeToV7(db);
+                        break;
+                    case 7:
+                        upgradeToV8(db);
                         break;
                 }
             }
@@ -897,6 +965,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db;
         ChannelExtendedValue value = getChannelExtendedValue(channelId);
+
 
         if (value == null) {
             value = new ChannelExtendedValue();
@@ -1357,14 +1426,15 @@ public class DbHelper extends SQLiteOpenHelper {
         return result.toArray(new Integer[0]);
     }
 
-    public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
+    private int getMeasurementTimestamp(String tableName, String colTimestamp,
+                                        String colChannelId, int channelId, boolean min) {
 
         String selection = "SELECT "+
                 (min ? "MIN" : "MAX")
                 +"("
-                +SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP+") FROM "
-                +SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
-                +" WHERE "+SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
+                +colTimestamp+") FROM "
+                +tableName
+                +" WHERE "+colChannelId
                 +" = "+Integer.toString(channelId);
 
         int max;
@@ -1380,6 +1450,14 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return max;
+    }
+
+    public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
+
+        return getMeasurementTimestamp(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
     }
 
     public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
@@ -1493,5 +1571,48 @@ public class DbHelper extends SQLiteOpenHelper {
                         + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
                         + " = ?",
                 args);
+    }
+
+    public int getThermostatMeasurementTimestamp(int channelId, boolean min) {
+        return getMeasurementTimestamp(SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public void deleteThermostatMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void addThermostatMeasurement(SQLiteDatabase db,
+                                          ThermostatMeasurementItem emi) {
+        db.insertWithOnConflict(SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    public Cursor getThermostatMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+
+        String sql = "SELECT "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.ThermostatLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId)
+                +" ORDER BY "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
     }
 }

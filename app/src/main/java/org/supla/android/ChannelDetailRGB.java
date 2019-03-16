@@ -324,7 +324,8 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             return;
 
         if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
-                && client.setRGBW(getRemoteId(), isGroup(), lastColor, lastColorBrightness, lastBrightness)) {
+                && client.setRGBW(getRemoteId(), isGroup(), lastColor, lastColorBrightness,
+                lastBrightness, false)) {
             remoteUpdateTime = System.currentTimeMillis();
 
         } else {

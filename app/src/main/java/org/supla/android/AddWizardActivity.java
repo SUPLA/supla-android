@@ -817,7 +817,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         return (SSID.startsWith("SUPLA-")
                 || SSID.startsWith("ZAMEL-")
-                || SSID.startsWith("NICE-"))
+                || SSID.startsWith("NICE-")
+                || SSID.startsWith("HEATPOL-"))
                 && mPattern.matcher(SSID).find();
     }
 

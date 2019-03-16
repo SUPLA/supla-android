@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
+import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -186,7 +187,6 @@ public class ChannelValue extends DbItem {
     }
 
     public double getTemp(int func) {
-
         if (Value != null) {
 
             if (func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
@@ -207,9 +207,43 @@ public class ChannelValue extends DbItem {
             } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
 
                 return getDouble(-275);
+            } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ) {
+
+                byte[] t = getChannelValue();
+                if (t.length >= 4) {
+                    int x = (int)t[3] & 0xFF;
+                    x<<=8;
+                    x|=(int)t[2] & 0xFF;
+
+                    return x * 0.01;
+                }
             }
 
 
+        }
+
+        return -275;
+    }
+
+    public double getMeasuredTemp(int func) {
+        return getTemp(func);
+    }
+
+    public double getPresetTemp(int func) {
+        if (Value != null) {
+            if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ) {
+
+                byte[] t = getChannelValue();
+                if (t.length >= 6) {
+                    int x = (int)t[5] & 0xFF;
+                    x<<=8;
+                    x|=(int)t[4] & 0xFF;
+
+                    return x * 0.01;
+                }
+            }
         }
 
         return -275;

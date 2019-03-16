@@ -20,6 +20,10 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 
 import org.supla.android.R;
 import org.supla.android.lib.SuplaChannelBase;
@@ -206,6 +210,12 @@ public abstract class ChannelBase extends DbItem {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
                     idx = R.string.channel_func_watermeter;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                    idx = R.string.channel_func_thermostat;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                    idx = R.string.channel_func_thermostat_hp_homeplus;
                     break;
             }
 
@@ -424,6 +434,40 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
                 img_idx = R.drawable.watermeter;
                 break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.thermostat_1;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.thermostat_2;
+                        break;
+                    case 3:
+                        img_idx = R.drawable.thermostat_3;
+                        break;
+                    default:
+                        img_idx = R.drawable.thermostat;
+                }
+
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.thermostat_hp_homeplus_1;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.thermostat_hp_homeplus_2;
+                        break;
+                    case 3:
+                        img_idx = R.drawable.thermostat_hp_homeplus_3;
+                        break;
+                    default:
+                        img_idx = R.drawable.thermostat_hp_homeplus;
+                }
+
+                break;
         }
 
         return img_idx;
@@ -440,7 +484,36 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    protected String getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+                                                              Double presetTemp) {
+        String measured;
+        String preset;
+
+        if (measuredTemp != null && measuredTemp > -273) {
+            measured = String.format("%.2f", measuredTemp)
+                    + (char) 0x00B0;
+        } else {
+            measured = "---" + (char) 0x00B0;
+        };
+
+        if (presetTemp != null && presetTemp > -273) {
+            preset = "/"+Integer.toString(presetTemp.intValue())
+                    + (char) 0x00B0;
+        } else {
+            preset = "/---"+ (char) 0x00B0;
+        };
+
+        SpannableString ss =  new SpannableString(measured+preset);
+        ss.setSpan(new RelativeSizeSpan(0.7f),
+                measured.length(),
+                measured.length()+preset.length(),
+                0); // set size
+
+        return ss;
+    }
+
+    @SuppressLint("DefaultLocale")
+    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
         if (value == null) {
             return "";
@@ -525,14 +598,21 @@ public abstract class ChannelBase extends DbItem {
                     return "--- kWh";
                 }
 
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+
+                return getHumanReadableThermostatTemperature(
+                        getOnLine() ? value.getMeasuredTemp(getFunc()) : null,
+                        getOnLine() ? value.getPresetTemp(getFunc()) : null);
+
         }
 
 
         return null;
     }
 
-    public abstract String getHumanReadableValue(WhichOne whichOne);
-    public abstract String getHumanReadableValue();
+    public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
+    public abstract CharSequence getHumanReadableValue();
 
     public void Assign(SuplaChannelBase base) {
 

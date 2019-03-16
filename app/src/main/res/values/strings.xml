@@ -63,6 +63,8 @@
     <string name="channel_func_electricitymeter">Electricity Meter</string>
     <string name="channel_func_gasmeter">Gas Meter</string>
     <string name="channel_func_watermeter">Water Meter</string>
+    <string name="channel_func_thermostat">Thermostat</string>
+    <string name="channel_func_thermostat_hp_homeplus">Home+ Heater</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
@@ -155,6 +157,17 @@
     <string name="em_phase1">Phase 1</string>
     <string name="em_phase2">Phase 2</string>
     <string name="em_phase3">Phase 3</string>
-
+    <string name="hp_on">ON</string>
+    <string name="hp_off">OFF</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Room temperature</string>
+    <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
+    <string name="hp_cfg_water_max">Maximum water temperature</string>
+    <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
+    <string name="hp_cfg_temp_comfort">Comfort temperature in AUTO mode</string>
+    <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
 
 </resources>

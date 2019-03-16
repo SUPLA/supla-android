@@ -23,6 +23,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
     protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
+    protected int itemsLimitPerRequest() {return 0;};
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -71,6 +72,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             result = apiRequest("channels/"
                     +Integer.toString(getChannelId())
                     +"/measurement-logs?order=ASC"
+                    +"&limit="+Integer.toString(itemsLimitPerRequest())
                     +"&afterTimestamp="
                     +Long.toString(AfterTimestamp));
 
@@ -116,6 +118,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                         if (isCancelled()) {
                             break;
                         }
+
+                        keepAlive();
                     }
 
                 } catch (JSONException e) {

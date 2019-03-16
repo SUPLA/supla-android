@@ -62,7 +62,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Button btnPhase3;
 
     final Handler mHandler = new Handler();
-    ChartHelper chartHelper;
+    ElectricityChartHelper chartHelper;
     private ImageView ivGraph;
     private LinearLayout llDetails;
     private RelativeLayout rlButtons1;
@@ -139,7 +139,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         emSpinner.setAdapter(adapter);
         emSpinner.setOnItemSelectedListener(this);
 
-        chartHelper = new ChartHelper(getContext());
+        chartHelper = new ElectricityChartHelper(getContext());
         chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
 
@@ -297,6 +297,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     }
 
     private void runDownloadTask() {
+        if (demm != null && !demm.isAlive(90)) {
+            demm.cancel(true);
+            demm = null;
+        }
+
         if (demm == null) {
             demm = new DownloadElectricityMeterMeasurements(this.getContext());
             demm.setChannelId(getRemoteId());
@@ -371,7 +376,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             return;
         }
 
-        ChartHelper.ChartType ctype = ChartHelper.ChartType.Bar_Minutely;
+        ElectricityChartHelper.ChartType ctype = ElectricityChartHelper.ChartType.Bar_Minutely;
 
        /*
                        new String[] {"Minuty", "Godziny", "Dni", "Miesiące", "Lata",
@@ -381,28 +386,28 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         switch (position) {
             case 1:
-                ctype = ChartHelper.ChartType.Bar_Hourly;
+                ctype = ElectricityChartHelper.ChartType.Bar_Hourly;
                 break;
             case 2:
-                ctype = ChartHelper.ChartType.Bar_Daily;
+                ctype = ElectricityChartHelper.ChartType.Bar_Daily;
                 break;
             case 3:
-                ctype = ChartHelper.ChartType.Bar_Monthly;
+                ctype = ElectricityChartHelper.ChartType.Bar_Monthly;
                 break;
             case 4:
-                ctype = ChartHelper.ChartType.Bar_Yearly;
+                ctype = ElectricityChartHelper.ChartType.Bar_Yearly;
                 break;
             case 5:
-                ctype = ChartHelper.ChartType.Pie_HourRank;
+                ctype = ElectricityChartHelper.ChartType.Pie_HourRank;
                 break;
             case 6:
-                ctype = ChartHelper.ChartType.Pie_DayRank;
+                ctype = ElectricityChartHelper.ChartType.Pie_DayRank;
                 break;
             case 7:
-                ctype = ChartHelper.ChartType.Pie_MonthRank;
+                ctype = ElectricityChartHelper.ChartType.Pie_MonthRank;
                 break;
             case 8:
-                ctype = ChartHelper.ChartType.Pie_PhaseRank;
+                ctype = ElectricityChartHelper.ChartType.Pie_PhaseRank;
                 break;
         }
 
