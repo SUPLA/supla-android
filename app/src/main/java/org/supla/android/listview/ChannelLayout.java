@@ -219,7 +219,10 @@ public class ChannelLayout extends LinearLayout {
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
 
                 width *= 2.5;
 
@@ -279,10 +282,28 @@ public class ChannelLayout extends LinearLayout {
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
 
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR) {
 
                 SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
+                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
+
+                SetImgDimensions(Img1, false, 0);
+                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weight_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weight_imgtext_height));
                 Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT

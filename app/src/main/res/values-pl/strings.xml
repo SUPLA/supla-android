@@ -36,7 +36,10 @@
     <string name="channel_func_thermometer">Termometr</string>
     <string name="channel_func_humidity">Wilgotność</string>
     <string name="channel_func_humidityandtemperature">Temperatura i wilgotność</string>
+    <string name="channel_func_windsensor" translatable="false">Prędkość wiatru</string>
     <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
+    <string name="channel_func_rainsensor" translatable="false">Pomiar opadów</string>
+    <string name="channel_func_weightsensor" translatable="false">Waga</string>
     <string name="channel_func_dimmer">Ściemniacz</string>
     <string name="channel_func_rgblighting">Oświetlenie RGB</string>
     <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>

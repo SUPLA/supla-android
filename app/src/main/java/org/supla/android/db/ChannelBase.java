@@ -172,8 +172,17 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                     idx = R.string.channel_func_humidityandtemperature;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
+                    idx = R.string.channel_func_windsensor;
+                    break;
                 case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
                     idx = R.string.channel_func_pressuresensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
+                    idx = R.string.channel_func_rainsensor;
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                    idx = R.string.channel_func_weightsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                     idx = R.string.channel_func_noliquidsensor;
@@ -376,8 +385,17 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 img_idx = whichImage == WhichOne.First ? R.drawable.thermometer : R.drawable.humidity;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
+                img_idx = R.drawable.wind;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
                 img_idx = R.drawable.pressure;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
+                img_idx = R.drawable.rain;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                img_idx = R.drawable.weight;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
                 img_idx = active == 1 ? R.drawable.liquid : R.drawable.noliquid;
@@ -550,6 +568,14 @@ public abstract class ChannelBase extends DbItem {
                     return "---";
                 }
 
+            case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
+                if (getOnLine()) {
+                    double wind = value.getDouble(-1);
+                    return String.format("%.1f m/s", wind);
+
+                } else {
+                    return "--- m/s";
+                }
             case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
                 if (getOnLine()) {
                     double pressure = value.getDouble(-1);
@@ -557,6 +583,31 @@ public abstract class ChannelBase extends DbItem {
 
                 } else {
                     return "--- hPa";
+                }
+            case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
+                if (getOnLine()) {
+                    double rain = value.getDouble(-1);
+                    return String.format("%.2f l/m2", rain/1000.00);
+
+                } else {
+                    return "--- l/m2";
+                }
+            case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                if (getOnLine()) {
+                    double weight = value.getDouble(-1);
+
+                    if (weight >= 2000) {
+
+                        return String.format("%.2f kg", weight / 1000.00);
+
+                    } else if (weight >= 1) {
+
+                        return String.format("%d g", (int) weight);
+
+                    }
+
+                } else {
+                    return "--- kg";
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
