@@ -31,6 +31,7 @@ import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
@@ -165,11 +166,23 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4 + " " +
                 "FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C " +
                 "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
-                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID;
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " " +
+                "LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I ON " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = I." +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID;
+
 
 
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
@@ -393,7 +406,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
                 SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " BLOB," +
                 SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " BLOB," +
-                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB)";
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " BLOB)";
 
         execSQL(db, SQL_CREATE_IMAGE_TABLE);
         createIndex(db, SuplaContract.UserIconsEntry.TABLE_NAME ,
@@ -520,13 +534,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void upgradeToV8(SQLiteDatabase db) {
         createUserIconsTable(db);
+        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        createChannelView(db);
     }
 
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        execSQL(db, "DROP TABLE " + SuplaContract.UserIconsEntry.TABLE_NAME);
         /*
-        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
         */
     }
@@ -766,7 +783,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
-
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4,
         };
 
         return (Channel) getItem("org.supla.android.db.Channel",
@@ -1207,6 +1227,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4
 
                 + " FROM " + SuplaContract.ChannelViewEntry.VIEW_NAME + " C"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
@@ -1248,11 +1276,22 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
 
                 + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " G"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
                 + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = L."
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I"
+                + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
                 + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " DESC, "
@@ -1614,5 +1653,89 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public ArrayList<Integer> iconsToDownload(SQLiteDatabase db) {
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+
+        String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " FROM " +SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
+                + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE "+SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer id = cursor.getInt(
+                        cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                if ( !ids.contains(id) ) {
+                    ids.add(id);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " FROM " +SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
+                + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer id = cursor.getInt(
+                        cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON));
+                if ( !ids.contains(id) ) {
+                    ids.add(id);
+                }
+            } while (cursor.moveToNext());
+        }
+
+
+        return ids;
+    }
+
+    public boolean addUserIcons(SQLiteDatabase db,
+                             int Id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
+
+        if (db == null
+                || Id <= 0
+                || (img1 == null && img2 == null && img3 == null && img4 == null)) {
+            return false;
+        }
+
+        ContentValues values = new ContentValues();
+
+        values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
+
+        if (img1!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1);
+        }
+
+        if (img2!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2);
+        }
+
+        if (img3!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3);
+        }
+
+        if (img4!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4);
+        }
+
+        db.insertWithOnConflict(SuplaContract.UserIconsEntry.TABLE_NAME,
+                null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+        return true;
     }
 }
