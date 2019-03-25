@@ -37,10 +37,6 @@ public abstract class ChannelBase extends DbItem {
     private long LocationId;
     private int AltIcon;
     private int UserIconId;
-    private byte[] UserIconImg1;
-    private byte[] UserIconImg2;
-    private byte[] UserIconImg3;
-    private byte[] UserIconImg4;
     private int Flags;
 
     public void setRemoteId(int id) {
@@ -109,38 +105,6 @@ public abstract class ChannelBase extends DbItem {
 
     public int getUserIconId() {
         return UserIconId;
-    }
-
-    public byte[] getUserIconImg1() {
-        return UserIconImg1;
-    }
-
-    public void setUserIconImg1(byte[] userIconImg1) {
-        UserIconImg1 = userIconImg1;
-    }
-
-    public byte[] getUserIconImg2() {
-        return UserIconImg2;
-    }
-
-    public void setUserIconImg2(byte[] userIconImg2) {
-        UserIconImg2 = userIconImg2;
-    }
-
-    public byte[] getUserIconImg3() {
-        return UserIconImg3;
-    }
-
-    public void setUserIconImg3(byte[] userIconImg3) {
-        UserIconImg3 = userIconImg3;
-    }
-
-    public byte[] getUserIconImg4() {
-        return UserIconImg4;
-    }
-
-    public void setUserIconImg4(byte[] userIconImg4) {
-        UserIconImg4 = userIconImg4;
     }
 
     public void setUserIconId(int userIconId) {
@@ -699,32 +663,6 @@ public abstract class ChannelBase extends DbItem {
 
     public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
     public abstract CharSequence getHumanReadableValue();
-
-    public void AssignCursorData(Cursor cursor) {
-        if (cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1) != -1) {
-            setUserIconImg1(cursor.getBlob(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1)));
-        } else {
-            setUserIconImg1(null);
-        }
-
-        if (cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2) != -1) {
-            setUserIconImg2(cursor.getBlob(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2)));
-        } else {
-            setUserIconImg2(null);
-        }
-
-        if (cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3) != -1) {
-            setUserIconImg3(cursor.getBlob(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3)));
-        } else {
-            setUserIconImg3(null);
-        }
-
-        if (cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4) != -1) {
-            setUserIconImg4(cursor.getBlob(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4)));
-        } else {
-            setUserIconImg4(null);
-        }
-    }
 
     public void Assign(SuplaChannelBase base) {
 

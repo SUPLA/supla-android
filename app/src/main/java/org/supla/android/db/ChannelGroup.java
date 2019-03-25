@@ -50,8 +50,6 @@ public class ChannelGroup extends ChannelBase {
     }
 
     public void AssignCursorData(Cursor cursor) {
-        super.AssignCursorData(cursor);
-
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC)));

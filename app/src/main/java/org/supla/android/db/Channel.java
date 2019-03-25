@@ -95,9 +95,6 @@ public class Channel extends ChannelBase {
     }
 
     public void AssignCursorData(Cursor cursor) {
-
-        super.AssignCursorData(cursor);
-
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
         setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
