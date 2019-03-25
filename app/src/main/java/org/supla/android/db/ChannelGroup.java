@@ -22,6 +22,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -363,7 +364,7 @@ public class ChannelGroup extends ChannelBase {
         return getActivePercent(0);
     }
 
-    public int getImageIdx(WhichOne whichImage) {
+    public ImageId getImageIdx(WhichOne whichImage) {
         int active = 0;
 
         if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {

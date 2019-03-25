@@ -35,6 +35,8 @@ import android.widget.TextView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.Location;
+import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
@@ -263,9 +265,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (channel == null) return;
 
-        int ImgIdx = channel.getImageIdx();
+        ImageId ImgIdx = channel.getImageIdx();
 
-        if (ImgIdx == -1) return;
+        if (ImgIdx == null) return;
 
         String msg;
 
@@ -335,9 +337,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
-    public void ShowNotificationMessage(String msg, int img) {
+    public void ShowNotificationMessage(String msg, ImageId imgId) {
 
-        notif_img.setImageResource(img);
+        notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
         notif_text.setText(msg);
 
         ShowHideNotificationView(true);

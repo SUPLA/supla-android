@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.supla.android.Trace;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
 
 
@@ -215,7 +216,7 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getSubValueHi() > 0;
     }
 
-    public int getImageIdx(WhichOne whichImage) {
+    public ImageId getImageIdx(WhichOne whichImage) {
         return super.getImageIdx(whichImage, Value);
     }
 

@@ -35,11 +35,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.images.ImageCache;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -127,8 +129,8 @@ public class ChannelLayout extends LinearLayout {
 
         private ImageView Img1;
         private ImageView Img2;
-        private int Img1Idx;
-        private int Img2Idx;
+        private ImageId Img1Id;
+        private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
 
@@ -323,30 +325,28 @@ public class ChannelLayout extends LinearLayout {
 
             }
 
-
-
-
         }
 
-        public void setImage(int img1Idx, int img2Idx) {
+        public void setImage(ImageId img1Id, ImageId img2Id) {
 
-            if (Img1Idx == img1Idx && Img2Idx == img2Idx)
+            if (ImageId.equals(img1Id, img2Id)) {
                 return;
+            }
 
-            Img1Idx = img1Idx;
-            Img2Idx = img2Idx;
+            Img1Id = img1Id;
+            Img2Id = img2Id;
 
-            if (Img1Idx == -1) {
+            if (Img1Id == null) {
                 Img1.setVisibility(View.INVISIBLE);
             } else {
-                Img1.setImageResource(Img1Idx);
+                Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
                 Img1.setVisibility(View.VISIBLE);
             }
 
-            if (Img2Idx == -1) {
+            if (Img2Id == null) {
                 Img2.setVisibility(View.INVISIBLE);
             } else {
-                Img2.setImageResource(Img2Idx);
+                Img2.setImageBitmap(ImageCache.getBitmap(getContext(), img2Id));
                 Img2.setVisibility(View.VISIBLE);
             }
 
