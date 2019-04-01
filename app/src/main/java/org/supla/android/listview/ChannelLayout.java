@@ -329,7 +329,8 @@ public class ChannelLayout extends LinearLayout {
 
         public void setImage(ImageId img1Id, ImageId img2Id) {
 
-            if (ImageId.equals(img1Id, img2Id)) {
+            if (ImageId.equals(img1Id, Img1Id)
+                    && ImageId.equals(img2Id, Img2Id)) {
                 return;
             }
 

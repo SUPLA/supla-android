@@ -24,6 +24,8 @@ import android.database.Cursor;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import org.supla.android.R;
+import org.supla.android.Trace;
+import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
 import org.supla.android.lib.SuplaConst;
@@ -289,6 +291,23 @@ public abstract class ChannelBase extends DbItem {
         if (whichImage != WhichOne.First
                 && getFunc() != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
             return null;
+
+        if (getUserIconId() > 0) {
+            ImageId Id = null;
+
+            switch (getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1);
+                    break;
+                default:
+                    Id = new ImageId(getUserIconId(), active+1);
+                    break;
+            }
+
+            if (ImageCache.bitmapExists(Id)) {
+                return Id;
+            }
+        }
 
         int img_idx = -1;
 

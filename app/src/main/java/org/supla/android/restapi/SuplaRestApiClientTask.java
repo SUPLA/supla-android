@@ -72,6 +72,12 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         }
     }
 
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        SuplaApp.getApp().UnregisterRestApiClientTask(this);
+    }
+
     public void setChannelId(int channelId) {
         ChannelId = channelId;
     }
@@ -170,7 +176,13 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private ApiRequestResult apiRequest(boolean retry, String endpint) {
 
         makeTokenRequest();
-        if (Token == null || Token.getUrl() == null) {
+        if (Token == null) {
+            Trace.d(log_tag, "Token == null");
+            return null;
+        }
+
+        if (Token.getUrl() == null) {
+            Trace.d(log_tag, "Token.getUrl() == null");
             return null;
         }
 

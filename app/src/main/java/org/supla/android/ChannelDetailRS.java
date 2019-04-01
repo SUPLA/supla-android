@@ -220,8 +220,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         if (client == null || !isDetailVisible())
             return;
-
-        Trace.d("XYZ", "XYZ");
+        
         client.Open(getRemoteId(), isGroup(), (int) (10 + percent));
         OnChannelDataChanged();
     }

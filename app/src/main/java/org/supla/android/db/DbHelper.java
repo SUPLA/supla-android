@@ -25,6 +25,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.supla.android.Trace;
+import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -1719,23 +1721,73 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (img1!= null) {
             values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1);
+            ImageCache.addImage(new ImageId(Id, 1), img1);
         }
 
         if (img2!= null) {
             values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2);
+            ImageCache.addImage(new ImageId(Id, 2), img2);
         }
 
         if (img3!= null) {
             values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3);
+            ImageCache.addImage(new ImageId(Id, 3), img3);
         }
 
         if (img4!= null) {
             values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4);
+            ImageCache.addImage(new ImageId(Id, 4), img4);
         }
 
         db.insertWithOnConflict(SuplaContract.UserIconsEntry.TABLE_NAME,
                 null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
         return true;
+    }
+
+    public void loadUserIconsIntoCache() {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sql = "SELECT " + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
+
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                for (int a = 1; a <= 4; a++) {
+                    String field = "";
+                    switch (a) {
+                        case 1:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1;
+                            break;
+                        case 2:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2;
+                            break;
+                        case 3:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3;
+                            break;
+                        case 4:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4;
+                            break;
+                    }
+
+                    byte[] image = cursor.getBlob(cursor.getColumnIndex(field));
+                    int remoteId = cursor.getInt(cursor.getColumnIndex(
+                            SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
+
+                    if (image != null && image.length > 0) {
+                        ImageCache.addImage(new ImageId(remoteId, a), image);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
     }
 }

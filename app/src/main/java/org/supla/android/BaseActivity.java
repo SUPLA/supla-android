@@ -52,21 +52,7 @@ public class BaseActivity extends Activity {
             bgTimer.cancel();
             bgTimer = null;
         }
-/*
-//CHECK IT AT BW (FAST DSL)
 
-        {
-            SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-            if ( getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)
-                    &&  client != null ) {
-
-                Trace.d("A", "A");
-                client.Reconnect();
-            }
-        }
-
-*/
         BackgroundTime = null;
 
         SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());

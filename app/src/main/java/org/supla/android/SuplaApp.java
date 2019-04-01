@@ -54,7 +54,7 @@ public class SuplaApp extends Application {
                 if (_msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
                     synchronized (_lck3) {
                         for(int a = 0; a< _RestApiClientTasks.size(); a++) {
-                            _RestApiClientTasks.get(0).setToken(_msg.getOAuthToken());
+                            _RestApiClientTasks.get(a).setToken(_msg.getOAuthToken());
                         }
                     }
                 }
@@ -169,6 +169,8 @@ public class SuplaApp extends Application {
             }
 
             _RestApiClientTasks.add(task);
+            //Trace.d("RegisterRestApiClientTask",
+            //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
         }
 
         return result;
@@ -177,6 +179,9 @@ public class SuplaApp extends Application {
     public void UnregisterRestApiClientTask(SuplaRestApiClientTask task) {
         synchronized (_lck3) {
             _RestApiClientTasks.remove(task);
+
+            //Trace.d("UnregisterRestApiClientTask",
+            //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
         }
     }
 

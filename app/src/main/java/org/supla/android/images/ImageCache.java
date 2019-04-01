@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import org.supla.android.Trace;
+
+import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 
 public class ImageCache {
@@ -26,7 +29,23 @@ public class ImageCache {
     }
 
     public static synchronized boolean bitmapExists(ImageId imgId) {
-        return map.containsKey(imgId);
+        return imgId != null && map.containsKey(imgId);
     }
 
+    public static synchronized boolean addBitmap(ImageId imgId, Bitmap bmp) {
+        if (!bitmapExists(imgId)) {
+            return map.put(imgId, bmp) != null;
+        }
+
+        return false;
+    }
+
+    public static synchronized boolean addImage(ImageId imgId, byte[] image) {
+        if (imgId == null || image == null) {
+            return false;
+        }
+
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(image);
+        return addBitmap(imgId, BitmapFactory.decodeStream(imageStream));
+    }
 }

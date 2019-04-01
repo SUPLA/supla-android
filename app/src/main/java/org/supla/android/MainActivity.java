@@ -82,7 +82,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);
 
-
         RelativeLayout NotifBgLayout = (RelativeLayout) NotificationView.findViewById(R.id.notif_bg_layout);
         NotifBgLayout.setOnClickListener(this);
         NotifBgLayout.setBackgroundColor(getResources().getColor(R.color.notification_bg));
@@ -189,6 +188,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     private void runDownloadTask() {
+        Trace.d("RubDownloadTask", "RunDownloadTask");
         if (downloadUserIcons != null && !downloadUserIcons.isAlive(90)) {
             downloadUserIcons.cancel(true);
             downloadUserIcons = null;

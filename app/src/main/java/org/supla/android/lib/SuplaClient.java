@@ -698,7 +698,7 @@ public class SuplaClient extends Thread {
     }
 
     private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
-        Trace.d(log_tag, "OAuthToken");
+        Trace.d(log_tag, "OAuthToken"+(token == null ? " is null" : ""));
 
         if (token.getUrl() == null) {
             Preferences prefs = new Preferences(_context);
@@ -817,6 +817,7 @@ public class SuplaClient extends Thread {
     public void run() {
 
         DbH = new DbHelper(_context);
+        DbH.loadUserIconsIntoCache();
 
         while (!canceled()) {
 
