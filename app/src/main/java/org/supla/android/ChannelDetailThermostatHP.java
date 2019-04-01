@@ -315,7 +315,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private void displayTemperature() {
         CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
                 measuredTemperature,
-                new Double(presetTemperature));
+                Double.valueOf(presetTemperature));
 
         tvTemperature.setText(t);
     }
@@ -413,7 +413,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             dtm.setChannelId(getRemoteId());
             dtm.setDelegate(this);
             dtm.execute();
-        };
+        }
     }
 
     @Override

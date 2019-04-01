@@ -25,7 +25,7 @@ public class SuplaVersionError {
 
     public SuplaVersionError() {
 
-    };
+    }
 
     public SuplaVersionError(SuplaVersionError err) {
         if (err != null) {

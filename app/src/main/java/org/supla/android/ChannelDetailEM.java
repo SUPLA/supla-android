@@ -93,29 +93,29 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         phase = 1;
 
-        tvTotalForwardActiveEnergy = (TextView)findViewById(R.id.emtv_TotalForwardActiveEnergy);
-        tvTotalReverseActiveEnergy = (TextView)findViewById(R.id.emtv_TotalReverseActiveEnergy);
-        tvTotalForwardReactiveEnergy = (TextView)findViewById(R.id.emtv_TotalForwardRectiveEnergy);
-        tvTotalReverseReactiveEnergy = (TextView)findViewById(R.id.emtv_TotalReverseRectiveEnergy);
+        tvTotalForwardActiveEnergy = findViewById(R.id.emtv_TotalForwardActiveEnergy);
+        tvTotalReverseActiveEnergy = findViewById(R.id.emtv_TotalReverseActiveEnergy);
+        tvTotalForwardReactiveEnergy = findViewById(R.id.emtv_TotalForwardRectiveEnergy);
+        tvTotalReverseReactiveEnergy = findViewById(R.id.emtv_TotalReverseRectiveEnergy);
 
-        tvFreq = (TextView)findViewById(R.id.emtv_Freq);
-        tvVoltage = (TextView)findViewById(R.id.emtv_Voltage);
-        tvCurrent = (TextView)findViewById(R.id.emtv_Current);
-        tvPowerActive = (TextView)findViewById(R.id.emtv_PowerActive);
-        tvPowerReactive = (TextView)findViewById(R.id.emtv_PowerReactive);
-        tvPowerApparent = (TextView)findViewById(R.id.emtv_PowerApparent);
-        tvPowerFactor = (TextView)findViewById(R.id.emtv_PowerFactor);
-        tvPhaseAngle = (TextView)findViewById(R.id.emtv_PhaseAngle);
-        tvPhaseForwardActiveEnergy = (TextView)findViewById(R.id.emtv_PhaseForwardActiveEnergy);
-        tvPhaseReverseActiveEnergy = (TextView)findViewById(R.id.emtv_PhaseReverseActiveEnergy);
-        tvPhaseForwardReactiveEnergy = (TextView)findViewById(R.id.emtv_PhaseForwardRectiveEnergy);
-        tvPhaseReverseReactiveEnergy = (TextView)findViewById(R.id.emtv_PhaseReverseRectiveEnergy);
+        tvFreq = findViewById(R.id.emtv_Freq);
+        tvVoltage = findViewById(R.id.emtv_Voltage);
+        tvCurrent = findViewById(R.id.emtv_Current);
+        tvPowerActive = findViewById(R.id.emtv_PowerActive);
+        tvPowerReactive = findViewById(R.id.emtv_PowerReactive);
+        tvPowerApparent = findViewById(R.id.emtv_PowerApparent);
+        tvPowerFactor = findViewById(R.id.emtv_PowerFactor);
+        tvPhaseAngle = findViewById(R.id.emtv_PhaseAngle);
+        tvPhaseForwardActiveEnergy = findViewById(R.id.emtv_PhaseForwardActiveEnergy);
+        tvPhaseReverseActiveEnergy = findViewById(R.id.emtv_PhaseReverseActiveEnergy);
+        tvPhaseForwardReactiveEnergy = findViewById(R.id.emtv_PhaseForwardRectiveEnergy);
+        tvPhaseReverseReactiveEnergy = findViewById(R.id.emtv_PhaseReverseRectiveEnergy);
 
-        tvChannelTitle = (TextView)findViewById(R.id.emtv_ChannelTitle);
+        tvChannelTitle = findViewById(R.id.emtv_ChannelTitle);
 
-        btnPhase1 = (Button) findViewById(R.id.embtn_Phase1);
-        btnPhase2 = (Button) findViewById(R.id.embtn_Phase2);
-        btnPhase3 = (Button) findViewById(R.id.embtn_Phase3);
+        btnPhase1 = findViewById(R.id.embtn_Phase1);
+        btnPhase2 = findViewById(R.id.embtn_Phase2);
+        btnPhase3 = findViewById(R.id.embtn_Phase3);
 
         btnPhase1.setOnClickListener(this);
         btnPhase2.setOnClickListener(this);
@@ -125,9 +125,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         btnPhase2.setTag(2);
         btnPhase3.setTag(3);
 
-        llDetails = (LinearLayout) findViewById(R.id.emllDetails);
-        rlButtons1 = (RelativeLayout) findViewById(R.id.emrlButtons1);
-        rlButtons2 = (RelativeLayout) findViewById(R.id.emrlButtons2);
+        llDetails = findViewById(R.id.emllDetails);
+        rlButtons1 = findViewById(R.id.emrlButtons1);
+        rlButtons2 = findViewById(R.id.emrlButtons2);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
                 android.R.layout.simple_spinner_item,
@@ -135,7 +135,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                         "Ranking godzin", "Ranking dni", "Ranking miesięcy",
                         "Zużycie wg. faz"});
 
-        emSpinner = (Spinner) findViewById(R.id.emSpinner);
+        emSpinner = findViewById(R.id.emSpinner);
         emSpinner.setAdapter(adapter);
         emSpinner.setOnItemSelectedListener(this);
 
@@ -143,11 +143,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
 
-        ivGraph = (ImageView) findViewById(R.id.emGraphImg);
+        ivGraph = findViewById(R.id.emGraphImg);
         ivGraph.bringToFront();
         ivGraph.setOnClickListener(this);
 
-        emProgress = (ProgressBar) findViewById(R.id.emProgressBar);
+        emProgress = findViewById(R.id.emProgressBar);
 
         showChart(false);
     }

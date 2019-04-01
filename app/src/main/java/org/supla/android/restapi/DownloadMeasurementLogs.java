@@ -22,8 +22,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     abstract protected void EraseMeasurements(SQLiteDatabase db);
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
-    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
-    protected int itemsLimitPerRequest() {return 0;};
+    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {}
+
+    protected int itemsLimitPerRequest() {return 0;}
 
     @Override
     protected Object doInBackground(Object[] objects) {

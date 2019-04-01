@@ -142,8 +142,9 @@ public abstract class DetailLayout extends FrameLayout {
         return cLV.isDetailVisible();
     }
 
-    public void onDetailShow() {};
-    public void onDetailHide() {};
+    public void onDetailShow() {}
+
+    public void onDetailHide() {}
 
     public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();

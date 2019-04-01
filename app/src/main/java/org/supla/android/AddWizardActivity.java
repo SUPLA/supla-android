@@ -149,7 +149,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         setContentView(R.layout.activity_wizard);
 
-        rlStepContent = (RelativeLayout) findViewById(R.id.wizard_step_content);
+        rlStepContent = findViewById(R.id.wizard_step_content);
 
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
 
@@ -157,28 +157,28 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vStep1.setVisibility(View.GONE);
         rlStepContent.addView(vStep1);
 
-        TextView tv = (TextView) findViewById(R.id.wizard_step1_txt1);
+        TextView tv = findViewById(R.id.wizard_step1_txt1);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_step1_txt2);
+        tv = findViewById(R.id.wizard_step1_txt2);
         tv.setTypeface(type);
 
         vStep2 = Inflate(R.layout.add_wizard_step2, null);
         vStep2.setVisibility(View.GONE);
         rlStepContent.addView(vStep2);
 
-        tv = (TextView) findViewById(R.id.wizard_step2_txt1);
+        tv = findViewById(R.id.wizard_step2_txt1);
         tv.setTypeface(type);
 
-        spWifiList = (Spinner) findViewById(R.id.wizard_wifi_list);
+        spWifiList = findViewById(R.id.wizard_wifi_list);
         spWifiList.setOnItemSelectedListener(this);
 
-        tvStep2Info = (TextView) findViewById(R.id.wizard_step2_txt3);
+        tvStep2Info = findViewById(R.id.wizard_step2_txt3);
         tvStep2Info.setTypeface(type);
 
-        edPassword = (EditText) findViewById(R.id.wizard_password);
-        cbSavePassword = (CheckBox) findViewById(R.id.wizard_cb_save_pwd);
-        btnViewPassword = (Button) findViewById(R.id.wizard_look_button);
+        edPassword = findViewById(R.id.wizard_password);
+        cbSavePassword = findViewById(R.id.wizard_cb_save_pwd);
+        btnViewPassword = findViewById(R.id.wizard_look_button);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
@@ -215,69 +215,69 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         vStep3.setVisibility(View.GONE);
         rlStepContent.addView(vStep3);
 
-        tv = (TextView) findViewById(R.id.wizard_step3_txt1);
+        tv = findViewById(R.id.wizard_step3_txt1);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_step3_txt2);
+        tv = findViewById(R.id.wizard_step3_txt2);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_step3_txt3);
+        tv = findViewById(R.id.wizard_step3_txt3);
         tv.setTypeface(type);
 
-        ivDot = (ImageView) findViewById(R.id.wizard_dot);
+        ivDot = findViewById(R.id.wizard_dot);
 
         vError = Inflate(R.layout.add_wizard_error, null);
         vError.setVisibility(View.GONE);
         rlStepContent.addView(vError);
 
-        tvErrorMsg = (TextView) findViewById(R.id.wizard_error_txt);
+        tvErrorMsg = findViewById(R.id.wizard_error_txt);
         tvErrorMsg.setTypeface(type);
 
         vDone = Inflate(R.layout.add_wizard_done, null);
         vDone.setVisibility(View.GONE);
         rlStepContent.addView(vDone);
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt1);
+        tv = findViewById(R.id.wizard_done_txt1);
         tv.setTypeface(type);
 
         type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt2);
+        tv = findViewById(R.id.wizard_done_txt2);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt3);
+        tv = findViewById(R.id.wizard_done_txt3);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt4);
+        tv = findViewById(R.id.wizard_done_txt4);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt5);
+        tv = findViewById(R.id.wizard_done_txt5);
         tv.setTypeface(type);
 
-        tv = (TextView) findViewById(R.id.wizard_done_txt6);
+        tv = findViewById(R.id.wizard_done_txt6);
         tv.setTypeface(type);
 
-        tvIODevName = (TextView) findViewById(R.id.wizard_done_iodev_name);
+        tvIODevName = findViewById(R.id.wizard_done_iodev_name);
         tvIODevName.setTypeface(type);
 
-        tvIODevFirmware = (TextView) findViewById(R.id.wizard_done_iodev_firmware);
+        tvIODevFirmware = findViewById(R.id.wizard_done_iodev_firmware);
         tvIODevFirmware.setTypeface(type);
 
-        tvIODevMAC = (TextView) findViewById(R.id.wizard_done_iodev_mac);
+        tvIODevMAC = findViewById(R.id.wizard_done_iodev_mac);
         tvIODevMAC.setTypeface(type);
 
-        tvIODevLastState = (TextView) findViewById(R.id.wizard_done_iodev_laststate);
+        tvIODevLastState = findViewById(R.id.wizard_done_iodev_laststate);
         tvIODevLastState.setTypeface(type);
 
 
-        btnNext1 = (Button) findViewById(R.id.wizard_next1);
+        btnNext1 = findViewById(R.id.wizard_next1);
         btnNext1.setOnClickListener(this);
 
-        btnNext2 = (Button) findViewById(R.id.wizard_next2);
+        btnNext2 = findViewById(R.id.wizard_next2);
         btnNext2.setOnClickListener(this);
         btnNext2.setTypeface(type);
 
-        btnNext3 = (Button) findViewById(R.id.wizard_next3);
+        btnNext3 = findViewById(R.id.wizard_next3);
         btnNext3.setOnClickListener(this);
 
         showMenuBar();

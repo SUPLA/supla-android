@@ -32,7 +32,7 @@ public class SuplaRegisterResult {
 
     public SuplaRegisterResult() {
 
-    };
+    }
 
     public SuplaRegisterResult(SuplaRegisterResult result) {
         if (result!=null) {

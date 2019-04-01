@@ -1681,6 +1681,8 @@ public class DbHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
+
         sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + " FROM " +SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
@@ -1701,6 +1703,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
             } while (cursor.moveToNext());
         }
+
+        cursor.close();
 
 
         return ids;
@@ -1787,6 +1791,7 @@ public class DbHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         db.close();
 
     }

@@ -73,19 +73,19 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     protected void init() {
 
         super.init();
-        rs = (SuplaRollerShutter) findViewById(R.id.rs1);
+        rs = findViewById(R.id.rs1);
         rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
         rs.setOnPercentTouchListener(this);
 
-        status = (SuplaChannelStatus) findViewById(R.id.rsstatus);
+        status = findViewById(R.id.rsstatus);
         status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
         status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 
-        btnUp = (Button) findViewById(R.id.rsBtnUp);
-        btnDown = (Button) findViewById(R.id.rsBtnDown);
-        btnStop = (Button) findViewById(R.id.rsBtnStop);
-        btnOpen = (Button) findViewById(R.id.rsBtnOpen);
-        btnClose = (Button) findViewById(R.id.rsBtnClose);
+        btnUp = findViewById(R.id.rsBtnUp);
+        btnDown = findViewById(R.id.rsBtnDown);
+        btnStop = findViewById(R.id.rsBtnStop);
+        btnOpen = findViewById(R.id.rsBtnOpen);
+        btnClose = findViewById(R.id.rsBtnClose);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
@@ -95,15 +95,15 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
 
-        tvPercentCaption = (TextView) findViewById(R.id.rsDetailPercentCaption);
+        tvPercentCaption = findViewById(R.id.rsDetailPercentCaption);
         tvPercentCaption.setTypeface(type);
 
-        tvPercent = (TextView) findViewById(R.id.rsDetailPercent);
+        tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
         type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
 
-        tvTitle = (TextView) findViewById(R.id.rsDetailTitle);
+        tvTitle = findViewById(R.id.rsDetailTitle);
         tvTitle.setTypeface(type);
 
         addOnLayoutChangeListener(this);
@@ -287,12 +287,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
 
-        RelativeLayout rlButtons = (RelativeLayout) findViewById(R.id.rlButtons);
+        RelativeLayout rlButtons = findViewById(R.id.rlButtons);
 
         int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
 
         if (margin < 0) {
-            RelativeLayout rlRS = (RelativeLayout) findViewById(R.id.rlRS);
+            RelativeLayout rlRS = findViewById(R.id.rlRS);
             rlRS.getLayoutParams().height += margin;
             rlRS.requestLayout();
         }

@@ -82,23 +82,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);
 
-        RelativeLayout NotifBgLayout = (RelativeLayout) NotificationView.findViewById(R.id.notif_bg_layout);
+        RelativeLayout NotifBgLayout = NotificationView.findViewById(R.id.notif_bg_layout);
         NotifBgLayout.setOnClickListener(this);
         NotifBgLayout.setBackgroundColor(getResources().getColor(R.color.notification_bg));
 
         getRootLayout().addView(NotificationView);
 
-        notif_img = (ImageView) NotificationView.findViewById(R.id.notif_img);
-        notif_text = (TextView) NotificationView.findViewById(R.id.notif_txt);
+        notif_img = NotificationView.findViewById(R.id.notif_img);
+        notif_text = NotificationView.findViewById(R.id.notif_txt);
 
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         notif_text.setTypeface(type);
 
-        channelLV = (ChannelListView) findViewById(R.id.channelsListView);
+        channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonTouchListener(this);
         channelLV.setOnDetailListener(this);
 
-        cgroupLV = (ChannelListView) findViewById(R.id.channelGroupListView);
+        cgroupLV = findViewById(R.id.channelGroupListView);
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
 

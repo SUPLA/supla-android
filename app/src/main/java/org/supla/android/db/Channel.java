@@ -40,7 +40,7 @@ public class Channel extends ChannelBase {
         return getRemoteId();
     }
 
-    public int getType() { return Type; };
+    public int getType() { return Type; }
 
     public void setType(int type) {
         Type = type;

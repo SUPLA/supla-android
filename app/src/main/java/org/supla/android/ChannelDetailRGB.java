@@ -91,15 +91,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         super.init();
 
-        tabs = (ViewGroup) findViewById(R.id.rlTabs);
+        tabs = findViewById(R.id.rlTabs);
 
         Resources r = getResources();
 
-        status = (SuplaChannelStatus) findViewById(R.id.rgbstatus);
+        status = findViewById(R.id.rgbstatus);
         status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
         status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
 
-        clPicker = (SuplaColorListPicker) findViewById(R.id.clPicker);
+        clPicker = findViewById(R.id.clPicker);
         clPicker.addItem(Color.WHITE, (short) 100);
         clPicker.addItem();
         clPicker.addItem();
@@ -108,15 +108,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         clPicker.addItem();
         clPicker.setOnTouchListener(this);
 
-        rgbPicker = (SuplaColorBrightnessPicker) findViewById(R.id.rgbPicker);
+        rgbPicker = findViewById(R.id.rgbPicker);
         rgbPicker.setPercentVisible(false);
         rgbPicker.setWheelWidth(r.getDimensionPixelSize(R.dimen.rgb_wheel_width));
         rgbPicker.setArrowHeight(r.getDimensionPixelSize(R.dimen.rgb_wheel_arrow_height));
 
         rgbPicker.setOnChangeListener(this);
 
-        tabRGB = (Button) findViewById(R.id.rgbTabBtn_RGB);
-        tabDimmer = (Button) findViewById(R.id.rgbTabBtn_Dimmer);
+        tabRGB = findViewById(R.id.rgbTabBtn_RGB);
+        tabDimmer = findViewById(R.id.rgbTabBtn_Dimmer);
 
         tabRGB.setOnClickListener(this);
         tabDimmer.setOnClickListener(this);
@@ -125,15 +125,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabRGB.setTypeface(type);
         tabDimmer.setTypeface(type);
 
-        tvStateCaption = (TextView) findViewById(R.id.rgbDetailStateCaption);
+        tvStateCaption = findViewById(R.id.rgbDetailStateCaption);
         tvStateCaption.setTypeface(type);
 
         type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
 
-        tvTitle = (TextView) findViewById(R.id.rgbDetailTitle);
+        tvTitle = findViewById(R.id.rgbDetailTitle);
         tvTitle.setTypeface(type);
 
-        stateImage = (ImageView) findViewById(R.id.rgbDetailStateImage);
+        stateImage = findViewById(R.id.rgbDetailStateImage);
         stateImage.setOnClickListener(this);
 
         remoteUpdateTime = 0;
@@ -231,7 +231,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
                 if (markers != null) {
                     if (markers.size() == 1) {
-                        if (markers.get(0).intValue() != (int) rgbPicker.getColor()) {
+                        if (markers.get(0).intValue() != rgbPicker.getColor()) {
                             rgbPicker.setColor(markers.get(0).intValue());
                         }
                     } else {

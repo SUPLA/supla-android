@@ -530,14 +530,14 @@ public abstract class ChannelBase extends DbItem {
                     + (char) 0x00B0;
         } else {
             measured = "---" + (char) 0x00B0;
-        };
+        }
 
         if (presetTemp != null && presetTemp > -273) {
             preset = "/"+Integer.toString(presetTemp.intValue())
                     + (char) 0x00B0;
         } else {
             preset = "/---"+ (char) 0x00B0;
-        };
+        }
 
         SpannableString ss =  new SpannableString(measured+preset);
         ss.setSpan(new RelativeSizeSpan(0.7f),

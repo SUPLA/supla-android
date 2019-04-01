@@ -47,7 +47,6 @@
             android:id="@+id/hpBtnSettings"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignTop="@+id/hpHeader"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
@@ -375,7 +374,8 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/hp_button_off"
                                 android:text="@string/hp_eco"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@android:color/white"
+                                android:layout_marginRight="0dp" />
                         </LinearLayout>
 
                         <LinearLayout
