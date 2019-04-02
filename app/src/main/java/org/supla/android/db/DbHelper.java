@@ -43,7 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
 
@@ -156,9 +156,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
+                "CV." + SuplaContract.ChannelValueEntry._ID + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry._ID + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
@@ -181,14 +185,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " " +
+                "LEFT JOIN " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " CEV ON " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CEV." +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " " +
                 "LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I ON " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = I." +
                 SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID;
 
-
-
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
-
     }
 
     private void createColorTable(SQLiteDatabase db, String suffix) {
@@ -540,12 +544,22 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelView(db);
     }
 
+    private void upgradeToV9(SQLiteDatabase db) {
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
+        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
+
+        createChannelValueTable(db);
+        createChannelExtendedValueTable(db);
+        createChannelView(db);
+        createChannelGroupValueView(db);
+    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        execSQL(db, "DROP TABLE " + SuplaContract.UserIconsEntry.TABLE_NAME);
         /*
+        execSQL(db, "DROP TABLE " + SuplaContract.UserIconsEntry.TABLE_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
         */
     }
@@ -578,6 +592,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 7:
                         upgradeToV8(db);
+                        break;
+                    case 8:
+                        upgradeToV9(db);
                         break;
                 }
             }
@@ -774,9 +791,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
@@ -965,7 +986,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
     }
 
-    public ChannelExtendedValue getChannelExtendedValue(int channelId) {
+    private ChannelExtendedValue getChannelExtendedValue(int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelExtendedValueEntry._ID,
@@ -1207,12 +1228,20 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " "

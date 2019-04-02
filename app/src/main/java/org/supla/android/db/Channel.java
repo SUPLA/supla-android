@@ -30,6 +30,7 @@ import org.supla.android.lib.SuplaChannel;
 public class Channel extends ChannelBase {
 
     private ChannelValue Value;
+    private ChannelExtendedValue ExtendedValue;
     private int Type;
     private int ProtocolVersion;
     private short ManufacturerID;
@@ -86,12 +87,20 @@ public class Channel extends ChannelBase {
         Value = value;
     }
 
+    public void setExtendedValue(ChannelExtendedValue extendedValue) {
+        ExtendedValue = extendedValue;
+    }
+
     public ChannelValue getValue() {
 
         if (Value == null)
             Value = new ChannelValue();
 
         return Value;
+    }
+
+    public ChannelExtendedValue getExtendedValue() {
+        return ExtendedValue;
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -113,6 +122,14 @@ public class Channel extends ChannelBase {
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
         setValue(cv);
+
+        if (ChannelExtendedValue.valueExists(cursor)) {
+            ChannelExtendedValue cev = new ChannelExtendedValue();
+            cev.AssignCursorData(cursor);
+            setExtendedValue(cev);
+        } else {
+            setExtendedValue(null);
+        }
     }
 
     public ContentValues getContentValues() {
@@ -156,7 +173,6 @@ public class Channel extends ChannelBase {
                 || channel.ManufacturerID != getManufacturerID()
                 || channel.ProductID != getProductID()
                 || getValue().Diff(channel.Value);
-
     }
 
     public boolean Diff(Channel channel) {

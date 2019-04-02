@@ -70,6 +70,16 @@ public class ChannelExtendedValue extends DbItem {
         return null;
     }
 
+    public static boolean valueExists(Cursor cursor) {
+        int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
+
+        return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
+                && vidx > -1
+                && !cursor.isNull(vidx);
+    }
+
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));

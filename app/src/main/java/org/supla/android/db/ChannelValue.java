@@ -348,4 +348,8 @@ public class ChannelValue extends DbItem {
         return 0.00;
     }
 
+    public String getUnit(String defaultUnit) {
+        return defaultUnit;
+    }
+
 }

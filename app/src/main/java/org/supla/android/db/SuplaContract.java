@@ -61,7 +61,7 @@ public class SuplaContract {
 
         public static final String TABLE_NAME = "channel_value";
 
-        public static final String _ID = "_id"; // Primary Key
+        public static final String _ID = "_channel_value_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_ONLINE = "online";
         public static final String COLUMN_NAME_SUBVALUE = "subvalue";
@@ -72,10 +72,10 @@ public class SuplaContract {
 
         public static final String TABLE_NAME = "channel_extendedvalue";
 
-        public static final String _ID = "_id"; // Primary Key
+        public static final String _ID = "_channel_extendedvalue_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
-        public static final String COLUMN_NAME_TYPE = "type";
-        public static final String COLUMN_NAME_VALUE = "value";
+        public static final String COLUMN_NAME_TYPE = "extendedvaluetype";
+        public static final String COLUMN_NAME_VALUE = "extendedvalue";
     }
 
     public static abstract class ChannelViewEntry implements BaseColumns {
@@ -86,9 +86,15 @@ public class SuplaContract {
         public static final String COLUMN_NAME_DEVICEID = ChannelEntry.COLUMN_NAME_DEVICEID;
         public static final String COLUMN_NAME_CHANNELID = ChannelEntry.COLUMN_NAME_CHANNELID;
         public static final String COLUMN_NAME_CAPTION = ChannelEntry.COLUMN_NAME_CAPTION;
+        public static final String COLUMN_NAME_VALUEID = ChannelValueEntry._ID;
+        public static final String COLUMN_NAME_EXTENDEDVALUEID = ChannelExtendedValueEntry._ID;
         public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
         public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
         public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
+        public static final String COLUMN_NAME_EXTENDEDVALUETYPE =
+                ChannelExtendedValueEntry.COLUMN_NAME_TYPE;
+        public static final String COLUMN_NAME_EXTENDEDVALUE =
+                ChannelExtendedValueEntry.COLUMN_NAME_VALUE;
         public static final String COLUMN_NAME_TYPE = ChannelEntry.COLUMN_NAME_TYPE;
         public static final String COLUMN_NAME_FUNC = ChannelEntry.COLUMN_NAME_FUNC;
         public static final String COLUMN_NAME_VISIBLE = ChannelEntry.COLUMN_NAME_VISIBLE;

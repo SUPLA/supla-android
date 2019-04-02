@@ -233,7 +233,9 @@ public class ChannelLayout extends LinearLayout {
                 width *= 4.3;
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
 
                 width *= 2.8;
 
@@ -279,7 +281,9 @@ public class ChannelLayout extends LinearLayout {
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
 
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
@@ -964,6 +968,8 @@ public class ChannelLayout extends LinearLayout {
 
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

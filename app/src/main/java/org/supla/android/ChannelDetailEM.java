@@ -192,7 +192,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
-        ChannelExtendedValue cev = DBH.getChannelExtendedValue(getRemoteId());
+        ChannelExtendedValue cev = channel.getExtendedValue();
 
         setBtnBackground(btnPhase1, R.drawable.em_phase_btn_black);
         setBtnBackground(btnPhase2, R.drawable.em_phase_btn_black);

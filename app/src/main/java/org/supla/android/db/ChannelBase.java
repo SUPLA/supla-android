@@ -576,7 +576,7 @@ public abstract class ChannelBase extends DbItem {
 
                 if (getOnLine()
                         && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f", value.getTemp(getFunc())) + (char) 0x00B0;
+                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
                 } else {
                     return "---";
                 }
@@ -584,7 +584,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 if (getOnLine()
                         && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f", value.getTemp(getFunc())) + (char) 0x00B0;
+                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
                 } else {
                     return "---";
                 }
@@ -608,7 +608,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
                 if (getOnLine()) {
                     double rain = value.getDouble(-1);
-                    return String.format("%.2f l/m2", rain/1000.00);
+                    return String.format("%.2f l/m\u00B2", rain/1000.00);
 
                 } else {
                     return "--- l/m2";
@@ -664,10 +664,27 @@ public abstract class ChannelBase extends DbItem {
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+
+                String unit = "";
+
+                switch (getFunc()) {
+                    case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                        unit = value.getUnit("kWh");
+                        break;
+                    case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                    case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                        unit = value.getUnit("m\u00B3");
+                        break;
+                }
+
+                double mValue = value.getTotalForwardActiveEnergy();
+
                 if (getOnLine()) {
-                    return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
+                    return String.format("%.2f " + unit, mValue);
                 } else {
-                    return "--- kWh";
+                    return "--- " + unit;
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:

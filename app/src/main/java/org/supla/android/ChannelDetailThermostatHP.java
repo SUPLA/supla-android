@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 
+import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
@@ -349,8 +351,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             return;
         }
 
-        ChannelExtendedValue cev = DBH.getChannelExtendedValue(getRemoteId());
-        if (cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
+       Channel channel = DBH.getChannel(getRemoteId());
+
+        ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
+        if (cev == null
+                || cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
                 || cev.getExtendedValue().ThermostatValue == null) {
             return;
         }
