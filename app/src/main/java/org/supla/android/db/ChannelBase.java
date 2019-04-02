@@ -299,6 +299,9 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                     Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1);
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    Id = new ImageId(getUserIconId(), 1);
+                    break;
                 default:
                     Id = new ImageId(getUserIconId(), active+1);
                     break;
