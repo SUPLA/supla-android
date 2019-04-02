@@ -1666,7 +1666,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
                 + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
                 + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " WHERE "+SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
+                + " WHERE "+SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND "+SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
                 " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + " IS NULL";
 
@@ -1689,7 +1690,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
                 + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " WHERE "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
+                + " WHERE "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
                 " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + " IS NULL";
 
