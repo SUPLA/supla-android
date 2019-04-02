@@ -4,6 +4,7 @@
     <color name="channel_btn">#12a71e</color>
     <color name="channel_btn_pressed">#5ae966</color>
     <color name="channel_cell">#fafbfc</color>
+    <color name="channel_section_cell">#edfbee</color>
     <color name="detail_rgb_gb">#ffe804</color>
     <color name="detail_rs_bg">#fffafafa</color>
     <color name="detail_rs_marker">#12a71e</color>

@@ -61,7 +61,7 @@ public class SectionLayout extends LinearLayout {
         int height = getResources().getDimensionPixelSize(R.dimen.channel_section_height);
         int sheight = getResources().getDimensionPixelSize(R.dimen.channel_separator_height);
 
-        setBackgroundColor(getResources().getColor(R.color.channel_cell));
+        setBackgroundColor(getResources().getColor(R.color.channel_section_cell));
         setOrientation(VERTICAL);
 
         setLayoutParams(new AbsListView.LayoutParams(
