@@ -41,7 +41,7 @@ public class ThermostatChartHelper extends ChartHelper {
     protected List<Integer> getColors() {
         Resources res = context.getResources();
 
-        List<Integer> Colors = new ArrayList<Integer>();
+        List<Integer> Colors = new ArrayList<Integer>(1);
         Colors.add(res.getColor(R.color.hp_chart_room_temperature));
 
         return Colors;
