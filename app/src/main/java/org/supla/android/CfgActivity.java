@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.Preferences;
 
 public class CfgActivity extends NavigationActivity {
@@ -246,6 +247,10 @@ public class CfgActivity extends NavigationActivity {
 
 
         if (changed) {
+
+            DbHelper DbH = new DbHelper(this);
+            DbH.deleteUserIcons();
+            DbH = null;
 
             prefs.setPreferedProtocolVersion();
 

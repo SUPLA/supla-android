@@ -1749,6 +1749,14 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public void deleteUserIcons() {
+        SQLiteDatabase db = getReadableDatabase();
+        db.delete(SuplaContract.UserIconsEntry.TABLE_NAME, null, null);
+        db.close();
+
+        ImageCache.clear();
+    }
+
     public void loadUserIconsIntoCache() {
 
         SQLiteDatabase db = getReadableDatabase();

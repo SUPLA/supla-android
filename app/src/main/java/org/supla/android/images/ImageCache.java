@@ -48,4 +48,8 @@ public class ImageCache {
         ByteArrayInputStream imageStream = new ByteArrayInputStream(image);
         return addBitmap(imgId, BitmapFactory.decodeStream(imageStream));
     }
+
+    public static synchronized void clear() {
+        map.clear();
+    }
 }
