@@ -171,6 +171,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         channelDataToViews();
     }
 
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
+    }
+
     public void onDetailShow() {
         if (vlCalibrationTool != null) {
             vlCalibrationTool.Hide();
@@ -344,7 +353,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             lastBrightness = brightness;
     }
 
-    private void sendNewValues(boolean force, boolean turnOnOff) {
+    public void sendNewValues(boolean force, boolean turnOnOff) {
 
         if (delayTimer1 != null) {
             delayTimer1.cancel();
@@ -353,7 +362,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if (client == null || !isDetailVisible())
+        if (client == null || (!isDetailVisible() && !force))
             return;
 
         if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
@@ -539,6 +548,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             }
 
         }
-
     }
+
+
 }
