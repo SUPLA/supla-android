@@ -17,6 +17,7 @@ import java.util.TimerTask;
 public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
     private ChannelDetailRGB detailRGB;
     private Button btnOK;
+    private Button btnCancel;
     private Button btnDmAuto;
     private Button btnDm1;
     private Button btnDm2;
@@ -37,6 +38,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int VL_MSG_CONFIGURATION_QUERY = 0x15;
     private final static int VL_MSG_CONFIGURATION_REPORT = 0x51;
     private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
+    private final static int VL_MSG_SAVE_AND_EXT = 0x64;
     private final static int VL_MSG_SET_MODE = 0x58;
     private final static int VL_MSG_SET_MINIMUM = 0x59;
     private final static int VL_MSG_SET_MAXIMUM = 0x5A;
@@ -82,6 +84,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         detailRGB.addView(mainView);
 
         btnOK = getBtn(R.id.vlBtnOK);
+        btnCancel = getBtn(R.id.vlBtnCancel);
         btnDmAuto = getBtn(R.id.vlCfgDmAuto);
         btnDm1 = getBtn(R.id.vlCfgDm1);
         btnDm2 = getBtn(R.id.vlCfgDm2);
@@ -269,10 +272,12 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         if (force || System.currentTimeMillis() - lastCalCfgTime >= DISPLAY_DELAY_TIME) {
             setMode(cfgParameters.getMode());
             setDrive(cfgParameters.getDrive());
-            calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
+            // First set right edge then left edge
             calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
-            calibrationWheel.setMinimum(cfgParameters.getMinimum());
+            calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
+            // First set maximum and then minimum
             calibrationWheel.setMaximum(cfgParameters.getMaximum());
+            calibrationWheel.setMinimum(cfgParameters.getMinimum());
             calibrationWheel.setDriveLevel(cfgParameters.getDriveLevel());
         } else {
 
@@ -333,6 +338,10 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     public void onClick(View v) {
 
         if (v == btnOK) {
+            calCfgRequest(VL_MSG_SAVE_AND_EXT, null, null);
+            Hide();
+            return;
+        } else if (v == btnCancel) {
             Hide();
             return;
         }
@@ -374,8 +383,15 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
     public void Hide() {
         unregisterMessageHandler();
-        mainView.setVisibility(View.GONE);
-        detailRGB.getContentView().setVisibility(View.VISIBLE);
+        if (mainView.getVisibility() == View.VISIBLE) {
+            mainView.setVisibility(View.GONE);
+            detailRGB.getContentView().setVisibility(View.VISIBLE);
+
+            if (System.currentTimeMillis() - lastCalCfgTime >= MIN_SEND_DELAY_TIME) {
+                Trace.d("Send new values", "Send new values");
+                detailRGB.sendNewValues(true, false);
+            }
+        }
     }
 
     public boolean isVisible() {

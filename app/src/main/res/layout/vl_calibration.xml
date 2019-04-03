@@ -8,6 +8,17 @@
     android:background="@color/vl_settings_bg">
 
     <Button
+        android:id="@+id/vlBtnCancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/error"
+        android:visibility="visible" />
+
+    <Button
         android:id="@+id/vlBtnOK"
         android:layout_width="40dp"
         android:layout_height="40dp"
