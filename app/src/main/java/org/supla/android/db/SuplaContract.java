@@ -167,6 +167,17 @@ public class SuplaContract {
 
     }
 
+    public static abstract class UserIconsEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "user_icons";
+
+        public static final String _ID = "_id"; // Primary Key
+        public static final String COLUMN_NAME_REMOTEID = "remoteid";
+        public static final String COLUMN_NAME_IMAGE1 = "uimage1";
+        public static final String COLUMN_NAME_IMAGE2 = "image2";
+        public static final String COLUMN_NAME_IMAGE3 = "image3";
+        public static final String COLUMN_NAME_IMAGE4 = "image4";
+    }
 
     public static abstract class ElectricityMeterLogEntry implements BaseColumns {
 
@@ -209,6 +220,17 @@ public class SuplaContract {
 
     }
 
+    public static abstract class ImpulseCounterLogEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "ic_log";
+
+        public static final String _ID = "_ic_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+        public static final String COLUMN_NAME_COUNTER = "counter";
+        public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
+    }
+
     public static abstract class ThermostatLogEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "th_log";
@@ -222,15 +244,26 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PRESETTEMPERATURE = "preset";
     }
 
-    public static abstract class UserIconsEntry implements BaseColumns {
+    public static abstract class TemperatureLogEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "user_icons";
+        public static final String TABLE_NAME = "temperature_log";
 
-        public static final String _ID = "_id"; // Primary Key
-        public static final String COLUMN_NAME_REMOTEID = "remoteid";
-        public static final String COLUMN_NAME_IMAGE1 = "uimage1";
-        public static final String COLUMN_NAME_IMAGE2 = "image2";
-        public static final String COLUMN_NAME_IMAGE3 = "image3";
-        public static final String COLUMN_NAME_IMAGE4 = "image4";
+        public static final String _ID = "_temperature_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
     }
+
+    public static abstract class TempHumidityLogEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "temphumidity_log";
+
+        public static final String _ID = "_temphumidit_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
+        public static final String COLUMN_NAME_HUMIDITY= "humidity";
+    }
+
+
 }

@@ -427,6 +427,85 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_INDEX);
     }
 
+    private void createImpulseCounterLogTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_ICLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + " (" +
+                SuplaContract.ImpulseCounterLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER + " BIGINT NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
+                + " DOUBLE NOT NULL)";
+
+        execSQL(db, SQL_CREATE_ICLOG_TABLE);
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
+    private void createTemperatureLogTable(SQLiteDatabase db) {
+        final String SQL_CREATE_TLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.TemperatureLogEntry.TABLE_NAME + " (" +
+                SuplaContract.TemperatureLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE
+                + " DECIMAL(8,4) NULL)";
+
+        execSQL(db, SQL_CREATE_TLOG_TABLE);
+        createIndex(db, SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
+    private void createTempHumidityLogTable(SQLiteDatabase db) {
+        final String SQL_CREATE_THLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.TempHumidityLogEntry.TABLE_NAME + " (" +
+                SuplaContract.TempHumidityLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE
+                + " DECIMAL(8,4) NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY
+                + " DECIMAL(8,4) NULL)";
+
+        execSQL(db, SQL_CREATE_THLOG_TABLE);
+        createIndex(db, SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -442,6 +521,9 @@ public class DbHelper extends SQLiteOpenHelper {
         createElectricityMeterLogView(db);
         createThermostatLogTable(db);
         createUserIconsTable(db);
+        createImpulseCounterLogTable(db);
+        createTemperatureLogTable(db);
+        createTempHumidityLogTable(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -554,6 +636,10 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelExtendedValueTable(db);
         createChannelView(db);
         createChannelGroupValueView(db);
+
+        createImpulseCounterLogTable(db);
+        createTemperatureLogTable(db);
+        createTempHumidityLogTable(db);
     }
 
     @Override
