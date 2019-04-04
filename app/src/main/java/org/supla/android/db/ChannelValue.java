@@ -352,4 +352,20 @@ public class ChannelValue extends DbItem {
         return defaultUnit;
     }
 
+    public long getImpulseCount() {
+        byte[] t = getChannelValue();
+
+        if (t.length == 8) {
+
+            byte[] i = new byte[8];
+
+            for(int a=0;a<8;a++) {
+                i[a] = t[7-a];
+            }
+
+            return ByteBuffer.wrap(i).getLong();
+        }
+
+        return 0;
+    }
 }

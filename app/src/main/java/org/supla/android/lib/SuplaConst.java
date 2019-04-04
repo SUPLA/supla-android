@@ -91,6 +91,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_THERMOSTAT = 400;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
 
+    public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
+
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR           = 30;

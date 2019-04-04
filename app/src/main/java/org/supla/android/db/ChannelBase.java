@@ -667,24 +667,10 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
             case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
 
-                String unit = "";
-
-                switch (getFunc()) {
-                    case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                        unit = value.getUnit("kWh");
-                        break;
-                    case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                    case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
-                        unit = value.getUnit("m\u00B3");
-                        break;
-                }
-
-                double mValue = value.getTotalForwardActiveEnergy();
-
                 if (getOnLine()) {
-                    return String.format("%.2f " + unit, mValue);
+                    return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
                 } else {
-                    return "--- " + unit;
+                    return "--- kWh";
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:

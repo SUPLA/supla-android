@@ -25,6 +25,7 @@ import android.database.Cursor;
 import org.supla.android.Trace;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaConst;
 
 
 public class Channel extends ChannelBase {
@@ -233,11 +234,20 @@ public class Channel extends ChannelBase {
         return super.getImageIdx(whichImage, Value);
     }
 
+    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+
+        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+            return Long.toString(value.getImpulseCount()) + " I";
+        }
+
+        return super.getHumanReadableValue(whichOne, value);
+    }
+
     public CharSequence getHumanReadableValue(WhichOne whichOne) {
-        return super.getHumanReadableValue(whichOne, Value);
+        return getHumanReadableValue(whichOne, Value);
     }
     public CharSequence getHumanReadableValue() {
-        return super.getHumanReadableValue(WhichOne.First, Value);
+        return getHumanReadableValue(WhichOne.First, Value);
     }
 
 }
