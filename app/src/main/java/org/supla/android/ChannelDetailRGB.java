@@ -171,6 +171,10 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         channelDataToViews();
     }
 
+    public void onBackPressed() {
+
+    }
+
     @Override
     public void onDetailHide() {
         super.onDetailHide();
@@ -353,7 +357,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             lastBrightness = brightness;
     }
 
-    public void sendNewValues(boolean force, boolean turnOnOff) {
+    private void sendNewValues(boolean force, boolean turnOnOff) {
 
         if (delayTimer1 != null) {
             delayTimer1.cancel();

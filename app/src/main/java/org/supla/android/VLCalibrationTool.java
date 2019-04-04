@@ -31,6 +31,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private RelativeLayout mainView;
     private SuperuserAuthorizationDialog authDialog;
     private long uiRefreshLockTime = 0;
+    private boolean configStarted = false;
     private VLCfgParameters cfgParameters;
 
     private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
@@ -38,7 +39,6 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int VL_MSG_CONFIGURATION_QUERY = 0x15;
     private final static int VL_MSG_CONFIGURATION_REPORT = 0x51;
     private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
-    private final static int VL_MSG_SAVE_AND_EXT = 0x64;
     private final static int VL_MSG_SET_MODE = 0x58;
     private final static int VL_MSG_SET_MINIMUM = 0x59;
     private final static int VL_MSG_SET_MAXIMUM = 0x5A;
@@ -153,6 +153,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
                     displayCfgParameters(true);
                     detailRGB.getContentView().setVisibility(View.GONE);
                     mainView.setVisibility(View.VISIBLE);
+                    configStarted = true;
                 }
                 break;
             case VL_MSG_CONFIGURATION_REPORT:
@@ -338,7 +339,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     public void onClick(View v) {
 
         if (v == btnOK) {
-            calCfgRequest(VL_MSG_SAVE_AND_EXT, null, null);
+            configStarted = false;
+            calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte)1, null);
             Hide();
             return;
         } else if (v == btnCancel) {
@@ -382,16 +384,19 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     public void Hide() {
+
         unregisterMessageHandler();
         if (mainView.getVisibility() == View.VISIBLE) {
             mainView.setVisibility(View.GONE);
             detailRGB.getContentView().setVisibility(View.VISIBLE);
 
-            if (System.currentTimeMillis() - lastCalCfgTime >= MIN_SEND_DELAY_TIME) {
-                Trace.d("Send new values", "Send new values");
-                detailRGB.sendNewValues(true, false);
+            if (configStarted) {
+                configStarted = false;
+                byte[] data = new byte[1];
+                detailRGB.deviceCalCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
             }
         }
+
     }
 
     public boolean isVisible() {

@@ -715,9 +715,9 @@ public class ChannelListView extends ListView {
         return mDetailVisible && mDetailLayout != null;
     }
 
+    public void onBackPressed() {};
+
     public void hideDetail(boolean animated) {
-
-
         if (isDetailVisible())
 
             if (animated) {
