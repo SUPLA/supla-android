@@ -514,10 +514,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createColorTable(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
-        createChannelGroupValueView(db);
         createChannelExtendedValueTable(db);
         createElectricityMeterLogTable(db);
-        createElectricityMeterLogView(db);
         createThermostatLogTable(db);
         createUserIconsTable(db);
         createImpulseCounterLogTable(db);
@@ -526,6 +524,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Create views at the end
         createChannelView(db);
+        createChannelGroupValueView(db);
+        createElectricityMeterLogView(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
