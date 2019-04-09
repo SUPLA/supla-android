@@ -234,10 +234,36 @@ public class Channel extends ChannelBase {
         return super.getImageIdx(whichImage, Value);
     }
 
+    public String getUnit(String defaultUnit) {
+        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
+                && getExtendedValue() != null
+                && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
+                && getExtendedValue().getExtendedValue() != null
+                && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
+
+            String unit = getExtendedValue().getExtendedValue().ImpulseCounterValue.getUnit();
+            if (unit != null && unit.length() > 0) {
+                return unit;
+            }
+        }
+        return defaultUnit;
+    }
+
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-            return Long.toString(value.getImpulseCount()) + " I";
+
+            String dUnit = "";
+            switch (getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                    dUnit = "kWh";
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                    dUnit = "m\u00B3";
+                    break;
+            }
+            return String.format("%.1f "+getUnit(dUnit), value.getImpulseCounterCalculatedValue());
         }
 
         return super.getHumanReadableValue(whichOne, value);

@@ -348,11 +348,7 @@ public class ChannelValue extends DbItem {
         return 0.00;
     }
 
-    public String getUnit(String defaultUnit) {
-        return defaultUnit;
-    }
-
-    public long getImpulseCount() {
+    public long getLong() {
         byte[] t = getChannelValue();
 
         if (t.length == 8) {
@@ -367,5 +363,9 @@ public class ChannelValue extends DbItem {
         }
 
         return 0;
+    }
+
+    public double getImpulseCounterCalculatedValue() {
+        return getLong() / 1000.0;
     }
 }
