@@ -251,7 +251,7 @@ public class Channel extends ChannelBase {
 
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
-        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+        if (getOnLine() && getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
 
             String dUnit = "";
             switch (getFunc()) {
