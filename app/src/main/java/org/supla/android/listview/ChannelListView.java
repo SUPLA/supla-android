@@ -34,6 +34,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGB;
 import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailEM;
@@ -134,10 +135,16 @@ public class ChannelListView extends ListView {
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
 
-                    if (!(mDetailLayout instanceof ChannelDetailEM))
-                        mDetailLayout = null;
-
+                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+                        if (!(mDetailLayout instanceof ChannelDetailIC))
+                            mDetailLayout = null;
+                    } else {
+                        if (!(mDetailLayout instanceof ChannelDetailEM))
+                            mDetailLayout = null;
+                    }
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
@@ -170,7 +177,13 @@ public class ChannelListView extends ListView {
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                    mDetailLayout = new ChannelDetailEM(getContext(), this);
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+                        mDetailLayout = new ChannelDetailIC(getContext(), this);
+                    } else {
+                        mDetailLayout = new ChannelDetailEM(getContext(), this);
+                    }
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     mDetailLayout = new ChannelDetailThermostat(getContext(), this);

@@ -73,6 +73,10 @@ public abstract class ChannelBase extends DbItem {
         return LocationId;
     }
 
+    public int getType() {
+        return 0;
+    }
+
     public void setFunc(int func) {
         Func = func;
     }
