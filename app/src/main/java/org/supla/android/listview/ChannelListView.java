@@ -38,6 +38,8 @@ import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGB;
 import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailEM;
+import org.supla.android.ChannelDetailTempHumidity;
+import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
@@ -147,6 +149,18 @@ public class ChannelListView extends ListView {
                     }
                     break;
 
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    if (!(mDetailLayout instanceof ChannelDetailTemperature))
+                        mDetailLayout = null;
+
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    if (!(mDetailLayout instanceof ChannelDetailTempHumidity))
+                        mDetailLayout = null;
+
+                    break;
+
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
 
                     if (!(mDetailLayout instanceof ChannelDetailThermostat))
@@ -184,6 +198,12 @@ public class ChannelListView extends ListView {
                     } else {
                         mDetailLayout = new ChannelDetailEM(getContext(), this);
                     }
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    mDetailLayout = new ChannelDetailTemperature(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    mDetailLayout = new ChannelDetailTemperature(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     mDetailLayout = new ChannelDetailThermostat(getContext(), this);

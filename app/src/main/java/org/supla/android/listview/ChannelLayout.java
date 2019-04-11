@@ -938,16 +938,6 @@ public class ChannelLayout extends LinearLayout {
 
                     lenabled = true;
                     renabled = true;
-
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-
-                    left_onlineStatus.setVisibility(View.INVISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
-
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
@@ -966,17 +956,14 @@ public class ChannelLayout extends LinearLayout {
 
                     break;
 
-
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
-
-                    left_onlineStatus.setVisibility(View.INVISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
-
-                    break;
-
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
 
