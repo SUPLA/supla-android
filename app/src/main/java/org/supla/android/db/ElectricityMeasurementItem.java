@@ -24,14 +24,13 @@ import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ElectricityMeasurementItem extends MeasurementItem {
+public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
     private double[] fae;
     private double[] rae;
     private double[] fre;
     private double[] rre;
-    private boolean Calculated;
-    private boolean Divided;
+
 
     public ElectricityMeasurementItem() {
         fae = new double[3];
@@ -109,14 +108,6 @@ public class ElectricityMeasurementItem extends MeasurementItem {
             return this.rre[phase];
         }
         return 0;
-    }
-
-    public boolean isCalculated() {
-        return Calculated;
-    }
-
-    public boolean isDivided() {
-        return Divided;
     }
 
     public void AssignJSONObject(JSONObject obj) throws JSONException {
@@ -221,8 +212,8 @@ public class ElectricityMeasurementItem extends MeasurementItem {
         return values;
     }
 
-    public void Calculate(ElectricityMeasurementItem emi) {
-        if (emi.getTimestamp() >= getTimestamp() || Calculated) return;
+    public void Calculate(IncrementalMeasurementItem item) {
+        ElectricityMeasurementItem emi = (ElectricityMeasurementItem)item;
 
         for(int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) - emi.getFae(phase));
@@ -235,8 +226,6 @@ public class ElectricityMeasurementItem extends MeasurementItem {
     }
 
     public void DivideBy(long div) {
-        if (Divided) return;
-
         for(int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) / div);
             setRae(phase, getRae(phase) / div);

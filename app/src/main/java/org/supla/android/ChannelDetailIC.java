@@ -24,8 +24,13 @@ import android.view.View;
 
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
-public class ChannelDetailIC extends DetailLayout {
+public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults {
+
+    private DownloadImpulseCounterMeasurements dtm;
+
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
     }
@@ -49,6 +54,37 @@ public class ChannelDetailIC extends DetailLayout {
 
     @Override
     public void OnChannelDataChanged() {
+
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+
+        runDownloadTask();
+    }
+
+    private void runDownloadTask() {
+        if (dtm != null && !dtm.isAlive(90)) {
+            dtm.cancel(true);
+            dtm = null;
+        }
+
+        if (dtm == null) {
+            dtm = new DownloadImpulseCounterMeasurements(this.getContext());
+            dtm.setChannelId(getRemoteId());
+            dtm.setDelegate(this);
+            dtm.execute();
+        }
+    }
+
+    @Override
+    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
+
+    }
+
+    @Override
+    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
 
     }
 }

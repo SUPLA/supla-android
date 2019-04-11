@@ -24,13 +24,10 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.db.ElectricityMeasurementItem;
+import org.supla.android.db.IncrementalMeasurementItem;
 
 
-public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLogs {
-
-    private ElectricityMeasurementItem older_emi = null;
-    private ElectricityMeasurementItem younger_emi = null;
-    private boolean added = false;
+public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMeasurements {
 
     public DownloadElectricityMeterMeasurements(Context context) {
         super(context);
@@ -48,61 +45,29 @@ public class DownloadElectricityMeterMeasurements extends DownloadMeasurementLog
         getMeasurementsDbH().deleteElectricityMeasurements(db, getChannelId());
     }
 
-    protected void SaveMeasurementItem(SQLiteDatabase db,
-                                       long timestamp, JSONObject obj) throws JSONException {
-
-        younger_emi = new ElectricityMeasurementItem();
-        younger_emi.AssignJSONObject(obj);
-        younger_emi.setChannelId(getChannelId());
-
-        if (older_emi==null) {
-            older_emi = getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(db,
-                    younger_emi.getChannelId(),
-                    younger_emi.getTimestamp());
-
-            if (older_emi!=null) {
-                getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(db,
-                        younger_emi.getChannelId());
-            }
-        }
-
-        if (older_emi!=null) {
-            if (younger_emi.getTimestamp() < older_emi.getTimestamp()) {
-                throw new JSONException("Wrong timestamp order!");
-            }
-
-            ElectricityMeasurementItem cemi = new ElectricityMeasurementItem(younger_emi);
-            cemi.Calculate(older_emi);
-
-            long diff = cemi.getTimestamp() - older_emi.getTimestamp();
-
-
-            if (diff >= 1200 ) {
-
-                long n = diff / 600;
-                cemi.DivideBy(n);
-
-                for(int a=0;a<n;a++) {
-                    getMeasurementsDbH().addElectricityMeasurement(db, cemi);
-                    cemi.setTimestamp(cemi.getTimestamp()-600);
-                }
-
-            } else {
-                getMeasurementsDbH().addElectricityMeasurement(db, cemi);
-            }
-
-            added = true;
-        }
-
-        older_emi = younger_emi;
+    protected IncrementalMeasurementItem newObject() {
+        return new ElectricityMeasurementItem();
     }
 
-    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {
-        super.noRemoteDataAvailable(db);
-        if (older_emi != null
-                && added) {
-            getMeasurementsDbH().addElectricityMeasurement(db, older_emi);
-        }
+    protected IncrementalMeasurementItem newObject(IncrementalMeasurementItem src) {
+        return new ElectricityMeasurementItem((ElectricityMeasurementItem)src);
+    }
+
+    protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
+            SQLiteDatabase db, int channelId, long timestamp) {
+        return getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(db,
+                channelId,
+                timestamp);
+    }
+
+    protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
+                                                                      int channelId) {
+        getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(db,
+                channelId);
+    }
+    protected void addIncrementalMeasurement(SQLiteDatabase db,
+                                                      IncrementalMeasurementItem emi) {
+        getMeasurementsDbH().addElectricityMeasurement(db, (ElectricityMeasurementItem)emi);
     }
 
 }
