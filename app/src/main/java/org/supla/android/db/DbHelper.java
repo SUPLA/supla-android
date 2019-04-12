@@ -43,7 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
 
@@ -436,7 +436,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER + " BIGINT NOT NULL," +
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
-                + " DOUBLE NOT NULL)";
+                + " DOUBLE NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_ICLOG_TABLE);
         createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
@@ -449,7 +451,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + "_unique_index ON "
                 + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
                 + "(" + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + ", "
-                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED + ")";
 
         execSQL(db, SQL_CREATE_INDEX);
     }
@@ -644,6 +647,12 @@ public class DbHelper extends SQLiteOpenHelper {
         createTempHumidityLogTable(db);
     }
 
+    private void upgradeToV10(SQLiteDatabase db) {
+        execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+        createImpulseCounterLogTable(db);
+    }
+
+
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /*
@@ -684,6 +693,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     case 8:
                         upgradeToV9(db);
                         break;
+                    case 9:
+                        upgradeToV10(db);
                 }
             }
         }

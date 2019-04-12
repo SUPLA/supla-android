@@ -229,6 +229,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_TIMESTAMP = "date";
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
+        public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
     }
 
     public static abstract class ThermostatLogEntry implements BaseColumns {
