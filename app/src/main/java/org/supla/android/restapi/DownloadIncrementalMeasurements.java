@@ -24,7 +24,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
     protected abstract void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
                                                                       int channelId);
     protected abstract void addIncrementalMeasurement(SQLiteDatabase db,
-                                                      IncrementalMeasurementItem emi);
+                                                      IncrementalMeasurementItem item);
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {

@@ -66,8 +66,8 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
                 channelId);
     }
     protected void addIncrementalMeasurement(SQLiteDatabase db,
-                                                      IncrementalMeasurementItem emi) {
-        getMeasurementsDbH().addElectricityMeasurement(db, (ElectricityMeasurementItem)emi);
+                                                      IncrementalMeasurementItem item) {
+        getMeasurementsDbH().addElectricityMeasurement(db, (ElectricityMeasurementItem) item);
     }
 
 }

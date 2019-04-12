@@ -2,7 +2,7 @@ package org.supla.android.restapi;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-
+import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.IncrementalMeasurementItem;
 
 public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasurements {
@@ -12,35 +12,40 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
     }
 
     protected long getMinTimestamp() {
-        return getMeasurementsDbH().getElectricityMeterMeasurementTimestamp(getChannelId(), true);
+        return getMeasurementsDbH().getImpulseCounterMeasurementTimestamp(getChannelId(), true);
     }
 
     protected long getMaxTimestamp() {
-        return getMeasurementsDbH().getElectricityMeterMeasurementTimestamp(getChannelId(), false);
+        return getMeasurementsDbH().getImpulseCounterMeasurementTimestamp(getChannelId(), false);
     }
 
     protected void EraseMeasurements(SQLiteDatabase db) {
-
+        getMeasurementsDbH().deleteImpulseCounterMeasurements(db, getChannelId());
     }
 
     protected IncrementalMeasurementItem newObject() {
-       return null;
+        return new ImpulseCounterMeasurementItem();
     }
 
     protected IncrementalMeasurementItem newObject(IncrementalMeasurementItem src) {
-        return null;
+        return new ImpulseCounterMeasurementItem((ImpulseCounterMeasurementItem)src);
     }
 
     protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
-        return null;
+        return getMeasurementsDbH().getOlderUncalculatedImpulseCounterMeasurement(db,
+                channelId,
+                timestamp);
     }
 
     protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
                                                              int channelId) {
+        getMeasurementsDbH().deleteUncalculatedImpulseCounterMeasurements(db,
+                channelId);
     }
-    protected void addIncrementalMeasurement(SQLiteDatabase db,
-                                             IncrementalMeasurementItem emi) {
 
+    protected void addIncrementalMeasurement(SQLiteDatabase db,
+                                             IncrementalMeasurementItem item) {
+        getMeasurementsDbH().addImpulseCounterMeasurement(db, (ImpulseCounterMeasurementItem) item);
     }
 }

@@ -457,6 +457,31 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_INDEX);
     }
 
+    private void createImpulseCounterLogView(SQLiteDatabase db) {
+
+        final String SQL_CREATE_EM_VIEW = "CREATE VIEW "
+                + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME + " AS "
+                + "SELECT " + SuplaContract.ImpulseCounterLogEntry._ID + " "
+                + SuplaContract.ImpulseCounterLogViewEntry._ID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + " "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + " "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + "datetime("+SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
+                + ", 'unixepoch', 'localtime') "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_DATE+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE
+                + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " > 0";
+
+        execSQL(db, SQL_CREATE_EM_VIEW);
+    }
+
     private void createTemperatureLogTable(SQLiteDatabase db) {
         final String SQL_CREATE_TLOG_TABLE = "CREATE TABLE " +
                 SuplaContract.TemperatureLogEntry.TABLE_NAME + " (" +
@@ -529,6 +554,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createChannelView(db);
         createChannelGroupValueView(db);
         createElectricityMeterLogView(db);
+        createImpulseCounterLogView(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
@@ -650,6 +676,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private void upgradeToV10(SQLiteDatabase db) {
         execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
         createImpulseCounterLogTable(db);
+        createImpulseCounterLogView(db);
     }
 
 
@@ -1783,6 +1810,116 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public void addImpulseCounterMeasurement(SQLiteDatabase db,
+                                          ImpulseCounterMeasurementItem item) {
+        db.insertWithOnConflict(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                null, item.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+
+        Trace.d("IC", "addImpulseCounterMeasurement:"+Long.toString(item.getTimestamp()));
+    }
+
+    public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
+
+        return getMeasurementTimestamp(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(
+            SQLiteDatabase db, int channelId, long timestamp) {
+        String[] projection = {
+                SuplaContract.ImpulseCounterLogEntry._ID,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+        };
+
+        String selection = SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                + " = ? AND " + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
+                + " < ? AND " + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " = 0";
+
+        String[] selectionArgs = {
+                String.valueOf(channelId),
+                String.valueOf(timestamp)
+        };
+
+        Cursor c = db.query(
+                SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP +" DESC",
+                "1"
+        );
+
+        ImpulseCounterMeasurementItem item = null;
+        if (c.getCount() > 0) {
+            item = new ImpulseCounterMeasurementItem();
+            c.moveToFirst();
+            item.AssignCursorData(c);
+        }
+
+        c.close();
+
+        return item;
+    }
+
+    public Cursor getImpulseCounterMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+
+        String sql = "SELECT SUM("
+                +SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+")"+
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER + ", "
+                + " SUM("
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ")"
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ", "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME
+                + " WHERE "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId)
+                +" GROUP BY "
+                + " strftime('"
+                + GroupByDateFormat
+                + "', " + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_DATE + ")"
+                +" ORDER BY "
+                +SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
+    }
+
+    public void deleteImpulseCounterMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void deleteUncalculatedImpulseCounterMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                        + " = 0 AND "
+                        + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
     }
 
     public ArrayList<Integer> iconsToDownload(SQLiteDatabase db) {

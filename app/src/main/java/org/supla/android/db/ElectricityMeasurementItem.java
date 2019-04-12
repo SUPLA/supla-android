@@ -33,6 +33,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
 
     public ElectricityMeasurementItem() {
+        super();
         fae = new double[3];
         rae = new double[3];
         fre = new double[3];
@@ -40,14 +41,11 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public ElectricityMeasurementItem(ElectricityMeasurementItem emi) {
-        ChannelId = emi.ChannelId;
-        Timestamp = emi.Timestamp;
+        super(emi);
         fae = emi.fae.clone();
         rae = emi.rae.clone();
         fre = emi.fre.clone();
         rre = emi.rre.clone();
-        Calculated = emi.Calculated;
-        Divided = emi.Divided;
     }
 
     public void setFae(int phase, double fae) {

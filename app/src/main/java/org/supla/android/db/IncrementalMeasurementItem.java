@@ -7,6 +7,18 @@ public abstract class IncrementalMeasurementItem extends MeasurementItem {
     protected boolean Calculated;
     protected boolean Divided;
 
+    public IncrementalMeasurementItem() {
+        super();
+        Calculated = false;
+        Divided = false;
+    }
+
+    public IncrementalMeasurementItem(IncrementalMeasurementItem src) {
+        super(src);
+        Calculated = src.Calculated;
+        Divided = src.Divided;
+    }
+
     public boolean isCalculated() {
         return Calculated;
     }

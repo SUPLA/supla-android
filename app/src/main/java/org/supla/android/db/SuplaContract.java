@@ -232,6 +232,19 @@ public class SuplaContract {
         public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
     }
 
+    public static abstract class ImpulseCounterLogViewEntry implements BaseColumns {
+
+        public static final String VIEW_NAME = "ic_log_v1";
+
+        public static final String _ID = "_ic_id"; // Primary Key
+        public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
+        public static final String COLUMN_NAME_TIMESTAMP = "date";
+        public static final String COLUMN_NAME_DATE = "date_dt";
+
+        public static final String COLUMN_NAME_COUNTER = "counter";
+        public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
+    }
+
     public static abstract class ThermostatLogEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "th_log";

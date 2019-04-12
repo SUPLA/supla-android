@@ -27,6 +27,16 @@ public abstract class MeasurementItem extends DbItem {
     protected int ChannelId;
     protected long Timestamp;
 
+    public MeasurementItem() {
+        ChannelId = 0;
+        Timestamp = 0;
+    }
+
+    public MeasurementItem(MeasurementItem src) {
+        ChannelId = src.ChannelId;
+        Timestamp = src.Timestamp;
+    }
+
     public int getChannelId() {
         return ChannelId;
     }
