@@ -1,4 +1,4 @@
-package org.supla.android;
+package org.supla.android.charts;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.

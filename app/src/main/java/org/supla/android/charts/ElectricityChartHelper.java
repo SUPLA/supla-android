@@ -1,4 +1,4 @@
-package org.supla.android;
+package org.supla.android.charts;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -27,6 +27,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+
+import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
 import java.text.SimpleDateFormat;

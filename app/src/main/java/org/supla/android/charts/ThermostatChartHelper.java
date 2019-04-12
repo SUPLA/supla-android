@@ -1,4 +1,4 @@
-package org.supla.android;
+package org.supla.android.charts;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
 import java.util.ArrayList;
