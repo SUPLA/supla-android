@@ -8,7 +8,7 @@
     android:visibility="visible">
 
     <RelativeLayout
-        android:id="@+id/hpFooter"
+        android:id="@+id/emFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -55,12 +55,12 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/hpHeader"
+        android:id="@+id/emHeader"
         android:layout_width="match_parent"
         android:layout_height="172dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:visibility="visible">
 
         <View
@@ -68,31 +68,31 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@android:color/black" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/emimgIcon"
             android:layout_width="111dp"
             android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
             android:background="@drawable/electricitymeter"
-            android:visibility="visible"
-            android:layout_marginLeft="15dp" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/imageView6"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/emimgIcon"
             android:orientation="vertical">
 
             <TextView
@@ -157,12 +157,12 @@
             android:id="@+id/emGraphImg"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignEnd="@+id/hpHeader"
-            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/emHeader"
+            android:layout_alignRight="@+id/emHeader"
             android:layout_alignParentRight="true"
-            android:layout_alignRight="@+id/hpHeader"
-            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/graphoff"
             tools:ignore="NotSibling" />
 
@@ -172,9 +172,9 @@
             android:layout_width="50dp"
             android:layout_height="10dp"
             android:layout_alignBaseline="@+id/emGraphImg"
-            android:layout_alignBottom="@+id/emGraphImg"
             android:layout_alignLeft="@+id/emGraphImg"
             android:layout_alignRight="@+id/emGraphImg"
+            android:layout_alignBottom="@+id/emGraphImg"
             android:layout_marginBottom="-10dp"
             android:indeterminateOnly="true"
             android:scaleY="5"
@@ -186,8 +186,8 @@
         android:id="@+id/emrlButtons1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignBaseline="@+id/hpHeader"
-        android:layout_below="@+id/hpHeader"
+        android:layout_alignBaseline="@+id/emHeader"
+        android:layout_below="@+id/emHeader"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:visibility="visible">
@@ -241,7 +241,7 @@
         android:id="@+id/emrlButtons2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/hpHeader"
+        android:layout_below="@+id/emHeader"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:visibility="visible">
@@ -258,7 +258,7 @@
         android:id="@+id/emrlDetails"
         android:layout_width="match_parent"
         android:layout_height="211dp"
-        android:layout_above="@+id/hpFooter"
+        android:layout_above="@+id/emFooter"
         android:layout_below="@+id/emrlButtons1"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"

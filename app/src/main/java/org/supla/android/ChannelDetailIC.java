@@ -19,9 +19,18 @@ package org.supla.android;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.images.ImageCache;
+import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
@@ -30,6 +39,12 @@ import org.supla.android.restapi.SuplaRestApiClientTask;
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults {
 
     private DownloadImpulseCounterMeasurements dtm;
+    private ProgressBar icProgress;
+    private TextView tvChannelTitle;
+    private TextView tvMeterValue;
+    private TextView tvCost;
+    private TextView tvImpulsesCount;
+    private ImageView icImgIcon;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -48,19 +63,62 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     }
 
     @Override
+    protected void init() {
+        super.init();
+        icProgress = findViewById(R.id.icProgressBar);
+        tvChannelTitle = findViewById(R.id.ictv_ChannelTitle);
+        tvMeterValue = findViewById(R.id.ictv_MeterValue);
+        tvCost = findViewById(R.id.ictv_Cost);
+        tvImpulsesCount = findViewById(R.id.ictv_ImpulsesCount);
+        icImgIcon = findViewById(R.id.icimgIcon);
+    }
+
+    @Override
     public View getContentView() {
         return inflateLayout(R.layout.detail_ic);
     }
 
+    private void channelExtendedDataToViews(boolean setIcon) {
+        Channel channel = (Channel) getChannelFromDatabase();
+        tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
+
+        if (setIcon) {
+            icImgIcon.setBackgroundColor(Color.TRANSPARENT);
+            icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
+        }
+
+        tvMeterValue.setText("---");
+        tvCost.setText("---");
+        tvImpulsesCount.setText("---");
+
+        ChannelExtendedValue cev = channel.getExtendedValue();
+        if (cev != null
+                && cev.getExtendedValue() != null
+                && cev.getExtendedValue().ImpulseCounterValue != null) {
+
+            SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
+
+            tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
+            tvCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
+            tvImpulsesCount.setText(Long.toString(ic.getCounter()));
+        }
+    }
+
     @Override
     public void OnChannelDataChanged() {
+        channelExtendedDataToViews(false);
+    }
 
+    @Override
+    public void setData(ChannelBase cbase) {
+        super.setData(cbase);
+        channelExtendedDataToViews(true);
     }
 
     @Override
     public void onDetailShow() {
         super.onDetailShow();
-
+        icProgress.setVisibility(INVISIBLE);
         runDownloadTask();
     }
 
@@ -80,11 +138,11 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
-
+        icProgress.setVisibility(VISIBLE);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
-
+        icProgress.setVisibility(INVISIBLE);
     }
 }

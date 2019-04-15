@@ -249,8 +249,7 @@ public class Channel extends ChannelBase {
         return defaultUnit;
     }
 
-    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
-
+    public String getUnit() {
         if (getOnLine() && getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
 
             String dUnit = "";
@@ -263,7 +262,16 @@ public class Channel extends ChannelBase {
                     dUnit = "m\u00B3";
                     break;
             }
-            return String.format("%.1f "+getUnit(dUnit), value.getImpulseCounterCalculatedValue());
+            return getUnit(dUnit);
+        }
+
+        return "";
+    }
+
+    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+
+        if (getOnLine() && getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+            return String.format("%.1f "+getUnit(), value.getImpulseCounterCalculatedValue());
         }
 
         return super.getHumanReadableValue(whichOne, value);
