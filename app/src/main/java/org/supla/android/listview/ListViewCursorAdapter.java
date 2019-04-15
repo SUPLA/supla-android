@@ -23,18 +23,11 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
-import org.supla.android.db.Location;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.OnSectionLayoutTouchListener {
 
@@ -61,7 +54,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             this.locationId = locationId;
             this.collapsed = collapsed;
             this.caption = caption;
-            Trace.d("Collapsed", Integer.toString(collapsed));
         }
 
         public int getPosition() {
