@@ -21,14 +21,12 @@ package org.supla.android.listview;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import org.supla.android.R;
 
 public class SectionLayout extends LinearLayout {
@@ -39,6 +37,7 @@ public class SectionLayout extends LinearLayout {
 
     private int locationId;
     private TextView Caption;
+    private FrameLayout frmCollapsed;
     private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
 
     public SectionLayout(Context context) {
@@ -58,31 +57,18 @@ public class SectionLayout extends LinearLayout {
 
     private void Init(Context context) {
 
-        int height = getResources().getDimensionPixelSize(R.dimen.channel_section_height);
-        int sheight = getResources().getDimensionPixelSize(R.dimen.channel_separator_height);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (inflater != null) {
+            View lv = inflater.inflate(R.layout.listview_section, null);
 
-        setBackgroundColor(getResources().getColor(R.color.channel_section_cell));
-        setOrientation(VERTICAL);
+            Caption = lv.findViewById(R.id.tvSectionCaption);
+            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
+            Caption.setTypeface(type);
 
-        setLayoutParams(new AbsListView.LayoutParams(
-                AbsListView.LayoutParams.MATCH_PARENT, height));
+            frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, height - sheight);
-
-        lp.setMargins(getResources().getDimensionPixelSize(R.dimen.channel_separator_text_margin), 0, 0, 0);
-
-        Caption = new TextView(context);
-        Caption.setLayoutParams(lp);
-
-        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-        Caption.setTypeface(type);
-        Caption.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_section_text));
-        Caption.setTextColor(getResources().getColor(R.color.channel_section_text));
-        Caption.setGravity(Gravity.CENTER_VERTICAL);
-
-        addView(Caption);
-        addView(new LineView(context));
+            addView(lv);
+        }
 
     }
 
@@ -107,6 +93,10 @@ public class SectionLayout extends LinearLayout {
 
         //return super.onTouchEvent(event);
         return true;
+    }
+
+    public void setCollapsed(boolean collapsed) {
+        frmCollapsed.setVisibility(collapsed ? VISIBLE : INVISIBLE);
     }
 }
 
