@@ -176,5 +176,10 @@
     <string name="meter_value">Meter value</string>
     <string name="cost">Cost</string>
     <string name="impulses_count">Impulses count</string>
+    <string name="minutes">Minutes</string>
+    <string name="hours">Hours</string>
+    <string name="days">Days</string>
+    <string name="months">Months</string>
+    <string name="years">Years</string>
 
 </resources>

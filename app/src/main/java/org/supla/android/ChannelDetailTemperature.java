@@ -25,7 +25,7 @@ import android.view.View;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
-public class ChannelDetailTemperature extends DetailLayout {
+public class ChannelDetailTemperature extends ChannelDetailTempHumidity {
     public ChannelDetailTemperature(Context context, ChannelListView cLV) {
         super(context, cLV);
     }
@@ -41,14 +41,5 @@ public class ChannelDetailTemperature extends DetailLayout {
     public ChannelDetailTemperature(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
-
-    @Override
-    public View getContentView() {
-        return inflateLayout(R.layout.detail_ic);
-    }
-
-    @Override
-    public void OnChannelDataChanged() {
-
-    }
+    
 }

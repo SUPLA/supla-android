@@ -19,6 +19,7 @@ package org.supla.android;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
@@ -148,9 +149,16 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         rlButtons1 = findViewById(R.id.emrlButtons1);
         rlButtons2 = findViewById(R.id.emrlButtons2);
 
+        Resources r = getResources();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
                 android.R.layout.simple_spinner_item,
-                new String[]{"Minuty", "Godziny", "Dni", "Miesiące", "Lata",
+                new String[]{
+                        r.getString(R.string.minutes),
+                        r.getString(R.string.hours),
+                        r.getString(R.string.days),
+                        r.getString(R.string.months),
+                        r.getString(R.string.years),
                         "Ranking godzin", "Ranking dni", "Ranking miesięcy",
                         "Zużycie wg. faz"});
 

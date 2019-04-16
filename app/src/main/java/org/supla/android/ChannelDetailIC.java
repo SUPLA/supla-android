@@ -19,13 +19,20 @@ package org.supla.android;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import com.github.mikephil.charting.charts.BarChart;
 
+import org.supla.android.charts.ChartHelper;
+import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
@@ -36,8 +43,10 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
-public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults {
+public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
+        AdapterView.OnItemSelectedListener, View.OnClickListener {
 
+    private ImpulseCounterChartHelper chartHelper;
     private DownloadImpulseCounterMeasurements dtm;
     private ProgressBar icProgress;
     private TextView tvChannelTitle;
@@ -45,6 +54,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private TextView tvCost;
     private TextView tvImpulsesCount;
     private ImageView icImgIcon;
+    private Spinner icSpinner;
+    private ImageView ivGraph;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -71,6 +82,28 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCost = findViewById(R.id.ictv_Cost);
         tvImpulsesCount = findViewById(R.id.ictv_ImpulsesCount);
         icImgIcon = findViewById(R.id.icimgIcon);
+
+        Resources r = getResources();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_spinner_item,
+                new String[]{
+                        r.getString(R.string.minutes),
+                        r.getString(R.string.hours),
+                        r.getString(R.string.days),
+                        r.getString(R.string.months),
+                        r.getString(R.string.years)});
+
+        icSpinner = findViewById(R.id.icSpinner);
+        icSpinner.setAdapter(adapter);
+        icSpinner.setOnItemSelectedListener(this);
+
+        ivGraph = findViewById(R.id.icGraphImg);
+        ivGraph.bringToFront();
+        ivGraph.setOnClickListener(this);
+
+        chartHelper = new ImpulseCounterChartHelper(getContext());
+        chartHelper.setBarChart((BarChart) findViewById(R.id.icBarChart));
     }
 
     @Override
@@ -119,7 +152,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     public void onDetailShow() {
         super.onDetailShow();
         icProgress.setVisibility(INVISIBLE);
-        runDownloadTask();
+        onClick(ivGraph);
     }
 
     private void runDownloadTask() {
@@ -144,5 +177,48 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         icProgress.setVisibility(INVISIBLE);
+        chartHelper.loadImpulseCounterMeasurements(getRemoteId());
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        ChartHelper.ChartType ctype = ChartHelper.ChartType.Bar_Minutely;
+
+
+        switch (position) {
+            case 1:
+                ctype = ChartHelper.ChartType.Bar_Hourly;
+                break;
+            case 2:
+                ctype = ChartHelper.ChartType.Bar_Daily;
+                break;
+            case 3:
+                ctype = ChartHelper.ChartType.Bar_Monthly;
+                break;
+            case 4:
+                ctype = ChartHelper.ChartType.Bar_Yearly;
+                break;
+        }
+
+        chartHelper.loadImpulseCounterMeasurements(getRemoteId(), ctype);
+        chartHelper.setVisibility(VISIBLE);
+        chartHelper.animate();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == ivGraph && icProgress.getVisibility() == INVISIBLE) {
+            runDownloadTask();
+
+            onItemSelected(null, null,
+                    icSpinner.getSelectedItemPosition(),
+                    icSpinner.getSelectedItemId());
+        }
     }
 }
