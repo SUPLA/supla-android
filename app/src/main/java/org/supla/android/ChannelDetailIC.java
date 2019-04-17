@@ -58,7 +58,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
-    double previousPeriod;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -124,6 +123,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
         }
 
+        DbHelper mDBH = new DbHelper(getContext(), true);
+
         tvMeterValue.setText("---");
         tvTotalCost.setText("---");
         tvCurrentCost.setText("---");
@@ -140,8 +141,12 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
             tvImpulsesCount.setText(Long.toString(ic.getCounter()));
 
+            double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
+                    channel.getChannelId());
+            double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
+                    channel.getChannelId());
             tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
-                    (ic.getCalculatedValue()-previousPeriod) * ic.getPricePerUnit()));
+                    (v0-v1) * ic.getPricePerUnit()));
 
         }
     }
@@ -154,15 +159,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void setData(ChannelBase cbase) {
         super.setData(cbase);
-
-        updatePreviousValue();
         channelExtendedDataToViews(true);
-    }
-
-    private void updatePreviousValue() {
-        DbHelper mDBH = new DbHelper(getContext(), true);
-        previousPeriod = mDBH.getLastImpulseCounterMeasurementValue(-1,
-                getRemoteId());
     }
 
     @Override
@@ -195,7 +192,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         icProgress.setVisibility(INVISIBLE);
         chartHelper.loadImpulseCounterMeasurements(getRemoteId());
-        updatePreviousValue();
         channelExtendedDataToViews(false);
     }
 
