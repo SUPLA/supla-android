@@ -81,7 +81,7 @@ public class ElectricityChartHelper extends ChartHelper {
         List<Integer> Colors = new ArrayList<Integer>(3);
         Colors.add(res.getColor(R.color.phase1));
         Colors.add(res.getColor(R.color.phase2));
-        Colors.add(res.getColor(R.color.phase2));
+        Colors.add(res.getColor(R.color.phase3));
 
         return Colors;
     }
