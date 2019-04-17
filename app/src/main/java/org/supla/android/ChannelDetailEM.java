@@ -162,7 +162,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                         r.getString(R.string.ranking_of_hours),
                         r.getString(R.string.ranking_of_days),
                         r.getString(R.string.ranking_of_months),
-                        r.getString(R.string.consumption_acording_to_phases));
+                        r.getString(R.string.consumption_acording_to_phases)});
 
         emSpinner = findViewById(R.id.emSpinner);
         emSpinner.setAdapter(adapter);
