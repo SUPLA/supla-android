@@ -41,5 +41,5 @@ public class ChannelDetailTemperature extends ChannelDetailTempHumidity {
     public ChannelDetailTemperature(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
-    
+
 }
