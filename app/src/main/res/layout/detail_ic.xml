@@ -50,7 +50,7 @@
     <RelativeLayout
         android:id="@+id/icHeader"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -133,15 +133,29 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cost"
+                android:text="@string/current_cost"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/ictv_Cost"
+                android:id="@+id/ictv_CurrentCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10 EUR"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/total_cost"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/ictv_TotalCost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10 EUR"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/textView2"

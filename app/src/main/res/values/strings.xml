@@ -174,7 +174,8 @@
     <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
     <string name="channel_func_impulsecounter">Impulse counter</string>
     <string name="meter_value">Meter value</string>
-    <string name="cost">Cost</string>
+    <string name="total_cost">Total cost</string>
+    <string name="current_cost">The cost in the current month</string>
     <string name="impulses_count">Impulses count</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Hours</string>

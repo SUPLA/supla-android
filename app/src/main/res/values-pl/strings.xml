@@ -176,7 +176,8 @@
     <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
     <string name="hp_cfg_temp_comfort">Temperatura komfort w trybie AUTO</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
-    <string name="cost">Koszt</string>
+    <string name="total_cost">Łączny koszt</string>
+    <string name="current_cost">Koszt w bierzącym miesiącu</string>
     <string name="impulses_count">Ilość impulsów</string>
     <string name="meter_value">Stan licznika</string>
     <string name="channel_func_impulsecounter">Licznik impulsów</string>

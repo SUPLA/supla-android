@@ -98,7 +98,7 @@ public class ImpulseCounterChartHelper extends ChartHelper {
     }
 
     public void loadImpulseCounterMeasurements(int channelId) {
-        loadBarChart(channelId, ChartType.Bar_Minutely);
+        loadBarChart(channelId, ctype);
     }
 
     public void setUnit(String unit) {

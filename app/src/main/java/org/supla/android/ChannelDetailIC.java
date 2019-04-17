@@ -36,6 +36,7 @@ import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.DbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.listview.ChannelListView;
@@ -51,11 +52,13 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ProgressBar icProgress;
     private TextView tvChannelTitle;
     private TextView tvMeterValue;
-    private TextView tvCost;
+    private TextView tvCurrentCost;
+    private TextView tvTotalCost;
     private TextView tvImpulsesCount;
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
+    double previousPeriod;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -79,7 +82,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         icProgress = findViewById(R.id.icProgressBar);
         tvChannelTitle = findViewById(R.id.ictv_ChannelTitle);
         tvMeterValue = findViewById(R.id.ictv_MeterValue);
-        tvCost = findViewById(R.id.ictv_Cost);
+        tvTotalCost = findViewById(R.id.ictv_TotalCost);
+        tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
         tvImpulsesCount = findViewById(R.id.ictv_ImpulsesCount);
         icImgIcon = findViewById(R.id.icimgIcon);
 
@@ -121,7 +125,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         }
 
         tvMeterValue.setText("---");
-        tvCost.setText("---");
+        tvTotalCost.setText("---");
+        tvCurrentCost.setText("---");
         tvImpulsesCount.setText("---");
 
         ChannelExtendedValue cev = channel.getExtendedValue();
@@ -132,8 +137,12 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
             tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
-            tvCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
+            tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
             tvImpulsesCount.setText(Long.toString(ic.getCounter()));
+
+            tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
+                    (ic.getCalculatedValue()-previousPeriod) * ic.getPricePerUnit()));
+
         }
     }
 
@@ -145,7 +154,15 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void setData(ChannelBase cbase) {
         super.setData(cbase);
+
+        updatePreviousValue();
         channelExtendedDataToViews(true);
+    }
+
+    private void updatePreviousValue() {
+        DbHelper mDBH = new DbHelper(getContext(), true);
+        previousPeriod = mDBH.getLastImpulseCounterMeasurementValue(-1,
+                getRemoteId());
     }
 
     @Override
@@ -178,6 +195,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         icProgress.setVisibility(INVISIBLE);
         chartHelper.loadImpulseCounterMeasurements(getRemoteId());
+        updatePreviousValue();
+        channelExtendedDataToViews(false);
     }
 
     @Override

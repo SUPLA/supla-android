@@ -37,6 +37,8 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -1620,6 +1622,68 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return result.toArray(new Integer[0]);
+    }
+
+    private double getLastMeasurementValue(String tableName, String colTimestamp,
+                                           String colChannelId, String colValue, int monthOffset,
+                                           int channelId) {
+        double result = 0;
+
+        String[] projection = {
+                "SUM("+colValue+") "+colValue
+        };
+
+        String selection = colChannelId
+                + " = ? AND " + colTimestamp + " <= ?";
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MONTH, monthOffset);
+        calendar.add(Calendar.SECOND, -1);
+
+        String[] selectionArgs = {
+                String.valueOf(channelId),
+                String.valueOf(calendar.getTimeInMillis()/1000)
+        };
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(
+                tableName,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                colTimestamp +" DESC",
+                "1");
+
+        result = c.getCount();
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            result = c.getDouble(c.getColumnIndex(colValue));
+            Trace.d("LAST", Double.toString(result));
+        }
+
+        c.close();
+        db.close();
+
+        return result;
+    }
+
+    public double getLastImpulseCounterMeasurementValue(int monthOffset,
+                                           int channelId) {
+        return getLastMeasurementValue(SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE,
+                 monthOffset, channelId);
     }
 
     private int getMeasurementTimestamp(String tableName, String colTimestamp,
