@@ -180,4 +180,13 @@
     <string name="impulses_count">Ilość impulsów</string>
     <string name="meter_value">Stan licznika</string>
     <string name="channel_func_impulsecounter">Licznik impulsów</string>
+    <string name="minutes">Minuty</string>
+    <string name="hours">Godziny</string>
+    <string name="days">Dni</string>
+    <string name="months">Miesiące</string>
+    <string name="years">Lata</string>
+    <string name="ranking_of_hours">Ranking godzin</string>
+    <string name="ranking_of_days">Ranking dni</string>
+    <string name="ranking_of_months">Ranking miesięcy</string>
+    <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
 </resources>
