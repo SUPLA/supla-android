@@ -176,6 +176,7 @@
     <string name="meter_value">Meter value</string>
     <string name="total_cost">Total cost</string>
     <string name="current_cost">The cost in the current month</string>
+    <string name="current_consumption">Consumption in the current month</string>
     <string name="impulses_count">Impulses count</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Hours</string>
