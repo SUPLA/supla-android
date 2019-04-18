@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -58,6 +59,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
+    private RadioButton rbUnit;
+    private RadioButton rbCurrency;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -86,6 +89,11 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
         icImgIcon = findViewById(R.id.icimgIcon);
 
+        rbUnit = findViewById(R.id.icrbUnit);
+        rbUnit.setOnClickListener(this);
+        rbCurrency = findViewById(R.id.icrbCurrency);
+        rbCurrency.setOnClickListener(this);
+
         Resources r = getResources();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
@@ -95,7 +103,10 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
                         r.getString(R.string.hours),
                         r.getString(R.string.days),
                         r.getString(R.string.months),
-                        r.getString(R.string.years)});
+                        r.getString(R.string.years),
+                        r.getString(R.string.ranking_of_hours),
+                        r.getString(R.string.ranking_of_days),
+                        r.getString(R.string.ranking_of_months)});
 
         icSpinner = findViewById(R.id.icSpinner);
         icSpinner.setAdapter(adapter);
@@ -129,6 +140,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentConsumption.setText("---");
         tvTotalCost.setText("---");
         tvCurrentCost.setText("---");
+        rbUnit.setText(channel.getUnit());
+        rbCurrency.setText("---");
 
         ChannelExtendedValue cev = channel.getExtendedValue();
         if (cev != null
@@ -148,6 +161,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), v0-v1));
             tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
 
+            if (ic.getCurrency().length() > 0) {
+                rbCurrency.setText(ic.getCurrency());
+            }
         }
     }
 
@@ -234,6 +250,10 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             onItemSelected(null, null,
                     icSpinner.getSelectedItemPosition(),
                     icSpinner.getSelectedItemId());
+        } else if (v == rbCurrency) {
+            rbUnit.setChecked(false);
+        } else if (v == rbUnit) {
+            rbCurrency.setChecked(false);
         }
     }
 }
