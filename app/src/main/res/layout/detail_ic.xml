@@ -50,7 +50,7 @@
     <RelativeLayout
         android:id="@+id/icHeader"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="180dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -116,7 +116,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/textView18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/meter_value"
@@ -128,6 +128,20 @@
                 android:layout_height="wrap_content"
                 android:text="09,0001 kWh"
                 android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/current_consumption"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/ictv_CurrentConsumption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="09,0001 kWh"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -155,20 +169,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10 EUR"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/impulses_count"
-                android:textSize="8sp" />
-
-            <TextView
-                android:id="@+id/ictv_ImpulsesCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="10000"
                 android:textSize="10sp" />
 
         </LinearLayout>

@@ -52,9 +52,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ProgressBar icProgress;
     private TextView tvChannelTitle;
     private TextView tvMeterValue;
+    private TextView tvCurrentConsumption;
     private TextView tvCurrentCost;
     private TextView tvTotalCost;
-    private TextView tvImpulsesCount;
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
@@ -82,8 +82,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvChannelTitle = findViewById(R.id.ictv_ChannelTitle);
         tvMeterValue = findViewById(R.id.ictv_MeterValue);
         tvTotalCost = findViewById(R.id.ictv_TotalCost);
+        tvCurrentConsumption = findViewById(R.id.ictv_CurrentConsumption);
         tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
-        tvImpulsesCount = findViewById(R.id.ictv_ImpulsesCount);
         icImgIcon = findViewById(R.id.icimgIcon);
 
         Resources r = getResources();
@@ -126,9 +126,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         DbHelper mDBH = new DbHelper(getContext(), true);
 
         tvMeterValue.setText("---");
+        tvCurrentConsumption.setText("---");
         tvTotalCost.setText("---");
         tvCurrentCost.setText("---");
-        tvImpulsesCount.setText("---");
 
         ChannelExtendedValue cev = channel.getExtendedValue();
         if (cev != null
@@ -137,16 +137,16 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
-            tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
-            tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
-            tvImpulsesCount.setText(Long.toString(ic.getCounter()));
-
             double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
                     channel.getChannelId());
             double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
                     channel.getChannelId());
             tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
                     (v0-v1) * ic.getPricePerUnit()));
+
+            tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
+            tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), v0-v1));
+            tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
 
         }
     }
