@@ -394,7 +394,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD FINISHED");
         emProgress.setVisibility(INVISIBLE);
-        chartHelper.loadElectricityMeasurements(getRemoteId());
+        chartHelper.load(getRemoteId());
         demm = null;
     }
 
@@ -405,42 +405,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             return;
         }
 
-        ElectricityChartHelper.ChartType ctype = ElectricityChartHelper.ChartType.Bar_Minutely;
-
-       /*
-                       new String[] {"Minuty", "Godziny", "Dni", "Miesiące", "Lata",
-                        "Ranking godzin", "Ranking dni", "Ranking miesięcy",
-                        "Zużycie wg. faz"});
-       * */
-
-        switch (position) {
-            case 1:
-                ctype = ElectricityChartHelper.ChartType.Bar_Hourly;
-                break;
-            case 2:
-                ctype = ElectricityChartHelper.ChartType.Bar_Daily;
-                break;
-            case 3:
-                ctype = ElectricityChartHelper.ChartType.Bar_Monthly;
-                break;
-            case 4:
-                ctype = ElectricityChartHelper.ChartType.Bar_Yearly;
-                break;
-            case 5:
-                ctype = ElectricityChartHelper.ChartType.Pie_HourRank;
-                break;
-            case 6:
-                ctype = ElectricityChartHelper.ChartType.Pie_DayRank;
-                break;
-            case 7:
-                ctype = ElectricityChartHelper.ChartType.Pie_MonthRank;
-                break;
-            case 8:
-                ctype = ElectricityChartHelper.ChartType.Pie_PhaseRank;
-                break;
-        }
-
-        chartHelper.loadElectricityMeasurements(getRemoteId(), ctype);
+        chartHelper.load(getRemoteId(), position);
         chartHelper.setVisibility(VISIBLE);
         chartHelper.animate();
     }

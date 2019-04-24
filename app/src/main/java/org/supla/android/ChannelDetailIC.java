@@ -27,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -59,8 +58,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
-    private RadioButton rbUnit;
-    private RadioButton rbCurrency;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -88,11 +85,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentConsumption = findViewById(R.id.ictv_CurrentConsumption);
         tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
         icImgIcon = findViewById(R.id.icimgIcon);
-
-        rbUnit = findViewById(R.id.icrbUnit);
-        rbUnit.setOnClickListener(this);
-        rbCurrency = findViewById(R.id.icrbCurrency);
-        rbCurrency.setOnClickListener(this);
 
         Resources r = getResources();
 
@@ -140,8 +132,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentConsumption.setText("---");
         tvTotalCost.setText("---");
         tvCurrentCost.setText("---");
-        rbUnit.setText(channel.getUnit());
-        rbCurrency.setText("---");
+        chartHelper.setUnit(channel.getUnit());
 
         ChannelExtendedValue cev = channel.getExtendedValue();
         if (cev != null
@@ -160,10 +151,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
             tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), v0-v1));
             tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
+            chartHelper.setPricePerUnit(ic.getPricePerUnit());
+            chartHelper.setCurrency(ic.getCurrency());
 
-            if (ic.getCurrency().length() > 0) {
-                rbCurrency.setText(ic.getCurrency());
-            }
         }
     }
 
@@ -207,32 +197,13 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         icProgress.setVisibility(INVISIBLE);
-        chartHelper.loadImpulseCounterMeasurements(getRemoteId());
+        chartHelper.load(getRemoteId());
         channelExtendedDataToViews(false);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        ChartHelper.ChartType ctype = ChartHelper.ChartType.Bar_Minutely;
-
-
-        switch (position) {
-            case 1:
-                ctype = ChartHelper.ChartType.Bar_Hourly;
-                break;
-            case 2:
-                ctype = ChartHelper.ChartType.Bar_Daily;
-                break;
-            case 3:
-                ctype = ChartHelper.ChartType.Bar_Monthly;
-                break;
-            case 4:
-                ctype = ChartHelper.ChartType.Bar_Yearly;
-                break;
-        }
-
-        chartHelper.loadImpulseCounterMeasurements(getRemoteId(), ctype);
+        chartHelper.load(getRemoteId(), position);
         chartHelper.setVisibility(VISIBLE);
         chartHelper.animate();
     }
@@ -250,10 +221,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             onItemSelected(null, null,
                     icSpinner.getSelectedItemPosition(),
                     icSpinner.getSelectedItemId());
-        } else if (v == rbCurrency) {
-            rbUnit.setChecked(false);
-        } else if (v == rbUnit) {
-            rbCurrency.setChecked(false);
         }
     }
 }

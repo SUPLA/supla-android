@@ -24,6 +24,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.IMarker;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -38,9 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImpulseCounterChartHelper extends ChartHelper {
-
-    private String Unit = "";
+public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
 
     public ImpulseCounterChartHelper(Context context) {
         super(context);
@@ -51,14 +51,20 @@ public class ImpulseCounterChartHelper extends ChartHelper {
         return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat);
     }
 
-    protected float[] getValues(Cursor c) {
+    protected void addBarEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
 
         phases[0] = (float) c.getDouble(
                 c.getColumnIndex(
                         SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
 
-        return phases;
+        entries.add(new BarEntry(x, phases));
+    }
+
+    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
+                                 Cursor c, ArrayList<PieEntry>entries) {
+
+
     }
 
     protected long getTimestamp(Cursor c) {
@@ -67,7 +73,7 @@ public class ImpulseCounterChartHelper extends ChartHelper {
     }
 
     protected String[] getStackLabels() {
-        return new String[]{Unit};
+        return new String[]{getUnit()};
     }
 
     protected List<Integer> getColors() {
@@ -79,29 +85,4 @@ public class ImpulseCounterChartHelper extends ChartHelper {
         return Colors;
     }
 
-    public void loadImpulseCounterMeasurements(int channelId, ChartType ctype) {
-
-        if (!this.ctype.equals(ctype)) {
-            this.ctype = ctype;
-        }
-
-        switch (ctype) {
-            case Bar_Minutely:
-            case Bar_Hourly:
-            case Bar_Daily:
-            case Bar_Monthly:
-            case Bar_Yearly:
-                loadBarChart(channelId, ctype);
-                break;
-        }
-
-    }
-
-    public void loadImpulseCounterMeasurements(int channelId) {
-        loadBarChart(channelId, ctype);
-    }
-
-    public void setUnit(String unit) {
-        Unit = unit;
-    }
 }
