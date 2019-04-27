@@ -41,6 +41,11 @@
                 android:layout_height="match_parent"
                 android:visibility="visible" />
 
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/icPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
         </LinearLayout>
 
     </RelativeLayout>
