@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class DownloadUserIcons extends SuplaRestApiClientTask {
 
     final private int PACKAGE_SIZE = 4;
-    final private int DELAY = 500;
+    final private int DELAY = 5000;
     private int DownloadCount = 0;
 
     public DownloadUserIcons(Context context) {
