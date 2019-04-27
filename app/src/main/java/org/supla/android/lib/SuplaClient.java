@@ -576,7 +576,8 @@ public class SuplaClient extends Thread {
                 + "  channel ID: " + Integer.toString(channel.Id)
                 + " channel Location ID: " + Integer.toString(channel.LocationID)
                 + " OnLine: " + Boolean.toString(channel.OnLine)
-                + " AltIcon: " + Integer.toString(channel.AltIcon));
+                + " AltIcon: " + Integer.toString(channel.AltIcon)
+                + " UserIcon: " + Integer.toString(channel.UserIcon));
 
         // Update channel value before update the channel
         if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
@@ -612,11 +613,12 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Group Function"
+        Trace.d(log_tag, "Channel Group Function "
                 + Integer.toString(channel_group.Func) + "  group ID: "
                 + Integer.toString(channel_group.Id) + " group Location ID: "
                 + Integer.toString(channel_group.LocationID) + " AltIcon: "
-                + Integer.toString(channel_group.AltIcon));
+                + Integer.toString(channel_group.AltIcon) + " UserIcon: "
+                + Integer.toString(channel_group.UserIcon));
 
         if (DbH.updateChannelGroup(channel_group)) {
             _DataChanged = true;
