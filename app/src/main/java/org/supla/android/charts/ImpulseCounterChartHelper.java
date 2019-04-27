@@ -64,7 +64,14 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
                                  Cursor c, ArrayList<PieEntry>entries) {
 
+        float value;
+        value = (float) c.getDouble(
+                c.getColumnIndex(
+                        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
 
+
+        entries.add(new PieEntry(value,
+                spf.format(new java.util.Date(getTimestamp(c) * 1000))));
     }
 
     protected long getTimestamp(Cursor c) {
