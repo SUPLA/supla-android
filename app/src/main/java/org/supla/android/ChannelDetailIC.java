@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 
 import org.supla.android.charts.ChartHelper;
 import org.supla.android.charts.ImpulseCounterChartHelper;
@@ -110,6 +111,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
         chartHelper = new ImpulseCounterChartHelper(getContext());
         chartHelper.setBarChart((BarChart) findViewById(R.id.icBarChart));
+        chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
     }
 
     @Override
@@ -217,10 +219,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     public void onClick(View v) {
         if (v == ivGraph && icProgress.getVisibility() == INVISIBLE) {
             runDownloadTask();
-
-            onItemSelected(null, null,
-                    icSpinner.getSelectedItemPosition(),
-                    icSpinner.getSelectedItemId());
         }
     }
 }
