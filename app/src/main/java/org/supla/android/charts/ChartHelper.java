@@ -163,7 +163,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     public void loadBarChart(int channelId, ChartType ctype) {
 
         if (pieChart != null) {
-            pieChart.setVisibility(View.INVISIBLE);
+            pieChart.setVisibility(View.GONE);
         }
 
         if (barChart == null) {
@@ -244,7 +244,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     public void loadPieChart(int channelId, ChartType ctype) {
 
         if (barChart != null) {
-            barChart.setVisibility(View.INVISIBLE);
+            barChart.setVisibility(View.GONE);
         }
 
         if (pieChart == null) {
@@ -323,13 +323,13 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         if (barChart!=null) {
             Description desc = barChart.getDescription();
-            desc.setText(unit);
+            desc.setText(unit == null ? "" : unit);
             barChart.setDescription(desc);
         }
 
         if (pieChart!=null) {
             Description desc = pieChart.getDescription();
-            desc.setText(unit);
+            desc.setText(unit == null ? "" : unit);
             pieChart.setDescription(desc);
         }
     }
@@ -393,4 +393,17 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     public void load(int channelId) {
         load(channelId, ctype);
     }
+
+    public boolean isVisible() {
+        if (barChart != null && barChart.getVisibility() == View.VISIBLE) {
+           return true;
+        }
+
+        if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
