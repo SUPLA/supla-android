@@ -171,6 +171,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper = new ElectricityChartHelper(getContext());
         chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
+        chartHelper.setUnit("kWh");
 
         ivGraph = findViewById(R.id.emGraphImg);
         ivGraph.bringToFront();
@@ -251,7 +252,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 && cev.getExtendedValue().ElectricityMeterValue != null) {
 
             SuplaChannelElectricityMeterValue em = cev.getExtendedValue().ElectricityMeterValue;
-
+            chartHelper.setCurrency(em.getCurrency());
+            chartHelper.setPricePerUnit(em.getPricePerUnit());
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
             tvTotalForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
@@ -394,7 +396,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD FINISHED");
         emProgress.setVisibility(INVISIBLE);
-        chartHelper.load(getRemoteId());
+        if (chartHelper.isVisible()) {
+            chartHelper.load(getRemoteId());
+        }
         demm = null;
     }
 
