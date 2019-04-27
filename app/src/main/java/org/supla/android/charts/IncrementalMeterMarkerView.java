@@ -42,17 +42,23 @@ public class IncrementalMeterMarkerView extends MarkerView {
 
     }
 
+
+    private String getString(String str) {
+        return str == null ? "" : str;
+    }
+
+    private void setText(TextView tv, String text) {
+        tv.setText(text);
+        tv.setVisibility(tv.getText().length() > 0 ? VISIBLE : GONE);
+    }
+
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvTime.setText(helper.getFormattedValue(e.getX(), null));
-        tvTime.setVisibility(tvTime.getText().length() > 0 ? VISIBLE : GONE);
 
-        tvValue.setText(String.format("%.2f "+helper.getUnit(), e.getY()));
-        tvValue.setVisibility(tvValue.getText().length() > 0 ? VISIBLE : GONE);
-
-        tvPrice.setText(String.format("%.2f "+helper.getCurrency(),
+        setText(tvTime, helper.getFormattedValue(e.getX(), null));
+        setText(tvValue, String.format("%.2f "+getString(helper.getUnit()), e.getY()));
+        setText(tvPrice, String.format("%.2f "+getString(helper.getCurrency()),
                 helper.getPricePerUnit()*e.getY()));
-        tvPrice.setVisibility(tvPrice.getText().length() > 0 ? VISIBLE : GONE);
 
         super.refreshContent(e, highlight);
     }
