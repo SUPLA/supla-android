@@ -1668,7 +1668,6 @@ public class DbHelper extends SQLiteOpenHelper {
         if (c.getCount() > 0) {
             c.moveToFirst();
             result = c.getDouble(c.getColumnIndex(colValue));
-            Trace.d("LAST", Double.toString(result));
         }
 
         c.close();
@@ -1923,8 +1922,6 @@ public class DbHelper extends SQLiteOpenHelper {
                                           ImpulseCounterMeasurementItem item) {
         db.insertWithOnConflict(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                 null, item.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
-
-        Trace.d("IC", "addImpulseCounterMeasurement:"+Long.toString(item.getTimestamp()));
     }
 
     public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
