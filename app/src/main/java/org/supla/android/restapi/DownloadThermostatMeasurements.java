@@ -38,7 +38,6 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
     }
 
     protected long getMinTimestamp() {
-        //return 0;
         return getMeasurementsDbH().getThermostatMeasurementTimestamp(getChannelId(), true);
     }
 
@@ -58,7 +57,6 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         thi.setChannelId(getChannelId());
 
         getMeasurementsDbH().addThermostatMeasurement(db, thi);
-
     }
 
 }
