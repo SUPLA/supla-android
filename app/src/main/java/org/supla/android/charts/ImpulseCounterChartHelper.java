@@ -46,11 +46,13 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
         super(context);
     }
 
+    @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
         return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat);
     }
 
+    @Override
     protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
 
@@ -61,7 +63,8 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
         entries.add(new BarEntry(x, phases));
     }
 
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
+    @Override
+    protected void addEntries(ChartType ctype, SimpleDateFormat spf,
                                  Cursor c, ArrayList<PieEntry>entries) {
 
         float value;
@@ -74,15 +77,18 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
                 spf.format(new java.util.Date(getTimestamp(c) * 1000))));
     }
 
+    @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
+    @Override
     protected String[] getStackLabels() {
         return new String[]{getUnit()};
     }
 
+    @Override
     protected List<Integer> getColors() {
         Resources res = context.getResources();
 

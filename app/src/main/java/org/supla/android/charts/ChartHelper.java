@@ -87,6 +87,18 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         pieChart = chart;
     }
 
+    public boolean isPieChartType(ChartType chartType) {
+        switch (ctype) {
+            case Pie_HourRank:
+            case Pie_DayRank:
+            case Pie_MonthRank:
+            case Pie_PhaseRank:
+                return true;
+        }
+
+        return false;
+    }
+
     public void setVisibility(int visibility) {
         if (barChart != null) {
             barChart.setVisibility(View.GONE);
@@ -96,24 +108,14 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             pieChart.setVisibility(View.GONE);
         }
 
-        switch (ctype) {
-            case Bar_Minutely:
-            case Bar_Hourly:
-            case Bar_Daily:
-            case Bar_Monthly:
-            case Bar_Yearly:
-                if (barChart != null) {
-                    barChart.setVisibility(visibility);
-                }
-                break;
-            case Pie_HourRank:
-            case Pie_DayRank:
-            case Pie_MonthRank:
-            case Pie_PhaseRank:
-                if (pieChart != null) {
-                    pieChart.setVisibility(visibility);
-                }
-                break;
+        if ( isPieChartType(ctype) ) {
+            if (pieChart != null) {
+                pieChart.setVisibility(visibility);
+            }
+        } else {
+            if (barChart != null) {
+                barChart.setVisibility(visibility);
+            }
         }
     }
 
@@ -143,10 +145,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     abstract protected Cursor getCursor(DbHelper DBH,
                                       SQLiteDatabase db, int channelId, String dateFormat);
 
-    abstract protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries);
+    abstract protected void addEntries(int x, Cursor c,
+                                       ArrayList<BarEntry> entries);
 
-    abstract protected void addPieEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
-                                          ArrayList<PieEntry>entries);
+    abstract protected void addEntries(ChartType ctype, SimpleDateFormat spf,
+                                 Cursor c, ArrayList<PieEntry>entries);
 
     abstract protected long getTimestamp(Cursor c);
 
@@ -280,10 +283,10 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 if (c.moveToFirst()) {
 
                     if (ctype.equals(ChartType.Pie_PhaseRank)) {
-                        addPieEntries(ctype, spf, c, entries);
+                        addEntries(ctype, spf, c, entries);
                     } else {
                         do {
-                            addPieEntries(ctype, spf, c, entries);
+                            addEntries(ctype, spf, c, entries);
                         } while (c.moveToNext());
                     }
 

@@ -42,11 +42,13 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         super(context);
     }
 
+    @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
         return DBH.getElectricityMeasurements(db, channelId, dateFormat);
     }
 
+    @Override
     protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[3];
         phases[0] = (float) c.getDouble(
@@ -62,7 +64,8 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         entries.add(new BarEntry(x, phases));
     }
 
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
+    @Override
+    protected void addEntries(ChartType ctype, SimpleDateFormat spf,
                                  Cursor c, ArrayList<PieEntry>entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
@@ -109,11 +112,13 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         }
     }
 
+    @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
     }
 
+    @Override
     protected String[] getStackLabels() {
         Resources res = context.getResources();
 
@@ -123,6 +128,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                 res.getString(R.string.em_phase3)};
     }
 
+    @Override
     protected List<Integer> getColors() {
         Resources res = context.getResources();
 

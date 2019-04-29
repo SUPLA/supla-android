@@ -36,11 +36,13 @@ import java.util.List;
 
 public class ThermostatChartHelper extends ChartHelper {
 
+    @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
         return DBH.getThermostatMeasurements(db, channelId, dateFormat);
     }
 
+    @Override
     protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
         phases[0] = (float) c.getDouble(
@@ -50,15 +52,19 @@ public class ThermostatChartHelper extends ChartHelper {
         entries.add(new BarEntry(x, phases));
     }
 
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries) {
-    }
+    @Override
+    protected void addEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
+                              ArrayList<PieEntry> entries) {
 
+    }
+    
+    @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
+    @Override
     protected String[] getStackLabels() {
         Resources res = context.getResources();
 
@@ -66,6 +72,7 @@ public class ThermostatChartHelper extends ChartHelper {
                 res.getString(R.string.hp_room_temperature)};
     }
 
+    @Override
     protected List<Integer> getColors() {
         Resources res = context.getResources();
 
