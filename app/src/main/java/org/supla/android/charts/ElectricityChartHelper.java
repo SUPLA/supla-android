@@ -47,7 +47,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         return DBH.getElectricityMeasurements(db, channelId, dateFormat);
     }
 
-    protected void addBarEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
+    protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[3];
         phases[0] = (float) c.getDouble(
                 c.getColumnIndex(

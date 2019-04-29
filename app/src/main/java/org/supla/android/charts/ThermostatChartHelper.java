@@ -41,7 +41,7 @@ public class ThermostatChartHelper extends ChartHelper {
         return DBH.getThermostatMeasurements(db, channelId, dateFormat);
     }
 
-    protected void addBarEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
+    protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
         phases[0] = (float) c.getDouble(
                 c.getColumnIndex(

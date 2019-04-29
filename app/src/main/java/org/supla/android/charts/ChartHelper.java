@@ -39,9 +39,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.supla.android.R;
 import org.supla.android.db.DbHelper;
-import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -145,7 +143,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     abstract protected Cursor getCursor(DbHelper DBH,
                                       SQLiteDatabase db, int channelId, String dateFormat);
 
-    abstract protected void addBarEntries(int x, Cursor c, ArrayList<BarEntry> entries);
+    abstract protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries);
 
     abstract protected void addPieEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
                                           ArrayList<PieEntry>entries);
@@ -212,7 +210,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                     int n = 0;
                     do {
                         n++;
-                        addBarEntries(n, c, entries);
+                        addEntries(n, c, entries);
                         values.add(spf.format(new java.util.Date(getTimestamp(c) * 1000)));
 
                     } while (c.moveToNext());
