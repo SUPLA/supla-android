@@ -1876,6 +1876,49 @@ public class DbHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql, null);
     }
 
+    public int getTempHumidityMeasurementTimestamp(int channelId, boolean min) {
+        return getMeasurementTimestamp(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public void deleteTempHumidityMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void addTempHumidityMeasurement(SQLiteDatabase db,
+                                           TempHumidityMeasurementItem emi) {
+        db.insertWithOnConflict(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+
+        String sql = "SELECT "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId)
+                +" ORDER BY "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
+    }
+
     public void addImpulseCounterMeasurement(SQLiteDatabase db,
                                           ImpulseCounterMeasurementItem item) {
         db.insertWithOnConflict(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
