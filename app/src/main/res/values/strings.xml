@@ -187,4 +187,6 @@
     <string name="ranking_of_days">Ranking of days</string>
     <string name="ranking_of_months">Ranking of months</string>
     <string name="consumption_acording_to_phases">Consumption according to phases</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
 </resources>

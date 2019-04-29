@@ -36,6 +36,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 
 import org.supla.android.charts.ElectricityChartHelper;
@@ -169,7 +170,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         emSpinner.setOnItemSelectedListener(this);
 
         chartHelper = new ElectricityChartHelper(getContext());
-        chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
+        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.emCombinedChart));
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
         chartHelper.setUnit("kWh");
 

@@ -19,12 +19,12 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.view.View;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -32,13 +32,19 @@ import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
 import java.text.SimpleDateFormat;
@@ -50,9 +56,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     protected String unit;
     protected Context context;
     protected ChartType ctype = ChartType.Bar_Hourly;
-    protected BarChart barChart;
+    protected CombinedChart combinedChart;
     protected PieChart pieChart;
-    protected ArrayList<String> values = new ArrayList<>();
+    private long minTimestamp;
+    private LineDataSet lineDataSet;
+    ArrayList<ILineDataSet> lineDataSets;
+    ArrayList<Entry> lineEntries;
 
     public enum ChartType {
         Bar_Minutely,
@@ -71,12 +80,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
 
-    public BarChart getBarChart() {
-        return barChart;
+    public CombinedChart getCombinedChart() {
+        return combinedChart;
     }
 
-    public void setBarChart(BarChart chart) {
-        barChart = chart;
+    public void setCombinedChart(CombinedChart chart) {
+        combinedChart = chart;
     }
 
     public PieChart getPieChart() {
@@ -100,8 +109,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public void setVisibility(int visibility) {
-        if (barChart != null) {
-            barChart.setVisibility(View.GONE);
+        if (combinedChart != null) {
+            combinedChart.setVisibility(View.GONE);
         }
 
         if (pieChart != null) {
@@ -113,16 +122,16 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 pieChart.setVisibility(visibility);
             }
         } else {
-            if (barChart != null) {
-                barChart.setVisibility(visibility);
+            if (combinedChart != null) {
+                combinedChart.setVisibility(visibility);
             }
         }
     }
 
     public void animate() {
-        if (barChart != null
-                && barChart.getVisibility() == View.VISIBLE) {
-            barChart.animateY(1000);
+        if (combinedChart != null
+                && combinedChart.getVisibility() == View.VISIBLE) {
+            combinedChart.animateY(1000);
         } else if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
             pieChart.spin(500, 0, -360f, Easing.EasingOption.EaseInOutQuad);
         }
@@ -130,26 +139,21 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-
-        value -= 1;
-
-
-        if (value > 0 && value < values.size()) {
-            return values.get((int) value);
-        }
-
-        return "";
+        return Float.toString(value);
     }
 
 
     abstract protected Cursor getCursor(DbHelper DBH,
                                       SQLiteDatabase db, int channelId, String dateFormat);
 
-    abstract protected void addEntries(int x, Cursor c,
-                                       ArrayList<BarEntry> entries);
+    abstract protected void addBarEntries(int n, float time, Cursor c,
+                                          ArrayList<BarEntry> entries);
 
-    abstract protected void addEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries);
+    abstract protected void addLineEntries(int n, Cursor c, float time,
+                                           ArrayList<Entry> entries);
+
+    abstract protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
+                                          Cursor c, ArrayList<PieEntry>entries);
 
     abstract protected long getTimestamp(Cursor c);
 
@@ -161,20 +165,49 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return null;
     }
 
-    public void loadBarChart(int channelId, ChartType ctype) {
+    protected void addFormatterValue(Cursor cursor, SimpleDateFormat spf) {}
+
+    protected void newLineDataSet() {
+        if (lineEntries != null
+                && lineDataSets != null
+                && lineEntries.size() > 0) {
+            lineDataSet = new LineDataSet(lineEntries, "");
+            lineDataSet.setDrawValues(false);
+            lineDataSet.setColors(Color.RED);
+            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+            lineDataSet.setCubicIntensity(0.05f);
+            lineDataSet.setDrawCircles(false);
+            lineDataSet.setDrawFilled(true);
+            lineDataSets.add(lineDataSet);
+        }
+    }
+
+    protected ArrayList<Entry> newLineEntries() {
+        newLineDataSet();
+
+        lineEntries = new ArrayList<>();
+        return lineEntries;
+    }
+
+    public void loadCombinedChart(int channelId, ChartType ctype) {
 
         if (pieChart != null) {
             pieChart.setVisibility(View.GONE);
         }
 
-        if (barChart == null) {
+        if (combinedChart == null) {
             return;
         }
 
-        barChart.setVisibility(View.VISIBLE);
-        barChart.getXAxis().setValueFormatter(this);
-        barChart.getXAxis().setLabelCount(3);
-        barChart.getAxisLeft().setDrawLabels(false);
+        lineEntries = null;
+        lineDataSet = null;
+        lineDataSets = null;
+
+        combinedChart.setVisibility(View.VISIBLE);
+        combinedChart.getXAxis().setValueFormatter(this);
+        combinedChart.getXAxis().setLabelCount(3);
+        combinedChart.getAxisLeft().setDrawLabels(false);
+        combinedChart.getLegend().setEnabled(false);
 
         setUnit(getUnit());
 
@@ -200,8 +233,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 break;
         }
 
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        values.clear();
+        lineDataSets = new ArrayList<ILineDataSet>();
+        ArrayList<IBarDataSet> barDataSets = new ArrayList<IBarDataSet>();
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+
+        newLineEntries();
 
         DbHelper DBH = new DbHelper(context, true);
         SQLiteDatabase db = DBH.getReadableDatabase();
@@ -211,10 +247,14 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             if (c != null) {
                 if (c.moveToFirst()) {
                     int n = 0;
+                    minTimestamp = getTimestamp(c);
                     do {
                         n++;
-                        addEntries(n, c, entries);
-                        values.add(spf.format(new java.util.Date(getTimestamp(c) * 1000)));
+                        addBarEntries(n, (getTimestamp(c)-minTimestamp) / 600, c,
+                                barEntries);
+                        addLineEntries(n, c, (getTimestamp(c)-minTimestamp) / 600,
+                                lineEntries);
+                        addFormatterValue(c, spf);
 
                     } while (c.moveToNext());
 
@@ -226,26 +266,45 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             db.close();
         }
 
-        BarDataSet dataset = new BarDataSet(entries, "");
-        dataset.setDrawValues(false);
+        if (barEntries.size() > 0) {
+            BarDataSet barDataSet = new BarDataSet(barEntries, "");
+            barDataSet.setDrawValues(false);
+            barDataSet.setStackLabels(getStackLabels());
+            barDataSet.setColors(getColors());
+            barDataSets.add(barDataSet);
+        }
 
-        Resources res = context.getResources();
+        newLineDataSet();
 
-        dataset.setStackLabels(getStackLabels());
-        dataset.setColors(getColors());
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(dataset);
+        CombinedData data = new CombinedData();
+        if (barDataSets.size() > 0) {
+            data.setData(new BarData(barDataSets));
+        }
 
-        barChart.setMarker(getMarker());
-        barChart.setDrawMarkers(barChart.getMarker()!=null);
-        barChart.setData(new BarData(dataSets));
-        barChart.invalidate();
+        if (lineDataSets.size() > 0) {
+            data.setData(new LineData(lineDataSets));
+        }
+
+        combinedChart.setMarker(getMarker());
+        combinedChart.setDrawMarkers(combinedChart.getMarker()!=null);
+
+        if (data.getDataSetCount() == 0) {
+            combinedChart.setData(null);
+        } else {
+            combinedChart.setData(data);
+        }
+
+        combinedChart.invalidate();
+
+        lineEntries = null;
+        lineDataSet = null;
+        lineDataSets = null;
     }
 
     public void loadPieChart(int channelId, ChartType ctype) {
 
-        if (barChart != null) {
-            barChart.setVisibility(View.GONE);
+        if (combinedChart != null) {
+            combinedChart.setVisibility(View.GONE);
         }
 
         if (pieChart == null) {
@@ -283,10 +342,10 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 if (c.moveToFirst()) {
 
                     if (ctype.equals(ChartType.Pie_PhaseRank)) {
-                        addEntries(ctype, spf, c, entries);
+                        addPieEntries(ctype, spf, c, entries);
                     } else {
                         do {
-                            addEntries(ctype, spf, c, entries);
+                            addPieEntries(ctype, spf, c, entries);
                         } while (c.moveToNext());
                     }
 
@@ -309,10 +368,15 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         pieChart.invalidate();
     }
 
+
     public void moveToEnd(float maxXRange1, float maxXRange2) {
-        barChart.setVisibleXRangeMaximum(maxXRange1);
-        barChart.moveViewToX(barChart.getXChartMax());
-        barChart.setVisibleXRangeMaximum(maxXRange2);
+        combinedChart.setVisibleXRangeMaximum(maxXRange1);
+        combinedChart.moveViewToX(combinedChart.getXChartMax());
+        combinedChart.setVisibleXRangeMaximum(maxXRange2);
+    }
+
+    public void moveToEnd() {
+        moveToEnd(20, 1000);
     }
 
     public String getUnit() {
@@ -322,10 +386,10 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     public void setUnit(String unit) {
         this.unit = unit;
 
-        if (barChart!=null) {
-            Description desc = barChart.getDescription();
+        if (combinedChart !=null) {
+            Description desc = combinedChart.getDescription();
             desc.setText(unit == null ? "" : unit);
-            barChart.setDescription(desc);
+            combinedChart.setDescription(desc);
         }
 
         if (pieChart!=null) {
@@ -335,11 +399,17 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
     }
 
+    public long getMinTimestamp() {
+        return minTimestamp;
+    }
+
     public void load(int channelId, ChartType ctype) {
 
         if (!this.ctype.equals(ctype)) {
             this.ctype = ctype;
         }
+
+        minTimestamp = 0;
 
         switch (ctype) {
             case Bar_Minutely:
@@ -347,7 +417,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             case Bar_Daily:
             case Bar_Monthly:
             case Bar_Yearly:
-                loadBarChart(channelId, ctype);
+                loadCombinedChart(channelId, ctype);
                 break;
             case Pie_HourRank:
             case Pie_DayRank:
@@ -396,7 +466,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public boolean isVisible() {
-        if (barChart != null && barChart.getVisibility() == View.VISIBLE) {
+        if (combinedChart != null && combinedChart.getVisibility() == View.VISIBLE) {
            return true;
         }
 

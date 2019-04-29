@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -49,7 +50,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
+    protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[3];
         phases[0] = (float) c.getDouble(
                 c.getColumnIndex(
@@ -61,11 +62,16 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                 c.getColumnIndex(
                         SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
 
-        entries.add(new BarEntry(x, phases));
+        entries.add(new BarEntry(n, phases));
     }
 
     @Override
-    protected void addEntries(ChartType ctype, SimpleDateFormat spf,
+    protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
+
+    }
+
+    @Override
+    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
                                  Cursor c, ArrayList<PieEntry>entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();

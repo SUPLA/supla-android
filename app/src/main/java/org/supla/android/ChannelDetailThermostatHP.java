@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
@@ -237,7 +238,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         btnMinus.setOnClickListener(this);
 
         chartHelper = new ThermostatChartHelper(getContext());
-        chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
+        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.hpCombinedChart));
 
 
         ((TextView)findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
@@ -444,8 +445,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         rlSettings.setVisibility(GONE);
 
         OnChannelDataChanged();
-        chartHelper.loadThermostatMeasurements(getRemoteId());
-        chartHelper.moveToEnd(20, 1000);
+        chartHelper.load(getRemoteId());
+        chartHelper.moveToEnd();
 
         runDownloadTask();
     }
@@ -606,7 +607,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         dtm = null;
         progressBar.setVisibility(INVISIBLE);
-        chartHelper.loadThermostatMeasurements(getRemoteId());
+        chartHelper.load(getRemoteId());
     }
 }
 

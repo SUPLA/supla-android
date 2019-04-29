@@ -27,22 +27,31 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.LineChart;
+
+import org.supla.android.charts.ChartHelper;
+import org.supla.android.charts.TempHumidityChartHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.restapi.DownloadMeasurementLogs;
+import org.supla.android.restapi.DownloadTempHumidityMeasurements;
+import org.supla.android.restapi.SuplaRestApiClientTask;
 
-public class ChannelDetailTempHumidity extends DetailLayout {
+public class ChannelDetailTempHumidity extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults, View.OnClickListener {
 
 
-    //private ImpulseCounterChartHelper chartHelper;
-    //private DownloadImpulseCounterMeasurements dtm;
+    private ChartHelper chartHelper;
+    private DownloadMeasurementLogs downloadMeasurementLogs;
     private ProgressBar thProgress;
-    private TextView tvChannelTitle;
+    private TextView thChannelTitle;
     private ImageView thThermometerIcon;
     private ImageView thHumidityIcon;
     private Spinner thSpinner;
-    private ImageView ivGraph;
+    private ImageView thGraph;
 
     public ChannelDetailTempHumidity(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -65,14 +74,40 @@ public class ChannelDetailTempHumidity extends DetailLayout {
         return inflateLayout(R.layout.detail_temphumidity);
     }
 
+    protected DownloadMeasurementLogs getDMLInstance() {
+        return new DownloadTempHumidityMeasurements(getContext());
+    }
+
+    protected ChartHelper getChartHelperInstance() {
+        return new TempHumidityChartHelper(getContext());
+    }
 
     @Override
     protected void init() {
         super.init();
         thProgress = findViewById(R.id.thProgressBar);
-        tvChannelTitle = findViewById(R.id.thtv_ChannelTitle);
+        thChannelTitle = findViewById(R.id.thtv_ChannelTitle);
+        thSpinner = findViewById(R.id.thSpinner);
         thThermometerIcon = findViewById(R.id.thThermometerIcon);
         thHumidityIcon = findViewById(R.id.thHumidityIcon);
+        thGraph = findViewById(R.id.thGraphImg);
+        thGraph.setOnClickListener(this);
+        chartHelper = getChartHelperInstance();
+        chartHelper.setCombinedChart((CombinedChart)findViewById(R.id.thCombinedChart));
+    }
+
+    private void runDownloadTask() {
+        if (downloadMeasurementLogs != null && !downloadMeasurementLogs.isAlive(90)) {
+            downloadMeasurementLogs.cancel(true);
+            downloadMeasurementLogs = null;
+        }
+
+        if (downloadMeasurementLogs == null) {
+            downloadMeasurementLogs = getDMLInstance();
+            downloadMeasurementLogs.setChannelId(getRemoteId());
+            downloadMeasurementLogs.setDelegate(this);
+            downloadMeasurementLogs.execute();
+        }
     }
 
     @Override
@@ -94,4 +129,41 @@ public class ChannelDetailTempHumidity extends DetailLayout {
         OnChannelDataChanged();
     }
 
+    @Override
+    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
+        thProgress.setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
+        thProgress.setVisibility(INVISIBLE);
+        chartHelper.load(getRemoteId());
+    }
+
+    private TempHumidityChartHelper getTempHumidityCHartHelper() {
+        return (TempHumidityChartHelper)chartHelper;
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+        thProgress.setVisibility(INVISIBLE);
+        onClick(thGraph);
+
+
+        getTempHumidityCHartHelper().setTemperatureVisible(true);
+        getTempHumidityCHartHelper().setHumidityVisible(true);
+
+        chartHelper.load(getRemoteId());
+        chartHelper.setVisibility(VISIBLE);
+        chartHelper.moveToEnd();
+        chartHelper.animate();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == thGraph && thProgress.getVisibility() == INVISIBLE) {
+            runDownloadTask();
+        }
+    }
 }

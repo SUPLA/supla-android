@@ -19,13 +19,20 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
+import android.database.Cursor;
+
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.IMarker;
 import org.supla.android.R;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public abstract class IncrementalMeterChartHelper extends ChartHelper {
 
     protected double pricePerUnit;
     protected String currency;
+    protected ArrayList<String> values = new ArrayList<>();
 
     public IncrementalMeterChartHelper(Context context) {
         super(context);
@@ -34,6 +41,24 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
     @Override
     protected IMarker getMarker() {
         return new IncrementalMeterMarkerView(this, context, R.layout.chart_energy_marker);
+    }
+
+    @Override
+    protected void addFormatterValue(Cursor cursor, SimpleDateFormat spf) {
+        values.add(spf.format(new java.util.Date(getTimestamp(cursor) * 1000)));
+    }
+
+    @Override
+    public String getFormattedValue(float value, AxisBase axis) {
+
+        value -= 1;
+
+
+        if (value > 0 && value < values.size()) {
+            return values.get((int) value);
+        }
+
+        return "";
     }
 
     public void setPricePerUnit(double pricePerUnit) {
@@ -50,5 +75,11 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    @Override
+    public void load(int channelId, ChartType ctype) {
+        values.clear();
+        super.load(channelId, ctype);
     }
 }

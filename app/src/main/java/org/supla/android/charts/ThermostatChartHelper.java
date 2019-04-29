@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.supla.android.R;
@@ -43,18 +44,23 @@ public class ThermostatChartHelper extends ChartHelper {
     }
 
     @Override
-    protected void addEntries(int x, Cursor c, ArrayList<BarEntry> entries) {
+    protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
         phases[0] = (float) c.getDouble(
                 c.getColumnIndex(
                         SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE));
 
-        entries.add(new BarEntry(x, phases));
+        entries.add(new BarEntry(time, phases));
     }
 
     @Override
-    protected void addEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
-                              ArrayList<PieEntry> entries) {
+    protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
+
+    }
+
+    @Override
+    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
+                                 ArrayList<PieEntry> entries) {
 
     }
 

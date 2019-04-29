@@ -8,45 +8,6 @@
     android:visibility="visible">
 
     <RelativeLayout
-        android:id="@+id/thContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/thFooter"
-        android:layout_below="@+id/thHeader"
-        android:layout_alignParentBottom="false"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/hpButtons"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <Spinner
-                android:id="@+id/thSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/thBarChart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/thHeader"
         android:layout_width="match_parent"
         android:layout_height="110dp"
@@ -135,6 +96,79 @@
 
         </LinearLayout>
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/thContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_above="@+id/thOptions"
+        android:layout_below="@+id/thHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/hpButtons"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/thSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/thCombinedChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+            </com.github.mikephil.charting.charts.CombinedChart>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/thOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/thFooter"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:id="@+id/thCheckButtons"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/temperature" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/humidity" />
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -19,81 +19,71 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieEntry;
-import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
+public class TempHumidityChartHelper extends TemperatureChartHelper {
 
-    public ImpulseCounterChartHelper(Context context) {
-        super(context);
-    }
+    boolean temperatureVisible;
+    boolean humidityVisible;
 
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat);
+        return DBH.getTempHumidityMeasurements(db, channelId, dateFormat);
     }
 
     @Override
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
-        float[] phases = new float[1];
-
-        phases[0] = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
-
-        entries.add(new BarEntry(n, phases));
+        if (humidityVisible) {
+            entries.add(new BarEntry(time, (float) c.getDouble(
+                    c.getColumnIndex(
+                            SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY))));
+        }
     }
 
     @Override
     protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
-
-    }
-
-    @Override
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries) {
-
-        float value;
-        value = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
-
-
-        entries.add(new PieEntry(value,
-                spf.format(new java.util.Date(getTimestamp(c) * 1000))));
+        if (temperatureVisible) {
+            super.addLineEntries(n, c, time, entries);
+        }
     }
 
     @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP));
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
     @Override
-    protected String[] getStackLabels() {
-        return new String[]{getUnit()};
+    protected float getTemperature(Cursor c) {
+        return (float) c.getDouble(
+                c.getColumnIndex(
+                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE));
     }
 
-    @Override
-    protected List<Integer> getColors() {
-        Resources res = context.getResources();
-
-        List<Integer> Colors = new ArrayList<Integer>(1);
-        Colors.add(res.getColor(R.color.ic_chart_value));
-
-        return Colors;
+    public TempHumidityChartHelper(Context context) {
+        super(context);
     }
 
+    public boolean isTemperatureVisible() {
+        return temperatureVisible;
+    }
+
+    public boolean isHumidityVisible() {
+        return humidityVisible;
+    }
+
+    public void setTemperatureVisible(boolean temperatureVisible) {
+        this.temperatureVisible = temperatureVisible;
+    }
+
+    public void setHumidityVisible(boolean humidityVisible) {
+        this.humidityVisible = humidityVisible;
+    }
 }

@@ -22,9 +22,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
+
 import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
@@ -33,57 +35,50 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
-
-    public ImpulseCounterChartHelper(Context context) {
-        super(context);
-    }
+public class TemperatureChartHelper extends ChartHelper {
 
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat);
+        return DBH.getTemperatureMeasurements(db, channelId, dateFormat);
     }
 
     @Override
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
-        float[] phases = new float[1];
-
-        phases[0] = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
-
-        entries.add(new BarEntry(n, phases));
     }
 
     @Override
     protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
+            if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1) {
+                entries = newLineEntries();
+            }
 
+            entries.add(new Entry(time, getTemperature(c)));
     }
 
     @Override
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries) {
+    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
+                                 ArrayList<PieEntry> entries) {
+    }
 
-        float value;
-        value = (float) c.getDouble(
+    protected float getTemperature(Cursor c) {
+        return (float) c.getDouble(
                 c.getColumnIndex(
-                        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
-
-
-        entries.add(new PieEntry(value,
-                spf.format(new java.util.Date(getTimestamp(c) * 1000))));
+                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE));
     }
 
     @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP));
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
     @Override
     protected String[] getStackLabels() {
-        return new String[]{getUnit()};
+        Resources res = context.getResources();
+
+        return new String[]{
+                res.getString(R.string.hp_room_temperature)};
     }
 
     @Override
@@ -91,9 +86,13 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
         Resources res = context.getResources();
 
         List<Integer> Colors = new ArrayList<Integer>(1);
-        Colors.add(res.getColor(R.color.ic_chart_value));
+        Colors.add(res.getColor(R.color.hp_chart_room_temperature));
 
         return Colors;
+    }
+
+    public TemperatureChartHelper(Context context) {
+        super(context);
     }
 
 }

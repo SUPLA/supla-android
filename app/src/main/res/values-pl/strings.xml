@@ -191,4 +191,6 @@
     <string name="ranking_of_days">Ranking dni</string>
     <string name="ranking_of_months">Ranking miesięcy</string>
     <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Wilgotność</string>
 </resources>
