@@ -57,7 +57,7 @@ public class ThermostatChartHelper extends ChartHelper {
                               ArrayList<PieEntry> entries) {
 
     }
-    
+
     @Override
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
@@ -86,8 +86,4 @@ public class ThermostatChartHelper extends ChartHelper {
         super(context);
     }
 
-
-    public void loadThermostatMeasurements(int channelId) {
-        loadBarChart(channelId, ChartType.Bar_Minutely);
-    }
 }
