@@ -54,7 +54,7 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         ti.AssignJSONObject(obj);
         ti.setChannelId(getChannelId());
 
-        getMeasurementsDbH().addTempHumidityMeasurement(db, ti);
+        getMeasurementsDbH().addTemperatureMeasurement(db, ti);
     }
 
 }

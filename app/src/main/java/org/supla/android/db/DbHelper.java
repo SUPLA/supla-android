@@ -1920,8 +1920,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public int getTemperatureMeasurementTimestamp(int channelId, boolean min) {
         return getMeasurementTimestamp(SuplaContract.TemperatureLogEntry.TABLE_NAME,
-                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP,
-                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
     }
 
@@ -1931,29 +1931,29 @@ public class DbHelper extends SQLiteOpenHelper {
         };
 
         db.delete(SuplaContract.TemperatureLogEntry.TABLE_NAME,
-                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
                         + " = ?",
                 args);
     }
 
     public void addTemperatureMeasurement(SQLiteDatabase db,
-                                           TempHumidityMeasurementItem emi) {
-        db.insertWithOnConflict(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                                          TemperatureMeasurementItem emi) {
+        db.insertWithOnConflict(SuplaContract.TemperatureLogEntry.TABLE_NAME,
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
 
         String sql = "SELECT "
-                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE + ", "
-                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
-                + " FROM " + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE + ", "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.TemperatureLogEntry.TABLE_NAME
                 + " WHERE "
-                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
                 + " = "
                 + Integer.toString(channelId)
                 +" ORDER BY "
-                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
 
 
