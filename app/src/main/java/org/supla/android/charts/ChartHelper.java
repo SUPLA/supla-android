@@ -44,7 +44,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
 import java.text.SimpleDateFormat;
@@ -139,7 +138,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return Float.toString(value);
+       SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+       return spf.format(new java.util.Date((minTimestamp+(long)value*600)*1000));
     }
 
 
@@ -157,27 +157,27 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     abstract protected long getTimestamp(Cursor c);
 
-    abstract protected String[] getStackLabels();
-
-    abstract protected List<Integer> getColors();
-
     protected IMarker getMarker() {
         return null;
     }
 
-    protected void addFormatterValue(Cursor cursor, SimpleDateFormat spf) {}
+    protected void addFormattedValue(Cursor cursor, SimpleDateFormat spf) {}
+
+    protected LineDataSet newLineDataSetInstance(ArrayList<Entry> lineEntries, String label) {
+        LineDataSet result = new LineDataSet(lineEntries, label);
+        result.setDrawValues(false);
+        result.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        result.setCubicIntensity(0.05f);
+        result.setDrawCircles(false);
+        result.setDrawFilled(true);
+        return result;
+    }
 
     protected void newLineDataSet() {
         if (lineEntries != null
                 && lineDataSets != null
                 && lineEntries.size() > 0) {
-            lineDataSet = new LineDataSet(lineEntries, "");
-            lineDataSet.setDrawValues(false);
-            lineDataSet.setColors(Color.RED);
-            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-            lineDataSet.setCubicIntensity(0.05f);
-            lineDataSet.setDrawCircles(false);
-            lineDataSet.setDrawFilled(true);
+            lineDataSet = newLineDataSetInstance(lineEntries, "");
             lineDataSets.add(lineDataSet);
         }
     }
@@ -187,6 +187,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         lineEntries = new ArrayList<>();
         return lineEntries;
+    }
+
+    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        BarDataSet result = new BarDataSet(barEntries, label);
+        result.setDrawValues(false);
+        return result;
     }
 
     public void loadCombinedChart(int channelId, ChartType ctype) {
@@ -254,7 +260,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                                 barEntries);
                         addLineEntries(n, c, (getTimestamp(c)-minTimestamp) / 600,
                                 lineEntries);
-                        addFormatterValue(c, spf);
+                        addFormattedValue(c, spf);
 
                     } while (c.moveToNext());
 
@@ -267,10 +273,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         if (barEntries.size() > 0) {
-            BarDataSet barDataSet = new BarDataSet(barEntries, "");
-            barDataSet.setDrawValues(false);
-            barDataSet.setStackLabels(getStackLabels());
-            barDataSet.setColors(getColors());
+            BarDataSet barDataSet = newBarDataSetInstance(barEntries, "");
             barDataSets.add(barDataSet);
         }
 
@@ -288,9 +291,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         combinedChart.setMarker(getMarker());
         combinedChart.setDrawMarkers(combinedChart.getMarker()!=null);
 
-        if (data.getDataSetCount() == 0) {
-            combinedChart.setData(null);
-        } else {
+        combinedChart.setData(null);
+
+        if (data.getDataSetCount() != 0) {
             combinedChart.setData(data);
         }
 
@@ -408,8 +411,6 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         if (!this.ctype.equals(ctype)) {
             this.ctype = ctype;
         }
-
-        minTimestamp = 0;
 
         switch (ctype) {
             case Bar_Minutely:

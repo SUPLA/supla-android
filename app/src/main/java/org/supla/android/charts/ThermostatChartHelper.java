@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -70,26 +71,22 @@ public class ThermostatChartHelper extends ChartHelper {
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
-    @Override
-    protected String[] getStackLabels() {
-        Resources res = context.getResources();
-
-        return new String[]{
-                res.getString(R.string.hp_room_temperature)};
+    public ThermostatChartHelper(Context context) {
+        super(context);
     }
 
     @Override
-    protected List<Integer> getColors() {
+    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        BarDataSet result = super.newBarDataSetInstance(barEntries, label);
+
         Resources res = context.getResources();
+        result.setStackLabels(new String[]{res.getString(R.string.hp_room_temperature)});
 
         List<Integer> Colors = new ArrayList<Integer>(1);
         Colors.add(res.getColor(R.color.hp_chart_room_temperature));
+        result.setColors(Colors);
 
-        return Colors;
-    }
-
-    public ThermostatChartHelper(Context context) {
-        super(context);
+        return result;
     }
 
 }

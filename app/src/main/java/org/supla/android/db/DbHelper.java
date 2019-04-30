@@ -1899,7 +1899,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId,
+                                              String GroupByDateFormat,
+                                              Date dateFrom, Date dateTo) {
 
         String sql = "SELECT "
                 + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE + ", "
@@ -1909,13 +1911,28 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " WHERE "
                 + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
                 + " = "
-                + Integer.toString(channelId)
-                +" ORDER BY "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " ORDER BY "
                 + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
 
-
         return db.rawQuery(sql, null);
+    }
+
+    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId,
+                                              String GroupByDateFormat) {
+        return getTempHumidityMeasurements(db, channelId, GroupByDateFormat,
+                null, null);
     }
 
     public int getTemperatureMeasurementTimestamp(int channelId, boolean min) {
@@ -1942,7 +1959,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+    public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat, Date dateFrom, Date dateTo) {
 
         String sql = "SELECT "
                 + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE + ", "
@@ -1951,13 +1969,29 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " WHERE "
                 + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
                 + " = "
-                + Integer.toString(channelId)
-                +" ORDER BY "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " ORDER BY "
                 + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat) {
+        return getTemperatureMeasurements(db, channelId, GroupByDateFormat,
+                null, null);
     }
 
     public void addImpulseCounterMeasurement(SQLiteDatabase db,

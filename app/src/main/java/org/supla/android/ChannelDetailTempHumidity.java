@@ -20,38 +20,27 @@ package org.supla.android;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.LineChart;
 
 import org.supla.android.charts.ChartHelper;
 import org.supla.android.charts.TempHumidityChartHelper;
+import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
 import org.supla.android.listview.ChannelListView;
-import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTempHumidityMeasurements;
-import org.supla.android.restapi.SuplaRestApiClientTask;
 
-public class ChannelDetailTempHumidity extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults, View.OnClickListener {
-
-
-    private ChartHelper chartHelper;
-    private DownloadMeasurementLogs downloadMeasurementLogs;
-    private ProgressBar thProgress;
-    private TextView thChannelTitle;
-    private ImageView thThermometerIcon;
-    private ImageView thHumidityIcon;
-    private Spinner thSpinner;
-    private ImageView thGraph;
+public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
+    private ImageView ivHumidityIcon;
+    private TextView tvHumidity;
+    private CheckBox cbHumidity;
+    private CheckBox cbTemperature;
 
     public ChannelDetailTempHumidity(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -69,15 +58,16 @@ public class ChannelDetailTempHumidity extends DetailLayout implements SuplaRest
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    protected DownloadMeasurementLogs getDMLInstance() {
+        return new DownloadTempHumidityMeasurements(getContext());
+    }
+
     @Override
     public View getContentView() {
         return inflateLayout(R.layout.detail_temphumidity);
     }
 
-    protected DownloadMeasurementLogs getDMLInstance() {
-        return new DownloadTempHumidityMeasurements(getContext());
-    }
-
+    @Override
     protected ChartHelper getChartHelperInstance() {
         return new TempHumidityChartHelper(getContext());
     }
@@ -85,85 +75,67 @@ public class ChannelDetailTempHumidity extends DetailLayout implements SuplaRest
     @Override
     protected void init() {
         super.init();
-        thProgress = findViewById(R.id.thProgressBar);
-        thChannelTitle = findViewById(R.id.thtv_ChannelTitle);
-        thSpinner = findViewById(R.id.thSpinner);
-        thThermometerIcon = findViewById(R.id.thThermometerIcon);
-        thHumidityIcon = findViewById(R.id.thHumidityIcon);
-        thGraph = findViewById(R.id.thGraphImg);
-        thGraph.setOnClickListener(this);
-        chartHelper = getChartHelperInstance();
-        chartHelper.setCombinedChart((CombinedChart)findViewById(R.id.thCombinedChart));
-    }
+        cbTemperature = findViewById(R.id.thCbTemperature);
+        cbTemperature.setOnClickListener(this);
+        cbHumidity = findViewById(R.id.thCbHumidity);
+        cbHumidity.setOnClickListener(this);
+        tvHumidity = findViewById(R.id.thTvHumidity);
+        ivHumidityIcon = findViewById(R.id.thHumidityIcon);
 
-    private void runDownloadTask() {
-        if (downloadMeasurementLogs != null && !downloadMeasurementLogs.isAlive(90)) {
-            downloadMeasurementLogs.cancel(true);
-            downloadMeasurementLogs = null;
-        }
-
-        if (downloadMeasurementLogs == null) {
-            downloadMeasurementLogs = getDMLInstance();
-            downloadMeasurementLogs.setChannelId(getRemoteId());
-            downloadMeasurementLogs.setDelegate(this);
-            downloadMeasurementLogs.execute();
-        }
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
+                "fonts/OpenSans-Regular.ttf");
+        tvHumidity.setTypeface(tf);
     }
 
     @Override
-    public void OnChannelDataChanged() {
-
+    protected void OnChannelDataChanged(Channel channel) {
+        tvHumidity.setText(channel.getHumanReadableValue(ChannelBase.WhichOne.Second));
     }
 
     @Override
     public void setData(ChannelBase cbase) {
         super.setData(cbase);
 
-        thThermometerIcon.setBackgroundColor(Color.TRANSPARENT);
-        thThermometerIcon.setImageBitmap(ImageCache.getBitmap(getContext(), cbase.getImageIdx()));
-
-        thHumidityIcon.setBackgroundColor(Color.TRANSPARENT);
-        thHumidityIcon.setImageBitmap(ImageCache.getBitmap(getContext(),
+        ivHumidityIcon.setBackgroundColor(Color.TRANSPARENT);
+        ivHumidityIcon.setImageBitmap(ImageCache.getBitmap(getContext(),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second)));
-
-        OnChannelDataChanged();
     }
 
-    @Override
-    public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
-        thProgress.setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
-        thProgress.setVisibility(INVISIBLE);
-        chartHelper.load(getRemoteId());
-    }
-
-    private TempHumidityChartHelper getTempHumidityCHartHelper() {
+    private TempHumidityChartHelper getTempHumidityChartHelper() {
         return (TempHumidityChartHelper)chartHelper;
     }
 
     @Override
-    public void onDetailShow() {
-        super.onDetailShow();
-        thProgress.setVisibility(INVISIBLE);
-        onClick(thGraph);
+    public void onClick(View v) {
+        super.onClick(v);
 
+        if (v == cbHumidity || v == cbTemperature) {
+            if (v == cbHumidity
+                    && !cbHumidity.isChecked()
+                    && !cbTemperature.isChecked()) {
+                cbTemperature.setChecked(true);
+            } else if (v == cbTemperature
+                    && !cbTemperature.isChecked()
+                    && !cbHumidity.isChecked()) {
+                cbHumidity.setChecked(true);
+            }
 
-        getTempHumidityCHartHelper().setTemperatureVisible(true);
-        getTempHumidityCHartHelper().setHumidityVisible(true);
-
-        chartHelper.load(getRemoteId());
-        chartHelper.setVisibility(VISIBLE);
-        chartHelper.moveToEnd();
-        chartHelper.animate();
+            onSpinnerItemSelected();
+        }
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == thGraph && thProgress.getVisibility() == INVISIBLE) {
-            runDownloadTask();
-        }
+    protected void __onDetailShow() {
+        super.__onDetailShow();
+        cbTemperature.setChecked(true);
+        cbHumidity.setChecked(true);
+    }
+
+    @Override
+    protected void beforeLoadChart() {
+        super.beforeLoadChart();
+
+        getTempHumidityChartHelper().setTemperatureVisible(cbTemperature.isChecked());
+        getTempHumidityChartHelper().setHumidityVisible(cbHumidity.isChecked());
     }
 }

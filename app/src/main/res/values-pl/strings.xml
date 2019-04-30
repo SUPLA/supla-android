@@ -193,4 +193,9 @@
     <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Wilgotność</string>
+    <string name="last24hours">Ostatnie 24 godziny</string>
+    <string name="last7days">Ostatnie 7 dni</string>
+    <string name="last30days">Ostatnie 30 dni</string>
+    <string name="last90days">Ostatnie 90 dnis</string>
+    <string name="all_available_history">Cała dostępna historia</string>
 </resources>

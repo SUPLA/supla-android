@@ -23,24 +23,31 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.supla.android.R;
+import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TemperatureChartHelper extends ChartHelper {
 
+    protected Date dateFrom;
+    protected Date dateTo;
+
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getTemperatureMeasurements(db, channelId, dateFormat);
+        return DBH.getTemperatureMeasurements(db, channelId, dateFormat, dateFrom, dateTo);
     }
 
     @Override
@@ -49,11 +56,11 @@ public class TemperatureChartHelper extends ChartHelper {
 
     @Override
     protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
-            if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1) {
-                entries = newLineEntries();
-            }
+        if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1) {
+            entries = newLineEntries();
+        }
 
-            entries.add(new Entry(time, getTemperature(c)));
+        entries.add(new Entry(time, getTemperature(c)));
     }
 
     @Override
@@ -73,26 +80,30 @@ public class TemperatureChartHelper extends ChartHelper {
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
-    @Override
-    protected String[] getStackLabels() {
-        Resources res = context.getResources();
-
-        return new String[]{
-                res.getString(R.string.hp_room_temperature)};
-    }
-
-    @Override
-    protected List<Integer> getColors() {
-        Resources res = context.getResources();
-
-        List<Integer> Colors = new ArrayList<Integer>(1);
-        Colors.add(res.getColor(R.color.hp_chart_room_temperature));
-
-        return Colors;
-    }
-
     public TemperatureChartHelper(Context context) {
         super(context);
+    }
+
+    public void setDateRange(Date from, Date to) {
+        dateFrom = from;
+        dateTo = to;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    @Override
+    protected LineDataSet newLineDataSetInstance(ArrayList<Entry> lineEntries, String label) {
+        LineDataSet result = super.newLineDataSetInstance(lineEntries, label);
+        Resources res = context.getResources();
+        result.setFillColor(res.getColor(R.color.th_temperature_fill_color));
+        result.setColor(res.getColor(R.color.th_temperature_line_color));
+        return result;
     }
 
 }

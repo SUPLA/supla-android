@@ -44,7 +44,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
     }
 
     @Override
-    protected void addFormatterValue(Cursor cursor, SimpleDateFormat spf) {
+    protected void addFormattedValue(Cursor cursor, SimpleDateFormat spf) {
         values.add(spf.format(new java.util.Date(getTimestamp(cursor) * 1000)));
     }
 

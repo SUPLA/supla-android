@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -125,26 +126,23 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected String[] getStackLabels() {
+    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        BarDataSet result = super.newBarDataSetInstance(barEntries, label);
+
         Resources res = context.getResources();
 
-        return new String[]{
+        result.setStackLabels(new String[]{
                 res.getString(R.string.em_phase1),
                 res.getString(R.string.em_phase2),
-                res.getString(R.string.em_phase3)};
-    }
-
-    @Override
-    protected List<Integer> getColors() {
-        Resources res = context.getResources();
+                res.getString(R.string.em_phase3)});
 
         List<Integer> Colors = new ArrayList<Integer>(3);
         Colors.add(res.getColor(R.color.phase1));
         Colors.add(res.getColor(R.color.phase2));
         Colors.add(res.getColor(R.color.phase3));
+        result.setColors(Colors);
 
-        return Colors;
+        return result;
     }
-
 
 }

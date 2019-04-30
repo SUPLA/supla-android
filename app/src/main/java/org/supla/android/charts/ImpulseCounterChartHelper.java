@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -82,18 +84,15 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected String[] getStackLabels() {
-        return new String[]{getUnit()};
-    }
+    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        BarDataSet result = super.newBarDataSetInstance(barEntries, label);
 
-    @Override
-    protected List<Integer> getColors() {
         Resources res = context.getResources();
-
+        result.setStackLabels(new String[]{getUnit()});
         List<Integer> Colors = new ArrayList<Integer>(1);
         Colors.add(res.getColor(R.color.ic_chart_value));
+        result.setColors(Colors);
 
-        return Colors;
+        return result;
     }
-
 }

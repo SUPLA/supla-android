@@ -19,13 +19,19 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+
+import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TempHumidityChartHelper extends TemperatureChartHelper {
 
@@ -35,7 +41,7 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getTempHumidityMeasurements(db, channelId, dateFormat);
+        return DBH.getTempHumidityMeasurements(db, channelId, dateFormat, dateFrom, dateTo);
     }
 
     @Override
@@ -85,5 +91,18 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
 
     public void setHumidityVisible(boolean humidityVisible) {
         this.humidityVisible = humidityVisible;
+    }
+
+    @Override
+    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        BarDataSet result = super.newBarDataSetInstance(barEntries, label);
+
+        Resources res = context.getResources();
+        result.setStackLabels(new String[]{res.getString(R.string.humidity)});
+        List<Integer> Colors = new ArrayList<Integer>(1);
+        Colors.add(res.getColor(R.color.th_humidity));
+        result.setColors(Colors);
+
+        return result;
     }
 }

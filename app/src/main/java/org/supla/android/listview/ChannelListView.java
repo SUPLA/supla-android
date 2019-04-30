@@ -150,7 +150,8 @@ public class ChannelListView extends ListView {
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    if (!(mDetailLayout instanceof ChannelDetailTemperature))
+                    if (!(mDetailLayout instanceof ChannelDetailTemperature)
+                            || mDetailLayout instanceof ChannelDetailTempHumidity)
                         mDetailLayout = null;
 
                     break;
@@ -203,7 +204,7 @@ public class ChannelListView extends ListView {
                     mDetailLayout = new ChannelDetailTemperature(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    mDetailLayout = new ChannelDetailTemperature(getContext(), this);
+                    mDetailLayout = new ChannelDetailTempHumidity(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     mDetailLayout = new ChannelDetailThermostat(getContext(), this);
