@@ -180,6 +180,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
         __onDetailShow();
         tvProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
+        onSpinnerItemSelected();
     }
 
     protected void onSpinnerItemSelected() {
