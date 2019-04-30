@@ -89,6 +89,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
 
     @Override
     protected void OnChannelDataChanged(Channel channel) {
+        super.OnChannelDataChanged(channel);
         tvHumidity.setText(channel.getHumanReadableValue(ChannelBase.WhichOne.Second));
     }
 
