@@ -42,7 +42,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                                                 JSONObject obj) throws JSONException;
     protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {}
 
-    protected int itemsLimitPerRequest() {return 0;}
+    protected int itemsLimitPerRequest() {return 1000;}
 
     @Override
     protected Object doInBackground(Object[] objects) {

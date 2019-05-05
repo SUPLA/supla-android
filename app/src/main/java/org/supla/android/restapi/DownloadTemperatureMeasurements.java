@@ -31,10 +31,6 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         super(context);
     }
 
-    protected int itemsLimitPerRequest() {
-        return 100;
-    }
-
     protected long getMinTimestamp() {
         return getMeasurementsDbH().getTemperatureMeasurementTimestamp(getChannelId(), true);
     }
