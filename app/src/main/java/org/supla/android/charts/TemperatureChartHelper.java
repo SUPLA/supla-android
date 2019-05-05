@@ -56,7 +56,7 @@ public class TemperatureChartHelper extends ChartHelper {
 
     @Override
     protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
-        if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1) {
+        if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1.5f) {
             entries = newLineEntries();
         }
 

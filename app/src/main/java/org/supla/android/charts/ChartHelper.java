@@ -21,7 +21,6 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.view.View;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -43,12 +42,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 import org.supla.android.db.DbHelper;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
 
@@ -139,7 +135,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
        SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-       return spf.format(new java.util.Date((minTimestamp+(long)value*600)*1000));
+       return spf.format(new java.util.Date((minTimestamp+(long)(value*600f))*1000));
     }
 
 
@@ -256,9 +252,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                     minTimestamp = getTimestamp(c);
                     do {
                         n++;
-                        addBarEntries(n, (getTimestamp(c)-minTimestamp) / 600, c,
+                        addBarEntries(n, (getTimestamp(c)-minTimestamp) / 600f, c,
                                 barEntries);
-                        addLineEntries(n, c, (getTimestamp(c)-minTimestamp) / 600,
+                        addLineEntries(n, c, (getTimestamp(c)-minTimestamp) / 600f,
                                 lineEntries);
                         addFormattedValue(c, spf);
 
