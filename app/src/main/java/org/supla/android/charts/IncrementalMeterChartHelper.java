@@ -40,7 +40,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
 
     @Override
     protected IMarker getMarker() {
-        return new IncrementalMeterMarkerView(this, context, R.layout.chart_energy_marker);
+        return new IncrementalMeterMarkerView(this, context, R.layout.chart_marker);
     }
 
     @Override

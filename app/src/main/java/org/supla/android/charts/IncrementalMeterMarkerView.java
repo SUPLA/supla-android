@@ -20,46 +20,30 @@ package org.supla.android.charts;
 
 import android.content.Context;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+
 import org.supla.android.R;
 
-public class IncrementalMeterMarkerView extends MarkerView {
-
-    private IncrementalMeterChartHelper helper;
-    private TextView tvTime;
-    private TextView tvValue;
-    private TextView tvPrice;
+public class IncrementalMeterMarkerView extends ChartMarkerView {
 
     public IncrementalMeterMarkerView(IncrementalMeterChartHelper helper, Context context,
                                       int layoutResource) {
-        super(context, layoutResource);
-        this.helper = helper;
-        tvTime = findViewById(R.id.tvmTime);
-        tvPrice = findViewById(R.id.tvmPrice);
-        tvValue = findViewById(R.id.tvmValue);
-
-    }
-
-
-    private String getString(String str) {
-        return str == null ? "" : str;
-    }
-
-    private void setText(TextView tv, String text) {
-        tv.setText(text);
-        tv.setVisibility(tv.getText().length() > 0 ? VISIBLE : GONE);
+        super(helper, context, layoutResource);
     }
 
     @Override
-    public void refreshContent(Entry e, Highlight highlight) {
+    protected String getValue2(Entry e) {
 
-        setText(tvTime, helper.getFormattedValue(e.getX(), null));
-        setText(tvValue, String.format("%.2f "+getString(helper.getUnit()), e.getY()));
-        setText(tvPrice, String.format("%.2f "+getString(helper.getCurrency()),
-                helper.getPricePerUnit()*e.getY()));
+        if (helper instanceof IncrementalMeterChartHelper) {
+            IncrementalMeterChartHelper helper = (IncrementalMeterChartHelper)this.helper;
+            return String.format("%.2f "+getString(helper.getCurrency()),
+                    helper.getPricePerUnit()*e.getY());
+        }
 
-        super.refreshContent(e, highlight);
+        return "";
     }
 }

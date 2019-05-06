@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -104,6 +105,11 @@ public class TemperatureChartHelper extends ChartHelper {
         result.setFillColor(res.getColor(R.color.th_temperature_fill_color));
         result.setColor(res.getColor(R.color.th_temperature_line_color));
         return result;
+    }
+
+    @Override
+    protected IMarker getMarker() {
+        return new ChartMarkerView(this, context, R.layout.chart_marker);
     }
 
 }
