@@ -45,6 +45,9 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
         AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -143,15 +146,42 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
-            double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
-                    channel.getChannelId());
-            double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
-                    channel.getChannelId());
+            long minTS = mDBH.getImpulseCounterMeasurementTimestamp(channel.getChannelId(),
+                    true);
+
+            double currentConsumption = 0;
+
+            if (minTS == 0) {
+                currentConsumption = 1;
+            } else {
+                Calendar now = Calendar.getInstance();
+                now.setTime(new Date());
+
+                Calendar minDate = Calendar.getInstance();
+                minDate.setTime(new Date(minTS*1000));
+
+                if (minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                        && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
+                    currentConsumption = 1;
+                }
+            }
+
+            if (currentConsumption == 1) {
+                currentConsumption = ic.getCalculatedValue();
+            } else {
+                double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
+                        channel.getChannelId());
+                double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
+                        channel.getChannelId());
+                currentConsumption = v0-v1;
+            }
+
+
             tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
-                    (v0-v1) * ic.getPricePerUnit()));
+                    currentConsumption * ic.getPricePerUnit()));
 
             tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
-            tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), v0-v1));
+            tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), currentConsumption));
             tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
             chartHelper.setPricePerUnit(ic.getPricePerUnit());
             chartHelper.setCurrency(ic.getCurrency());
