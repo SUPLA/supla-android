@@ -37,6 +37,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     abstract protected long getMinTimestamp();
     abstract protected long getMaxTimestamp();
+    abstract protected int getLocalTotalCount();
     abstract protected void EraseMeasurements(SQLiteDatabase db);
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
@@ -86,6 +87,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         }
 
         AfterTimestamp = getMaxTimestamp();
+        int LocalTotalCount = getLocalTotalCount();
+        Double percent = 0d;
 
         do {
             result = apiRequest("channels/"
@@ -136,6 +139,17 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
                         if (isCancelled()) {
                             break;
+                        }
+
+
+                        LocalTotalCount++;
+
+                        if (result.getTotalCount() > 0) {
+                            Double new_percent = LocalTotalCount*100d/result.getTotalCount();
+                            if (new_percent - percent >= 1d) {
+                                percent = new_percent;
+                                publishProgress(percent);
+                            }
                         }
 
                         keepAlive();

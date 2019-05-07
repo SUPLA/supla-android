@@ -391,16 +391,25 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD STARTED");
         emProgress.setVisibility(VISIBLE);
+        chartHelper.setDownloadProgress(0d);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         Trace.d("EM", "DOWNLOAD FINISHED");
         emProgress.setVisibility(INVISIBLE);
+        chartHelper.setDownloadProgress(null);
         if (chartHelper.isVisible()) {
             chartHelper.load(getRemoteId());
         }
         demm = null;
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+        if (chartHelper.isVisible()) {
+            chartHelper.setDownloadProgress(progress);
+        }
     }
 
     @Override

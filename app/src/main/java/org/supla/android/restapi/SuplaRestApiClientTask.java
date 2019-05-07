@@ -68,6 +68,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     public interface IAsyncResults {
         void onRestApiTaskStarted(SuplaRestApiClientTask task);
         void onRestApiTaskFinished(SuplaRestApiClientTask task);
+        void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress);
     }
 
     @Override
@@ -87,6 +88,19 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
         if (delegate!=null) {
             delegate.onRestApiTaskFinished(this);
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Object[] values) {
+        super.onProgressUpdate(values);
+
+        if (delegate!=null
+                && values != null
+                && values.length > 0
+                && values[0] instanceof Double) {
+
+            delegate.onRestApiTaskProgressUpdate(this, (Double)values[0]);
         }
     }
 

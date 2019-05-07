@@ -41,6 +41,11 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
         return getMeasurementsDbH().getElectricityMeterMeasurementTimestamp(getChannelId(), false);
     }
 
+    @Override
+    protected int getLocalTotalCount() {
+        return getMeasurementsDbH().getElectricityMeterMeasurementTotalCount(getChannelId());
+    }
+
     protected void EraseMeasurements(SQLiteDatabase db) {
         getMeasurementsDbH().deleteElectricityMeasurements(db, getChannelId());
     }

@@ -39,6 +39,11 @@ public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getTempHumidityMeasurementTimestamp(getChannelId(), false);
     }
 
+    @Override
+    protected int getLocalTotalCount() {
+        return getMeasurementsDbH().getTempHumidityMeasurementTotalCount(getChannelId());
+    }
+
     protected void EraseMeasurements(SQLiteDatabase db) {
         getMeasurementsDbH().deleteTempHumidityMeasurements(db, getChannelId());
     }

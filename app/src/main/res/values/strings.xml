@@ -194,4 +194,5 @@
     <string name="last30days">Last 30 days</string>
     <string name="last90days">Last 90 days</string>
     <string name="all_available_history">All available history</string>
+    <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
 </resources>

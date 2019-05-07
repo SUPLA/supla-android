@@ -157,6 +157,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         tvProgress.setVisibility(VISIBLE);
+        chartHelper.setDownloadProgress(0d);
     }
 
     protected void beforeLoadChart() {};
@@ -165,7 +166,13 @@ public class ChannelDetailTemperature extends DetailLayout implements
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         tvProgress.setVisibility(INVISIBLE);
         beforeLoadChart();
+        chartHelper.setDownloadProgress(null);
         chartHelper.load(getRemoteId());
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+        chartHelper.setDownloadProgress(progress);
     }
 
     private TemperatureChartHelper getTemperatureChartHelper() {

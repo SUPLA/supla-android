@@ -198,4 +198,5 @@
     <string name="last30days">Ostatnie 30 dni</string>
     <string name="last90days">Ostatnie 90 dni</string>
     <string name="all_available_history">Cała dostępna historia</string>
+    <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
 </resources>

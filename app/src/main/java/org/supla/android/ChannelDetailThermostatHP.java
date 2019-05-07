@@ -601,13 +601,20 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         progressBar.setVisibility(VISIBLE);
+        chartHelper.setDownloadProgress(0d);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         dtm = null;
         progressBar.setVisibility(INVISIBLE);
+        chartHelper.setDownloadProgress(null);
         chartHelper.load(getRemoteId());
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+        chartHelper.setDownloadProgress(progress);
     }
 }
 

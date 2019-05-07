@@ -39,6 +39,11 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getTemperatureMeasurementTimestamp(getChannelId(), false);
     }
 
+    @Override
+    protected int getLocalTotalCount() {
+        return getMeasurementsDbH().getTemperatureMeasurementTotalCount(getChannelId());
+    }
+
     protected void EraseMeasurements(SQLiteDatabase db) {
         getMeasurementsDbH().deleteTemperatureMeasurements(db, getChannelId());
     }

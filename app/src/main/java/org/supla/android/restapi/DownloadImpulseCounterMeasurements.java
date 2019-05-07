@@ -19,6 +19,11 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
         return getMeasurementsDbH().getImpulseCounterMeasurementTimestamp(getChannelId(), false);
     }
 
+    @Override
+    protected int getLocalTotalCount() {
+        return getMeasurementsDbH().getImpulseCounterMeasurementTotalCount(getChannelId());
+    }
+
     protected void EraseMeasurements(SQLiteDatabase db) {
         getMeasurementsDbH().deleteImpulseCounterMeasurements(db, getChannelId());
     }

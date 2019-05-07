@@ -505,5 +505,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             downloadUserIcons = null;
         }
     }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+
+    }
 }
 

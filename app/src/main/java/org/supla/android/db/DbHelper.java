@@ -1700,8 +1700,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        //execSQL(db, "DELETE FROM "+SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
-
         Cursor c = db.rawQuery(selection, null);
         c.moveToFirst();
         max = c.getInt(0);
@@ -1711,6 +1709,26 @@ public class DbHelper extends SQLiteOpenHelper {
         return max;
     }
 
+    private int getTotalCount(String tableName, String colChannelId, int channelId) {
+
+        String selection = "SELECT COUNT(*) FROM "
+                +tableName
+                +" WHERE "+colChannelId
+                +" = "+Integer.toString(channelId);
+
+        int total = 0;
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery(selection, null);
+        c.moveToFirst();
+        total = c.getInt(0);
+        c.close();
+        db.close();
+
+        return total;
+    }
+
     public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
 
         return getMeasurementTimestamp(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
@@ -1718,6 +1736,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
     }
+
+    public int getElectricityMeterMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId);
+    }
+
 
     public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
@@ -1839,6 +1863,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public int getThermostatMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId);
+    }
+
     public void deleteThermostatMeasurements(SQLiteDatabase db, int channelId) {
         String[] args = {
                 String.valueOf(channelId),
@@ -1880,6 +1909,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public int getTempHumidityMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
     public void deleteTempHumidityMeasurements(SQLiteDatabase db, int channelId) {
@@ -1940,6 +1974,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public int getTemperatureMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
     public void deleteTemperatureMeasurements(SQLiteDatabase db, int channelId) {
@@ -2006,6 +2045,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public int getImpulseCounterMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
     public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(

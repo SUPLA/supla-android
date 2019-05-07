@@ -42,6 +42,8 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+
+import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     private LineDataSet lineDataSet;
     ArrayList<ILineDataSet> lineDataSets;
     ArrayList<Entry> lineEntries;
+    private Double downloadProgress;
 
     public enum ChartType {
         Bar_Minutely,
@@ -211,7 +214,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         combinedChart.getAxisLeft().setDrawLabels(false);
         combinedChart.getLegend().setEnabled(false);
 
-        setUnit(getUnit());
+        updateDescription();
 
         SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -357,7 +360,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             db.close();
         }
 
-        setUnit(getUnit());
+        updateDescription();
 
         PieDataSet set = new PieDataSet(entries, "");
         set.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -378,24 +381,44 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         moveToEnd(20, 1000);
     }
 
+    private void updateDescription() {
+        String description = "";
+
+        if (downloadProgress != null) {
+            description =
+                    context.getResources().getString(R.string.retrieving_data_from_the_server);
+            description += Integer.toString(downloadProgress.intValue())+ "% ";
+        }
+
+        if (unit != null) {
+            if (description.length() > 0) {
+                description += " | ";
+            }
+            description+=unit;
+        }
+
+        if (combinedChart !=null) {
+            Description desc = combinedChart.getDescription();
+            desc.setText(description);
+            combinedChart.setDescription(desc);
+            combinedChart.invalidate();
+        }
+
+        if (pieChart!=null) {
+            Description desc = pieChart.getDescription();
+            desc.setText(description);
+            pieChart.setDescription(desc);
+            combinedChart.invalidate();
+        }
+    }
+
     public String getUnit() {
         return unit;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
-
-        if (combinedChart !=null) {
-            Description desc = combinedChart.getDescription();
-            desc.setText(unit == null ? "" : unit);
-            combinedChart.setDescription(desc);
-        }
-
-        if (pieChart!=null) {
-            Description desc = pieChart.getDescription();
-            desc.setText(unit == null ? "" : unit);
-            pieChart.setDescription(desc);
-        }
+        updateDescription();
     }
 
     public long getMinTimestamp() {
@@ -474,4 +497,13 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return false;
     }
 
+    public void setDownloadProgress(Double downloadProgress) {
+        this.downloadProgress = downloadProgress;
+        updateDescription();
+    }
+
+    public Double getDownloadProgress() {
+
+        return downloadProgress;
+    }
 }

@@ -227,13 +227,20 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         icProgress.setVisibility(VISIBLE);
+        chartHelper.setDownloadProgress(0d);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         icProgress.setVisibility(INVISIBLE);
+        chartHelper.setDownloadProgress(null);
         chartHelper.load(getRemoteId());
         channelExtendedDataToViews(false);
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+        chartHelper.setDownloadProgress(progress);
     }
 
     @Override

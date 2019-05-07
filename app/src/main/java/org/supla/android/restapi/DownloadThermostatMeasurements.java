@@ -41,6 +41,11 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getThermostatMeasurementTimestamp(getChannelId(), false);
     }
 
+    @Override
+    protected int getLocalTotalCount() {
+        return getMeasurementsDbH().getThermostatMeasurementTotalCount(getChannelId());
+    }
+
     protected void EraseMeasurements(SQLiteDatabase db) {
         getMeasurementsDbH().deleteThermostatMeasurements(db, getChannelId());
     }
