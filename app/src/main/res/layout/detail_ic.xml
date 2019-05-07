@@ -165,14 +165,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/total_cost"
-                android:textSize="8sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/ictv_TotalCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10 EUR"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

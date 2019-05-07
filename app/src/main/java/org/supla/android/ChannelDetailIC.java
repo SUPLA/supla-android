@@ -29,10 +29,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
-
 import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -146,27 +144,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
-            long minTS = mDBH.getImpulseCounterMeasurementTimestamp(channel.getChannelId(),
-                    true);
-
             double currentConsumption = 0;
 
-            if (minTS == 0) {
-                currentConsumption = 1;
-            } else {
-                Calendar now = Calendar.getInstance();
-                now.setTime(new Date());
-
-                Calendar minDate = Calendar.getInstance();
-                minDate.setTime(new Date(minTS*1000));
-
-                if (minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
-                        && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
-                    currentConsumption = 1;
-                }
-            }
-
-            if (currentConsumption == 1) {
+            if (mDBH.impulseCounterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = ic.getCalculatedValue();
             } else {
                 double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
@@ -175,7 +155,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
                         channel.getChannelId());
                 currentConsumption = v0-v1;
             }
-
 
             tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
                     currentConsumption * ic.getPricePerUnit()));

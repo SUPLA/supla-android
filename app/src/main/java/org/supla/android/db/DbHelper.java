@@ -33,7 +33,6 @@ import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
-import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
@@ -1630,7 +1629,7 @@ public class DbHelper extends SQLiteOpenHelper {
         double result = 0;
 
         String[] projection = {
-                "SUM("+colValue+") "+colValue
+                "SUM("+colValue+")"
         };
 
         String selection = colChannelId
@@ -1667,7 +1666,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (c.getCount() > 0) {
             c.moveToFirst();
-            result = c.getDouble(c.getColumnIndex(colValue));
+            result = c.getDouble(0);
         }
 
         c.close();
@@ -1683,6 +1682,21 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID,
                 SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE,
                  monthOffset, channelId);
+    }
+
+    public double getLastElectricityMeterMeasurementValue(int monthOffset,
+                                                        int channelId) {
+        return getLastMeasurementValue(SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME,
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID,
+                "IFNULL("
+                        +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE
+                        + ", 0) + IFNULL("
+                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE
+                        + ",0) + IFNULL("
+                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
+                        +",0)",
+                monthOffset, channelId);
     }
 
     private int getMeasurementTimestamp(String tableName, String colTimestamp,
@@ -1729,12 +1743,37 @@ public class DbHelper extends SQLiteOpenHelper {
         return total;
     }
 
+    private boolean timestampStartsWithTheCurrentMonth(long TS) {
+        if (TS == 0) {
+            return true;
+        } else {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+
+            Calendar minDate = Calendar.getInstance();
+            minDate.setTime(new Date(TS*1000));
+
+            if (minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                    && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
 
         return getMeasurementTimestamp(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public boolean electricityMeterMeasurementsStartsWithTheCurrentMonth(int channelId) {
+        long minTS = getElectricityMeterMeasurementTimestamp(channelId,
+                true);
+        return timestampStartsWithTheCurrentMonth(minTS);
     }
 
     public int getElectricityMeterMeasurementTotalCount(int channelId) {
@@ -2045,6 +2084,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
+        long minTS = getImpulseCounterMeasurementTimestamp(channelId,
+                true);
+        return timestampStartsWithTheCurrentMonth(minTS);
     }
 
     public int getImpulseCounterMeasurementTotalCount(int channelId) {

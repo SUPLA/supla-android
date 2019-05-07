@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
@@ -35,7 +36,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 
@@ -43,6 +43,8 @@ import org.supla.android.charts.ElectricityChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.DbHelper;
+import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
@@ -59,9 +61,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Integer phase;
 
     private TextView tvTotalForwardActiveEnergy;
-    private TextView tvTotalReverseActiveEnergy;
-    private TextView tvTotalForwardReactiveEnergy;
-    private TextView tvTotalReverseReactiveEnergy;
+    private TextView tvCurrentConsumption;
+    private TextView tvCurrentCost;
+    private TextView tvTotalCost;
 
     private TextView tvFreq;
     private TextView tvVoltage;
@@ -76,6 +78,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private TextView tvPhaseForwardReactiveEnergy;
     private TextView tvPhaseReverseReactiveEnergy;
 
+    private ImageView emImgIcon;
     private TextView tvChannelTitle;
 
     private Button btnPhase1;
@@ -115,9 +118,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         phase = 1;
 
         tvTotalForwardActiveEnergy = findViewById(R.id.emtv_TotalForwardActiveEnergy);
-        tvTotalReverseActiveEnergy = findViewById(R.id.emtv_TotalReverseActiveEnergy);
-        tvTotalForwardReactiveEnergy = findViewById(R.id.emtv_TotalForwardRectiveEnergy);
-        tvTotalReverseReactiveEnergy = findViewById(R.id.emtv_TotalReverseRectiveEnergy);
+        tvCurrentConsumption = findViewById(R.id.emtv_CurrentConsumption);
+        tvCurrentCost = findViewById(R.id.emtv_CurrentCost);
+        tvTotalCost = findViewById(R.id.emtv_TotalCost);
 
         tvFreq = findViewById(R.id.emtv_Freq);
         tvVoltage = findViewById(R.id.emtv_Voltage);
@@ -132,6 +135,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tvPhaseForwardReactiveEnergy = findViewById(R.id.emtv_PhaseForwardRectiveEnergy);
         tvPhaseReverseReactiveEnergy = findViewById(R.id.emtv_PhaseReverseRectiveEnergy);
 
+        emImgIcon = findViewById(R.id.emimgIcon);
         tvChannelTitle = findViewById(R.id.emtv_ChannelTitle);
 
         btnPhase1 = findViewById(R.id.embtn_Phase1);
@@ -217,9 +221,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
     }
 
-    public void channelExtendedDataToViews() {
+    public void channelExtendedDataToViews(boolean setIcon) {
 
         Channel channel = (Channel) getChannelFromDatabase();
+
+        if (setIcon) {
+            emImgIcon.setBackgroundColor(Color.TRANSPARENT);
+            emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
+        }
 
         tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
@@ -231,9 +240,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         String empty = "----";
         tvTotalForwardActiveEnergy.setText(empty);
-        tvTotalReverseActiveEnergy.setText(empty);
-        tvTotalForwardReactiveEnergy.setText(empty);
-        tvTotalReverseReactiveEnergy.setText(empty);
+        tvCurrentConsumption.setText(empty);
+        tvCurrentCost.setText(empty);
+        tvTotalCost.setText(empty);
 
         tvFreq.setText(empty);
         tvVoltage.setText(empty);
@@ -257,10 +266,25 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             chartHelper.setPricePerUnit(em.getPricePerUnit());
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
+            double currentConsumption = 0;
+
+            DbHelper mDBH = new DbHelper(getContext(), true);
+
+            if (mDBH.electricityMeterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
+                currentConsumption = sum.getTotalForwardActiveEnergy();
+            } else {
+                double v0 = mDBH.getLastElectricityMeterMeasurementValue(0,
+                        channel.getChannelId());
+                double v1 = mDBH.getLastElectricityMeterMeasurementValue(-1,
+                        channel.getChannelId());
+                currentConsumption = v0-v1;
+            }
+
             tvTotalForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
-            tvTotalReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
-            tvTotalForwardReactiveEnergy.setText(format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
-            tvTotalReverseReactiveEnergy.setText(format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
+            tvCurrentConsumption.setText(String.format("%.2f kWh", currentConsumption));
+            tvCurrentCost.setText(String.format("%.2f "+em.getCurrency(),
+                    currentConsumption * em.getPricePerUnit()));
+            tvTotalCost.setText(String.format("%.2f "+em.getCurrency(), em.getTotalCost()));
 
             SuplaChannelElectricityMeterValue.Measurement m = em.getMeasurement(phase, 0);
             if (m!= null) {
@@ -294,7 +318,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
-        channelExtendedDataToViews();
+        channelExtendedDataToViews(true);
     }
 
     @Override
@@ -304,7 +328,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void OnChannelDataChanged() {
-        channelExtendedDataToViews();
+        channelExtendedDataToViews(false);
     }
 
     private void setBtnBackground(Button btn, int i) {
@@ -324,7 +348,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             showChart(v.getTag() == null);
         } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer)v.getTag();
-            channelExtendedDataToViews();
+            channelExtendedDataToViews(false);
         }
     }
 

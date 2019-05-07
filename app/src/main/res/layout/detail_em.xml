@@ -113,42 +113,42 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/em_reverse_active_energy"
+                android:text="@string/current_consumption"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/emtv_TotalReverseActiveEnergy"
+                android:id="@+id/emtv_CurrentConsumption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="09,0001 kWh"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/em_total_forward_reactive_energy"
+                android:text="@string/current_cost"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/emtv_TotalForwardRectiveEnergy"
+                android:id="@+id/emtv_CurrentCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="09,0001 kvar"
-                android:textSize="12sp" />
+                android:text="10 EUR"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/em_total_reverse_reactive_energy"
+                android:text="@string/total_cost"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/emtv_TotalReverseRectiveEnergy"
+                android:id="@+id/emtv_TotalCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="09,0001 kvar"
+                android:text="10 EUR"
                 android:textSize="12sp" />
 
         </LinearLayout>
