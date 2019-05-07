@@ -387,7 +387,10 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         if (downloadProgress != null) {
             description =
                     context.getResources().getString(R.string.retrieving_data_from_the_server);
-            description += Integer.toString(downloadProgress.intValue())+ "% ";
+            if (downloadProgress > 0) {
+                description += Integer.toString(downloadProgress.intValue())+ "%";
+            }
+            description += " ";
         }
 
         if (unit != null) {
