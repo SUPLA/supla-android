@@ -19,10 +19,12 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -42,7 +44,6 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
@@ -381,15 +382,27 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         moveToEnd(20, 1000);
     }
 
+    private void calculateDescPosition(Chart chart, Description desc) {
+        float x = chart.getWidth() -
+                chart.getViewPortHandler().offsetRight() - desc.getXOffset();
+        float y = chart.getHeight() - desc.getYOffset();
+
+        desc.setPosition(x, y);
+    }
+
     private void updateDescription() {
+        Resources r = context.getResources();
         String description = "";
+        String noData =  r.getString(R.string.no_chart_data_available);
 
         if (downloadProgress != null) {
             description =
-                    context.getResources().getString(R.string.retrieving_data_from_the_server);
+                    r.getString(R.string.retrieving_data_from_the_server);
             if (downloadProgress > 0) {
                 description += Integer.toString(downloadProgress.intValue())+ "%";
             }
+
+            noData = description;
             description += " ";
         }
 
@@ -403,14 +416,20 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         if (combinedChart !=null) {
             Description desc = combinedChart.getDescription();
             desc.setText(description);
+            calculateDescPosition(combinedChart, desc);
+
             combinedChart.setDescription(desc);
+            combinedChart.setNoDataText(noData);
             combinedChart.invalidate();
         }
 
         if (pieChart!=null) {
             Description desc = pieChart.getDescription();
             desc.setText(description);
+            calculateDescPosition(pieChart, desc);
+
             pieChart.setDescription(desc);
+            pieChart.setNoDataText(noData);
             combinedChart.invalidate();
         }
     }
