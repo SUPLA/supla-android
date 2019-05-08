@@ -43,7 +43,8 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
 
     @Override
     protected int getLocalTotalCount() {
-        return getMeasurementsDbH().getElectricityMeterMeasurementTotalCount(getChannelId());
+        return getMeasurementsDbH().getElectricityMeterMeasurementTotalCount(getChannelId(),
+                true);
     }
 
     protected void EraseMeasurements(SQLiteDatabase db) {

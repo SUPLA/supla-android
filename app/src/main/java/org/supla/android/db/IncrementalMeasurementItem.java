@@ -6,17 +6,20 @@ import org.json.JSONObject;
 public abstract class IncrementalMeasurementItem extends MeasurementItem {
     protected boolean Calculated;
     protected boolean Divided;
+    protected boolean Complement;
 
     public IncrementalMeasurementItem() {
         super();
         Calculated = false;
         Divided = false;
+        Complement = false;
     }
 
     public IncrementalMeasurementItem(IncrementalMeasurementItem src) {
         super(src);
         Calculated = src.Calculated;
         Divided = src.Divided;
+        Complement = src.Complement;
     }
 
     public boolean isCalculated() {
@@ -27,9 +30,17 @@ public abstract class IncrementalMeasurementItem extends MeasurementItem {
         return Divided;
     }
 
+    public boolean isComplement() {
+        return Complement;
+    }
+
     public abstract void AssignJSONObject(JSONObject obj) throws JSONException;
 
     public abstract void DivideBy(long div);
 
     public abstract void Calculate(IncrementalMeasurementItem item);
+
+    public void setComplement(boolean complement) {
+        Complement = complement;
+    }
 }

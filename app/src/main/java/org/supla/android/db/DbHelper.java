@@ -44,14 +44,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
+    private boolean measurements;
 
     public DbHelper(Context context, boolean measurements) {
         super(context, measurements ? M_DATABASE_NAME : DATABASE_NAME,
                 null, DATABASE_VERSION);
         this.context = context;
+        this.measurements = measurements;
         rdb = getReadableDatabase();
     }
 
@@ -62,7 +64,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void execSQL(SQLiteDatabase db, String sql) {
-        Trace.d("sql-statments", sql);
+        Trace.d("sql-statments/"+(measurements ? M_DATABASE_NAME : DATABASE_NAME), sql);
         db.execSQL(sql);
     }
 
@@ -322,6 +324,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED +
+                " INTEGER NOT NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT +
                 " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_EMLOG_TABLE);
@@ -333,6 +337,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED);
+
+        createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT);
 
         final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + "_unique_index ON "
@@ -367,7 +374,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE+", "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE+" "
-                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE+", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
                 + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 + " WHERE "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
@@ -439,6 +448,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
                 + " DOUBLE NOT NULL," +
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " INTEGER NOT NULL,"+
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
                 + " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_ICLOG_TABLE);
@@ -447,6 +458,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT);
 
         final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
                 + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + "_unique_index ON "
@@ -474,7 +488,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER+" "
                 + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+", "
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE+" "
-                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COMPLEMENT
                 + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
                 + " WHERE "
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
@@ -680,6 +696,18 @@ public class DbHelper extends SQLiteOpenHelper {
         createImpulseCounterLogView(db);
     }
 
+    private void upgradeToV11(SQLiteDatabase db) {
+        execSQL(db, "DROP VIEW " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+
+        createElectricityMeterLogTable(db);
+        createImpulseCounterLogTable(db);
+
+        createElectricityMeterLogView(db);
+        createImpulseCounterLogView(db);
+    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -696,33 +724,28 @@ public class DbHelper extends SQLiteOpenHelper {
 
             for (int nv = oldVersion; nv < newVersion; nv++) {
 
+                // Without "break" between cases
                 switch (nv) {
                     case 1:
                         upgradeToV2(db);
-                        break;
                     case 2:
                         upgradeToV3(db);
-                        break;
                     case 3:
                         upgradeToV4(db);
-                        break;
                     case 4:
                         upgradeToV5(db);
-                        break;
                     case 5:
                         upgradeToV6(db);
-                        break;
                     case 6:
                         upgradeToV7(db);
-                        break;
                     case 7:
                         upgradeToV8(db);
-                        break;
                     case 8:
                         upgradeToV9(db);
-                        break;
                     case 9:
                         upgradeToV10(db);
+                    case 10:
+                        upgradeToV11(db);
                 }
             }
         }
@@ -1723,12 +1746,14 @@ public class DbHelper extends SQLiteOpenHelper {
         return max;
     }
 
-    private int getTotalCount(String tableName, String colChannelId, int channelId) {
+    private int getTotalCount(String tableName, String colChannelId, int channelId,
+                              String andWhere) {
 
         String selection = "SELECT COUNT(*) FROM "
                 +tableName
                 +" WHERE "+colChannelId
-                +" = "+Integer.toString(channelId);
+                +" = "+Integer.toString(channelId)
+                +andWhere;
 
         int total = 0;
 
@@ -1741,6 +1766,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return total;
+    }
+
+    private int getTotalCount(String tableName, String colChannelId, int channelId) {
+        return getTotalCount(tableName, colChannelId, channelId, "");
     }
 
     private boolean timestampStartsWithTheCurrentMonth(long TS) {
@@ -1776,11 +1805,19 @@ public class DbHelper extends SQLiteOpenHelper {
         return timestampStartsWithTheCurrentMonth(minTS);
     }
 
-    public int getElectricityMeterMeasurementTotalCount(int channelId) {
-        return getTotalCount(SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME,
-                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID, channelId);
-    }
+    public int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement) {
 
+        String complementCondition = "";
+        if (withoutComplement) {
+            complementCondition = " AND " +
+                    SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT + " = 0";
+        }
+
+        return getTotalCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
+                channelId,
+                complementCondition);
+    }
 
     public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
@@ -1801,6 +1838,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT
         };
 
         String selection = SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
@@ -2092,9 +2130,18 @@ public class DbHelper extends SQLiteOpenHelper {
         return timestampStartsWithTheCurrentMonth(minTS);
     }
 
-    public int getImpulseCounterMeasurementTotalCount(int channelId) {
-        return getTotalCount(SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME,
-                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID, channelId);
+    public int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement) {
+
+        String complementCondition = "";
+
+        if (withoutComplement) {
+            complementCondition = " AND " +
+                    SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT + " = 0";
+        }
+
+        return getTotalCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId,
+                complementCondition);
     }
 
     public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(
@@ -2106,6 +2153,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER,
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE,
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
         };
 
         String selection = SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID

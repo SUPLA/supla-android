@@ -103,6 +103,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         cgroupLV.setOnDetailListener(this);
 
         DbH_ListView = new DbHelper(this);
+        new DbHelper(this, true); // For upgrade purposes
 
         RegisterMessageHandler();
         showMenuBar();

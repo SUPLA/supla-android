@@ -25,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
-import org.supla.android.db.DbHelper;
 
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
@@ -149,6 +148,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                             if (new_percent - percent >= 1d) {
                                 percent = new_percent;
                                 publishProgress(percent);
+                                //Trace.d(log_tag, "PERCENT: "+Double.toString(percent)
+                                // + " L:"+Integer.toString(LocalTotalCount)
+                                // + " R:"+Integer.toString(result.getTotalCount()));
                             }
                         }
 

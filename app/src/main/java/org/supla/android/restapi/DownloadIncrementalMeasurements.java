@@ -64,6 +64,9 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
                 }
 
                 for(int a=0;a<n;a++) {
+                    if (a<n-1) {
+                        citem.setComplement(true);
+                    }
                     addIncrementalMeasurement(db, citem);
                     citem.setTimestamp(citem.getTimestamp()-600);
                 }

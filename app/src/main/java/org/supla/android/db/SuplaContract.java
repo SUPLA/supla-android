@@ -203,6 +203,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
 
         public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
+        public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
 
     public static abstract class ElectricityMeterLogViewEntry implements BaseColumns {
@@ -217,6 +218,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE1_FAE = "phase1_fae";
         public static final String COLUMN_NAME_PHASE2_FAE = "phase2_fae";
         public static final String COLUMN_NAME_PHASE3_FAE = "phase3_fae";
+        public static final String COLUMN_NAME_COMPLEMENT = "complement";
 
     }
 
@@ -230,6 +232,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
         public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
+        public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
 
     public static abstract class ImpulseCounterLogViewEntry implements BaseColumns {
@@ -243,6 +246,7 @@ public class SuplaContract {
 
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
+        public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
 
     public static abstract class ThermostatLogEntry implements BaseColumns {

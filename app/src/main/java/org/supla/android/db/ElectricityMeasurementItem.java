@@ -168,6 +168,8 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         Calculated = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED)) > 0;
 
+        Complement = cursor.getInt(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT)) > 0;
     }
 
     public ContentValues getContentValues() {
@@ -206,6 +208,9 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
         values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
                 isCalculated() ? 1 : 0);
+
+        values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT,
+                isComplement() ? 1 : 0);
 
         return values;
     }
