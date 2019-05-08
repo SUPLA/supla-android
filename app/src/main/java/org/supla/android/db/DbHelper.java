@@ -1777,8 +1777,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public int getElectricityMeterMeasurementTotalCount(int channelId) {
-        return getTotalCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId);
+        return getTotalCount(SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME,
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
 
@@ -2093,8 +2093,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public int getImpulseCounterMeasurementTotalCount(int channelId) {
-        return getTotalCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId);
+        return getTotalCount(SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
     public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(

@@ -251,4 +251,12 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         return null;
     }
 
+    public double[] getTotalForwardActiveEnergyForAllPhases() {
+        double result[] = new double[3];
+        for(int a=0;a<3;a++) {
+            result[a] = getSummary(a+1).getTotalForwardActiveEnergy();
+        }
+        return result;
+    }
+
 }

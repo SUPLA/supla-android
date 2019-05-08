@@ -371,6 +371,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
                 tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalForwardReactiveEnergy()));
                 tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalReverseReactiveEnergy()));
+
+                chartHelper.setTotalForwardActiveEnergy(em.getTotalForwardActiveEnergyForAllPhases());
             }
         }
 

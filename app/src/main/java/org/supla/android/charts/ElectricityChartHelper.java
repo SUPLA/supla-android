@@ -40,8 +40,11 @@ import java.util.List;
 
 public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
+    private double totalForwardActiveEnergy[];
+
     public ElectricityChartHelper(Context context) {
         super(context);
+        totalForwardActiveEnergy = new double[]{0,0,0};
     }
 
     @Override
@@ -77,23 +80,9 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
 
-            float phase = (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
-
-            entries.add(new PieEntry(phase, res.getText(R.string.em_phase1)));
-
-            phase = (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE));
-
-            entries.add(new PieEntry(phase, res.getText(R.string.em_phase2)));
-
-            phase = (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
-
-            entries.add(new PieEntry(phase, res.getText(R.string.em_phase3)));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[0], res.getText(R.string.em_phase1)));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[1], res.getText(R.string.em_phase2)));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[2], res.getText(R.string.em_phase3)));
 
         } else {
 
@@ -145,4 +134,9 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         return result;
     }
 
+    public void setTotalForwardActiveEnergy(double[] totalForwardActiveEnergy) {
+        if (totalForwardActiveEnergy != null && totalForwardActiveEnergy.length == 3) {
+            this.totalForwardActiveEnergy = totalForwardActiveEnergy;
+        }
+    }
 }
