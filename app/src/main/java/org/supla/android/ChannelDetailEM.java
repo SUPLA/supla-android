@@ -46,6 +46,7 @@ import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.DbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
@@ -66,17 +67,29 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private TextView tvTotalCost;
 
     private TextView tvFreq;
+    private TextView tvlFreq;
     private TextView tvVoltage;
+    private TextView tvlVoltage;
     private TextView tvCurrent;
+    private TextView tvlCurrent;
     private TextView tvPowerActive;
+    private TextView tvlPowerActive;
     private TextView tvPowerReactive;
+    private TextView tvlPowerReactive;
     private TextView tvPowerApparent;
+    private TextView tvlPowerApparent;
     private TextView tvPowerFactor;
+    private TextView tvlPowerFactor;
     private TextView tvPhaseAngle;
+    private TextView tvlPhaseAngle;
     private TextView tvPhaseForwardActiveEnergy;
+    private TextView tvlPhaseForwardActiveEnergy;
     private TextView tvPhaseReverseActiveEnergy;
+    private TextView tvlPhaseReverseActiveEnergy;
     private TextView tvPhaseForwardReactiveEnergy;
+    private TextView tvlPhaseForwardReactiveEnergy;
     private TextView tvPhaseReverseReactiveEnergy;
+    private TextView tvlPhaseReverseReactiveEnergy;
 
     private ImageView emImgIcon;
     private TextView tvChannelTitle;
@@ -123,17 +136,29 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tvTotalCost = findViewById(R.id.emtv_TotalCost);
 
         tvFreq = findViewById(R.id.emtv_Freq);
+        tvlFreq = findViewById(R.id.emtv_lFreq);
         tvVoltage = findViewById(R.id.emtv_Voltage);
+        tvlVoltage = findViewById(R.id.emtv_lVoltage);
         tvCurrent = findViewById(R.id.emtv_Current);
+        tvlCurrent = findViewById(R.id.emtv_lCurrent);
         tvPowerActive = findViewById(R.id.emtv_PowerActive);
+        tvlPowerActive = findViewById(R.id.emtv_lPowerActive);
         tvPowerReactive = findViewById(R.id.emtv_PowerReactive);
+        tvlPowerReactive = findViewById(R.id.emtv_lPowerReactive);
         tvPowerApparent = findViewById(R.id.emtv_PowerApparent);
+        tvlPowerApparent = findViewById(R.id.emtv_lPowerApparent);
         tvPowerFactor = findViewById(R.id.emtv_PowerFactor);
+        tvlPowerFactor = findViewById(R.id.emtv_lPowerFactor);
         tvPhaseAngle = findViewById(R.id.emtv_PhaseAngle);
+        tvlPhaseAngle = findViewById(R.id.emtv_lPhaseAngle);
         tvPhaseForwardActiveEnergy = findViewById(R.id.emtv_PhaseForwardActiveEnergy);
+        tvlPhaseForwardActiveEnergy = findViewById(R.id.emtv_lPhaseForwardActiveEnergy);
         tvPhaseReverseActiveEnergy = findViewById(R.id.emtv_PhaseReverseActiveEnergy);
+        tvlPhaseReverseActiveEnergy = findViewById(R.id.emtv_lPhaseReverseActiveEnergy);
         tvPhaseForwardReactiveEnergy = findViewById(R.id.emtv_PhaseForwardRectiveEnergy);
+        tvlPhaseForwardReactiveEnergy = findViewById(R.id.emtv_lPhaseForwardRectiveEnergy);
         tvPhaseReverseReactiveEnergy = findViewById(R.id.emtv_PhaseReverseRectiveEnergy);
+        tvlPhaseReverseReactiveEnergy = findViewById(R.id.emtv_lPhaseReverseRectiveEnergy);
 
         emImgIcon = findViewById(R.id.emimgIcon);
         tvChannelTitle = findViewById(R.id.emtv_ChannelTitle);
@@ -219,6 +244,38 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         return format("%."+Integer.toString(precision)+"f kWh", energy);
     }
 
+    private void displayMeasurementDetail(long vars, int var, TextView tv1, TextView tv2) {
+        tv1.setVisibility((vars & var) > 0 ? VISIBLE : GONE);
+        tv2.setVisibility(tv1.getVisibility());
+    }
+
+    private void displayMeasurementDetails(long vars) {
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_FREQ,
+                tvFreq, tvlFreq);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_VOLTAGE,
+                tvVoltage, tvlVoltage);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_CURRENT,
+                tvCurrent, tvlCurrent);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_ACTIVE,
+                tvPowerActive, tvlPowerActive);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_REACTIVE,
+                tvPowerReactive, tvlPowerReactive);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_APPARENT,
+                tvPowerApparent, tvlPowerApparent);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_FACTOR,
+                tvPowerFactor, tvlPowerFactor);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_PHASE_ANGLE,
+                tvPhaseAngle, tvlPhaseAngle);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY,
+                tvPhaseForwardActiveEnergy, tvlPhaseForwardActiveEnergy);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY,
+                tvPhaseReverseActiveEnergy, tvlPhaseReverseActiveEnergy);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_FORWARD_REACTIVE_ENERGY,
+                tvPhaseForwardReactiveEnergy, tvlPhaseForwardReactiveEnergy);
+        displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_REACTIVE_ENERGY,
+                tvPhaseReverseReactiveEnergy, tvlPhaseReverseReactiveEnergy);
+    }
+
     public void channelExtendedDataToViews(boolean setIcon) {
 
         Channel channel = (Channel) getChannelFromDatabase();
@@ -255,11 +312,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tvPhaseForwardReactiveEnergy.setText(empty);
         tvPhaseReverseReactiveEnergy.setText(empty);
 
+        int vars = 0;
+
         if (cev != null
                 && cev.getExtendedValue() != null
                 && cev.getExtendedValue().ElectricityMeterValue != null) {
 
             SuplaChannelElectricityMeterValue em = cev.getExtendedValue().ElectricityMeterValue;
+            vars = em.getMeasuredValues();
             chartHelper.setCurrency(em.getCurrency());
             chartHelper.setPricePerUnit(em.getPricePerUnit());
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
@@ -313,6 +373,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalReverseReactiveEnergy()));
             }
         }
+
+        displayMeasurementDetails(vars);
     }
 
     public void setData(ChannelBase channel) {
