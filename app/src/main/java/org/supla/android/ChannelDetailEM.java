@@ -209,6 +209,16 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
     }
 
+    protected String getActiveEnergyFormattedString(double energy) {
+        int precision = 5;
+        if (energy >= 1000) {
+            precision = 3;
+        } else if (energy >= 10000) {
+            precision = 2;
+        }
+        return format("%."+Integer.toString(precision)+"f kWh", energy);
+    }
+
     public void channelExtendedDataToViews(boolean setIcon) {
 
         Channel channel = (Channel) getChannelFromDatabase();
@@ -268,7 +278,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 currentConsumption = v0-v1;
             }
 
-            tvTotalForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
+            tvTotalForwardActiveEnergy
+                    .setText(getActiveEnergyFormattedString(sum.getTotalForwardActiveEnergy()));
             tvCurrentConsumption.setText(String.format("%.2f kWh", currentConsumption));
             tvCurrentCost.setText(String.format("%.2f "+em.getCurrency(),
                     currentConsumption * em.getPricePerUnit()));
@@ -298,8 +309,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 sum = em.getSummary(phase);
                 tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
                 tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
-                tvPhaseForwardReactiveEnergy.setText(format("%.5f kvar", sum.getTotalForwardReactiveEnergy()));
-                tvPhaseReverseReactiveEnergy.setText(format("%.5f kvar", sum.getTotalReverseReactiveEnergy()));
+                tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalForwardReactiveEnergy()));
+                tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalReverseReactiveEnergy()));
             }
         }
     }
