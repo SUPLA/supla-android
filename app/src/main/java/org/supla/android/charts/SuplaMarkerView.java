@@ -22,6 +22,7 @@ import android.content.Context;
 import android.widget.TextView;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import org.supla.android.R;
 
@@ -53,6 +54,9 @@ public class SuplaMarkerView extends MarkerView {
     }
 
     protected String getTime(Entry e) {
+        if (e instanceof PieEntry) {
+            return ((PieEntry)e).getLabel();
+        }
         return helper.getFormattedValue(e.getX(), null);
     }
 

@@ -38,7 +38,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -214,6 +213,15 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return result;
     }
 
+    protected void setMarker(Chart chart) {
+        IMarker m = getMarker();
+        chart.setMarker(m);
+        chart.setDrawMarkers(m!=null);
+        if (m!=null && m instanceof MarkerView) {
+            ((MarkerView)m).setChartView(chart);
+        }
+    }
+
     public void loadCombinedChart(int channelId, ChartType ctype) {
 
         if (pieChart != null) {
@@ -335,12 +343,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             data.setData(new LineData(lineDataSets));
         }
 
-        IMarker m = getMarker();
-        combinedChart.setMarker(m);
-        combinedChart.setDrawMarkers(m!=null);
-        if (m!=null && m instanceof MarkerView) {
-            ((MarkerView)m).setChartView(combinedChart);
-        }
+        setMarker(combinedChart);
         combinedChart.setData(null);
 
         if (data.getDataSetCount() != 0) {
@@ -413,10 +416,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         updateDescription();
 
-        PieDataSet set = new PieDataSet(entries, "");
+        SuplaPieDataSet set = new SuplaPieDataSet(entries, "");
         set.setColors(ColorTemplate.MATERIAL_COLORS);
 
         PieData data = new PieData(set);
+        setMarker(pieChart);
         pieChart.setData(data);
         pieChart.invalidate();
     }

@@ -18,24 +18,19 @@ package org.supla.android.charts;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.graphics.Color;
-
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.List;
 
-public class SuplaBarDataSet extends BarDataSet {
-
-    boolean colorDependsOnTheValue;
-
-    public SuplaBarDataSet(List<BarEntry> yVals, String label) {
+public class SuplaPieDataSet extends PieDataSet {
+    public SuplaPieDataSet(List<PieEntry> yVals, String label) {
         super(yVals, label);
     }
 
     @Override
-    public BarEntry getEntryForIndex(int index) {
-        BarEntry result = null;
+    public PieEntry getEntryForIndex(int index) {
+        PieEntry result = null;
 
         try {
             result = super.getEntryForIndex(index);
@@ -43,29 +38,5 @@ public class SuplaBarDataSet extends BarDataSet {
         catch (IndexOutOfBoundsException exception) {result = null;};
 
         return result;
-    }
-
-    @Override
-    public int getColor(int index) {
-        if (colorDependsOnTheValue) {
-            BarEntry e = getEntryForIndex(index);
-
-            if (e!=null) {
-                return e.getY() >= 0 ?
-                        mColors.get(0 % mColors.size()) : mColors.get(1 % mColors.size());
-            }
-
-            return Color.GRAY;
-        }
-
-        return super.getColor(index);
-    }
-
-    public boolean isColorDependsOnTheValue() {
-        return colorDependsOnTheValue;
-    }
-
-    public void setColorDependsOnTheValue(boolean colorDependsOnTheValue) {
-        this.colorDependsOnTheValue = colorDependsOnTheValue;
     }
 }
