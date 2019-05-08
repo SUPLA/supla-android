@@ -200,9 +200,9 @@
     <string name="all_available_history">Cała dostępna historia</string>
     <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
     <string name="no_chart_data_available">Brak danych dla wykresu.</string>
-    <string name="comparsion_minmin">Porówanienie minuta do minuty</string>
-    <string name="comparsion_hourhour">Porówanienie godzina do godziny</string>
-    <string name="comparsion_dayday">Porówanienie dzień do dnia</string>
-    <string name="comparsion_monthmonth">Porówanienie miesiąc do miesiąca</string>
-    <string name="comparsion_yearyear">Porówanienie rok do roku</string>
+    <string name="comparsion_minmin">Porównanie minuta do minuty</string>
+    <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
+    <string name="comparsion_dayday">Porównanie dzień do dnia</string>
+    <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
+    <string name="comparsion_yearyear">Porównanie rok do roku</string>
 </resources>
