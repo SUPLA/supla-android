@@ -19,8 +19,8 @@ package org.supla.android;
  */
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,9 +42,8 @@ import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
         AdapterView.OnItemSelectedListener, View.OnClickListener {
@@ -60,6 +59,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImageView icImgIcon;
     private Spinner icSpinner;
     private ImageView ivGraph;
+    final Handler mHandler = new Handler();
+    private Timer timer1;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -88,19 +89,12 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
         icImgIcon = findViewById(R.id.icimgIcon);
 
-        Resources r = getResources();
+        chartHelper = new ImpulseCounterChartHelper(getContext());
+        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
+        chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item,
-                new String[]{
-                        r.getString(R.string.minutes),
-                        r.getString(R.string.hours),
-                        r.getString(R.string.days),
-                        r.getString(R.string.months),
-                        r.getString(R.string.years),
-                        r.getString(R.string.ranking_of_hours),
-                        r.getString(R.string.ranking_of_days),
-                        r.getString(R.string.ranking_of_months)});
+                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(10));
 
         icSpinner = findViewById(R.id.icSpinner);
         icSpinner.setAdapter(adapter);
@@ -109,10 +103,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         ivGraph = findViewById(R.id.icGraphImg);
         ivGraph.bringToFront();
         ivGraph.setOnClickListener(this);
-
-        chartHelper = new ImpulseCounterChartHelper(getContext());
-        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
-        chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
     }
 
     @Override
@@ -187,6 +177,32 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         onItemSelected(null, null,
                 icSpinner.getSelectedItemPosition(),
                 icSpinner.getSelectedItemId());
+
+        if (timer1 == null) {
+            timer1 = new Timer();
+            timer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            runDownloadTask();
+                        }
+                    };
+
+                    mHandler.post(r);
+                }
+            }, 0, 30000);
+        }
+    }
+
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+
+        if (timer1 != null) {
+            timer1.cancel();
+            timer1 = null;
+        }
     }
 
     private void runDownloadTask() {

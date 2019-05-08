@@ -30,8 +30,8 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.IMarker;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
@@ -48,12 +48,13 @@ import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
 
     protected String unit;
     protected Context context;
-    protected ChartType ctype = ChartType.Bar_Hourly;
+    protected ChartType ctype = ChartType.Bar_Minutely;
     protected CombinedChart combinedChart;
     protected PieChart pieChart;
     private long minTimestamp;
@@ -68,6 +69,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         Bar_Daily,
         Bar_Monthly,
         Bar_Yearly,
+        Bar_Comparsion_MinMin,
+        Bar_Comparsion_HourHour,
+        Bar_Comparsion_DayDay,
+        Bar_Comparsion_MonthMonth,
+        Bar_Comparsion_YearYear,
         Pie_HourRank,
         Pie_DayRank,
         Pie_MonthRank,
@@ -96,11 +102,24 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public boolean isPieChartType(ChartType chartType) {
-        switch (ctype) {
+        switch (chartType) {
             case Pie_HourRank:
             case Pie_DayRank:
             case Pie_MonthRank:
             case Pie_PhaseRank:
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isComparsionChartType(ChartType chartType) {
+        switch (chartType) {
+            case Bar_Comparsion_MinMin:
+            case Bar_Comparsion_HourHour:
+            case Bar_Comparsion_DayDay:
+            case Bar_Comparsion_MonthMonth:
+            case Bar_Comparsion_YearYear:
                 return true;
         }
 
@@ -189,8 +208,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return lineEntries;
     }
 
-    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
-        BarDataSet result = new BarDataSet(barEntries, label);
+    protected SuplaBarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        SuplaBarDataSet result = new SuplaBarDataSet(barEntries, label);
         result.setDrawValues(false);
         return result;
     }
@@ -222,21 +241,26 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         String DateFormat = "%Y-%m-%dT%H:%M:00.000";
         switch (ctype) {
             case Bar_Hourly:
+            case Bar_Comparsion_HourHour:
                 DateFormat = "%Y-%m-%dT%H:00:00.000";
                 spf = new SimpleDateFormat("yyyy-MM-dd HH");
                 break;
             case Bar_Daily:
+            case Bar_Comparsion_DayDay:
                 DateFormat = "%Y-%m-%dT00:00:00.000";
                 spf = new SimpleDateFormat("yyyy-MM-dd");
                 break;
             case Bar_Monthly:
+            case Bar_Comparsion_MonthMonth:
                 DateFormat = "%Y-%m-01T00:00:00.000";
                 spf = new SimpleDateFormat("yyyy MMM");
                 break;
             case Bar_Yearly:
+            case Bar_Comparsion_YearYear:
                 DateFormat = "%Y-01-01T00:00:00.000";
                 spf = new SimpleDateFormat("yyyy");
                 break;
+
         }
 
         lineDataSets = new ArrayList<ILineDataSet>();
@@ -272,8 +296,31 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             db.close();
         }
 
+        if (barEntries.size() > 0 && isComparsionChartType(ctype)) {
+            for(int a=barEntries.size()-1;a>0;a--) {
+
+                BarEntry e1 = barEntries.get(a);
+                BarEntry e2 = barEntries.get(a-1);
+                e1.setVals(new float[] {e1.getY() - e2.getY()});
+                barEntries.set(a, e1);
+            }
+
+            barEntries.remove(0);
+        }
+
         if (barEntries.size() > 0) {
-            BarDataSet barDataSet = newBarDataSetInstance(barEntries, "");
+            SuplaBarDataSet barDataSet = newBarDataSetInstance(barEntries, "");
+            if (isComparsionChartType(ctype)) {
+                barDataSet.setColorDependsOnTheValue(true);
+
+                Resources r = context.getResources();
+
+                List<Integer> Colors = new ArrayList<Integer>(1);
+                Colors.add(r.getColor(R.color.chart_color_value_positive));
+                Colors.add(r.getColor(R.color.chart_color_value_negative));
+                barDataSet.setColors(Colors);
+            }
+
             barDataSets.add(barDataSet);
         }
 
@@ -288,9 +335,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             data.setData(new LineData(lineDataSets));
         }
 
-        combinedChart.setMarker(getMarker());
-        combinedChart.setDrawMarkers(combinedChart.getMarker()!=null);
-
+        IMarker m = getMarker();
+        combinedChart.setMarker(m);
+        combinedChart.setDrawMarkers(m!=null);
+        if (m!=null && m instanceof MarkerView) {
+            ((MarkerView)m).setChartView(combinedChart);
+        }
         combinedChart.setData(null);
 
         if (data.getDataSetCount() != 0) {
@@ -459,6 +509,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             case Bar_Daily:
             case Bar_Monthly:
             case Bar_Yearly:
+            case Bar_Comparsion_MinMin:
+            case Bar_Comparsion_HourHour:
+            case Bar_Comparsion_DayDay:
+            case Bar_Comparsion_MonthMonth:
+            case Bar_Comparsion_YearYear:
                 loadCombinedChart(channelId, ctype);
                 break;
             case Pie_HourRank:
@@ -471,32 +526,107 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     }
 
+    public String[] getSpinnerItems(int limit) {
+
+        if (limit <=0 || limit > 14) {
+            limit = 14;
+        }
+
+        String[] result = new String[limit];
+        Resources r = context.getResources();
+
+        for(int a=0;a<limit;a++) {
+            switch (a) {
+                case 0:
+                    result[a] = r.getString(R.string.minutes);
+                    break;
+                case 1:
+                    result[a] = r.getString(R.string.hours);
+                    break;
+                case 2:
+                    result[a] = r.getString(R.string.days);
+                    break;
+                case 3:
+                    result[a] = r.getString(R.string.months);
+                    break;
+                case 4:
+                    result[a] = r.getString(R.string.years);
+                    break;
+                case 5:
+                    result[a] = r.getString(R.string.comparsion_minmin);
+                    break;
+                case 6:
+                    result[a] = r.getString(R.string.comparsion_hourhour);
+                    break;
+                case 7:
+                    result[a] = r.getString(R.string.comparsion_dayday);
+                    break;
+                case 8:
+                    result[a] = r.getString(R.string.comparsion_monthmonth);
+                    break;
+                case 9:
+                    result[a] = r.getString(R.string.comparsion_yearyear);
+                    break;
+                case 10:
+                    result[a] = r.getString(R.string.ranking_of_hours);
+                    break;
+                case 11:
+                    result[a] = r.getString(R.string.ranking_of_days);
+                    break;
+                case 12:
+                    result[a] = r.getString(R.string.ranking_of_months);
+                    break;
+                case 13:
+                    result[a] = r.getString(R.string.consumption_acording_to_phases);
+                    break;
+            }
+
+        }
+
+        return result;
+    }
+
     public void load(int channelId, int chartTypeIdx) {
         ElectricityChartHelper.ChartType ctype = ElectricityChartHelper.ChartType.Bar_Minutely;
         switch (chartTypeIdx) {
             case 1:
-                ctype = ElectricityChartHelper.ChartType.Bar_Hourly;
+                ctype = ChartType.Bar_Hourly;
                 break;
             case 2:
-                ctype = ElectricityChartHelper.ChartType.Bar_Daily;
+                ctype = ChartType.Bar_Daily;
                 break;
             case 3:
-                ctype = ElectricityChartHelper.ChartType.Bar_Monthly;
+                ctype = ChartType.Bar_Monthly;
                 break;
             case 4:
-                ctype = ElectricityChartHelper.ChartType.Bar_Yearly;
+                ctype = ChartType.Bar_Yearly;
                 break;
             case 5:
-                ctype = ElectricityChartHelper.ChartType.Pie_HourRank;
+                ctype = ChartType.Bar_Comparsion_MinMin;
                 break;
             case 6:
-                ctype = ElectricityChartHelper.ChartType.Pie_DayRank;
+                ctype = ChartType.Bar_Comparsion_HourHour;
                 break;
             case 7:
-                ctype = ElectricityChartHelper.ChartType.Pie_MonthRank;
+                ctype = ChartType.Bar_Comparsion_DayDay;
                 break;
             case 8:
-                ctype = ElectricityChartHelper.ChartType.Pie_PhaseRank;
+                ctype = ChartType.Bar_Comparsion_MonthMonth;
+                break;
+            case 9:
+                ctype = ChartType.Bar_Comparsion_YearYear;
+                break;
+            case 10:
+                ctype = ChartType.Pie_HourRank;
+                break;
+            case 11:
+                ctype = ChartType.Pie_DayRank;
+                break;
+            case 12:
+                ctype = ChartType.Pie_MonthRank;
+                break;
+            case 13:
+                ctype = ChartType.Pie_PhaseRank;
                 break;
         }
 

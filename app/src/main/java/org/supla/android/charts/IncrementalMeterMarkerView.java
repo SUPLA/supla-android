@@ -19,16 +19,10 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
-import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
 
-import org.supla.android.R;
-
-public class IncrementalMeterMarkerView extends ChartMarkerView {
+public class IncrementalMeterMarkerView extends SuplaMarkerView {
 
     public IncrementalMeterMarkerView(IncrementalMeterChartHelper helper, Context context,
                                       int layoutResource) {

@@ -76,8 +76,8 @@ public class ThermostatChartHelper extends ChartHelper {
     }
 
     @Override
-    protected BarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
-        BarDataSet result = super.newBarDataSetInstance(barEntries, label);
+    protected SuplaBarDataSet newBarDataSetInstance(ArrayList<BarEntry> barEntries, String label) {
+        SuplaBarDataSet result = super.newBarDataSetInstance(barEntries, label);
 
         Resources res = context.getResources();
         result.setStackLabels(new String[]{res.getString(R.string.hp_room_temperature)});

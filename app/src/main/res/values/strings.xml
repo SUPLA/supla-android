@@ -196,4 +196,9 @@
     <string name="all_available_history">All available history</string>
     <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
     <string name="no_chart_data_available">No chart data available.</string>
+    <string name="comparsion_minmin">Minute to minute comparison</string>
+    <string name="comparsion_hourhour">Hour to hour comparison</string>
+    <string name="comparsion_dayday">Day to day comparison</string>
+    <string name="comparsion_monthmonth">Month to month comparison</string>
+    <string name="comparsion_yearyear">Year to year comparison</string>
 </resources>

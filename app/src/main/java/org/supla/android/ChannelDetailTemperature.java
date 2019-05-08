@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,6 +44,8 @@ import org.supla.android.restapi.DownloadTemperatureMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChannelDetailTemperature extends DetailLayout implements
         SuplaRestApiClientTask.IAsyncResults, View.OnClickListener,
@@ -56,6 +59,8 @@ public class ChannelDetailTemperature extends DetailLayout implements
     private Spinner thSpinner;
     private ImageView ivGraph;
     private TextView tvTemperature;
+    final Handler mHandler = new Handler();
+    private Timer timer1;
 
     public ChannelDetailTemperature(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -188,6 +193,32 @@ public class ChannelDetailTemperature extends DetailLayout implements
         tvProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
         onSpinnerItemSelected();
+
+        if (timer1 == null) {
+            timer1 = new Timer();
+            timer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            runDownloadTask();
+                        }
+                    };
+
+                    mHandler.post(r);
+                }
+            }, 0, 30000);
+        }
+    }
+
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+
+        if (timer1 != null) {
+            timer1.cancel();
+            timer1 = null;
+        }
     }
 
     protected void onSpinnerItemSelected() {

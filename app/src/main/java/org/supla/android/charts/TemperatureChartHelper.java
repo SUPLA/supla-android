@@ -24,21 +24,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.github.mikephil.charting.components.IMarker;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class TemperatureChartHelper extends ChartHelper {
 
@@ -57,7 +54,7 @@ public class TemperatureChartHelper extends ChartHelper {
 
     @Override
     protected void addLineEntries(int n, Cursor c, float time, ArrayList<Entry> entries) {
-        if (entries.size() > 0 && time - entries.get(entries.size()-1).getX() > 1.5f) {
+        if (entries.size() > 0 && time - entries.get(entries.size() - 1).getX() > 1.5f) {
             entries = newLineEntries();
         }
 
@@ -109,7 +106,6 @@ public class TemperatureChartHelper extends ChartHelper {
 
     @Override
     protected IMarker getMarker() {
-        return new ChartMarkerView(this, context, R.layout.chart_marker);
+        return new SuplaMarkerView(this, context, R.layout.chart_marker);
     }
-
 }

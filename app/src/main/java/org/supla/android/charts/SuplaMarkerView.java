@@ -25,14 +25,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import org.supla.android.R;
 
-public class ChartMarkerView extends MarkerView {
+public class SuplaMarkerView extends MarkerView {
 
     protected ChartHelper helper;
     protected TextView tvTime;
     protected TextView tvValue2;
     protected TextView tvValue1;
 
-    public ChartMarkerView(ChartHelper helper, Context context,
+    public SuplaMarkerView(ChartHelper helper, Context context,
                            int layoutResource) {
         super(context, layoutResource);
         this.helper = helper;

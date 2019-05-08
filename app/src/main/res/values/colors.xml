@@ -31,8 +31,12 @@
     <color name="ic_chart_value">#00c2fc</color>
     <color name="chart_marker_background">#ffdd00</color>
     <color name="chart_marker_text">#000000</color>
+    <color name="chart_color_value_positive">#ec5598</color>
+    <color name="chart_color_value_negative">#55eca9</color>
 
     <color name="th_humidity">#00a0fc</color>
     <color name="th_temperature_fill_color">#fcf7ca</color>
     <color name="th_temperature_line_color">#fd4a4d</color>
+
+
 </resources>

@@ -154,29 +154,17 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         rlButtons1 = findViewById(R.id.emrlButtons1);
         rlButtons2 = findViewById(R.id.emrlButtons2);
 
-        Resources r = getResources();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item,
-                new String[]{
-                        r.getString(R.string.minutes),
-                        r.getString(R.string.hours),
-                        r.getString(R.string.days),
-                        r.getString(R.string.months),
-                        r.getString(R.string.years),
-                        r.getString(R.string.ranking_of_hours),
-                        r.getString(R.string.ranking_of_days),
-                        r.getString(R.string.ranking_of_months),
-                        r.getString(R.string.consumption_acording_to_phases)});
-
-        emSpinner = findViewById(R.id.emSpinner);
-        emSpinner.setAdapter(adapter);
-        emSpinner.setOnItemSelectedListener(this);
-
         chartHelper = new ElectricityChartHelper(getContext());
         chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.emCombinedChart));
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
         chartHelper.setUnit("kWh");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(0));
+
+        emSpinner = findViewById(R.id.emSpinner);
+        emSpinner.setAdapter(adapter);
+        emSpinner.setOnItemSelectedListener(this);
 
         ivGraph = findViewById(R.id.emGraphImg);
         ivGraph.bringToFront();
