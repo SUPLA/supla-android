@@ -75,7 +75,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         Bar_Comparsion_MonthMonth,
         Bar_Comparsion_YearYear,
         Pie_HourRank,
-        Pie_DayRank,
+        Pie_WeekdayRank,
         Pie_MonthRank,
         Pie_PhaseRank
     }
@@ -104,7 +104,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     public boolean isPieChartType(ChartType chartType) {
         switch (chartType) {
             case Pie_HourRank:
-            case Pie_DayRank:
+            case Pie_WeekdayRank:
             case Pie_MonthRank:
             case Pie_PhaseRank:
                 return true;
@@ -370,8 +370,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         String DateFormat = "2018-01-01T%H:00:00.000";
         switch (ctype) {
-            case Pie_DayRank:
-                DateFormat = "2018-01-%dT00:00:00.000";
+            case Pie_WeekdayRank:
+                DateFormat = "2018-01-%wT00:00:00.000";
                 spf = new SimpleDateFormat("EE");
                 break;
             case Pie_MonthRank:
@@ -517,7 +517,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 loadCombinedChart(channelId, ctype);
                 break;
             case Pie_HourRank:
-            case Pie_DayRank:
+            case Pie_WeekdayRank:
             case Pie_MonthRank:
             case Pie_PhaseRank:
                 loadPieChart(channelId, ctype);
@@ -571,7 +571,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                     result[a] = r.getString(R.string.ranking_of_hours);
                     break;
                 case 11:
-                    result[a] = r.getString(R.string.ranking_of_days);
+                    result[a] = r.getString(R.string.ranking_of_weekdays);
                     break;
                 case 12:
                     result[a] = r.getString(R.string.ranking_of_months);
@@ -620,7 +620,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
                 ctype = ChartType.Pie_HourRank;
                 break;
             case 11:
-                ctype = ChartType.Pie_DayRank;
+                ctype = ChartType.Pie_WeekdayRank;
                 break;
             case 12:
                 ctype = ChartType.Pie_MonthRank;

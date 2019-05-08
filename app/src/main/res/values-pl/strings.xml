@@ -188,7 +188,7 @@
     <string name="months">Miesiące</string>
     <string name="years">Lata</string>
     <string name="ranking_of_hours">Ranking godzin</string>
-    <string name="ranking_of_days">Ranking dni</string>
+    <string name="ranking_of_weekdays">Ranking dni tygodnia</string>
     <string name="ranking_of_months">Ranking miesięcy</string>
     <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
     <string name="temperature">Temperatura</string>
