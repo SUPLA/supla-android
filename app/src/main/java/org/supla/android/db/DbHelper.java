@@ -707,29 +707,37 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < newVersion) {
 
             for (int nv = oldVersion; nv < newVersion; nv++) {
-
-                // Without "break" between cases
                 switch (nv) {
                     case 1:
                         upgradeToV2(db);
+                        break;
                     case 2:
                         upgradeToV3(db);
+                        break;
                     case 3:
                         upgradeToV4(db);
+                        break;
                     case 4:
                         upgradeToV5(db);
+                        break;
                     case 5:
                         upgradeToV6(db);
+                        break;
                     case 6:
                         upgradeToV7(db);
+                        break;
                     case 7:
                         upgradeToV8(db);
+                        break;
                     case 8:
                         upgradeToV9(db);
+                        break;
                     case 9:
                         upgradeToV10(db);
+                        break;
                     case 10:
                         upgradeToV11(db);
+                        break;
                 }
             }
         }
