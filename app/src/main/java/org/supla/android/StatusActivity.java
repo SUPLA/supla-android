@@ -192,8 +192,7 @@ public class StatusActivity extends NavigationActivity {
     protected void OnRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if ( CurrentActivity == null
-                || !(CurrentActivity instanceof AddWizardActivity) ) {
+        if ( !(CurrentActivity instanceof AddWizardActivity) ) {
             showMain(this);
         }
 

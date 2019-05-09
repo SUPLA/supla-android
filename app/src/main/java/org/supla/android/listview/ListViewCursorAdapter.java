@@ -339,8 +339,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
             if ((collapsed & _collapsed) > 0) {
 
-                if (convertView == null
-                        || !(convertView instanceof  View)
+                if (!(convertView instanceof  View)
                         || convertView.getVisibility() != View.GONE) {
                     convertView = new View(context);
                     convertView.setVisibility(View.GONE);
@@ -349,8 +348,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                 return convertView;
             }
 
-            if ( convertView == null
-                    || !(convertView instanceof ChannelLayout)
+            if (!(convertView instanceof ChannelLayout)
                     || convertView.getVisibility() == View.GONE  ) {
                 convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
             }

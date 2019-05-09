@@ -219,7 +219,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         IMarker m = getMarker();
         chart.setMarker(m);
         chart.setDrawMarkers(m!=null);
-        if (m!=null && m instanceof MarkerView) {
+        if (m instanceof MarkerView) {
             ((MarkerView)m).setChartView(chart);
         }
     }

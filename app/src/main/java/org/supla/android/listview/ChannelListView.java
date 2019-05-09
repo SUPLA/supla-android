@@ -627,8 +627,7 @@ public class ChannelListView extends ListView {
 
             View v = getChildAt(i);
 
-            if (v != null
-                    && v instanceof ChannelLayout) {
+            if (v instanceof ChannelLayout) {
                 v.setBackgroundColor(color);
             }
 
@@ -652,8 +651,7 @@ public class ChannelListView extends ListView {
             View v = getChildAt(i - start);
 
 
-            if (v != null
-                    && v instanceof ChannelLayout
+            if (v instanceof ChannelLayout
                     && ((ChannelLayout) v).Slided() > 0) {
                 return true;
             }
