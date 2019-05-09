@@ -208,7 +208,7 @@ public class Channel extends ChannelBase {
 
         byte p = Value != null ? Value.getPercent() : 0;
 
-        if (p < 100 && getSubValueHi() == true)
+        if (p < 100 && getSubValueHi())
             p = 100;
 
         return p;

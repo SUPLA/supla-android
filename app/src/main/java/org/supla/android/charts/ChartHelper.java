@@ -659,11 +659,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
            return true;
         }
 
-        if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
-            return true;
-        }
-
-        return false;
+        return pieChart != null && pieChart.getVisibility() == View.VISIBLE;
     }
 
     public void setDownloadProgress(Double downloadProgress) {

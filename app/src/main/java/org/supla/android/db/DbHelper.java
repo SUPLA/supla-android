@@ -1782,13 +1782,10 @@ public class DbHelper extends SQLiteOpenHelper {
             Calendar minDate = Calendar.getInstance();
             minDate.setTime(new Date(TS*1000));
 
-            if (minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
-                    && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
-                return true;
-            }
+            return minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                    && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH);
         }
 
-        return false;
     }
 
     public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
