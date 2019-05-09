@@ -193,6 +193,8 @@
     <string name="comparsion_dayday">Ежедневное сравнение</string>
     <string name="comparsion_monthmonth">Сравнение месяца к месяцу</string>
     <string name="comparsion_yearyear">Сравнение в год к году</string>
+    <string name="channel_func_thermostat">Термостат</string>
+    <string name="channel_func_thermostat_hp_homeplus">Дом + обогреватель</string>
 
 
 </resources>
