@@ -191,7 +191,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
                     mHandler.post(r);
                 }
-            }, 0, 30000);
+            }, 0, 120000);
         }
     }
 

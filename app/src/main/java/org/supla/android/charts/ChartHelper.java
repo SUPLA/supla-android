@@ -47,6 +47,8 @@ import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
@@ -415,6 +417,17 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         updateDescription();
+
+        Collections.sort(entries, new Comparator<PieEntry>() {
+            @Override
+            public int compare(PieEntry p1, PieEntry p2) {
+                if (p1.getValue() > p2.getValue())
+                    return 1;
+                if (p1.getValue() < p2.getValue())
+                    return -1;
+                return 0;
+            }
+        });
 
         SuplaPieDataSet set = new SuplaPieDataSet(entries, "");
         set.setColors(ColorTemplate.MATERIAL_COLORS);

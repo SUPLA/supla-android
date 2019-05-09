@@ -207,7 +207,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
 
                     mHandler.post(r);
                 }
-            }, 0, 30000);
+            }, 0, 120000);
         }
     }
 

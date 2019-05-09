@@ -451,7 +451,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
                     mHandler.post(r);
                 }
-            }, 0, 30000);
+            }, 0, 120000);
         }
 
 
