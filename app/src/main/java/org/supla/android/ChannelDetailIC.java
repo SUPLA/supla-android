@@ -94,7 +94,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(10));
+                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(13));
 
         icSpinner = findViewById(R.id.icSpinner);
         icSpinner.setAdapter(adapter);
