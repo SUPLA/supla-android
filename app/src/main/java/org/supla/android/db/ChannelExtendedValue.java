@@ -94,17 +94,17 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
-                if (obj != null && obj instanceof SuplaChannelElectricityMeterValue) {
+                if (obj instanceof SuplaChannelElectricityMeterValue) {
                     ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
                 }
                 break;
             case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
-                if (obj != null && obj instanceof SuplaChannelImpulseCounterValue) {
+                if (obj instanceof SuplaChannelImpulseCounterValue) {
                     ExtendedValue.ImpulseCounterValue = (SuplaChannelImpulseCounterValue) obj;
                 }
                 break;
             case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
-                if (obj != null && obj instanceof SuplaChannelThermostatValue) {
+                if (obj instanceof SuplaChannelThermostatValue) {
                     ExtendedValue.ThermostatValue = (SuplaChannelThermostatValue) obj;
                 }
                 break;
