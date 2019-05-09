@@ -548,10 +548,12 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV2");
         createColorTable(db);
     }
 
     private void upgradeToV3(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV3");
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON
                 + " INTEGER NOT NULL default 0");
@@ -566,6 +568,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV4(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV4");
         execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME +
                 " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
 
@@ -598,10 +601,13 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV5(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV5");
         createChannelExtendedValueTable(db);
     }
 
     private void upgradeToV6(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV6");
+
         createElectricityMeterLogTable(db);
         createElectricityMeterLogView(db);
 
@@ -638,16 +644,19 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV7(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV7");
         createThermostatLogTable(db);
     }
 
     private void upgradeToV8(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV8");
         createUserIconsTable(db);
         execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
         createChannelView(db);
     }
 
     private void upgradeToV9(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV9");
         execSQL(db, "DROP TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME);
         execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -664,12 +673,14 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV10(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV10");
         execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
         createImpulseCounterLogTable(db);
         createImpulseCounterLogView(db);
     }
 
     private void upgradeToV11(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV11");
         execSQL(db, "DROP VIEW " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
         execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
