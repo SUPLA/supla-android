@@ -89,10 +89,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID);
     }
 
-    private void createChannelTable(SQLiteDatabase db, String suffix) {
+    private void createChannelTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE "
-                + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ChannelEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + " INTEGER NULL," +
@@ -114,11 +114,6 @@ public class DbHelper extends SQLiteOpenHelper {
         createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME,
                 SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID);
     }
-
-    private void createChannelTable(SQLiteDatabase db) {
-        createChannelTable(db, "");
-    }
-
 
     private void createChannelValueTable(SQLiteDatabase db) {
 
@@ -198,10 +193,10 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
     }
 
-    private void createColorTable(SQLiteDatabase db, String suffix) {
+    private void createColorTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE "
-                + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ColorListItemEntry.TABLE_NAME + " (" +
                 SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " INTEGER NOT NULL," +
@@ -216,15 +211,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP);
     }
 
-    private void createColorTable(SQLiteDatabase db) {
-        createColorTable(db, "");
-    }
-
-
-    private void createChannelGroupTable(SQLiteDatabase db, String suffix) {
+    private void createChannelGroupTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE "
-                + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ChannelGroupEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -244,13 +234,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID);
     }
 
-    private void createChannelGroupTable(SQLiteDatabase db) {
-        createChannelGroupTable(db, "");
-    }
+    private void createChannelGroupRelationTable(SQLiteDatabase db) {
 
-    private void createChannelGroupRelationTable(SQLiteDatabase db, String suffix) {
-
-        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " (" +
+        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelGroupRelationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
@@ -263,12 +249,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID);
     }
 
-    private void createChannelGroupRelationTable(SQLiteDatabase db) {
-        createChannelGroupRelationTable(db, "");
-    }
-
-
-    private void createChannelGroupValueView(SQLiteDatabase db, String suffix) {
+    private void createChannelGroupValueView(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNELGROUP_VALUE_VIEW =
                 "CREATE VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME + " AS " +
@@ -300,14 +281,10 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_CHANNELGROUP_VALUE_VIEW);
     }
 
-    private void createChannelGroupValueView(SQLiteDatabase db) {
-        createChannelGroupValueView(db, "");
-    }
-
-    private void createElectricityMeterLogTable(SQLiteDatabase db, String suffix) {
+    private void createElectricityMeterLogTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_EMLOG_TABLE = "CREATE TABLE " +
-                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + suffix + " (" +
+                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + " (" +
                 SuplaContract.ElectricityMeterLogEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
@@ -350,10 +327,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 +" )";
 
         execSQL(db, SQL_CREATE_INDEX);
-    }
-
-    private void createElectricityMeterLogTable(SQLiteDatabase db) {
-        createElectricityMeterLogTable(db, "");
     }
 
     private void createElectricityMeterLogView(SQLiteDatabase db) {
