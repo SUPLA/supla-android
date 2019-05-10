@@ -208,7 +208,7 @@ public class Channel extends ChannelBase {
 
         byte p = Value != null ? Value.getPercent() : 0;
 
-        if (p < 100 && getSubValueHi() == true)
+        if (p < 100 && getSubValueHi())
             p = 100;
 
         return p;
@@ -230,6 +230,19 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getSubValueHi() > 0;
     }
 
+    @Override
+    protected int imgActive(ChannelValue value) {
+
+        if (getOnLine()
+                && getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                && getRollerShutterPosition() >= 100) {
+            return 1;
+        }
+
+        return super.imgActive(value);
+    }
+
+    @Override
     public ImageId getImageIdx(WhichOne whichImage) {
         return super.getImageIdx(whichImage, Value);
     }

@@ -358,8 +358,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public static void showMain(Activity sender) {
 
-
-
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null

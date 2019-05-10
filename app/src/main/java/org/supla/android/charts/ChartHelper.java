@@ -219,7 +219,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         IMarker m = getMarker();
         chart.setMarker(m);
         chart.setDrawMarkers(m!=null);
-        if (m!=null && m instanceof MarkerView) {
+        if (m instanceof MarkerView) {
             ((MarkerView)m).setChartView(chart);
         }
     }
@@ -659,11 +659,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
            return true;
         }
 
-        if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
-            return true;
-        }
-
-        return false;
+        return pieChart != null && pieChart.getVisibility() == View.VISIBLE;
     }
 
     public void setDownloadProgress(Double downloadProgress) {
