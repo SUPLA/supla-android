@@ -1,0 +1,208 @@
+<resources>
+
+    <string name="feedback_title">Zaslať e-mail</string>
+    <string name="donate_title">Podporiť projekt</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=sk</string>
+
+    <string name="version">verzia</string>
+
+    <string name="feedback">Spätná väzba</string>
+    <string name="about">O programe</string>
+    <string name="settings">Nastavenia</string>
+    <string name="add_device">Pridať zariadenie</string>
+
+    <string name="status_connecting">Pripája sa...</string>
+    <string name="status_unknown_err">Neznáma chyba</string>
+    <string name="status_temporarily_unavailable">Služba je dočasne nedostupná</string>
+    <string name="status_bad_credentials">Nesprávne autentifikačné údaje</string>
+    <string name="status_climit_exceded">Prekročený limit klientskych aplikácií</string>
+    <string name="status_version_error">Nekompatibilná verzia servera</string>
+    <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  %1$s</string>
+    <string name="status_access_id_not_assigned">Toto zariadenie nemá priradený identifikátor prístupu. Prejdite na stránku %1$s a v záložke \"Smartfóny\" priraďte príslušný identifikátor.</string>
+    <string name="status_device_disabled">Zariadenie je vypnuté</string>
+    <string name="status_accessid_disabled">Identifikátor prístupu je vypnutý</string>
+
+    <string name="err_hostnotfound">Adresa servera nebola nájdená</string>
+    <string name="err_cantconnecttohost">Nedá sa spojiť so serverom.</string>
+
+    <string name="channel_func_gateway">Bránička</string>
+    <string name="channel_func_gate">Brána</string>
+    <string name="channel_func_garagedoor">Garážová brána</string>
+    <string name="channel_func_door">Dvere</string>
+    <string name="channel_func_rollershutter">Roleta</string>
+    <string name="channel_func_powerswith">Zapínač napájania</string>
+    <string name="channel_func_lightswith">Zapínač svetla</string>
+    <string name="channel_func_thermometer">Teplomer</string>
+    <string name="channel_func_humidity">Vlhkosť</string>
+    <string name="channel_func_humidityandtemperature">Teplota a vlhkosť</string>
+    <string name="channel_func_windsensor">Rýchlosť vetra</string>
+    <string name="channel_func_pressuresensor">Snímač tlaku</string>
+    <string name="channel_func_rainsensor">Meranie zrážok</string>
+    <string name="channel_func_weightsensor">Závažia</string>
+    <string name="channel_func_dimmer">Stmievač</string>
+    <string name="channel_func_rgblighting">RGB osvetlenie</string>
+    <string name="channel_func_dimmerandrgblighting">Stmievač a RGB osvetlenie</string>
+    <string name="channel_func_noliquidsensor">Snímač prítomnosti kvapaliny</string>
+    <string name="channel_func_gatewayopeningsensor">Snímač otvorenia bráničky</string>
+    <string name="channel_func_gateopeningsensor">Snímač otvorenia brány</string>
+    <string name="channel_func_garagedooropeningsensor">Snímač otvorenia garážovej brány</string>
+    <string name="channel_func_dooropeningsensor">Snímač otvorenia dverí</string>
+    <string name="channel_func_rsopeningsensor">Snímač otvorenia roliet</string>
+    <string name="channel_func_depthsensor">Snímač hĺbky</string>
+    <string name="channel_func_distancesensor">Snímač vzdialenosti</string>
+    <string name="channel_func_windowopeningsensor">Snímač otvorenia okna</string>
+    <string name="channel_func_mailsensor">Snímač pošty</string>
+
+    <string name="rgb_brightness">Jas</string>
+    <string name="rgb_color">Farba</string>
+    <string name="rgb_state">Stav</string>
+
+    <string name="channel_btn_open">Otvoriť</string>
+    <string name="channel_btn_openclose">Otvoriť Zatvoriť</string>
+    <string name="channel_btn_on">Zapnúť</string>
+    <string name="channel_btn_off">Vypnúť</string>
+
+    <string name="event_openedthegateway">otvoril bráničku</string>
+    <string name="event_openedclosedthegate">otvoril / zatvoril bránu</string>
+    <string name="event_openedclosedthegatedoors">otvoril / zatvoril garážové dvere</string>
+    <string name="event_openedthedoor">otvoril dvere</string>
+    <string name="event_openedcloserollershutter">otvoril / zatvoril roletu</string>
+    <string name="event_poweronoff">zapol / vypol napájanie</string>
+    <string name="event_turnedthelightonoff">zapol / vypol svetlo</string>
+
+    <string name="server_address">ADRESA SERVERA</string>
+    <string name="access_id">IDENTIFIKÁTOR PRÍSTUPU</string>
+    <string name="password">HESLO</string>
+    <string name="email">EMAILOVÁ ADRESA</string>
+    <string name="advanced_settings">Pokročilé nastavenia</string>
+    <string name="create_account"><u>Vytvoriť účet</u></string>
+
+    <string name="about_app">This program is free software; you can redistribute it and/or\n
+ modify it under the terms of the GNU General Public License\n
+ as published by the Free Software Foundation; either version 2\n
+ of the License, or (at your option) any later version.\n\n
+
+ This program is distributed in the hope that it will be useful,\n
+ but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+ GNU General Public License for more details.\n\n
+
+ You should have received a copy of the GNU General Public License\n
+ along with this program; if not, write to the Free Software\n
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    </string>
+
+    <string name="rate_msg">Páči sa vám táto aplikácia? Venujte chvíľku a ohodnoťte ju. Ďakujeme za vašu podporu!</string>
+    <string name="rate_now">Ohodnotiť teraz</string>
+    <string name="rate_later">Neskôr</string>
+    <string name="rate_no_thanks">Nie, ďakujem</string>
+    <string name="rs_percent_caption">Percento zatvorenia</string>
+    <string name="calibration">[Kalibrácia]</string>
+
+    <string name="add_wizard_is_not_available">Sprievodca pridaním je k dispozícii iba vtedy, keď bolo nadviazané spojenie so serverom na základe e-mailovej adresy zadanej v nastaveniach!</string>
+    <string name="device_registration_disabled">Registrácia I / O zariadení je momentálne vypnutá. Ak chcete pokračovať, prejdite na stránku %1$s a v záložke „Moja SUPLA“ zapnite pridávanie zariadení.</string>
+
+    <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
+    <string name="wizard_step1_txt2">Pokračujte stlačením <b>Ďalej</ b>.</string>
+    <string name="next">Ďalej</string>
+    <string name="start">ŠTART</string>>
+
+    <string name="wizard_step2_txt1">Zadajte heslo vašej WiFi siete, ktorej názov je</string>
+    <string name="wizard_step2_txt3">*) Sieť %1$s bude používať vykonávacie zariadenie na pripojenie k serveru.</string>
+    <string name="wizard_remember_passwd">Zapamätať si heslo</string>
+
+    <string name="wizard_step3_txt1">Pripojte vaše vykonávacie zariadenie k el. napätiu. Zariadenie musí byť predvolene spustené v konfiguračnom režime, čo signalizuje blikanie kontrolky stavu nasledujúcim spôsobom</string>
+    <string name="wizard_step3_txt2">Ak zariadenie po pripojení k el. napätiu nie je spustené v konfiguračnom režime, stlačte a na aspoň 5 sekúnd podržte tlačidlo <b>CONFIG</b>.</string>
+    <string name="wizard_step3_txt3">Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.</string>
+
+    <string name="wizard_server_compat_error">Server, s ktorým bolo nadviazané spojenie, túto funkciu nepodporuje!</string>
+    <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez WiFi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
+    <string name="wizard_wifi_error">WiFi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
+    <string name="wizard_addnetwork_error">Nedá sa pridať konfigurácia WiFi siete!</string>
+    <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej WiFi sieti!</string>
+    <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania WiFi sietí!</string>
+    <string name="wizard_connect_timeout">Bola prekročená lehota čakania na nadviazanie spojenia s vykonávacím zariadením!</string>
+    <string name="wizard_configure_timeout">Bola prekročená lehota čakania na dokončenie konfigurácie zariadenia!</string>
+    <string name="wizard_reconnect_timeout">Bola prekročená lehota čakania na návrat do základnej WiFi siete!</string>
+    <string name="device_reg_request_timeout">Bola prekročená lehota čakania na informácie o dostupnosti registrácie zariadení!</string>
+
+    <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať Wi-Fi site. Preto skontrolujte, že je GPS spustené.</string>
+
+
+    <string name="wizard_done">Konfigurácia zariadenia bola úspešne dokončená :)</string>
+    <string name="wizard_iodev_data">Údaje zariadenia</string>
+    <string name="wizard_iodev_name">Názov</string>
+    <string name="wizard_iodev_laststate">Predchádzajúci status</string>
+
+    <string name="wizard_result_param_error">Nesprávne vstupné parametre!</string>
+    <string name="wizard_result_compat_error">Pripojené zariadenie nie je kompatibilné s týmto sprievodcom!</string>
+    <string name="wizard_result_conn_error">Nedá sa pripojiť k tomuto zariadeniu!</string>
+    <string name="wizard_result_failed">Konfigurácia zlyhala!</string>
+    <string name="wizard_not_enought_permissions">Aplikácia nemá dostatočné oprávnenia. V systémových nastaveniach prejdite na správu aplikácií. Následne nájdite aplikáciu %1$s a povoľte všetky oprávnenia, ktoré aplikácia vyžaduje.</string>
+    <string name="help">Pomoc</string>
+    <string name="channel_func_staircasetimer">Schodiskový automat</string>
+
+    <string name="channel_func_electricitymeter">Elektromer</string>
+    <string name="channel_func_gasmeter">Plynomer</string>
+    <string name="channel_func_watermeter">Vodomer</string>
+
+    <string name="em_total_forward_avtive_energy">Činná energia prijatá</string>
+    <string name="em_reverse_active_energy">Činná energia odovzdaná</string>
+    <string name="em_total_forward_reactive_energy">Jalová energia prijatá</string>
+    <string name="em_total_reverse_reactive_energy">Jalová energia odovzdaná</string>
+    <string name="em_frequency">Frekvencia</string>
+    <string name="em_voltage">Napätie</string>
+    <string name="em_current">Intenzita</string>
+    <string name="em_power_active">Činný výkon</string>
+    <string name="em_power_reactive">Jalový výkon</string>
+    <string name="em_power_factor">Účinník</string>
+    <string name="em_phase_angle">Fázový uhol</string>
+    <string name="em_power_apparent">Zdanlivý výkon</string>
+    <string name="em_phase1">Fáza 1</string>
+    <string name="em_phase2">Fáza 2</string>
+    <string name="em_phase3">Fáza 3</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_hp_homeplus">Špirála Home+</string>
+    <string name="hp_on">ZAPNUTÉ</string>
+    <string name="hp_off">VYPNUTÉ</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Teplota v miestnosti</string>
+    <string name="hp_cfg_turbo_time">Trvanie režimu TURBO</string>
+    <string name="hp_cfg_water_max">Maximálna teplota vody</string>
+    <string name="hp_cfg_eco_reduction">Zníženie teploty v režime EKO</string>
+    <string name="hp_cfg_temp_comfort">Komfortná teplota v režime AUTO</string>
+    <string name="hp_cfg_temp_eco">EKO teplota v režime AUTO</string>
+    <string name="total_cost">Celkové náklady</string>
+    <string name="current_cost">Náklady v aktuálnom mesiaci</string>
+    <string name="current_consumption">Spotreba v aktuálnom mesiaci</string>
+    <string name="impulses_count">Počet impulzov</string>
+    <string name="meter_value">Stav počítadla</string>
+    <string name="channel_func_impulsecounter">Počítadlo impulzov</string>
+    <string name="minutes">Minúty</string>
+    <string name="hours">Hodiny</string>
+    <string name="days">Dni</string>
+    <string name="months">Mesiace</string>
+    <string name="years">Roky</string>
+    <string name="ranking_of_hours">Rebríček hodín</string>
+    <string name="ranking_of_weekdays">Rebríček dní týždňa</string>
+    <string name="ranking_of_months">Rebríček mesiacov</string>
+    <string name="consumption_acording_to_phases">Spotreba podľa fáz</string>
+    <string name="temperature">Teplota</string>
+    <string name="humidity">Vlhkosť</string>
+    <string name="last24hours">Posledných 24 hodín</string>
+    <string name="last7days">Posledných 7 dní</string>
+    <string name="last30days">Posledných 30 dní</string>
+    <string name="last90days">Posledných 90 dní</string>
+    <string name="all_available_history">Celá dostupná história</string>
+    <string name="retrieving_data_from_the_server">Údaje sa načítavajú zo servera...</string>
+    <string name="no_chart_data_available">Žiadne údaje pre graf.</string>
+    <string name="comparsion_minmin">Porovnanie minúta po minúte</string>
+    <string name="comparsion_hourhour">Porovnanie hodina po hodine</string>
+    <string name="comparsion_dayday">Porovnanie deň po dni</string>
+    <string name="comparsion_monthmonth">Porovnanie mesiac po mesiaci</string>
+    <string name="comparsion_yearyear">Porovnanie rok po rokuu</string>
+</resources>
