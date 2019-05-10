@@ -104,7 +104,7 @@
     <string name="device_registration_disabled">Registrácia I / O zariadení je momentálne vypnutá. Ak chcete pokračovať, prejdite na stránku %1$s a v záložke „Moja SUPLA“ zapnite pridávanie zariadení.</string>
 
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
-    <string name="wizard_step1_txt2">Pokračujte stlačením <b>Ďalej</ b>.</string>
+    <string name="wizard_step1_txt2">Pokračujte stlačením <b>Ďalej</b>.</string>
     <string name="next">Ďalej</string>
     <string name="start">ŠTART</string>>
 
