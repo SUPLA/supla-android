@@ -230,6 +230,19 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getSubValueHi() > 0;
     }
 
+    @Override
+    protected int imgActive(ChannelValue value) {
+
+        if (getOnLine()
+                && getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                && getRollerShutterPosition() >= 100) {
+            return 1;
+        }
+
+        return super.imgActive(value);
+    }
+
+    @Override
     public ImageId getImageIdx(WhichOne whichImage) {
         return super.getImageIdx(whichImage, Value);
     }
