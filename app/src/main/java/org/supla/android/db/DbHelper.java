@@ -593,11 +593,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createLocationTable(db);
         createChannelTable(db);
         createChannelValueTable(db);
-        createChannelView(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
-        createChannelGroupValueView(db);
-
     }
 
     private void upgradeToV5(SQLiteDatabase db) {
@@ -609,7 +606,6 @@ public class DbHelper extends SQLiteOpenHelper {
         Trace.d(DbHelper.class.getName(), "upgradeToV6");
 
         createElectricityMeterLogTable(db);
-        createElectricityMeterLogView(db);
 
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID
@@ -639,8 +635,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
-        createChannelView(db);
     }
 
     private void upgradeToV7(SQLiteDatabase db) {
@@ -651,21 +645,15 @@ public class DbHelper extends SQLiteOpenHelper {
     private void upgradeToV8(SQLiteDatabase db) {
         Trace.d(DbHelper.class.getName(), "upgradeToV8");
         createUserIconsTable(db);
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
-        createChannelView(db);
     }
 
     private void upgradeToV9(SQLiteDatabase db) {
         Trace.d(DbHelper.class.getName(), "upgradeToV9");
         execSQL(db, "DROP TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME);
         execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
-
         createChannelValueTable(db);
         createChannelExtendedValueTable(db);
-        createChannelView(db);
-        createChannelGroupValueView(db);
+
 
         createImpulseCounterLogTable(db);
         createTemperatureLogTable(db);
@@ -676,19 +664,32 @@ public class DbHelper extends SQLiteOpenHelper {
         Trace.d(DbHelper.class.getName(), "upgradeToV10");
         execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
         createImpulseCounterLogTable(db);
-        createImpulseCounterLogView(db);
     }
 
     private void upgradeToV11(SQLiteDatabase db) {
         Trace.d(DbHelper.class.getName(), "upgradeToV11");
-        execSQL(db, "DROP VIEW " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
-        execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+
         execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
         execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
 
         createElectricityMeterLogTable(db);
         createImpulseCounterLogTable(db);
 
+
+    }
+
+    private void recreateViews(SQLiteDatabase db) {
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+
+        createChannelView(db);
+        createChannelGroupValueView(db);
         createElectricityMeterLogView(db);
         createImpulseCounterLogView(db);
     }
@@ -740,6 +741,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                 }
             }
+
+            // Recreate views on the end
+            recreateViews(db);
         }
 
     }
