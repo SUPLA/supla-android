@@ -306,6 +306,10 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                     Id = new ImageId(getUserIconId(), 1);
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                    Id = new ImageId(getUserIconId(), (active & 0x1) > 0 ? 2
+                            : ((active & 0x2) > 0 ? 3 : 1));
+                    break;
                 default:
                     Id = new ImageId(getUserIconId(), active+1);
                     break;
