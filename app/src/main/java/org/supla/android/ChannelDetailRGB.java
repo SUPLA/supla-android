@@ -311,7 +311,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             lastBrightness = brightness;
     }
 
-    private void sendNewValues() {
+    private void sendNewValues(boolean TurnOnOff) {
 
         if (delayTimer1 != null) {
             delayTimer1.cancel();
@@ -325,7 +325,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
                 && client.setRGBW(getRemoteId(), isGroup(), lastColor, lastColorBrightness,
-                lastBrightness, false)) {
+                lastBrightness, TurnOnOff)) {
             remoteUpdateTime = System.currentTimeMillis();
 
         } else {
@@ -359,6 +359,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
     }
 
+    private void sendNewValues() {
+        sendNewValues(false);
+    }
 
     @Override
     public void onClick(View v) {
@@ -388,7 +391,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
             rgbPicker.setBrightnessValue(rgbPicker.getBrightnessValue() > 0 ? 0 : 100);
             pickerToInfoPanel();
-            sendNewValues();
+            sendNewValues(true);
             onChangeFinished();
         }
 
