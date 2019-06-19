@@ -212,13 +212,18 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             img = R.drawable.graphon;
             ivGraph.setTag(1);
 
-            onItemSelected(null, null,
-                    emSpinner.getSelectedItemPosition(),
-                    emSpinner.getSelectedItemId());
+            postDelayed(new Runnable() {
+                public void run() {
+                    onItemSelected(null, null,
+                            emSpinner.getSelectedItemPosition(),
+                            emSpinner.getSelectedItemId());
+                }
+            }, 50);
 
         } else {
             llDetails.setVisibility(VISIBLE);
             chartHelper.setVisibility(GONE);
+            chartHelper.clearData();
             rlButtons1.setVisibility(VISIBLE);
             rlButtons2.setVisibility(INVISIBLE);
             img = R.drawable.graphoff;
