@@ -19,7 +19,6 @@ package org.supla.android;
  */
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -104,7 +103,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private LinearLayout llDetails;
     private RelativeLayout rlButtons1;
     private RelativeLayout rlButtons2;
-    private Spinner emSpinner;
+    private Spinner emSpinnerMaster;
+    private Spinner emSpinnerSlave;
     private ProgressBar emProgress;
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
@@ -185,11 +185,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper.setUnit("kWh");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(0));
+                android.R.layout.simple_spinner_item, chartHelper.getMasterSpinnerItems(0));
 
-        emSpinner = findViewById(R.id.emSpinner);
-        emSpinner.setAdapter(adapter);
-        emSpinner.setOnItemSelectedListener(this);
+        emSpinnerMaster = findViewById(R.id.emSpinnerMaster);
+        emSpinnerMaster.setAdapter(adapter);
+        emSpinnerMaster.setOnItemSelectedListener(this);
+
+        emSpinnerSlave = findViewById(R.id.emSpinnerSlave);
+        updateSlaveSpinnerItems();
 
         ivGraph = findViewById(R.id.emGraphImg);
         ivGraph.bringToFront();
@@ -198,6 +201,18 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         emProgress = findViewById(R.id.emProgressBar);
 
         showChart(false);
+    }
+
+    private void updateSlaveSpinnerItems() {
+        emSpinnerSlave.setOnItemSelectedListener(null);
+
+        String[] items = chartHelper.getSlaveSpinnerItems(emSpinnerMaster);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_spinner_item, items);
+        emSpinnerSlave.setAdapter(adapter);
+        emSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
+
+        emSpinnerSlave.setOnItemSelectedListener(this);
     }
 
     private void showChart(boolean show) {
@@ -215,8 +230,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             postDelayed(new Runnable() {
                 public void run() {
                     onItemSelected(null, null,
-                            emSpinner.getSelectedItemPosition(),
-                            emSpinner.getSelectedItemId());
+                            emSpinnerMaster.getSelectedItemPosition(),
+                            emSpinnerMaster.getSelectedItemId());
                 }
             }, 50);
 
@@ -511,7 +526,12 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             return;
         }
 
-        chartHelper.load(getRemoteId(), position);
+        if (parent != emSpinnerSlave) {
+            updateSlaveSpinnerItems();
+        }
+
+        chartHelper.setDateRangeBySpinners(emSpinnerMaster, emSpinnerSlave);
+        chartHelper.load(getRemoteId(), emSpinnerMaster.getSelectedItemPosition());
         chartHelper.setVisibility(VISIBLE);
         chartHelper.animate();
     }

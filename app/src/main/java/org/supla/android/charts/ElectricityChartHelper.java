@@ -50,7 +50,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getElectricityMeasurements(db, channelId, dateFormat);
+        return DBH.getElectricityMeasurements(db, channelId, dateFormat, dateFrom, dateTo);
     }
 
     @Override

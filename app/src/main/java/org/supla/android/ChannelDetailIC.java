@@ -57,7 +57,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private TextView tvCurrentCost;
     private TextView tvTotalCost;
     private ImageView icImgIcon;
-    private Spinner icSpinner;
+    private Spinner icSpinnerMaster;
+    private Spinner icSpinnerSlave;
     private ImageView ivGraph;
     final Handler mHandler = new Handler();
     private Timer timer1;
@@ -94,15 +95,29 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item, chartHelper.getSpinnerItems(13));
+                android.R.layout.simple_spinner_item, chartHelper.getMasterSpinnerItems(13));
 
-        icSpinner = findViewById(R.id.icSpinner);
-        icSpinner.setAdapter(adapter);
-        icSpinner.setOnItemSelectedListener(this);
+        icSpinnerMaster = findViewById(R.id.icSpinnerMaster);
+        icSpinnerMaster.setAdapter(adapter);
+        icSpinnerMaster.setOnItemSelectedListener(this);
+
+        icSpinnerSlave = findViewById(R.id.icSpinnerSlave);
 
         ivGraph = findViewById(R.id.icGraphImg);
         ivGraph.bringToFront();
         ivGraph.setOnClickListener(this);
+    }
+
+    private void updateSlaveSpinnerItems() {
+        icSpinnerSlave.setOnItemSelectedListener(null);
+
+        String[] items = chartHelper.getSlaveSpinnerItems(icSpinnerMaster);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_spinner_item, items);
+        icSpinnerSlave.setAdapter(adapter);
+        icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
+
+        icSpinnerSlave.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -175,8 +190,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         icProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
         onItemSelected(null, null,
-                icSpinner.getSelectedItemPosition(),
-                icSpinner.getSelectedItemId());
+                icSpinnerMaster.getSelectedItemPosition(),
+                icSpinnerMaster.getSelectedItemId());
 
         if (timer1 == null) {
             timer1 = new Timer();
@@ -240,7 +255,13 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        chartHelper.load(getRemoteId(), position);
+
+        if (parent != icSpinnerSlave) {
+            updateSlaveSpinnerItems();
+        }
+
+        chartHelper.setDateRangeBySpinners(icSpinnerMaster, icSpinnerSlave);
+        chartHelper.load(getRemoteId(), icSpinnerMaster.getSelectedItemPosition());
         chartHelper.setVisibility(VISIBLE);
         chartHelper.animate();
     }

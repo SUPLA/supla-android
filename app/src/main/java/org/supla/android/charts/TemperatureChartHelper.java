@@ -39,9 +39,6 @@ import java.util.Date;
 
 public class TemperatureChartHelper extends ChartHelper {
 
-    protected Date dateFrom;
-    protected Date dateTo;
-
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
@@ -80,19 +77,6 @@ public class TemperatureChartHelper extends ChartHelper {
 
     public TemperatureChartHelper(Context context) {
         super(context);
-    }
-
-    public void setDateRange(Date from, Date to) {
-        dateFrom = from;
-        dateTo = to;
-    }
-
-    public Date getDateFrom() {
-        return dateFrom;
-    }
-
-    public Date getDateTo() {
-        return dateTo;
     }
 
     @Override

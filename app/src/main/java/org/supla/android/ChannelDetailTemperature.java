@@ -113,12 +113,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
                 android.R.layout.simple_spinner_item,
-                new String[]{
-                        r.getString(R.string.last24hours),
-                        r.getString(R.string.last7days),
-                        r.getString(R.string.last30days),
-                        r.getString(R.string.last90days),
-                        r.getString(R.string.all_available_history)});
+                chartHelper.getSlaveSpinnerItems(null));
 
         thSpinner = findViewById(R.id.thSpinner);
         thSpinner.setAdapter(adapter);
@@ -237,40 +232,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        Date dateFrom = null;
-        Date dateTo = null;
-
-        int calendar_field = Calendar.DATE;
-        int calendar_amount = 0;
-
-        switch(position) {
-            case 0:
-                calendar_amount = -24;
-                calendar_field = Calendar.HOUR;
-                break;
-            case 1:
-                calendar_amount = -7;
-                break;
-            case 2:
-                calendar_amount = -30;
-                break;
-            case 3:
-                calendar_amount = -90;
-                break;
-        }
-
-        if (calendar_amount != 0) {
-            Calendar now = Calendar.getInstance();
-            now.add(calendar_field, calendar_amount);
-            dateFrom = now.getTime();
-        }
-
-        if (dateFrom!=null) {
-            dateTo = new Date();
-        }
-
-        getTemperatureChartHelper().setDateRange(dateFrom, dateTo);
-
+        getTemperatureChartHelper().setDateRangeBySpinners(null, thSpinner);
         beforeLoadChart();
         chartHelper.load(getRemoteId());
         chartHelper.setVisibility(VISIBLE);
