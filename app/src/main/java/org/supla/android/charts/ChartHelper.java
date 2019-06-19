@@ -243,6 +243,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         combinedChart.getXAxis().setLabelCount(3);
         combinedChart.getAxisLeft().setDrawLabels(false);
         combinedChart.getLegend().setEnabled(false);
+        combinedChart.setData(null);
+        combinedChart.invalidate();
 
         updateDescription();
 
@@ -346,7 +348,6 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         setMarker(combinedChart);
-        combinedChart.setData(null);
 
         if (data.getDataSetCount() != 0) {
             combinedChart.setData(data);
@@ -370,6 +371,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         pieChart.setVisibility(View.VISIBLE);
+        pieChart.setData(null);
+        pieChart.invalidate();
 
         SimpleDateFormat spf = new SimpleDateFormat("HH");
 
