@@ -32,25 +32,27 @@
             <Spinner
                 android:id="@+id/icSpinnerMaster"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp" />
 
             <Spinner
                 android:id="@+id/icSpinnerSlave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="5dp" />
 
             <com.github.mikephil.charting.charts.CombinedChart
                 android:id="@+id/icCombinedChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:visibility="visible" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/icPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:visibility="gone" />
         </LinearLayout>
 
