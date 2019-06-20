@@ -44,7 +44,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     @Override
     protected Cursor getCursor(DbHelper DBH,
                                SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat);
+        return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat, dateFrom, dateTo);
     }
 
     @Override

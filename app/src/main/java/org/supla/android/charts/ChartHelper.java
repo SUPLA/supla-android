@@ -23,6 +23,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
+import android.widget.Spinner;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -47,8 +49,10 @@ import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
@@ -58,6 +62,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     protected ChartType ctype = ChartType.Bar_Minutely;
     protected CombinedChart combinedChart;
     protected PieChart pieChart;
+    protected Date dateFrom;
+    protected Date dateTo;
     private long minTimestamp;
     private LineDataSet lineDataSet;
     ArrayList<ILineDataSet> lineDataSets;
@@ -243,6 +249,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         combinedChart.getXAxis().setLabelCount(3);
         combinedChart.getAxisLeft().setDrawLabels(false);
         combinedChart.getLegend().setEnabled(false);
+        combinedChart.setData(null);
+        combinedChart.clear();
+        combinedChart.invalidate();
 
         updateDescription();
 
@@ -346,7 +355,6 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         setMarker(combinedChart);
-        combinedChart.setData(null);
 
         if (data.getDataSetCount() != 0) {
             combinedChart.setData(data);
@@ -370,6 +378,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
 
         pieChart.setVisibility(View.VISIBLE);
+        pieChart.setData(null);
+        pieChart.clear();
+        pieChart.invalidate();
 
         SimpleDateFormat spf = new SimpleDateFormat("HH");
 
@@ -516,9 +527,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     public void load(int channelId, ChartType ctype) {
 
-        if (!this.ctype.equals(ctype)) {
-            this.ctype = ctype;
-        }
+        this.ctype = ctype;
 
         switch (ctype) {
             case Bar_Minutely:
@@ -543,7 +552,19 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     }
 
-    public String[] getSpinnerItems(int limit) {
+    public void clearData() {
+        if (combinedChart !=null) {
+            combinedChart.setData(null);
+            combinedChart.invalidate();
+        }
+
+        if (pieChart!=null) {
+            pieChart.setData(null);
+            pieChart.invalidate();
+        }
+    }
+
+    public String[] getMasterSpinnerItems(int limit) {
 
         if (limit <=0 || limit > 14) {
             limit = 14;
@@ -603,55 +624,136 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return result;
     }
 
-    public void load(int channelId, int chartTypeIdx) {
-        ElectricityChartHelper.ChartType ctype = ElectricityChartHelper.ChartType.Bar_Minutely;
+    public ChartType chartTypeByIndex(int chartTypeIdx) {
         switch (chartTypeIdx) {
             case 1:
-                ctype = ChartType.Bar_Hourly;
-                break;
+                return ChartType.Bar_Hourly;
             case 2:
-                ctype = ChartType.Bar_Daily;
-                break;
+                return ChartType.Bar_Daily;
             case 3:
-                ctype = ChartType.Bar_Monthly;
-                break;
+                return ChartType.Bar_Monthly;
             case 4:
-                ctype = ChartType.Bar_Yearly;
-                break;
+                return ChartType.Bar_Yearly;
             case 5:
-                ctype = ChartType.Bar_Comparsion_MinMin;
-                break;
+                return ChartType.Bar_Comparsion_MinMin;
             case 6:
-                ctype = ChartType.Bar_Comparsion_HourHour;
-                break;
+                return ChartType.Bar_Comparsion_HourHour;
             case 7:
-                ctype = ChartType.Bar_Comparsion_DayDay;
-                break;
+                return ChartType.Bar_Comparsion_DayDay;
             case 8:
-                ctype = ChartType.Bar_Comparsion_MonthMonth;
-                break;
+                return ChartType.Bar_Comparsion_MonthMonth;
             case 9:
-                ctype = ChartType.Bar_Comparsion_YearYear;
-                break;
+                return ChartType.Bar_Comparsion_YearYear;
             case 10:
-                ctype = ChartType.Pie_HourRank;
-                break;
+                return ChartType.Pie_HourRank;
             case 11:
-                ctype = ChartType.Pie_WeekdayRank;
-                break;
+                return ChartType.Pie_WeekdayRank;
             case 12:
-                ctype = ChartType.Pie_MonthRank;
-                break;
+                return ChartType.Pie_MonthRank;
             case 13:
-                ctype = ChartType.Pie_PhaseRank;
-                break;
+                return ChartType.Pie_PhaseRank;
         }
 
-        load(channelId, ctype);
+        return ElectricityChartHelper.ChartType.Bar_Minutely;
+    }
+
+    public String[] getSlaveSpinnerItems(Spinner master) {
+
+        ArrayList<String> result = new ArrayList<>();
+        Resources r = context.getResources();
+
+        result.add(r.getString(R.string.last24hours));
+        result.add(r.getString(R.string.last7days));
+        result.add(r.getString(R.string.last30days));
+        result.add(r.getString(R.string.last90days));
+        result.add(r.getString(R.string.all_available_history));
+
+        if (master!=null) {
+            switch (chartTypeByIndex(master.getSelectedItemPosition())) {
+                case Bar_Minutely:
+                case Bar_Hourly:
+                case Bar_Comparsion_MinMin:
+                case Bar_Comparsion_HourHour:
+                    break;
+                case Bar_Daily:
+                case Bar_Comparsion_DayDay:
+                    result.remove(0);
+                    break;
+                default:
+                    result.clear();
+            }
+        }
+
+        return result.toArray(new String[0]);
+    }
+
+
+    public void load(int channelId, int chartTypeIdx) {
+        load(channelId, chartTypeByIndex(chartTypeIdx));
     }
 
     public void load(int channelId) {
         load(channelId, ctype);
+    }
+
+    public void setDateRange(Date from, Date to) {
+        dateFrom = from;
+        dateTo = to;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateRangeBySpinners(Spinner master, Spinner slave) {
+        Date dateFrom = null;
+        Date dateTo = null;
+
+        int calendar_field = Calendar.DATE;
+        int calendar_amount = 0;
+
+        int position = slave.getSelectedItemPosition();
+
+        if (master!=null) {
+            switch (chartTypeByIndex(master.getSelectedItemPosition())) {
+                case Bar_Daily:
+                case Bar_Comparsion_DayDay:
+                    position++;
+                    break;
+            }
+        }
+
+        switch(position) {
+            case 0:
+                calendar_amount = -24;
+                calendar_field = Calendar.HOUR;
+                break;
+            case 1:
+                calendar_amount = -7;
+                break;
+            case 2:
+                calendar_amount = -30;
+                break;
+            case 3:
+                calendar_amount = -90;
+                break;
+        }
+
+        if (calendar_amount != 0) {
+            Calendar now = Calendar.getInstance();
+            now.add(calendar_field, calendar_amount);
+            dateFrom = now.getTime();
+        }
+
+        if (dateFrom!=null) {
+            dateTo = new Date();
+        }
+
+        setDateRange(dateFrom, dateTo);
     }
 
     public boolean isVisible() {
@@ -668,7 +770,6 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public Double getDownloadProgress() {
-
         return downloadProgress;
     }
 }

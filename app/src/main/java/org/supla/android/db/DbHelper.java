@@ -1873,7 +1873,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat,
+                                             Date dateFrom, Date dateTo) {
 
         String sql = "SELECT SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE+")"+
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE + ", "
@@ -1889,15 +1891,24 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " WHERE "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
                 + " = "
-                + Integer.toString(channelId)
-                +" GROUP BY "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " GROUP BY "
                 + " strftime('"
                 + GroupByDateFormat
                 + "', " + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")"
                 +" ORDER BY "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
-
 
         return db.rawQuery(sql, null);
     }
@@ -2029,7 +2040,7 @@ public class DbHelper extends SQLiteOpenHelper {
         sql += " ORDER BY "
                 + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
-
+        
         return db.rawQuery(sql, null);
     }
 
@@ -2182,7 +2193,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return item;
     }
 
-    public Cursor getImpulseCounterMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+    public Cursor getImpulseCounterMeasurements(SQLiteDatabase db, int channelId,
+                                                String GroupByDateFormat,
+                                                Date dateFrom, Date dateTo) {
 
         String sql = "SELECT SUM("
                 +SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+")"+
@@ -2195,8 +2208,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " WHERE "
                 + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID
                 + " = "
-                + Integer.toString(channelId)
-                +" GROUP BY "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " GROUP BY "
                 + " strftime('"
                 + GroupByDateFormat
                 + "', " + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_DATE + ")"
