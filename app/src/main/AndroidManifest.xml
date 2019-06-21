@@ -29,8 +29,6 @@
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-
         <activity android:name=".StartActivity"
             android:screenOrientation="sensorPortrait"
             android:noHistory="true">

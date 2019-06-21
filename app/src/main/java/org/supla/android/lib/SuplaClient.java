@@ -25,11 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -38,11 +33,13 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 @SuppressWarnings("JniMissingFunction")
@@ -759,31 +756,43 @@ public class SuplaClient extends Thread {
 
         String result = "";
 
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("autodiscover.supla.org")
+                .appendPath("users")
+                .appendPath(email);
+
+        URL url = null;
         try {
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
+            url = new URL(builder.build().toString());
 
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("https")
-                    .authority("autodiscover.supla.org")
-                    .appendPath("users")
-                    .appendPath(email);
+            String json = "";
+            String line;
 
-            request.setURI(new URI(builder.build().toString()));
-            HttpResponse response = client.execute(request);
+            HttpsURLConnection https = null;
+            try {
+                https = (HttpsURLConnection) url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(https.getInputStream()));
 
-            if (response != null) {
-                String json = EntityUtils.toString(response.getEntity());
+                while ((line = br.readLine()) != null) {
+                    json += line;
+                }
 
                 JSONTokener tokener = new JSONTokener(json);
-                JSONObject jsonResult = new JSONObject(tokener);
-
-                if (jsonResult.getString("email").equals(email)) {
-                    result = jsonResult.getString("server");
+                try {
+                    JSONObject jsonResult = new JSONObject(tokener);
+                    if (jsonResult.getString("email").equals(email)) {
+                        result = jsonResult.getString("server");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-        } catch (URISyntaxException | IOException | JSONException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
