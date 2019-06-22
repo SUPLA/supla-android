@@ -10,7 +10,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/hpHeader"
+        android:id="@+id/emHeader"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentStart="true"
@@ -47,7 +47,6 @@
             android:id="@+id/hpBtnSettings"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignTop="@+id/hpHeader"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
@@ -61,8 +60,8 @@
         android:id="@+id/hpSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/hpFooter"
-        android:layout_below="@+id/hpHeader"
+        android:layout_above="@+id/emFooter"
+        android:layout_below="@+id/emHeader"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
@@ -286,8 +285,8 @@
         android:id="@+id/hpContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/hpFooter"
-        android:layout_below="@+id/hpHeader"
+        android:layout_above="@+id/emFooter"
+        android:layout_below="@+id/emHeader"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
@@ -380,7 +379,8 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/hp_button_off"
                                 android:text="@string/hp_eco"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@android:color/white"
+                                android:layout_marginRight="0dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -481,7 +481,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/hpFooter"
+        android:id="@+id/emFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

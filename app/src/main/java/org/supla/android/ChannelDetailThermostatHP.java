@@ -1,5 +1,23 @@
 package org.supla.android;
 
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -8,19 +26,19 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 
+import org.supla.android.charts.ThermostatChartHelper;
+import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.lib.Preferences;
-import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -220,7 +238,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         btnMinus.setOnClickListener(this);
 
         chartHelper = new ThermostatChartHelper(getContext());
-        chartHelper.setBarChart((BarChart) findViewById(R.id.emBarChart));
+        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.hpCombinedChart));
 
 
         ((TextView)findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
@@ -315,7 +333,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private void displayTemperature() {
         CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
                 measuredTemperature,
-                new Double(presetTemperature));
+                Double.valueOf(presetTemperature));
 
         tvTemperature.setText(t);
     }
@@ -349,8 +367,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             return;
         }
 
-        ChannelExtendedValue cev = DBH.getChannelExtendedValue(getRemoteId());
-        if (cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
+       Channel channel = DBH.getChannel(getRemoteId());
+
+        ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
+        if (cev == null
+                || cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
                 || cev.getExtendedValue().ThermostatValue == null) {
             return;
         }
@@ -413,7 +434,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             dtm.setChannelId(getRemoteId());
             dtm.setDelegate(this);
             dtm.execute();
-        };
+        }
     }
 
     @Override
@@ -424,8 +445,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         rlSettings.setVisibility(GONE);
 
         OnChannelDataChanged();
-        chartHelper.loadThermostatMeasurements(getRemoteId());
-        chartHelper.moveToEnd(20, 1000);
+        chartHelper.load(getRemoteId());
+        chartHelper.moveToEnd();
 
         runDownloadTask();
     }
@@ -580,13 +601,20 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
         progressBar.setVisibility(VISIBLE);
+        chartHelper.setDownloadProgress(0d);
     }
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
         dtm = null;
         progressBar.setVisibility(INVISIBLE);
-        chartHelper.loadThermostatMeasurements(getRemoteId());
+        chartHelper.setDownloadProgress(null);
+        chartHelper.load(getRemoteId());
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+        chartHelper.setDownloadProgress(progress);
     }
 }
 

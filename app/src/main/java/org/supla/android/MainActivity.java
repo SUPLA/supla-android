@@ -35,6 +35,8 @@ import android.widget.TextView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.Location;
+import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
@@ -80,28 +82,28 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);
 
-
-        RelativeLayout NotifBgLayout = (RelativeLayout) NotificationView.findViewById(R.id.notif_bg_layout);
+        RelativeLayout NotifBgLayout = NotificationView.findViewById(R.id.notif_bg_layout);
         NotifBgLayout.setOnClickListener(this);
         NotifBgLayout.setBackgroundColor(getResources().getColor(R.color.notification_bg));
 
         getRootLayout().addView(NotificationView);
 
-        notif_img = (ImageView) NotificationView.findViewById(R.id.notif_img);
-        notif_text = (TextView) NotificationView.findViewById(R.id.notif_txt);
+        notif_img = NotificationView.findViewById(R.id.notif_img);
+        notif_text = NotificationView.findViewById(R.id.notif_txt);
 
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
         notif_text.setTypeface(type);
 
-        channelLV = (ChannelListView) findViewById(R.id.channelsListView);
+        channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonTouchListener(this);
         channelLV.setOnDetailListener(this);
 
-        cgroupLV = (ChannelListView) findViewById(R.id.channelGroupListView);
+        cgroupLV = findViewById(R.id.channelGroupListView);
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
 
         DbH_ListView = new DbHelper(this);
+        new DbHelper(this, true); // For upgrade purposes
 
         RegisterMessageHandler();
         showMenuBar();
@@ -187,6 +189,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     private void runDownloadTask() {
+        Trace.d("RubDownloadTask", "RunDownloadTask");
         if (downloadUserIcons != null && !downloadUserIcons.isAlive(90)) {
             downloadUserIcons.cancel(true);
             downloadUserIcons = null;
@@ -263,9 +266,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (channel == null) return;
 
-        int ImgIdx = channel.getImageIdx();
+        ImageId ImgIdx = channel.getImageIdx();
 
-        if (ImgIdx == -1) return;
+        if (ImgIdx == null) return;
 
         String msg;
 
@@ -335,9 +338,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
-    public void ShowNotificationMessage(String msg, int img) {
+    public void ShowNotificationMessage(String msg, ImageId imgId) {
 
-        notif_img.setImageResource(img);
+        notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
         notif_text.setText(msg);
 
         ShowHideNotificationView(true);
@@ -502,6 +505,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             }
             downloadUserIcons = null;
         }
+    }
+
+    @Override
+    public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+
     }
 }
 

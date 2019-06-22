@@ -33,22 +33,22 @@ public class AboutActivity extends NavigationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        TextView v = (TextView)findViewById(R.id.about_project_name);
+        TextView v = findViewById(R.id.about_project_name);
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.cfg_label_svr_address);
+        v = findViewById(R.id.cfg_label_svr_address);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
         v.setTypeface(type);
 
         v.setText(getResources().getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
 
-        v = (TextView)findViewById(R.id.about_text);
+        v = findViewById(R.id.about_text);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
         v.setTypeface(type);
 
 
-        homepage = (Button)findViewById(R.id.about_homepage);
+        homepage = findViewById(R.id.about_homepage);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
         homepage.setTypeface(type);
         homepage.setOnClickListener(this);

@@ -1,5 +1,23 @@
 package org.supla.android.restapi;
 
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -7,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
-import org.supla.android.db.DbHelper;
 
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
@@ -19,11 +36,13 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     abstract protected long getMinTimestamp();
     abstract protected long getMaxTimestamp();
+    abstract protected int getLocalTotalCount();
     abstract protected void EraseMeasurements(SQLiteDatabase db);
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
-    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {};
-    protected int itemsLimitPerRequest() {return 0;};
+    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {}
+
+    protected int itemsLimitPerRequest() {return 1000;}
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -67,6 +86,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         }
 
         AfterTimestamp = getMaxTimestamp();
+        int LocalTotalCount = getLocalTotalCount();
+        Double percent = 0d;
 
         do {
             result = apiRequest("channels/"
@@ -117,6 +138,20 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
                         if (isCancelled()) {
                             break;
+                        }
+
+
+                        LocalTotalCount++;
+
+                        if (result.getTotalCount() > 0) {
+                            Double new_percent = LocalTotalCount*100d/result.getTotalCount();
+                            if (new_percent - percent >= 1d) {
+                                percent = new_percent;
+                                publishProgress(percent);
+                                //Trace.d(log_tag, "PERCENT: "+Double.toString(percent)
+                                // + " L:"+Integer.toString(LocalTotalCount)
+                                // + " R:"+Integer.toString(result.getTotalCount()));
+                            }
                         }
 
                         keepAlive();

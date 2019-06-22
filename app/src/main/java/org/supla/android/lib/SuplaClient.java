@@ -25,11 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -38,11 +33,13 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 @SuppressWarnings("JniMissingFunction")
@@ -576,7 +573,8 @@ public class SuplaClient extends Thread {
                 + "  channel ID: " + Integer.toString(channel.Id)
                 + " channel Location ID: " + Integer.toString(channel.LocationID)
                 + " OnLine: " + Boolean.toString(channel.OnLine)
-                + " AltIcon: " + Integer.toString(channel.AltIcon));
+                + " AltIcon: " + Integer.toString(channel.AltIcon)
+                + " UserIcon: " + Integer.toString(channel.UserIcon));
 
         // Update channel value before update the channel
         if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
@@ -612,11 +610,12 @@ public class SuplaClient extends Thread {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Group Function"
+        Trace.d(log_tag, "Channel Group Function "
                 + Integer.toString(channel_group.Func) + "  group ID: "
                 + Integer.toString(channel_group.Id) + " group Location ID: "
                 + Integer.toString(channel_group.LocationID) + " AltIcon: "
-                + Integer.toString(channel_group.AltIcon));
+                + Integer.toString(channel_group.AltIcon) + " UserIcon: "
+                + Integer.toString(channel_group.UserIcon));
 
         if (DbH.updateChannelGroup(channel_group)) {
             _DataChanged = true;
@@ -698,7 +697,7 @@ public class SuplaClient extends Thread {
     }
 
     private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
-        Trace.d(log_tag, "OAuthToken");
+        Trace.d(log_tag, "OAuthToken"+(token == null ? " is null" : ""));
 
         if (token.getUrl() == null) {
             Preferences prefs = new Preferences(_context);
@@ -757,31 +756,43 @@ public class SuplaClient extends Thread {
 
         String result = "";
 
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("autodiscover.supla.org")
+                .appendPath("users")
+                .appendPath(email);
+
+        URL url = null;
         try {
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
+            url = new URL(builder.build().toString());
 
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("https")
-                    .authority("autodiscover.supla.org")
-                    .appendPath("users")
-                    .appendPath(email);
+            String json = "";
+            String line;
 
-            request.setURI(new URI(builder.build().toString()));
-            HttpResponse response = client.execute(request);
+            HttpsURLConnection https = null;
+            try {
+                https = (HttpsURLConnection) url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(https.getInputStream()));
 
-            if (response != null) {
-                String json = EntityUtils.toString(response.getEntity());
+                while ((line = br.readLine()) != null) {
+                    json += line;
+                }
 
                 JSONTokener tokener = new JSONTokener(json);
-                JSONObject jsonResult = new JSONObject(tokener);
-
-                if (jsonResult.getString("email").equals(email)) {
-                    result = jsonResult.getString("server");
+                try {
+                    JSONObject jsonResult = new JSONObject(tokener);
+                    if (jsonResult.getString("email").equals(email)) {
+                        result = jsonResult.getString("server");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-        } catch (URISyntaxException | IOException | JSONException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
@@ -817,6 +828,7 @@ public class SuplaClient extends Thread {
     public void run() {
 
         DbH = new DbHelper(_context);
+        DbH.loadUserIconsIntoCache();
 
         while (!canceled()) {
 

@@ -20,12 +20,13 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-
 import org.supla.android.R;
+import org.supla.android.Trace;
+import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
 import org.supla.android.lib.SuplaConst;
 
@@ -37,7 +38,7 @@ public abstract class ChannelBase extends DbItem {
     private int Visible;
     private long LocationId;
     private int AltIcon;
-    private int UserIcon;
+    private int UserIconId;
     private int Flags;
 
     public void setRemoteId(int id) {
@@ -72,6 +73,10 @@ public abstract class ChannelBase extends DbItem {
         return LocationId;
     }
 
+    public int getType() {
+        return 0;
+    }
+
     public void setFunc(int func) {
         Func = func;
     }
@@ -104,12 +109,12 @@ public abstract class ChannelBase extends DbItem {
         return AltIcon;
     }
 
-    public int getUserIcon() {
-        return UserIcon;
+    public int getUserIconId() {
+        return UserIconId;
     }
 
-    public void setUserIcon(int userIcon) {
-        UserIcon = userIcon;
+    public void setUserIconId(int userIconId) {
+        UserIconId = userIconId;
     }
 
     public void setFlags(int flags) {
@@ -285,11 +290,35 @@ public abstract class ChannelBase extends DbItem {
         return value.hiValue() ? 1 : 0;
     }
 
-    protected int getImageIdx(WhichOne whichImage, int active) {
+    protected ImageId getImageIdx(WhichOne whichImage, int active) {
 
         if (whichImage != WhichOne.First
                 && getFunc() != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
-            return -1;
+            return null;
+
+        if (getUserIconId() > 0) {
+            ImageId Id = null;
+
+            switch (getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    Id = new ImageId(getUserIconId(), 1);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                    Id = new ImageId(getUserIconId(), (active & 0x1) > 0 ? 2
+                            : ((active & 0x2) > 0 ? 3 : 1));
+                    break;
+                default:
+                    Id = new ImageId(getUserIconId(), active+1);
+                    break;
+            }
+
+            if (ImageCache.bitmapExists(Id)) {
+                return Id;
+            }
+        }
 
         int img_idx = -1;
 
@@ -488,16 +517,16 @@ public abstract class ChannelBase extends DbItem {
                 break;
         }
 
-        return img_idx;
+        return new ImageId(img_idx);
     }
 
-    protected int getImageIdx(WhichOne whichImage, ChannelValue value) {
+    protected ImageId getImageIdx(WhichOne whichImage, ChannelValue value) {
         return getImageIdx(whichImage, imgActive(value));
     }
 
-    public abstract int getImageIdx(WhichOne whichImage);
+    public abstract ImageId getImageIdx(WhichOne whichImage);
 
-    public int getImageIdx() {
+    public ImageId getImageIdx() {
         return getImageIdx(WhichOne.First);
     }
 
@@ -512,14 +541,14 @@ public abstract class ChannelBase extends DbItem {
                     + (char) 0x00B0;
         } else {
             measured = "---" + (char) 0x00B0;
-        };
+        }
 
         if (presetTemp != null && presetTemp > -273) {
             preset = "/"+Integer.toString(presetTemp.intValue())
                     + (char) 0x00B0;
         } else {
             preset = "/---"+ (char) 0x00B0;
-        };
+        }
 
         SpannableString ss =  new SpannableString(measured+preset);
         ss.setSpan(new RelativeSizeSpan(0.7f),
@@ -555,7 +584,7 @@ public abstract class ChannelBase extends DbItem {
 
                 if (getOnLine()
                         && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f", value.getTemp(getFunc())) + (char) 0x00B0;
+                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
                 } else {
                     return "---";
                 }
@@ -563,7 +592,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 if (getOnLine()
                         && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f", value.getTemp(getFunc())) + (char) 0x00B0;
+                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
                 } else {
                     return "---";
                 }
@@ -587,7 +616,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
                 if (getOnLine()) {
                     double rain = value.getDouble(-1);
-                    return String.format("%.2f l/m2", rain/1000.00);
+                    return String.format("%.2f l/m\u00B2", rain/1000.00);
 
                 } else {
                     return "--- l/m2";
@@ -643,6 +672,9 @@ public abstract class ChannelBase extends DbItem {
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+
                 if (getOnLine()) {
                     return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
                 } else {
@@ -673,7 +705,7 @@ public abstract class ChannelBase extends DbItem {
         setFunc(base.Func);
         setFlags(base.Flags);
         setAltIcon(base.AltIcon);
-        setUserIcon(base.UserIcon);
+        setUserIconId(base.UserIcon);
 
     }
 
@@ -684,7 +716,7 @@ public abstract class ChannelBase extends DbItem {
                 || base.OnLine != getOnLine()
                 || base.Flags != getFlags()
                 || base.AltIcon != getAltIcon()
-                || base.UserIcon != getUserIcon();
+                || base.UserIcon != getUserIconId();
 
     }
 
@@ -695,7 +727,7 @@ public abstract class ChannelBase extends DbItem {
                 || base.getOnLine() != getOnLine()
                 || base.getFlags() != getFlags()
                 || base.getAltIcon() != getAltIcon()
-                || base.getUserIcon() != getUserIcon();
+                || base.getUserIconId() != getUserIconId();
     }
 
 }

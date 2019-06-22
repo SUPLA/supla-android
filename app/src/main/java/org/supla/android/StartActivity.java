@@ -37,11 +37,11 @@ public class StartActivity extends Activity {
 
         setContentView(R.layout.splash);
 
-        TextView v = (TextView)findViewById(R.id.splash_name);
+        TextView v = findViewById(R.id.splash_name);
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
         v.setTypeface(type);
 
-        v = (TextView)findViewById(R.id.splash_slogan);
+        v = findViewById(R.id.splash_slogan);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
         v.setTypeface(type);
 

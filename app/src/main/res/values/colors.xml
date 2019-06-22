@@ -4,6 +4,7 @@
     <color name="channel_btn">#12a71e</color>
     <color name="channel_btn_pressed">#5ae966</color>
     <color name="channel_cell">#fafbfc</color>
+    <color name="channel_section_cell">#edfbee</color>
     <color name="detail_rgb_gb">#ffe804</color>
     <color name="detail_rs_bg">#fffafafa</color>
     <color name="detail_rs_marker">#12a71e</color>
@@ -23,9 +24,19 @@
     <color name="notification_bg">#fee700</color>
 
     <color name="phase1">#90ebfe</color>
-    <color name="phase2">#fff691</color>
+    <color name="phase2">#9791ff</color>
     <color name="phase3">#fed191</color>
 
     <color name="hp_chart_room_temperature">#00c2fc</color>
+    <color name="ic_chart_value">#00c2fc</color>
+    <color name="chart_marker_background">#ffdd00</color>
+    <color name="chart_marker_text">#000000</color>
+    <color name="chart_color_value_positive">#e74c3c</color>
+    <color name="chart_color_value_negative">#2dcc71</color>
+
+    <color name="th_humidity">#00a0fc</color>
+    <color name="th_temperature_fill_color">#fcf7ca</color>
+    <color name="th_temperature_line_color">#fd4a4d</color>
+
 
 </resources>

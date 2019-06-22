@@ -25,6 +25,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.supla.android.Trace;
+import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -34,20 +36,24 @@ import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 11;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
+    private boolean measurements;
 
     public DbHelper(Context context, boolean measurements) {
         super(context, measurements ? M_DATABASE_NAME : DATABASE_NAME,
                 null, DATABASE_VERSION);
         this.context = context;
+        this.measurements = measurements;
         rdb = getReadableDatabase();
     }
 
@@ -58,7 +64,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void execSQL(SQLiteDatabase db, String sql) {
-        Trace.d("sql-statments", sql);
+        Trace.d("sql-statments/"+(measurements ? M_DATABASE_NAME : DATABASE_NAME), sql);
         db.execSQL(sql);
     }
 
@@ -83,10 +89,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID);
     }
 
-    private void createChannelTable(SQLiteDatabase db, String suffix) {
+    private void createChannelTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE "
-                + SuplaContract.ChannelEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ChannelEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + " INTEGER NULL," +
@@ -108,11 +114,6 @@ public class DbHelper extends SQLiteOpenHelper {
         createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME,
                 SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID);
     }
-
-    private void createChannelTable(SQLiteDatabase db) {
-        createChannelTable(db, "");
-    }
-
 
     private void createChannelValueTable(SQLiteDatabase db) {
 
@@ -153,9 +154,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
+                "CV." + SuplaContract.ChannelValueEntry._ID + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry._ID + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + ", " +
+                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
@@ -165,21 +170,33 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3 + ", " +
+                "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " " +
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4 + " " +
                 "FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C " +
                 "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
-                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID;
-
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " " +
+                "LEFT JOIN " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " CEV ON " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CEV." +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " " +
+                "LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I ON " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = I." +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID;
 
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
-
     }
 
-    private void createColorTable(SQLiteDatabase db, String suffix) {
+    private void createColorTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_COLOR_TABLE = "CREATE TABLE "
-                + SuplaContract.ColorListItemEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ColorListItemEntry.TABLE_NAME + " (" +
                 SuplaContract.ColorListItemEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP + " INTEGER NOT NULL," +
@@ -194,15 +211,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP);
     }
 
-    private void createColorTable(SQLiteDatabase db) {
-        createColorTable(db, "");
-    }
-
-
-    private void createChannelGroupTable(SQLiteDatabase db, String suffix) {
+    private void createChannelGroupTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNELGROUP_TABLE = "CREATE TABLE "
-                + SuplaContract.ChannelGroupEntry.TABLE_NAME + suffix + " (" +
+                + SuplaContract.ChannelGroupEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelGroupEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
@@ -222,13 +234,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID);
     }
 
-    private void createChannelGroupTable(SQLiteDatabase db) {
-        createChannelGroupTable(db, "");
-    }
+    private void createChannelGroupRelationTable(SQLiteDatabase db) {
 
-    private void createChannelGroupRelationTable(SQLiteDatabase db, String suffix) {
-
-        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + suffix + " (" +
+        final String SQL_CREATE_CHANNELGROUP_REL_TABLE = "CREATE TABLE " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelGroupRelationEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
@@ -241,12 +249,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID);
     }
 
-    private void createChannelGroupRelationTable(SQLiteDatabase db) {
-        createChannelGroupRelationTable(db, "");
-    }
-
-
-    private void createChannelGroupValueView(SQLiteDatabase db, String suffix) {
+    private void createChannelGroupValueView(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNELGROUP_VALUE_VIEW =
                 "CREATE VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME + " AS " +
@@ -278,14 +281,10 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_CHANNELGROUP_VALUE_VIEW);
     }
 
-    private void createChannelGroupValueView(SQLiteDatabase db) {
-        createChannelGroupValueView(db, "");
-    }
-
-    private void createElectricityMeterLogTable(SQLiteDatabase db, String suffix) {
+    private void createElectricityMeterLogTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_EMLOG_TABLE = "CREATE TABLE " +
-                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + suffix + " (" +
+                SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + " (" +
                 SuplaContract.ElectricityMeterLogEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
@@ -302,6 +301,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED +
+                " INTEGER NOT NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT +
                 " INTEGER NOT NULL)";
 
         execSQL(db, SQL_CREATE_EMLOG_TABLE);
@@ -314,6 +315,9 @@ public class DbHelper extends SQLiteOpenHelper {
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED);
 
+        createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT);
+
         final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + "_unique_index ON "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
@@ -323,10 +327,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 +" )";
 
         execSQL(db, SQL_CREATE_INDEX);
-    }
-
-    private void createElectricityMeterLogTable(SQLiteDatabase db) {
-        createElectricityMeterLogTable(db, "");
     }
 
     private void createElectricityMeterLogView(SQLiteDatabase db) {
@@ -347,7 +347,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE+", "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE+" "
-                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE+", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
                 + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 + " WHERE "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
@@ -393,7 +395,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " INTEGER NOT NULL," +
                 SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " BLOB," +
                 SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " BLOB," +
-                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB)";
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " BLOB," +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " BLOB)";
 
         execSQL(db, SQL_CREATE_IMAGE_TABLE);
         createIndex(db, SuplaContract.UserIconsEntry.TABLE_NAME ,
@@ -407,28 +410,150 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, SQL_CREATE_INDEX);
     }
 
+    private void createImpulseCounterLogTable(SQLiteDatabase db) {
+
+        final String SQL_CREATE_ICLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + " (" +
+                SuplaContract.ImpulseCounterLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER + " BIGINT NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
+                + " DOUBLE NOT NULL," +
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " INTEGER NOT NULL,"+
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
+                + " INTEGER NOT NULL)";
+
+        execSQL(db, SQL_CREATE_ICLOG_TABLE);
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        createIndex(db, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
+    private void createImpulseCounterLogView(SQLiteDatabase db) {
+
+        final String SQL_CREATE_EM_VIEW = "CREATE VIEW "
+                + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME + " AS "
+                + "SELECT " + SuplaContract.ImpulseCounterLogEntry._ID + " "
+                + SuplaContract.ImpulseCounterLogViewEntry._ID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + " "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + " "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + "datetime("+SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
+                + ", 'unixepoch', 'localtime') "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_DATE+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE+", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT+" "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COMPLEMENT
+                + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " > 0";
+
+        execSQL(db, SQL_CREATE_EM_VIEW);
+    }
+
+    private void createTemperatureLogTable(SQLiteDatabase db) {
+        final String SQL_CREATE_TLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.TemperatureLogEntry.TABLE_NAME + " (" +
+                SuplaContract.TemperatureLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE
+                + " DECIMAL(8,4) NULL)";
+
+        execSQL(db, SQL_CREATE_TLOG_TABLE);
+        createIndex(db, SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
+    private void createTempHumidityLogTable(SQLiteDatabase db) {
+        final String SQL_CREATE_THLOG_TABLE = "CREATE TABLE " +
+                SuplaContract.TempHumidityLogEntry.TABLE_NAME + " (" +
+                SuplaContract.TempHumidityLogEntry._ID + " INTEGER PRIMARY KEY," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP + " BIGINT NOT NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE
+                + " DECIMAL(8,4) NULL," +
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY
+                + " DECIMAL(8,4) NULL)";
+
+        execSQL(db, SQL_CREATE_THLOG_TABLE);
+        createIndex(db, SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID);
+
+        createIndex(db, SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP);
+
+        final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP + ")";
+
+        execSQL(db, SQL_CREATE_INDEX);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
         createChannelTable(db);
         createChannelValueTable(db);
-        createChannelView(db);
         createColorTable(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
-        createChannelGroupValueView(db);
         createChannelExtendedValueTable(db);
         createElectricityMeterLogTable(db);
-        createElectricityMeterLogView(db);
         createThermostatLogTable(db);
         createUserIconsTable(db);
+        createImpulseCounterLogTable(db);
+        createTemperatureLogTable(db);
+        createTempHumidityLogTable(db);
+
+        // Create views at the end
+        createChannelView(db);
+        createChannelGroupValueView(db);
+        createElectricityMeterLogView(db);
+        createImpulseCounterLogView(db);
     }
 
     private void upgradeToV2(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV2");
         createColorTable(db);
     }
 
     private void upgradeToV3(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV3");
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON
                 + " INTEGER NOT NULL default 0");
@@ -443,6 +568,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV4(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV4");
         execSQL(db, "ALTER TABLE " + SuplaContract.ColorListItemEntry.TABLE_NAME +
                 " RENAME TO " + SuplaContract.ColorListItemEntry.TABLE_NAME + "_old");
 
@@ -467,20 +593,19 @@ public class DbHelper extends SQLiteOpenHelper {
         createLocationTable(db);
         createChannelTable(db);
         createChannelValueTable(db);
-        createChannelView(db);
         createChannelGroupTable(db);
         createChannelGroupRelationTable(db);
-        createChannelGroupValueView(db);
-
     }
 
     private void upgradeToV5(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV5");
         createChannelExtendedValueTable(db);
     }
 
     private void upgradeToV6(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV6");
+
         createElectricityMeterLogTable(db);
-        createElectricityMeterLogView(db);
 
         execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID
@@ -510,23 +635,69 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "DROP VIEW " + SuplaContract.ChannelViewEntry.VIEW_NAME);
-        createChannelView(db);
     }
 
     private void upgradeToV7(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV7");
         createThermostatLogTable(db);
     }
 
     private void upgradeToV8(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV8");
         createUserIconsTable(db);
     }
 
+    private void upgradeToV9(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV9");
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
+        createChannelValueTable(db);
+        createChannelExtendedValueTable(db);
+
+
+        createImpulseCounterLogTable(db);
+        createTemperatureLogTable(db);
+        createTempHumidityLogTable(db);
+    }
+
+    private void upgradeToV10(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV10");
+        execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+        createImpulseCounterLogTable(db);
+    }
+
+    private void upgradeToV11(SQLiteDatabase db) {
+        Trace.d(DbHelper.class.getName(), "upgradeToV11");
+
+        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+
+        createElectricityMeterLogTable(db);
+        createImpulseCounterLogTable(db);
+
+
+    }
+
+    private void recreateViews(SQLiteDatabase db) {
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ChannelViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
+        execSQL(db, "DROP VIEW IF EXISTS "
+                + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
+
+        createChannelView(db);
+        createChannelGroupValueView(db);
+        createElectricityMeterLogView(db);
+        createImpulseCounterLogView(db);
+    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /*
-        execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "DROP TABLE " + SuplaContract.UserIconsEntry.TABLE_NAME);
         execSQL(db, "DROP VIEW " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
         */
     }
@@ -537,7 +708,6 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < newVersion) {
 
             for (int nv = oldVersion; nv < newVersion; nv++) {
-
                 switch (nv) {
                     case 1:
                         upgradeToV2(db);
@@ -560,8 +730,20 @@ public class DbHelper extends SQLiteOpenHelper {
                     case 7:
                         upgradeToV8(db);
                         break;
+                    case 8:
+                        upgradeToV9(db);
+                        break;
+                    case 9:
+                        upgradeToV10(db);
+                        break;
+                    case 10:
+                        upgradeToV11(db);
+                        break;
                 }
             }
+
+            // Recreate views on the end
+            recreateViews(db);
         }
 
     }
@@ -755,9 +937,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
@@ -766,7 +952,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
-
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4,
         };
 
         return (Channel) getItem("org.supla.android.db.Channel",
@@ -943,7 +1132,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return updateChannelValue(channelValue.Value, channelValue.Id, channelValue.OnLine);
     }
 
-    public ChannelExtendedValue getChannelExtendedValue(int channelId) {
+    private ChannelExtendedValue getChannelExtendedValue(int channelId) {
 
         String[] projection = {
                 SuplaContract.ChannelExtendedValueEntry._ID,
@@ -1185,12 +1374,20 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " "
@@ -1207,6 +1404,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4 + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4
 
                 + " FROM " + SuplaContract.ChannelViewEntry.VIEW_NAME + " C"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
@@ -1248,11 +1453,22 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
                 + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " "
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
 
                 + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " G"
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
                 + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = L."
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I"
+                + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
                 + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " DESC, "
@@ -1426,6 +1642,82 @@ public class DbHelper extends SQLiteOpenHelper {
         return result.toArray(new Integer[0]);
     }
 
+    private double getLastMeasurementValue(String tableName, String colTimestamp,
+                                           String colChannelId, String colValue, int monthOffset,
+                                           int channelId) {
+        double result = 0;
+
+        String[] projection = {
+                "SUM("+colValue+")"
+        };
+
+        String selection = colChannelId
+                + " = ? AND " + colTimestamp + " <= ?";
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MONTH, monthOffset);
+        calendar.add(Calendar.SECOND, -1);
+
+        String[] selectionArgs = {
+                String.valueOf(channelId),
+                String.valueOf(calendar.getTimeInMillis()/1000)
+        };
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(
+                tableName,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                colTimestamp +" DESC",
+                "1");
+
+        result = c.getCount();
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            result = c.getDouble(0);
+        }
+
+        c.close();
+        db.close();
+
+        return result;
+    }
+
+    public double getLastImpulseCounterMeasurementValue(int monthOffset,
+                                           int channelId) {
+        return getLastMeasurementValue(SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE,
+                 monthOffset, channelId);
+    }
+
+    public double getLastElectricityMeterMeasurementValue(int monthOffset,
+                                                        int channelId) {
+        return getLastMeasurementValue(SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME,
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID,
+                "IFNULL("
+                        +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE
+                        + ", 0) + IFNULL("
+                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE
+                        + ",0) + IFNULL("
+                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
+                        +",0)",
+                monthOffset, channelId);
+    }
+
     private int getMeasurementTimestamp(String tableName, String colTimestamp,
                                         String colChannelId, int channelId, boolean min) {
 
@@ -1441,8 +1733,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        //execSQL(db, "DELETE FROM "+SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
-
         Cursor c = db.rawQuery(selection, null);
         c.moveToFirst();
         max = c.getInt(0);
@@ -1452,12 +1742,74 @@ public class DbHelper extends SQLiteOpenHelper {
         return max;
     }
 
+    private int getTotalCount(String tableName, String colChannelId, int channelId,
+                              String andWhere) {
+
+        String selection = "SELECT COUNT(*) FROM "
+                +tableName
+                +" WHERE "+colChannelId
+                +" = "+Integer.toString(channelId)
+                +andWhere;
+
+        int total = 0;
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery(selection, null);
+        c.moveToFirst();
+        total = c.getInt(0);
+        c.close();
+        db.close();
+
+        return total;
+    }
+
+    private int getTotalCount(String tableName, String colChannelId, int channelId) {
+        return getTotalCount(tableName, colChannelId, channelId, "");
+    }
+
+    private boolean timestampStartsWithTheCurrentMonth(long TS) {
+        if (TS == 0) {
+            return true;
+        } else {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+
+            Calendar minDate = Calendar.getInstance();
+            minDate.setTime(new Date(TS*1000));
+
+            return minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                    && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH);
+        }
+
+    }
+
     public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
 
         return getMeasurementTimestamp(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public boolean electricityMeterMeasurementsStartsWithTheCurrentMonth(int channelId) {
+        long minTS = getElectricityMeterMeasurementTimestamp(channelId,
+                true);
+        return timestampStartsWithTheCurrentMonth(minTS);
+    }
+
+    public int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement) {
+
+        String complementCondition = "";
+        if (withoutComplement) {
+            complementCondition = " AND " +
+                    SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT + " = 0";
+        }
+
+        return getTotalCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
+                channelId,
+                complementCondition);
     }
 
     public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(
@@ -1479,6 +1831,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT
         };
 
         String selection = SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
@@ -1520,7 +1873,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId, String GroupByDateFormat) {
+    public Cursor getElectricityMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat,
+                                             Date dateFrom, Date dateTo) {
 
         String sql = "SELECT SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE+")"+
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE + ", "
@@ -1536,15 +1891,24 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " WHERE "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
                 + " = "
-                + Integer.toString(channelId)
-                +" GROUP BY "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " GROUP BY "
                 + " strftime('"
                 + GroupByDateFormat
                 + "', " + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")"
                 +" ORDER BY "
                 +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP
                 + " ASC ";
-
 
         return db.rawQuery(sql, null);
     }
@@ -1578,6 +1942,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
 
+    }
+
+    public int getThermostatMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.ThermostatLogEntry.TABLE_NAME,
+                SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId);
     }
 
     public void deleteThermostatMeasurements(SQLiteDatabase db, int channelId) {
@@ -1614,5 +1983,424 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return db.rawQuery(sql, null);
+    }
+
+    public int getTempHumidityMeasurementTimestamp(int channelId, boolean min) {
+        return getMeasurementTimestamp(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public int getTempHumidityMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId);
+    }
+
+    public void deleteTempHumidityMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void addTempHumidityMeasurement(SQLiteDatabase db,
+                                           TempHumidityMeasurementItem emi) {
+        db.insertWithOnConflict(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
+                null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId,
+                                              String GroupByDateFormat,
+                                              Date dateFrom, Date dateTo) {
+
+        String sql = "SELECT "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " ORDER BY "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+        
+        return db.rawQuery(sql, null);
+    }
+
+    public Cursor getTempHumidityMeasurements(SQLiteDatabase db, int channelId,
+                                              String GroupByDateFormat) {
+        return getTempHumidityMeasurements(db, channelId, GroupByDateFormat,
+                null, null);
+    }
+
+    public int getTemperatureMeasurementTimestamp(int channelId, boolean min) {
+        return getMeasurementTimestamp(SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public int getTemperatureMeasurementTotalCount(int channelId) {
+        return getTotalCount(SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId);
+    }
+
+    public void deleteTemperatureMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void addTemperatureMeasurement(SQLiteDatabase db,
+                                          TemperatureMeasurementItem emi) {
+        db.insertWithOnConflict(SuplaContract.TemperatureLogEntry.TABLE_NAME,
+                null, emi.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat, Date dateFrom, Date dateTo) {
+
+        String sql = "SELECT "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE + ", "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.TemperatureLogEntry.TABLE_NAME
+                + " WHERE "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " ORDER BY "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
+    }
+
+    public Cursor getTemperatureMeasurements(SQLiteDatabase db, int channelId,
+                                             String GroupByDateFormat) {
+        return getTemperatureMeasurements(db, channelId, GroupByDateFormat,
+                null, null);
+    }
+
+    public void addImpulseCounterMeasurement(SQLiteDatabase db,
+                                          ImpulseCounterMeasurementItem item) {
+        db.insertWithOnConflict(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                null, item.getContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
+
+        return getMeasurementTimestamp(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId, min);
+
+    }
+
+    public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
+        long minTS = getImpulseCounterMeasurementTimestamp(channelId,
+                true);
+        return timestampStartsWithTheCurrentMonth(minTS);
+    }
+
+    public int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement) {
+
+        String complementCondition = "";
+
+        if (withoutComplement) {
+            complementCondition = " AND " +
+                    SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT + " = 0";
+        }
+
+        return getTotalCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId,
+                complementCondition);
+    }
+
+    public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(
+            SQLiteDatabase db, int channelId, long timestamp) {
+        String[] projection = {
+                SuplaContract.ImpulseCounterLogEntry._ID,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
+        };
+
+        String selection = SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                + " = ? AND " + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
+                + " < ? AND " + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                + " = 0";
+
+        String[] selectionArgs = {
+                String.valueOf(channelId),
+                String.valueOf(timestamp)
+        };
+
+        Cursor c = db.query(
+                SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP +" DESC",
+                "1"
+        );
+
+        ImpulseCounterMeasurementItem item = null;
+        if (c.getCount() > 0) {
+            item = new ImpulseCounterMeasurementItem();
+            c.moveToFirst();
+            item.AssignCursorData(c);
+        }
+
+        c.close();
+
+        return item;
+    }
+
+    public Cursor getImpulseCounterMeasurements(SQLiteDatabase db, int channelId,
+                                                String GroupByDateFormat,
+                                                Date dateFrom, Date dateTo) {
+
+        String sql = "SELECT SUM("
+                +SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER+")"+
+                SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COUNTER + ", "
+                + " SUM("
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ")"
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ", "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                + " FROM " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME
+                + " WHERE "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID
+                + " = "
+                + Integer.toString(channelId);
+
+        if (dateFrom != null && dateTo != null) {
+            sql += " AND "
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " >= " + Long.toString(dateFrom.getTime() / 1000)
+                    + " AND "
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                    + " <= " + Long.toString(dateTo.getTime() / 1000);
+        }
+
+        sql += " GROUP BY "
+                + " strftime('"
+                + GroupByDateFormat
+                + "', " + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_DATE + ")"
+                +" ORDER BY "
+                +SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+                + " ASC ";
+
+
+        return db.rawQuery(sql, null);
+    }
+
+    public void deleteImpulseCounterMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public void deleteUncalculatedImpulseCounterMeasurements(SQLiteDatabase db, int channelId) {
+        String[] args = {
+                String.valueOf(channelId),
+        };
+
+        db.delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
+                        + " = 0 AND "
+                        + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
+                        + " = ?",
+                args);
+    }
+
+    public ArrayList<Integer> iconsToDownload(SQLiteDatabase db) {
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+
+        String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " FROM " +SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
+                + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE "+SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND "+SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer id = cursor.getInt(
+                        cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                if ( !ids.contains(id) ) {
+                    ids.add(id);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " FROM " +SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN "+SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
+                + "U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND "+SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U."+SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer id = cursor.getInt(
+                        cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON));
+                if ( !ids.contains(id) ) {
+                    ids.add(id);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+
+        return ids;
+    }
+
+    public boolean addUserIcons(SQLiteDatabase db,
+                             int Id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
+
+        if (db == null
+                || Id <= 0
+                || (img1 == null && img2 == null && img3 == null && img4 == null)) {
+            return false;
+        }
+
+        ContentValues values = new ContentValues();
+
+        values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
+
+        if (img1!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1);
+            ImageCache.addImage(new ImageId(Id, 1), img1);
+        }
+
+        if (img2!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2);
+            ImageCache.addImage(new ImageId(Id, 2), img2);
+        }
+
+        if (img3!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3);
+            ImageCache.addImage(new ImageId(Id, 3), img3);
+        }
+
+        if (img4!= null) {
+            values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4);
+            ImageCache.addImage(new ImageId(Id, 4), img4);
+        }
+
+        db.insertWithOnConflict(SuplaContract.UserIconsEntry.TABLE_NAME,
+                null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+        return true;
+    }
+
+    public void deleteUserIcons() {
+        SQLiteDatabase db = getReadableDatabase();
+        db.delete(SuplaContract.UserIconsEntry.TABLE_NAME, null, null);
+        db.close();
+
+        ImageCache.clear();
+    }
+
+    public void loadUserIconsIntoCache() {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sql = "SELECT " + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
+
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                for (int a = 1; a <= 4; a++) {
+                    String field = "";
+                    switch (a) {
+                        case 1:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1;
+                            break;
+                        case 2:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2;
+                            break;
+                        case 3:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3;
+                            break;
+                        case 4:
+                            field = SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4;
+                            break;
+                    }
+
+                    byte[] image = cursor.getBlob(cursor.getColumnIndex(field));
+                    int remoteId = cursor.getInt(cursor.getColumnIndex(
+                            SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
+
+                    if (image != null && image.length > 0) {
+                        ImageCache.addImage(new ImageId(remoteId, a), image);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
     }
 }

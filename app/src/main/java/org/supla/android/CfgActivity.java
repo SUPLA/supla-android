@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.Preferences;
 
 public class CfgActivity extends NavigationActivity {
@@ -68,7 +69,7 @@ public class CfgActivity extends NavigationActivity {
 
         setContentView(R.layout.activity_cfg);
 
-        rlContent = (RelativeLayout) findViewById(R.id.cfg_content);
+        rlContent = findViewById(R.id.cfg_content);
 
         vBasic = Inflate(R.layout.activity_cfg_basic, null);
         vAdvanced = Inflate(R.layout.activity_cfg_advanced, null);
@@ -79,13 +80,13 @@ public class CfgActivity extends NavigationActivity {
         vAdvanced.setVisibility(View.VISIBLE);
         rlContent.addView(vAdvanced);
 
-        cbAdvanced = (CheckBox) findViewById(R.id.cfg_cb_advanced);
+        cbAdvanced = findViewById(R.id.cfg_cb_advanced);
         cbAdvanced.setOnClickListener(this);
 
-        edServerAddr = (EditText) findViewById(R.id.edServerAddr);
-        edAccessID = (EditText) findViewById(R.id.edAccessID);
-        edAccessIDpwd = (EditText) findViewById(R.id.edAccessIDpwd);
-        edEmail = (EditText) findViewById(R.id.cfg_email);
+        edServerAddr = findViewById(R.id.edServerAddr);
+        edAccessID = findViewById(R.id.edAccessID);
+        edAccessIDpwd = findViewById(R.id.edAccessIDpwd);
+        edEmail = findViewById(R.id.cfg_email);
 
         edServerAddr.setOnFocusChangeListener(fcl);
         edAccessID.setOnFocusChangeListener(fcl);
@@ -98,28 +99,28 @@ public class CfgActivity extends NavigationActivity {
         edAccessIDpwd.setTypeface(type);
         edEmail.setTypeface(type);
 
-        btnCreate = (Button) findViewById(R.id.cfg_create_account);
+        btnCreate = findViewById(R.id.cfg_create_account);
         btnCreate.setOnClickListener(this);
 
         type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
-        TextView v = (TextView) findViewById(R.id.cfg_label_svr_address);
+        TextView v = findViewById(R.id.cfg_label_svr_address);
         v.setTypeface(type);
 
-        v = (TextView) findViewById(R.id.cfg_label_access_id);
+        v = findViewById(R.id.cfg_label_access_id);
         v.setTypeface(type);
 
-        v = (TextView) findViewById(R.id.cfg_label_access_pwd);
+        v = findViewById(R.id.cfg_label_access_pwd);
         v.setTypeface(type);
 
-        v = (TextView) findViewById(R.id.cfg_label_email);
+        v = findViewById(R.id.cfg_label_email);
         v.setTypeface(type);
 
 
         type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
-        v = (TextView) findViewById(R.id.cfg_label_title_basic);
+        v = findViewById(R.id.cfg_label_title_basic);
         v.setTypeface(type);
 
-        v = (TextView) findViewById(R.id.cfg_label_title_adv);
+        v = findViewById(R.id.cfg_label_title_adv);
         v.setTypeface(type);
 
         btnCreate.setTypeface(type, Typeface.BOLD);
@@ -137,10 +138,10 @@ public class CfgActivity extends NavigationActivity {
             edEmail.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
         }
 
-        btnSaveBasic = (Button) findViewById(R.id.cfg_save_basic);
+        btnSaveBasic = findViewById(R.id.cfg_save_basic);
         btnSaveBasic.setOnClickListener(this);
 
-        btnSaveAdv = (Button) findViewById(R.id.cfg_save_adv);
+        btnSaveAdv = findViewById(R.id.cfg_save_adv);
         btnSaveAdv.setOnClickListener(this);
 
         edEmail.addTextChangedListener(new TextWatcher() {
@@ -246,6 +247,10 @@ public class CfgActivity extends NavigationActivity {
 
 
         if (changed) {
+
+            DbHelper DbH = new DbHelper(this);
+            DbH.deleteUserIcons();
+            DbH = null;
 
             prefs.setPreferedProtocolVersion();
 

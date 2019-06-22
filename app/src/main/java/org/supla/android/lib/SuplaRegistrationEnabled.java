@@ -26,7 +26,7 @@ public class SuplaRegistrationEnabled {
 
     public SuplaRegistrationEnabled() {
 
-    };
+    }
 
     public SuplaRegistrationEnabled(SuplaRegistrationEnabled regen) {
         if (regen!=null) {

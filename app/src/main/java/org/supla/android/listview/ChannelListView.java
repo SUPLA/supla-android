@@ -34,9 +34,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGB;
 import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailEM;
+import org.supla.android.ChannelDetailTempHumidity;
+import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
@@ -134,8 +137,27 @@ public class ChannelListView extends ListView {
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
 
-                    if (!(mDetailLayout instanceof ChannelDetailEM))
+                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+                        if (!(mDetailLayout instanceof ChannelDetailIC))
+                            mDetailLayout = null;
+                    } else {
+                        if (!(mDetailLayout instanceof ChannelDetailEM))
+                            mDetailLayout = null;
+                    }
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    if (!(mDetailLayout instanceof ChannelDetailTemperature)
+                            || mDetailLayout instanceof ChannelDetailTempHumidity)
+                        mDetailLayout = null;
+
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    if (!(mDetailLayout instanceof ChannelDetailTempHumidity))
                         mDetailLayout = null;
 
                     break;
@@ -170,7 +192,19 @@ public class ChannelListView extends ListView {
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                    mDetailLayout = new ChannelDetailEM(getContext(), this);
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+                        mDetailLayout = new ChannelDetailIC(getContext(), this);
+                    } else {
+                        mDetailLayout = new ChannelDetailEM(getContext(), this);
+                    }
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                    mDetailLayout = new ChannelDetailTemperature(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                    mDetailLayout = new ChannelDetailTempHumidity(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     mDetailLayout = new ChannelDetailThermostat(getContext(), this);
@@ -593,8 +627,7 @@ public class ChannelListView extends ListView {
 
             View v = getChildAt(i);
 
-            if (v != null
-                    && v instanceof ChannelLayout) {
+            if (v instanceof ChannelLayout) {
                 v.setBackgroundColor(color);
             }
 
@@ -618,8 +651,7 @@ public class ChannelListView extends ListView {
             View v = getChildAt(i - start);
 
 
-            if (v != null
-                    && v instanceof ChannelLayout
+            if (v instanceof ChannelLayout
                     && ((ChannelLayout) v).Slided() > 0) {
                 return true;
             }

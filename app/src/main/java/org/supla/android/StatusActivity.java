@@ -54,22 +54,22 @@ public class StatusActivity extends NavigationActivity {
 
         mode = 0;
 
-        img = (ImageView)findViewById(R.id.status_img);
-        progress = (ProgressBar)findViewById(R.id.status_progress);
+        img = findViewById(R.id.status_img);
+        progress = findViewById(R.id.status_progress);
         progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
 
-        msg = (TextView)findViewById(R.id.status_text);
+        msg = findViewById(R.id.status_text);
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
         msg.setTypeface(type);
 
-        btnSettings = (Button)findViewById(R.id.status_btn);
+        btnSettings = findViewById(R.id.status_btn);
         type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
         btnSettings.setTypeface(type);
         btnSettings.setTransformationMethod(null);
         btnSettings.setText(getResources().getText(R.string.settings));
         btnSettings.setOnClickListener(this);
 
-        btnRetry = (Button)findViewById(R.id.retry_btn);
+        btnRetry = findViewById(R.id.retry_btn);
         btnRetry.setOnClickListener(this);
 
         layout = (RelativeLayout)msg.getParent();
@@ -192,8 +192,7 @@ public class StatusActivity extends NavigationActivity {
     protected void OnRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if ( CurrentActivity == null
-                || !(CurrentActivity instanceof AddWizardActivity) ) {
+        if ( !(CurrentActivity instanceof AddWizardActivity) ) {
             showMain(this);
         }
 

@@ -44,12 +44,12 @@ public class CreateAccountActivity extends NavigationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createaccount);
-        mWebView = (WebView) findViewById(R.id.webBrowser);
+        mWebView = findViewById(R.id.webBrowser);
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        progress = (ProgressBar)findViewById(R.id.caProgressBar);
+        progress = findViewById(R.id.caProgressBar);
         progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
 
         showMenuBar();

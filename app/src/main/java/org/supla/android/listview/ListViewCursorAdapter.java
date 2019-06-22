@@ -23,18 +23,11 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
-import org.supla.android.db.Location;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.OnSectionLayoutTouchListener {
 
@@ -48,9 +41,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
-
-    public Map<String, Boolean> sectionCollapsed;
-
 
     public class SectionItem {
         private int locationId;
@@ -95,7 +85,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     private void init(Context context, Cursor cursor) {
         currentSectionIndex = 0;
         Sections = new ArrayList<>();
-        sectionCollapsed = new HashMap<>();
         dbHelper = new DbHelper(context);
         setCursor(cursor);
         this.context = context;
@@ -123,6 +112,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             SectionItem s2 = S2.get(a);
 
             if ( s1.getPosition() != s2.getPosition()
+                    || s1.getCollapsed() != s2.getCollapsed()
                     || !s1.getCaption().equals(s2.getCaption()))
                 return true;
         }
@@ -315,6 +305,14 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
         Object obj = getItem(position);
 
+        int _collapsed = 0;
+
+        if (isGroup()) {
+            _collapsed = 0x2;
+        } else {
+            _collapsed = 0x1;
+        }
+
         if ( obj instanceof SectionItem ) {
 
             if ( ((SectionItem)obj).view == null ) {
@@ -322,8 +320,8 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                 ((SectionItem)obj).view.setCaption(((SectionItem)obj).getCaption());
                 ((SectionItem)obj).view.setLocationId(((SectionItem)obj).getLocationId());
                 ((SectionItem)obj).view.setOnSectionLayoutTouchListener(this);
-
-                sectionCollapsed.put(((SectionItem) obj).caption, true);
+                ((SectionItem)obj).view.
+                        setCollapsed((((SectionItem)obj).getCollapsed() & _collapsed) > 0);
             }
 
             convertView = ((SectionItem)obj).view;
@@ -331,21 +329,17 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         } else if ( obj instanceof Cursor ) {
 
             ChannelBase cbase;
-            int _collapsed = 0;
 
             if (isGroup()) {
                 cbase = new ChannelGroup();
-                _collapsed = 0x2;
             } else {
                 cbase = new Channel();
-                _collapsed = 0x1;
             }
 
             int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
             if ((collapsed & _collapsed) > 0) {
 
-                if (convertView == null
-                        || !(convertView instanceof  View)
+                if (!(convertView instanceof  View)
                         || convertView.getVisibility() != View.GONE) {
                     convertView = new View(context);
                     convertView.setVisibility(View.GONE);
@@ -354,8 +348,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
                 return convertView;
             }
 
-            if ( convertView == null
-                    || !(convertView instanceof ChannelLayout)
+            if (!(convertView instanceof ChannelLayout)
                     || convertView.getVisibility() == View.GONE  ) {
                 convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView)parent : null);
             }

@@ -108,17 +108,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuBarLayout = (RelativeLayout)Inflate(R.layout.menubar, null);
             MenuBarLayout.setVisibility(View.GONE);
 
-            TextView title = (TextView)MenuBarLayout.findViewById(R.id.menubar_title);
+            TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
             Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
             title.setTypeface(type);
 
             getRootLayout().addView(MenuBarLayout);
 
-            MenuButton = (Button)findViewById(R.id.menubutton);
+            MenuButton = findViewById(R.id.menubutton);
             MenuButton.setVisibility(View.GONE);
             MenuButton.setOnClickListener(this);
 
-            GroupButton = (Button)findViewById(R.id.groupbutton);
+            GroupButton = findViewById(R.id.groupbutton);
             GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(Integer.valueOf(0));
@@ -134,11 +134,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuItemsLayout = (RelativeLayout)Inflate(R.layout.menuitems, null);
             MenuItemsLayout.setVisibility(View.GONE);
 
-            MiSettings = (Button)MenuItemsLayout.findViewById(R.id.menuitem_settings);
-            MiAbout = (Button)MenuItemsLayout.findViewById(R.id.menuitem_about);
-            MiDonate = (Button)MenuItemsLayout.findViewById(R.id.menuitem_donate);
-            MiHelp = (Button)MenuItemsLayout.findViewById(R.id.menuitem_help);
-            MiAddDevice = (Button)MenuItemsLayout.findViewById(R.id.menuitem_add);
+            MiSettings = MenuItemsLayout.findViewById(R.id.menuitem_settings);
+            MiAbout = MenuItemsLayout.findViewById(R.id.menuitem_about);
+            MiDonate = MenuItemsLayout.findViewById(R.id.menuitem_donate);
+            MiHelp = MenuItemsLayout.findViewById(R.id.menuitem_help);
+            MiAddDevice = MenuItemsLayout.findViewById(R.id.menuitem_add);
 
             MiSettings.setOnClickListener(this);
             MiAbout.setOnClickListener(this);
@@ -146,12 +146,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MiHelp.setOnClickListener(this);
             MiAddDevice.setOnClickListener(this);
 
-            SettingsButton = (Button)MenuItemsLayout.findViewById(R.id.btn_settings);
-            AboutButton = (Button)MenuItemsLayout.findViewById(R.id.btn_about);
-            DonateButton = (Button)MenuItemsLayout.findViewById(R.id.btn_donate);
-            HelpButton = (Button)MenuItemsLayout.findViewById(R.id.btn_help);
-            HomepageButton = (Button)MenuItemsLayout.findViewById(R.id.btn_homepage);
-            AddDeviceButton = (Button)MenuItemsLayout.findViewById(R.id.btn_add);
+            SettingsButton = MenuItemsLayout.findViewById(R.id.btn_settings);
+            AboutButton = MenuItemsLayout.findViewById(R.id.btn_about);
+            DonateButton = MenuItemsLayout.findViewById(R.id.btn_donate);
+            HelpButton = MenuItemsLayout.findViewById(R.id.btn_help);
+            HomepageButton = MenuItemsLayout.findViewById(R.id.btn_homepage);
+            AddDeviceButton = MenuItemsLayout.findViewById(R.id.btn_add);
 
             SettingsButton.setOnClickListener(this);
             AboutButton.setOnClickListener(this);
@@ -357,8 +357,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public static void showMain(Activity sender) {
-
-
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 

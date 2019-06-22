@@ -370,13 +370,11 @@ public class SuplaColorBrightnessPicker extends View {
         double rightX = top.X + Math.cos(topAngle - arrowRad) * arrowHeight_a;
         double rightY = top.Y + Math.sin(topAngle - arrowRad) * arrowHeight_a;
 
-        double backRad = topAngle;
+        double backLeftX = leftX + Math.cos(topAngle) * arrowHeight_b;
+        double backLeftY = leftY + Math.sin(topAngle) * arrowHeight_b;
 
-        double backLeftX = leftX + Math.cos(backRad) * arrowHeight_b;
-        double backLeftY = leftY + Math.sin(backRad) * arrowHeight_b;
-
-        double backRightX = rightX + Math.cos(backRad) * arrowHeight_b;
-        double backRightY = rightY + Math.sin(backRad) * arrowHeight_b;
+        double backRightX = rightX + Math.cos(topAngle) * arrowHeight_b;
+        double backRightY = rightY + Math.sin(topAngle) * arrowHeight_b;
 
         arrowPath.reset();
         arrowPath.moveTo((float) top.X, (float) top.Y);

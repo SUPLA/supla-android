@@ -35,11 +35,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.images.ImageCache;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -127,8 +129,8 @@ public class ChannelLayout extends LinearLayout {
 
         private ImageView Img1;
         private ImageView Img2;
-        private int Img1Idx;
-        private int Img2Idx;
+        private ImageId Img1Id;
+        private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
 
@@ -231,7 +233,9 @@ public class ChannelLayout extends LinearLayout {
                 width *= 4.3;
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
 
                 width *= 2.8;
 
@@ -277,7 +281,9 @@ public class ChannelLayout extends LinearLayout {
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
 
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
 
                 SetImgDimensions(Img1, false, 0);
                 SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
@@ -323,30 +329,29 @@ public class ChannelLayout extends LinearLayout {
 
             }
 
-
-
-
         }
 
-        public void setImage(int img1Idx, int img2Idx) {
+        public void setImage(ImageId img1Id, ImageId img2Id) {
 
-            if (Img1Idx == img1Idx && Img2Idx == img2Idx)
+            if (ImageId.equals(img1Id, Img1Id)
+                    && ImageId.equals(img2Id, Img2Id)) {
                 return;
+            }
 
-            Img1Idx = img1Idx;
-            Img2Idx = img2Idx;
+            Img1Id = img1Id;
+            Img2Id = img2Id;
 
-            if (Img1Idx == -1) {
+            if (Img1Id == null) {
                 Img1.setVisibility(View.INVISIBLE);
             } else {
-                Img1.setImageResource(Img1Idx);
+                Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
                 Img1.setVisibility(View.VISIBLE);
             }
 
-            if (Img2Idx == -1) {
+            if (Img2Id == null) {
                 Img2.setVisibility(View.INVISIBLE);
             } else {
-                Img2.setImageResource(Img2Idx);
+                Img2.setImageBitmap(ImageCache.getBitmap(getContext(), img2Id));
                 Img2.setVisibility(View.VISIBLE);
             }
 
@@ -933,16 +938,6 @@ public class ChannelLayout extends LinearLayout {
 
                     lenabled = true;
                     renabled = true;
-
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-
-                    left_onlineStatus.setVisibility(View.INVISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
-
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
@@ -961,15 +956,14 @@ public class ChannelLayout extends LinearLayout {
 
                     break;
 
-
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-
-                    left_onlineStatus.setVisibility(View.INVISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
-
-                    break;
-
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/channel_section_height"
+        android:background="@color/channel_section_cell"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvSectionCaption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/channel_separator_text_margin"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textColor="@color/channel_section_text"
+            android:textSize="@dimen/channel_section_text" />
+
+        <FrameLayout
+            android:id="@+id/frmSectionCollapsed"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivSectionCollapsed"
+                android:layout_width="25dp"
+                android:layout_height="15dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/collapsed"
+                android:cropToPadding="false"
+                android:drawingCacheQuality="high" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/channel_separetor" />
+
+</LinearLayout>

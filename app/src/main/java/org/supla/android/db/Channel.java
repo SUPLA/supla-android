@@ -22,12 +22,16 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.supla.android.Trace;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaConst;
 
 
 public class Channel extends ChannelBase {
 
     private ChannelValue Value;
+    private ChannelExtendedValue ExtendedValue;
     private int Type;
     private int ProtocolVersion;
     private short ManufacturerID;
@@ -38,7 +42,7 @@ public class Channel extends ChannelBase {
         return getRemoteId();
     }
 
-    public int getType() { return Type; };
+    public int getType() { return Type; }
 
     public void setType(int type) {
         Type = type;
@@ -84,6 +88,10 @@ public class Channel extends ChannelBase {
         Value = value;
     }
 
+    public void setExtendedValue(ChannelExtendedValue extendedValue) {
+        ExtendedValue = extendedValue;
+    }
+
     public ChannelValue getValue() {
 
         if (Value == null)
@@ -92,8 +100,11 @@ public class Channel extends ChannelBase {
         return Value;
     }
 
-    public void AssignCursorData(Cursor cursor) {
+    public ChannelExtendedValue getExtendedValue() {
+        return ExtendedValue;
+    }
 
+    public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
         setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
@@ -103,7 +114,7 @@ public class Channel extends ChannelBase {
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON)));
-        setUserIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON)));
+        setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON)));
         setManufacturerID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID)));
         setProductID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
@@ -112,6 +123,14 @@ public class Channel extends ChannelBase {
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
         setValue(cv);
+
+        if (ChannelExtendedValue.valueExists(cursor)) {
+            ChannelExtendedValue cev = new ChannelExtendedValue();
+            cev.AssignCursorData(cursor);
+            setExtendedValue(cev);
+        } else {
+            setExtendedValue(null);
+        }
     }
 
     public ContentValues getContentValues() {
@@ -126,7 +145,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());
-        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON, getUserIcon());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON, getUserIconId());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID, getManufacturerID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
@@ -155,7 +174,6 @@ public class Channel extends ChannelBase {
                 || channel.ManufacturerID != getManufacturerID()
                 || channel.ProductID != getProductID()
                 || getValue().Diff(channel.Value);
-
     }
 
     public boolean Diff(Channel channel) {
@@ -190,7 +208,7 @@ public class Channel extends ChannelBase {
 
         byte p = Value != null ? Value.getPercent() : 0;
 
-        if (p < 100 && getSubValueHi() == true)
+        if (p < 100 && getSubValueHi())
             p = 100;
 
         return p;
@@ -212,15 +230,73 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getSubValueHi() > 0;
     }
 
-    public int getImageIdx(WhichOne whichImage) {
+    @Override
+    protected int imgActive(ChannelValue value) {
+
+        if (getOnLine()
+                && getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                && getRollerShutterPosition() >= 100) {
+            return 1;
+        }
+
+        return super.imgActive(value);
+    }
+
+    @Override
+    public ImageId getImageIdx(WhichOne whichImage) {
         return super.getImageIdx(whichImage, Value);
     }
 
+    public String getUnit(String defaultUnit) {
+        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
+                && getExtendedValue() != null
+                && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
+                && getExtendedValue().getExtendedValue() != null
+                && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
+
+            String unit = getExtendedValue().getExtendedValue().ImpulseCounterValue.getUnit();
+            if (unit != null && unit.length() > 0) {
+                return unit;
+            }
+        }
+        return defaultUnit;
+    }
+
+    public String getUnit() {
+        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+
+            String dUnit = "";
+            switch (getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                    dUnit = "kWh";
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                    dUnit = "m\u00B3";
+                    break;
+            }
+            return getUnit(dUnit);
+        }
+
+        return "";
+    }
+
+    protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+
+        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+            return getOnLine() ?
+                    String.format("%.1f "+getUnit(), value.getImpulseCounterCalculatedValue()) :
+                    "--- "+getUnit();
+        }
+
+        return super.getHumanReadableValue(whichOne, value);
+    }
+
     public CharSequence getHumanReadableValue(WhichOne whichOne) {
-        return super.getHumanReadableValue(whichOne, Value);
+        return getHumanReadableValue(whichOne, Value);
     }
     public CharSequence getHumanReadableValue() {
-        return super.getHumanReadableValue(WhichOne.First, Value);
+        return getHumanReadableValue(WhichOne.First, Value);
     }
 
 }

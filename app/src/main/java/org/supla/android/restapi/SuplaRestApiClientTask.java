@@ -1,5 +1,23 @@
 package org.supla.android.restapi;
 
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -50,6 +68,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     public interface IAsyncResults {
         void onRestApiTaskStarted(SuplaRestApiClientTask task);
         void onRestApiTaskFinished(SuplaRestApiClientTask task);
+        void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress);
     }
 
     @Override
@@ -70,6 +89,25 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         if (delegate!=null) {
             delegate.onRestApiTaskFinished(this);
         }
+    }
+
+    @Override
+    protected void onProgressUpdate(Object[] values) {
+        super.onProgressUpdate(values);
+
+        if (delegate!=null
+                && values != null
+                && values.length > 0
+                && values[0] instanceof Double) {
+
+            delegate.onRestApiTaskProgressUpdate(this, (Double)values[0]);
+        }
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        SuplaApp.getApp().UnregisterRestApiClientTask(this);
     }
 
     public void setChannelId(int channelId) {
@@ -170,7 +208,13 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private ApiRequestResult apiRequest(boolean retry, String endpint) {
 
         makeTokenRequest();
-        if (Token == null || Token.getUrl() == null) {
+        if (Token == null) {
+            Trace.d(log_tag, "Token == null");
+            return null;
+        }
+
+        if (Token.getUrl() == null) {
+            Trace.d(log_tag, "Token.getUrl() == null");
             return null;
         }
 

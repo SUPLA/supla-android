@@ -1,21 +1,39 @@
 package org.supla.android.db;
 
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ElectricityMeasurementItem extends MeasurementItem {
+public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
     private double[] fae;
     private double[] rae;
     private double[] fre;
     private double[] rre;
-    private boolean Calculated;
-    private boolean Divided;
+
 
     public ElectricityMeasurementItem() {
+        super();
         fae = new double[3];
         rae = new double[3];
         fre = new double[3];
@@ -23,14 +41,11 @@ public class ElectricityMeasurementItem extends MeasurementItem {
     }
 
     public ElectricityMeasurementItem(ElectricityMeasurementItem emi) {
-        ChannelId = emi.ChannelId;
-        Timestamp = emi.Timestamp;
+        super(emi);
         fae = emi.fae.clone();
         rae = emi.rae.clone();
         fre = emi.fre.clone();
         rre = emi.rre.clone();
-        Calculated = emi.Calculated;
-        Divided = emi.Divided;
     }
 
     public void setFae(int phase, double fae) {
@@ -93,14 +108,6 @@ public class ElectricityMeasurementItem extends MeasurementItem {
         return 0;
     }
 
-    public boolean isCalculated() {
-        return Calculated;
-    }
-
-    public boolean isDivided() {
-        return Divided;
-    }
-
     public void AssignJSONObject(JSONObject obj) throws JSONException {
 
         setTimestamp(obj.getLong("date_timestamp"));
@@ -161,6 +168,8 @@ public class ElectricityMeasurementItem extends MeasurementItem {
         Calculated = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED)) > 0;
 
+        Complement = cursor.getInt(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT)) > 0;
     }
 
     public ContentValues getContentValues() {
@@ -200,11 +209,14 @@ public class ElectricityMeasurementItem extends MeasurementItem {
         values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
                 isCalculated() ? 1 : 0);
 
+        values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT,
+                isComplement() ? 1 : 0);
+
         return values;
     }
 
-    public void Calculate(ElectricityMeasurementItem emi) {
-        if (emi.getTimestamp() >= getTimestamp() || Calculated) return;
+    public void Calculate(IncrementalMeasurementItem item) {
+        ElectricityMeasurementItem emi = (ElectricityMeasurementItem)item;
 
         for(int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) - emi.getFae(phase));
@@ -217,8 +229,6 @@ public class ElectricityMeasurementItem extends MeasurementItem {
     }
 
     public void DivideBy(long div) {
-        if (Divided) return;
-
         for(int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) / div);
             setRae(phase, getRae(phase) / div);

@@ -22,11 +22,12 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:extractNativeLibs="false">
-
+        android:extractNativeLibs="false"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <activity android:name=".StartActivity"
             android:screenOrientation="sensorPortrait"

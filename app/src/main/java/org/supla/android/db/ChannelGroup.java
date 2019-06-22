@@ -22,6 +22,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ public class ChannelGroup extends ChannelBase {
     }
 
     public void AssignCursorData(Cursor cursor) {
-
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
         setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC)));
@@ -59,7 +59,7 @@ public class ChannelGroup extends ChannelBase {
         TotalValue = cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE));
         setLocationId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID)));
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
-        setUserIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
+        setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
 
     }
@@ -76,7 +76,7 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID, getLocationId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON, getAltIcon());
-        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIcon());
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIconId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
 
         return values;
@@ -362,7 +362,7 @@ public class ChannelGroup extends ChannelBase {
         return getActivePercent(0);
     }
 
-    public int getImageIdx(WhichOne whichImage) {
+    public ImageId getImageIdx(WhichOne whichImage) {
         int active = 0;
 
         if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
