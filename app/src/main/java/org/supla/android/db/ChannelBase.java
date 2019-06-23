@@ -629,7 +629,7 @@ public abstract class ChannelBase extends DbItem {
 
                         return String.format("%.2f kg", weight / 1000.00);
 
-                    } else if (weight >= 1) {
+                    } else {
 
                         return String.format("%d g", (int) weight);
 
