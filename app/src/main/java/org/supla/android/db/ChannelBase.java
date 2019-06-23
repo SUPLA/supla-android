@@ -625,7 +625,7 @@ public abstract class ChannelBase extends DbItem {
                 if (getOnLine()) {
                     double weight = value.getDouble(-1);
 
-                    if (weight >= 2000) {
+                    if (Math.abs(weight) >= 2000) {
 
                         return String.format("%.2f kg", weight / 1000.00);
 
