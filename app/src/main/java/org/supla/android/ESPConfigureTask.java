@@ -80,7 +80,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         while(retryCount > 0)
             try {
 
-                Thread.sleep(1000);
+                Thread.sleep(1500);
                 Document doc = Jsoup.connect("http://192.168.4.1").get();
 
                 Elements inputs = doc.getElementsByTag("input");

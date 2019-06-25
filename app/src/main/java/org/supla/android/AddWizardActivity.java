@@ -509,17 +509,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
-                                timeout = 3;
+                                timeout = 10;
                                 break;
                             case STEP_SCAN:
-                                timeout = 40;
+                                timeout = 50;
                                 break;
                             case STEP_CONNECT:
                             case STEP_CONFIGURE:
-                                timeout = 30;
+                                timeout = 40;
                                 break;
                             case STEP_RECONNECT:
-                                timeout = 15;
+                                timeout = 25;
                                 break;
                         }
 
