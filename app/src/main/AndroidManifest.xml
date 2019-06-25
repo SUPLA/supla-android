@@ -27,7 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:extractNativeLibs="false"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:usesCleartextTraffic="true">
 
         <activity android:name=".StartActivity"
             android:screenOrientation="sensorPortrait"
