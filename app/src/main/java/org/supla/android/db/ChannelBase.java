@@ -657,7 +657,7 @@ public abstract class ChannelBase extends DbItem {
                     } else {
                         distance *= 100;
 
-                        if (distance >= 1) {
+                        if (Math.abs(distance) >= 1) {
                             return String.format("%.1f cm", distance);
                         } else {
                             distance *= 10;
