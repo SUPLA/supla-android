@@ -646,18 +646,18 @@ public abstract class ChannelBase extends DbItem {
 
                     double distance = value.getDistance();
 
-                    if (distance >= 1000) {
+                    if (Math.abs(distance) >= 1000) {
 
                         return String.format("%.2f km", distance / 1000.00);
 
-                    } else if (distance >= 1) {
+                    } else if (Math.abs(distance) >= 1) {
 
                         return String.format("%.2f m", distance);
 
                     } else {
                         distance *= 100;
 
-                        if (distance >= 1) {
+                        if (Math.abs(distance) >= 1) {
                             return String.format("%.1f cm", distance);
                         } else {
                             distance *= 10;
