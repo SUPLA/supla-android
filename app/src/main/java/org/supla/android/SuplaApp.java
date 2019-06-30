@@ -41,7 +41,8 @@ public class SuplaApp extends Application {
 
     private static SuplaClient _SuplaClient = null;
     private static SuplaApp _SuplaApp = null;
-    ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
+    private SuplaOAuthToken _OAuthToken;
+    private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
 
     private Handler _sc_msg_handler = new Handler() {
         @Override
@@ -53,8 +54,9 @@ public class SuplaApp extends Application {
 
                 if (_msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
                     synchronized (_lck3) {
+                        _OAuthToken = _msg.getOAuthToken();
                         for(int a = 0; a< _RestApiClientTasks.size(); a++) {
-                            _RestApiClientTasks.get(a).setToken(_msg.getOAuthToken());
+                            _RestApiClientTasks.get(a).setToken(_OAuthToken);
                         }
                     }
                 }
@@ -161,11 +163,8 @@ public class SuplaApp extends Application {
     public SuplaOAuthToken RegisterRestApiClientTask(SuplaRestApiClientTask task) {
         SuplaOAuthToken result = null;
         synchronized (_lck3) {
-            for(int a = 0; a< _RestApiClientTasks.size(); a++) {
-                result = _RestApiClientTasks.get(a).getTokenWhenIsAlive();
-                if (result!=null) {
-                    break;
-                }
+            if (_OAuthToken != null && _OAuthToken.isAlive()) {
+                result = new SuplaOAuthToken(_OAuthToken);
             }
 
             _RestApiClientTasks.add(task);

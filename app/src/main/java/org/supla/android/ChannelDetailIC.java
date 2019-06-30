@@ -150,19 +150,22 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
             double currentConsumption = 0;
+            double currentCost = 0;
 
             if (mDBH.impulseCounterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = ic.getCalculatedValue();
+                currentCost = ic.getTotalCost();
             } else {
                 double v0 = mDBH.getLastImpulseCounterMeasurementValue(0,
                         channel.getChannelId());
                 double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
                         channel.getChannelId());
                 currentConsumption = v0-v1;
+                currentCost = currentConsumption * ic.getPricePerUnit();
             }
 
             tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
-                    currentConsumption * ic.getPricePerUnit()));
+                    currentCost));
 
             tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
             tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), currentConsumption));
