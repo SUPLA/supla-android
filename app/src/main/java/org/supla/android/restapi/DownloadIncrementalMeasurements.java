@@ -86,6 +86,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
         if (older_item != null
                 && added) {
             addIncrementalMeasurement(db, older_item);
+            older_item = null;
         }
     }
 
