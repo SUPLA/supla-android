@@ -50,7 +50,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
             IncrementalMeasurementItem citem = newObject(younger_item);
 
-            if (older_item.getTimestamp() < citem.getTimestamp() && !citem.isCalculated())  {
+            if (!citem.isCalculated())  {
                 citem.Calculate(older_item);
             }
 
