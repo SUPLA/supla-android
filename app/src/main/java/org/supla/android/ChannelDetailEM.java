@@ -345,25 +345,28 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
             double currentConsumption = 0;
+            double currentCost = 0;
 
             DbHelper mDBH = new DbHelper(getContext(), true);
 
             if (mDBH.electricityMeterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = sum.getTotalForwardActiveEnergy();
+                currentCost = em.getTotalCost();
             } else {
                 double v0 = mDBH.getLastElectricityMeterMeasurementValue(0,
                         channel.getChannelId());
                 double v1 = mDBH.getLastElectricityMeterMeasurementValue(-1,
                         channel.getChannelId());
                 currentConsumption = v0-v1;
+                currentCost = currentConsumption * em.getPricePerUnit();
             }
 
             tvTotalForwardActiveEnergy
                     .setText(getActiveEnergyFormattedString(sum.getTotalForwardActiveEnergy()));
+            tvTotalCost.setText(String.format("%.2f "+em.getCurrency(), em.getTotalCost()));
             tvCurrentConsumption.setText(String.format("%.2f kWh", currentConsumption));
             tvCurrentCost.setText(String.format("%.2f "+em.getCurrency(),
-                    currentConsumption * em.getPricePerUnit()));
-            tvTotalCost.setText(String.format("%.2f "+em.getCurrency(), em.getTotalCost()));
+                    currentCost));
 
             SuplaChannelElectricityMeterValue.Measurement m = em.getMeasurement(phase, 0);
             if (m!= null) {
