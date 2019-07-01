@@ -69,6 +69,10 @@ public class SuplaOAuthToken {
             return Url;
         }
 
+        if (Token == null) {
+            return null;
+        }
+
         String[] t = Token.split("\\.");
         if (t.length > 1) {
             byte [] data = Base64.decode(t[t.length-1], Base64.DEFAULT);
