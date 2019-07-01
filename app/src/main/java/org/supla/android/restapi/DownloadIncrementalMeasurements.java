@@ -86,12 +86,10 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
         super.onFirstItem(db);
         added = false;
         older_item = null;
-        Trace.d("THERAD", "ON FIRST");
     }
 
     protected void onLastItem(SQLiteDatabase db) throws JSONException {
         super.onLastItem(db);
-        Trace.d("THERAD", "ON LAST");
         if (older_item != null
                 && added) {
             addIncrementalMeasurement(db, older_item);
