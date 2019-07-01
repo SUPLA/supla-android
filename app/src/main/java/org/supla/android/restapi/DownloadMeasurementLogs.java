@@ -40,7 +40,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     abstract protected void EraseMeasurements(SQLiteDatabase db);
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
-    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {}
+    protected void onFirstItem(SQLiteDatabase db) throws JSONException {}
+    protected void onLastItem(SQLiteDatabase db) throws JSONException {}
 
     protected int itemsLimitPerRequest() {return 1000;}
 
@@ -85,7 +86,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             }
         }
 
-        AfterTimestamp = getMaxTimestamp();
+        AfterTimestamp = getMaxTimestamp()+1;
         int LocalTotalCount = getLocalTotalCount();
         Double percent = 0d;
 
@@ -107,6 +108,10 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
             JSONArray arr = (JSONArray)result.getJObj();
 
+            if (arr == null || arr.length() <= 0) {
+                break;
+            }
+
             long t = System.currentTimeMillis();
 
             SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
@@ -114,12 +119,6 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
                 db.beginTransaction();
                 try {
-
-                    if (arr.length() <= 0) {
-                        noRemoteDataAvailable(db);
-                        db.setTransactionSuccessful();
-                        break;
-                    }
 
                     for(int a=0;a<arr.length();a++) {
 
@@ -134,7 +133,15 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                             AfterTimestamp = timestamp;
                         }
 
+                        if (a == 0) {
+                            onFirstItem(db);
+                        }
+
                         SaveMeasurementItem(db, timestamp, obj);
+
+                        if (a == arr.length()-1) {
+                            onLastItem(db);
+                        }
 
                         if (isCancelled()) {
                             break;
@@ -171,6 +178,8 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             Trace.d(log_tag, "TIME: "+Long.toString(System.currentTimeMillis()-t));
 
         } while (!isCancelled());
+
+
 
 
         return null;

@@ -44,7 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private SQLiteDatabase rdb;
     private boolean measurements;
@@ -674,9 +674,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
         createElectricityMeterLogTable(db);
         createImpulseCounterLogTable(db);
-
-
     }
+
+    private void upgradeToV12(SQLiteDatabase db) {
+        execSQL(db, "DELETE FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "DELETE FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+    }
+
 
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -738,6 +742,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 10:
                         upgradeToV11(db);
+                        break;
+                    case 11:
+                        upgradeToV12(db);
                         break;
                 }
             }
