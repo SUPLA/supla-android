@@ -18,9 +18,11 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.util.Base64;
 
 import org.supla.android.SuplaApp;
@@ -29,6 +31,7 @@ import java.util.Random;
 
 public class Preferences {
 
+    private static final String pref_androidid = "pref_androidid";
     private static final String pref_guid = "pref_guid";
     private static final String pref_serveraddr = "pref_serveraddr";
     private static final String pref_accessid = "pref_accessid";
@@ -45,15 +48,19 @@ public class Preferences {
     private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
 
     private SharedPreferences _prefs;
+    private Context _context;
 
     public Preferences(Context context) {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        _context = context;
 
         if ( getCfgVersion() == 0 ) {
 
             setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
             setCfgVersion(2);
         }
+
+        context.getContentResolver();
     }
 
     private int getCfgVersion() {
@@ -90,6 +97,25 @@ public class Preferences {
     }
 
     public byte[] getClientGUID() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String _androidId = Settings.Secure.getString(_context.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+
+                String androidId = _prefs.getString(pref_androidid, "");
+
+                if (androidId == null || androidId.length() == 0) {
+                    SharedPreferences.Editor editor = _prefs.edit();
+                    editor.putString(pref_androidid, _androidId);
+                    editor.apply();
+                    androidId = _androidId;
+                }
+
+                if (!androidId.equals(_androidId)) {
+                    SharedPreferences.Editor editor = _prefs.edit();
+                    editor.remove(pref_guid);
+                    editor.apply();
+                }
+        }
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }
 
