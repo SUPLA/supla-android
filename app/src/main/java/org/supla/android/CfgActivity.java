@@ -19,9 +19,7 @@ package org.supla.android;
  */
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,7 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.DbHelper;
-import org.supla.android.lib.Preferences;
 
 public class CfgActivity extends NavigationActivity {
 

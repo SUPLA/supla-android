@@ -1,4 +1,4 @@
-package org.supla.android.lib;
+package org.supla.android;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -26,6 +26,8 @@ import android.provider.Settings;
 import android.util.Base64;
 
 import org.supla.android.SuplaApp;
+import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaConst;
 
 import java.util.Random;
 
