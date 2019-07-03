@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
+import org.supla.android.Preferences;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
