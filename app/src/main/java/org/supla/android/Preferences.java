@@ -23,17 +23,14 @@ import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
-
-import org.supla.android.SuplaApp;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-
 import java.util.Random;
 
 public class Preferences {
 
-    private static final String pref_androidid = "pref_androidid";
     private static final String pref_guid = "pref_guid";
     private static final String pref_serveraddr = "pref_serveraddr";
     private static final String pref_accessid = "pref_accessid";
@@ -75,11 +72,51 @@ public class Preferences {
         editor.apply();
     }
 
+    private String getDeviceID() {
+        String Id = null;
+
+        try {
+            final TelephonyManager tm = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Id = Settings.Secure.getString(_context.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+            } else {
+                Id =  Build.SERIAL;
+            }
+
+            Id += "-" + Build.BOARD+
+                    "-"+Build.BRAND+
+                    "-"+Build.DEVICE+
+                    "-"+Build.HARDWARE;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return (Id == null || Id.length() == 0) ? "unknown" : Id;
+    }
+
+    private void encryptAndSave(String pref_key, byte[] data) {
+            SharedPreferences.Editor editor = _prefs.edit();
+            editor.putString(pref_key,
+                    Base64.encodeToString(
+                            Encryption.encryptDataWithNullOnException(
+                                    data, getDeviceID()), Base64.DEFAULT));
+            editor.putBoolean(pref_key+"_encrypted", true);
+            editor.apply();
+    }
+
     private byte[] getRandom(String pref_key, int size) {
 
         byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
-        if ( result.length != size ) {
+        if ( !_prefs.getBoolean(pref_key+"_encrypted", false) ) {
+            encryptAndSave(pref_key, result);
+        } else {
+            result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
+        }
+
+        if ( result == null || result.length != size ) {
 
             Random random = new Random();
             result = new byte[size];
@@ -88,10 +125,7 @@ public class Preferences {
                 result[a] = (byte)random.nextInt(255);
             }
 
-            SharedPreferences.Editor editor = _prefs.edit();
-            editor.putString(pref_key, Base64.encodeToString(result, Base64.DEFAULT));
-            editor.apply();
-
+            encryptAndSave(pref_key, result);
         }
 
         return result;
@@ -99,25 +133,6 @@ public class Preferences {
     }
 
     public byte[] getClientGUID() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                String _androidId = Settings.Secure.getString(_context.getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
-
-                String androidId = _prefs.getString(pref_androidid, "");
-
-                if (androidId == null || androidId.length() == 0) {
-                    SharedPreferences.Editor editor = _prefs.edit();
-                    editor.putString(pref_androidid, _androidId);
-                    editor.apply();
-                    androidId = _androidId;
-                }
-
-                if (!androidId.equals(_androidId)) {
-                    SharedPreferences.Editor editor = _prefs.edit();
-                    editor.remove(pref_guid);
-                    editor.apply();
-                }
-        }
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }
 
