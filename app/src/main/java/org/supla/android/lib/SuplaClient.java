@@ -269,8 +269,11 @@ public class SuplaClient extends Thread {
 
         boolean result;
 
-        synchronized (sc_lck) {
+        LockClientPtr();
+        try {
             result = _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
@@ -353,8 +356,11 @@ public class SuplaClient extends Thread {
 
         int result;
 
-        synchronized (sc_lck) {
+        LockClientPtr();
+        try {
             result = _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
+        } finally {
+            UnlockClientPtr();
         }
 
         return result;
