@@ -647,7 +647,7 @@ public class DbHelper extends SQLiteOpenHelper {
         addColumn(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
-        
+
     }
 
     private void upgradeToV7(SQLiteDatabase db) {
