@@ -21,6 +21,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -66,6 +67,18 @@ public class DbHelper extends SQLiteOpenHelper {
     private void execSQL(SQLiteDatabase db, String sql) {
         Trace.d("sql-statments/"+(measurements ? M_DATABASE_NAME : DATABASE_NAME), sql);
         db.execSQL(sql);
+    }
+
+    private void addColumn(SQLiteDatabase db, String sql) {
+        try {
+            execSQL(db, sql);
+        } catch(SQLException e) {
+            if ( !e.getMessage().contains("duplicate column name:") ) {
+                throw e;
+            } else {
+                e.getStackTrace();
+            }
+        }
     }
 
     private void createIndex(SQLiteDatabase db, String tableName, String fieldName) {
@@ -554,15 +567,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void upgradeToV3(SQLiteDatabase db) {
         Trace.d(DbHelper.class.getName(), "upgradeToV3");
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION
                 + " INTEGER NOT NULL default 0");
     }
@@ -607,31 +620,31 @@ public class DbHelper extends SQLiteOpenHelper {
 
         createElectricityMeterLogTable(db);
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID
                 + " SMALLINT NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID
                 + " SMALLINT NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " INTEGER NOT NULL default 0");
 
-        execSQL(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
+        addColumn(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
                 + " INTEGER NOT NULL default 0");
 
