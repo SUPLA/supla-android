@@ -34,14 +34,17 @@ public class Encryption {
     private static SecretKey generateKey(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
-        password = password.substring(0, 32);
-        String alignment = "";
+        if (password == null) {
+            password = "";
+        }
 
+        String alignment = "";
         for(int a=0;a<32-password.length();a++) {
             alignment+="0";
         }
 
         password+=alignment;
+        password = password.substring(0, 32);
 
         return new SecretKeySpec(password.getBytes(), "AES");
     }
