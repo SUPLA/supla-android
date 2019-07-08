@@ -1662,6 +1662,20 @@ public class DbHelper extends SQLiteOpenHelper {
         return result.toArray(new Integer[0]);
     }
 
+    private Calendar lastSecondInMonthWithOffset(int monthOffset) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MONTH, monthOffset);
+        calendar.add(Calendar.SECOND, -1);
+        return calendar;
+    }
+
     private double getLastMeasurementValue(String tableName, String colTimestamp,
                                            String colChannelId, String colValue, int monthOffset,
                                            int channelId) {
@@ -1674,20 +1688,9 @@ public class DbHelper extends SQLiteOpenHelper {
         String selection = colChannelId
                 + " = ? AND " + colTimestamp + " <= ?";
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.add(Calendar.MONTH, 1);
-        calendar.add(Calendar.MONTH, monthOffset);
-        calendar.add(Calendar.SECOND, -1);
-
         String[] selectionArgs = {
                 String.valueOf(channelId),
-                String.valueOf(calendar.getTimeInMillis()/1000)
+                String.valueOf(lastSecondInMonthWithOffset(monthOffset).getTimeInMillis()/1000)
         };
 
         SQLiteDatabase db = getReadableDatabase();
