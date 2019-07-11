@@ -137,7 +137,8 @@
     <string name="hp_cfg_turbo_time">TURBO režimo trukmė</string>
     <string name="hp_cfg_water_max">Maksimali vandens temperatūra</string>
     <string name="hp_cfg_eco_reduction">Temperatūros mažinimas ECO režime</string>
-    <string name="hp_cfg_temp_comfort">Comfort temperatūra AUTO režime</string>
+    <string name="hp_cfg_temp_comfort_auto">Comfort temperatūra AUTO režime</string>
+    <string name="hp_temp_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO temperatūra AUTO režime</string>
     <string name="total_cost">Bendra kaina</string>
     <string name="current_cost">Kaina einamąjį mėnesį</string>

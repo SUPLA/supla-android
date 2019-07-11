@@ -18,7 +18,9 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
@@ -40,10 +42,12 @@ import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
-        SuplaRestApiClientTask.IAsyncResults {
+        SuplaRestApiClientTask.IAsyncResults, SuplaThermostatCalendar.OnCalendarTouchListener {
 
     private class CfgItem {
 
@@ -158,17 +162,19 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private Button btnTurbo;
     private Button btnPlus;
     private Button btnMinus;
+    private SuplaThermostatCalendar mCalendar;
     private TextView tvTemperature;
     private long refreshLock = 0;
     private int presetTemperature = 0;
     private Double measuredTemperature = 0.00;
     private DownloadThermostatMeasurements dtm;
     private ThermostatChartHelper chartHelper;
-    private RelativeLayout rlContent;
+    private RelativeLayout rlMain;
     private RelativeLayout rlSettings;
     private RelativeLayout rlSchedule;
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
+    private Timer delayTimer1;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -190,14 +196,17 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     protected void init() {
         super.init();
 
-        rlContent = findViewById(R.id.hpContent);
-        rlContent.setVisibility(VISIBLE);
+        rlMain = findViewById(R.id.hpMain);
+        rlMain.setVisibility(VISIBLE);
 
         rlSettings = findViewById(R.id.hpSettings);
         rlSettings.setVisibility(GONE);
 
         rlSchedule = findViewById(R.id.hpSchedule);
         rlSchedule.setVisibility(GONE);
+
+        mCalendar = findViewById(R.id.hpCalendar);
+        mCalendar.setOnCalendarTouchListener(this);
 
         progressBar = findViewById(R.id.hpProgressBar);
         progressBar.setVisibility(INVISIBLE);
@@ -345,22 +354,22 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         tvTemperature.setText(t);
     }
 
-    public void displaySettings() {
-        rlContent.setVisibility(GONE);
+    public void setSettingsVisible() {
+        rlMain.setVisibility(GONE);
         rlSchedule.setVisibility(GONE);
         rlSettings.setVisibility(VISIBLE);
     }
 
-    public void displaySchedule() {
-        rlContent.setVisibility(GONE);
+    public void setScheduleVisible() {
+        rlMain.setVisibility(GONE);
         rlSettings.setVisibility(GONE);
         rlSchedule.setVisibility(VISIBLE);
     }
 
-    public void displayContent() {
+    public void setMainViewVisible() {
         rlSettings.setVisibility(GONE);
         rlSchedule.setVisibility(GONE);
-        rlContent.setVisibility(VISIBLE);
+        rlMain.setVisibility(VISIBLE);
     }
 
     public Integer getCfgValue(int id) {
@@ -377,6 +386,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             if (item.idEqualsTo(id)) {
                 item.setValue(value);
             }
+        }
+
+        Resources res = getResources();
+
+        if (id == CfgItem.ID_TEMP_ECO) {
+            mCalendar.setProgram0Label("ECO "+Integer.toString(value)+"\u00B0");
+        } else if (id == CfgItem.ID_TEMP_COMFORT) {
+            mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+                    +" "
+                    +Integer.toString(value)+"\u00B0");
         }
     }
 
@@ -441,6 +460,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             setBtnAppearance(btnNormal, true);
         }
 
+        if (!mCalendar.isTouched()) {
+
+        }
+
     }
 
     private void runDownloadTask() {
@@ -461,7 +484,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public void onDetailShow() {
         super.onDetailShow();
 
-        displayContent();
+        setMainViewVisible();
 
         OnChannelDataChanged();
         chartHelper.load(getRemoteId());
@@ -543,17 +566,17 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         if (view == btnSettings) {
 
             if (rlSettings.getVisibility() == GONE) {
-                displaySettings();
+                setSettingsVisible();
             } else {
-                displayContent();
+                setMainViewVisible();
             }
 
         } else if (view == btnSchedule) {
 
             if (rlSchedule.getVisibility() == GONE) {
-                displaySchedule();
+                setScheduleVisible();
             } else {
-                displayContent();
+                setMainViewVisible();
             }
 
         } else if (view == btnPlus) {
@@ -641,6 +664,46 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
         chartHelper.setDownloadProgress(progress);
+    }
+
+    private void cancelDelayTimer1() {
+        if (delayTimer1 != null) {
+            delayTimer1.cancel();
+            delayTimer1 = null;
+        }
+    }
+
+    private void sendScheduleValues() {
+        cancelDelayTimer1();
+
+        refreshLock = System.currentTimeMillis()+2000;
+        Trace.d("Calendar", "Send!");
+
+    }
+
+    @Override
+    public void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour, boolean program1) {
+        cancelDelayTimer1();
+
+        delayTimer1 = new Timer();
+
+        delayTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            sendScheduleValues();
+                        }
+                    });
+                }
+
+            }
+
+        }, 2000, 1000);
     }
 }
 

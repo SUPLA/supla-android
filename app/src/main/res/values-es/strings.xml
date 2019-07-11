@@ -159,7 +159,8 @@
     <string name="hp_cfg_turbo_time">Duración del modo TURBO</string>
     <string name="hp_cfg_water_max">Temperatura máxima del agua</string>
     <string name="hp_cfg_eco_reduction">Reducción de la temperatura en modo ECO</string>
-    <string name="hp_cfg_temp_comfort">Temperatura confort en modo AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Temperatura confort en modo AUTO</string>
+    <string name="hp_temp_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO en modo AUTO</string>
     <string name="channel_func_impulsecounter">Contador de pulsos</string>
     <string name="meter_value">Lectura del contador</string>

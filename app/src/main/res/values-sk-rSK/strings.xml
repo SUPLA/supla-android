@@ -174,7 +174,8 @@
     <string name="hp_cfg_turbo_time">Trvanie režimu TURBO</string>
     <string name="hp_cfg_water_max">Maximálna teplota vody</string>
     <string name="hp_cfg_eco_reduction">Zníženie teploty v režime EKO</string>
-    <string name="hp_cfg_temp_comfort">Komfortná teplota v režime AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Komfortná teplota v režime AUTO</string>
+    <string name="hp_temp_comfort">Komfortná</string>
     <string name="hp_cfg_temp_eco">EKO teplota v režime AUTO</string>
     <string name="total_cost">Celkové náklady</string>
     <string name="current_cost">Náklady v aktuálnom mesiaci</string>

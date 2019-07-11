@@ -60,6 +60,7 @@ public class SuplaThermostatCalendar extends View {
     private int mLastHour = -1;
     private int mLastDay = -1;
     private boolean mReadOnly = false;
+    private boolean mTouched = false;
     private OnCalendarTouchListener mOnCalendarTouchListener;
 
     public interface OnCalendarTouchListener {
@@ -137,14 +138,14 @@ public class SuplaThermostatCalendar extends View {
     protected short drawLabel(Canvas canvas, short offset, String label, int color) {
         if (label != null) {
             RectF frm = getRectangle(offset+1, 24);
-            frm.right = getRectangle(offset+2, 24).right;
+            frm.right = getRectangle(offset+3, 24).right;
 
             mPaint.setColor(color);
             canvas.drawRoundRect(frm, 6, 6, mPaint);
 
             mPaint.setColor(mFontColor);
             drawText(canvas, label, frm, false);
-            offset+=2;
+            offset+=3;
         }
 
         return offset;
@@ -193,12 +194,14 @@ public class SuplaThermostatCalendar extends View {
                 && event.getAction() != MotionEvent.ACTION_MOVE) ) {
             mLastHour = -1;
             mLastDay = -1;
+            mTouched = false;
             return false;
 
         }
 
         float X =event.getX();
         float Y =event.getY();
+        mTouched = true;
 
         if ( X < mBoxWidth || Y > getHeight()-mBoxHeight) {
             return false;
@@ -336,6 +339,10 @@ public class SuplaThermostatCalendar extends View {
 
     public OnCalendarTouchListener getOnCalendarTouchListener() {
         return mOnCalendarTouchListener;
+    }
+
+    public boolean isTouched() {
+        return mTouched;
     }
 
     public void setOnCalendarTouchListener(OnCalendarTouchListener mOnCalendarTouchListener) {
