@@ -150,6 +150,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private int cfgTurboTime = 1;
 
     private Button btnSettings;
+    private Button btnSchedule;
     private Button btnOnOff;
     private Button btnNormal;
     private Button btnEco;
@@ -165,6 +166,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ThermostatChartHelper chartHelper;
     private RelativeLayout rlContent;
     private RelativeLayout rlSettings;
+    private RelativeLayout rlSchedule;
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
 
@@ -194,6 +196,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         rlSettings = findViewById(R.id.hpSettings);
         rlSettings.setVisibility(GONE);
 
+        rlSchedule = findViewById(R.id.hpSchedule);
+        rlSchedule.setVisibility(GONE);
+
         progressBar = findViewById(R.id.hpProgressBar);
         progressBar.setVisibility(INVISIBLE);
 
@@ -209,6 +214,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         btnSettings = findViewById(R.id.hpBtnSettings);
         btnSettings.setOnClickListener(this);
+
+        btnSchedule = findViewById(R.id.hpBtnSchedule);
+        btnSchedule.setOnClickListener(this);
 
         btnOnOff = findViewById(R.id.hpBtnOnOff);
         btnOnOff.setOnClickListener(this);
@@ -339,7 +347,20 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     public void displaySettings() {
         rlContent.setVisibility(GONE);
+        rlSchedule.setVisibility(GONE);
         rlSettings.setVisibility(VISIBLE);
+    }
+
+    public void displaySchedule() {
+        rlContent.setVisibility(GONE);
+        rlSettings.setVisibility(GONE);
+        rlSchedule.setVisibility(VISIBLE);
+    }
+
+    public void displayContent() {
+        rlSettings.setVisibility(GONE);
+        rlSchedule.setVisibility(GONE);
+        rlContent.setVisibility(VISIBLE);
     }
 
     public Integer getCfgValue(int id) {
@@ -440,8 +461,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public void onDetailShow() {
         super.onDetailShow();
 
-        rlContent.setVisibility(VISIBLE);
-        rlSettings.setVisibility(GONE);
+        displayContent();
 
         OnChannelDataChanged();
         chartHelper.load(getRemoteId());
@@ -525,8 +545,15 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             if (rlSettings.getVisibility() == GONE) {
                 displaySettings();
             } else {
-                rlContent.setVisibility(VISIBLE);
-                rlSettings.setVisibility(GONE);
+                displayContent();
+            }
+
+        } else if (view == btnSchedule) {
+
+            if (rlSchedule.getVisibility() == GONE) {
+                displaySchedule();
+            } else {
+                displayContent();
             }
 
         } else if (view == btnPlus) {

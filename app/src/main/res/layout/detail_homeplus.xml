@@ -21,6 +21,17 @@
         android:layout_marginTop="10dp"
         android:visibility="visible">
 
+        <Button
+            android:id="@+id/hpBtnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/settings2" />
+
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
@@ -44,15 +55,15 @@
             android:background="@drawable/heatpollogo" />
 
         <Button
-            android:id="@+id/hpBtnSettings"
+            android:id="@+id/hpBtnSchedule"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="0dp"
-            android:background="@drawable/settings2" />
+            android:layout_marginEnd="84dp"
+            android:layout_marginRight="84dp"
+            android:background="@drawable/clock" />
 
     </RelativeLayout>
 
@@ -274,6 +285,27 @@
             </LinearLayout>
 
         </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/hpSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/emFooter"
+        android:layout_below="@+id/emHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible">
+
+        <org.supla.android.SuplaThermostatCalendar
+            android:id="@+id/hpCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
     </RelativeLayout>
 
     <RelativeLayout
