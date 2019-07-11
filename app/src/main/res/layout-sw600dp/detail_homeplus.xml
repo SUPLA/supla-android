@@ -314,7 +314,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/hpMain"
+            android:id="@+id/hpBtnsAndChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/hpTemperature"
