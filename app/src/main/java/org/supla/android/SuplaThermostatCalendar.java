@@ -19,6 +19,7 @@ package org.supla.android;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -38,7 +39,7 @@ import java.text.DateFormatSymbols;
 public class SuplaThermostatCalendar extends View {
 
     private Paint mPaint;
-    private DisplayMetrics mMetrics = getResources().getDisplayMetrics();
+    private DisplayMetrics mMetrics;
     private float mSpacing;
     private float mTextSize;
     private float mGridHeight;
@@ -54,6 +55,7 @@ public class SuplaThermostatCalendar extends View {
     private int mHourProgram0Color;
     private int mHourProgram1Color;
     private int mFontColor;
+    private int mFirtsDay = 1;
 
     private boolean[][] mHourProgramGrid = new boolean[7][24];
     private boolean mSetHourProgramTo1;
@@ -69,10 +71,18 @@ public class SuplaThermostatCalendar extends View {
     }
 
     private void init() {
-        mSpacing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 3, mMetrics);
-        mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-                (float) 10, mMetrics);
+
+        Resources res = getResources();
+        if (res==null) {
+            mSpacing = 5;
+            mTextSize = 20;
+        } else {
+            mMetrics = res.getDisplayMetrics();
+            mSpacing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    (float) 3, mMetrics);
+            mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    (float) 10, mMetrics);
+        }
 
         DateFormatSymbols symbols = new DateFormatSymbols();
         mDayNames = symbols.getShortWeekdays();
@@ -151,6 +161,16 @@ public class SuplaThermostatCalendar extends View {
         return offset;
     }
 
+    public short dayWithOffset(short day) {
+
+        day = (short)(day+mFirtsDay-1);
+        if (day > 7) {
+            day-=7;
+        }
+
+        return day;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
 
@@ -160,14 +180,15 @@ public class SuplaThermostatCalendar extends View {
         for(short d = 0; d <= 7; d++) {
             for(short h = -1; h < 24; h++) {
 
-                frm = getRectangle(d, h);
+               frm = getRectangle(d, h);
+               short dayIdx = (short)(dayWithOffset((short)d)-1);
 
                if (h == -1 || d == 0) {
-                   String label;
+                   String label = "";
 
-                   if (h == -1) {
-                       label = mDayNames[d];
-                   } else {
+                   if (h == -1 && d > 0) {
+                       label = mDayNames[dayIdx+1];
+                   } else if ( h > -1 )  {
                        label = String.format("%02d", h);
                    }
 
@@ -175,7 +196,8 @@ public class SuplaThermostatCalendar extends View {
                    drawText(canvas, label, frm, false);
 
                } else {
-                   mPaint.setColor(mHourProgramGrid[d-1][h] ? mHourProgram1Color : mHourProgram0Color);
+                   mPaint.setColor(mHourProgramGrid[dayIdx][h]
+                           ? mHourProgram1Color : mHourProgram0Color);
                    canvas.drawRoundRect(frm, 6, 6, mPaint);
                }
             }
@@ -210,17 +232,18 @@ public class SuplaThermostatCalendar extends View {
         for(short d = 1; d <= 7; d++) {
             for (short h = 0; h < 24; h++) {
                 RectF frm = getRectangle(d, h);
+                short dayIdx = (short)(dayWithOffset(d) - 1);
                 if (X >= frm.left
                         && Y >= frm.top
                         && X <= frm.right
                         && Y <= frm.bottom) {
 
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        mSetHourProgramTo1 = !mHourProgramGrid[d-1][h];
+                        mSetHourProgramTo1 = !mHourProgramGrid[dayIdx][h];
                     }
 
                     if (mLastDay != d || mLastHour != h) {
-                        mHourProgramGrid[d-1][h] = mSetHourProgramTo1;
+                        mHourProgramGrid[dayIdx][h] = mSetHourProgramTo1;
                         mLastDay = d;
                         mLastHour = h;
 
@@ -313,6 +336,13 @@ public class SuplaThermostatCalendar extends View {
         invalidate();
     }
 
+    public void setFirtsDay(int firtsDay) {
+        if (firtsDay >= 1 && firtsDay <= 7) {
+            this.mFirtsDay = firtsDay;
+            invalidate();
+        }
+    }
+
     public int getHourProgram0Color() {
         return mHourProgram0Color;
     }
@@ -337,6 +367,10 @@ public class SuplaThermostatCalendar extends View {
         return mProgram1Label;
     }
 
+    public int getFirtsDay() {
+        return mFirtsDay;
+    }
+
     public OnCalendarTouchListener getOnCalendarTouchListener() {
         return mOnCalendarTouchListener;
     }
@@ -348,4 +382,9 @@ public class SuplaThermostatCalendar extends View {
     public void setOnCalendarTouchListener(OnCalendarTouchListener mOnCalendarTouchListener) {
         this.mOnCalendarTouchListener = mOnCalendarTouchListener;
     }
+
+    public void clear() {
+        mHourProgramGrid = new boolean[7][24];
+    }
+
 }
