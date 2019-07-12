@@ -20,6 +20,8 @@ package org.supla.android.lib;
 
 import android.support.annotation.IntDef;
 
+import org.supla.android.Trace;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -64,12 +66,15 @@ public class SuplaThermostatScheduleCfg {
         }
 
         CfgGroup group = null;
+        byte hourValue[] = new byte[24];
         int a;
 
         for(a=0;a<mGroups.size();a++) {
             group = mGroups.get(a);
             if ((group.mWeekDays & weekday) > 0 ) {
                 group.mWeekDays ^= weekday;
+                hourValue = group.mHourValue.clone();
+
                 if (group.mWeekDays == 0) {
                     mGroups.remove(a);
                 }
@@ -77,7 +82,6 @@ public class SuplaThermostatScheduleCfg {
             }
         }
 
-        byte hourValue[] = new byte[24];
         hourValue[hour] = value;
 
         for(a=0;a<mGroups.size();a++) {
@@ -98,23 +102,35 @@ public class SuplaThermostatScheduleCfg {
         }
     }
 
+    public @DayOfWeek int getWeekdayByDayIndex(short idx) {
+        switch(idx) {
+            case 2:  return DayOfWeek.MONDAY;
+            case 3:  return DayOfWeek.TUESDAY;
+            case 4:  return DayOfWeek.WEDNESDAY;
+            case 5:  return DayOfWeek.THURSDAY;
+            case 6:  return DayOfWeek.FRIDAY;
+            case 7:  return DayOfWeek.SATURDAY;
+            default:  return DayOfWeek.SUNDAY;
+        }
+    }
+
     public void setTemperature(@DayOfWeek int weekday, short hour, byte temperature) {
         setHourValue(HourValueType.TEMPERATURE, weekday, hour, temperature);
     }
 
-    void setProgram(@DayOfWeek int weekday, short hour, byte program) {
+    public void setProgram(@DayOfWeek int weekday, short hour, byte program) {
         setHourValue(HourValueType.PROGRAM, weekday, hour, program);
     }
 
-    void clear() {
+    public void clear() {
         mGroups.clear();
     }
 
-    int getGroupCount() {
+    public int getGroupCount() {
         return mGroups.size();
     }
 
-    int getGroupWeekDays(int groupIdx) {
+    public int getGroupWeekDays(int groupIdx) {
         if (groupIdx >= 0 && groupIdx < mGroups.size()) {
             return mGroups.get(groupIdx).mWeekDays;
         }
@@ -122,7 +138,7 @@ public class SuplaThermostatScheduleCfg {
         return 0;
     }
 
-    int getGroupHourValueType(int groupIdx) {
+    public int getGroupHourValueType(int groupIdx) {
         if (groupIdx >= 0 && groupIdx < mGroups.size()) {
             return mGroups.get(groupIdx).mValueType;
         }
@@ -130,11 +146,18 @@ public class SuplaThermostatScheduleCfg {
         return HourValueType.TEMPERATURE;
     }
 
-    byte[] getGroupHourValue(int groupIdx) {
+    public byte[] getGroupHourValue(int groupIdx) {
         if (groupIdx >= 0 && groupIdx < mGroups.size()) {
             return mGroups.get(groupIdx).mHourValue;
         }
         return new byte[24];
     }
 
+    public byte getGroupHourValue(int groupIdx, short hour) {
+        if (groupIdx >= 0 && groupIdx < mGroups.size()
+                && hour >= 0 && hour < 24) {
+            return mGroups.get(groupIdx).mHourValue[hour];
+        }
+        return 0;
+    }
 }

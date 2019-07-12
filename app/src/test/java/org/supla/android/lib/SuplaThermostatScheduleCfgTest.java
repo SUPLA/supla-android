@@ -113,6 +113,7 @@ public class SuplaThermostatScheduleCfgTest {
         cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.WEDNESDAY, (byte)1, (byte)3);
         cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.THURSDAY, (byte)2, (byte)4);
 
+        Assert.assertEquals(2, cfg.getGroupCount());
         Assert.assertEquals(0, cfg.getGroupWeekDays(-1));
         Assert.assertEquals(SuplaThermostatScheduleCfg.DayOfWeek.WEDNESDAY,
                 cfg.getGroupWeekDays(0));
@@ -121,9 +122,10 @@ public class SuplaThermostatScheduleCfgTest {
 
         cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.THURSDAY, (byte)1, (byte)3);
 
-        Assert.assertEquals(0, cfg.getGroupWeekDays(1));
-        Assert.assertEquals(SuplaThermostatScheduleCfg.DayOfWeek.WEDNESDAY
-                            | SuplaThermostatScheduleCfg.DayOfWeek.THURSDAY,
+        Assert.assertEquals(2, cfg.getGroupCount());
+        Assert.assertEquals(SuplaThermostatScheduleCfg.DayOfWeek.THURSDAY,
+                cfg.getGroupWeekDays(1));
+        Assert.assertEquals(SuplaThermostatScheduleCfg.DayOfWeek.WEDNESDAY,
                 cfg.getGroupWeekDays(0));
     }
 
@@ -159,5 +161,25 @@ public class SuplaThermostatScheduleCfgTest {
         hourValue[17] = 30;
         Assert.assertArrayEquals(hourValue, cfg.getGroupHourValue(0));
 
+    }
+
+    @Test
+    public void testGroupCount() {
+
+        SuplaThermostatScheduleCfg cfg = new SuplaThermostatScheduleCfg();
+        Assert.assertEquals(0, cfg.getGroupCount());
+
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.MONDAY, (byte)17, (byte)30);
+        Assert.assertEquals(1, cfg.getGroupCount());
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.MONDAY, (byte)18, (byte)30);
+        Assert.assertEquals(1, cfg.getGroupCount());
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.WEDNESDAY, (byte)18, (byte)30);
+        Assert.assertEquals(2, cfg.getGroupCount());
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.MONDAY, (byte)18, (byte)40);
+        Assert.assertEquals(2, cfg.getGroupCount());
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.MONDAY, (byte)17, (byte)0);
+        Assert.assertEquals(2, cfg.getGroupCount());
+        cfg.setTemperature(SuplaThermostatScheduleCfg.DayOfWeek.MONDAY, (byte)18, (byte)30);
+        Assert.assertEquals(1, cfg.getGroupCount());
     }
 }
