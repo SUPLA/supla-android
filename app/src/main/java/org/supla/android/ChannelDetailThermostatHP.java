@@ -35,11 +35,16 @@ import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.lib.SuplaChannelThermostatValue;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+
+import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -142,6 +147,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
+    public final static int PROG_ECO = 1;
+    public final static int PROG_COMFORT = 2;
     public final static int STATUS_POWERON = 0x01;
     public final static int STATUS_PROGRAMMODE = 0x04;
     public final static int STATUS_HEATERANDWATERTEST = 0x10;
@@ -207,6 +214,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         mCalendar = findViewById(R.id.hpCalendar);
         mCalendar.setOnCalendarTouchListener(this);
+        mCalendar.setFirtsDay(2);
 
         progressBar = findViewById(R.id.hpProgressBar);
         progressBar.setVisibility(INVISIBLE);
@@ -461,9 +469,20 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
         if (!mCalendar.isTouched()) {
+            mCalendar.clear();
 
+            SuplaChannelThermostatValue.Schedule schedule =
+                    cev.getExtendedValue().ThermostatValue.getSchedule();
+            if (schedule!=null && schedule.getType() ==
+                    SuplaChannelThermostatValue.Schedule.TYPE_PROGRAM) {
+                for(short d=0;d<7;d++) {
+                    for(short h=0;h<24;h++) {
+                        mCalendar.setHourProgramTo1((short)(d+1), h, schedule.getValue((byte)d,
+                                (byte)h) == PROG_COMFORT);
+                    }
+                }
+            }
         }
-
     }
 
     private void runDownloadTask() {
@@ -676,14 +695,26 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private void sendScheduleValues() {
         cancelDelayTimer1();
 
-        refreshLock = System.currentTimeMillis()+2000;
-        Trace.d("Calendar", "Send!");
+        SuplaClient client = getClient();
+        if (client!=null) {
+
+            SuplaThermostatScheduleCfg cfg =  new SuplaThermostatScheduleCfg();
+            for(short d=1;d<=7;d++) {
+                for(short h=0;h<24;h++) {
+                    cfg.setProgram(cfg.getWeekdayByDayIndex(d), h,
+                            (byte)(mCalendar.isHourProgramIsSetTo1(d, h) ? PROG_COMFORT : PROG_ECO));
+                }
+            }
+
+            client.ThermostatScheduleCfgRequest(getRemoteId(), false, cfg);
+        }
 
     }
 
     @Override
     public void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour, boolean program1) {
         cancelDelayTimer1();
+        refreshLock = System.currentTimeMillis()+4000;
 
         delayTimer1 = new Timer();
 
