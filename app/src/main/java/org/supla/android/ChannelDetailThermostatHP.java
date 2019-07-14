@@ -160,6 +160,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private int cfgTurboTime = 1;
 
+    private TextView tvChannelTitle;
     private Button btnSettings;
     private Button btnSchedule;
     private Button btnOnOff;
@@ -209,6 +210,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     protected void init() {
         super.init();
+
+
+        tvChannelTitle = findViewById(R.id.hptv_ChannelTitle);
 
         rlMain = findViewById(R.id.hpMain);
         rlMain.setVisibility(VISIBLE);
@@ -445,6 +449,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void OnChannelGroupDataChanged() {
         ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId());
+        tvChannelTitle.setText(channelGroup.getNotEmptyCaption(this.getContext()));
 
         Double t = channelGroup.getMinimumPresetTemperature();
         presetTemperatureMin = t == null ? 0 : t.intValue();
@@ -472,6 +477,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
        Channel channel = DBH.getChannel(getRemoteId());
+
+        tvChannelTitle.setText(channel.getNotEmptyCaption(this.getContext()));
 
         ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
         if (cev == null
