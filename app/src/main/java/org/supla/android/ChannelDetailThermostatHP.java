@@ -186,7 +186,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
     private Timer delayTimer1;
-    private Timer refreshTimer1;
+    private Timer reloadTimer1;
     private SuplaChannelStatus channelStatus;
     private LinearLayout llChart;
     private ListView lvChannelList;
@@ -458,11 +458,30 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         measuredTemperatureMin = t == null ? 0.0 : t.doubleValue();
         measuredTemperatureMax = channelGroup.getMaximumMeasuredTemperature();
         displayTemperature();
-        loadChannelList();
     }
 
     @Override
     public void OnChannelDataChanged() {
+
+        reloadTimer1 = new Timer();
+
+        reloadTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            loadChannelList();
+                        }
+                    });
+                }
+
+            }
+
+        }, 10, 1000);
 
         if (refreshLock > System.currentTimeMillis()) {
             return;
@@ -568,7 +587,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailShow();
 
         cancelDelayTimer1();
-        cancelRefreshTimer1();
+        cancelReloadTimer1();
 
         setButtonsOff(null, true);
         setMainViewVisible();
@@ -588,7 +607,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailHide();
 
         cancelDelayTimer1();
-        cancelRefreshTimer1();
+        cancelReloadTimer1();
     }
 
     private void setButtonsOff(Button skip, boolean all) {
@@ -805,10 +824,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-    private void cancelRefreshTimer1() {
-        if (refreshTimer1 != null) {
-            refreshTimer1.cancel();
-            refreshTimer1 = null;
+    private void cancelReloadTimer1() {
+        if (reloadTimer1 != null) {
+            reloadTimer1.cancel();
+            reloadTimer1 = null;
         }
     }
 
