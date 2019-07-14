@@ -159,7 +159,7 @@ public abstract class DetailLayout extends FrameLayout {
     public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
         SuplaClient client = getClient();
         if (client!=null) {
-            client.DeviceCalCfgRequest(getRemoteId(), cmd, dataType, data);
+            client.DeviceCalCfgRequest(getRemoteId(), isGroup(), cmd, dataType, data);
         }
     }
 

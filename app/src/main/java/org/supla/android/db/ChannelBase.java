@@ -531,32 +531,82 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
-                                                              Double presetTemp) {
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo,
+                                                                     float measuredRelativeSize,
+                                                                     float presetdRelativeSize) {
+
+        if (measuredTempFrom != null && measuredTempTo != null
+                    && measuredTempFrom.doubleValue() > measuredTempTo.doubleValue()) {
+                Double f = measuredTempFrom;
+                measuredTempFrom = measuredTempTo;
+                measuredTempTo = f;
+        }
+
+        if (presetTempFrom != null && presetTempTo != null
+                    && presetTempFrom.doubleValue() > presetTempTo.doubleValue()) {
+                Double f = presetTempFrom;
+                presetTempFrom = presetTempTo;
+                presetTempTo = f;
+        }
+
         String measured;
         String preset;
 
-        if (measuredTemp != null && measuredTemp > -273) {
-            measured = String.format("%.2f", measuredTemp)
+        if (measuredTempFrom != null && measuredTempFrom > -273) {
+            measured = String.format("%.2f", measuredTempFrom)
                     + (char) 0x00B0;
+            if (measuredTempTo != null && measuredTempTo > -273) {
+                measured += String.format(" - %.2f", measuredTempTo)
+                        + (char) 0x00B0;
+            }
         } else {
             measured = "---" + (char) 0x00B0;
         }
 
-        if (presetTemp != null && presetTemp > -273) {
-            preset = "/"+Integer.toString(presetTemp.intValue())
+        if (presetTempFrom != null && presetTempFrom > -273) {
+            preset = "/"+Integer.toString(presetTempFrom.intValue())
                     + (char) 0x00B0;
+            if (presetTempTo != null && presetTempTo > -273) {
+                preset += " - " + Integer.toString(presetTempTo.intValue())
+                        + (char) 0x00B0;
+            }
         } else {
             preset = "/---"+ (char) 0x00B0;
         }
 
         SpannableString ss =  new SpannableString(measured+preset);
-        ss.setSpan(new RelativeSizeSpan(0.7f),
+        ss.setSpan(new RelativeSizeSpan(measuredRelativeSize),
+                0,
+                measured.length(),
+                0);
+
+        ss.setSpan(new RelativeSizeSpan(presetdRelativeSize),
                 measured.length(),
                 measured.length()+preset.length(),
-                0); // set size
+                0);
 
         return ss;
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo) {
+
+        return getHumanReadableThermostatTemperature(measuredTempFrom, measuredTempTo,
+                presetTempFrom, presetTempTo,
+                1.0f, 0.7f);
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+                                                              Double presetTemp) {
+        return getHumanReadableThermostatTemperature(measuredTemp,
+                null, presetTemp,null);
     }
 
     @SuppressLint("DefaultLocale")

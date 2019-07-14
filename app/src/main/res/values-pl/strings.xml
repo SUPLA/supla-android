@@ -166,6 +166,8 @@
     <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
+    <string name="hp_turn_on">WŁĄCZ</string>
+    <string name="hp_turn_off">WYŁĄCZ</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>

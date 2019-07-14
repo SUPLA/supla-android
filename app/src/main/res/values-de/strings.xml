@@ -145,6 +145,8 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">EINGESCHALTET</string>
     <string name="hp_off">AUSGESCHALTET</string>
+    <string name="hp_turn_on">EINSCHALTEN</string>
+    <string name="hp_turn_off">AUSSCHALTEN</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>

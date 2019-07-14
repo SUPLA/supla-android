@@ -169,4 +169,6 @@
     <string name="comparsion_dayday">Palyginimas diena prie dienos</string>
     <string name="comparsion_monthmonth">Palyginimas mėnuo prie mėnesio</string>
     <string name="comparsion_yearyear">Palyginimas metai prie metų</string>
+    <string name="hp_turn_on">Įjungti</string>
+    <string name="hp_turn_off">Išjunk</string>
 </resources>

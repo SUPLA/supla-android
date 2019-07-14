@@ -191,5 +191,7 @@
     <string name="comparsion_dayday">Comparaison jour par jour</string>
     <string name="comparsion_monthmonth">Comparaison mois par mois</string>
     <string name="comparsion_yearyear">Comparaison année par année</string>
+    <string name="hp_turn_off">Éteindre</string>
+    <string name="hp_turn_on">Allumer</string>
 
 </resources>

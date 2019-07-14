@@ -167,4 +167,6 @@
     <string name="comparsion_dayday">Mezidenní srovnání</string>
     <string name="comparsion_monthmonth">Meziměsíční srovnání</string>
     <string name="comparsion_yearyear">Meziroční srovnání</string>
+    <string name="hp_turn_on">Zapnout</string>
+    <string name="hp_turn_off">Vypnout</string>
 </resources>

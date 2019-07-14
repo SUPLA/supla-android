@@ -196,6 +196,8 @@
     <string name="comparsion_yearyear">Сравнение в год к году</string>
     <string name="channel_func_thermostat">Термостат</string>
     <string name="channel_func_thermostat_hp_homeplus">Дом + обогреватель</string>
+    <string name="hp_turn_on">Включи</string>
+    <string name="hp_turn_off">Выключи</string>
 
 
 </resources>

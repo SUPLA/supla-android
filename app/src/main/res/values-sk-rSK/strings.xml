@@ -206,4 +206,6 @@
     <string name="comparsion_dayday">Porovnanie deň po dni</string>
     <string name="comparsion_monthmonth">Porovnanie mesiac po mesiaci</string>
     <string name="comparsion_yearyear">Porovnanie rok po rokuu</string>
+    <string name="hp_turn_off">Vypnúť</string>
+    <string name="hp_turn_on">Zapnúť</string>
 </resources>
