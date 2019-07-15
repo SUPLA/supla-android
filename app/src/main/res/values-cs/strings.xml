@@ -135,7 +135,8 @@
     <string name="hp_cfg_turbo_time">Trvání režimu TURBO</string>
     <string name="hp_cfg_water_max">Maximální teplota vody</string>
     <string name="hp_cfg_eco_reduction">Snížení teploty v režimu ECO</string>
-    <string name="hp_cfg_temp_comfort">Ideální teplota v režimu AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Ideální teplota v režimu AUTO</string>
+    <string name="hp_temp_comfort">Ideální teplota</string>
     <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
     <string name="channel_func_impulsecounter">Počítadlo impulzů</string>
     <string name="meter_value">Stav měřiče</string>
@@ -166,4 +167,6 @@
     <string name="comparsion_dayday">Mezidenní srovnání</string>
     <string name="comparsion_monthmonth">Meziměsíční srovnání</string>
     <string name="comparsion_yearyear">Meziroční srovnání</string>
+    <string name="hp_turn_on">Zapnout</string>
+    <string name="hp_turn_off">Vypnout</string>
 </resources>

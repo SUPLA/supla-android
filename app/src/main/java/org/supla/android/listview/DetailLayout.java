@@ -146,14 +146,21 @@ public abstract class DetailLayout extends FrameLayout {
 
     public void onDetailHide() {}
 
-    public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
+    public SuplaClient getClient() {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if (client == null || !isDetailVisible()) {
-            return;
+            return null;
         }
 
-        client.DeviceCalCfgRequest(getRemoteId(), cmd, dataType, data);
+        return client;
+    }
+
+    public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
+        SuplaClient client = getClient();
+        if (client!=null) {
+            client.DeviceCalCfgRequest(getRemoteId(), isGroup(), cmd, dataType, data);
+        }
     }
 
     public void deviceCalCfgRequest(int cmd, Byte data) {

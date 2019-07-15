@@ -47,7 +47,6 @@ public class DbHelper extends SQLiteOpenHelper {
     private Context context;
     private static final int DATABASE_VERSION = 12;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
-    private SQLiteDatabase rdb;
     private boolean measurements;
 
     public DbHelper(Context context, boolean measurements) {
@@ -55,13 +54,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 null, DATABASE_VERSION);
         this.context = context;
         this.measurements = measurements;
-        rdb = getReadableDatabase();
     }
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        rdb = getReadableDatabase();
     }
 
     private void execSQL(SQLiteDatabase db, String sql) {
@@ -1375,8 +1372,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getChannelListCursor() {
+    public Cursor getChannelListCursor(String WHERE) {
 
+        SQLiteDatabase db = getReadableDatabase();
+
+        if (WHERE != null && WHERE.length() > 0) {
+            WHERE = " AND ("+WHERE+")";
+        } else {
+            WHERE = "";
+        }
 
         String sql = "SELECT "
                 + "C." + SuplaContract.ChannelViewEntry._ID + " "
@@ -1437,15 +1441,35 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L"
                 + " ON C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " = L."
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
-                + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
+                + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
+                + WHERE
                 + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
 
-        return rdb.rawQuery(sql, null);
+        return db.rawQuery(sql, null);
+    }
+
+    public Cursor getChannelListCursor() {
+        return getChannelListCursor("");
+    }
+
+    public Cursor getChannelListCursorForGroup(int groupId) {
+
+        String WHERE = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+                + " IN ( SELECT "+SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
+                + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME
+                + " WHERE " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
+                + " = " + Integer.toString(groupId)
+                + " AND " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
+                + " > 0 ) ";
+
+        return getChannelListCursor(WHERE);
     }
 
     public Cursor getGroupListCursor() {
+
+        SQLiteDatabase db = getReadableDatabase();
 
         String sql = "SELECT "
                 + "G." + SuplaContract.ChannelGroupEntry._ID + " "
@@ -1495,7 +1519,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION;
 
 
-        return rdb.rawQuery(sql, null);
+        return db.rawQuery(sql, null);
     }
 
     public ColorListItem getColorListItem(int id, boolean group, int idx) {

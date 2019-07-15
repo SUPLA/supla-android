@@ -145,6 +145,8 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">EINGESCHALTET</string>
     <string name="hp_off">AUSGESCHALTET</string>
+    <string name="hp_turn_on">EINSCHALTEN</string>
+    <string name="hp_turn_off">AUSSCHALTEN</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -153,7 +155,8 @@
     <string name="hp_cfg_turbo_time">Dauer des TURBO-Modus</string>
     <string name="hp_cfg_water_max">Maximale Wassertemperatur</string>
     <string name="hp_cfg_eco_reduction">Temperaturabsenkung im ECO-Modus</string>
-    <string name="hp_cfg_temp_comfort">Komforttemperatur im AUTO-Modus</string>
+    <string name="hp_cfg_temp_comfort_auto">Komforttemperatur im AUTO-Modus</string>
+    <string name="hp_temp_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
     <string name="total_cost">Gesamtkosten</string>
     <string name="current_cost">Die Kosten im laufenden Monat</string>

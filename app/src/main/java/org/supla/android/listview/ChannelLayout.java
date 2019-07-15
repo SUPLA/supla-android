@@ -859,9 +859,12 @@ public class ChannelLayout extends LinearLayout {
             right_onlineStatus.setShapeType(shapeType);
         }
 
-        if (mGroup) {
+        int activePercent;
+
+        if (mGroup
+                && (activePercent = ((ChannelGroup)cbase).getActivePercent()) >= 0) {
             right_ActiveStatus.setVisibility(View.VISIBLE);
-            right_ActiveStatus.setPercent(((ChannelGroup)cbase).getActivePercent());
+            right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
         }

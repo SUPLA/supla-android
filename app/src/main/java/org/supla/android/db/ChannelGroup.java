@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -119,6 +120,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
             case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
             case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 break;
             default:
                 return;
@@ -170,6 +172,11 @@ public class ChannelGroup extends ChannelBase {
                 BufferTotalValue += Integer.toString(value.getColorBrightness());
                 BufferTotalValue += ":";
                 BufferTotalValue += Integer.toString(value.getBrightness());
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                BufferTotalValue += Double.toString(value.getMeasuredTemp(getFunc()));
+                BufferTotalValue += ":";
+                BufferTotalValue += Double.toString(value.getPresetTemp(getFunc()));
                 break;
         }
 
@@ -277,6 +284,50 @@ public class ChannelGroup extends ChannelBase {
         return null;
     }
 
+    private Double getMinMaxTemperature(boolean preset, boolean min) {
+        Double result = null;
+        String[] items = getTotalValue().split("\\|");
+        int idx = preset ? 1 : 0;
+
+        for (int a = 0; a < items.length; a++) {
+            String[] n = items[a].split(":");
+            if (idx < n.length) {
+                try {
+                    Double v = Double.valueOf(n[idx]);
+                    if (v != null) {
+                        if (result!=null) {
+                            if ((min && v.doubleValue() < result.doubleValue())
+                                    || (!min && v.doubleValue() > result.doubleValue())) {
+                                result = v;
+                            }
+                        } else {
+                            result = v;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+        return result;
+    }
+
+    public Double getMinimumMeasuredTemperature() {
+        return getMinMaxTemperature(false, true);
+    }
+
+    public Double getMaximumMeasuredTemperature() {
+        return getMinMaxTemperature(false, false);
+    }
+
+
+    public Double getMinimumPresetTemperature() {
+        return getMinMaxTemperature(true, true);
+    }
+
+    public Double getMaximumPresetTemperature() {
+        return getMinMaxTemperature(true, false);
+    }
+
     public int getActivePercent(int idx) {
         ArrayList<Integer> result = new ArrayList<>();
         String[] items = getTotalValue().split("\\|");
@@ -350,6 +401,8 @@ public class ChannelGroup extends ChannelBase {
                     }
                     count++;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                    return -1;
             }
 
 
@@ -387,6 +440,15 @@ public class ChannelGroup extends ChannelBase {
     }
 
     public CharSequence getHumanReadableValue() {
+        if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+            return ChannelBase.getHumanReadableThermostatTemperature(
+                    getMinimumMeasuredTemperature(),
+                    getMaximumMeasuredTemperature(),
+                    getMinimumPresetTemperature(),
+                    getMaximumPresetTemperature(),
+                    0.8f,
+                    0.6f);
+        }
         return null;
     }
 

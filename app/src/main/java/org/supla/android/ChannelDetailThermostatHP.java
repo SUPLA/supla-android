@@ -18,32 +18,41 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.CombinedChart;
-
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.SuplaChannelThermostatValue;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
-        SuplaRestApiClientTask.IAsyncResults {
+        SuplaRestApiClientTask.IAsyncResults, SuplaThermostatCalendar.OnCalendarTouchListener {
 
     private class CfgItem {
 
@@ -138,6 +147,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
+    public final static int PROG_ECO = 1;
+    public final static int PROG_COMFORT = 2;
     public final static int STATUS_POWERON = 0x01;
     public final static int STATUS_PROGRAMMODE = 0x04;
     public final static int STATUS_HEATERANDWATERTEST = 0x10;
@@ -149,24 +160,36 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private int cfgTurboTime = 1;
 
+    private TextView tvChannelTitle;
     private Button btnSettings;
+    private Button btnSchedule;
     private Button btnOnOff;
+    private Button btnOff;
     private Button btnNormal;
     private Button btnEco;
     private Button btnAuto;
     private Button btnTurbo;
     private Button btnPlus;
     private Button btnMinus;
+    private SuplaThermostatCalendar mCalendar;
     private TextView tvTemperature;
     private long refreshLock = 0;
-    private int presetTemperature = 0;
-    private Double measuredTemperature = 0.00;
+    private int presetTemperatureMin = 0;
+    private Double presetTemperatureMax = null;
+    private Double measuredTemperatureMin = 0.00;
+    private Double measuredTemperatureMax = null;
     private DownloadThermostatMeasurements dtm;
     private ThermostatChartHelper chartHelper;
-    private RelativeLayout rlContent;
+    private RelativeLayout rlMain;
     private RelativeLayout rlSettings;
+    private RelativeLayout rlSchedule;
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
+    private Timer delayTimer1;
+    private Timer reloadTimer1;
+    private SuplaChannelStatus channelStatus;
+    private LinearLayout llChart;
+    private ListView lvChannelList;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -188,11 +211,21 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     protected void init() {
         super.init();
 
-        rlContent = findViewById(R.id.hpContent);
-        rlContent.setVisibility(VISIBLE);
+
+        tvChannelTitle = findViewById(R.id.hptv_ChannelTitle);
+
+        rlMain = findViewById(R.id.hpMain);
+        rlMain.setVisibility(VISIBLE);
 
         rlSettings = findViewById(R.id.hpSettings);
         rlSettings.setVisibility(GONE);
+
+        rlSchedule = findViewById(R.id.hpSchedule);
+        rlSchedule.setVisibility(GONE);
+
+        mCalendar = findViewById(R.id.hpCalendar);
+        mCalendar.setOnCalendarTouchListener(this);
+        mCalendar.setFirtsDay(2);
 
         progressBar = findViewById(R.id.hpProgressBar);
         progressBar.setVisibility(INVISIBLE);
@@ -210,9 +243,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         btnSettings = findViewById(R.id.hpBtnSettings);
         btnSettings.setOnClickListener(this);
 
+        btnSchedule = findViewById(R.id.hpBtnSchedule);
+        btnSchedule.setOnClickListener(this);
+
         btnOnOff = findViewById(R.id.hpBtnOnOff);
         btnOnOff.setOnClickListener(this);
         btnOnOff.setTag(Integer.valueOf(0));
+
+        btnOff = findViewById(R.id.hpBtnOff);
+        btnOff.setOnClickListener(this);
+        btnOff.setTag(Integer.valueOf(0));
 
         btnNormal = findViewById(R.id.hpBtnNormal);
         btnNormal.setOnClickListener(this);
@@ -239,6 +279,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         chartHelper = new ThermostatChartHelper(getContext());
         chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.hpCombinedChart));
 
+        llChart = findViewById(R.id.hpllChart);
+
+        lvChannelList = findViewById(R.id.hpChannelList);
 
         ((TextView)findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
         ((TextView)findViewById(R.id.hpTvTurbo)).setTypeface(tfOpenSansRegular);
@@ -302,14 +345,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         if (setOn == BTN_SET_ON) {
             btn.setTag(1);
-            btn.setBackgroundResource(R.drawable.hp_button_on);
+            btn.setBackgroundResource(isGroup() ?
+                    R.drawable.hp_button_group : R.drawable.hp_button_on);
             if (textOn != 0) {
                 btn.setText(textOn);
             }
             return 1;
         } else {
             btn.setTag(0);
-            btn.setBackgroundResource(R.drawable.hp_button_off);
+            btn.setBackgroundResource(isGroup() ?
+                    R.drawable.hp_button_group : R.drawable.hp_button_off);
             if (textOff != 0) {
                 btn.setText(textOff);
             }
@@ -331,15 +376,48 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void displayTemperature() {
         CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
-                measuredTemperature,
-                Double.valueOf(presetTemperature));
+                measuredTemperatureMin, measuredTemperatureMax,
+                Double.valueOf(presetTemperatureMin),
+               presetTemperatureMax,
+                isGroup() ? 0.6f : 1f,
+                isGroup() ? 0.3f : 0.7f);
 
         tvTemperature.setText(t);
     }
 
-    public void displaySettings() {
-        rlContent.setVisibility(GONE);
+    public void setSettingsVisible() {
+        rlMain.setVisibility(GONE);
+        rlSchedule.setVisibility(GONE);
         rlSettings.setVisibility(VISIBLE);
+    }
+
+    public void setScheduleVisible() {
+        rlMain.setVisibility(GONE);
+        rlSettings.setVisibility(GONE);
+        rlSchedule.setVisibility(VISIBLE);
+    }
+
+    public void setMainViewVisible() {
+        if (isGroup()) {
+            btnSchedule.setVisibility(GONE);
+            btnSettings.setVisibility(GONE);
+            llChart.setVisibility(GONE);
+            lvChannelList.setVisibility(VISIBLE);
+            btnOff.setVisibility(VISIBLE);
+            btnOff.setText(R.string.hp_turn_off);
+            btnOnOff.setText(R.string.hp_turn_on);
+        } else {
+            btnSchedule.setVisibility(VISIBLE);
+            btnSchedule.setVisibility(VISIBLE);
+            llChart.setVisibility(VISIBLE);
+            lvChannelList.setVisibility(GONE);
+            btnOff.setVisibility(GONE);
+            btnOff.setText(R.string.hp_off);
+            btnOnOff.setText(R.string.hp_on);
+        }
+        rlSettings.setVisibility(GONE);
+        rlSchedule.setVisibility(GONE);
+        rlMain.setVisibility(VISIBLE);
     }
 
     public Integer getCfgValue(int id) {
@@ -357,16 +435,69 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 item.setValue(value);
             }
         }
+
+        Resources res = getResources();
+
+        if (id == CfgItem.ID_TEMP_ECO) {
+            mCalendar.setProgram0Label("ECO "+Integer.toString(value)+"\u00B0");
+        } else if (id == CfgItem.ID_TEMP_COMFORT) {
+            mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+                    +" "
+                    +Integer.toString(value)+"\u00B0");
+        }
+    }
+
+    private void OnChannelGroupDataChanged() {
+        ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId());
+        tvChannelTitle.setText(channelGroup.getNotEmptyCaption(this.getContext()));
+
+        Double t = channelGroup.getMinimumPresetTemperature();
+        presetTemperatureMin = t == null ? 0 : t.intValue();
+        presetTemperatureMax = channelGroup.getMaximumPresetTemperature();
+        t = channelGroup.getMinimumMeasuredTemperature();
+        measuredTemperatureMin = t == null ? 0.0 : t.doubleValue();
+        measuredTemperatureMax = channelGroup.getMaximumMeasuredTemperature();
+        displayTemperature();
     }
 
     @Override
     public void OnChannelDataChanged() {
 
+        reloadTimer1 = new Timer();
+
+        reloadTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            loadChannelList();
+                        }
+                    });
+                }
+
+            }
+
+        }, 10, 1000);
+
         if (refreshLock > System.currentTimeMillis()) {
             return;
         }
 
+        presetTemperatureMax = null;
+        measuredTemperatureMax = null;
+
+        if (isGroup()) {
+            OnChannelGroupDataChanged();
+            return;
+        }
+
        Channel channel = DBH.getChannel(getRemoteId());
+
+        tvChannelTitle.setText(channel.getNotEmptyCaption(this.getContext()));
 
         ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
         if (cev == null
@@ -376,8 +507,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
         Double temp = cev.getExtendedValue().ThermostatValue.getPresetTemperature(0);
-        presetTemperature = temp != null ? temp.intValue() : 0;
-        measuredTemperature = cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0);
+        presetTemperatureMin = temp != null ? temp.intValue() : 0;
+        measuredTemperatureMin = cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0);
 
         displayTemperature();
 
@@ -420,6 +551,21 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             setBtnAppearance(btnNormal, true);
         }
 
+        if (!mCalendar.isTouched()) {
+            mCalendar.clear();
+
+            SuplaChannelThermostatValue.Schedule schedule =
+                    cev.getExtendedValue().ThermostatValue.getSchedule();
+            if (schedule!=null && schedule.getType() ==
+                    SuplaChannelThermostatValue.Schedule.TYPE_PROGRAM) {
+                for(short d=0;d<7;d++) {
+                    for(short h=0;h<24;h++) {
+                        mCalendar.setHourProgramTo1((short)(d+1), h, schedule.getValue((byte)d,
+                                (byte)h) == PROG_COMFORT);
+                    }
+                }
+            }
+        }
     }
 
     private void runDownloadTask() {
@@ -440,17 +586,41 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     public void onDetailShow() {
         super.onDetailShow();
 
-        rlContent.setVisibility(VISIBLE);
-        rlSettings.setVisibility(GONE);
+        cancelDelayTimer1();
+        cancelReloadTimer1();
+
+        setButtonsOff(null, true);
+        setMainViewVisible();
 
         OnChannelDataChanged();
-        chartHelper.load(getRemoteId());
-        chartHelper.moveToEnd();
 
-        runDownloadTask();
+        if (!isGroup()) {
+            chartHelper.load(getRemoteId());
+            chartHelper.moveToEnd();
+
+            runDownloadTask();
+        }
     }
 
-    private void setAllButtonsOff(Button skip) {
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+
+        cancelDelayTimer1();
+        cancelReloadTimer1();
+    }
+
+    private void setButtonsOff(Button skip, boolean all) {
+        if (all) {
+            if (skip != btnOff) {
+                setBtnAppearance(btnOff, BTN_SET_OFF);
+            }
+
+            if (skip != btnOnOff) {
+                setBtnAppearance(btnOnOff, BTN_SET_OFF);
+            }
+        }
+
         if (skip != btnNormal) {
             setBtnAppearance(btnNormal, BTN_SET_OFF);
         }
@@ -468,9 +638,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-    private void setAllButtonsOff() {
-        setAllButtonsOff(null);
-    }
 
     @Override
     public void onClick(View view) {
@@ -520,50 +687,84 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         byte on = 0;
 
-        if (view == btnSettings) {
+        if (view == btnPlus || view == btnMinus) {
+            if (view == btnMinus ) {
+                if (presetTemperatureMax != null) {
+                    presetTemperatureMin = presetTemperatureMax.intValue();
+                }
+
+                presetTemperatureMin--;
+            } else if (view == btnPlus) {
+                presetTemperatureMin++;
+            }
+
+            if (presetTemperatureMin > 30) {
+                presetTemperatureMin = 30;
+            } else if (presetTemperatureMin < 10) {
+                presetTemperatureMin = 10;
+            }
+            presetTemperatureMax = null;
+
+            setTemperature(0, (double) presetTemperatureMin);
+            displayTemperature();
+        } else if (view == btnSettings) {
 
             if (rlSettings.getVisibility() == GONE) {
-                displaySettings();
+                setSettingsVisible();
             } else {
-                rlContent.setVisibility(VISIBLE);
-                rlSettings.setVisibility(GONE);
+                setMainViewVisible();
             }
 
-        } else if (view == btnPlus) {
-            presetTemperature++;
-            if (presetTemperature > 30) {
-                presetTemperature = 30;
+        } else if (view == btnSchedule) {
+
+            if (rlSchedule.getVisibility() == GONE) {
+                setScheduleVisible();
+            } else {
+                setMainViewVisible();
             }
 
-            setTemperature(0, (double) presetTemperature);
-            displayTemperature();
-        } else if (view == btnMinus) {
-            presetTemperature--;
-            if (presetTemperature < 10) {
-                presetTemperature = 10;
+        } else if (view == btnOnOff || view == btnOff) {
+            if (isGroup()) {
+                on = (byte)(view == btnOff ? 0 : 1);
+            } else {
+                on = setBtnAppearance(btnOnOff, BTN_SET_TOGGLE,  R.string.hp_on,  R.string.hp_off);
             }
 
-            setTemperature(0, (double) presetTemperature);
-            displayTemperature();
-        } else if (view == btnOnOff) {
-            on = setBtnAppearance(btnOnOff, BTN_SET_TOGGLE,  R.string.hp_on,  R.string.hp_off);
             if (on == 0) {
-                setAllButtonsOff();
+                setButtonsOff(null , false);
             }
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_TURNON, on);
         } else if (view == btnNormal) {
-            setBtnAppearance(btnNormal, BTN_SET_ON);
+            if (!isGroup()) {
+                setBtnAppearance(btnNormal, BTN_SET_ON);
+                setButtonsOff(btnNormal, false);
+            }
+
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL);
-            setAllButtonsOff(btnNormal);
         } else if (view == btnEco) {
-            on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
+            if (isGroup()) {
+                on = (byte)1;
+            } else {
+                on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
+            }
+
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
                     (byte)(on > 0 ? getCfgValue(CfgItem.ID_ECO_REDUCTION) * 10 : 0));
         } else if (view == btnAuto) {
-            on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
+            if (isGroup()) {
+                on = (byte)1;
+            } else {
+                on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
+            }
+
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO, on);
         } else if (view == btnTurbo) {
-            on = setBtnAppearance(btnTurbo, BTN_SET_TOGGLE);
+            if (isGroup()) {
+                on = (byte)1;
+            } else {
+                on = setBtnAppearance(btnTurbo, BTN_SET_TOGGLE);
+            }
+
             deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO,
                     (byte)(on > 0 ? getCfgValue(CfgItem.ID_TURBO_TIME) : 0));
         }
@@ -572,7 +773,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 || view == btnEco
                 || view == btnAuto
                 || view == btnTurbo)) {
-            setAllButtonsOff((Button) view);
+            setButtonsOff((Button) view, false);
         }
     }
 
@@ -614,6 +815,80 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
         chartHelper.setDownloadProgress(progress);
+    }
+
+    private void cancelDelayTimer1() {
+        if (delayTimer1 != null) {
+            delayTimer1.cancel();
+            delayTimer1 = null;
+        }
+    }
+
+    private void cancelReloadTimer1() {
+        if (reloadTimer1 != null) {
+            reloadTimer1.cancel();
+            reloadTimer1 = null;
+        }
+    }
+
+    private void sendScheduleValues() {
+        cancelDelayTimer1();
+
+        SuplaClient client = getClient();
+        if (client!=null) {
+
+            SuplaThermostatScheduleCfg cfg =  new SuplaThermostatScheduleCfg();
+            for(short d=1;d<=7;d++) {
+                for(short h=0;h<24;h++) {
+                    cfg.setProgram(cfg.getWeekdayByDayIndex(d), h,
+                            (byte)(mCalendar.isHourProgramIsSetTo1(d, h) ? PROG_COMFORT : PROG_ECO));
+                }
+            }
+
+            client.ThermostatScheduleCfgRequest(getRemoteId(), false, cfg);
+        }
+
+    }
+
+    @Override
+    public void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour, boolean program1) {
+        cancelDelayTimer1();
+        refreshLock = System.currentTimeMillis()+4000;
+
+        delayTimer1 = new Timer();
+
+        delayTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            sendScheduleValues();
+                        }
+                    });
+                }
+
+            }
+
+        }, 2000, 1000);
+    }
+
+    private void loadChannelList() {
+        Cursor cursor = DBH.getChannelListCursorForGroup(getRemoteId());
+
+        if (lvChannelList.getAdapter() != null) {
+            ((ThermostatHPListViewCursorAdapter)lvChannelList.getAdapter()).swapCursor(cursor);
+        } else {
+            ThermostatHPListViewCursorAdapter adapter = new ThermostatHPListViewCursorAdapter(
+                    this.getContext(), R.layout.homeplus_channel_row, cursor, 0);
+
+            lvChannelList.setAdapter(adapter);
+        }
+
+
     }
 }
 
