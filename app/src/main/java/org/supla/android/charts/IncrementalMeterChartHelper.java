@@ -54,7 +54,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
         value -= 1;
 
 
-        if (value > 0 && value < values.size()) {
+        if (value >= 0 && value < values.size()) {
             return values.get((int) value);
         }
 
