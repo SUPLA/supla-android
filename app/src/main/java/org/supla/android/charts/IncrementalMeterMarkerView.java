@@ -30,7 +30,7 @@ public class IncrementalMeterMarkerView extends SuplaMarkerView {
     }
 
     @Override
-    protected String getValue2(Entry e) {
+    protected String getValue1(Entry e) {
 
         if (helper instanceof IncrementalMeterChartHelper) {
             IncrementalMeterChartHelper helper = (IncrementalMeterChartHelper)this.helper;

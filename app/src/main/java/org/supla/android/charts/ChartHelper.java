@@ -272,7 +272,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             case Bar_Monthly:
             case Bar_Comparsion_MonthMonth:
                 DateFormat = "%Y-%m-01T00:00:00.000";
-                spf = new SimpleDateFormat("yyyy MMM");
+                spf = new SimpleDateFormat("yyyy LLLL");
                 break;
             case Bar_Yearly:
             case Bar_Comparsion_YearYear:

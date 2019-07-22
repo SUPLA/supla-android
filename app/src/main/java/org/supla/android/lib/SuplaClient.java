@@ -116,8 +116,12 @@ public class SuplaClient extends Thread {
 
     private native boolean scOAuthTokenRequest(long _supla_client);
 
-    private native boolean scDeviceCalCfgRequest(long _supla_client, int ChannelID,
+    private native boolean scDeviceCalCfgRequest(long _supla_client, int ID, int Group,
                                                  int Command, int DataType, byte[] Data);
+
+    private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
+                                                          SuplaThermostatScheduleCfg cfg);
+
 
     private native boolean scSuperUserAuthorizationRequest(long _supla_client,
                                                            String email, String password);
@@ -419,18 +423,42 @@ public class SuplaClient extends Thread {
         return result;
     }
 
-    public boolean DeviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
+    public boolean DeviceCalCfgRequest(int ID, boolean Group, int Command,
+                                       int DataType, byte[] Data) {
         boolean result;
 
         LockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
-                    ChannelID, Command, DataType, Data);
+                    ID, Group ? 1 : 0, Command, DataType, Data);
         } finally {
             UnlockClientPtr();
         }
 
         return result;
+    }
+
+    public boolean DeviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
+        return DeviceCalCfgRequest(ChannelID, false, Command, DataType,  Data);
+    }
+
+    public boolean ThermostatScheduleCfgRequest(int ID, boolean Group,
+                                                SuplaThermostatScheduleCfg cfg) {
+        boolean result;
+
+        LockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
+                    ID, Group ? 1 : 0, cfg);
+        } finally {
+            UnlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean ThermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
+        return ThermostatScheduleCfgRequest(ChannelID, false, cfg);
     }
 
     private void onVersionError(SuplaVersionError versionError) {

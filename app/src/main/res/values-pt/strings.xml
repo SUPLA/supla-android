@@ -159,7 +159,8 @@
     <string name="hp_cfg_turbo_time">Duração do modo TURBO</string>
     <string name="hp_cfg_water_max">Temperatura máxima da água</string>
     <string name="hp_cfg_eco_reduction">Redução de temperatura no modo ECO</string>
-    <string name="hp_cfg_temp_comfort">Temperatura de conforto no modo AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Temperatura de conforto no modo AUTO</string>
+    <string name="hp_temp_comfort">Conforto</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO no modo AUTO</string>
     <string name="total_cost">Custo total</string>
     <string name="current_cost">Custo no mês atual</string>
@@ -190,5 +191,7 @@
     <string name="comparsion_dayday">Comparação dia a dia</string>
     <string name="comparsion_monthmonth">Comparação mês a mês</string>
     <string name="comparsion_yearyear">Comparação ano a ano</string>
+    <string name="hp_turn_off">Desligar</string>
+    <string name="hp_turn_on">Ligar</string>
 
 </resources>

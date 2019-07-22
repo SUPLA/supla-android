@@ -22,15 +22,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
 import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
@@ -80,9 +74,12 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
 
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[0], res.getText(R.string.em_phase1)));
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[1], res.getText(R.string.em_phase2)));
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[2], res.getText(R.string.em_phase3)));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[0],
+                    res.getText(R.string.em_phase1).toString()));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[1],
+                    res.getText(R.string.em_phase2).toString()));
+            entries.add(new PieEntry((float)totalForwardActiveEnergy[2],
+                    res.getText(R.string.em_phase3).toString()));
 
         } else {
 
