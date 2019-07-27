@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/hprCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="0"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <org.supla.android.SuplaChannelStatus
+            android:id="@+id/hprStatus"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/hprOnOff"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_weight="0"
+            android:background="@drawable/hp_button_on"
+            android:gravity="center"
+            android:text="@string/hp_on"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/hprNormal"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_weight="0"
+            android:background="@drawable/hp_button_on"
+            android:gravity="center"
+            android:text="@string/hp_normal"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/hprEco"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_weight="0"
+            android:background="@drawable/hp_button_on"
+            android:gravity="center"
+            android:text="@string/hp_eco"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/hprAuto"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_weight="0"
+            android:background="@drawable/hp_button_on"
+            android:gravity="center"
+            android:text="@string/hp_auto"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/hprTurbo"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@drawable/hp_button_on"
+            android:gravity="center"
+            android:text="@string/hp_turbo"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

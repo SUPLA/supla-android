@@ -190,6 +190,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private SuplaChannelStatus channelStatus;
     private LinearLayout llChart;
     private ListView lvChannelList;
+    private TextView tvErrorMessage;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -280,6 +281,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.hpCombinedChart));
 
         llChart = findViewById(R.id.hpllChart);
+
+        tvErrorMessage = findViewById(R.id.hpTvErrorMessage);
+        tvErrorMessage.setVisibility(GONE);
 
         lvChannelList = findViewById(R.id.hpChannelList);
 
@@ -499,6 +503,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvChannelTitle.setText(channel.getNotEmptyCaption(this.getContext()));
 
+        tvErrorMessage.setVisibility(GONE);
+        tvErrorMessage.setText("");
+
         ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
         if (cev == null
                 || cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
@@ -566,6 +573,24 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 }
             }
         }
+
+        int error = cev.getExtendedValue().ThermostatValue.getFlags(6);
+        error = 0x2;
+        if (error > 0) {
+            tvErrorMessage.setVisibility(VISIBLE);
+            if ((error & 0x1) > 0) {
+                tvErrorMessage.setText(R.string.hp_error_0);
+            } else if ((error & 0x2) > 0) {
+                tvErrorMessage.setText(R.string.hp_error_1);
+            } else if ((error & 0x4) > 0) {
+                tvErrorMessage.setText(R.string.hp_error_2);
+            } else if ((error & 0x8) > 0) {
+                tvErrorMessage.setText(R.string.hp_error_3);
+            } else if ((error & 0x10) > 0) {
+                tvErrorMessage.setText(R.string.hp_error_4);
+            }
+
+        }
     }
 
     private void runDownloadTask() {
@@ -585,6 +610,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onDetailShow() {
         super.onDetailShow();
+
+        tvErrorMessage.setVisibility(GONE);
 
         cancelDelayTimer1();
         cancelReloadTimer1();
