@@ -208,9 +208,9 @@
     <string name="comparsion_dayday">Porównanie dzień do dnia</string>
     <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
     <string name="comparsion_yearyear">Porównanie rok do roku</string>
-    <string name="hp_error_0">Brak wody</string>
-    <string name="hp_error_1">Spalona grzałka</string>
-    <string name="hp_error_2">Błąd czujnika temperatury wody</string>
-    <string name="hp_error_3">Błąd czujnika temperatury pokojowej</string>
-    <string name="hp_error_4">Brak przerwań sieciowych</string>
+    <string name="hp_error_1">Brak wody</string>
+    <string name="hp_error_2">Spalona grzałka</string>
+    <string name="hp_error_3">Błąd czujnika temperatury wody</string>
+    <string name="hp_error_4">Błąd czujnika temperatury pokojowej</string>
+    <string name="hp_error_5">Brak przerwań sieciowych</string>
 </resources>

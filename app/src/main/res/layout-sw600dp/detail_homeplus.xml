@@ -393,16 +393,6 @@
                                 android:layout_weight="1"
                                 android:textColor="@android:color/white" />
 
-                            <Button
-                                android:id="@+id/hpBtnOff"
-                                android:layout_width="wrap_content"
-                                android:layout_height="80dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/hp_button_off"
-                                android:text="@string/hp_off"
-                                android:textColor="@android:color/white"
-                                android:visibility="visible" />
                         </LinearLayout>
 
                         <LinearLayout

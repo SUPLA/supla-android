@@ -204,9 +204,9 @@
     <string name="comparsion_dayday">Day to day comparison</string>
     <string name="comparsion_monthmonth">Month to month comparison</string>
     <string name="comparsion_yearyear">Year to year comparison</string>
-    <string name="hp_error_0"></string>
     <string name="hp_error_1"></string>
     <string name="hp_error_2"></string>
     <string name="hp_error_3"></string>
     <string name="hp_error_4"></string>
+    <string name="hp_error_5"></string>
 </resources>

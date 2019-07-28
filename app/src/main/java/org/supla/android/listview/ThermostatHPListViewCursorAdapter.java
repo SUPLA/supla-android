@@ -25,13 +25,11 @@ import android.widget.TextView;
 
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
+import org.supla.android.ThermostatHP;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.lib.SuplaConst;
-
-import static org.supla.android.ChannelDetailThermostatHP.STATUS_POWERON;
-import static org.supla.android.ChannelDetailThermostatHP.STATUS_PROGRAMMODE;
 
 public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     public ThermostatHPListViewCursorAdapter(Context context, int layout, Cursor c) {
@@ -89,52 +87,24 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
         caption.setText(channel.getNotEmptyCaption(context));
         status.setPercent(channel.getOnLinePercent());
 
-        ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
-        if (cev == null
-                || cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
-                || cev.getExtendedValue().ThermostatValue == null) {
+        ThermostatHP thermostat = new ThermostatHP();
+        if (!thermostat.assign(channel)) {
             return;
         }
 
-
-        Double temp = cev.getExtendedValue().ThermostatValue.getPresetTemperature(0);
-        double presetTemperatureMin = temp != null ? temp.intValue() : 0;
-        double measuredTemperatureMin =
-                cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0);
-
         String tempTxt = String.valueOf(ChannelBase.getHumanReadableThermostatTemperature(
-                measuredTemperatureMin, null,
-                Double.valueOf(presetTemperatureMin),
+                thermostat.getMeasuredTemperatureMin(), null,
+                Double.valueOf(thermostat.getPresetTemperatureMin()),
                 null, 1f, 1f));
 
-        caption.setText(caption.getText() + " | " + tempTxt);
-
-        Double ecoReduction = cev.getExtendedValue().ThermostatValue.getPresetTemperature(3);
-        if (ecoReduction != null && ecoReduction > 0.0) {
-            setOn(eco, true);
+        if (channel.getOnLine()) {
+            caption.setText(caption.getText() + " | " + tempTxt);
         }
 
-        Integer flags = cev.getExtendedValue().ThermostatValue.getFlags(4);
-
-        if (flags != null) {
-            if ((flags & STATUS_POWERON) > 0) {
-                setOn(onoff, true);
-            }
-
-            if ((flags & STATUS_PROGRAMMODE) > 0) {
-                setOn(auto, true);
-            }
-        }
-
-        Integer trb = cev.getExtendedValue().ThermostatValue.getValues(4);
-        if (trb != null && trb > 0) {
-            setOn(turbo, true);
-        }
-
-        if (isOn(onoff) && !isOn(eco)
-                && !isOn(turbo) && !isOn(auto)) {
-            setOn(normal, true);
-        }
-
+        setOn(eco, thermostat.isEcoOn());
+        setOn(onoff, thermostat.isThermostatOn());
+        setOn(auto, thermostat.isAutoOn());
+        setOn(turbo, thermostat.isTurboOn());
+        setOn(normal, thermostat.isNormalOn());
     }
 }
