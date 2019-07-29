@@ -95,7 +95,7 @@
     <string name="rate_later">Later</string>
     <string name="rate_no_thanks">No thanks</string>
 
-    <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="rs_percent_caption">Процент закрытия</string>
     <string name="calibration">[калибровка]</string>
     <string name="wizard_step1_txt2">Для продолжения нажмите <b>Далее</b>.</string>
     <string name="add_device">Добавить устройство</string>
