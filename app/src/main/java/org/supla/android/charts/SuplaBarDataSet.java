@@ -35,7 +35,7 @@ public class SuplaBarDataSet extends BarDataSet {
 
     @Override
     public BarEntry getEntryForIndex(int index) {
-        BarEntry result = null;
+        BarEntry result;
 
         try {
             result = super.getEntryForIndex(index);

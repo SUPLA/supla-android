@@ -797,14 +797,14 @@ public class SuplaClient extends Thread {
                 .appendPath("users")
                 .appendPath(email);
 
-        URL url = null;
+        URL url;
         try {
             url = new URL(builder.build().toString());
 
             String json = "";
             String line;
 
-            HttpsURLConnection https = null;
+            HttpsURLConnection https;
             try {
                 https = (HttpsURLConnection) url.openConnection();
                 BufferedReader br = new BufferedReader(new InputStreamReader(https.getInputStream()));

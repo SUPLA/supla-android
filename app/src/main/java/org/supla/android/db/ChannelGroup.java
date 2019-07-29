@@ -334,7 +334,7 @@ public class ChannelGroup extends ChannelBase {
 
         int sum = 0;
         int count = 0;
-        String[] n = null;
+        String[] n;
 
         for (int a = 0; a < items.length; a++) {
 

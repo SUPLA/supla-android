@@ -735,7 +735,7 @@ public class SuplaColorBrightnessPicker extends View {
 
     private double brightnessToAngle(double value) {
 
-        double result = 0;
+        double result;
 
         if (value < 0)
             value = 0;

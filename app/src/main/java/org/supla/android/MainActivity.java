@@ -416,7 +416,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         } else {
 
-            int Open = 0;
+            int Open;
 
             if (left) {
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
@@ -455,7 +455,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
 
-        int _collapsed = 0;
+        int _collapsed;
         DbHelper dbHelper = new DbHelper(this);
 
         if (sender == channelLV.getAdapter()) {

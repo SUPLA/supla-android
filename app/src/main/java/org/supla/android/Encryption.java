@@ -54,7 +54,7 @@ public class Encryption {
             InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException,
             UnsupportedEncodingException, InvalidKeySpecException {
         /* Encrypt the message. */
-        Cipher cipher = null;
+        Cipher cipher;
         cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, generateKey(password));
         byte[] cipherText = cipher.doFinal(data);
@@ -65,7 +65,7 @@ public class Encryption {
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException,
             InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException {
-        Cipher cipher = null;
+        Cipher cipher;
         cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, generateKey(password));
         return cipher.doFinal(cipherText);

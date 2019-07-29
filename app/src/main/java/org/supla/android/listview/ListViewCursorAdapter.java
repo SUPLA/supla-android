@@ -305,7 +305,7 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
         Object obj = getItem(position);
 
-        int _collapsed = 0;
+        int _collapsed;
 
         if (isGroup()) {
             _collapsed = 0x2;

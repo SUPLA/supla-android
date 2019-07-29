@@ -295,7 +295,7 @@ public abstract class ChannelBase extends DbItem {
             return null;
 
         if (getUserIconId() > 0) {
-            ImageId Id = null;
+            ImageId Id;
 
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:

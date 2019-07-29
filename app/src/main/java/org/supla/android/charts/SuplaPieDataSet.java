@@ -30,7 +30,7 @@ public class SuplaPieDataSet extends PieDataSet {
 
     @Override
     public PieEntry getEntryForIndex(int index) {
-        PieEntry result = null;
+        PieEntry result;
 
         try {
             result = super.getEntryForIndex(index);

@@ -344,8 +344,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             chartHelper.setPricePerUnit(em.getPricePerUnit());
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
-            double currentConsumption = 0;
-            double currentCost = 0;
+            double currentConsumption;
+            double currentCost;
 
             DbHelper mDBH = new DbHelper(getContext(), true);
 

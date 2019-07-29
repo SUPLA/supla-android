@@ -1703,7 +1703,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private double getLastMeasurementValue(String tableName, String colTimestamp,
                                            String colChannelId, String colValue, int monthOffset,
                                            int channelId) {
-        double result = 0;
+        double result;
 
         String[] projection = {
                 "SUM("+colValue+")"
@@ -1798,7 +1798,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 +" = "+Integer.toString(channelId)
                 +andWhere;
 
-        int total = 0;
+        int total;
 
         SQLiteDatabase db = getReadableDatabase();
 
