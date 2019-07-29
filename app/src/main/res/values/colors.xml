@@ -18,7 +18,7 @@
     <color name="channel_btn_text">#FFFFFF</color>
     <color name="channel_caption_text">#000000</color>
     <color name="channel_section_text">#000000</color>
-    <color name="channel_temp_text">#000000</color>
+    <color name="channel_imgtext_color">#000000</color>
     <color name="menubar">#12a71e</color>
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
