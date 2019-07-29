@@ -918,6 +918,7 @@ public class SuplaClient extends Thread {
 
                 if (Connect()) {
 
+                    //noinspection StatementWithEmptyBody
                     while (!canceled() && Iterate(100000)) {}
 
                     if (!canceled()) {
