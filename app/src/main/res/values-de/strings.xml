@@ -84,7 +84,7 @@
     <string name="rate_later">Später</string>
     <string name="rate_no_thanks">Nein danke</string>
 
-    <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="rs_percent_caption">Prozentsatz des Abschlusses</string>
     <string name="calibration">[Kalibrierung]</string>
     <string name="wizard_step1_txt2">Um fortzusetzen, drücken Sie <b>Weiter</b>.</string>
     <string name="add_device">Gerät hinzufügen</string>
