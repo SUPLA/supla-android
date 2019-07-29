@@ -672,7 +672,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 }
 
                 presetTemperatureMin--;
-            } else if (view == btnPlus) {
+            } else {
                 presetTemperatureMin++;
             }
 
@@ -724,7 +724,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             } else if (view == btnAuto) {
                 on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
                 deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO, on);
-            } else if (view == btnTurbo) {
+            } else {
                 on = setBtnAppearance(btnTurbo, BTN_SET_TOGGLE);
                 deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO,
                         (byte)(on > 0 ? getCfgValue(CfgItem.ID_TURBO_TIME) : 0));
