@@ -181,7 +181,7 @@ public class SuplaThermostatCalendar extends View {
             for(short h = -1; h < 24; h++) {
 
                frm = getRectangle(d, h);
-               short dayIdx = (short)(dayWithOffset((short)d)-1);
+               short dayIdx = (short)(dayWithOffset(d)-1);
 
                if (h == -1 || d == 0) {
                    String label = "";
