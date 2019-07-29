@@ -962,7 +962,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         cm.bindProcessToNetwork(n);
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else //noinspection ConstantConditions
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ConnectivityManager.setProcessDefaultNetwork(n);
                     }
 
