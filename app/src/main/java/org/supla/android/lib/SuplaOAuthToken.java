@@ -56,7 +56,7 @@ public class SuplaOAuthToken {
     }
 
     public int getExpiresIn() {
-        return getExpiresIn();
+        return ExpiresIn;
     }
 
     public String getToken() {
