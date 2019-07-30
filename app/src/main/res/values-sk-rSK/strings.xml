@@ -39,7 +39,7 @@
     <string name="channel_func_windsensor">Rýchlosť vetra</string>
     <string name="channel_func_pressuresensor">Snímač tlaku</string>
     <string name="channel_func_rainsensor">Meranie zrážok</string>
-    <string name="channel_func_weightsensor">Závažia</string>
+    <string name="channel_func_weightsensor">Hmotnosť</string>
     <string name="channel_func_dimmer">Stmievač</string>
     <string name="channel_func_rgblighting">RGB osvetlenie</string>
     <string name="channel_func_dimmerandrgblighting">Stmievač a RGB osvetlenie</string>
@@ -208,4 +208,9 @@
     <string name="comparsion_yearyear">Porovnanie rok po rokuu</string>
     <string name="hp_turn_off">Vypnúť</string>
     <string name="hp_turn_on">Zapnúť</string>
+    <string name="hp_error_1">Žiadna voda</string>
+    <string name="hp_error_2">Zhorená špirála</string>
+    <string name="hp_error_3">Chyba snímača teploty vody</string>
+    <string name="hp_error_4">Chyba snímača izbovej teploty</string>
+    <string name="hp_error_5">Žiadne prerušenia el. napätia</string>
 </resources>
