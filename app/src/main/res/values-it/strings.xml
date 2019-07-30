@@ -193,5 +193,13 @@
     <string name="comparsion_yearyear">Confronto anno ad anno</string>
     <string name="hp_turn_off">Spegnere</string>
     <string name="hp_turn_on">Accendere</string>
-
+    <string name="hp_error_1">Mancanza d’acqua</string>
+    <string name="hp_error_2">Resistenza bruciata</string>
+    <string name="hp_error_3">Errore del sensore di temperatura dell’acqua</string>
+    <string name="hp_error_4">Errore del sensore di temperatura ambiente</string>
+    <string name="hp_error_5">Mancanza di interruzioni di rete</string>
+    <string name="channel_func_pressuresensor" translatable="false">Sensore di pressione</string>
+    <string name="channel_func_rainsensor" translatable="false">Misura della quantità di pioggia caduta</string>
+    <string name="channel_func_weightsensor" translatable="false">Peso</string>
+    <string name="channel_func_windsensor" translatable="false">Velocità del vento</string>
 </resources>

@@ -198,7 +198,15 @@
     <string name="channel_func_thermostat_hp_homeplus">Дом + обогреватель</string>
     <string name="hp_turn_on">Включи</string>
     <string name="hp_turn_off">Выключи</string>
-
+    <string name="hp_error_1">Нет Воды</string>
+    <string name="hp_error_2">Сгоревший нагреватель</string>
+    <string name="hp_error_3">Ошибка датчика температуры воды</string>
+    <string name="hp_error_4">Ошибка датчика комнатной температуры</string>
+    <string name="hp_error_5">Нет сетевых прерываний</string>
+    <string name="channel_func_pressuresensor" translatable="false">Датчик давления</string>
+    <string name="channel_func_rainsensor" translatable="false">Измерение осадков</string>
+    <string name="channel_func_weightsensor" translatable="false">Вес</string>
+    <string name="channel_func_windsensor" translatable="false">Скорость ветра</string>
 
 </resources>
 
