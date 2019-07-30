@@ -63,6 +63,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private Button HelpButton;
     private Button HomepageButton;
     private Button AddDeviceButton;
+    private Button EmptySpaceButton;
 
     private boolean Anim = false;
 
@@ -152,6 +153,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             HelpButton = MenuItemsLayout.findViewById(R.id.btn_help);
             HomepageButton = MenuItemsLayout.findViewById(R.id.btn_homepage);
             AddDeviceButton = MenuItemsLayout.findViewById(R.id.btn_add);
+            EmptySpaceButton = MenuItemsLayout.findViewById(R.id.btn_empty_space);
 
             SettingsButton.setOnClickListener(this);
             AboutButton.setOnClickListener(this);
@@ -159,6 +161,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             HelpButton.setOnClickListener(this);
             HomepageButton.setOnClickListener(this);
             AddDeviceButton.setOnClickListener(this);
+            EmptySpaceButton.setOnClickListener(this);
 
             Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
             SettingsButton.setTypeface(type);
@@ -166,6 +169,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             DonateButton.setTypeface(type);
             HelpButton.setTypeface(type);
             AddDeviceButton.setTypeface(type);
+            EmptySpaceButton.setTypeface(type);
 
             type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
             HomepageButton.setTypeface(type);
@@ -176,6 +180,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             HelpButton.setTransformationMethod(null);
             HomepageButton.setTransformationMethod(null);
             AddDeviceButton.setTransformationMethod(null);
+            EmptySpaceButton.setTransformationMethod(null);
 
             getRootLayout().addView(MenuItemsLayout);
         }
@@ -458,6 +463,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         } else if ( v == HomepageButton ) {
 
             openHomepage();
+
+        } else if ( v == EmptySpaceButton ) {
 
         }
 
