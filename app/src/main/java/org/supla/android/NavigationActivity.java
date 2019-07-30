@@ -169,7 +169,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             DonateButton.setTypeface(type);
             HelpButton.setTypeface(type);
             AddDeviceButton.setTypeface(type);
-            EmptySpaceButton.setTypeface(type);
 
             type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
             HomepageButton.setTypeface(type);
@@ -180,7 +179,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             HelpButton.setTransformationMethod(null);
             HomepageButton.setTransformationMethod(null);
             AddDeviceButton.setTransformationMethod(null);
-            EmptySpaceButton.setTransformationMethod(null);
 
             getRootLayout().addView(MenuItemsLayout);
         }
@@ -463,8 +461,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         } else if ( v == HomepageButton ) {
 
             openHomepage();
-
-        } else if ( v == EmptySpaceButton ) {
 
         }
 
