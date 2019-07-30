@@ -149,8 +149,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
             SuplaChannelImpulseCounterValue ic = cev.getExtendedValue().ImpulseCounterValue;
 
-            double currentConsumption = 0;
-            double currentCost = 0;
+            double currentConsumption;
+            double currentCost;
 
             if (mDBH.impulseCounterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = ic.getCalculatedValue();

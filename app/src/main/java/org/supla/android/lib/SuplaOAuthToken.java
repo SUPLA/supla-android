@@ -47,7 +47,7 @@ public class SuplaOAuthToken {
             ResultCode = token.ResultCode;
             Birthday = token.Birthday;
             ExpiresIn = token.ExpiresIn;
-            Token = token.Token == null ? null : new String(token.Token);
+            Token = token.Token;
         }
     }
 
@@ -56,7 +56,7 @@ public class SuplaOAuthToken {
     }
 
     public int getExpiresIn() {
-        return getExpiresIn();
+        return ExpiresIn;
     }
 
     public String getToken() {

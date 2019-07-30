@@ -38,7 +38,7 @@ public class SuplaEvent {
             ChannelID = event.ChannelID;
             DurationMS = event.DurationMS;
             SenderID = event.SenderID;
-            SenderName = event.SenderName == null ? null : new String(event.SenderName);
+            SenderName = event.SenderName;
         }
     }
 }

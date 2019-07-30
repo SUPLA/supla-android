@@ -247,7 +247,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
             return null;
         }
 
-        HttpsURLConnection conn = null;
+        HttpsURLConnection conn;
         try {
             conn = (HttpsURLConnection)url.openConnection();
         } catch (IOException e) {
@@ -319,7 +319,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                 Trace.d(log_tag, "CODE: "+conn.getResponseCode());
                 Trace.d(log_tag, "URL: "+url.toString());
 
-                int TotalCount = 0;
+                int TotalCount;
                 try
                 {
                     TotalCount = Integer.parseInt(conn.getHeaderField("X-Total-Count"));
@@ -335,7 +335,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                         conn.getInputStream() : conn.getErrorStream());
                 BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
-                String inputLine = "";
+                String inputLine;
                 StringBuffer sb = new StringBuffer();
 
                 while ((inputLine = br.readLine()) != null) {

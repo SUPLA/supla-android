@@ -294,16 +294,16 @@ public class ChannelGroup extends ChannelBase {
             if (idx < n.length) {
                 try {
                     Double v = Double.valueOf(n[idx]);
-                    if (v != null) {
-                        if (result!=null) {
-                            if ((min && v.doubleValue() < result.doubleValue())
-                                    || (!min && v.doubleValue() > result.doubleValue())) {
-                                result = v;
-                            }
-                        } else {
+
+                    if (result!=null) {
+                        if ((min && v.doubleValue() < result.doubleValue())
+                                || (!min && v.doubleValue() > result.doubleValue())) {
                             result = v;
                         }
+                    } else {
+                        result = v;
                     }
+
                 } catch (NumberFormatException e) {
                 }
             }
@@ -334,7 +334,7 @@ public class ChannelGroup extends ChannelBase {
 
         int sum = 0;
         int count = 0;
-        String[] n = null;
+        String[] n;
 
         for (int a = 0; a < items.length; a++) {
 

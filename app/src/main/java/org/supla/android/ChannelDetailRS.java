@@ -198,7 +198,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
                 tvPercent.setText("---");
             }
 
-            withoutDelay = false;
         }
 
     }

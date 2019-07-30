@@ -193,5 +193,13 @@
     <string name="comparsion_yearyear">Comparação ano a ano</string>
     <string name="hp_turn_off">Desligar</string>
     <string name="hp_turn_on">Ligar</string>
-
+    <string name="hp_error_1">Falta de água</string>
+    <string name="hp_error_2">Aquecedor estourado</string>
+    <string name="hp_error_3">Erro do sensor da temperatura de água</string>
+    <string name="hp_error_4">Erro do sensor da temperatura de ambiente</string>
+    <string name="hp_error_5">Fornecimento ininterrupto de eletricidade</string>
+    <string name="channel_func_pressuresensor">Sensor de pressão</string>
+    <string name="channel_func_rainsensor">Medições da precipitação</string>
+    <string name="channel_func_weightsensor">Peso</string>
+    <string name="channel_func_windsensor">Velocidade do vento</string>
 </resources>

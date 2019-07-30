@@ -187,5 +187,13 @@
     <string name="comparsion_dayday">Vergleich Tag zu Tag</string>
     <string name="comparsion_monthmonth">Vergleich Monat zu Monat</string>
     <string name="comparsion_yearyear">Vergleich Jahr zu Jahr</string>
-
+    <string name="hp_error_1">Wassermangel</string>
+    <string name="hp_error_2">Heizgerät verbrannt</string>
+    <string name="hp_error_3">Fehler des Wassertemperatursensors</string>
+    <string name="hp_error_4">Fehler des Raumtemperatursensors</string>
+    <string name="hp_error_5">Netzunterbrechung nicht vorhanden</string>
+    <string name="channel_func_pressuresensor">Drucksensor</string>
+    <string name="channel_func_rainsensor">Niederschlagsmessung</string>
+    <string name="channel_func_weightsensor">Gewicht</string>
+    <string name="channel_func_windsensor">Windgeschwindigkeit</string>
 </resources>

@@ -193,6 +193,14 @@
     <string name="comparsion_yearyear">Comparación año con año</string>
     <string name="hp_turn_on">Encender</string>
     <string name="hp_turn_off">Apagar</string>
-
+    <string name="hp_error_1">No hay agua</string>
+    <string name="hp_error_2">Calentador quemado</string>
+    <string name="hp_error_3">Error del sensor de temperatura del agua</string>
+    <string name="hp_error_4">Error del sensor de temperatura ambiente</string>
+    <string name="hp_error_5">No hay interrupciones de red</string>
+    <string name="channel_func_pressuresensor" translatable="false">Sensor de presión</string>
+    <string name="channel_func_rainsensor" translatable="false">Sensor de precipitaciones</string>
+    <string name="channel_func_weightsensor" translatable="false">Peso</string>
+    <string name="channel_func_windsensor" translatable="false">Velocidad del viento</string>
 
 </resources>

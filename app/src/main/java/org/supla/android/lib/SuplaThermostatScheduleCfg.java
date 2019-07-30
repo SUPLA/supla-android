@@ -65,7 +65,7 @@ public class SuplaThermostatScheduleCfg {
             hour = 23;
         }
 
-        CfgGroup group = null;
+        CfgGroup group;
         byte hourValue[] = new byte[24];
         int a;
 

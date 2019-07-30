@@ -20,11 +20,9 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -297,7 +295,7 @@ public abstract class ChannelBase extends DbItem {
             return null;
 
         if (getUserIconId() > 0) {
-            ImageId Id = null;
+            ImageId Id;
 
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
@@ -485,16 +483,20 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = R.drawable.thermostat_1;
+                        img_idx = active == 1 ? R.drawable.thermostaton_1
+                                : R.drawable.thermostatoff_1;
                         break;
                     case 2:
-                        img_idx = R.drawable.thermostat_2;
+                        img_idx = active == 1 ? R.drawable.thermostaton_2
+                                : R.drawable.thermostatoff_2;
                         break;
                     case 3:
-                        img_idx = R.drawable.thermostat_3;
+                        img_idx = active == 1 ? R.drawable.thermostaton_3
+                                : R.drawable.thermostatoff_3;
                         break;
                     default:
-                        img_idx = R.drawable.thermostat;
+                        img_idx = active == 1 ? R.drawable.thermostaton
+                                : R.drawable.thermostatoff;
                 }
 
                 break;
@@ -502,16 +504,20 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = R.drawable.thermostat_hp_homeplus_1;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_1
+                                : R.drawable.thermostat_hp_homeplusoff_1;
                         break;
                     case 2:
-                        img_idx = R.drawable.thermostat_hp_homeplus_2;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_2
+                                : R.drawable.thermostat_hp_homeplusoff_2;
                         break;
                     case 3:
-                        img_idx = R.drawable.thermostat_hp_homeplus_3;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_3
+                                : R.drawable.thermostat_hp_homeplusoff_3;
                         break;
                     default:
-                        img_idx = R.drawable.thermostat_hp_homeplus;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson
+                                : R.drawable.thermostat_hp_homeplusoff;
                 }
 
                 break;
