@@ -5,6 +5,7 @@
     android:gravity="top">
 
     <RelativeLayout
+        android:id="@+id/menu_inside_layout"
         android:layout_width="match_parent"
         android:layout_height="470dp"
         android:background="@color/menubar">
@@ -228,4 +229,14 @@
             android:layout_marginLeft="10dp" />
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_empty_space"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menu_inside_layout"
+        android:layout_alignParentBottom="true"
+        android:text=""/>
+
 </RelativeLayout>
