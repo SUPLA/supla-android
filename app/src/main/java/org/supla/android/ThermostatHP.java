@@ -26,6 +26,8 @@ import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 
+import java.lang.annotation.Target;
+
 public class ThermostatHP {
 
     private final static int STATUS_POWERON = 0x01;
@@ -33,19 +35,20 @@ public class ThermostatHP {
     private final static int STATUS_HEATERANDWATERTEST = 0x10;
     private final static int STATUS_HEATING = 0x20;
 
+    private final static int STATUS2_TURBO_ON = 0x1;
+    private final static int STATUS2_ECOREDUCTION_ON = 0x2;
+
     private int presetTemperatureMin;
     private Double measuredTemperatureMin;
     private Double waterMax;
-    Double ecoReduction;
+    Double ecoReductionTemperature;
     Double comfortTemp;
     Double ecoTemp;
-    Integer flags;
-    Integer turbo;
+    Integer flags1;
+    Integer flags2;
+    Integer turboTime;
     int errors;
-    boolean thermostatOn;
-    boolean ecoOn;
-    boolean turboOn;
-    boolean autoOn;
+
     SuplaChannelThermostatValue.Schedule schedule;
 
     public ThermostatHP() {
@@ -68,16 +71,13 @@ public class ThermostatHP {
         presetTemperatureMin = 0;
         measuredTemperatureMin = null;
         waterMax = null;
-        ecoReduction = null;
+        ecoReductionTemperature = null;
         comfortTemp = null;
         ecoTemp = null;
-        flags = null;
-        turbo = null;
+        flags1 = null;
+        flags2 = null;
+        turboTime = null;
         errors = 0;
-        thermostatOn = false;
-        ecoOn = false;
-        turboOn = false;
-        autoOn = false;
         schedule = null;
 
         if (cev == null
@@ -90,23 +90,16 @@ public class ThermostatHP {
         presetTemperatureMin = temp != null ? temp.intValue() : 0;
         measuredTemperatureMin = cev.getExtendedValue().ThermostatValue.getMeasuredTemperature(0);
         waterMax = cev.getExtendedValue().ThermostatValue.getPresetTemperature(2);
-        ecoReduction = cev.getExtendedValue().ThermostatValue.getPresetTemperature(3);
+        ecoReductionTemperature = cev.getExtendedValue().ThermostatValue.getPresetTemperature(3);
         comfortTemp = cev.getExtendedValue().ThermostatValue.getPresetTemperature(4);
         ecoTemp = cev.getExtendedValue().ThermostatValue.getPresetTemperature(5);
-        flags = cev.getExtendedValue().ThermostatValue.getFlags(4);
-
-        if (flags != null) {
-            thermostatOn = (flags & STATUS_POWERON) > 0;
-            autoOn = (flags & STATUS_PROGRAMMODE) > 0;
-        }
-
-        turbo = cev.getExtendedValue().ThermostatValue.getValues(4);
-        if (turbo != null) {
-            turboOn = turbo > 0;
-        }
-
+        flags1 = cev.getExtendedValue().ThermostatValue.getFlags(4);
+        turboTime = cev.getExtendedValue().ThermostatValue.getValues(4);
         schedule = cev.getExtendedValue().ThermostatValue.getSchedule();
         errors = cev.getExtendedValue().ThermostatValue.getFlags(6);
+        flags2 = cev.getExtendedValue().ThermostatValue.getFlags(7);
+
+        Trace.d("Flags2", Integer.toString(flags2));
 
         return true;
     }
@@ -134,8 +127,8 @@ public class ThermostatHP {
         return waterMax;
     }
 
-    public Double getEcoReduction() {
-        return ecoReduction;
+    public Double getEcoReductionTemperature() {
+        return ecoReductionTemperature;
     }
 
     public Double getComfortTemp() {
@@ -146,12 +139,16 @@ public class ThermostatHP {
         return ecoTemp;
     }
 
-    public Integer getFlags() {
-        return flags;
+    public Integer getFlags1() {
+        return flags1;
     }
 
-    public Integer getTurbo() {
-        return turbo;
+    public Integer getFlags2() {
+        return flags2;
+    }
+
+    public Integer getTurboTime() {
+        return turboTime;
     }
 
     public int getErrors() {
@@ -201,23 +198,23 @@ public class ThermostatHP {
     }
 
     public boolean isThermostatOn() {
-        return thermostatOn;
+        return flags1 != null && (flags1 & STATUS_POWERON) > 0;
     }
 
     public boolean isNormalOn() {
-        return isThermostatOn() && !isEcoOn() && !isTurboOn() && !isAutoOn();
+        return isThermostatOn() && !isEcoRecuctionApplied() && !isTurboOn() && !isAutoOn();
     }
 
-    public boolean isEcoOn() {
-        return ecoOn;
+    public boolean isEcoRecuctionApplied() {
+        return flags2 != null && (flags2 & STATUS2_ECOREDUCTION_ON) > 0;
     }
 
     public boolean isTurboOn() {
-        return turboOn;
+        return flags2 != null && (flags2 & STATUS2_TURBO_ON) > 0;
     }
 
     public boolean isAutoOn() {
-        return autoOn;
+        return flags1 != null && (flags1 & STATUS_PROGRAMMODE) > 0;
     }
 
     public SuplaChannelThermostatValue.Schedule getSchedule() {

@@ -245,25 +245,4 @@ public class Preferences {
         editor.putString(pref_wizard_selected_wifi, SSID);
         editor.apply();
     }
-
-    public void setHeatpolTurboTime(int time) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_hp_turbo_time, time);
-        editor.apply();
-    }
-
-    public int getHeatpolTurboTime() {
-        return _prefs.getInt(pref_hp_turbo_time, 1);
-    }
-
-    public void setHeatpolEcoReduction(int temp) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_hp_eco_reduction, temp);
-        editor.apply();
-    }
-
-    public int getHeatpolEcoReduction() {
-        return _prefs.getInt(pref_hp_eco_reduction, 5);
-    }
-
 }

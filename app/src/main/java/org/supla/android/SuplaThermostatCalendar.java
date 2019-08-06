@@ -263,39 +263,18 @@ public class SuplaThermostatCalendar extends View {
         return true;
     }
 
-    private short day(short day) {
-        if (day < 1) {
-            day = 1;
-        } else if (day > 7) {
-            day = 7;
-        }
-
-        return day;
-    }
-
-
-    private short hour(short hour) {
-        if (hour > 0) {
-            hour = 0;
-        } else if (hour > 23) {
-            hour = 23;
-        }
-
-        return hour;
-    }
-
-    private boolean isDayAndHourAreCorrect(short day, short hour) {
+    private boolean areTheDayAndHourCorrect(short day, short hour) {
         return !(day < 1 || day > 7 || hour < 0 || hour > 23);
     }
 
     public void setHourProgramTo1(short day, short hour, boolean one) {
-        if (isDayAndHourAreCorrect(day, hour)) {
+        if (areTheDayAndHourCorrect(day, hour)) {
             mHourProgramGrid[day-1][hour] = one;
         }
     }
 
     public boolean isHourProgramIsSetTo1(short day, short hour) {
-        return isDayAndHourAreCorrect(day, hour) && mHourProgramGrid[day-1][hour];
+        return areTheDayAndHourCorrect(day, hour) && mHourProgramGrid[day-1][hour];
     }
 
     public void setReadOnly(boolean readOnly) {
