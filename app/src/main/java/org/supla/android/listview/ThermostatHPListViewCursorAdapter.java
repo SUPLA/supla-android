@@ -101,7 +101,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
             caption.setText(caption.getText() + " | " + tempTxt);
         }
 
-        setOn(eco, thermostat.isEcoOn());
+        setOn(eco, thermostat.isEcoRecuctionApplied());
         setOn(onoff, thermostat.isThermostatOn());
         setOn(auto, thermostat.isAutoOn());
         setOn(turbo, thermostat.isTurboOn());

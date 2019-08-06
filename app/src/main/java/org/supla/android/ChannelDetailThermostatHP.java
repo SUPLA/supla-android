@@ -309,10 +309,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                         R.id.hpBtnEcoMinus,
                         R.id.hpBtnEcoPlus, R.id.hpTvEco, 10, 30, 19)
         );
-
-        Preferences prefs = new Preferences(getContext());
-        setCfgValue(CfgItem.ID_TURBO_TIME, prefs.getHeatpolTurboTime());
-        setCfgValue(CfgItem.ID_ECO_REDUCTION, prefs.getHeatpolEcoReduction());
     }
 
     @Override
@@ -433,6 +429,14 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
+    public void setCfgValue(int id, Integer value) {
+        setCfgValue(id, value == null ? 0 : value.intValue());
+    }
+
+    public void setCfgValue(int id, Double value) {
+        setCfgValue(id, value == null ? 0 : value.intValue());
+    }
+
     private void OnChannelGroupDataChanged() {
         ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId());
         tvChannelTitle.setText(channelGroup.getNotEmptyCaption(this.getContext()));
@@ -499,24 +503,29 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         displayTemperature();
 
         if (thermostat.getWaterMax() != null) {
-            setCfgValue(CfgItem.ID_WATER_MAX, thermostat.getWaterMax().intValue());
-        }
-
-        if (thermostat.getEcoReduction() != null) {
-            setBtnAppearance(btnEco, thermostat.getEcoReduction().doubleValue() > 0.0);
+            setCfgValue(CfgItem.ID_WATER_MAX, thermostat.getWaterMax());
         }
 
         if (thermostat.getComfortTemp() != null) {
-            setCfgValue(CfgItem.ID_TEMP_COMFORT, thermostat.getComfortTemp().intValue());
+            setCfgValue(CfgItem.ID_TEMP_COMFORT, thermostat.getComfortTemp());
         }
 
         if (thermostat.getEcoTemp() != null) {
-            setCfgValue(CfgItem.ID_TEMP_ECO, thermostat.getEcoTemp().intValue());
+            setCfgValue(CfgItem.ID_TEMP_ECO, thermostat.getEcoTemp());
+        }
+
+        if (thermostat.getEcoReductionTemperature() != null) {
+            setCfgValue(CfgItem.ID_ECO_REDUCTION, thermostat.getEcoReductionTemperature());
+        }
+
+        if (thermostat.getTurboTime() != null) {
+            setCfgValue(CfgItem.ID_TURBO_TIME, thermostat.getTurboTime());
         }
 
         setBtnAppearance(btnOnOff, thermostat.isThermostatOn() ? BTN_SET_ON : BTN_SET_OFF,
                 R.string.hp_on, R.string.hp_off);
         setBtnAppearance(btnAuto, thermostat.isAutoOn() ? BTN_SET_ON : BTN_SET_OFF);
+        setBtnAppearance(btnEco, thermostat.isEcoRecuctionApplied());
         setBtnAppearance(btnTurbo, thermostat.isTurboOn() ? BTN_SET_ON : BTN_SET_OFF);
 
         if (!btnIsOn(btnOnOff) || btnIsOn(btnEco)
@@ -637,21 +646,13 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                     case CfgItem.ID_TEMP_ECO:
                         idx = 4;
                         break;
-                    case CfgItem.ID_TURBO_TIME:
-                        prefs.setHeatpolTurboTime(item.getValue());
-
-                        if (btnIsOn(btnTurbo)) {
-                            deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO,
-                                    (byte)item.getValue());
-                        }
-                        break;
                     case CfgItem.ID_ECO_REDUCTION:
-                        prefs.setHeatpolEcoReduction(item.getValue());
+                        idx = 5;
+                        break;
+                    case CfgItem.ID_TURBO_TIME:
+                        deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_TIME,
+                                (byte)item.getValue());
 
-                        if (btnIsOn(btnEco)) {
-                            deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
-                                    (byte)(item.getValue()));
-                        }
                         break;
                 }
 
@@ -719,15 +720,13 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_NORMAL);
             } else if (view == btnEco) {
                 on = setBtnAppearance(btnEco, BTN_SET_TOGGLE);
-                deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO,
-                        (byte)(on > 0 ? getCfgValue(CfgItem.ID_ECO_REDUCTION) * 10 : 0));
+                deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_ECO, on);
             } else if (view == btnAuto) {
                 on = setBtnAppearance(btnAuto, BTN_SET_TOGGLE);
                 deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO, on);
             } else {
                 on = setBtnAppearance(btnTurbo, BTN_SET_TOGGLE);
-                deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO,
-                        (byte)(on > 0 ? getCfgValue(CfgItem.ID_TURBO_TIME) : 0));
+                deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_MODE_TURBO, on);
             }
         }
 
@@ -852,7 +851,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
                 int setBtnOnOff = thermostat.isThermostatOn() ? BTN_SET_ON : BTN_SET_OFF;
                 int setBtnNormal = thermostat.isNormalOn() ? BTN_SET_ON : BTN_SET_OFF;
-                int setBtnEco = thermostat.isEcoOn() ? BTN_SET_ON : BTN_SET_OFF;
+                int setBtnEco = thermostat.isEcoRecuctionApplied() ? BTN_SET_ON : BTN_SET_OFF;
                 int setBtnTurbo = thermostat.isTurboOn() ? BTN_SET_ON : BTN_SET_OFF;
                 int setBtnAuto = thermostat.isAutoOn() ? BTN_SET_ON : BTN_SET_OFF;
 
@@ -875,7 +874,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
                     if (setBtnEco != BTN_SET_OFF_UNKNOWN
                             && setBtnEco !=
-                            (thermostat.isEcoOn() ? BTN_SET_ON : BTN_SET_OFF)) {
+                            (thermostat.isEcoRecuctionApplied() ? BTN_SET_ON : BTN_SET_OFF)) {
                         setBtnEco = BTN_SET_OFF_UNKNOWN;
                     }
 
