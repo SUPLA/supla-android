@@ -174,6 +174,8 @@ public class ChannelGroup extends ChannelBase {
                 BufferTotalValue += Integer.toString(value.getBrightness());
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
+                BufferTotalValue += ":";
                 BufferTotalValue += Double.toString(value.getMeasuredTemp(getFunc()));
                 BufferTotalValue += ":";
                 BufferTotalValue += Double.toString(value.getPresetTemp(getFunc()));
@@ -347,6 +349,7 @@ public class ChannelGroup extends ChannelBase {
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                     try {
                         sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;
                     } catch (NumberFormatException e) {
@@ -401,8 +404,18 @@ public class ChannelGroup extends ChannelBase {
                     }
                     count++;
                     break;
+
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                    return -1;
+                    n = items[a].split(":");
+                    if (n.length == 3) {
+                        try {
+                            sum += Integer.valueOf(n[0]).intValue() > 0 ? 1 : 0;
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+
+                    count++;
+                    break;
             }
 
 
