@@ -519,6 +519,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
         if (thermostat.getTurboTime() != null) {
+            Trace.d("TURBO", Integer.toString(thermostat.getTurboTime()));
             setCfgValue(CfgItem.ID_TURBO_TIME, thermostat.getTurboTime());
         }
 

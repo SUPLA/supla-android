@@ -174,8 +174,10 @@
     <string name="hp_error_3">Chyba snímače teploty vody</string>
     <string name="hp_error_4">Chyba snímače pokojové teploty</string>
     <string name="hp_error_5">Źádné síťové spojení</string>
-    <string name="channel_func_pressuresensor" translatable="false">Snímač tlaku</string>
-    <string name="channel_func_rainsensor" translatable="false">Měření úhrnu srážek</string>
-    <string name="channel_func_weightsensor" translatable="false">Hmotnost</string>
-    <string name="channel_func_windsensor" translatable="false">Rychlost větru</string>
+    <string name="channel_func_pressuresensor">Snímač tlaku</string>
+    <string name="channel_func_rainsensor">Měření úhrnu srážek</string>
+    <string name="channel_func_weightsensor">Hmotnost</string>
+    <string name="channel_func_windsensor">Rychlost větru</string>
+    <string name="current_production">Produkce v tomto měsíci</string>
+    <string name="production_acording_to_phases">Produkce podle fáze</string>
 </resources>

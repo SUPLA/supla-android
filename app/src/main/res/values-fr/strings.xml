@@ -202,4 +202,6 @@
     <string name="channel_func_rainsensor">Mesure des précipitations</string>
     <string name="channel_func_weightsensor">Poids</string>
     <string name="channel_func_windsensor">Vitesse du vent</string>
+    <string name="current_production">Production dans le mois courant</string>
+    <string name="production_acording_to_phases">Production selon phases</string>
 </resources>

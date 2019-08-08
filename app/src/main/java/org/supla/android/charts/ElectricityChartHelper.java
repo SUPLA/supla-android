@@ -34,11 +34,16 @@ import java.util.List;
 
 public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
-    private double totalForwardActiveEnergy[];
+    private double totalActiveEnergy[];
+    private boolean mProductionDataSource;
+    private String colPhase1;
+    private String colPhase2;
+    private String colPhase3;
 
     public ElectricityChartHelper(Context context) {
         super(context);
-        totalForwardActiveEnergy = new double[]{0,0,0};
+        totalActiveEnergy = new double[]{0,0,0};
+        setProductionDataSource(false);
     }
 
     @Override
@@ -51,14 +56,11 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[3];
         phases[0] = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
+                c.getColumnIndex(colPhase1));
         phases[1] = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE));
+                c.getColumnIndex(colPhase2));
         phases[2] = (float) c.getDouble(
-                c.getColumnIndex(
-                        SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
+                c.getColumnIndex(colPhase3));
 
         entries.add(new BarEntry(n, phases));
     }
@@ -74,25 +76,22 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
 
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[0],
+            entries.add(new PieEntry((float) totalActiveEnergy[0],
                     res.getText(R.string.em_phase1).toString()));
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[1],
+            entries.add(new PieEntry((float) totalActiveEnergy[1],
                     res.getText(R.string.em_phase2).toString()));
-            entries.add(new PieEntry((float)totalForwardActiveEnergy[2],
+            entries.add(new PieEntry((float) totalActiveEnergy[2],
                     res.getText(R.string.em_phase3).toString()));
 
         } else {
 
             float phases;
             phases = (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
+                    c.getColumnIndex(colPhase1));
             phases += (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE));
+                    c.getColumnIndex(colPhase2));
             phases += (float) c.getDouble(
-                    c.getColumnIndex(
-                            SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
+                    c.getColumnIndex(colPhase3));
 
 
             long timestamp = c.getLong(
@@ -131,9 +130,51 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
         return result;
     }
 
-    public void setTotalForwardActiveEnergy(double[] totalForwardActiveEnergy) {
-        if (totalForwardActiveEnergy != null && totalForwardActiveEnergy.length == 3) {
-            this.totalForwardActiveEnergy = totalForwardActiveEnergy;
+    @Override
+    protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
+        if (!isProductionDataSource() || !isComparsionChartType(ctype)) {
+            super.prepareBarDataSet(barDataSet);
+        } else {
+            barDataSet.setColorDependsOnTheValue(true);
+            barDataSet.setColors(getBarChartComparsionColors(true));
         }
+    }
+
+    public void setTotalActiveEnergy(double[] totalActiveEnergy) {
+        if (totalActiveEnergy != null && totalActiveEnergy.length == 3) {
+            this.totalActiveEnergy = totalActiveEnergy;
+        }
+    }
+
+    @Override
+    public String[] getMasterSpinnerItems(int limit) {
+        String[] result = super.getMasterSpinnerItems(limit);
+        if (mProductionDataSource && result != null && result.length >= 14) {
+            Resources r = context.getResources();
+            result[13] = r.getString(R.string.production_acording_to_phases);
+        }
+        return result;
+    }
+
+    public boolean isProductionDataSource() {
+        return mProductionDataSource;
+    }
+
+    public void setProductionDataSource(boolean mProduction) {
+        this.mProductionDataSource = mProduction;
+        if (mProduction) {
+            colPhase1 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE;
+            colPhase2 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE;
+            colPhase3 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE;
+        } else {
+            colPhase1 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE;
+            colPhase2 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE;
+            colPhase3 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE;
+        }
+    }
+
+    @Override
+    public String getCurrency() {
+        return mProductionDataSource ? null : currency;
     }
 }

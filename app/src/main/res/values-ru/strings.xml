@@ -203,10 +203,12 @@
     <string name="hp_error_3">Ошибка датчика температуры воды</string>
     <string name="hp_error_4">Ошибка датчика комнатной температуры</string>
     <string name="hp_error_5">Нет сетевых прерываний</string>
-    <string name="channel_func_pressuresensor" translatable="false">Датчик давления</string>
-    <string name="channel_func_rainsensor" translatable="false">Измерение осадков</string>
-    <string name="channel_func_weightsensor" translatable="false">Вес</string>
-    <string name="channel_func_windsensor" translatable="false">Скорость ветра</string>
+    <string name="channel_func_pressuresensor">Датчик давления</string>
+    <string name="channel_func_rainsensor">Измерение осадков</string>
+    <string name="channel_func_weightsensor">Вес</string>
+    <string name="channel_func_windsensor">Скорость ветра</string>
+    <string name="production_acording_to_phases">Производство по фазе</string>
+    <string name="current_production">Производство в текущем месяце</string>
 
 </resources>
 

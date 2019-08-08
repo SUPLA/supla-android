@@ -198,8 +198,10 @@
     <string name="hp_error_3">Errore del sensore di temperatura dell’acqua</string>
     <string name="hp_error_4">Errore del sensore di temperatura ambiente</string>
     <string name="hp_error_5">Mancanza di interruzioni di rete</string>
-    <string name="channel_func_pressuresensor" translatable="false">Sensore di pressione</string>
-    <string name="channel_func_rainsensor" translatable="false">Misura della quantità di pioggia caduta</string>
-    <string name="channel_func_weightsensor" translatable="false">Peso</string>
-    <string name="channel_func_windsensor" translatable="false">Velocità del vento</string>
+    <string name="channel_func_pressuresensor">Sensore di pressione</string>
+    <string name="channel_func_rainsensor">Misura della quantità di pioggia caduta</string>
+    <string name="channel_func_weightsensor">Peso</string>
+    <string name="channel_func_windsensor">Velocità del vento</string>
+    <string name="current_production">Produzione del mese corrente</string>
+    <string name="production_acording_to_phases">Produzione in base alle fasi</string>
 </resources>

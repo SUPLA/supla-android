@@ -209,4 +209,6 @@
     <string name="hp_error_3">Water temperature sensor error</string>
     <string name="hp_error_4">Room temperature sensor error</string>
     <string name="hp_error_5">No network interruptions</string>
+    <string name="current_production">Production in the current month</string>
+    <string name="production_acording_to_phases">Production according to phases</string>
 </resources>
