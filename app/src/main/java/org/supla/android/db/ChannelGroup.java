@@ -289,7 +289,7 @@ public class ChannelGroup extends ChannelBase {
     private Double getMinMaxTemperature(boolean preset, boolean min) {
         Double result = null;
         String[] items = getTotalValue().split("\\|");
-        int idx = preset ? 1 : 0;
+        int idx = preset ? 2 : 1;
 
         for (int a = 0; a < items.length; a++) {
             String[] n = items[a].split(":");
