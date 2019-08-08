@@ -96,28 +96,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/emtv_lTotalActiveEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/em_total_forward_avtive_energy"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/emtv_TotalForwardActiveEnergy"
+                android:id="@+id/emtv_TotalActiveEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="09,0001 kWh"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/emtv_lCurrentConsumptionProduction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/current_consumption"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/emtv_CurrentConsumption"
+                android:id="@+id/emtv_CurrentConsumptionProduction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="09,0001 kWh"
@@ -166,6 +166,17 @@
             android:background="@drawable/graphoff"
             tools:ignore="NotSibling" />
 
+        <ImageView
+            android:id="@+id/emDirectionImg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignRight="@id/emGraphImg"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/consumption"
+            tools:ignore="NotSibling" />
+
         <ProgressBar
             android:id="@+id/emProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -181,8 +192,7 @@
             android:secondaryProgressTint="@color/activity_bg" />
     </RelativeLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:id="@+id/emrlButtons1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -211,7 +221,8 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/em_phase_btn_black"
-                android:text="@string/em_phase1" />
+                android:text="@string/em_phase1"
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/embtn_Phase2"
@@ -221,7 +232,8 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/em_phase_btn_black"
-                android:text="@string/em_phase2" />
+                android:text="@string/em_phase2"
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/embtn_Phase3"
@@ -231,7 +243,19 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/em_phase_btn_black"
-                android:text="@string/em_phase3" />
+                android:text="@string/em_phase3"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/embtn_Phase123"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/em_phase_btn_black"
+                android:text="1+2+3 "
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
 

@@ -141,7 +141,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/emtv_lTotalActiveEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/current_consumption"
@@ -155,7 +155,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/emtv_lCurrentConsumptionProduction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/current_cost"

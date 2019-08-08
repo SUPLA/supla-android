@@ -213,4 +213,6 @@
     <string name="hp_error_3">Chyba snímača teploty vody</string>
     <string name="hp_error_4">Chyba snímača izbovej teploty</string>
     <string name="hp_error_5">Žiadne prerušenia el. napätia</string>
+    <string name="production_acording_to_phases">Výroba podľa fáz</string>
+    <string name="current_production">Výroba v aktuálnom mesiaci</string>
 </resources>

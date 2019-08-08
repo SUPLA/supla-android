@@ -45,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private boolean measurements;
 
@@ -358,6 +358,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE+", "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE+", "
+
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE+", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE+", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE+", "
+
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
                 + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
@@ -691,6 +699,9 @@ public class DbHelper extends SQLiteOpenHelper {
         execSQL(db, "DELETE FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
     }
 
+    private void upgradeToV13(SQLiteDatabase db) {
+        recreateViews(db);
+    }
 
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -756,6 +767,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     case 11:
                         upgradeToV12(db);
                         break;
+                    case 12:
+                        upgradeToV13(db);
                 }
             }
 
@@ -1751,16 +1764,31 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public double getLastElectricityMeterMeasurementValue(int monthOffset,
-                                                        int channelId) {
+                                                        int channelId, boolean production) {
+
+        String colPhase1;
+        String colPhase2;
+        String colPhase3;
+
+        if (production) {
+            colPhase1 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE;
+            colPhase2 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE;
+            colPhase3 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE;
+        } else {
+            colPhase1 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE;
+            colPhase2 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE;
+            colPhase3 = SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE;
+        }
+
         return getLastMeasurementValue(SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME,
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP,
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID,
                 "IFNULL("
-                        +SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE
+                        +colPhase1
                         + ", 0) + IFNULL("
-                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE
+                        + colPhase2
                         + ",0) + IFNULL("
-                        + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE
+                        + colPhase3
                         +",0)",
                 monthOffset, channelId);
     }
@@ -1930,6 +1958,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE + ", "
                 + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ")" +
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE + ", "
+
+                + " SUM("+SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE+")"+
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE + ", "
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE + ", "
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE + ", "
+
                 + " MAX(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")" +
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "
                 + " MAX(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP + ")" +

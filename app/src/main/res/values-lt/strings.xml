@@ -171,13 +171,15 @@
     <string name="comparsion_yearyear">Palyginimas metai prie metų</string>
     <string name="hp_turn_on">Įjungti</string>
     <string name="hp_turn_off">Išjunk</string>
-    <string name="channel_func_pressuresensor" translatable="false">Slėgio jutiklis</string>
-    <string name="channel_func_rainsensor" translatable="false">Kritulių matavimas</string>
-    <string name="channel_func_weightsensor" translatable="false">Svoris</string>
-    <string name="channel_func_windsensor" translatable="false">Vėjo greitis</string>
+    <string name="channel_func_pressuresensor">Slėgio jutiklis</string>
+    <string name="channel_func_rainsensor">Kritulių matavimas</string>
+    <string name="channel_func_weightsensor">Svoris</string>
+    <string name="channel_func_windsensor">Vėjo greitis</string>
     <string name="hp_error_1">Nėra Vandens</string>
     <string name="hp_error_2">Šildytuvas perdegęs</string>
     <string name="hp_error_3">Vandens temperatūros jutiklio klaida</string>
     <string name="hp_error_4">Kambario temperatūros jutiklio klaida</string>
     <string name="hp_error_5">Tinklo pertraukų nėra</string>
+    <string name="current_production">Gamyba einamąjį mėnesį</string>
+    <string name="production_acording_to_phases">Gamyba pagal fazes</string>
 </resources>
