@@ -425,7 +425,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             double totalFRE = 0;
             double totalRRE = 0;
 
-            for(int p=1;p<3;p++) {
+            for(int p=1;p<=3;p++) {
 
                 if (phase > 0) {
                     p = phase;
