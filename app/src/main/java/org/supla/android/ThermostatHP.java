@@ -41,6 +41,7 @@ public class ThermostatHP {
     private int presetTemperatureMin;
     private Double measuredTemperatureMin;
     private Double waterMax;
+    private boolean online;
     Double ecoReductionTemperature;
     Double comfortTemp;
     Double ecoTemp;
@@ -54,8 +55,8 @@ public class ThermostatHP {
     public ThermostatHP() {
     }
 
-    public ThermostatHP(ChannelExtendedValue cev) {
-        assign(cev);
+    public ThermostatHP(ChannelExtendedValue cev, boolean online) {
+        assign(cev, online);
     }
 
     public ThermostatHP(Cursor cursor) {
@@ -66,8 +67,9 @@ public class ThermostatHP {
         assign(channel);
     }
 
-    public boolean assign(ChannelExtendedValue cev) {
+    public boolean assign(ChannelExtendedValue cev, boolean online) {
 
+        this.online = online;
         presetTemperatureMin = 0;
         measuredTemperatureMin = null;
         waterMax = null;
@@ -99,14 +101,12 @@ public class ThermostatHP {
         errors = cev.getExtendedValue().ThermostatValue.getFlags(6);
         flags2 = cev.getExtendedValue().ThermostatValue.getFlags(7);
 
-        Trace.d("Flags2", Integer.toString(flags2));
-
         return true;
     }
 
     public boolean assign(Channel channel) {
         ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
-        return assign(cev);
+        return assign(cev, channel.getOnLine());
     }
 
     public boolean assign(Cursor cursor) {
@@ -198,23 +198,23 @@ public class ThermostatHP {
     }
 
     public boolean isThermostatOn() {
-        return flags1 != null && (flags1 & STATUS_POWERON) > 0;
+        return online && flags1 != null && (flags1 & STATUS_POWERON) > 0;
     }
 
     public boolean isNormalOn() {
-        return isThermostatOn() && !isEcoRecuctionApplied() && !isTurboOn() && !isAutoOn();
+        return online && isThermostatOn() && !isEcoRecuctionApplied() && !isTurboOn() && !isAutoOn();
     }
 
     public boolean isEcoRecuctionApplied() {
-        return flags2 != null && (flags2 & STATUS2_ECOREDUCTION_ON) > 0;
+        return online && flags2 != null && (flags2 & STATUS2_ECOREDUCTION_ON) > 0;
     }
 
     public boolean isTurboOn() {
-        return flags2 != null && (flags2 & STATUS2_TURBO_ON) > 0;
+        return online && flags2 != null && (flags2 & STATUS2_TURBO_ON) > 0;
     }
 
     public boolean isAutoOn() {
-        return flags1 != null && (flags1 & STATUS_PROGRAMMODE) > 0;
+        return online && flags1 != null && (flags1 & STATUS_PROGRAMMODE) > 0;
     }
 
     public SuplaChannelThermostatValue.Schedule getSchedule() {
