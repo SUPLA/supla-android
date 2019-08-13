@@ -69,8 +69,6 @@ public class SuplaCurtains extends View {
         void onPercentChangeing(SuplaCurtains rs, float percent);
     }
 
-    //Colors Getters and Setters
-
     public int getLineColor() { return mLineColor; }
 
     public void setLineColor(int lineColor) {
