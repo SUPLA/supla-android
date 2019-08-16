@@ -1,4 +1,4 @@
-package com.example.curtains;
+package org.supla.android;
 
 import android.app.Instrumentation;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-public class SuplaCurtainsTest extends Instrumentation{
+public class SuplaCurtainsTest extends Instrumentation {
 
     private SuplaCurtains curtains = new SuplaCurtains(getContext());
 
