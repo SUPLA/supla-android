@@ -17,18 +17,23 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import junit.framework.TestCase;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SuplaThermostatCalendarTest {
+public class SuplaThermostatCalendarTest extends TestCase {
+    SuplaThermostatCalendar calendar;
+
+    @Override
+    protected void setUp() throws Exception {
+        calendar = new SuplaThermostatCalendar(null);
+    }
 
     @Test
     public void testSettingFirtsDay() {
-
-        SuplaThermostatCalendar calendar = new SuplaThermostatCalendar(null);
-
         for(short a=1;a<=7;a++) {
             calendar.setFirtsDay(a);
             Assert.assertEquals(a, calendar.getFirtsDay());
@@ -42,8 +47,6 @@ public class SuplaThermostatCalendarTest {
 
     @Test
     public void testGettingDayOffset() {
-
-        SuplaThermostatCalendar calendar = new SuplaThermostatCalendar(null);
 
         {
             int d[] = { 1, 2, 3, 4, 5, 6, 7 };
@@ -78,8 +81,6 @@ public class SuplaThermostatCalendarTest {
 
     @Test
     public void testSettingHourProgramTo1() {
-
-        SuplaThermostatCalendar calendar = new SuplaThermostatCalendar(null);
 
         short d,h;
 
