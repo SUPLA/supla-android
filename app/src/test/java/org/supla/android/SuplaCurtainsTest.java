@@ -1,8 +1,11 @@
-package com.example.curtains;
+package org.supla.android;
 
-import android.app.Instrumentation;
+import android.content.Context;
+import junit.framework.TestCase;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -22,9 +25,15 @@ import static org.junit.Assert.*;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-public class SuplaCurtainsTest extends Instrumentation{
+public class SuplaCurtainsTest extends TestCase {
 
-    private SuplaCurtains curtains = new SuplaCurtains(getContext());
+    private SuplaCurtains curtains;
+    Context context = mock(Context.class);
+
+    @Override
+    protected void setUp() throws Exception {
+        curtains = new SuplaCurtains(context);
+    }
 
     @Test
     public void testLineColorDefaultValue()  {

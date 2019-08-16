@@ -49,6 +49,7 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation 'com.android.support:recyclerview-v7:25.3.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'

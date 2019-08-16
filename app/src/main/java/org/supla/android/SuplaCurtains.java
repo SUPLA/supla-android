@@ -1,4 +1,4 @@
-package com.example.curtains;
+package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
