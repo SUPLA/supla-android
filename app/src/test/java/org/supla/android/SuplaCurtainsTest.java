@@ -6,6 +6,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import android.view.MotionEvent;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.mock;
 public class SuplaCurtainsTest extends TestCase {
 
     private SuplaCurtains curtains;
-    Context context = mock(Context.class);
+    private Context context = mock(Context.class);
 
     @Override
     protected void setUp() throws Exception {
@@ -36,7 +38,7 @@ public class SuplaCurtainsTest extends TestCase {
     }
 
     @Test
-    public void testLineColorDefaultValue()  {
+    public void testLineColorDefaultValue() {
         assertEquals(0x000000, curtains.getLineColor());
     }
 
@@ -105,5 +107,41 @@ public class SuplaCurtainsTest extends TestCase {
         assertEquals(90, curtains.getPercent(), 0);
         curtains.setPercent(170);
         assertEquals(100, curtains.getPercent(), 0);
+    }
+
+    @Test
+    public void testTouchEventActionDown() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_DOWN, event.getAction());
+    }
+
+    @Test
+    public void testTouchEventActionMove() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_MOVE, event.getAction());
+    }
+
+    @Test
+    public void testTouchEventActionUp() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_UP);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_UP, event.getAction());
+    }
+
+    @Test
+    public void testTouchEventActionCancel() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_CANCEL);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_CANCEL, event.getAction());
     }
 }
