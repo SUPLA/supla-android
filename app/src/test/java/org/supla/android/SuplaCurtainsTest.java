@@ -95,39 +95,19 @@ public class SuplaCurtainsTest extends TestCase {
         assertEquals(100, curtains.getPercent(), 0);
     }
 
-    public void testTouchEventActionDown() {
+    public void testOnTouchEventDownUp() {
         MotionEvent event = mock(MotionEvent.class);
         assertNotNull(event);
+        assertFalse(curtains.isTouched());
         when(event.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
         curtains.onTouchEvent(event);
-        assertEquals(MotionEvent.ACTION_DOWN, event.getAction());
-    }
-
-    public void testTouchEventActionMove() {
-        MotionEvent event = mock(MotionEvent.class);
-        assertNotNull(event);
-        when(event.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
-        curtains.onTouchEvent(event);
-        assertEquals(MotionEvent.ACTION_MOVE, event.getAction());
-    }
-
-    public void testTouchEventActionUp() {
-        MotionEvent event = mock(MotionEvent.class);
-        assertNotNull(event);
+        assertTrue(curtains.isTouched());
         when(event.getAction()).thenReturn(MotionEvent.ACTION_UP);
         curtains.onTouchEvent(event);
-        assertEquals(MotionEvent.ACTION_UP, event.getAction());
+        assertFalse(curtains.isTouched());
     }
 
-    public void testTouchEventActionCancel() {
-        MotionEvent event = mock(MotionEvent.class);
-        assertNotNull(event);
-        when(event.getAction()).thenReturn(MotionEvent.ACTION_CANCEL);
-        curtains.onTouchEvent(event);
-        assertEquals(MotionEvent.ACTION_CANCEL, event.getAction());
-    }
-
-    public void testOnTouchEvent() {
+    public void testOnTouchEventDownCancel() {
         MotionEvent event = mock(MotionEvent.class);
         assertNotNull(event);
         assertFalse(curtains.isTouched());
