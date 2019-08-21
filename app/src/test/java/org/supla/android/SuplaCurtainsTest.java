@@ -3,9 +3,9 @@ package org.supla.android;
 import android.content.Context;
 import junit.framework.TestCase;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import android.view.MotionEvent;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -28,70 +28,59 @@ import static org.mockito.Mockito.mock;
 public class SuplaCurtainsTest extends TestCase {
 
     private SuplaCurtains curtains;
-    Context context = mock(Context.class);
+    private Context context = mock(Context.class);
 
     @Override
-    protected void setUp() throws Exception {
+    protected void setUp() {
         curtains = new SuplaCurtains(context);
     }
 
-    @Test
-    public void testLineColorDefaultValue()  {
+    public void testLineColorDefaultValue() {
         assertEquals(0x000000, curtains.getLineColor());
     }
 
-    @Test
     public void testLineColorGetterSetter() {
         curtains.setLineColor(0x123123);
         assertEquals(0x123123, curtains.getLineColor());
     }
 
-    @Test
     public void testFillColor1DefaultValue() {
         assertEquals(0x05AA37, curtains.getFillColor1());
     }
 
-    @Test
     public void testFillColor1GetterSetter() {
         curtains.setFillColor1(0x123123);
         assertEquals(0x123123, curtains.getFillColor1());
     }
 
-    @Test
     public void testFillColor2DefaultValue() {
         assertEquals(0x049629, curtains.getFillColor2());
     }
 
-    @Test
     public void testFillColor2GetterSetter() {
         curtains.setFillColor2(0x123123);
         assertEquals(0x123123, curtains.getFillColor2());
     }
 
-    @Test
-    public void getPercent() {
+    public void testGetPercent() {
         assertEquals(0, curtains.getPercent(), 0);
     }
 
-    @Test
     public void testPercentGetterSetter() {
         curtains.setPercent(75f);
         assertEquals(75f, curtains.getPercent(), 0);
     }
 
-    @Test
     public void testPercentMinValue() {
         curtains.setPercent(-15);
         assertEquals(0, curtains.getPercent(), 0);
     }
 
-    @Test
     public void testPercentMaxValue() {
         curtains.setPercent(130);
         assertEquals(100, curtains.getPercent(), 0);
     }
 
-    @Test
     public void testPercentMinChangeValue() {
         curtains.setPercent(10);
         assertEquals(10, curtains.getPercent(), 0);
@@ -99,11 +88,54 @@ public class SuplaCurtainsTest extends TestCase {
         assertEquals(0, curtains.getPercent(), 0);
     }
 
-    @Test
     public void testPercentMaxChangeValue() {
         curtains.setPercent(90);
         assertEquals(90, curtains.getPercent(), 0);
         curtains.setPercent(170);
         assertEquals(100, curtains.getPercent(), 0);
+    }
+
+    public void testTouchEventActionDown() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_DOWN, event.getAction());
+    }
+
+    public void testTouchEventActionMove() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_MOVE, event.getAction());
+    }
+
+    public void testTouchEventActionUp() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_UP);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_UP, event.getAction());
+    }
+
+    public void testTouchEventActionCancel() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_CANCEL);
+        curtains.onTouchEvent(event);
+        assertEquals(MotionEvent.ACTION_CANCEL, event.getAction());
+    }
+
+    public void testOnTouchEvent() {
+        MotionEvent event = mock(MotionEvent.class);
+        assertNotNull(event);
+        assertFalse(curtains.isTouched());
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+        curtains.onTouchEvent(event);
+        assertTrue(curtains.isTouched());
+        when(event.getAction()).thenReturn(MotionEvent.ACTION_CANCEL);
+        curtains.onTouchEvent(event);
+        assertFalse(curtains.isTouched());
     }
 }
