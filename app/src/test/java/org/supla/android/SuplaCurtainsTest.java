@@ -45,7 +45,7 @@ public class SuplaCurtainsTest extends TestCase {
     }
 
     public void testFillColor1DefaultValue() {
-        assertEquals(0x05AA37, curtains.getFillColor1());
+        assertEquals(0x00D449, curtains.getFillColor1());
     }
 
     public void testFillColor1GetterSetter() {
