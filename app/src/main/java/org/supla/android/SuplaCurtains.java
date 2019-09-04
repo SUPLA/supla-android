@@ -48,7 +48,7 @@ public class SuplaCurtains extends View {
     private double mThickness = 1, mLineSubtract;
     private boolean mTouchLeft, mTouched;
     private int mLineColor = 0x000000;
-    private int mFillColor1 = 0x05AA37;
+    private int mFillColor1 = 0x00D449;
     private int mFillColor2 = 0x049629;
     private OnPercentChangeListener mOnPercentChangeListener;
     private RectF workSpace = new RectF();
