@@ -95,7 +95,7 @@
     <string name="rate_later">Later</string>
     <string name="rate_no_thanks">No thanks</string>
 
-    <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="rs_percent_caption">Процент закрытия</string>
     <string name="calibration">[калибровка]</string>
     <string name="wizard_step1_txt2">Для продолжения нажмите <b>Далее</b>.</string>
     <string name="add_device">Добавить устройство</string>
@@ -162,7 +162,8 @@
     <string name="hp_cfg_turbo_time">Длительность режима ТУРБО</string>
     <string name="hp_cfg_water_max">Максимальная температура воды</string>
     <string name="hp_cfg_eco_reduction">Снижение температуры в режиме ECO</string>
-    <string name="hp_cfg_temp_comfort">Комфортная температура в режиме АВТО</string>
+    <string name="hp_cfg_temp_comfort_auto">Комфортная температура в режиме АВТО</string>
+    <string name="hp_temp_comfort">Комфортная</string>
     <string name="hp_cfg_temp_eco">Температура ECO в режиме АВТО</string>
     <string name="total_cost">Общая стоимость</string>
     <string name="current_cost">Стоимость в текущем месяце</string>
@@ -195,7 +196,19 @@
     <string name="comparsion_yearyear">Сравнение в год к году</string>
     <string name="channel_func_thermostat">Термостат</string>
     <string name="channel_func_thermostat_hp_homeplus">Дом + обогреватель</string>
-
+    <string name="hp_turn_on">Включи</string>
+    <string name="hp_turn_off">Выключи</string>
+    <string name="hp_error_1">Нет Воды</string>
+    <string name="hp_error_2">Сгоревший нагреватель</string>
+    <string name="hp_error_3">Ошибка датчика температуры воды</string>
+    <string name="hp_error_4">Ошибка датчика комнатной температуры</string>
+    <string name="hp_error_5">Нет сетевых прерываний</string>
+    <string name="channel_func_pressuresensor">Датчик давления</string>
+    <string name="channel_func_rainsensor">Измерение осадков</string>
+    <string name="channel_func_weightsensor">Вес</string>
+    <string name="channel_func_windsensor">Скорость ветра</string>
+    <string name="production_acording_to_phases">Производство по фазе</string>
+    <string name="current_production">Производство в текущем месяце</string>
 
 </resources>
 

@@ -17,10 +17,10 @@
     <string name="status_bad_credentials">Schlechte Referenzen</string>
     <string name="status_climit_exceded">Klient-Grenze überschritten</string>
     <string name="status_version_error">Nicht kompatible Server-Version</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">Die Client-Registrierung ist deaktiviert. Bitte gehen Sie zu \"Smartphones\" auf %1$s, um es zu aktivieren.</string>
+    <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf %1$s und holen Sie sich eine gültige ID.</string>
+    <string name="status_device_disabled">Gerät ist deaktiviert</string>
+    <string name="status_accessid_disabled">Die Zugriffskennung ist deaktiviert</string>
 
     <string name="err_hostnotfound">Host nicht gefunden</string>
     <string name="err_cantconnecttohost">Kann nicht Host verbinden</string>
@@ -84,7 +84,7 @@
     <string name="rate_later">Später</string>
     <string name="rate_no_thanks">Nein danke</string>
 
-    <string name="rs_percent_caption">Percentage of closing</string>
+    <string name="rs_percent_caption">Prozentsatz des Abschlusses</string>
     <string name="calibration">[Kalibrierung]</string>
     <string name="wizard_step1_txt2">Um fortzusetzen, drücken Sie <b>Weiter</b>.</string>
     <string name="add_device">Gerät hinzufügen</string>
@@ -145,6 +145,8 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">EINGESCHALTET</string>
     <string name="hp_off">AUSGESCHALTET</string>
+    <string name="hp_turn_on">EINSCHALTEN</string>
+    <string name="hp_turn_off">AUSSCHALTEN</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -153,7 +155,8 @@
     <string name="hp_cfg_turbo_time">Dauer des TURBO-Modus</string>
     <string name="hp_cfg_water_max">Maximale Wassertemperatur</string>
     <string name="hp_cfg_eco_reduction">Temperaturabsenkung im ECO-Modus</string>
-    <string name="hp_cfg_temp_comfort">Komforttemperatur im AUTO-Modus</string>
+    <string name="hp_cfg_temp_comfort_auto">Komforttemperatur im AUTO-Modus</string>
+    <string name="hp_temp_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
     <string name="total_cost">Gesamtkosten</string>
     <string name="current_cost">Die Kosten im laufenden Monat</string>
@@ -184,5 +187,15 @@
     <string name="comparsion_dayday">Vergleich Tag zu Tag</string>
     <string name="comparsion_monthmonth">Vergleich Monat zu Monat</string>
     <string name="comparsion_yearyear">Vergleich Jahr zu Jahr</string>
-
+    <string name="hp_error_1">Wassermangel</string>
+    <string name="hp_error_2">Heizgerät verbrannt</string>
+    <string name="hp_error_3">Fehler des Wassertemperatursensors</string>
+    <string name="hp_error_4">Fehler des Raumtemperatursensors</string>
+    <string name="hp_error_5">Netzunterbrechung nicht vorhanden</string>
+    <string name="channel_func_pressuresensor">Drucksensor</string>
+    <string name="channel_func_rainsensor">Niederschlagsmessung</string>
+    <string name="channel_func_weightsensor">Gewicht</string>
+    <string name="channel_func_windsensor">Windgeschwindigkeit</string>
+    <string name="current_production">Produktion im laufenden Monat</string>
+    <string name="production_acording_to_phases">Produktion nach Phase</string>
 </resources>

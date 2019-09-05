@@ -422,11 +422,7 @@ public class ChannelListView extends ListView {
 
                 return true;
 
-            } else if (detailSliding) {
-                return true;
             }
-
-
         }
 
 

@@ -93,7 +93,8 @@ public class ChannelLayout extends LinearLayout {
 
             Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
             setTypeface(type);
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_caption_text));
+            setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.channel_caption_text_size));
             setTextColor(getResources().getColor(R.color.channel_caption_text));
             setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
@@ -117,7 +118,8 @@ public class ChannelLayout extends LinearLayout {
 
         tv.setTypeface(type);
 
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text));
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.channel_btn_text_size));
         tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
         tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
@@ -165,8 +167,9 @@ public class ChannelLayout extends LinearLayout {
 
             Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
             Text.setTypeface(type);
-            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_temp_text));
-            Text.setTextColor(getResources().getColor(R.color.channel_temp_text));
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.channel_imgtext_size));
+            Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
             addView(Text);
@@ -174,46 +177,52 @@ public class ChannelLayout extends LinearLayout {
             return Text;
         }
 
-        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible, int width, int height) {
+        private void SetTextDimensions(TextView Text, ImageView Img,
+                                       Boolean visible, int width) {
 
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
 
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
+            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
 
             Text.setLayoutParams(lp);
             Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+
 
         }
 
         private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
 
-            SetTextDimensions(Text, Img, visible, getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_imgtext_height));
+            SetTextDimensions(Text, Img, visible,
+                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width));
 
         }
 
-        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin, int width, int height) {
+        private void SetImgDimensions(ImageView Img, int width, int height) {
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     width, height);
 
 
-            if (!img2) {
+            if (Img == Img1) {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             } else {
                 lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
             }
 
-            lp.leftMargin = leftMargin;
             lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 
             Img.setLayoutParams(lp);
 
         }
 
-        private void SetImgDimensions(ImageView Img, Boolean img2, int leftMargin) {
-            SetImgDimensions(Img, img2, leftMargin, getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+        private void SetImgDimensions(ImageView Img) {
+            SetImgDimensions(Img,
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width),
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
         }
 
         private void SetDimensions() {
@@ -252,12 +261,13 @@ public class ChannelLayout extends LinearLayout {
             lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
 
             setLayoutParams(lp);
-
+            SetImgDimensions(Img1);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
 
                 RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width), getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width),
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
 
                 _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
                 _lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -266,67 +276,25 @@ public class ChannelLayout extends LinearLayout {
                 Img1.setVisibility(View.VISIBLE);
 
 
-                _lp = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
+                _lp = new RelativeLayout.LayoutParams(
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width),
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
 
                 _lp.addRule(RelativeLayout.ABOVE, Img1.getId());
                 _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
 
                 Text1.setLayoutParams(_lp);
                 Text1.setVisibility(View.VISIBLE);
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
+            } else  {
+                SetTextDimensions(Text1, Img1, true,
+                        getResources().getDimensionPixelSize(
+                                mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ?
+                                        R.dimen.channel_imgtext_thermometer_width :
+                                        R.dimen.channel_imgtext_width));
 
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_depthimgtext_height));
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_emimgtext_height));
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weathersensors_imgtext_height));
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_weight_imgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_weight_imgtext_height));
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-                       || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-
-                SetImgDimensions(Img1, false, 0);
-                SetTextDimensions(Text1, Img1, true, getResources().getDimensionPixelSize(R.dimen.channel_thimgtext_width), getResources().getDimensionPixelSize(R.dimen.channel_thimgtext_height));
-                Text1.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-            } else {
-
-                SetImgDimensions(Img1, false, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ? getResources().getDimensionPixelSize(R.dimen.channel_img_left_margin) : 0);
-                SetTextDimensions(Text1, Img1, mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-                        || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
-
-                SetImgDimensions(Img2, true, 0);
+                SetImgDimensions(Img2);
                 SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
-
             }
 
         }
@@ -859,9 +827,12 @@ public class ChannelLayout extends LinearLayout {
             right_onlineStatus.setShapeType(shapeType);
         }
 
-        if (mGroup) {
+        int activePercent;
+
+        if (mGroup
+                && (activePercent = ((ChannelGroup)cbase).getActivePercent()) >= 0) {
             right_ActiveStatus.setVisibility(View.VISIBLE);
-            right_ActiveStatus.setPercent(((ChannelGroup)cbase).getActivePercent());
+            right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
         }

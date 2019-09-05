@@ -19,7 +19,6 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
-
 import com.github.mikephil.charting.data.Entry;
 
 public class IncrementalMeterMarkerView extends SuplaMarkerView {
@@ -30,12 +29,14 @@ public class IncrementalMeterMarkerView extends SuplaMarkerView {
     }
 
     @Override
-    protected String getValue2(Entry e) {
+    protected String getValue1(Entry e) {
 
         if (helper instanceof IncrementalMeterChartHelper) {
             IncrementalMeterChartHelper helper = (IncrementalMeterChartHelper)this.helper;
-            return String.format("%.2f "+getString(helper.getCurrency()),
-                    helper.getPricePerUnit()*e.getY());
+            if (helper.getCurrency() != null) {
+                return String.format("%.2f "+getString(helper.getCurrency()),
+                        helper.getPricePerUnit()*e.getY());
+            }
         }
 
         return "";

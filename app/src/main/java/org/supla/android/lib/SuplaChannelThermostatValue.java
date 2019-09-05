@@ -41,7 +41,7 @@ public class SuplaChannelThermostatValue implements Serializable {
             HourValue = new byte[7][24];
         }
 
-        boolean setValue(byte day, byte hour, byte value) {
+        public boolean setValue(byte day, byte hour, byte value) {
             if (day >= 0 && day < HourValue.length
                     && hour >= 0 && hour < HourValue[day].length) {
                 HourValue[day][hour] = value;
@@ -50,16 +50,16 @@ public class SuplaChannelThermostatValue implements Serializable {
             return false;
         }
 
-        byte getValue(byte day, byte hour) {
+        public byte getValue(byte day, byte hour) {
             return day >= 0 && day < HourValue.length
                     && hour >= 0 && hour < HourValue[day].length ? HourValue[day][hour] : 0;
         }
 
-        void setType(byte type) {
+        public void setType(byte type) {
             Type = type;
         }
 
-        byte getType() {
+        public byte getType() {
             return Type;
         }
     }
@@ -187,7 +187,7 @@ public class SuplaChannelThermostatValue implements Serializable {
         return Values != null && idx >= 0 && idx < Values.length ? Values[idx] : null;
     }
 
-    boolean setValues(int idx, int values) {
+    public boolean setValues(int idx, int values) {
         if (idx >= 0 && idx < 8) {
             if (Values == null) {
                 Values = new Integer[8];
@@ -198,11 +198,11 @@ public class SuplaChannelThermostatValue implements Serializable {
         return false;
     }
 
-    void setSchedule(Schedule schedule) {
+    public void setSchedule(Schedule schedule) {
         mSchedule = schedule;
     }
 
-    void setScheduleValue(byte day, byte hour, byte value) {
+    public void setScheduleValue(byte day, byte hour, byte value) {
         if (mSchedule == null) {
             mSchedule = new Schedule();
         }
@@ -210,7 +210,7 @@ public class SuplaChannelThermostatValue implements Serializable {
         mSchedule.setValue(day, hour, value);
     }
 
-    void setScheduleValueType(byte type) {
+    public void setScheduleValueType(byte type) {
         if (mSchedule == null) {
             mSchedule = new Schedule();
         }
@@ -218,20 +218,19 @@ public class SuplaChannelThermostatValue implements Serializable {
         mSchedule.setType(type);
     }
 
-    Schedule getSchedule() {
+    public Schedule getSchedule() {
         return mSchedule;
     }
 
-    void setTime(Time time) {
+    public void setTime(Time time) {
         mTime = time;
     }
 
-    void setTime(byte second, byte minute, byte hour, byte dayOfWeek) {
-        Trace.d("SETTIME", Integer.toString(second)+":"+Integer.toString(minute));
+    public void setTime(byte second, byte minute, byte hour, byte dayOfWeek) {
         mTime = new Time(second, minute, hour, dayOfWeek);
     }
 
-    Time getTime() {
+    public Time getTime() {
         return mTime;
     }
 }

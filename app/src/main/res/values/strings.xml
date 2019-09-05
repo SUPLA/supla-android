@@ -45,10 +45,10 @@
     <string name="channel_func_thermometer">Thermometer</string>
     <string name="channel_func_humidity">Humidity</string>
     <string name="channel_func_humidityandtemperature">Temperature and Humidity</string>
-    <string name="channel_func_windsensor" translatable="false">Wind sensor</string>
-    <string name="channel_func_pressuresensor" translatable="false">Pressure sensor</string>
-    <string name="channel_func_rainsensor" translatable="false">Rain sensor</string>
-    <string name="channel_func_weightsensor" translatable="false">Weight sensor</string>
+    <string name="channel_func_windsensor">Wind sensor</string>
+    <string name="channel_func_pressuresensor">Pressure sensor</string>
+    <string name="channel_func_rainsensor">Rain sensor</string>
+    <string name="channel_func_weightsensor">Weight sensor</string>
     <string name="channel_func_dimmer">Dimmer</string>
     <string name="channel_func_rgblighting">RGB Lighting</string>
     <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
@@ -162,6 +162,8 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">ON</string>
     <string name="hp_off">OFF</string>
+    <string name="hp_turn_on">Turn ON</string>
+    <string name="hp_turn_off">Turn OFF</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,7 +172,8 @@
     <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
     <string name="hp_cfg_water_max">Maximum water temperature</string>
     <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
-    <string name="hp_cfg_temp_comfort">Comfort temperature in AUTO mode</string>
+    <string name="hp_cfg_temp_comfort_auto">Comfort temperature in AUTO mode</string>
+    <string name="hp_temp_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
     <string name="channel_func_impulsecounter">Impulse counter</string>
     <string name="meter_value">Meter value</string>
@@ -201,4 +204,11 @@
     <string name="comparsion_dayday">Day to day comparison</string>
     <string name="comparsion_monthmonth">Month to month comparison</string>
     <string name="comparsion_yearyear">Year to year comparison</string>
+    <string name="hp_error_1">No water</string>
+    <string name="hp_error_2">Burnt heater</string>
+    <string name="hp_error_3">Water temperature sensor error</string>
+    <string name="hp_error_4">Room temperature sensor error</string>
+    <string name="hp_error_5">No network interruptions</string>
+    <string name="current_production">Production in the current month</string>
+    <string name="production_acording_to_phases">Production according to phases</string>
 </resources>

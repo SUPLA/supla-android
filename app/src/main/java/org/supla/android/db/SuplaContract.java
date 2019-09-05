@@ -218,6 +218,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE1_FAE = "phase1_fae";
         public static final String COLUMN_NAME_PHASE2_FAE = "phase2_fae";
         public static final String COLUMN_NAME_PHASE3_FAE = "phase3_fae";
+        public static final String COLUMN_NAME_PHASE1_RAE = "phase1_rae";
+        public static final String COLUMN_NAME_PHASE2_RAE = "phase2_rae";
+        public static final String COLUMN_NAME_PHASE3_RAE = "phase3_rae";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
 
     }

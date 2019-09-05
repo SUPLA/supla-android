@@ -19,6 +19,7 @@ package org.supla.android.charts;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 
 import com.github.mikephil.charting.components.AxisBase;
@@ -27,6 +28,7 @@ import org.supla.android.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class IncrementalMeterChartHelper extends ChartHelper {
 
@@ -54,7 +56,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
         value -= 1;
 
 
-        if (value > 0 && value < values.size()) {
+        if (value >= 0 && value < values.size()) {
             return values.get((int) value);
         }
 
@@ -82,4 +84,27 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
         values.clear();
         super.load(channelId, ctype);
     }
+
+    protected List<Integer> getBarChartComparsionColors(boolean inverted) {
+        Resources r = context.getResources();
+
+        List<Integer> Colors = new ArrayList<Integer>(1);
+        if (inverted) {
+            Colors.add(r.getColor(R.color.chart_color_value_negative));
+            Colors.add(r.getColor(R.color.chart_color_value_positive));
+        } else {
+            Colors.add(r.getColor(R.color.chart_color_value_positive));
+            Colors.add(r.getColor(R.color.chart_color_value_negative));
+        }
+
+        return Colors;
+    }
+
+    protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
+        if (isComparsionChartType(ctype)) {
+            barDataSet.setColorDependsOnTheValue(true);
+            barDataSet.setColors(getBarChartComparsionColors(false));
+        }
+    }
+
 }

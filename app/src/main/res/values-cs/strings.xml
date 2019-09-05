@@ -135,7 +135,8 @@
     <string name="hp_cfg_turbo_time">Trvání režimu TURBO</string>
     <string name="hp_cfg_water_max">Maximální teplota vody</string>
     <string name="hp_cfg_eco_reduction">Snížení teploty v režimu ECO</string>
-    <string name="hp_cfg_temp_comfort">Ideální teplota v režimu AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Ideální teplota v režimu AUTO</string>
+    <string name="hp_temp_comfort">Ideální teplota</string>
     <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
     <string name="channel_func_impulsecounter">Počítadlo impulzů</string>
     <string name="meter_value">Stav měřiče</string>
@@ -166,4 +167,17 @@
     <string name="comparsion_dayday">Mezidenní srovnání</string>
     <string name="comparsion_monthmonth">Meziměsíční srovnání</string>
     <string name="comparsion_yearyear">Meziroční srovnání</string>
+    <string name="hp_turn_on">Zapnout</string>
+    <string name="hp_turn_off">Vypnout</string>
+    <string name="hp_error_1">Chybí voda</string>
+    <string name="hp_error_2">Spálené topení</string>
+    <string name="hp_error_3">Chyba snímače teploty vody</string>
+    <string name="hp_error_4">Chyba snímače pokojové teploty</string>
+    <string name="hp_error_5">Źádné síťové spojení</string>
+    <string name="channel_func_pressuresensor">Snímač tlaku</string>
+    <string name="channel_func_rainsensor">Měření úhrnu srážek</string>
+    <string name="channel_func_weightsensor">Hmotnost</string>
+    <string name="channel_func_windsensor">Rychlost větru</string>
+    <string name="current_production">Produkce v tomto měsíci</string>
+    <string name="production_acording_to_phases">Produkce podle fáze</string>
 </resources>

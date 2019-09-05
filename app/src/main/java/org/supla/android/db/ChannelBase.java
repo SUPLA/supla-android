@@ -20,11 +20,9 @@ package org.supla.android.db;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -297,7 +295,7 @@ public abstract class ChannelBase extends DbItem {
             return null;
 
         if (getUserIconId() > 0) {
-            ImageId Id = null;
+            ImageId Id;
 
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
@@ -485,16 +483,20 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = R.drawable.thermostat_1;
+                        img_idx = active == 1 ? R.drawable.thermostaton_1
+                                : R.drawable.thermostatoff_1;
                         break;
                     case 2:
-                        img_idx = R.drawable.thermostat_2;
+                        img_idx = active == 1 ? R.drawable.thermostaton_2
+                                : R.drawable.thermostatoff_2;
                         break;
                     case 3:
-                        img_idx = R.drawable.thermostat_3;
+                        img_idx = active == 1 ? R.drawable.thermostaton_3
+                                : R.drawable.thermostatoff_3;
                         break;
                     default:
-                        img_idx = R.drawable.thermostat;
+                        img_idx = active == 1 ? R.drawable.thermostaton
+                                : R.drawable.thermostatoff;
                 }
 
                 break;
@@ -502,16 +504,20 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = R.drawable.thermostat_hp_homeplus_1;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_1
+                                : R.drawable.thermostat_hp_homeplusoff_1;
                         break;
                     case 2:
-                        img_idx = R.drawable.thermostat_hp_homeplus_2;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_2
+                                : R.drawable.thermostat_hp_homeplusoff_2;
                         break;
                     case 3:
-                        img_idx = R.drawable.thermostat_hp_homeplus_3;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson_3
+                                : R.drawable.thermostat_hp_homeplusoff_3;
                         break;
                     default:
-                        img_idx = R.drawable.thermostat_hp_homeplus;
+                        img_idx = active == 1 ? R.drawable.thermostat_hp_homepluson
+                                : R.drawable.thermostat_hp_homeplusoff;
                 }
 
                 break;
@@ -531,32 +537,82 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
-                                                              Double presetTemp) {
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo,
+                                                                     float measuredRelativeSize,
+                                                                     float presetdRelativeSize) {
+
+        if (measuredTempFrom != null && measuredTempTo != null
+                    && measuredTempFrom.doubleValue() > measuredTempTo.doubleValue()) {
+                Double f = measuredTempFrom;
+                measuredTempFrom = measuredTempTo;
+                measuredTempTo = f;
+        }
+
+        if (presetTempFrom != null && presetTempTo != null
+                    && presetTempFrom.doubleValue() > presetTempTo.doubleValue()) {
+                Double f = presetTempFrom;
+                presetTempFrom = presetTempTo;
+                presetTempTo = f;
+        }
+
         String measured;
         String preset;
 
-        if (measuredTemp != null && measuredTemp > -273) {
-            measured = String.format("%.2f", measuredTemp)
+        if (measuredTempFrom != null && measuredTempFrom > -273) {
+            measured = String.format("%.2f", measuredTempFrom)
                     + (char) 0x00B0;
+            if (measuredTempTo != null && measuredTempTo > -273) {
+                measured += String.format(" - %.2f", measuredTempTo)
+                        + (char) 0x00B0;
+            }
         } else {
             measured = "---" + (char) 0x00B0;
         }
 
-        if (presetTemp != null && presetTemp > -273) {
-            preset = "/"+Integer.toString(presetTemp.intValue())
+        if (presetTempFrom != null && presetTempFrom > -273) {
+            preset = "/"+Integer.toString(presetTempFrom.intValue())
                     + (char) 0x00B0;
+            if (presetTempTo != null && presetTempTo > -273) {
+                preset += " - " + Integer.toString(presetTempTo.intValue())
+                        + (char) 0x00B0;
+            }
         } else {
             preset = "/---"+ (char) 0x00B0;
         }
 
         SpannableString ss =  new SpannableString(measured+preset);
-        ss.setSpan(new RelativeSizeSpan(0.7f),
+        ss.setSpan(new RelativeSizeSpan(measuredRelativeSize),
+                0,
+                measured.length(),
+                0);
+
+        ss.setSpan(new RelativeSizeSpan(presetdRelativeSize),
                 measured.length(),
                 measured.length()+preset.length(),
-                0); // set size
+                0);
 
         return ss;
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo) {
+
+        return getHumanReadableThermostatTemperature(measuredTempFrom, measuredTempTo,
+                presetTempFrom, presetTempTo,
+                1.0f, 0.7f);
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+                                                              Double presetTemp) {
+        return getHumanReadableThermostatTemperature(measuredTemp,
+                null, presetTemp,null);
     }
 
     @SuppressLint("DefaultLocale")
@@ -646,18 +702,18 @@ public abstract class ChannelBase extends DbItem {
 
                     double distance = value.getDistance();
 
-                    if (distance >= 1000) {
+                    if (Math.abs(distance) >= 1000) {
 
                         return String.format("%.2f km", distance / 1000.00);
 
-                    } else if (distance >= 1) {
+                    } else if (Math.abs(distance) >= 1) {
 
                         return String.format("%.2f m", distance);
 
                     } else {
                         distance *= 100;
 
-                        if (distance >= 1) {
+                        if (Math.abs(distance) >= 1) {
                             return String.format("%.1f cm", distance);
                         } else {
                             distance *= 10;

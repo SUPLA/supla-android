@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeplus_Main"
     android:layout_width="match_parent"
@@ -10,7 +9,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/emHeader"
+        android:id="@+id/hpHeader"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentStart="true"
@@ -20,6 +19,17 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="10dp"
         android:visibility="visible">
+
+        <Button
+            android:id="@+id/hpBtnSettings"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="104dp"
+            android:layout_marginRight="104dp"
+            android:background="@drawable/settings2" />
 
         <View
             android:id="@+id/view"
@@ -44,7 +54,7 @@
             android:background="@drawable/heatpollogo" />
 
         <Button
-            android:id="@+id/hpBtnSettings"
+            android:id="@+id/hpBtnSchedule"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
@@ -52,7 +62,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="0dp"
-            android:background="@drawable/settings2" />
+            android:background="@drawable/clock" />
 
     </RelativeLayout>
 
@@ -60,8 +70,8 @@
         android:id="@+id/hpSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/emFooter"
-        android:layout_below="@+id/emHeader"
+        android:layout_above="@+id/hpFooter"
+        android:layout_below="@+id/hpHeader"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
@@ -84,8 +94,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/hp_cfg_turbo_time"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:text="@string/hp_cfg_turbo_time" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -124,8 +134,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/hp_cfg_water_max"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:text="@string/hp_cfg_water_max" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -164,8 +174,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/hp_cfg_eco_reduction"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:text="@string/hp_cfg_eco_reduction" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -204,8 +214,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/hp_cfg_temp_comfort"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:text="@string/hp_cfg_temp_comfort_auto" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -244,8 +254,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/hp_cfg_temp_eco"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:text="@string/hp_cfg_temp_eco" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -282,11 +292,32 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/hpContent"
+        android:id="@+id/hpSchedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/emFooter"
-        android:layout_below="@+id/emHeader"
+        android:layout_above="@+id/hpFooter"
+        android:layout_below="@+id/hpHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone">
+
+        <org.supla.android.SuplaThermostatCalendar
+            android:id="@+id/hpCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/hpMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/hpFooter"
+        android:layout_below="@+id/hpHeader"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
@@ -294,15 +325,16 @@
         android:layout_marginBottom="10dp"
         android:visibility="visible">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/hpTemperature"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="visible">
 
             <TextView
                 android:id="@+id/hpTvTemperature"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
@@ -311,15 +343,17 @@
                 android:layout_marginLeft="15dp"
                 android:text="0.00"
                 android:textSize="90sp" />
-        </RelativeLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/hpMain"
+            android:id="@+id/hpBtnsAndChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/hpTemperature"
 
             android:visibility="visible">
+
 
             <RelativeLayout
                 android:id="@+id/hpButtons"
@@ -342,14 +376,23 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/hpBtnOnOff"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@drawable/hp_button_off"
-                            android:text="@string/hp_off"
-                            android:textColor="@android:color/white" />
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/hpBtnOnOff"
+                                android:layout_width="wrap_content"
+                                android:layout_height="80dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/hp_button_off"
+                                android:text="@string/hp_on"
+                                android:layout_marginRight="3dp"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -375,12 +418,12 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginEnd="0dp"
+                                android:layout_marginRight="0dp"
                                 android:layout_marginBottom="5dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/hp_button_off"
                                 android:text="@string/hp_eco"
-                                android:textColor="@android:color/white"
-                                android:layout_marginRight="0dp" />
+                                android:textColor="@android:color/white" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -444,7 +487,18 @@
 
             </RelativeLayout>
 
+            <ListView
+                android:id="@+id/hpChannelList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/hpButtons"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"/>
+
             <LinearLayout
+                android:id="@+id/hpllChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/hpButtons"
@@ -458,7 +512,7 @@
                     android:id="@+id/hpProgressBar"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
+                    android:layout_height="10dp"
                     android:layout_marginBottom="10dp"
                     android:indeterminateOnly="true"
                     android:scaleY="1"
@@ -468,8 +522,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/emBarChart"
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/hpCombinedChart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="visible" />
@@ -481,7 +535,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/emFooter"
+        android:id="@+id/hpFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -499,7 +553,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/emtv_ChannelTitle"
+                android:id="@+id/hpTvErrorMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/hp_error_background_color"
+                android:gravity="center_horizontal"
+                android:text="@string/hp_error_2"
+                android:textColor="@color/hp_error_text_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/hptv_ChannelTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"

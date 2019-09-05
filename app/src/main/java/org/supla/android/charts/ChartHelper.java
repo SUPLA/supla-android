@@ -230,6 +230,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         }
     }
 
+    protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {}
+
     public void loadCombinedChart(int channelId, ChartType ctype) {
 
         if (pieChart != null) {
@@ -272,7 +274,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             case Bar_Monthly:
             case Bar_Comparsion_MonthMonth:
                 DateFormat = "%Y-%m-01T00:00:00.000";
-                spf = new SimpleDateFormat("yyyy MMM");
+                spf = new SimpleDateFormat("yyyy LLLL");
                 break;
             case Bar_Yearly:
             case Bar_Comparsion_YearYear:
@@ -329,17 +331,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         if (barEntries.size() > 0) {
             SuplaBarDataSet barDataSet = newBarDataSetInstance(barEntries, "");
-            if (isComparsionChartType(ctype)) {
-                barDataSet.setColorDependsOnTheValue(true);
-
-                Resources r = context.getResources();
-
-                List<Integer> Colors = new ArrayList<Integer>(1);
-                Colors.add(r.getColor(R.color.chart_color_value_positive));
-                Colors.add(r.getColor(R.color.chart_color_value_negative));
-                barDataSet.setColors(Colors);
-            }
-
+            prepareBarDataSet(barDataSet);
             barDataSets.add(barDataSet);
         }
 

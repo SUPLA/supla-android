@@ -20,8 +20,8 @@ package org.supla.android.lib;
 
 import android.content.Context;
 
+import org.supla.android.Preferences;
 import org.supla.android.R;
-import org.supla.android.lib.SuplaConst;
 
 public class SuplaRegisterError {
 

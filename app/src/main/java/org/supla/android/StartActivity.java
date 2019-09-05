@@ -26,8 +26,6 @@ import android.os.Handler;
 import android.view.Display;
 import android.widget.TextView;
 
-import org.supla.android.lib.Preferences;
-
 public class StartActivity extends Activity {
 
 

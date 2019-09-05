@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.Trace;
 import org.supla.android.db.IncrementalMeasurementItem;
 
 public abstract class DownloadIncrementalMeasurements extends DownloadMeasurementLogs  {
@@ -50,7 +51,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
             IncrementalMeasurementItem citem = newObject(younger_item);
 
-            if (older_item.getTimestamp() < citem.getTimestamp() && !citem.isCalculated())  {
+            if (!citem.isCalculated())  {
                 citem.Calculate(older_item);
             }
 
@@ -81,11 +82,18 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
         older_item = younger_item;
     }
 
-    protected void noRemoteDataAvailable(SQLiteDatabase db) throws JSONException {
-        super.noRemoteDataAvailable(db);
+    protected void onFirstItem(SQLiteDatabase db) throws JSONException {
+        super.onFirstItem(db);
+        added = false;
+        older_item = null;
+    }
+
+    protected void onLastItem(SQLiteDatabase db) throws JSONException {
+        super.onLastItem(db);
         if (older_item != null
                 && added) {
             addIncrementalMeasurement(db, older_item);
+            older_item = null;
         }
     }
 

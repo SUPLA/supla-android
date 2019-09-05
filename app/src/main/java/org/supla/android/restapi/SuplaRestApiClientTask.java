@@ -55,7 +55,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private Context _context;
     private int ChannelId = 0;
     private long ActivityTime = 0;
-    private SuplaOAuthToken Token;
+    private SuplaOAuthToken mToken;
     private DbHelper MDbH = null;
     private DbHelper DbH = null;
     private IAsyncResults delegate;
@@ -74,7 +74,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Token = SuplaApp.getApp().RegisterRestApiClientTask(this);
+        setToken(SuplaApp.getApp().RegisterRestApiClientTask(this));
 
         if (delegate!=null) {
             delegate.onRestApiTaskStarted(this);
@@ -127,12 +127,16 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     }
 
     public synchronized void setToken(SuplaOAuthToken token) {
-        Token = token == null ? null : new SuplaOAuthToken(token);
+        mToken = token == null ? null : new SuplaOAuthToken(token);
         notify();
     }
 
+    public synchronized SuplaOAuthToken getToken() {
+        return new SuplaOAuthToken(mToken);
+    }
+
     public synchronized SuplaOAuthToken getTokenWhenIsAlive() {
-        return Token != null && Token.isAlive() ? new SuplaOAuthToken(Token) : null;
+        return mToken != null && mToken.isAlive() ? getToken() : null;
     }
 
     public synchronized boolean isAlive(int timeout) {
@@ -144,6 +148,8 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     }
 
     private void makeTokenRequest() {
+
+        SuplaOAuthToken Token = getToken();
         if (Token != null && Token.isAlive()) return;
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -208,6 +214,8 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private ApiRequestResult apiRequest(boolean retry, String endpint) {
 
         makeTokenRequest();
+        SuplaOAuthToken Token = getToken();
+
         if (Token == null) {
             Trace.d(log_tag, "Token == null");
             return null;
@@ -239,7 +247,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
             return null;
         }
 
-        HttpsURLConnection conn = null;
+        HttpsURLConnection conn;
         try {
             conn = (HttpsURLConnection)url.openConnection();
         } catch (IOException e) {
@@ -311,7 +319,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                 Trace.d(log_tag, "CODE: "+conn.getResponseCode());
                 Trace.d(log_tag, "URL: "+url.toString());
 
-                int TotalCount = 0;
+                int TotalCount;
                 try
                 {
                     TotalCount = Integer.parseInt(conn.getHeaderField("X-Total-Count"));
@@ -327,7 +335,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                         conn.getInputStream() : conn.getErrorStream());
                 BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
-                String inputLine = "";
+                String inputLine;
                 StringBuffer sb = new StringBuffer();
 
                 while ((inputLine = br.readLine()) != null) {

@@ -36,10 +36,10 @@
     <string name="channel_func_thermometer">Termometr</string>
     <string name="channel_func_humidity">Wilgotność</string>
     <string name="channel_func_humidityandtemperature">Temperatura i wilgotność</string>
-    <string name="channel_func_windsensor" translatable="false">Prędkość wiatru</string>
+    <string name="channel_func_windsensor">Prędkość wiatru</string>
     <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
-    <string name="channel_func_rainsensor" translatable="false">Pomiar opadów</string>
-    <string name="channel_func_weightsensor" translatable="false">Waga</string>
+    <string name="channel_func_rainsensor">Pomiar opadów</string>
+    <string name="channel_func_weightsensor">Waga</string>
     <string name="channel_func_dimmer">Ściemniacz</string>
     <string name="channel_func_rgblighting">Oświetlenie RGB</string>
     <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
@@ -166,6 +166,8 @@
     <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
+    <string name="hp_turn_on">WŁĄCZ</string>
+    <string name="hp_turn_off">WYŁĄCZ</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -174,7 +176,8 @@
     <string name="hp_cfg_turbo_time">Czas trwania trybu TURBO</string>
     <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
     <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
-    <string name="hp_cfg_temp_comfort">Temperatura komfort w trybie AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Temperatura komfort w trybie AUTO</string>
+    <string name="hp_temp_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
     <string name="total_cost">Łączny koszt</string>
     <string name="current_cost">Koszt w bieżącym miesiącu</string>
@@ -205,4 +208,11 @@
     <string name="comparsion_dayday">Porównanie dzień do dnia</string>
     <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
     <string name="comparsion_yearyear">Porównanie rok do roku</string>
+    <string name="hp_error_1">Brak wody</string>
+    <string name="hp_error_2">Spalona grzałka</string>
+    <string name="hp_error_3">Błąd czujnika temperatury wody</string>
+    <string name="hp_error_4">Błąd czujnika temperatury pokojowej</string>
+    <string name="hp_error_5">Brak przerwań sieciowych</string>
+    <string name="production_acording_to_phases">Produkcja wg. faz</string>
+    <string name="current_production">Produkcja w bieżącym miesiącu</string>
 </resources>

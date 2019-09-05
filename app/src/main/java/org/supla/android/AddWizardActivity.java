@@ -56,7 +56,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.supla.android.lib.Preferences;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -509,17 +508,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
-                                timeout = 3;
+                                timeout = 10;
                                 break;
                             case STEP_SCAN:
-                                timeout = 40;
+                                timeout = 50;
                                 break;
                             case STEP_CONNECT:
                             case STEP_CONFIGURE:
-                                timeout = 30;
+                                timeout = 40;
                                 break;
                             case STEP_RECONNECT:
-                                timeout = 15;
+                                timeout = 25;
                                 break;
                         }
 
@@ -963,7 +962,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         cm.bindProcessToNetwork(n);
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else //noinspection ConstantConditions
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ConnectivityManager.setProcessDefaultNetwork(n);
                     }
 

@@ -1,4 +1,4 @@
-package org.supla.android.lib;
+package org.supla.android;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -18,13 +18,15 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
-
-import org.supla.android.SuplaApp;
-
+import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaConst;
 import java.util.Random;
 
 public class Preferences {
@@ -45,15 +47,19 @@ public class Preferences {
     private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
 
     private SharedPreferences _prefs;
+    private Context _context;
 
     public Preferences(Context context) {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        _context = context;
 
         if ( getCfgVersion() == 0 ) {
 
             setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
             setCfgVersion(2);
         }
+
+        context.getContentResolver();
     }
 
     private int getCfgVersion() {
@@ -66,11 +72,51 @@ public class Preferences {
         editor.apply();
     }
 
+    private String getDeviceID() {
+        String Id = null;
+
+        try {
+            final TelephonyManager tm = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Id = Settings.Secure.getString(_context.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+            } else {
+                Id =  Build.SERIAL;
+            }
+
+            Id += "-" + Build.BOARD+
+                    "-"+Build.BRAND+
+                    "-"+Build.DEVICE+
+                    "-"+Build.HARDWARE;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return (Id == null || Id.length() == 0) ? "unknown" : Id;
+    }
+
+    private void encryptAndSave(String pref_key, byte[] data) {
+            SharedPreferences.Editor editor = _prefs.edit();
+            editor.putString(pref_key,
+                    Base64.encodeToString(
+                            Encryption.encryptDataWithNullOnException(
+                                    data, getDeviceID()), Base64.DEFAULT));
+            editor.putBoolean(pref_key+"_encrypted", true);
+            editor.apply();
+    }
+
     private byte[] getRandom(String pref_key, int size) {
 
         byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
-        if ( result.length != size ) {
+        if ( !_prefs.getBoolean(pref_key+"_encrypted", false) ) {
+            encryptAndSave(pref_key, result);
+        } else {
+            result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
+        }
+
+        if ( result == null || result.length != size ) {
 
             Random random = new Random();
             result = new byte[size];
@@ -79,10 +125,7 @@ public class Preferences {
                 result[a] = (byte)random.nextInt(255);
             }
 
-            SharedPreferences.Editor editor = _prefs.edit();
-            editor.putString(pref_key, Base64.encodeToString(result, Base64.DEFAULT));
-            editor.apply();
-
+            encryptAndSave(pref_key, result);
         }
 
         return result;
@@ -202,25 +245,4 @@ public class Preferences {
         editor.putString(pref_wizard_selected_wifi, SSID);
         editor.apply();
     }
-
-    public void setHeatpolTurboTime(int time) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_hp_turbo_time, time);
-        editor.apply();
-    }
-
-    public int getHeatpolTurboTime() {
-        return _prefs.getInt(pref_hp_turbo_time, 1);
-    }
-
-    public void setHeatpolEcoReduction(int temp) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_hp_eco_reduction, temp);
-        editor.apply();
-    }
-
-    public int getHeatpolEcoReduction() {
-        return _prefs.getInt(pref_hp_eco_reduction, 5);
-    }
-
 }

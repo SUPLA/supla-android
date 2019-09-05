@@ -60,8 +60,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     private Integer phase;
 
-    private TextView tvTotalForwardActiveEnergy;
-    private TextView tvCurrentConsumption;
+    private TextView tvTotalActiveEnergy;
+    private TextView tvlTotalActiveEnergy;
+    private TextView tvCurrentConsumptionProduction;
+    private TextView tvlCurrentConsumptionProduction;
     private TextView tvCurrentCost;
     private TextView tvTotalCost;
 
@@ -96,10 +98,12 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Button btnPhase1;
     private Button btnPhase2;
     private Button btnPhase3;
+    private Button btnPhase123;
 
     final Handler mHandler = new Handler();
     ElectricityChartHelper chartHelper;
     private ImageView ivGraph;
+    private ImageView ivDirection;
     private LinearLayout llDetails;
     private RelativeLayout rlButtons1;
     private RelativeLayout rlButtons2;
@@ -130,8 +134,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         phase = 1;
 
-        tvTotalForwardActiveEnergy = findViewById(R.id.emtv_TotalForwardActiveEnergy);
-        tvCurrentConsumption = findViewById(R.id.emtv_CurrentConsumption);
+        tvTotalActiveEnergy = findViewById(R.id.emtv_TotalActiveEnergy);
+        tvlTotalActiveEnergy = findViewById(R.id.emtv_lTotalActiveEnergy);
+        tvCurrentConsumptionProduction = findViewById(R.id.emtv_CurrentConsumptionProduction);
+        tvlCurrentConsumptionProduction = findViewById(R.id.emtv_lCurrentConsumptionProduction);
         tvCurrentCost = findViewById(R.id.emtv_CurrentCost);
         tvTotalCost = findViewById(R.id.emtv_TotalCost);
 
@@ -166,14 +172,17 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         btnPhase1 = findViewById(R.id.embtn_Phase1);
         btnPhase2 = findViewById(R.id.embtn_Phase2);
         btnPhase3 = findViewById(R.id.embtn_Phase3);
+        btnPhase123 = findViewById(R.id.embtn_Phase123);
 
         btnPhase1.setOnClickListener(this);
         btnPhase2.setOnClickListener(this);
         btnPhase3.setOnClickListener(this);
+        btnPhase123.setOnClickListener(this);
 
         btnPhase1.setTag(1);
         btnPhase2.setTag(2);
         btnPhase3.setTag(3);
+        btnPhase123.setTag(0);
 
         llDetails = findViewById(R.id.emllDetails);
         rlButtons1 = findViewById(R.id.emrlButtons1);
@@ -184,11 +193,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper.setPieChart((PieChart) findViewById(R.id.emPieChart));
         chartHelper.setUnit("kWh");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                android.R.layout.simple_spinner_item, chartHelper.getMasterSpinnerItems(0));
-
         emSpinnerMaster = findViewById(R.id.emSpinnerMaster);
-        emSpinnerMaster.setAdapter(adapter);
         emSpinnerMaster.setOnItemSelectedListener(this);
 
         emSpinnerSlave = findViewById(R.id.emSpinnerSlave);
@@ -197,6 +202,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         ivGraph = findViewById(R.id.emGraphImg);
         ivGraph.bringToFront();
         ivGraph.setOnClickListener(this);
+
+        ivDirection = findViewById(R.id.emDirectionImg);
+        ivDirection.bringToFront();
+        ivDirection.setOnClickListener(this);
 
         emProgress = findViewById(R.id.emProgressBar);
 
@@ -215,17 +224,31 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         emSpinnerSlave.setOnItemSelectedListener(this);
     }
 
+    private void setImgBackground(ImageView img, int bg) {
+        Drawable d = getResources().getDrawable(bg);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            img.setBackground(d);
+        } else {
+            img.setBackgroundDrawable(d);
+        }
+    }
+
     private void showChart(boolean show) {
 
-        int img;
+        int bg;
 
         if (show) {
             llDetails.setVisibility(GONE);
             chartHelper.setVisibility(VISIBLE);
             rlButtons1.setVisibility(INVISIBLE);
             rlButtons2.setVisibility(VISIBLE);
-            img = R.drawable.graphon;
+            setImgBackground(ivGraph, R.drawable.graphon);
             ivGraph.setTag(1);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                    android.R.layout.simple_spinner_item, chartHelper.getMasterSpinnerItems(0));
+            emSpinnerMaster.setAdapter(adapter);
 
             postDelayed(new Runnable() {
                 public void run() {
@@ -241,16 +264,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             chartHelper.clearData();
             rlButtons1.setVisibility(VISIBLE);
             rlButtons2.setVisibility(INVISIBLE);
-            img = R.drawable.graphoff;
+            setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
-        }
-
-        Drawable d = getResources().getDrawable(img);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ivGraph.setBackground(d);
-        } else {
-            ivGraph.setBackgroundDrawable(d);
         }
     }
 
@@ -269,23 +284,28 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tv2.setVisibility(tv1.getVisibility());
     }
 
-    private void displayMeasurementDetails(long vars) {
+    private void displayMeasurementDetails(long vars, boolean sum) {
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_FREQ,
                 tvFreq, tvlFreq);
-        displayMeasurementDetail(vars, SuplaConst.EM_VAR_VOLTAGE,
+
+        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_VOLTAGE,
                 tvVoltage, tvlVoltage);
-        displayMeasurementDetail(vars, SuplaConst.EM_VAR_CURRENT,
+        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_CURRENT,
                 tvCurrent, tvlCurrent);
+
+
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_ACTIVE,
                 tvPowerActive, tvlPowerActive);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_REACTIVE,
                 tvPowerReactive, tvlPowerReactive);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_APPARENT,
                 tvPowerApparent, tvlPowerApparent);
-        displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_FACTOR,
+
+        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_POWER_FACTOR,
                 tvPowerFactor, tvlPowerFactor);
-        displayMeasurementDetail(vars, SuplaConst.EM_VAR_PHASE_ANGLE,
+        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_PHASE_ANGLE,
                 tvPhaseAngle, tvlPhaseAngle);
+
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY,
                 tvPhaseForwardActiveEnergy, tvlPhaseForwardActiveEnergy);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY,
@@ -312,10 +332,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         setBtnBackground(btnPhase1, R.drawable.em_phase_btn_black);
         setBtnBackground(btnPhase2, R.drawable.em_phase_btn_black);
         setBtnBackground(btnPhase3, R.drawable.em_phase_btn_black);
+        setBtnBackground(btnPhase123, R.drawable.em_phase_btn_black);
 
         String empty = "----";
-        tvTotalForwardActiveEnergy.setText(empty);
-        tvCurrentConsumption.setText(empty);
+        tvTotalActiveEnergy.setText(empty);
+        tvCurrentConsumptionProduction.setText(empty);
         tvCurrentCost.setText(empty);
         tvTotalCost.setText(empty);
 
@@ -344,59 +365,117 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             chartHelper.setPricePerUnit(em.getPricePerUnit());
             SuplaChannelElectricityMeterValue.Summary sum = em.getSummary();
 
-            double currentConsumption = 0;
+            double currentConsumption;
+            double currentProduction;
+            double currentCost;
 
             DbHelper mDBH = new DbHelper(getContext(), true);
 
             if (mDBH.electricityMeterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = sum.getTotalForwardActiveEnergy();
+                currentProduction = sum.getTotalReverseActiveEnergy();
+                currentCost = em.getTotalCost();
             } else {
                 double v0 = mDBH.getLastElectricityMeterMeasurementValue(0,
-                        channel.getChannelId());
+                        channel.getChannelId(), false);
                 double v1 = mDBH.getLastElectricityMeterMeasurementValue(-1,
-                        channel.getChannelId());
+                        channel.getChannelId(), false);
                 currentConsumption = v0-v1;
+                currentCost = currentConsumption * em.getPricePerUnit();
+
+                v0 = mDBH.getLastElectricityMeterMeasurementValue(0,
+                        channel.getChannelId(), true);
+                v1 = mDBH.getLastElectricityMeterMeasurementValue(-1,
+                        channel.getChannelId(), true);
+                currentProduction = v0-v1;
             }
 
-            tvTotalForwardActiveEnergy
-                    .setText(getActiveEnergyFormattedString(sum.getTotalForwardActiveEnergy()));
-            tvCurrentConsumption.setText(String.format("%.2f kWh", currentConsumption));
-            tvCurrentCost.setText(String.format("%.2f "+em.getCurrency(),
-                    currentConsumption * em.getPricePerUnit()));
+            if (chartHelper.isProductionDataSource()) {
+                tvTotalActiveEnergy
+                        .setText(getActiveEnergyFormattedString(sum.getTotalReverseActiveEnergy()));
+                tvCurrentConsumptionProduction.setText(String.format("%.2f kWh", currentProduction));
+            } else {
+                tvTotalActiveEnergy
+                        .setText(getActiveEnergyFormattedString(sum.getTotalForwardActiveEnergy()));
+                tvCurrentConsumptionProduction.setText(String.format("%.2f kWh", currentConsumption));
+            }
+
             tvTotalCost.setText(String.format("%.2f "+em.getCurrency(), em.getTotalCost()));
+            tvCurrentCost.setText(String.format("%.2f "+em.getCurrency(),
+                    currentCost));
 
-            SuplaChannelElectricityMeterValue.Measurement m = em.getMeasurement(phase, 0);
-            if (m!= null) {
+            Button btn = null;
+            switch (phase) {
+                case 1: btn = btnPhase1; break;
+                case 2: btn = btnPhase2; break;
+                case 3: btn = btnPhase3; break;
+                default: btn = btnPhase123; break;
+            }
 
-                Button btn = null;
-                switch (phase) {
-                    case 1: btn = btnPhase1; break;
-                    case 2: btn = btnPhase2; break;
-                    case 3: btn = btnPhase3; break;
+            double freq = 0;
+            double voltage = 0;
+            double current = 0;
+            double powerActive = 0;
+            double powerReactive = 0;
+            double powerApparent = 0;
+            double powerFactor = 0;
+            double phaseAngle = 0;
+            double totalFAE = 0;
+            double totalRAE = 0;
+            double totalFRE = 0;
+            double totalRRE = 0;
+
+            for(int p=1;p<=3;p++) {
+
+                if (phase > 0) {
+                    p = phase;
                 }
 
-                setBtnBackground(btn, m.getVoltage() > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
+                SuplaChannelElectricityMeterValue.Measurement m = em.getMeasurement(p, 0);
+                if (m!= null) {
 
-                tvFreq.setText(format("%.2f Hz", m.getFreq()));
-                tvVoltage.setText(format("%.2f V", m.getVoltage()));
-                tvCurrent.setText(format("%.3f A", m.getCurrent()));
-                tvPowerActive.setText(format("%.5f W", m.getPowerActive()));
-                tvPowerReactive.setText(format("%.5f var", m.getPowerReactive()));
-                tvPowerApparent.setText(format("%.5f VA", m.getPowerApparent()));
-                tvPowerFactor.setText(format("%.3f", m.getPowerFactor()));
-                tvPhaseAngle.setText(format("%.2f\u00B0", m.getPhaseAngle()));
+                    sum = em.getSummary(p);
 
-                sum = em.getSummary(phase);
-                tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", sum.getTotalForwardActiveEnergy()));
-                tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", sum.getTotalReverseActiveEnergy()));
-                tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalForwardReactiveEnergy()));
-                tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", sum.getTotalReverseReactiveEnergy()));
+                    freq = m.getFreq();
+                    if (voltage == 0) {
+                        voltage = m.getVoltage();
+                    }
+                    current = m.getCurrent();
+                    powerActive += m.getPowerActive();
+                    powerReactive += m.getPowerReactive();
+                    powerApparent += m.getPowerApparent();
+                    powerFactor = m.getPowerFactor();
+                    phaseAngle = m.getPhaseAngle();
+                    totalFAE += sum.getTotalForwardActiveEnergy();
+                    totalRAE += sum.getTotalReverseActiveEnergy();
+                    totalFRE += sum.getTotalForwardReactiveEnergy();
+                    totalRRE += sum.getTotalReverseReactiveEnergy();
+                }
 
-                chartHelper.setTotalForwardActiveEnergy(em.getTotalForwardActiveEnergyForAllPhases());
+                if (phase > 0) {
+                    break;
+                }
             }
+
+            setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
+            tvFreq.setText(format("%.2f Hz", freq));
+            tvVoltage.setText(format("%.2f V", voltage));
+            tvCurrent.setText(format("%.3f A", current));
+            tvPowerActive.setText(format("%.5f W", powerActive));
+            tvPowerReactive.setText(format("%.5f var", powerReactive));
+            tvPowerApparent.setText(format("%.5f VA", powerApparent));
+            tvPowerFactor.setText(format("%.3f", powerFactor));
+            tvPhaseAngle.setText(format("%.2f\u00B0", phaseAngle));
+            tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", totalFAE));
+            tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", totalRAE));
+            tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", totalFRE));
+            tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", totalRRE));
+
+            chartHelper.setTotalActiveEnergy(
+                    em.getTotalActiveEnergyForAllPhases(chartHelper.isProductionDataSource()));
         }
 
-        displayMeasurementDetails(vars);
+        displayMeasurementDetails(vars, phase == 0);
     }
 
     public void setData(ChannelBase channel) {
@@ -429,6 +508,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onClick(View v) {
         if (v == ivGraph) {
             showChart(v.getTag() == null);
+        } else if (v == ivDirection) {
+            setProductionDataSource(!chartHelper.isProductionDataSource(), true);
         } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer)v.getTag();
             channelExtendedDataToViews(false);
@@ -449,11 +530,33 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
     }
 
+    private void setProductionDataSource(boolean production, boolean reload) {
+        chartHelper.setProductionDataSource(production);
+
+        if (production) {
+            tvlTotalActiveEnergy.setText(R.string.em_reverse_active_energy);
+            tvlCurrentConsumptionProduction.setText(R.string.current_production);
+            setImgBackground(ivDirection, R.drawable.production);
+        } else {
+            tvlTotalActiveEnergy.setText(R.string.em_total_forward_avtive_energy);
+            tvlCurrentConsumptionProduction.setText(R.string.current_consumption);
+            setImgBackground(ivDirection, R.drawable.consumption);
+        }
+
+        if (reload) {
+            OnChannelDataChanged();
+            if (chartHelper.isVisible()) {
+                showChart(true);
+            }
+        }
+    }
+
     @Override
     public void onDetailShow() {
         super.onDetailShow();
 
         emProgress.setVisibility(INVISIBLE);
+        setProductionDataSource(false, false);
         showChart(false);
 
         SuplaApp.getApp().CancelAllRestApiClientTasks(true);

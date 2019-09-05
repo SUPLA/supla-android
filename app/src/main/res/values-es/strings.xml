@@ -159,7 +159,8 @@
     <string name="hp_cfg_turbo_time">Duración del modo TURBO</string>
     <string name="hp_cfg_water_max">Temperatura máxima del agua</string>
     <string name="hp_cfg_eco_reduction">Reducción de la temperatura en modo ECO</string>
-    <string name="hp_cfg_temp_comfort">Temperatura confort en modo AUTO</string>
+    <string name="hp_cfg_temp_comfort_auto">Temperatura confort en modo AUTO</string>
+    <string name="hp_temp_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO en modo AUTO</string>
     <string name="channel_func_impulsecounter">Contador de pulsos</string>
     <string name="meter_value">Lectura del contador</string>
@@ -190,6 +191,17 @@
     <string name="comparsion_dayday">Comparación día con día</string>
     <string name="comparsion_monthmonth">Comparación mes con mes</string>
     <string name="comparsion_yearyear">Comparación año con año</string>
-
-
+    <string name="hp_turn_on">Encender</string>
+    <string name="hp_turn_off">Apagar</string>
+    <string name="hp_error_1">No hay agua</string>
+    <string name="hp_error_2">Calentador quemado</string>
+    <string name="hp_error_3">Error del sensor de temperatura del agua</string>
+    <string name="hp_error_4">Error del sensor de temperatura ambiente</string>
+    <string name="hp_error_5">No hay interrupciones de red</string>
+    <string name="channel_func_pressuresensor">Sensor de presión</string>
+    <string name="channel_func_rainsensor">Sensor de precipitaciones</string>
+    <string name="channel_func_weightsensor">Peso</string>
+    <string name="channel_func_windsensor">Velocidad del viento</string>
+    <string name="current_production">Producción en el mes actual</string>
+    <string name="production_acording_to_phases">Producción según fases</string>
 </resources>
