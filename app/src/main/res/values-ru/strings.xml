@@ -165,6 +165,7 @@
     <string name="hp_cfg_temp_comfort_auto">Комфортная температура в режиме АВТО</string>
     <string name="hp_temp_comfort">Комфортная</string>
     <string name="hp_cfg_temp_eco">Температура ECO в режиме АВТО</string>
+    <string name="hp_hour">h</string>
     <string name="total_cost">Общая стоимость</string>
     <string name="current_cost">Стоимость в текущем месяце</string>
     <string name="current_consumption">Потребление в текущем месяце</string>
