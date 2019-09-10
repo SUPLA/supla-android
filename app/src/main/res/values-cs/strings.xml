@@ -138,6 +138,7 @@
     <string name="hp_cfg_temp_comfort_auto">Ideální teplota v režimu AUTO</string>
     <string name="hp_temp_comfort">Ideální teplota</string>
     <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
+    <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Počítadlo impulzů</string>
     <string name="meter_value">Stav měřiče</string>
     <string name="total_cost">Celková cena</string>

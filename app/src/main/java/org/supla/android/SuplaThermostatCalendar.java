@@ -225,7 +225,9 @@ public class SuplaThermostatCalendar extends View {
         float Y =event.getY();
         mTouched = true;
 
-        if ( X < mBoxWidth || Y > getHeight()-mBoxHeight) {
+        if ( X < mBoxWidth
+                || Y < mBoxHeight
+                || Y > getHeight()-mBoxHeight) {
             return false;
         }
 
@@ -364,6 +366,7 @@ public class SuplaThermostatCalendar extends View {
 
     public void clear() {
         mHourProgramGrid = new boolean[7][24];
+        invalidate();
     }
 
 }

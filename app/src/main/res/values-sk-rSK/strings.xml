@@ -177,6 +177,7 @@
     <string name="hp_cfg_temp_comfort_auto">Komfortná teplota v režime AUTO</string>
     <string name="hp_temp_comfort">Komfortná</string>
     <string name="hp_cfg_temp_eco">EKO teplota v režime AUTO</string>
+    <string name="hp_hour">h</string>
     <string name="total_cost">Celkové náklady</string>
     <string name="current_cost">Náklady v aktuálnom mesiaci</string>
     <string name="current_consumption">Spotreba v aktuálnom mesiaci</string>

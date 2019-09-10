@@ -162,6 +162,7 @@
     <string name="hp_cfg_temp_comfort_auto">Temperatura comfort in modalità AUTO</string>
     <string name="hp_temp_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO in modalità AUTO</string>
+    <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Contatore di impulsi</string>
     <string name="meter_value">Lettura del contatore</string>
     <string name="total_cost">Costo totale</string>

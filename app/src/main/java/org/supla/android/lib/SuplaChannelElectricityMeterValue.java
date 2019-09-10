@@ -55,8 +55,8 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
             return Voltage;
         }
 
-        public double getCurrent() {
-            return Current;
+        public double getCurrent(boolean over65A) {
+            return Current * (over65A ? 10 : 1);
         }
 
         public double getPowerActive() {
@@ -145,6 +145,12 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     public int getMeasuredValues() {
         return MeasuredValues;
     }
+
+    public boolean currentIsOver65A() {
+        return (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT_OVER_65A) > 0
+                && (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT) == 0;
+    }
+
 
     public int getPeriod() {
         return Period;

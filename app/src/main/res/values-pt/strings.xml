@@ -162,6 +162,7 @@
     <string name="hp_cfg_temp_comfort_auto">Temperatura de conforto no modo AUTO</string>
     <string name="hp_temp_comfort">Conforto</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO no modo AUTO</string>
+    <string name="hp_hour">h</string>
     <string name="total_cost">Custo total</string>
     <string name="current_cost">Custo no mês atual</string>
     <string name="current_consumption">Consumo no mês atual</string>
