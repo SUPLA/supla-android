@@ -279,9 +279,13 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         return format("%."+Integer.toString(precision)+"f kWh", energy);
     }
 
-    private void displayMeasurementDetail(long vars, int var, TextView tv1, TextView tv2) {
-        tv1.setVisibility((vars & var) > 0 ? VISIBLE : GONE);
+    private void displayMeasurementDetail(long vars, int var1, int var2, TextView tv1, TextView tv2) {
+        tv1.setVisibility((vars & var1) > 0 || (vars & var2) > 0 ? VISIBLE : GONE);
         tv2.setVisibility(tv1.getVisibility());
+    }
+
+    private void displayMeasurementDetail(long vars, int var1, TextView tv1, TextView tv2) {
+        displayMeasurementDetail(vars, var1, 0, tv1, tv2);
     }
 
     private void displayMeasurementDetails(long vars, boolean sum) {
@@ -290,9 +294,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_VOLTAGE,
                 tvVoltage, tvlVoltage);
-        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_CURRENT,
-                tvCurrent, tvlCurrent);
 
+        displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_CURRENT,
+                sum ? 0 : SuplaConst.EM_VAR_CURRENT_OVER_65A,
+                tvCurrent, tvlCurrent);
 
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_ACTIVE,
                 tvPowerActive, tvlPowerActive);
@@ -440,7 +445,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                     if (voltage == 0) {
                         voltage = m.getVoltage();
                     }
-                    current = m.getCurrent();
+                    current = m.getCurrent(em.currentIsOver65A());
                     powerActive += m.getPowerActive();
                     powerReactive += m.getPowerReactive();
                     powerApparent += m.getPowerApparent();
@@ -460,7 +465,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
             tvFreq.setText(format("%.2f Hz", freq));
             tvVoltage.setText(format("%.2f V", voltage));
-            tvCurrent.setText(format("%.3f A", current));
+            tvCurrent.setText(format("%."
+                    +Integer.toString(em.currentIsOver65A() ? 2 : 3)+"f A", current));
             tvPowerActive.setText(format("%.5f W", powerActive));
             tvPowerReactive.setText(format("%.5f var", powerReactive));
             tvPowerApparent.setText(format("%.5f VA", powerApparent));
