@@ -30,7 +30,7 @@
     <string name="channel_func_gate">Poort</string>
     <string name="channel_func_garagedoor">Garagedeur</string>
     <string name="channel_func_door">Deuren</string>
-    <string name="channel_func_rollershutter">Rolgordijn</string>
+    <string name="channel_func_rollershutter">Rolluik</string>
     <string name="channel_func_powerswith">Aan / uit schakelaar</string>
     <string name="channel_func_lightswith">Lichtschakelaar</string>
     <string name="channel_func_thermometer">Thermometer</string>
@@ -48,11 +48,11 @@
     <string name="channel_func_gateopeningsensor">Poort open sensor</string>
     <string name="channel_func_garagedooropeningsensor">Garagedeur openingssensor</string>
     <string name="channel_func_dooropeningsensor">Sensor deuropening</string>
-    <string name="channel_func_rsopeningsensor">Jaloezieën openen sensor</string>
+    <string name="channel_func_rsopeningsensor">Rolluiken openen sensor</string>
     <string name="channel_func_depthsensor">Dieptesensor</string>
     <string name="channel_func_distancesensor">Afstandssensor</string>
     <string name="channel_func_windowopeningsensor">Raamopeningssensor</string>
-    <string name="channel_func_mailsensor">Mailsensor</string>
+    <string name="channel_func_mailsensor">Postsensor</string>
 
     <string name="rgb_brightness">Helderheid</string>
     <string name="rgb_color">Kleur</string>
@@ -67,7 +67,7 @@
     <string name="event_openedclosedthegate">opende / sloot de poort</string>
     <string name="event_openedclosedthegatedoors">opende / sloot de garagedeur</string>
     <string name="event_openedthedoor">opende de deur</string>
-    <string name="event_openedcloserollershutter">opende / sloot de jaloezie</string>
+    <string name="event_openedcloserollershutter">opende / sloot de rolluik</string>
     <string name="event_poweronoff">zette de stroom aan / uit</string>
     <string name="event_turnedthelightonoff">deed het licht aan / uit</string>
 
