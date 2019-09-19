@@ -1,0 +1,206 @@
+<resources>
+
+    <string name="feedback_title">Στείλτε ένα e-mail</string>
+    <string name="donate_title">Υποστηρίξτε το έργο</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+
+    <string name="version">Η έκδοση</string>
+
+    <string name="feedback">Ανάδραση</string>
+    <string name="about">Για το πρόγραμμα</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="add_device">Προσθήκη συσκευής</string>
+
+    <string name="status_connecting">Σύνδεση...</string>
+    <string name="status_unknown_err">Άγνωστο σφάλμα</string>
+    <string name="status_temporarily_unavailable">Υπηρεσία προσωρινά μη διαθέσιμη</string>
+    <string name="status_bad_credentials">Λανθασμένα διαπιστευτήρια</string>
+    <string name="status_climit_exceded">Υπέρβαση ορίου των εφαρμογών πελάτη</string>
+    <string name="status_version_error">Μη συμβατή έκδοση διακομιστή</string>
+    <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones \" στη σελίδα %1$s</string>
+    <string name="status_access_id_not_assigned">Αυτή η συσκευή δεν έχει παραχωρημένο αναγνωριστικό πρόσβασης. Μεταβείτε στη σελίδα %1$s  στην καρτέλα \"Smartphones \" και παραχωρήστε το κατάλληλο αναγνωριστικό.</string>
+    <string name="status_device_disabled">Η συσκευή είναι απενεργοποιημένη</string>
+    <string name="status_accessid_disabled">Το αναγνωριστικό πρόσβασης είναι απενεργοποιημένο</string>
+
+    <string name="err_hostnotfound">Η διεύθυνση του διακομιστή δεν βρέθηκε</string>
+    <string name="err_cantconnecttohost">Αδυναμία σύνδεσης με τον διακομιστή</string>
+
+    <string name="channel_func_gateway">Αυλόπορτα</string>
+    <string name="channel_func_gate">Πύλη</string>
+    <string name="channel_func_garagedoor">Γκαραζόπορτα</string>
+    <string name="channel_func_door">Πόρτα</string>
+    <string name="channel_func_rollershutter">Περσίδες</string>
+    <string name="channel_func_powerswith">Διακόπτης παροχής ρεύματος</string>
+    <string name="channel_func_lightswith">Διακόπτης φωτισμού</string>
+    <string name="channel_func_thermometer">Θερμόμετρο</string>
+    <string name="channel_func_humidity">Υγρασία</string>
+    <string name="channel_func_humidityandtemperature">Θερμοκρασία και υγρασία</string>
+    <string name="channel_func_windsensor">Ταχύτητα αέρα</string>
+    <string name="channel_func_pressuresensor">Αισθητήρας πίεσης</string>
+    <string name="channel_func_rainsensor">Μέτρηση βροχοπτώσεων</string>
+    <string name="channel_func_weightsensor">Βάρος</string>
+    <string name="channel_func_dimmer">Ρεοστάτης</string>
+    <string name="channel_func_rgblighting">Φωτισμός RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Ρεοστάτης και φωτισμός RGB</string>
+    <string name="channel_func_noliquidsensor">Αισθητήρας έλλειψης υγρού</string>
+    <string name="channel_func_gatewayopeningsensor">Αισθητήρας ανοίγματος της αυλόπορτας</string>
+    <string name="channel_func_gateopeningsensor">Αισθητήρας ανοίγματος της πύλης</string>
+    <string name="channel_func_garagedooropeningsensor">Αισθητήρας ανοίγματος της γκαραζόπορτας</string>
+    <string name="channel_func_dooropeningsensor">Αισθητήρας ανοίγματος πόρτας</string>
+    <string name="channel_func_rsopeningsensor">Αισθητήρας ανοίγματος περσίδων</string>
+    <string name="channel_func_depthsensor">Αισθητήρας βάθους</string>
+    <string name="channel_func_distancesensor">Αισθητήρας απόστασης</string>
+    <string name="channel_func_windowopeningsensor">Αισθητήρας ανοίγματος παραθύρου</string>
+    <string name="channel_func_mailsensor">Αισθητήρας ταχυδρομείου</string>
+
+    <string name="rgb_brightness">Φωτεινότητα</string>
+    <string name="rgb_color">Χρώμα</string>
+    <string name="rgb_state">Κατάσταση</string>
+
+    <string name="channel_btn_open">Άνοιγμα</string>
+    <string name="channel_btn_openclose">Άνοιγμα Κλείσιμο</string>
+    <string name="channel_btn_on">Ενεργοποίηση</string>
+    <string name="channel_btn_off">Απενεργοποίηση</string>
+
+    <string name="event_openedthegateway">άνοιξε την αυλόπορτα</string>
+    <string name="event_openedclosedthegate">άνοιξε / έκλεισε την πύλη</string>
+    <string name="event_openedclosedthegatedoors">άνοιξε / έκλεισε την γκαραζὀπορτα</string>
+    <string name="event_openedthedoor">άνοιξε την πόρτα</string>
+    <string name="event_openedcloserollershutter">άνοιξε / έκλεισε τις περσίδες</string>
+    <string name="event_poweronoff">ενεργοποίησε / απενεργοποίησε την παροχή ρεύματος</string>
+    <string name="event_turnedthelightonoff">ενεργοποίησε / απενεργοποίησε το φως</string>
+
+    <string name="server_address">ΔΙΕΥΘΥΝΣΗ ΔΙΑΚΟΜΙΣΤΗ</string>
+    <string name="access_id">ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΠΡΟΣΒΑΣΗΣ</string>
+    <string name="password">ΚΩΔΙΚΟΣ ΠΡΟΣΒΑΣΗΣ</string>
+    <string name="email">ΔΙΕΥΘΥΝΣΗ E-MAIL</string>
+    <string name="advanced_settings">Ρυθμίσεις για προχωρημένους</string>
+    <string name="create_account"><u>Δημιουργία λογαριασμού</u></string>
+
+    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+
+    <string name="rate_msg">Αν σας αρέσει αυτή η εφαρμογή, παρακαλώ αφιερώστε λίγο χρόνο για να την αξιολογήσετε. Σας ευχαριστώ για την υποστήριξή σας!</string>
+    <string name="rate_now">Βαθμολογήστε τώρα</string>
+    <string name="rate_later">Αργότερα</string>
+    <string name="rate_no_thanks">Όχι, ευχαριστώ</string>
+    <string name="rs_percent_caption">Ποσοστό κλεισίματος</string>
+    <string name="calibration">[Βαθμονόμηση]</string>
+
+    <string name="add_wizard_is_not_available">Ο οδηγός προσθήκης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί μια σύνδεση με το διακομιστή με βάση τη διεύθυνση ηλεκτρονικού ταχυδρομείου που είχε εισαχθεί στις ρυθμίσεις!</string>
+    <string name="device_registration_disabled">Η εγγραφή συσκευών εισόδου/εξόδου είναι αυτή τη στιγμή απενεργοποιημένη. Για να συνεχίσετε, μεταβείτε στην ιστοσελίδα %1$s και στην καρτέλα "Η SUPLA μου" ενεργοποιήστε την προσθήκη συσκευών.</string>
+
+    <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
+    <string name="wizard_step1_txt2">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
+    <string name="next">Επόμενο</string>
+    <string name="start">ΕΝΑΡΞΗ</string>>
+
+    <string name="wizard_step2_txt1">Πληκτρολογήστε τον κωδικό πρόσβασης για το δίκτυό σας WiFi, το όνομα του οποίου είναι</string>
+    <string name="wizard_step2_txt3">*) Το δίκτυο %1$s θα χρησιμοποιηθεί από την εκτελεστική συσκευή για να συνδεθεί με τον διακομιστή.</string>
+    <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
+
+    <string name="wizard_step3_txt1">Συνδέστε την εκτελεστική συσκευή σας με την παροχή ρεύματος. Η συσκευή έχει ως την προεπιλογή τη λειτουργία διαμόρφωσης και μας ειδοποιεί σχετικά με το να αναβοσβήνει ένα LED λαμπάκι της κατάστασης ως εξής</string>
+    <string name="wizard_step3_txt2">Όταν η συσκευή κατόπιν  ενεργοποίησης δεν εκτελεί τη λειτουργία διαμόρφωσης, κρατήστε πατημένο το κουμπί <b>CONFIG</b> για τουλάχιστον 5 δευτερόλεπτα.</string>
+    <string name="wizard_step3_txt3">Πατήστε το κουμπί <b>START</b> για να ξεκινήσει η διαμόρφωση.</string>
+
+    <string name="wizard_server_compat_error">Ο διακομιστής στον οποίο συνδέεστε δεν υποστηρίζει αυτή τη λειτουργία!</string>
+    <string name="wizard_no_internetwifi">Πριν ξεκινήσετε, συνδεθείτε στο Διαδἰκτυο μέσω ενός δικτύου WiFI, το οποίο θα χρησιμοποιηθεί για τη σύνδεση με το διακομιστή και από τις εκτελεστικές συσκευές.</string>
+    <string name="wizard_wifi_error">Το δίκτυο WiFi είναι απενεργοποιημένο ή δεν μπορούν να διαβαστούν το αναγνωριστικό ή το όνομα του!</string>
+    <string name="wizard_addnetwork_error">Δεν είναι δυνατή η προσθήκη διαμόρφωσης του δικτύου WiFi!</string>
+    <string name="wizard_wifi_timeout">Υπέρβαση χρόνου αναμονής για τα δεδομένα του ισχύοντος WiFi!</string>
+    <string name="wizard_scan_timeout">Υπέρβαση χρόνου αναμονής για την ολοκλήρωση της αναζήτησης WiFi!</string>
+    <string name="wizard_connect_timeout">Υπέρβαση χρόνου αναμονής για τη σύνδεση με την εκτελεστική συσκευή!</string>
+    <string name="wizard_configure_timeout">Υπέρβαση χρόνου αναμονής για την ολοκλήρωση διαμόρφωσης της συσκευής!</string>
+    <string name="wizard_reconnect_timeout">Υπέρβαση χρόνου αναμονής για την επιστροφή στο κύριο δίκτυο WiFi!</string>
+    <string name="device_reg_request_timeout">Υπέρβαση χρόνου αναμονής για τις πληροφορίες σχετικά με τη διαθεσιμότητα εγγραφής των συσκευών!</string>
+
+    <string name="wizard_iodevice_notfound">Δεν βρέθηκε καμία συσκευή! Βεβαιωθείτε ότι η συσκευή την οποία θέλετε να ρυθμίσετε βρίσκετε στη λειτουργία διαμόρφωσης και στη συνέχεια προσπαθήστε ξανά. ΣΗΜΑΝΤΙΚΟ - Ορισμένες εκδόσεις του Android απαιτούν ενεργοποίηση του GPS προτού να επιτρέψουν στην εφαρμογή την αναζήτηση στο δίκτυο WiFi, οπότε βεβαιωθείτε αν έχετε ενεργοποιημένο το GPS.</string>
+
+
+    <string name="wizard_done">Η διαμόρφωση της συσκευής ολοκληρώθηκε με επιτυχία :)</string>
+    <string name="wizard_iodev_data">Τα στοιχεία της συσκευής</string>
+    <string name="wizard_iodev_name">Ονομασία</string>
+    <string name="wizard_iodev_laststate">Προηγούμενη κατάσταση</string>
+
+    <string name="wizard_result_param_error">Μη έγκυρες παράμετροι εισόδου!</string>
+    <string name="wizard_result_compat_error">Η συσκευή με την οποία συνδεθήκατε δεν είναι συμβατή με αυτόν τον οδηγό!</string>
+    <string name="wizard_result_conn_error">Δεν είναι δυνατή η σύνδεση με τη συσκευή!</string>
+    <string name="wizard_result_failed">Η διαμόρφωση απέτυχε!</string>
+    <string name="wizard_not_enought_permissions">Η εφαρμογή δε διαθέτει επαρκή δικαιώματα. Μεταβείτε στη διαχείριση εφαρμογών στις ρυθμίσεις του συστήματος. Στη συνέχεια, εντοπίστε την εφαρμογή %1$s και ενεργοποιήστε όλα τα δικαιώματα που χρειάζεται.</string>
+    <string name="help">Βοήθεια</string>
+    <string name="channel_func_staircasetimer">Αυτόματη σκάλα</string>
+
+    <string name="channel_func_electricitymeter">Μετρητής ηλεκτρικής ενέργειας</string>
+    <string name="channel_func_gasmeter">Μετρητής αερίου</string>
+    <string name="channel_func_watermeter">Μετρητής νερού</string>
+
+    <string name="em_total_forward_avtive_energy">Ληφθείσα ενεργή ενέργεια </string>
+    <string name="em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
+    <string name="em_total_forward_reactive_energy">Ληφθείσα παθητική  ενέργεια </string>
+    <string name="em_total_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
+    <string name="em_frequency">Συχνότητα</string>
+    <string name="em_voltage">Τάση</string>
+    <string name="em_current">Ένταση</string>
+    <string name="em_power_active">Ενεργός ισχύς</string>
+    <string name="em_power_reactive">Παθητική ισχύς</string>
+    <string name="em_power_factor">Συντελεστής ισχύος</string>
+    <string name="em_phase_angle">Γωνία φάσης</string>
+    <string name="em_power_apparent">Φαινομενική ισχύς</string>
+    <string name="em_phase1">Φάση 1</string>
+    <string name="em_phase2">Φάση 2</string>
+    <string name="em_phase3">Φάση 3</string>
+    <string name="channel_func_thermostat">Θερμοστάτης</string>
+    <string name="channel_func_thermostat_hp_homeplus">Θερμαντήρας Home+</string>
+    <string name="hp_on">ΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
+    <string name="hp_off">ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
+    <string name="hp_turn_on">ΕΝΕΡΓΟΠΟΙΗΣΗ</string>
+    <string name="hp_turn_off">ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ</string>
+    <string name="hp_normal">ΚΑΝΟΝΙΚΟ</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Θερμοκρασία δωματίου</string>
+    <string name="hp_cfg_turbo_time">Διάρκεια λειτουργίας TURBO</string>
+    <string name="hp_cfg_water_max">Μέγιστη θερμοκρασία νερού</string>
+    <string name="hp_cfg_eco_reduction">Μείωση θερμοκρασίας με λειτουργία ECO</string>
+    <string name="hp_cfg_temp_comfort_auto">Θερμοκρασία κομφόρ με λειτουργία AUTO</string>
+    <string name="hp_temp_comfort">Κομφόρ</string>
+    <string name="hp_cfg_temp_eco">Θερμοκρασία ECO με λειτουργία AUTO</string>
+    <string name="hp_hour">ώρα</string>
+    <string name="total_cost">Συνολικό κόστος</string>
+    <string name="current_cost">Το κόστος του τρέχοντος μήνα</string>
+    <string name="current_consumption">Κατανάλωση τον τρέχοντα μήνα</string>
+    <string name="impulses_count">Αριθμός παλμών</string>
+    <string name="meter_value">Κατάσταση του μετρητή</string>
+    <string name="channel_func_impulsecounter">Μετρητής παλμών</string>
+    <string name="minutes">Λεπτά</string>
+    <string name="hours">Ώρες</string>
+    <string name="days">Ημέρες</string>
+    <string name="months">Μήνες</string>
+    <string name="years">Χρόνια</string>
+    <string name="ranking_of_hours">Κατάταξη των ωρών</string>
+    <string name="ranking_of_weekdays">Κατάταξη των ημερών της εβδομάδας</string>
+    <string name="ranking_of_months">Κατάταξη των μηνών</string>
+    <string name="consumption_acording_to_phases">Κατανάλωση ανάλογα με τις φάσεις</string>
+    <string name="temperature">Θερμοκρασία</string>
+    <string name="humidity">Υγρασία</string>
+    <string name="last24hours">Οι τελευταίες 24 ώρες</string>
+    <string name="last7days">Οι τελευταίες 7 ημέρες</string>
+    <string name="last30days">Οι τελευταίες 30 ημέρες</string>
+    <string name="last90days">Οι τελευταίες 90 ημέρες</string>
+    <string name="all_available_history">Όλο το διαθέσιμο ιστορικό</string>
+    <string name="retrieving_data_from_the_server">Λήψη δεδομένων από διακομιστή...</string>
+    <string name="no_chart_data_available">Δεν υπάρχουν δεδομένα για το γράφημα.</string>
+    <string name="comparsion_minmin">Σύγκριση λεπτό προς λεπτό</string>
+    <string name="comparsion_hourhour">Σύγκριση ώρα προς ώρα</string>
+    <string name="comparsion_dayday">Σύγκριση μέρα προς μέρα</string>
+    <string name="comparsion_monthmonth">Σύγκριση ώρα προς ώρα</string>
+    <string name="comparsion_yearyear">Σύγκριση έτος προς έτος</string>
+    <string name="hp_error_1">Έλλειψη νερού</string>
+    <string name="hp_error_2">Καμμένος θερμαντήρας</string>
+    <string name="hp_error_3">Σφάλμα αισθητήρα θερμοκρασίας νερού</string>
+    <string name="hp_error_4">Σφάλμα αισθητήρα θερμοκρασίας δωματίου</string>
+    <string name="hp_error_5">Δεν υπάρχουν διακοπές στο δίκτυο</string>
+    <string name="production_acording_to_phases">Παραγωγή ανάλογα με τις φάσεις</string>
+    <string name="current_production">Παραγωγή τον τρέχοντα μήνα</string>
+</resources>
