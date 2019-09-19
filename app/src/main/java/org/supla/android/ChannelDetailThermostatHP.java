@@ -740,7 +740,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     public void setTemperature(int idx, Double temperature) {
 
-        if (idx < 0 || idx > 10) {
+        if (idx < 0 || idx >= 10) {
             return;
         }
 
