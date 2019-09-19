@@ -164,7 +164,7 @@
     <string name="hp_off">OFF</string>
     <string name="hp_turn_on">Turn ON</string>
     <string name="hp_turn_off">Turn OFF</string>
-    <string name="hp_normal">NORMAL</string>
+    <string name="hp_normal">MANUAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
     <string name="hp_auto">AUTO</string>
@@ -175,6 +175,7 @@
     <string name="hp_cfg_temp_comfort_auto">Comfort temperature in AUTO mode</string>
     <string name="hp_temp_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
+    <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Impulse counter</string>
     <string name="meter_value">Meter value</string>
     <string name="total_cost">Total cost</string>

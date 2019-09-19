@@ -366,6 +366,7 @@ public class SuplaThermostatCalendar extends View {
 
     public void clear() {
         mHourProgramGrid = new boolean[7][24];
+        invalidate();
     }
 
 }

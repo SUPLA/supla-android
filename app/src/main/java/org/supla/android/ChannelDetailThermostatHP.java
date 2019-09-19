@@ -95,7 +95,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         public void displayValue() {
             if (TvValue != null) {
                 if (Id == ID_TURBO_TIME) {
-                    TvValue.setText(Integer.toString(value)+" godz.");
+                    TvValue.setText(R.string.hp_hour);
+                    TvValue.setText(Integer.toString(value)+" "+TvValue.getText());
                 } else {
                     TvValue.setText(Integer.toString(value)+(char) 0x00B0);
                 }
