@@ -166,6 +166,7 @@
     <string name="hp_cfg_temp_comfort_auto">Udobna temperatura v načinu AUTO</string>
     <string name="hp_temp_comfort">Udobje</string>
     <string name="hp_cfg_temp_eco">ECO temperatura v načinu AUTO</string>
+    <string name="hp_hour">ura</string>
     <string name="total_cost">Skupni stroški</string>
     <string name="current_cost">Stroški v tekočem mesecu</string>
     <string name="current_consumption">Poraba v tekočem mesecu</string>

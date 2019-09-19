@@ -166,6 +166,7 @@
     <string name="hp_cfg_temp_comfort_auto">Θερμοκρασία κομφόρ με λειτουργία AUTO</string>
     <string name="hp_temp_comfort">Κομφόρ</string>
     <string name="hp_cfg_temp_eco">Θερμοκρασία ECO με λειτουργία AUTO</string>
+    <string name="hp_hour">ώρα</string>
     <string name="total_cost">Συνολικό κόστος</string>
     <string name="current_cost">Το κόστος του τρέχοντος μήνα</string>
     <string name="current_consumption">Κατανάλωση τον τρέχοντα μήνα</string>
