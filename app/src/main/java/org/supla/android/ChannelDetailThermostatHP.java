@@ -412,21 +412,30 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         return null;
     }
 
+    private void updateCalendarComfortLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+                +" "
+                +Integer.toString(item.value)+"\u00B0");
+    }
+
+    private void updateCalendarECOLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram0Label("ECO "+Integer.toString(item.value)+"\u00B0");
+    }
+
     public void setCfgValue(int id, int value) {
         for (CfgItem item : cfgItems) {
             if (item.idEqualsTo(id)) {
                 item.setValue(value);
+
+                if (id == CfgItem.ID_TEMP_ECO) {
+                    updateCalendarECOLabel(item);
+                } else if (id == CfgItem.ID_TEMP_COMFORT) {
+                    updateCalendarComfortLabel(item);
+                }
+                break;
             }
-        }
-
-        Resources res = getResources();
-
-        if (id == CfgItem.ID_TEMP_ECO) {
-            mCalendar.setProgram0Label("ECO "+Integer.toString(value)+"\u00B0");
-        } else if (id == CfgItem.ID_TEMP_COMFORT) {
-            mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
-                    +" "
-                    +Integer.toString(value)+"\u00B0");
         }
     }
 
@@ -643,9 +652,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                         idx = 2;
                         break;
                     case CfgItem.ID_TEMP_COMFORT:
+                        updateCalendarComfortLabel(item);
                         idx = 3;
                         break;
                     case CfgItem.ID_TEMP_ECO:
+                        updateCalendarECOLabel(item);
                         idx = 4;
                         break;
                     case CfgItem.ID_ECO_REDUCTION:
