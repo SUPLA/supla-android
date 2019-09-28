@@ -223,7 +223,7 @@ public class ChannelValue extends DbItem {
 
         }
 
-        return -275;
+        return -273;
     }
 
     public double getMeasuredTemp(int func) {
@@ -246,7 +246,7 @@ public class ChannelValue extends DbItem {
             }
         }
 
-        return -275;
+        return -273;
     }
 
     public double getDistance() {
