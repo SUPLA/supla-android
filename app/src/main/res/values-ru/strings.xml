@@ -134,7 +134,7 @@
     <string name="wizard_not_enought_permissions">Приложение не имеет достаточных разрешений. Перейдите в управление приложениями в системных настройках. Затем найдите приложение %1$s и включите все необходимые для него разрешения.</string>
     <string name="help">Помощь</string>
     <string name="channel_func_staircasetimer">Лестничный автомат</string>
-    <string name="channel_func_electricitymeter">"Счётчик электроэнергии "</string>
+    <string name="channel_func_electricitymeter">"Счётчик электроэнергии"</string>
     <string name="channel_func_gasmeter">Счётчик газа</string>
     <string name="channel_func_watermeter">Счётчик воды</string>
     <string name="em_total_forward_avtive_energy">Продвижение активной энергии</string>
