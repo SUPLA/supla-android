@@ -143,7 +143,7 @@
     <string name="em_total_reverse_reactive_energy">Возращение пассивной энергия</string>
     <string name="em_frequency">Частота</string>
     <string name="em_voltage">Напряжение</string>
-    <string name="em_current">Напряжение</string>
+    <string name="em_current">Сила тока</string>
     <string name="em_power_active">Активная мощность</string>
     <string name="em_power_reactive">Пассивная мощность</string>
     <string name="em_power_factor">Коэффициент мощности</string>
