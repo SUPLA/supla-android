@@ -35,7 +35,6 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaClient;
@@ -180,6 +179,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
     private Timer delayTimer1;
+    private Timer retryTimer1;
     private Timer reloadTimer1;
     private LinearLayout llChart;
     private ListView lvChannelList;
@@ -463,8 +463,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void OnChannelDataChanged() {
 
-        reloadTimer1 = new Timer();
+        cancelReloadTimer1();
+        cancelRetryTimer1();
 
+        reloadTimer1 = new Timer();
         reloadTimer1.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -484,6 +486,24 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }, 10, 1000);
 
         if (refreshLock > System.currentTimeMillis()) {
+            retryTimer1 = new Timer();
+            retryTimer1.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    if (getContext() instanceof Activity) {
+                        ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                OnChannelDataChanged();
+                            }
+                        });
+                    }
+
+                }
+
+            }, refreshLock - System.currentTimeMillis() + 500, 1000);
             return;
         }
 
@@ -588,6 +608,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         tvErrorMessage.setVisibility(GONE);
 
         cancelDelayTimer1();
+        cancelRetryTimer1();
         cancelReloadTimer1();
 
         setButtonsOff(null, true);
@@ -608,6 +629,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailHide();
 
         cancelDelayTimer1();
+        cancelRetryTimer1();
         cancelReloadTimer1();
     }
 
@@ -793,6 +815,13 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         if (delayTimer1 != null) {
             delayTimer1.cancel();
             delayTimer1 = null;
+        }
+    }
+
+    private void cancelRetryTimer1() {
+        if (retryTimer1 != null) {
+            retryTimer1.cancel();
+            retryTimer1 = null;
         }
     }
 
