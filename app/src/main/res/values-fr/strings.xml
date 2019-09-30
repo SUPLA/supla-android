@@ -132,7 +132,7 @@
     <string name="channel_func_electricitymeter">Compteur d\'énergie</string>
     <string name="channel_func_gasmeter">Compteur de gaz</string>
     <string name="channel_func_watermeter">Compteur d\'eau</string>
-    <string name="em_total_forward_avtive_energy">Energie active  importée</string>
+    <string name="em_total_forward_avtive_energy">Energie active importée</string>
     <string name="em_reverse_active_energy">Energie active rendue</string>
     <string name="em_total_forward_reactive_energy">Energie passive importée</string>
     <string name="em_total_reverse_reactive_energy">Energie passive rendue</string>
