@@ -179,8 +179,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
     private Timer delayTimer1;
-    private Timer retryTimer1;
-    private Timer reloadTimer1;
+    private Timer refreshTimer1;
     private LinearLayout llChart;
     private ListView lvChannelList;
     private TextView tvErrorMessage;
@@ -463,47 +462,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void OnChannelDataChanged() {
 
-        cancelReloadTimer1();
-        cancelRetryTimer1();
-
-        reloadTimer1 = new Timer();
-        reloadTimer1.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                if (getContext() instanceof Activity) {
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            loadChannelList();
-                        }
-                    });
-                }
-
-            }
-
-        }, 10, 1000);
+        if (isGroup()) {
+            loadChannelList();
+        }
 
         if (refreshLock > System.currentTimeMillis()) {
-            retryTimer1 = new Timer();
-            retryTimer1.schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-                    if (getContext() instanceof Activity) {
-                        ((Activity) getContext()).runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                OnChannelDataChanged();
-                            }
-                        });
-                    }
-
-                }
-
-            }, refreshLock - System.currentTimeMillis() + 500, 1000);
             return;
         }
 
@@ -607,9 +570,26 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvErrorMessage.setVisibility(GONE);
 
-        cancelDelayTimer1();
-        cancelRetryTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
+
+        refreshTimer1 = new Timer();
+        refreshTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            OnChannelDataChanged();
+                        }
+                    });
+                }
+
+            }
+
+        }, 100, 1000);
 
         setButtonsOff(null, true);
         setMainViewVisible();
@@ -629,8 +609,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailHide();
 
         cancelDelayTimer1();
-        cancelRetryTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
     }
 
     private void setButtonsOff(Button skip, boolean all) {
@@ -661,7 +640,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        refreshLock = System.currentTimeMillis()+(isGroup() ? 4000 : 2000);
+        refreshLock = System.currentTimeMillis()+(isGroup() ? 4000 : 3000);
 
         for (CfgItem item : cfgItems) {
             if (item.onClick(view)) {
@@ -818,17 +797,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-    private void cancelRetryTimer1() {
-        if (retryTimer1 != null) {
-            retryTimer1.cancel();
-            retryTimer1 = null;
-        }
-    }
-
-    private void cancelReloadTimer1() {
-        if (reloadTimer1 != null) {
-            reloadTimer1.cancel();
-            reloadTimer1 = null;
+    private void cancelRefreshTimer() {
+        if (refreshTimer1 != null) {
+            refreshTimer1.cancel();
+            refreshTimer1 = null;
         }
     }
 
@@ -880,7 +852,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void loadChannelList() {
         if (!isGroup()) {
-            cancelReloadTimer1();
             return;
         }
 
