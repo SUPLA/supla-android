@@ -572,6 +572,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         cancelRefreshTimer();
 
+        // Because of this refreshLock, the refresh timer is running
         refreshTimer1 = new Timer();
         refreshTimer1.schedule(new TimerTask() {
             @Override
