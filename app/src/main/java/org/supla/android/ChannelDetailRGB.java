@@ -30,8 +30,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
@@ -55,6 +56,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private Button tabDimmer;
     private ViewGroup tabs;
     private TextView tvTitle;
+    private Button btnSettings;
+    private RelativeLayout rlMain;
+    private VLCalibrationTool vlCalibrationTool = null;
 
     private TextView tvStateCaption;
     private ImageView stateImage;
@@ -121,6 +125,13 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         tabRGB.setOnClickListener(this);
         tabDimmer.setOnClickListener(this);
 
+        btnSettings = findViewById(R.id.rgbBtnSettings);
+        btnSettings.setOnClickListener(this);
+        btnSettings.setVisibility(GONE);
+
+        rlMain = findViewById(R.id.rlRgbMain);
+        rlMain.setVisibility(VISIBLE);
+
         Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
         tabRGB.setTypeface(type);
         tabDimmer.setTypeface(type);
@@ -160,15 +171,50 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         channelDataToViews();
     }
 
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onDetailHide() {
+        super.onDetailHide();
+
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
+    }
+
+    public void onDetailShow() {
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
+        rlMain.setVisibility(VISIBLE);
+    }
+
     public void setData(ChannelBase channel) {
 
         super.setData(channel);
+        btnSettings.setVisibility(GONE);
 
         switch (channel.getFunc()) {
 
             case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 showDimmer();
                 tabs.setVisibility(View.GONE);
+
+                if (vlCalibrationTool != null) {
+                    vlCalibrationTool.Hide();
+                    vlCalibrationTool = null;
+                }
+
+                if (channel instanceof Channel) {
+                    Channel c = (Channel)channel;
+                    if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_VL
+                            && c.getProductID() == 1) {
+                        vlCalibrationTool = new VLCalibrationTool(this);
+                        btnSettings.setVisibility(VISIBLE);
+                    }
+                }
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
@@ -282,7 +328,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_rgb);
     }
 
@@ -311,7 +357,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             lastBrightness = brightness;
     }
 
-    private void sendNewValues(boolean TurnOnOff) {
+    private void sendNewValues(boolean force, boolean turnOnOff) {
 
         if (delayTimer1 != null) {
             delayTimer1.cancel();
@@ -320,12 +366,12 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if (client == null || !isDetailVisible())
+        if (client == null || (!isDetailVisible() && !force))
             return;
 
         if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
-                && client.setRGBW(getRemoteId(), isGroup(), lastColor, lastColorBrightness,
-                lastBrightness, TurnOnOff)) {
+                && client.setRGBW(getRemoteId(), isGroup(), lastColor,
+                lastColorBrightness, lastBrightness, turnOnOff)) {
             remoteUpdateTime = System.currentTimeMillis();
 
         } else {
@@ -360,14 +406,13 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     }
 
     private void sendNewValues() {
-        sendNewValues(false);
+        sendNewValues(false, false);
     }
 
     @Override
     public void onClick(View v) {
 
         if (v == tabRGB) {
-
             showRGB();
 
             setBtnBackground(tabRGB, R.drawable.rounded_rgb_left_sel_btn);
@@ -375,10 +420,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
             tabRGB.setTextColor(getResources().getColor(R.color.detail_rgb_gb));
             tabDimmer.setTextColor(Color.BLACK);
-
-
         } else if (v == tabDimmer) {
-
             showDimmer();
 
             setBtnBackground(tabRGB, R.drawable.rounded_rgb_left_btn);
@@ -386,13 +428,14 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
             tabRGB.setTextColor(Color.BLACK);
             tabDimmer.setTextColor(getResources().getColor(R.color.detail_rgb_gb));
-
         } else if (v == stateImage) {
-
             rgbPicker.setBrightnessValue(rgbPicker.getBrightnessValue() > 0 ? 0 : 100);
             pickerToInfoPanel();
-            sendNewValues(true);
+            sendNewValues(true, true);
             onChangeFinished();
+        } else if (v == btnSettings
+                && vlCalibrationTool != null) {
+            vlCalibrationTool.Show();
         }
 
         if (v == tabDimmer || v == tabRGB) {
@@ -470,6 +513,10 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     @Override
     public void OnChannelDataChanged() {
         updateDelayed();
+
+        if (vlCalibrationTool != null) {
+            vlCalibrationTool.Hide();
+        }
     }
 
 
@@ -505,6 +552,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
             }
 
         }
-
     }
+
+
 }

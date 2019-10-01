@@ -490,7 +490,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_em);
     }
 
