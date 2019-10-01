@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Error"
-            android:textColor="@android:color/red"
+            android:textColor="#ffcc0000"
             android:visibility="invisible" />
 
         <EditText
