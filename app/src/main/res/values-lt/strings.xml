@@ -183,4 +183,5 @@
     <string name="hp_error_5">Tinklo pertraukų nėra</string>
     <string name="current_production">Gamyba einamąjį mėnesį</string>
     <string name="production_acording_to_phases">Gamyba pagal fazes</string>
+    <string name="enter_superuser_credentials">Įveskite pagrindinio vartotojo kredencialus</string>
 </resources>

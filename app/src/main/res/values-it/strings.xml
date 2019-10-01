@@ -205,4 +205,5 @@
     <string name="channel_func_windsensor">Velocità del vento</string>
     <string name="current_production">Produzione del mese corrente</string>
     <string name="production_acording_to_phases">Produzione in base alle fasi</string>
+    <string name="enter_superuser_credentials">Immettere le credenziali del superutente</string>
 </resources>

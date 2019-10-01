@@ -216,4 +216,5 @@
     <string name="hp_error_5">Žiadne prerušenia el. napätia</string>
     <string name="production_acording_to_phases">Výroba podľa fáz</string>
     <string name="current_production">Výroba v aktuálnom mesiaci</string>
+    <string name="enter_superuser_credentials">Zadajte poverenia superužívateľa</string>
 </resources>

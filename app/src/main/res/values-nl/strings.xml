@@ -203,4 +203,5 @@
     <string name="hp_error_5">Geen netwerkonderbrekingen</string>
     <string name="production_acording_to_phases">Productie door fase</string>
     <string name="current_production">Productie in de huidige maand</string>
+    <string name="enter_superuser_credentials">Voer de inloggegevens van de superuser in</string>
 </resources>

@@ -210,6 +210,7 @@
     <string name="channel_func_windsensor">Скорость ветра</string>
     <string name="production_acording_to_phases">Производство по фазе</string>
     <string name="current_production">Производство в текущем месяце</string>
+    <string name="enter_superuser_credentials">Введите учетные данные суперпользователя</string>
 
 </resources>
 

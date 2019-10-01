@@ -203,4 +203,5 @@
     <string name="hp_error_5">Ingen nettverk avbrudd</string>
     <string name="production_acording_to_phases">Produksjon i forhold til faser</string>
     <string name="current_production">Produksjon i gjeldende måned</string>
+    <string name="enter_superuser_credentials">Skriv inn superbrukerens legitimasjon</string>
 </resources>

@@ -203,4 +203,5 @@
     <string name="hp_error_5">Brez prekinitev omrežja</string>
     <string name="production_acording_to_phases">Izdelava v skladu s fazami</string>
     <string name="current_production">Proizvodnja v tekočem mesecu</string>
+    <string name="enter_superuser_credentials">Vnesite poverilnice podupravitelja</string>
 </resources>
