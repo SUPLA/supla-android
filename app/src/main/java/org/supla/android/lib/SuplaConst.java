@@ -183,7 +183,7 @@ public class SuplaConst {
     public final static int SUPLA_MFR_ZAMEL = 4;
     public final static int SUPLA_MFR_NICE = 5;
     public final static int SUPLA_MFR_ITEAD = 6;
-    public final static int SUPLA_MFR_VL = 7;
+    public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
 
 

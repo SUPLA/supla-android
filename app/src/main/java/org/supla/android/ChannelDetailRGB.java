@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -209,7 +208,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
 
                 if (channel instanceof Channel) {
                     Channel c = (Channel)channel;
-                    if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_VL
+                    if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
                             && c.getProductID() == 1) {
                         vlCalibrationTool = new VLCalibrationTool(this);
                         btnSettings.setVisibility(VISIBLE);
