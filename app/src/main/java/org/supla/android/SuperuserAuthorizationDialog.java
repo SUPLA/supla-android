@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.supla.android.lib.Preferences;
+import org.supla.android.Preferences;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
