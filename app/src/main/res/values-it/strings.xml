@@ -17,10 +17,10 @@
     <string name="status_bad_credentials">Credenziali non valide</string>
     <string name="status_climit_exceded">Limite delle applicazioni dei clienti superato</string>
     <string name="status_version_error">Versione del server non compatibile</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">La registrazione è attualmente disabilitata. Per abilitarlo, vai alla scheda \"Smartphone\" a pagina %1$s.</string>
+    <string name="status_access_id_not_assigned">A questo dispositivo non è stato assegnato un ID di accesso. Vai a pagina %1$s e assegna l\'identificatore appropriato nella scheda \"Smartphone \".</string>
+    <string name="status_device_disabled">Il dispositivo è  disabilitato</string>
+    <string name="status_accessid_disabled">L\'ID di accesso è disabilitato</string>
 
     <string name="err_hostnotfound">L’indirizzo del server non è stato trovato</string>
     <string name="err_cantconnecttohost">Connessione con il server non riuscita</string>
@@ -69,7 +69,7 @@
     <string name="server_address">INDIRIZZO DEL SERVER</string>
     <string name="access_id">IDENTIFICATORE DELL’ACCESSO</string>
     <string name="password">PASSWORD</string>
-    <string name="create_account">Crea un account</string>
+    <string name="create_account">Crea un Account</string>
 
     <string name="about_app">This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n
