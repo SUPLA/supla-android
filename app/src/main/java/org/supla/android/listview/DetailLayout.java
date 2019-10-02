@@ -40,6 +40,7 @@ import org.supla.android.lib.SuplaClient;
 public abstract class DetailLayout extends FrameLayout {
 
     private ChannelListView cLV;
+    private ChannelBase channelBase;
     private View mContentView;
     private int mRemoteId;
     private boolean Group;
@@ -70,8 +71,10 @@ public abstract class DetailLayout extends FrameLayout {
     protected void init() {
 
         mRemoteId = 0;
+        channelBase = null;
+
         DBH = new DbHelper(getContext());
-        mContentView = getContentView();
+        mContentView = inflateContentView();
 
         if (mContentView != null) {
 
@@ -86,17 +89,21 @@ public abstract class DetailLayout extends FrameLayout {
 
     }
 
-    protected View inflateLayout(int id) {
+    public View inflateLayout(int id) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return inflater == null ? null : inflater.inflate(id, null);
     }
 
+    public View getContentView() {
+        return mContentView;
+    }
 
-    public abstract View getContentView();
+    public abstract View inflateContentView();
 
     public abstract void OnChannelDataChanged();
 
     public void setData(ChannelBase cbase) {
+        channelBase = cbase;
         mRemoteId = cbase == null ? 0 : cbase.getRemoteId();
         Group = mRemoteId != 0 && cbase instanceof ChannelGroup;
     }
@@ -136,6 +143,10 @@ public abstract class DetailLayout extends FrameLayout {
         return mRemoteId;
     }
 
+    public ChannelBase getChannelBase() {
+        return channelBase;
+    }
+
     public boolean isGroup() { return Group; }
 
     public boolean isDetailVisible() {
@@ -146,21 +157,29 @@ public abstract class DetailLayout extends FrameLayout {
 
     public void onDetailHide() {}
 
-    public SuplaClient getClient() {
+    public SuplaClient getClient(boolean force) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if (client == null || !isDetailVisible()) {
+        if (!isDetailVisible() && !force) {
             return null;
         }
 
         return client;
     }
 
-    public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
-        SuplaClient client = getClient();
+    public SuplaClient getClient() {
+        return getClient(false);
+    }
+
+    public void deviceCalCfgRequest(int cmd, int dataType, byte[] data, boolean force) {
+        SuplaClient client = getClient(force);
         if (client!=null) {
             client.DeviceCalCfgRequest(getRemoteId(), isGroup(), cmd, dataType, data);
         }
+    }
+
+    public void deviceCalCfgRequest(int cmd, int dataType, byte[] data) {
+        deviceCalCfgRequest(cmd, dataType, data, false);
     }
 
     public void deviceCalCfgRequest(int cmd, Byte data) {

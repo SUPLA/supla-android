@@ -17,10 +17,10 @@
     <string name="status_bad_credentials">Неправильные логин/пароль</string>
     <string name="status_climit_exceded">Ограничение количества пользователей</string>
     <string name="status_version_error">Несовместимая версия сервера</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">Регистрация в настоящее время отключена. Для ее включения перейдите на вкладку Смартфоны на странице %1$s</string>
+    <string name="status_access_id_not_assigned">Это устройство не имеет назначенного ключа доступа. Перейдите на страницу %1$s и  на вкладке Смартфоны назначьте соответствующий ключ.</string>
+    <string name="status_device_disabled">Устройство выключено</string>
+    <string name="status_accessid_disabled">Ключ доступа отключен</string>
 
     <string name="err_hostnotfound">Хост не найден</string>
     <string name="err_cantconnecttohost">Не удается подключиться к хосту</string>
@@ -134,7 +134,7 @@
     <string name="wizard_not_enought_permissions">Приложение не имеет достаточных разрешений. Перейдите в управление приложениями в системных настройках. Затем найдите приложение %1$s и включите все необходимые для него разрешения.</string>
     <string name="help">Помощь</string>
     <string name="channel_func_staircasetimer">Лестничный автомат</string>
-    <string name="channel_func_electricitymeter">"Счётчик электроэнергии "</string>
+    <string name="channel_func_electricitymeter">"Счётчик электроэнергии"</string>
     <string name="channel_func_gasmeter">Счётчик газа</string>
     <string name="channel_func_watermeter">Счётчик воды</string>
     <string name="em_total_forward_avtive_energy">Продвижение активной энергии</string>
@@ -143,7 +143,7 @@
     <string name="em_total_reverse_reactive_energy">Возращение пассивной энергия</string>
     <string name="em_frequency">Частота</string>
     <string name="em_voltage">Напряжение</string>
-    <string name="em_current">Напряжение</string>
+    <string name="em_current">Сила тока</string>
     <string name="em_power_active">Активная мощность</string>
     <string name="em_power_reactive">Пассивная мощность</string>
     <string name="em_power_factor">Коэффициент мощности</string>
@@ -210,6 +210,7 @@
     <string name="channel_func_windsensor">Скорость ветра</string>
     <string name="production_acording_to_phases">Производство по фазе</string>
     <string name="current_production">Производство в текущем месяце</string>
+    <string name="enter_superuser_credentials">Введите учетные данные суперпользователя</string>
 
 </resources>
 

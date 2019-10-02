@@ -17,10 +17,10 @@
     <string name="status_bad_credentials">Dados de identificação errados</string>
     <string name="status_climit_exceded">Excedeu o limite de aplicações de clientes</string>
     <string name="status_version_error">Versão do servidor incompátivel</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">Atualmente o registro está desativado. Para activá-lo, vá para a guia \"Smartphones\" na página %1$s.</string>
+    <string name="status_access_id_not_assigned">Este dispositivo não possui um ID de acesso atribuído. Vá para a página %1$s e atribua o ID apropriado na guia \"Smartphones\".</string>
+    <string name="status_device_disabled">O dispositivo está desligado</string>
+    <string name="status_accessid_disabled">O ID de acesso está desativado</string>
 
     <string name="err_hostnotfound">O endereço do servidor não foi encontrado</string>
     <string name="err_cantconnecttohost">Impossível ligar com o servidor</string>
@@ -205,4 +205,5 @@
     <string name="channel_func_windsensor">Velocidade do vento</string>
     <string name="production_acording_to_phases">Produção de acordo com fase</string>
     <string name="current_production">Produção no mês atual</string>
+    <string name="enter_superuser_credentials">Digite as credenciais do superusuário</string>
 </resources>

@@ -17,10 +17,10 @@
     <string name="status_bad_credentials">Certificaciones incorrectas</string>
     <string name="status_climit_exceded">Se ha superado el límite de aplicaciones del cliente</string>
     <string name="status_version_error">Versión del servidor incompatible</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, ve a la pestaña \"Smartphones\" en la página %1$s.</string>
+    <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Ve a la página %1$s y asigna el identificador adecuado en la pestaña \"Smartphones\".</string>
+    <string name="status_device_disabled">El dispositivo está apagado</string>
+    <string name="status_accessid_disabled">El identificador de acceso está deshabilitado</string>
 
     <string name="err_hostnotfound">No se ha encontrado la dirección del servidor</string>
     <string name="err_cantconnecttohost">No se puede conectar al servidor</string>
@@ -69,7 +69,7 @@
     <string name="server_address">DIRECCIÓN DEL SERVIDOR</string>
     <string name="access_id">IDENTIFICACIÓN DE ACCESO</string>
     <string name="password">CONTRASEÑA</string>
-    <string name="create_account">Crea cuenta</string>
+    <string name="create_account">Crear cuenta</string>
 
     <string name="about_app">This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n
@@ -205,4 +205,5 @@
     <string name="channel_func_windsensor">Velocidad del viento</string>
     <string name="current_production">Producción en el mes actual</string>
     <string name="production_acording_to_phases">Producción según fases</string>
+    <string name="enter_superuser_credentials">Entrez les informations d\'identification du superutilisateur</string>
 </resources>

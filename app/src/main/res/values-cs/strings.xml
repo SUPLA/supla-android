@@ -181,4 +181,5 @@
     <string name="channel_func_windsensor">Rychlost větru</string>
     <string name="current_production">Produkce v tomto měsíci</string>
     <string name="production_acording_to_phases">Produkce podle fáze</string>
+    <string name="enter_superuser_credentials">Zadejte pověření superuživatele</string>
 </resources>

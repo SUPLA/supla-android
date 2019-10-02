@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlRgbVLCalibration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/vl_settings_bg">
+
+    <Button
+        android:id="@+id/vlBtnCancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/error"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/vlBtnOK"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/btnok"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/vlcfgLL1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dimming mode" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/vlCfgDmAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/vl_left_btn_on"
+                android:text="AUTO"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/vlCfgDm1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-1dp"
+                android:layout_marginRight="-1dp"
+                android:layout_weight="1"
+                android:background="@drawable/vl_middle_btn_off"
+                android:text="MODE 1" />
+
+            <Button
+                android:id="@+id/vlCfgDm2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-1dp"
+                android:layout_weight="1"
+                android:background="@drawable/vl_middle_btn_off"
+                android:text="MODE 2" />
+
+            <Button
+                android:id="@+id/vlCfgDm3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/vl_right_btn_off"
+                android:text="MODE 3" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vlcfgLL2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vlcfgLL1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Drive" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/vlCfgDriveAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/vl_left_btn_on"
+                android:text="AUTO"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/vlCfgDriveYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-1dp"
+                android:layout_marginRight="-1dp"
+                android:layout_weight="1"
+                android:background="@drawable/vl_middle_btn_off"
+                android:text="YES" />
+
+            <Button
+                android:id="@+id/vlCfgDriveNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/vl_right_btn_off"
+                android:text="NO" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vlcfgLL3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/vlcfgLL2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-1dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/vlCfgOpRange"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/vl_tab_on"
+                android:text="Operating range"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/vlCfgDrive"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/vl_tab_off"
+                android:text="Drive"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/vl_middle_btn_off"
+            android:orientation="vertical">
+
+
+            <org.supla.android.SuplaRangeCalibrationWheel
+                android:id="@+id/vlCfgCalibrationWheel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="76dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/vllogo" />
+</RelativeLayout>

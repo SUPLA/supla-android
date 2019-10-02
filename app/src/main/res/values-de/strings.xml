@@ -158,7 +158,7 @@
     <string name="hp_cfg_temp_comfort_auto">Komforttemperatur im AUTO-Modus</string>
     <string name="hp_temp_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
-    <string name="hp_hour">h</string>
+    <string name="hp_hour">std</string>
     <string name="total_cost">Gesamtkosten</string>
     <string name="current_cost">Die Kosten im laufenden Monat</string>
     <string name="current_consumption">Verbrauch im laufenden Monat</string>
@@ -199,4 +199,5 @@
     <string name="channel_func_windsensor">Windgeschwindigkeit</string>
     <string name="current_production">Produktion im laufenden Monat</string>
     <string name="production_acording_to_phases">Produktion nach Phase</string>
+    <string name="enter_superuser_credentials">Geben Sie die Superuser-Anmeldeinformationen ein</string>
 </resources>

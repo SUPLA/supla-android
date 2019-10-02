@@ -35,7 +35,6 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaClient;
@@ -180,7 +179,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
     private Timer delayTimer1;
-    private Timer reloadTimer1;
+    private Timer refreshTimer1;
     private LinearLayout llChart;
     private ListView lvChannelList;
     private TextView tvErrorMessage;
@@ -313,7 +312,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_homeplus);
     }
 
@@ -412,21 +411,30 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         return null;
     }
 
+    private void updateCalendarComfortLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+                +" "
+                +Integer.toString(item.value)+"\u00B0");
+    }
+
+    private void updateCalendarECOLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram0Label("ECO "+Integer.toString(item.value)+"\u00B0");
+    }
+
     public void setCfgValue(int id, int value) {
         for (CfgItem item : cfgItems) {
             if (item.idEqualsTo(id)) {
                 item.setValue(value);
+
+                if (id == CfgItem.ID_TEMP_ECO) {
+                    updateCalendarECOLabel(item);
+                } else if (id == CfgItem.ID_TEMP_COMFORT) {
+                    updateCalendarComfortLabel(item);
+                }
+                break;
             }
-        }
-
-        Resources res = getResources();
-
-        if (id == CfgItem.ID_TEMP_ECO) {
-            mCalendar.setProgram0Label("ECO "+Integer.toString(value)+"\u00B0");
-        } else if (id == CfgItem.ID_TEMP_COMFORT) {
-            mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
-                    +" "
-                    +Integer.toString(value)+"\u00B0");
         }
     }
 
@@ -454,25 +462,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void OnChannelDataChanged() {
 
-        reloadTimer1 = new Timer();
-
-        reloadTimer1.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                if (getContext() instanceof Activity) {
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            loadChannelList();
-                        }
-                    });
-                }
-
-            }
-
-        }, 10, 1000);
+        if (isGroup()) {
+            loadChannelList();
+        }
 
         if (refreshLock > System.currentTimeMillis()) {
             return;
@@ -578,8 +570,27 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvErrorMessage.setVisibility(GONE);
 
-        cancelDelayTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
+
+        // Because of this refreshLock, the refresh timer is running
+        refreshTimer1 = new Timer();
+        refreshTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            OnChannelDataChanged();
+                        }
+                    });
+                }
+
+            }
+
+        }, 100, 1000);
 
         setButtonsOff(null, true);
         setMainViewVisible();
@@ -599,7 +610,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailHide();
 
         cancelDelayTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
     }
 
     private void setButtonsOff(Button skip, boolean all) {
@@ -630,7 +641,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        refreshLock = System.currentTimeMillis()+(isGroup() ? 4000 : 2000);
+        refreshLock = System.currentTimeMillis()+(isGroup() ? 4000 : 3000);
 
         for (CfgItem item : cfgItems) {
             if (item.onClick(view)) {
@@ -643,9 +654,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                         idx = 2;
                         break;
                     case CfgItem.ID_TEMP_COMFORT:
+                        updateCalendarComfortLabel(item);
                         idx = 3;
                         break;
                     case CfgItem.ID_TEMP_ECO:
+                        updateCalendarECOLabel(item);
                         idx = 4;
                         break;
                     case CfgItem.ID_ECO_REDUCTION:
@@ -740,7 +753,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     public void setTemperature(int idx, Double temperature) {
 
-        if (idx < 0 || idx > 10) {
+        if (idx < 0 || idx >= 10) {
             return;
         }
 
@@ -785,10 +798,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-    private void cancelReloadTimer1() {
-        if (reloadTimer1 != null) {
-            reloadTimer1.cancel();
-            reloadTimer1 = null;
+    private void cancelRefreshTimer() {
+        if (refreshTimer1 != null) {
+            refreshTimer1.cancel();
+            refreshTimer1 = null;
         }
     }
 
@@ -840,7 +853,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void loadChannelList() {
         if (!isGroup()) {
-            cancelReloadTimer1();
             return;
         }
 

@@ -197,7 +197,7 @@ public class Channel extends ChannelBase {
     }
 
     public double getTemp() {
-        return Value != null ? Value.getTemp(getFunc()) : -275;
+        return Value != null ? Value.getTemp(getFunc()) : -273;
     }
 
     public double getDistance() {

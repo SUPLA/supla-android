@@ -87,7 +87,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_temperature);
     }
 

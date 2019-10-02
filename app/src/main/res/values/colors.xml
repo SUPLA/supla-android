@@ -39,5 +39,6 @@
     <color name="th_temperature_line_color">#fd4a4d</color>
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
+    <color name="vl_settings_bg">#ededed</color>
 
 </resources>
