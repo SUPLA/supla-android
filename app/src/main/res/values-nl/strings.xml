@@ -140,7 +140,7 @@
     <string name="em_total_reverse_reactive_energy">Reactieve energie geretourneerd</string>
     <string name="em_frequency">Frequentie</string>
     <string name="em_voltage">Spanning</string>
-    <string name="em_current">intensiteit</string>
+    <string name="em_current">Intensiteit</string>
     <string name="em_power_active">Actieve kracht</string>
     <string name="em_power_reactive">Reactief vermogen</string>
     <string name="em_power_factor">Arbeidsfactor</string>
