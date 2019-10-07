@@ -136,7 +136,7 @@
 
     <string name="em_total_forward_avtive_energy">Ληφθείσα ενεργή ενέργεια</string>
     <string name="em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
-    <string name="em_total_forward_reactive_energy">Ληφθείσα παθητική  ενέργεια</string>
+    <string name="em_total_forward_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
     <string name="em_total_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
     <string name="em_frequency">Συχνότητα</string>
     <string name="em_voltage">Τάση</string>
