@@ -167,7 +167,7 @@
     <string name="current_cost">Coût dans le mois courant</string>
     <string name="current_consumption">Consommation dans le mois courant</string>
     <string name="impulses_count">Nombre d\'impulsions</string>
-    <string name="meter_value">"Valeur du compteur "</string>
+    <string name="meter_value">"Valeur du compteur"</string>
     <string name="channel_func_impulsecounter">Compteur d\'impulsions</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Heures</string>
