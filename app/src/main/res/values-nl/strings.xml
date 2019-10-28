@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Onjuiste inloggegevens</string>
     <string name="status_climit_exceded">Limiet clienttoepassing overschreden</string>
     <string name="status_version_error">Incompatibele serverversie</string>
-    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \ "Smartphones \" op pagina %1$s</string>
-    <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina %1$s en wijs de juiste ID toe op het tabblad \ "Smartphones \".</string>
+    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina %1$s</string>
+    <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina %1$s en wijs de juiste ID toe op het tabblad \"Smartphones\".</string>
     <string name="status_device_disabled">Het apparaat is uitgeschakeld</string>
     <string name="status_accessid_disabled">Toegangs-ID is uitgeschakeld</string>
 
@@ -91,7 +91,7 @@
     <string name="device_registration_disabled">I / O-apparaatregistratie is momenteel uitgeschakeld. Ga door naar pagina %1$s en schakel op het tabblad "Mijn SUPLA" het toevoegen van apparaten in.</string>
 
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
-    <string name="wizard_step1_txt2">Druk op <b>Volgende</b> om door te gaan..</string>
+    <string name="wizard_step1_txt2">Druk op <b>Volgende</b> om door te gaan.</string>
     <string name="next">Doorgaan</string>
     <string name="start">OPSTARTEN</string>>
 
@@ -140,7 +140,7 @@
     <string name="em_total_reverse_reactive_energy">Reactieve energie geretourneerd</string>
     <string name="em_frequency">Frequentie</string>
     <string name="em_voltage">Spanning</string>
-    <string name="em_current">intensiteit</string>
+    <string name="em_current">Intensiteit</string>
     <string name="em_power_active">Actieve kracht</string>
     <string name="em_power_reactive">Reactief vermogen</string>
     <string name="em_power_factor">Arbeidsfactor</string>
@@ -155,7 +155,7 @@
     <string name="hp_off">UIT</string>
     <string name="hp_turn_on">INSCHAKELEN</string>
     <string name="hp_turn_off">UIT</string>
-    <string name="hp_normal">Normaal</string>
+    <string name="hp_normal">NORMAAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
     <string name="hp_auto">AUTO</string>

@@ -675,7 +675,7 @@ public abstract class ChannelBase extends DbItem {
                     return String.format("%.2f l/m\u00B2", rain/1000.00);
 
                 } else {
-                    return "--- l/m2";
+                    return "--- l/m\u00B2";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
                 if (getOnLine()) {

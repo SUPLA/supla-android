@@ -44,10 +44,10 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
             }
         }
 
-        if (older_item!=null) {
-            if (younger_item.getTimestamp() < older_item.getTimestamp()) {
-                throw new JSONException("Wrong timestamp order!");
-            }
+        boolean correctDateOrder = older_item == null
+                || younger_item.getTimestamp() > older_item.getTimestamp();
+
+        if (older_item!=null && correctDateOrder) {
 
             IncrementalMeasurementItem citem = newObject(younger_item);
 
@@ -79,7 +79,9 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
             added = true;
         }
 
-        older_item = younger_item;
+        if (correctDateOrder) {
+            older_item = younger_item;
+        }
     }
 
     protected void onFirstItem(SQLiteDatabase db) throws JSONException {
