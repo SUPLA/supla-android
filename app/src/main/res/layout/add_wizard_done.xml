@@ -31,10 +31,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/flDeviceParams"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:background="@android:color/white"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -43,9 +44,9 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/wizard_done_txt3"
@@ -93,9 +94,9 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/wizard_done_iodev_name"
