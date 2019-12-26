@@ -243,8 +243,9 @@ public class ChannelLayout extends LinearLayout {
             } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER) {
 
                 width *= 2.8;
 
@@ -931,8 +932,9 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:

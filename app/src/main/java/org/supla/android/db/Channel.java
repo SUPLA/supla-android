@@ -248,6 +248,7 @@ public class Channel extends ChannelBase {
     }
 
     public String getUnit(String defaultUnit) {
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
                 && getExtendedValue() != null
                 && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
@@ -263,15 +264,17 @@ public class Channel extends ChannelBase {
     }
 
     public String getUnit() {
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
 
             String dUnit = "";
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                     dUnit = "kWh";
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                     dUnit = "m\u00B3";
                     break;
             }
@@ -282,7 +285,7 @@ public class Channel extends ChannelBase {
     }
 
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
-
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
             return getOnLine() ?
                     String.format("%.1f "+getUnit(), value.getImpulseCounterCalculatedValue()) :
