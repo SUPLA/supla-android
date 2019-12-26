@@ -26,6 +26,7 @@ public class SuplaConst {
     public final static int SUPLA_ACCESSID_PWD_MAXSIZE = 33;
     public final static int SUPLA_SOFTVER_MAXSIZE = 21;
     public final static int SUPLA_EMAIL_MAXSIZE = 256;
+    public final static int SUPLA_PASSWORD_MAXSIZE = 64;
     public final static int SUPLA_CHANNELVALUE_SIZE = 8;
     public final static int SUPLA_RESULTCODE_NONE                      = 0;
     public final static int SUPLA_RESULTCODE_UNSUPORTED                = 1;
