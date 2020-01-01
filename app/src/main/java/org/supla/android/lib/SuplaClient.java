@@ -600,6 +600,11 @@ public class SuplaClient extends Thread {
 
     }
 
+    private boolean isChannelExcluded(SuplaChannel channel) {
+        // For partner applications
+        return false;
+    }
+
     private void ChannelUpdate(SuplaChannel channel) {
 
         boolean _DataChanged = false;
@@ -616,7 +621,8 @@ public class SuplaClient extends Thread {
             _DataChanged = true;
         }
 
-        if (DbH.updateChannel(channel)) {
+        if (!isChannelExcluded(channel)
+                && DbH.updateChannel(channel)) {
             _DataChanged = true;
         }
 

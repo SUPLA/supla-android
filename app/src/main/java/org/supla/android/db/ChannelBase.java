@@ -215,12 +215,13 @@ public abstract class ChannelBase extends DbItem {
                     idx = R.string.channel_func_staircasetimer;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                     idx = R.string.channel_func_electricitymeter;
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
                     idx = R.string.channel_func_gasmeter;
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                     idx = R.string.channel_func_watermeter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
@@ -469,14 +470,15 @@ public abstract class ChannelBase extends DbItem {
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 img_idx = R.drawable.electricitymeter;
                 break;
 
-            case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
                 img_idx = R.drawable.gasmeter;
                 break;
 
-            case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                 img_idx = R.drawable.watermeter;
                 break;
 
@@ -728,8 +730,6 @@ public abstract class ChannelBase extends DbItem {
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-            case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-            case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
 
                 if (getOnLine()) {
                     return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());

@@ -27,6 +27,7 @@ public class SuplaCfg {
     int AccessID;
     String AccessIDpwd;
     String Email;
+    String Password;
     String SoftVer;
     String Host;
     int tcp_port;
@@ -63,6 +64,10 @@ public class SuplaCfg {
 
     void setEmail(String Email) {
         this.Email = Email.substring(0, SuplaConst.SUPLA_EMAIL_MAXSIZE-1);
+    }
+
+    void setPassword(String Password) {
+        this.Password = Password.substring(0, SuplaConst.SUPLA_PASSWORD_MAXSIZE-1);
     }
 
     void setSoftVer(String SoftVer) {

@@ -132,6 +132,8 @@ public class Preferences {
 
     }
 
+    // TODO: Store GUID and AuthKey in the Android key system (API >= 14). Issue 127
+
     public byte[] getClientGUID() {
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }

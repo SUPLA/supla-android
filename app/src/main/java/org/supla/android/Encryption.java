@@ -34,6 +34,9 @@ public class Encryption {
     private static SecretKey generateKey(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
+        // *Password
+        // This is not a good implementation but sufficient for current use
+        
         if (password == null) {
             password = "";
         }

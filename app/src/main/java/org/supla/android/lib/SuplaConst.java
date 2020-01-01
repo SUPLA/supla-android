@@ -26,6 +26,7 @@ public class SuplaConst {
     public final static int SUPLA_ACCESSID_PWD_MAXSIZE = 33;
     public final static int SUPLA_SOFTVER_MAXSIZE = 21;
     public final static int SUPLA_EMAIL_MAXSIZE = 256;
+    public final static int SUPLA_PASSWORD_MAXSIZE = 64;
     public final static int SUPLA_CHANNELVALUE_SIZE = 8;
     public final static int SUPLA_RESULTCODE_NONE                      = 0;
     public final static int SUPLA_RESULTCODE_UNSUPORTED                = 1;
@@ -86,10 +87,11 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_WEATHER_STATION               = 290;
     public final static int SUPLA_CHANNELFNC_STAIRCASETIMER                = 300;
     public final static int SUPLA_CHANNELFNC_ELECTRICITY_METER             = 310;
-    public final static int SUPLA_CHANNELFNC_GAS_METER = 320;
-    public final static int SUPLA_CHANNELFNC_WATER_METER = 330;
-    public final static int SUPLA_CHANNELFNC_THERMOSTAT = 400;
-    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
+    public final static int SUPLA_CHANNELFNC_IC_ELECTRICITY_METER          = 315;
+    public final static int SUPLA_CHANNELFNC_IC_GAS_METER                  = 320;
+    public final static int SUPLA_CHANNELFNC_IC_WATER_METER                = 330;
+    public final static int SUPLA_CHANNELFNC_THERMOSTAT                    = 400;
+    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS   = 410;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
 
