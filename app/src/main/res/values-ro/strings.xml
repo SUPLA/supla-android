@@ -1,0 +1,207 @@
+<resources>
+
+    <string name="feedback_title">Trimite un e-mail</string>
+    <string name="donate_title">Susține proiectul</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+
+    <string name="version">versiune</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="about">Despre program</string>
+    <string name="settings">Setări</string>
+    <string name="add_device">Adaugă un dispozitiv</string>
+
+    <string name="status_connecting">Conectare..</string>
+    <string name="status_unknown_err">Eroare necunoscută</string>
+    <string name="status_temporarily_unavailable">Serviciu indisponibil temporar</string>
+    <string name="status_bad_credentials">Date de conectare incorecte</string>
+    <string name="status_climit_exceded">Limita de aplicații de client a fost depășită</string>
+    <string name="status_version_error">Versiunea serverului este incompatibilă</string>
+    <string name="status_reg_disabled">În prezent, înregistrarea este dezactivată. Pentru a o activa, accesați fila \"Smartphones\" de pe pagina %1$s</string>
+    <string name="status_access_id_not_assigned">Acest Dispozitiv nu a realocat un identificator de acces. Accesați pagina %1$s și atribuiți indetificatorul corespunzător în fila \"Smartphones\".</string>
+    <string name="status_device_disabled">Dispozitivul este oprit</string>
+    <string name="status_accessid_disabled">Identificatorul de acces este dezactivat</string>
+
+    <string name="err_hostnotfound">Adresa serverului nu a fost găsită</string>
+    <string name="err_cantconnecttohost">Nu vă  puteţi conecta la server</string>
+
+    <string name="channel_func_gateway">Portiță</string>
+    <string name="channel_func_gate">Poartă</string>
+    <string name="channel_func_garagedoor">Ușa garajului</string>
+    <string name="channel_func_door">Uși</string>
+    <string name="channel_func_rollershutter">Jaluzea</string>
+    <string name="channel_func_powerswith">Comutator de alimentare</string>
+    <string name="channel_func_lightswith">Întrerupător de lumină</string>
+    <string name="channel_func_thermometer">Termometru</string>
+    <string name="channel_func_humidity">Umiditate</string>
+    <string name="channel_func_humidityandtemperature">Temperatură și umiditate</string>
+    <string name="channel_func_windsensor">Viteza vântului</string>
+    <string name="channel_func_pressuresensor">Senzor de presiune</string>
+    <string name="channel_func_rainsensor">Măsurarea precipitațiilor</string>
+    <string name="channel_func_weightsensor">Greutate</string>
+    <string name="channel_func_dimmer">Variator de lumină</string>
+    <string name="channel_func_rgblighting">Iluminare RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Variator și iluminare RGB</string>
+    <string name="channel_func_noliquidsensor">Senzor lipsă de lichid</string>
+    <string name="channel_func_gatewayopeningsensor">Senzor de deschidere a porții</string>
+    <string name="channel_func_gateopeningsensor">Senzor de deschidere a porții</string>
+    <string name="channel_func_garagedooropeningsensor">Senzor de deschidere a porții de la garaj</string>
+    <string name="channel_func_dooropeningsensor">Senzor de deschidere a ușii</string>
+    <string name="channel_func_rsopeningsensor">Senzor de deschidere a jaluzelelor</string>
+    <string name="channel_func_depthsensor">Senzor de adâncime</string>
+    <string name="channel_func_distancesensor">Senzor de distanță</string>
+    <string name="channel_func_windowopeningsensor">Senzor de deschidere a geamului</string>
+    <string name="channel_func_mailsensor">Senzor de poștă</string>
+
+    <string name="rgb_brightness">Claritate</string>
+    <string name="rgb_color">Culoare</string>
+    <string name="rgb_state">Stare</string>
+
+    <string name="channel_btn_open">Deschide</string>
+    <string name="channel_btn_openclose">Deschide Închide</string>
+    <string name="channel_btn_on">Activează</string>
+    <string name="channel_btn_off">Dezactivează</string>
+
+    <string name="event_openedthegateway">a deschis poarta</string>
+    <string name="event_openedclosedthegate">a deschis / a închis poarta</string>
+    <string name="event_openedclosedthegatedoors">a deschis / a închis ușa garajului</string>
+    <string name="event_openedthedoor">a deschis ușa</string>
+    <string name="event_openedcloserollershutter">a deschis / a închis jaluzeaua</string>
+    <string name="event_poweronoff">a pornit / a oprit alimentarea</string>
+    <string name="event_turnedthelightonoff">a aprins / a stins lumina</string>
+
+    <string name="server_address">ADRESA SERVERULUI</string>
+    <string name="access_id">IDENTIFICATOR DE ACCES</string>
+    <string name="password">PAROLĂ</string>
+    <string name="email">ADRESA DE E-MAIL</string>
+    <string name="advanced_settings">Setări avansate</string>
+    <string name="create_account"><u>Creează cont</u></string>
+
+    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+
+    <string name="rate_msg">Dacă vă place această aplicație, vă rugăm să acordați un moment pentru a o evalua. Vă mulțumim pentru suport!</string>
+    <string name="rate_now">Evaluează acum</string>
+    <string name="rate_later">Mai târziu</string>
+    <string name="rate_no_thanks">Nu, mulțumesc</string>
+    <string name="rs_percent_caption">Procentul de închidere</string>
+    <string name="calibration">[Calibrare]</string>
+
+    <string name="add_wizard_is_not_available">Creatorul pentru adăugare este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introduse însetări!</string>
+    <string name="device_registration_disabled">În prezent, înregistrarea dispozitivelor I/O este dezactivată. Pentru a continua, accesați pagina %1$s și în fila „SUPLA mea” activați adăugarea dispozitivelor.</string>
+
+    <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
+    <string name="wizard_step1_txt2">Pentru a continua, apăsați<b>Mai departe</b>.</string>
+    <string name="next">Mai departe</string>
+    <string name="start">START</string>>
+
+    <string name="wizard_step2_txt1">Introduceți parola pentru rețeaua WiFi a cărei nume este</string>
+    <string name="wizard_step2_txt3">*) Rețeaua %1$s va fi utilizată de dispozitivul de acționare pentru conectarea la server.</string>
+    <string name="wizard_remember_passwd">Salvează parola</string>
+
+    <string name="wizard_step3_txt1">Conectați dispozitivul de acționare la alimentare. Dispozitivul trebuie să funcționeze în mod implicit în modul de configurare, semnalizând acest lucru prin pâlpâirea diodei de stare după cum urmează</string>
+    <string name="wizard_step3_txt2">Dacă, după pornirea alimentării, dispozitivul nu funcționează în modul de configurare, țineți apăsat butonul<b>CONFIG</b>timp de cel puțin 5 secunde.</string>
+    <string name="wizard_step3_txt3">Apăsați butonul<b>START</b>pentru a începe configurarea.</string>
+
+    <string name="wizard_server_compat_error">Serverul conectat nu suportă această funcție!</string>
+    <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea WiFi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
+    <string name="wizard_wifi_error">Rețeaua WiFi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
+    <string name="wizard_addnetwork_error">Nu se poate adăuga configurația rețelei WiFi!</string>
+    <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale WiFi a fost depășit!</string>
+    <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei WiFi a fost depășit!</string>
+    <string name="wizard_connect_timeout">Timpul de așteptare pentru stabilirea conexiunii cu dispozitivul de acționare a fost depășit!</string>
+    <string name="wizard_configure_timeout">Timpul de așteptare pentru completarea configurației dispozitivului a fost depășit!</string>
+    <string name="wizard_reconnect_timeout">Timpul de așteptare pentru revenirea la rețeaua WiFi primară a fost depășit!</string>
+    <string name="device_reg_request_timeout">Timpul de așteptare pentru informații despre disponibilitatea înregistrării dispozitivului a fost depășit!</string>
+
+    <string name="wizard_iodevice_notfound">Nu s-au găsit dispozitive! Asigurați-vă că dispozitivul pe care doriți să îl configurați este în modul de configurare și apoi încercați din nou. IMPORTANT – Unele versiuni de Android necesită activarea GPS-ului pentru a permite aplicațiilor să caute în rețeaua WiFi, deci asigurați-vă că GPS-ul este activat.</string>
+
+
+    <string name="wizard_done">Configurația dispozitivului a fost terminată cu succes :)</string>
+    <string name="wizard_iodev_data">Datele dispozitivului</string>
+    <string name="wizard_iodev_name">Numele</string>
+    <string name="wizard_iodev_laststate">Starea precedentă</string>
+
+    <string name="wizard_result_param_error">Parametri de intrare incorecți!</string>
+    <string name="wizard_result_compat_error">Dispozitivul la care s-a efectuat conectarea nu este compatibil cu acest creator!</string>
+    <string name="wizard_result_conn_error">Conexiunea la dispozitiv nu este posibilă!</string>
+    <string name="wizard_result_failed">Configurația a eșuat!</string>
+    <string name="wizard_not_enought_permissions">Aplicația nu are permisiuni suficiente. Accesați gestionarea aplicațiilor în setările sistemului. Apoi localizați aplicația %1$s și activați toate permisiunile de care are nevoie.</string>
+    <string name="help">Ajutor</string>
+    <string name="channel_func_staircasetimer">Întrerupător automat scară</string>
+
+    <string name="channel_func_electricitymeter">Contor de electricitate</string>
+    <string name="channel_func_gasmeter">Contor de gaz</string>
+    <string name="channel_func_watermeter">Contor de apă</string>
+
+    <string name="em_total_forward_avtive_energy">Energie activă consumată</string>
+    <string name="em_reverse_active_energy">Energia activă returnată</string>
+    <string name="em_total_forward_reactive_energy">Energie reactivă consumată</string>
+    <string name="em_total_reverse_reactive_energy">Energia reactivă returnată</string>
+    <string name="em_frequency">Frecvență</string>
+    <string name="em_voltage">Tensiune</string>
+    <string name="em_current">Intensitate</string>
+    <string name="em_power_active">Putere activă</string>
+    <string name="em_power_reactive">Putere reactivă</string>
+    <string name="em_power_factor">Factor de putere</string>
+    <string name="em_phase_angle">Unghi de fază</string>
+    <string name="em_power_apparent">Putere aparentă</string>
+    <string name="em_phase1">Faza 1</string>
+    <string name="em_phase2">Faza 2</string>
+    <string name="em_phase3">Faza 3</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_hp_homeplus">Încălzitor Home+</string>
+    <string name="hp_on">ACTIVAT</string>
+    <string name="hp_off">DEZACTIVAT</string>
+    <string name="hp_turn_on">ACTIVEAZĂ</string>
+    <string name="hp_turn_off">DEZACTIVEAZĂ</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">Temperatura camerei</string>
+    <string name="hp_cfg_turbo_time">Durata modului TURBO</string>
+    <string name="hp_cfg_water_max">Temperatura maximă a apei</string>
+    <string name="hp_cfg_eco_reduction">Reducerea temperaturii în modul ECO</string>
+    <string name="hp_cfg_temp_comfort_auto">Temperatura de confort în modul AUTO</string>
+    <string name="hp_temp_comfort">Confort</string>
+    <string name="hp_cfg_temp_eco">Temperatura ECO în modul AUTO</string>
+    <string name="hp_hour">godz.</string>
+    <string name="total_cost">Costul total</string>
+    <string name="current_cost">Costul în luna curentă</string>
+    <string name="current_consumption">Consumul în luna curentă</string>
+    <string name="impulses_count">Număr de impulsuri</string>
+    <string name="meter_value">Starea contorului</string>
+    <string name="channel_func_impulsecounter">Contor de impulsuri</string>
+    <string name="minutes">Minute</string>
+    <string name="hours">Ore</string>
+    <string name="days">Zile</string>
+    <string name="months">Luni</string>
+    <string name="years">Ani</string>
+    <string name="ranking_of_hours">Clasarea orelor</string>
+    <string name="ranking_of_weekdays">Clasarea zilelor săptămânii</string>
+    <string name="ranking_of_months">Clasare alunilor</string>
+    <string name="consumption_acording_to_phases">Consumul conform fazelor</string>
+    <string name="temperature">Temperatură</string>
+    <string name="humidity">Umiditate</string>
+    <string name="last24hours">Ultimele 24 de ore</string>
+    <string name="last7days">Ultimele 7 zile</string>
+    <string name="last30days">Ultimele 30 de zile</string>
+    <string name="last90days">Ultimele 90 de zile</string>
+    <string name="all_available_history">Tot istoricul disponibil</string>
+    <string name="retrieving_data_from_the_server">Descărcare adatelor de pe server...</string>
+    <string name="no_chart_data_available">Nu există date pentru grafic.</string>
+    <string name="comparsion_minmin">Comparație minut cu minut</string>
+    <string name="comparsion_hourhour">Comparație oră cu oră</string>
+    <string name="comparsion_dayday">Comparație zi cu zi</string>
+    <string name="comparsion_monthmonth">Comparație lună cu lună</string>
+    <string name="comparsion_yearyear">Comparație an cu an</string>
+    <string name="hp_error_1">Nu există apă</string>
+    <string name="hp_error_2">Încălzitor ars</string>
+    <string name="hp_error_3">Eroare a senzorului de temperatură a apei</string>
+    <string name="hp_error_4">Eroare a senzorului de temperatură a camerei</string>
+    <string name="hp_error_5">Nu există întreruperi în rețea</string>
+    <string name="production_acording_to_phases">Producția conform fazelor</string>
+    <string name="current_production">Producția în luna curentă</string>
+    <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+</resources>
