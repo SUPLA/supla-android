@@ -45,25 +45,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout RootLayout;
     private RelativeLayout ContentLayout;
     private RelativeLayout MenuBarLayout;
-    private RelativeLayout MenuItemsLayout;
+    private MenuItemsLayout mMenuItemsLayout;
     private ViewGroup Content;
 
     private Button MenuButton;
     private Button GroupButton;
-
-    private Button MiSettings;
-    private Button MiAbout;
-    private Button MiDonate;
-    private Button MiHelp;
-    private Button MiAddDevice;
-
-    private Button SettingsButton;
-    private Button AboutButton;
-    private Button DonateButton;
-    private Button HelpButton;
-    private Button HomepageButton;
-    private Button AddDeviceButton;
-    private Button EmptySpaceButton;
 
     private boolean Anim = false;
 
@@ -129,61 +115,15 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         return MenuBarLayout;
     }
 
-    private RelativeLayout getMenuItemsLayout() {
+    private MenuItemsLayout getMenuItemsLayout() {
 
-        if ( MenuItemsLayout == null ) {
-            MenuItemsLayout = (RelativeLayout)Inflate(R.layout.menuitems, null);
-            MenuItemsLayout.setVisibility(View.GONE);
-
-            MiSettings = MenuItemsLayout.findViewById(R.id.menuitem_settings);
-            MiAbout = MenuItemsLayout.findViewById(R.id.menuitem_about);
-            MiDonate = MenuItemsLayout.findViewById(R.id.menuitem_donate);
-            MiHelp = MenuItemsLayout.findViewById(R.id.menuitem_help);
-            MiAddDevice = MenuItemsLayout.findViewById(R.id.menuitem_add);
-
-            MiSettings.setOnClickListener(this);
-            MiAbout.setOnClickListener(this);
-            MiDonate.setOnClickListener(this);
-            MiHelp.setOnClickListener(this);
-            MiAddDevice.setOnClickListener(this);
-
-            SettingsButton = MenuItemsLayout.findViewById(R.id.btn_settings);
-            AboutButton = MenuItemsLayout.findViewById(R.id.btn_about);
-            DonateButton = MenuItemsLayout.findViewById(R.id.btn_donate);
-            HelpButton = MenuItemsLayout.findViewById(R.id.btn_help);
-            HomepageButton = MenuItemsLayout.findViewById(R.id.btn_homepage);
-            AddDeviceButton = MenuItemsLayout.findViewById(R.id.btn_add);
-            EmptySpaceButton = MenuItemsLayout.findViewById(R.id.btn_empty_space);
-
-            SettingsButton.setOnClickListener(this);
-            AboutButton.setOnClickListener(this);
-            DonateButton.setOnClickListener(this);
-            HelpButton.setOnClickListener(this);
-            HomepageButton.setOnClickListener(this);
-            AddDeviceButton.setOnClickListener(this);
-            EmptySpaceButton.setOnClickListener(this);
-
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-            SettingsButton.setTypeface(type);
-            AboutButton.setTypeface(type);
-            DonateButton.setTypeface(type);
-            HelpButton.setTypeface(type);
-            AddDeviceButton.setTypeface(type);
-
-            type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-            HomepageButton.setTypeface(type);
-
-            SettingsButton.setTransformationMethod(null);
-            AboutButton.setTransformationMethod(null);
-            DonateButton.setTransformationMethod(null);
-            HelpButton.setTransformationMethod(null);
-            HomepageButton.setTransformationMethod(null);
-            AddDeviceButton.setTransformationMethod(null);
-
-            getRootLayout().addView(MenuItemsLayout);
+        if ( mMenuItemsLayout == null ) {
+            mMenuItemsLayout = new MenuItemsLayout(this);
+            mMenuItemsLayout.setOnClickListener(this);
+            getRootLayout().addView(mMenuItemsLayout);
         }
 
-        return MenuItemsLayout;
+        return mMenuItemsLayout;
     }
 
     protected RelativeLayout getContentLayout() {
@@ -247,7 +187,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if ( Anim ) return;
 
-            getMenuItemsLayout().setTop(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight() );
+            getMenuItemsLayout().setButtonsAvailable(MenuItemsLayout.BTN_ALL);
+            getMenuItemsLayout().setY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                    + getMenuBarLayout().getHeight() );
             getMenuItemsLayout().setVisibility(View.VISIBLE);
             getMenuItemsLayout().bringToFront();
             getMenuBarLayout().bringToFront();
@@ -280,7 +222,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
                 getMenuItemsLayout()
                         .animate()
-                        .translationY(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight())
+                        .translationY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                                + getMenuBarLayout().getHeight())
                         .setDuration(200)
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
@@ -437,32 +380,30 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             }
 
             onGroupButtonTouch(img == R.drawable.groupon);
-
-        } else if ( v == MiSettings || v == SettingsButton) {
-
-            showCfg(this);
-
-        } else if ( v == MiAbout || v == AboutButton ) {
-
-            showAbout();
-
-        } else if ( v == MiAddDevice || v == AddDeviceButton ) {
-
-            addDevice();
-
-        } else if ( v == MiDonate || v == DonateButton ) {
-
-            donate();
-
-        } else if ( v == MiHelp || v == HelpButton ) {
-
-            openForumpage();
-
-        } else if ( v == HomepageButton ) {
-
-            openHomepage();
-
+        } else {
+            switch (MenuItemsLayout.getButtonId(v)) {
+                case MenuItemsLayout.BTN_SETTINGS:
+                    showCfg(this);
+                    break;
+                case MenuItemsLayout.BTN_ABOUT:
+                    showAbout();
+                    break;
+                case MenuItemsLayout.BTN_ADD_DEVICE:
+                    addDevice();
+                    break;
+                case MenuItemsLayout.BTN_DONATE:
+                    donate();
+                    break;
+                case MenuItemsLayout.BTN_HELP:
+                    openForumpage();
+                    break;
+                case MenuItemsLayout.BTN_HOMEPAGE:
+                    openHomepage();
+                    break;
+            }
         }
+
+
 
     }
 

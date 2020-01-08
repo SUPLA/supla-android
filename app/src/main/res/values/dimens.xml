@@ -39,4 +39,10 @@
     <dimen name="rs_detail_info_text">12sp</dimen>
     <dimen name="wizard_btnnextl_width">15dp</dimen>
     <dimen name="wizard_btnnextr_width">40dp</dimen>
+    <dimen name="menuitem_height">50dp</dimen>
+    <dimen name="menuitem_iamge_margin">10dp</dimen>
+    <dimen name="menuitem_separator_height">0.25dp</dimen>
+    <dimen name="menuitem_text_size">15sp</dimen>
+    <dimen name="menuitem_homepage_text_size">12sp</dimen>
+    <dimen name="menuitem_padding">2dp</dimen>
 </resources>
