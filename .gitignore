@@ -79,3 +79,4 @@ lint/tmp/
 
 #mac
 .DS_Store
+app/src/main/java/org/supla/android/Trace.java
