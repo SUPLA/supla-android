@@ -1455,6 +1455,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " ON C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " = L."
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
                 + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
+                + " AND " + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 "
                 + WHERE
                 + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
