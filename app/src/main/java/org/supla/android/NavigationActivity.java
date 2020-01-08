@@ -108,7 +108,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton = findViewById(R.id.groupbutton);
             GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
-            GroupButton.setTag(Integer.valueOf(0));
+            GroupButton.setTag(0);
 
         }
 
@@ -366,10 +366,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             int img;
 
             if (GroupButton.getTag() == Integer.valueOf(0)) {
-                GroupButton.setTag(Integer.valueOf(1));
+                GroupButton.setTag(1);
                 img = R.drawable.groupon;
             } else {
-                GroupButton.setTag(Integer.valueOf(0));
+                GroupButton.setTag(0);
                 img = R.drawable.groupoff;
             }
 
