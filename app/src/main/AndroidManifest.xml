@@ -70,6 +70,11 @@
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleTop">
         </activity>
+
+        <activity android:name=".ZWaveConfigurationWizardActivity"
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 
 </manifest>

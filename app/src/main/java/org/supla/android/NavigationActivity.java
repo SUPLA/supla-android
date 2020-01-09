@@ -292,12 +292,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
-    public void addDevice() {
-
-        showAddWizard();
-    }
-
-
     private static void showActivity(Activity sender,  Class<?> cls, int flags) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
@@ -321,8 +315,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             showStatus(sender);
         }
 
-
-
     }
 
     public static void showStatus(Activity sender) {
@@ -343,6 +335,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void showAddWizard() {
         showActivity(this, AddWizardActivity.class, 0);
+    }
+
+    public void showZWaveConfigurationWizard() {
+        showActivity(this, ZWaveConfigurationWizardActivity.class, 0);
     }
 
     public void gotoMain() {
@@ -395,7 +391,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     showAbout();
                     break;
                 case MenuItemsLayout.BTN_ADD_DEVICE:
-                    addDevice();
+                    showAddWizard();
+                    break;
+                case MenuItemsLayout.BTN_Z_WAVE:
+                    showZWaveConfigurationWizard();
                     break;
                 case MenuItemsLayout.BTN_DONATE:
                     donate();
@@ -408,8 +407,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
             }
         }
-
-
 
     }
 
