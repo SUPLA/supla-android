@@ -84,7 +84,7 @@ public class StatusActivity extends NavigationActivity {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null
-                && client.Registered() ) {
+                && client.registered() ) {
             showMain(this);
         } else {
 
@@ -164,7 +164,7 @@ public class StatusActivity extends NavigationActivity {
         if ( v == btnSettings ) {
             NavigationActivity.showCfg(this);
         } else if ( v == btnRetry ) {
-            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         }
     }
 

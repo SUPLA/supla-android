@@ -204,7 +204,7 @@ public class Preferences {
 
     public int getPreferedProtocolVersion() {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.GetMaxProtoVersion());
+        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.getMaxProtoVersion());
     }
 
     public void setPreferedProtocolVersion(int version) {
@@ -215,7 +215,7 @@ public class Preferences {
 
     public void setPreferedProtocolVersion() {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        setPreferedProtocolVersion(client == null ? 0 : client.GetMaxProtoVersion());
+        setPreferedProtocolVersion(client == null ? 0 : client.getMaxProtoVersion());
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {

@@ -251,7 +251,7 @@ public class CfgActivity extends NavigationActivity {
             prefs.setPreferedProtocolVersion();
 
             showStatus(this);
-            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
 
         } else {
             showMain(this);

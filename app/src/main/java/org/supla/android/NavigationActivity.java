@@ -37,7 +37,7 @@ import android.widget.TextView;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
-@SuppressLint("Registered")
+@SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String INTENTSENDER = "sender";
@@ -307,7 +307,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null
-                && client.Registered() ) {
+                && client.registered() ) {
 
             showActivity(sender, MainActivity.class, 0);
 

@@ -819,7 +819,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 }
             }
 
-            client.ThermostatScheduleCfgRequest(getRemoteId(), false, cfg);
+            client.thermostatScheduleCfgRequest(getRemoteId(), false, cfg);
         }
 
     }

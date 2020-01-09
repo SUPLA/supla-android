@@ -484,7 +484,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             return;
 
         } else if (SuplaApp.getApp().getSuplaClient() != null) {
-            int version = SuplaApp.getApp().getSuplaClient().GetProtoVersion();
+            int version = SuplaApp.getApp().getSuplaClient().getProtoVersion();
 
             if (version > 0 && version < 7) {
                 showError(R.string.wizard_server_compat_error);
@@ -641,7 +641,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 break;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                 setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY2);
-                SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
+                SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).getRegistrationEnabled();
                 return;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
                 showError(R.string.device_reg_request_timeout);
@@ -768,7 +768,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                     btnNext2.setText("....", TextView.BufferType.NORMAL);
                     setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY1);
-                    SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
+                    SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).getRegistrationEnabled();
 
                     break;
                 case PAGE_ERROR:
@@ -1111,7 +1111,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             stateChangedReceiver = null;
 
                             if (SuplaApp.getApp().getSuplaClient() != null) {
-                                SuplaApp.getApp().getSuplaClient().Reconnect();
+                                SuplaApp.getApp().getSuplaClient().reconnect();
                             }
 
                             setStep(STEP_DONE);

@@ -22,7 +22,6 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
@@ -412,7 +411,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (up) {
 
             if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.Open(channelId, clv == cgroupLV,  0);
+                client.open(channelId, clv == cgroupLV,  0);
 
         } else {
 
@@ -424,7 +423,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            client.Open(channelId, clv == cgroupLV, Open);
+            client.open(channelId, clv == cgroupLV, Open);
 
         }
 
