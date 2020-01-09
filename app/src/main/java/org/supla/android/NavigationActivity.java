@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 @SuppressLint("Registered")
@@ -187,7 +188,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if ( Anim ) return;
 
-            getMenuItemsLayout().setButtonsAvailable(MenuItemsLayout.BTN_ALL);
+            DbHelper DbH = new DbHelper(this);
+
+            int btns = DbH.isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
+                    : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
+
+            getMenuItemsLayout().setButtonsAvailable(btns);
             getMenuItemsLayout().setY(getMenuItemsLayout().getBtnAreaHeight() * -1
                     + getMenuBarLayout().getHeight() );
             getMenuItemsLayout().setVisibility(View.VISIBLE);

@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
@@ -2486,5 +2487,41 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
+    }
+
+    public boolean isZWaveBridgeChannelAvailable() {
+        String[] projection = {
+                SuplaContract.ChannelViewEntry._ID
+        };
+
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                + " = ?"
+                + " AND ("
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
+
+        String[] selectionArgs = {
+                String.valueOf(SuplaConst.SUPLA_CHANNELTYPE_BRIDGE),
+                String.valueOf(SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE)
+        };
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(
+                SuplaContract.ChannelViewEntry.VIEW_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+                "1"
+        );
+
+
+        boolean result = c.getCount() > 0;
+
+        c.close();
+        db.close();
+
+        return result;
     }
 }
