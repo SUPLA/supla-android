@@ -94,6 +94,24 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS   = 410;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
+    public final static int SUPLA_CHANNELTYPE_BRIDGE = 8000;
+
+    public final static int SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE = 0x0001;
+    public final static int SUPLA_CHANNEL_FLAG_IR_BRIDGE = 0x0002;
+    public final static int SUPLA_CHANNEL_FLAG_RF_BRIDGE = 0x0004;
+    public final static int SUPLA_CHANNEL_FLAG_DETAILED_STATUS = 0x0008;
+    public final static int SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
+    public final static int SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
+    public final static int SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
+    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION1 = 0x0080;
+    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION2 = 0x0100;
+    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION3 = 0x0200;
+    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION4 = 0x0400;
+    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION5 = 0x0800;
+    public final static int SUPLA_CHANNEL_FLAG_CHANNELSTATE = 0x00010000;
+    public final static int SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
+    public final static int SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
+    public final static int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
