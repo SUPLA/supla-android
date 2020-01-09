@@ -614,7 +614,8 @@ public class SuplaClient extends Thread {
                 + " channel Location ID: " + Integer.toString(channel.LocationID)
                 + " OnLine: " + Boolean.toString(channel.OnLine)
                 + " AltIcon: " + Integer.toString(channel.AltIcon)
-                + " UserIcon: " + Integer.toString(channel.UserIcon));
+                + " UserIcon: " + Integer.toString(channel.UserIcon)
+                + " Flags: " + Integer.toString(channel.Flags));
 
         // Update channel value before update the channel
         if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
