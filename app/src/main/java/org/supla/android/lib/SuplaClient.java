@@ -121,9 +121,10 @@ public class SuplaClient extends Thread {
     private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
                                                           SuplaThermostatScheduleCfg cfg);
 
-
     private native boolean scSuperUserAuthorizationRequest(long _supla_client,
                                                            String email, String password);
+
+    private native boolean scGetChannelState(long _supla_client, int ChannelID);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -429,6 +430,19 @@ public class SuplaClient extends Thread {
         return thermostatScheduleCfgRequest(ChannelID, false, cfg);
     }
 
+    public boolean getChannelState(int ChannelID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -730,6 +744,14 @@ public class SuplaClient extends Thread {
         msg.setData(Data);
         sendMessage(msg);
     }
+
+    private void onChannelState(SuplaChannelState state) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelState);
+        msg.setChannelState(state);
+        sendMessage(msg);
+    }
+
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onSuperuserAuthorizationResult);

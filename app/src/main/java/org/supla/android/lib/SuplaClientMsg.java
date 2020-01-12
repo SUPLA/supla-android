@@ -29,6 +29,7 @@ public class SuplaClientMsg {
     private SuplaEvent Event;
     private SuplaRegistrationEnabled RegistrationEnabled;
     private SuplaOAuthToken OAuthToken;
+    private SuplaChannelState ChannelState;
     private int ChannelId;
     private int ChannelGroupId;
     private boolean Success;
@@ -51,6 +52,7 @@ public class SuplaClientMsg {
     public final static int onOAuthTokenRequestResult = 12;
     public final static int onCalCfgResult = 13;
     public final static int onSuperuserAuthorizationResult = 14;
+    public final static int onChannelState = 15;
 
 
     public SuplaClientMsg(SuplaClient sender, int type) {
@@ -179,5 +181,13 @@ public class SuplaClientMsg {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public void setChannelState(SuplaChannelState channelState) {
+        ChannelState = channelState;
+    }
+
+    public SuplaChannelState getChannelState() {
+        return ChannelState;
     }
 }
