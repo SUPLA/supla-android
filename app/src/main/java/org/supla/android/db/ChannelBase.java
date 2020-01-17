@@ -648,51 +648,47 @@ public abstract class ChannelBase extends DbItem {
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                double temp = value.getTemp(getFunc());
                 if (getOnLine()
-                        && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
+                        && temp >= -273) {
+                    return String.format("%.1f\u00B0", temp);
                 } else {
                     return "---";
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-                if (getOnLine()) {
-                    double wind = value.getDouble(-1);
-                    return String.format("%.1f m/s", wind);
+                double wind = value.getDouble(-1);
 
+                if (getOnLine() && wind > -1) {
+                    return String.format("%.1f m/s", wind);
                 } else {
                     return "--- m/s";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-                if (getOnLine()) {
-                    double pressure = value.getDouble(-1);
-                    return String.format("%d hPa", (int) pressure);
+                double pressure = value.getDouble(-1);
 
+                if (getOnLine() && pressure > -1) {
+                    return String.format("%d hPa", (int) pressure);
                 } else {
                     return "--- hPa";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-                if (getOnLine()) {
-                    double rain = value.getDouble(-1);
-                    return String.format("%.2f l/m\u00B2", rain/1000.00);
+                double rain = value.getDouble(-1);
 
+                if (getOnLine() && rain > -1) {
+                    return String.format("%.2f l/m\u00B2", rain/1000.00);
                 } else {
                     return "--- l/m\u00B2";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-                if (getOnLine()) {
-                    double weight = value.getDouble(-1);
+                double weight = value.getDouble(-1);
 
+                if (getOnLine() && weight > -1) {
                     if (Math.abs(weight) >= 2000) {
-
                         return String.format("%.2f kg", weight / 1000.00);
-
                     } else {
-
                         return String.format("%d g", (int) weight);
-
                     }
-
                 } else {
                     return "--- kg";
                 }
