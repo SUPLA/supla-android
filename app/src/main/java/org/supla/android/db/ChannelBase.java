@@ -628,7 +628,7 @@ public abstract class ChannelBase extends DbItem {
 
             if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
                 if (getOnLine()
-                        && value.getHumidity() > -1)
+                        && value.getHumidity() >= 0)
                     return String.format("%.1f", value.getHumidity());
                 else
                     return "---";
@@ -659,7 +659,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
                 double wind = value.getDouble(-1);
 
-                if (getOnLine() && wind > -1) {
+                if (getOnLine() && wind >= 0) {
                     return String.format("%.1f m/s", wind);
                 } else {
                     return "--- m/s";
@@ -667,7 +667,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
                 double pressure = value.getDouble(-1);
 
-                if (getOnLine() && pressure > -1) {
+                if (getOnLine() && pressure >= 0) {
                     return String.format("%d hPa", (int) pressure);
                 } else {
                     return "--- hPa";
@@ -675,7 +675,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
                 double rain = value.getDouble(-1);
 
-                if (getOnLine() && rain > -1) {
+                if (getOnLine() && rain >= 0) {
                     return String.format("%.2f l/m\u00B2", rain/1000.00);
                 } else {
                     return "--- l/m\u00B2";
@@ -683,7 +683,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
                 double weight = value.getDouble(-1);
 
-                if (getOnLine() && weight > -1) {
+                if (getOnLine() && weight >= 0) {
                     if (Math.abs(weight) >= 2000) {
                         return String.format("%.2f kg", weight / 1000.00);
                     } else {
@@ -696,7 +696,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
             case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
                 if (getOnLine()
-                        && value.getDistance() > -1) {
+                        && value.getDistance() >= 0) {
 
                     double distance = value.getDistance();
 
