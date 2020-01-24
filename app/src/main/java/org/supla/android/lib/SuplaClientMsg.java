@@ -18,6 +18,7 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@SuppressWarnings("unused")
 public class SuplaClientMsg {
 
     private SuplaClient Sender;
@@ -30,6 +31,7 @@ public class SuplaClientMsg {
     private SuplaRegistrationEnabled RegistrationEnabled;
     private SuplaOAuthToken OAuthToken;
     private SuplaChannelState ChannelState;
+    private SuplaChannelBasicCfg ChannelBasicCfg;
     private int ChannelId;
     private int ChannelGroupId;
     private boolean Success;
@@ -53,6 +55,7 @@ public class SuplaClientMsg {
     public final static int onCalCfgResult = 13;
     public final static int onSuperuserAuthorizationResult = 14;
     public final static int onChannelState = 15;
+    public final static int onChannelBasicCfg = 16;
 
 
     public SuplaClientMsg(SuplaClient sender, int type) {
@@ -189,5 +192,13 @@ public class SuplaClientMsg {
 
     public SuplaChannelState getChannelState() {
         return ChannelState;
+    }
+
+    public SuplaChannelBasicCfg getChannelBasicCfg() {
+        return ChannelBasicCfg;
+    }
+
+    public void setChannelBasicCfg(SuplaChannelBasicCfg channelBasicCfg) {
+        ChannelBasicCfg = channelBasicCfg;
     }
 }

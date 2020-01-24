@@ -126,6 +126,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scGetChannelState(long _supla_client, int ChannelID);
 
+    private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -443,6 +445,19 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean getChannelBasicCfg(int ChannelID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -749,6 +764,13 @@ public class SuplaClient extends Thread {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onChannelState);
         msg.setChannelState(state);
+        sendMessage(msg);
+    }
+
+    private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelBasicCfg);
+        msg.setChannelBasicCfg(cfg);
         sendMessage(msg);
     }
 
