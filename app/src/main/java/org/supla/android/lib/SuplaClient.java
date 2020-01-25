@@ -128,6 +128,10 @@ public class SuplaClient extends Thread {
 
     private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
 
+    private native boolean scSetChannelFunction(long _supla_client, int ChannelID, int Function);
+
+    private native boolean scReconnectAllClients(long _supla_client);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -458,6 +462,34 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean setChannelFunction(int ChannelID, int Function) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean reconnectAllClients() {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scReconnectAllClients(_supla_client_ptr);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -774,12 +806,29 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onChannelFunctionSetResult(int ChannelID, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelFunctionSetResult);
+        msg.setCode(ResultCode);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onClientsReconnectResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onClientsReconnectResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
+        Trace.d(log_tag, Integer.toString(ResultCode));
+    }
+
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onSuperuserAuthorizationResult);
         msg.setSuccess(authorized);
         msg.setCode(code);
         sendMessage(msg);
+        Trace.d(log_tag, "Authorized: "+Boolean.toString(authorized));
     }
 
     private void onDataChanged(int ChannelId, int GroupId) {
