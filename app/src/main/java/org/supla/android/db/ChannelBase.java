@@ -230,6 +230,9 @@ public abstract class ChannelBase extends DbItem {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     idx = R.string.channel_func_thermostat_hp_homeplus;
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                    idx = R.string.channel_func_valve;
+                    break;
             }
 
             if (idx == -1)
@@ -522,6 +525,9 @@ public abstract class ChannelBase extends DbItem {
                                 : R.drawable.thermostat_hp_homeplusoff;
                 }
 
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
                 break;
         }
 

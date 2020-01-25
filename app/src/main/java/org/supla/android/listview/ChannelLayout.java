@@ -871,6 +871,11 @@ public class ChannelLayout extends LinearLayout {
                     lidx = R.string.channel_btn_off;
                     break;
 
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                    ridx = R.string.channel_btn_open;
+                    lidx = R.string.channel_btn_close;
+                    break;
+
             }
 
             setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
@@ -904,6 +909,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

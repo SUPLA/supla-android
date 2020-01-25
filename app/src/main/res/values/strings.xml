@@ -69,12 +69,14 @@
     <string name="channel_func_watermeter">Water Meter</string>
     <string name="channel_func_thermostat">Thermostat</string>
     <string name="channel_func_thermostat_hp_homeplus">Home+ Heater</string>
+    <string translatable="false" name="channel_func_valve">Valve</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
     <string name="rgb_state">State</string>
 
     <string name="channel_btn_open">Open</string>
+    <string translatable="false" name="channel_btn_close">Close</string>
     <string name="channel_btn_openclose">Open Close</string>
     <string name="channel_btn_on">On</string>
     <string name="channel_btn_off">Off</string>
