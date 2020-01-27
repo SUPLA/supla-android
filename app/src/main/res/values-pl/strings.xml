@@ -60,7 +60,6 @@
     <string name="rgb_state">Stan</string>
 
     <string name="channel_btn_open">Otwórz</string>
-    <string name="channel_btn_close">Zamknij</string>
     <string name="channel_btn_openclose">Otwórz Zamknij</string>
     <string name="channel_btn_on">Włącz</string>
     <string name="channel_btn_off">Wyłącz</string>
@@ -166,7 +165,6 @@
     <string name="em_phase3">Faza 3</string>
     <string name="channel_func_thermostat">Termostat</string>
     <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
-    <string name="channel_func_valve">Zawór</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
     <string name="hp_turn_on">WŁĄCZ</string>
@@ -220,4 +218,7 @@
     <string name="production_acording_to_phases">Produkcja wg. faz</string>
     <string name="current_production">Produkcja w bieżącym miesiącu</string>
     <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+
+    <string name="channel_func_valve">Zawór</string>
+    <string name="channel_btn_close">Zamknij</string>
 </resources>
