@@ -58,6 +58,7 @@ public class SuplaClientMsg {
     public final static int onChannelBasicCfg = 16;
     public final static int onChannelFunctionSetResult = 17;
     public final static int onClientsReconnectResult = 18;
+    public final static int onSetRegistrationEnabledResult = 19;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;

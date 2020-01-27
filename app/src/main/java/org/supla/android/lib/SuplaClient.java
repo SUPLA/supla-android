@@ -132,6 +132,9 @@ public class SuplaClient extends Thread {
 
     private native boolean scReconnectAllClients(long _supla_client);
 
+    private native boolean scSetRegistrationEnabled(long _supla_client,
+                                                    int ioDeviceRegTimeSec, int clientRegTimeSec);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -490,6 +493,21 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean setRegistrationEnabled(int ioDeviceRegTimeSec, int clientRegTimeSec) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scSetRegistrationEnabled(_supla_client_ptr,
+                    ioDeviceRegTimeSec, clientRegTimeSec);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -819,7 +837,13 @@ public class SuplaClient extends Thread {
                 SuplaClientMsg.onClientsReconnectResult);
         msg.setCode(ResultCode);
         sendMessage(msg);
-        Trace.d(log_tag, Integer.toString(ResultCode));
+    }
+
+    private void onSetRegistrationEnabledResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSetRegistrationEnabledResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
     }
 
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
