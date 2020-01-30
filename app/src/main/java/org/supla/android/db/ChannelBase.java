@@ -266,6 +266,7 @@ public abstract class ChannelBase extends DbItem {
                 return value.getSubValueHi();
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
 
                 return 1;
 
@@ -644,11 +645,21 @@ public abstract class ChannelBase extends DbItem {
         }
 
         switch (getFunc()) {
+
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
                 if (getOnLine()
                         && value.getTemp(getFunc()) >= -273) {
                     return String.format("%.1f\u00B0", value.getTemp(getFunc()));
+                } else {
+                    return "---";
+                }
+
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                double humidity = value.getHumidity();
+
+                if (getOnLine() && humidity >= 0) {
+                    return String.format("%.1f", humidity);
                 } else {
                     return "---";
                 }

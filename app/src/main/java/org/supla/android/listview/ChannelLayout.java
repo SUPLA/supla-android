@@ -230,6 +230,7 @@ public class ChannelLayout extends LinearLayout {
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
