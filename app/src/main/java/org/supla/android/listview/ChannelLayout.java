@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -35,6 +36,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.Trace;
+import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.images.ImageCache;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
@@ -42,6 +46,8 @@ import org.supla.android.ViewHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelExtendedValue;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -65,6 +71,7 @@ public class ChannelLayout extends LinearLayout {
     private SuplaChannelStatus right_onlineStatus;
     private SuplaChannelStatus right_ActiveStatus;
     private SuplaChannelStatus left_onlineStatus;
+    private ImageView channelStateIcon;
 
     private LineView bottom_line;
 
@@ -126,7 +133,6 @@ public class ChannelLayout extends LinearLayout {
         return tv;
     }
 
-
     private class ChannelImageLayout extends RelativeLayout {
 
         private ImageView Img1;
@@ -135,6 +141,15 @@ public class ChannelLayout extends LinearLayout {
         private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
+
+        private ImageView newImageView(Context context) {
+
+            ImageView Img = new ImageView(context);
+            Img.setId(ViewHelper.generateViewId());
+            addView(Img);
+
+            return Img;
+        }
 
         public ChannelImageLayout(Context context) {
             super(context);
@@ -149,15 +164,6 @@ public class ChannelLayout extends LinearLayout {
             Text2 = newTextView(context);
 
             SetDimensions();
-        }
-
-        private ImageView newImageView(Context context) {
-
-            ImageView Img = new ImageView(context);
-            Img.setId(ViewHelper.generateViewId());
-            addView(Img);
-
-            return Img;
         }
 
         private TextView newTextView(Context context) {
@@ -367,6 +373,21 @@ public class ChannelLayout extends LinearLayout {
         return lp;
     }
 
+    protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
+        lp.leftMargin = margin;
+
+        lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
+        lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
     protected SuplaChannelStatus newOnlineStatus(Context context, boolean right) {
 
         SuplaChannelStatus result = new SuplaChannelStatus(context);
@@ -419,7 +440,13 @@ public class ChannelLayout extends LinearLayout {
         right_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(right_onlineStatus);
         left_onlineStatus = newOnlineStatus(context, false);
+        left_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(left_onlineStatus);
+
+        channelStateIcon = new ImageView(context);
+        channelStateIcon.setId(ViewHelper.generateViewId());
+        content.addView(channelStateIcon);
+        channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
 
         right_ActiveStatus = new SuplaChannelStatus(context);
         right_ActiveStatus.setSingleColor(true);
@@ -442,17 +469,8 @@ public class ChannelLayout extends LinearLayout {
         bottom_line = new LineView(context);
         content.addView(bottom_line);
 
-        {
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
-
-            imgl = new ChannelImageLayout(context);
-            content.addView(imgl);
-        }
+        imgl = new ChannelImageLayout(context);
+        content.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId());
         content.addView(caption_text);
@@ -809,6 +827,8 @@ public class ChannelLayout extends LinearLayout {
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
 
+        channelStateIcon.setVisibility(INVISIBLE);
+
         if (OldFunc != mFunc) {
             imgl.SetDimensions();
         }
@@ -837,6 +857,25 @@ public class ChannelLayout extends LinearLayout {
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
+            if (cbase.getOnLine() && cbase instanceof Channel) {
+                SuplaChannelState state = ((Channel)cbase).getChannelState();
+                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                    switch (state.getDefaultIconField()) {
+                        case SuplaChannelState.FIELD_BATTERYPOWERED:
+                            if (state.getBatteryPowered()) {
+                                channelStateIcon.setImageResource(R.drawable.battery);
+                                channelStateIcon.setVisibility(VISIBLE);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            // Only when channelStateIcon is invisible !!
+            if (channelStateIcon.getVisibility() == INVISIBLE
+                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                // TODO: Show state icon/button
+            }
         }
 
         {

@@ -20,20 +20,24 @@ package org.supla.android.lib;
 
 import android.annotation.SuppressLint;
 
-@SuppressWarnings("unused")
-public class SuplaChannelState {
+import java.io.Serializable;
 
-    private static final int FIELD_IPV4 = 0x0001;
-    private static final int FIELD_MAC = 0x0002;
-    private static final int FIELD_BATTERYLEVEL = 0x0004;
-    private static final int FIELD_BATTERYPOWERED = 0x0008;
-    private static final int FIELD_WIFIRSSI = 0x0010;
-    private static final int FIELD_WIFISIGNALSTRENGTH = 0x0020;
-    private static final int FIELD_BRIDGESIGNALSTRENGTH = 0x0040;
-    private static final int FIELD_UPTIME = 0x0080;
-    private static final int FIELD_CONNECTIONUPTIME = 0x0100;
+@SuppressWarnings("unused")
+public class SuplaChannelState implements Serializable {
+
+    public static final int FIELD_IPV4 = 0x0001;
+    public static final int FIELD_MAC = 0x0002;
+    public static final int FIELD_BATTERYLEVEL = 0x0004;
+    public static final int FIELD_BATTERYPOWERED = 0x0008;
+    public static final int FIELD_WIFIRSSI = 0x0010;
+    public static final int FIELD_WIFISIGNALSTRENGTH = 0x0020;
+    public static final int FIELD_BRIDGESIGNALSTRENGTH = 0x0040;
+    public static final int FIELD_UPTIME = 0x0080;
+    public static final int FIELD_CONNECTIONUPTIME = 0x0100;
 
     private int ChannelID;
+    private int fields;
+    private int defaultIconField;
     private int ipv4;
     private byte[] macAddress;
     private Byte batteryLevel;
@@ -44,12 +48,14 @@ public class SuplaChannelState {
     private Long uptime;
     private Long connectionUptime;
     
-    public SuplaChannelState(int ChannelID, int fields, int ipv4, byte[] macAddress,
-                             byte batteryLevel, byte batteryPowered, byte wiFiRSSI,
-                             byte wiFiSignalStrength, byte bridgeSignalStrength,
-                             int uptime, int connectionUptime) {
+    public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
+                             int ipv4, byte[] macAddress, byte batteryLevel,
+                             byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
+                             byte bridgeSignalStrength, int uptime, int connectionUptime) {
 
         this.ChannelID = ChannelID;
+        this.fields = fields;
+        this.defaultIconField = defaultIconField;
 
         if ((fields & FIELD_IPV4) > 0) {
             this.ipv4 = ipv4;
@@ -154,5 +160,17 @@ public class SuplaChannelState {
 
     public Long getConnectionUptime() {
         return connectionUptime;
+    }
+
+    public Boolean getBatteryPowered() {
+        return batteryPowered;
+    }
+
+    public int getFields() {
+        return fields;
+    }
+
+    public int getDefaultIconField() {
+        return defaultIconField;
     }
 }

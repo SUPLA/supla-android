@@ -114,6 +114,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
+    public final static int SUPLA_CHANNEL_FLAG_RS_AUTOCALIBRATION = 0x00100000;
+    public final static int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
@@ -183,6 +185,7 @@ public class SuplaConst {
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
     public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
+    public final static int EV_TYPE_CHANNEL_STATE_V1 = 40;
 
     public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
     public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO = 2;
@@ -207,6 +210,9 @@ public class SuplaConst {
     public final static int SUPLA_MFR_ITEAD = 6;
     public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
+
+    public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
+    public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
 
 }
