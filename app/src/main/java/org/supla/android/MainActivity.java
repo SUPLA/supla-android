@@ -23,6 +23,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -392,7 +393,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
-    private void ShowValveAlertDialog(final int channelId) {
+    private void ShowValveAlertDialog(final int channelId, final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(android.R.string.dialog_alert_title);
@@ -403,6 +404,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     public void onClick(DialogInterface dialog, int id) {
                         SuplaClient client = SuplaApp.getApp().getSuplaClient();
                         if (client != null) {
+                            SuplaApp.Vibrate(context);
                             client.open(channelId, false, 1);
                         }
                         dialog.cancel();
@@ -437,7 +439,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             if (channel != null
                     && (channel.getValue().flooding()
                     || channel.getValue().isManuallyClosed())) {
-                ShowValveAlertDialog(channelId);
+                ShowValveAlertDialog(channelId, this);
                 return;
             }
         }
