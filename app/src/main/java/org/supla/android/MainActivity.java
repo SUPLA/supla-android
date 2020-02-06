@@ -432,6 +432,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (client == null)
             return;
 
+        if (!up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
+            DbHelper dbH = new DbHelper(this);
+            Channel channel = dbH.getChannel(channelId);
+            if (channel != null
+                    && (channel.getValue().flooding()
+                    || channel.getValue().isManuallyClosed())) {
+                ShowValveAlertDialog(channelId);
+                return;
+            }
+        }
+
         if (!up
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
 
@@ -452,18 +464,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
             } else {
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
-            }
-
-            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
-                    || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE) {
-                DbHelper dbH = new DbHelper(this);
-                Channel channel = dbH.getChannel(channelId);
-                if (channel != null
-                        && (channel.getValue().flooding()
-                        || channel.getValue().isManuallyClosed())) {
-                    ShowValveAlertDialog(channelId);
-                    return;
-                }
             }
 
             client.open(channelId, clv == cgroupLV, Open);
