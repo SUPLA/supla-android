@@ -437,6 +437,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             DbHelper dbH = new DbHelper(this);
             Channel channel = dbH.getChannel(channelId);
             if (channel != null
+                    && channel.getValue().isClosed()
                     && (channel.getValue().flooding()
                     || channel.getValue().isManuallyClosed())) {
                 ShowValveAlertDialog(channelId, this);
