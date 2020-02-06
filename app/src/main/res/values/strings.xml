@@ -217,4 +217,6 @@
 
     <string translatable="false" name="channel_func_valve">Valve</string>
     <string translatable="false" name="channel_btn_close">Close</string>
+    <string translatable="false" name="valve_open_warning">The valve has been closed in manual mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
+
 </resources>

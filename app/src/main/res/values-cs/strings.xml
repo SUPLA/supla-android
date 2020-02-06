@@ -182,6 +182,8 @@
     <string name="current_production">Produkce v tomto měsíci</string>
     <string name="production_acording_to_phases">Produkce podle fáze</string>
     <string name="enter_superuser_credentials">Zadejte pověření superuživatele</string>
+
     <string name="channel_btn_close">Zavřít</string>
-    <string translatable="false" name="channel_func_valve">Ventil</string>
+    <string name="channel_func_valve">Ventil</string>
+    <string name="valve_open_warning">Ventil byl v manuálním režimu uzavřen. Před otevřením se ujistěte, že nebyl zavřen kvůli zaplavení. Chcete-li varování vypnout, otevřete ventil ručně. Opravdu jej chcete otevřít z aplikace?!</string>
 </resources>

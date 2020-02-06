@@ -22,6 +22,8 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
@@ -390,6 +392,36 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
+    private void ShowValveAlertDialog(final int channelId) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setMessage(R.string.valve_open_warning);
+
+        builder.setNeutralButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                        if (client != null) {
+                            client.open(channelId, false, 1);
+                        }
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setPositiveButton(android.R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                    }
+                });
+
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
 
@@ -399,7 +431,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (client == null)
             return;
-
 
         if (!up
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
@@ -421,6 +452,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
             } else {
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
+            }
+
+            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+                    || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE) {
+                DbHelper dbH = new DbHelper(this);
+                Channel channel = dbH.getChannel(channelId);
+                if (channel != null
+                        && (channel.getValue().flooding()
+                        || channel.getValue().isManuallyClosed())) {
+                    ShowValveAlertDialog(channelId);
+                    return;
+                }
             }
 
             client.open(channelId, clv == cgroupLV, Open);
