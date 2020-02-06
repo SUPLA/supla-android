@@ -287,12 +287,15 @@ public abstract class ChannelBase extends DbItem {
 
                 return result;
             }
-            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE: {
+                boolean warning = value.isManuallyClosed() || value.flooding();
+
                 if (value.isClosed()) {
-                    return value.isManuallyClosed() || value.flooding() ? 2 : 1;
+                    return warning ? 2 : 1;
                 } else {
-                    return 0;
+                    return warning ? -1 : 0;
                 }
+            }
         }
 
 
@@ -535,11 +538,14 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 switch (active) {
+                    case -1:
+                        img_idx = R.drawable.valveopenwarning;
+                        break;
                     case 1:
                         img_idx = R.drawable.valveclosed;
                         break;
                     case 2:
-                        img_idx = R.drawable.valvewarning;
+                        img_idx = R.drawable.valveclosedwarning;
                         break;
                     default:
                         img_idx = R.drawable.valveopen;
