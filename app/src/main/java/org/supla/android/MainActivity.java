@@ -398,7 +398,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         builder.setTitle(android.R.string.dialog_alert_title);
         builder.setMessage(R.string.valve_open_warning);
 
-        builder.setNeutralButton(android.R.string.yes,
+        builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -409,14 +409,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     }
                 });
 
-        builder.setPositiveButton(android.R.string.no,
+        builder.setNeutralButton(R.string.no,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-
                     }
                 });
-
 
         AlertDialog alert = builder.create();
         alert.show();

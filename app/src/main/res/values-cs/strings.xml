@@ -186,4 +186,7 @@
     <string name="channel_btn_close">Zavřít</string>
     <string name="channel_func_valve">Ventil</string>
     <string name="valve_open_warning">Ventil byl v manuálním režimu uzavřen. Před otevřením se ujistěte, že nebyl zavřen kvůli zaplavení. Chcete-li varování vypnout, otevřete ventil ručně. Opravdu jej chcete otevřít z aplikace?!</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+
 </resources>
