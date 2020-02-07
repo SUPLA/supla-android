@@ -104,7 +104,7 @@
     <string name="wizard_step3_txt3">A konfiguráció elindításához nyomja meg a <b> START </b> gombot.</string>
 
     <string name="wizard_server_compat_error">A szerver, amelyhez csatlakozott, nem támogatja ezt a funkciót!</string>
-    <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFI-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
+    <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
     <string name="wizard_wifi_error">A WiFi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
     <string name="wizard_addnetwork_error">Nem lehet hozzáadni a WiFi hálózati konfigurációt!</string>
     <string name="wizard_wifi_timeout">A várakozási idő túllépte a jelenlegi WiFi hálózati adatokat!</string>

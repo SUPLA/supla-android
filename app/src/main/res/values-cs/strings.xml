@@ -85,11 +85,11 @@
     <string name="wizard_step3_txt2">Pokud zařízení nepracuje v konfiguračním režimu po zapnutí, držte stisknuté tlačítko <b>CONFIG</b> minimálně po dobu 5 sekund.</string>
     <string name="wizard_step3_txt3">Stisknutím tlačítka <b>START</b> spustíte konfiguraci.</string>
     <string name="wizard_server_compat_error">Server, ke kterému jste se připojili, nepodporuje tuto funkci!</string>
-    <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFI, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
+    <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
     <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
     <string name="wizard_addnetwork_error">Nelze přidat konfiguraci sítě WiFi!</string>
     <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti WiFi byla překročena!</string>
-    <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě WIFI!</string>
+    <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě WiFi!</string>
     <string name="wizard_connect_timeout">Doba čekání na spojení s vykonávajícím zařízením byla překročena!</string>
     <string name="wizard_configure_timeout">Doba čekání na dokončení konfigurace zařízení byla překročena!</string>
     <string name="wizard_reconnect_timeout">Doba čekání na návrat do základní sítě WiFi byla překročena!</string>
