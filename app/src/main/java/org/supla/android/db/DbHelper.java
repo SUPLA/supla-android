@@ -2496,6 +2496,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = ?"
+                + " AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
                 + " AND ("
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
 
