@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import org.supla.android.lib.SuplaConst;
+
 public class ZWaveConfigurationWizardActivity extends NavigationActivity {
 
     private Button btnTest;
@@ -22,7 +24,8 @@ public class ZWaveConfigurationWizardActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnTest) {
-            SuplaApp.getApp().getSuplaClient().getChannelState(298);
+            SuplaApp.getApp().getSuplaClient().superUserAuthorizationRequest("p.zygmunt@acsoftware.pl", "123123123");
+            SuplaApp.getApp().getSuplaClient().setChannelFunction(298, 110);
         }
     }
 }
