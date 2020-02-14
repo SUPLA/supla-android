@@ -34,6 +34,8 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BRIDGESIGNALSTRENGTH = 0x0040;
     public static final int FIELD_UPTIME = 0x0080;
     public static final int FIELD_CONNECTIONUPTIME = 0x0100;
+    public static final int FIELD_BATTERYHEALTH = 0x0200;
+    public static final int FIELD_BRIDGENODEONLINE = 0x0400;
 
     private int ChannelID;
     private int fields;
@@ -44,14 +46,17 @@ public class SuplaChannelState implements Serializable {
     private Boolean batteryPowered;
     private Byte wiFiRSSI;
     private Byte wiFiSignalStrength;
+    private Boolean bridgeNodeOnline;
     private Byte bridgeSignalStrength;
     private Long uptime;
     private Long connectionUptime;
+    private Byte batteryHealth;
     
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
-                             byte bridgeSignalStrength, int uptime, int connectionUptime) {
+                             byte bridgeNodeOnline, byte bridgeSignalStrength, int uptime,
+                             int connectionUptime, byte batteryHealth) {
 
         this.ChannelID = ChannelID;
         this.fields = fields;
@@ -85,6 +90,10 @@ public class SuplaChannelState implements Serializable {
             this.wiFiSignalStrength = wiFiSignalStrength;
         }
 
+        if ((fields & FIELD_BRIDGENODEONLINE) > 0) {
+            this.bridgeNodeOnline = bridgeNodeOnline > 0;
+        }
+
         if ((fields & FIELD_BRIDGESIGNALSTRENGTH) > 0
                 && bridgeSignalStrength >= 0
                 && bridgeSignalStrength <= 100) {
@@ -97,6 +106,12 @@ public class SuplaChannelState implements Serializable {
 
         if ((fields & FIELD_CONNECTIONUPTIME) > 0) {
             this.connectionUptime = connectionUptime & 0x00000000ffffffffL;
+        }
+
+        if ((fields & FIELD_BATTERYHEALTH) > 0
+                && batteryHealth >= 0
+                && batteryHealth <= 100) {
+            this.batteryHealth = batteryHealth;
         }
     }
 
@@ -172,5 +187,13 @@ public class SuplaChannelState implements Serializable {
 
     public int getDefaultIconField() {
         return defaultIconField;
+    }
+
+    public Boolean getBridgeNodeOnline() {
+        return bridgeNodeOnline;
+    }
+
+    public Byte getBatteryHealth() {
+        return batteryHealth;
     }
 }

@@ -24,8 +24,6 @@ public class ZWaveConfigurationWizardActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnTest) {
-            SuplaApp.getApp().getSuplaClient().superUserAuthorizationRequest("p.zygmunt@acsoftware.pl", "123123123");
-            SuplaApp.getApp().getSuplaClient().setChannelFunction(298, 110);
         }
     }
 }
