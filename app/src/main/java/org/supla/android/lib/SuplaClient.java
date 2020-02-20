@@ -852,7 +852,6 @@ public class SuplaClient extends Thread {
         msg.setSuccess(authorized);
         msg.setCode(code);
         sendMessage(msg);
-        Trace.d(log_tag, "Authorized: "+Boolean.toString(authorized));
     }
 
     private void onDataChanged(int ChannelId, int GroupId) {
