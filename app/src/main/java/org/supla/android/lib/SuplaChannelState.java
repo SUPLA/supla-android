@@ -36,6 +36,7 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_CONNECTIONUPTIME = 0x0100;
     public static final int FIELD_BATTERYHEALTH = 0x0200;
     public static final int FIELD_BRIDGENODEONLINE = 0x0400;
+    public static final int FIELD_LASTCONNECTIONRESETCAUSE = 0x0800;
 
     private int ChannelID;
     private int fields;
@@ -51,12 +52,14 @@ public class SuplaChannelState implements Serializable {
     private Long uptime;
     private Long connectionUptime;
     private Byte batteryHealth;
+    private Byte lastConnectionResetCause;
     
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
                              byte bridgeNodeOnline, byte bridgeSignalStrength, int uptime,
-                             int connectionUptime, byte batteryHealth) {
+                             int connectionUptime, byte batteryHealth,
+                             byte lastConnectionResetCause) {
 
         this.ChannelID = ChannelID;
         this.fields = fields;
@@ -112,6 +115,10 @@ public class SuplaChannelState implements Serializable {
                 && batteryHealth >= 0
                 && batteryHealth <= 100) {
             this.batteryHealth = batteryHealth;
+        }
+
+        if ((fields & FIELD_LASTCONNECTIONRESETCAUSE) > 0) {
+            this.lastConnectionResetCause = lastConnectionResetCause;
         }
     }
 
@@ -195,5 +202,9 @@ public class SuplaChannelState implements Serializable {
 
     public Byte getBatteryHealth() {
         return batteryHealth;
+    }
+
+    public Byte getLastConnectionResetCause() {
+        return lastConnectionResetCause;
     }
 }
