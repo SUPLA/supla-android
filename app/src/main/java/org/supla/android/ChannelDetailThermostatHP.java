@@ -225,11 +225,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvTemperature = findViewById(R.id.hpTvTemperature);
 
-        Typeface tfOpenSansRegular = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-
-        Typeface tfQuicksandRegular = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/Quicksand-Regular.ttf");
+        Typeface tfOpenSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
 
         tvTemperature.setTypeface(tfOpenSansRegular);
 

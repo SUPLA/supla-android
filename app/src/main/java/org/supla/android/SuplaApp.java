@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 
@@ -34,6 +35,16 @@ import android.os.Vibrator;
 public class SuplaApp extends Application {
 
     private ArrayList<Handler>msgReceivers = new ArrayList<>();
+
+    private Typeface mTypefaceQuicksandRegular = Typeface.createFromAsset(
+            getAssets(), "fonts/Quicksand-Regular.ttf");
+
+    private Typeface mTypefaceOpenSansRegular = Typeface.createFromAsset(
+            getAssets(), "fonts/OpenSans-Regular.ttf");
+
+    private Typeface mTypefaceOpenSansBold = Typeface.createFromAsset(
+            getAssets(), "fonts/fonts/OpenSans-Bold.ttf");
+
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();
@@ -190,5 +201,17 @@ public class SuplaApp extends Application {
                 _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
             }
         }
+    }
+
+    public Typeface getTypefaceQuicksandRegular() {
+        return mTypefaceQuicksandRegular;
+    }
+
+    public Typeface getTypefaceOpenSansRegular() {
+        return mTypefaceOpenSansRegular;
+    }
+
+    public Typeface getTypefaceOpenSansBold() {
+        return mTypefaceOpenSansBold;
     }
 }

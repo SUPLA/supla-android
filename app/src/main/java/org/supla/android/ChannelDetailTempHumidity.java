@@ -82,9 +82,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
         tvHumidity = findViewById(R.id.thTvHumidity);
         ivHumidityIcon = findViewById(R.id.thHumidityIcon);
 
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-        tvHumidity.setTypeface(tf);
+        tvHumidity.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
     }
 
     @Override

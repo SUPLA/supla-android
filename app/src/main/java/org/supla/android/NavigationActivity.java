@@ -97,8 +97,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuBarLayout.setVisibility(View.GONE);
 
             TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-            title.setTypeface(type);
+            title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
 
@@ -334,7 +333,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showAddWizard() {
-        showActivity(this, AddWizardActivity.class, 0);
+        showActivity(this, AddDeviceWizardActivity.class, 0);
     }
 
     public void showZWaveConfigurationWizard() {
@@ -418,7 +417,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         if (  CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity)
-                && !(CurrentActivity instanceof AddWizardActivity )
+                && !(CurrentActivity instanceof AddDeviceWizardActivity)
                 && !(CurrentActivity instanceof CreateAccountActivity )) {
             showStatus(this);
         }

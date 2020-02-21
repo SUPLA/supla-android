@@ -93,8 +93,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_img = NotificationView.findViewById(R.id.notif_img);
         notif_text = NotificationView.findViewById(R.id.notif_txt);
 
-        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
-        notif_text.setTypeface(type);
+        notif_text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonTouchListener(this);

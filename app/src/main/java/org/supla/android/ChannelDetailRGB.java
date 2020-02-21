@@ -131,17 +131,15 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
         rlMain = findViewById(R.id.rlRgbMain);
         rlMain.setVisibility(VISIBLE);
 
-        Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
+        Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
         tabRGB.setTypeface(type);
         tabDimmer.setTypeface(type);
 
         tvStateCaption = findViewById(R.id.rgbDetailStateCaption);
         tvStateCaption.setTypeface(type);
 
-        type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
-
         tvTitle = findViewById(R.id.rgbDetailTitle);
-        tvTitle.setTypeface(type);
+        tvTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         stateImage = findViewById(R.id.rgbDetailStateImage);
         stateImage.setOnClickListener(this);
