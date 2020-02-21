@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
@@ -46,6 +47,12 @@ public class BaseActivity extends Activity {
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
     protected static Activity CurrentActivity = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SuplaApp.getApp().initTypefaceCollection(this);
+    }
 
     @Override
     protected void onResume() {

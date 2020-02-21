@@ -36,15 +36,9 @@ public class SuplaApp extends Application {
 
     private ArrayList<Handler>msgReceivers = new ArrayList<>();
 
-    private Typeface mTypefaceQuicksandRegular = Typeface.createFromAsset(
-            getAssets(), "fonts/Quicksand-Regular.ttf");
-
-    private Typeface mTypefaceOpenSansRegular = Typeface.createFromAsset(
-            getAssets(), "fonts/OpenSans-Regular.ttf");
-
-    private Typeface mTypefaceOpenSansBold = Typeface.createFromAsset(
-            getAssets(), "fonts/fonts/OpenSans-Bold.ttf");
-
+    private Typeface mTypefaceQuicksandRegular;
+    private Typeface mTypefaceOpenSansRegular;
+    private Typeface mTypefaceOpenSansBold;
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();
@@ -200,6 +194,27 @@ public class SuplaApp extends Application {
             for(int a = 0; a< _RestApiClientTasks.size(); a++) {
                 _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
             }
+        }
+    }
+
+    public void initTypefaceCollection(Context context) {
+        if (context == null) {
+            return;
+        }
+
+        if (mTypefaceQuicksandRegular == null) {
+            mTypefaceQuicksandRegular = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/Quicksand-Regular.ttf");
+        }
+
+        if (mTypefaceOpenSansRegular == null) {
+            mTypefaceOpenSansRegular = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/OpenSans-Regular.ttf");
+        }
+
+        if (mTypefaceOpenSansBold == null) {
+            mTypefaceOpenSansBold = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/OpenSans-Bold.ttf");
         }
     }
 
