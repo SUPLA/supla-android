@@ -2489,12 +2489,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean isZWaveBridgeChannelAvailable() {
+    public boolean isZWaveBridgeOnlineChannelAvailable() {
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID
         };
 
-        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                + " > 0 AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = ?"
                 + " AND "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
