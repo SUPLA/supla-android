@@ -224,5 +224,6 @@
     <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="channel_func_none">Brak funkcji</string>
 
 </resources>
