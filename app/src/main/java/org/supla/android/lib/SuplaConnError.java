@@ -24,10 +24,15 @@ import org.supla.android.R;
 
 public class SuplaConnError {
 
+    // TODO: Make it private. Remember about JNI (NativeLib)
     public int Code;
 
     public SuplaConnError() {
 
+    }
+
+    public SuplaConnError(int Code) {
+        this.Code = Code;
     }
 
     public SuplaConnError(SuplaConnError error) {
