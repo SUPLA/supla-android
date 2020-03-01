@@ -8,6 +8,7 @@
     <dimen name="channel_separator_text_margin">10dp</dimen>
     <dimen name="channel_layout_button_width">100dp</dimen>
     <dimen name="channel_dot_size">10dp</dimen>
+    <dimen name="channel_state_image_size">20dp</dimen>
     <dimen name="channel_dot_margin">20dp</dimen>
     <dimen name="channel_btn_text_size">18sp</dimen>
     <dimen name="channel_caption_top_margin">18dp</dimen>
@@ -39,4 +40,10 @@
     <dimen name="rs_detail_info_text">12sp</dimen>
     <dimen name="wizard_btnnextl_width">15dp</dimen>
     <dimen name="wizard_btnnextr_width">40dp</dimen>
+    <dimen name="menuitem_height">50dp</dimen>
+    <dimen name="menuitem_iamge_margin">10dp</dimen>
+    <dimen name="menuitem_separator_height">0.25dp</dimen>
+    <dimen name="menuitem_text_size">15sp</dimen>
+    <dimen name="menuitem_homepage_text_size">12sp</dimen>
+    <dimen name="menuitem_padding">2dp</dimen>
 </resources>

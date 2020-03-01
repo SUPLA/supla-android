@@ -159,7 +159,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         }
 
 
-        client.OAuthTokenRequest();
+        client.oAuthTokenRequest();
 
         synchronized (this) {
             try {

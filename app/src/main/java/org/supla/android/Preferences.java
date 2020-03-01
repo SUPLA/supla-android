@@ -148,7 +148,7 @@ public class Preferences {
 
     public void setServerAddress(String ServerAddress) {
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_serveraddr, ServerAddress);
+        editor.putString(pref_serveraddr, ServerAddress.trim());
         editor.apply();
     }
 
@@ -169,7 +169,7 @@ public class Preferences {
     public void setAccessIDpwd(String AccessIDpwd) {
 
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_accessidpwd, AccessIDpwd);
+        editor.putString(pref_accessidpwd, AccessIDpwd.trim());
         editor.apply();
     }
 
@@ -180,7 +180,7 @@ public class Preferences {
     public void setEmail(String email) {
 
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_email, email);
+        editor.putString(pref_email, email.trim());
         editor.apply();
     }
 
@@ -204,7 +204,7 @@ public class Preferences {
 
     public int getPreferedProtocolVersion() {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.GetMaxProtoVersion());
+        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.getMaxProtoVersion());
     }
 
     public void setPreferedProtocolVersion(int version) {
@@ -215,7 +215,7 @@ public class Preferences {
 
     public void setPreferedProtocolVersion() {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        setPreferedProtocolVersion(client == null ? 0 : client.GetMaxProtoVersion());
+        setPreferedProtocolVersion(client == null ? 0 : client.getMaxProtoVersion());
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {

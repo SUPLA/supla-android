@@ -1,0 +1,207 @@
+<resources>
+
+    <string name="feedback_title">Küldjön egy e-mailt</string>
+    <string name="donate_title">Támogassa a projektet</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+
+    <string name="version">verzió</string>
+
+    <string name="feedback">Visszajelzés</string>
+    <string name="about">Programról</string>
+    <string name="settings">Beállítások</string>
+    <string name="add_device">Eszköz hozzáadása</string>
+
+    <string name="status_connecting">Csatlakozás...</string>
+    <string name="status_unknown_err">Ismeretlen hiba</string>
+    <string name="status_temporarily_unavailable">A szolgáltatás ideiglenesen nem érhető el</string>
+    <string name="status_bad_credentials">Helytelen hitelesítési adatok</string>
+    <string name="status_climit_exceded">Az ügyfélalkalmazás mennyiség korlátja túllépett</string>
+    <string name="status_version_error">Nem kompatibilis szerver verzió</string>
+    <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) %1$s oldalon</string>
+    <string name="status_access_id_not_assigned">Ehhez az eszközhöz nincs hozzárendelve hozzáférési azonosító. Lépjen az %1$s webhelyre, és  az "Okostelefonok \" fülben rendelje hozzá a megfelelő azonosítót.</string>
+    <string name="status_device_disabled">Az eszköz ki van kapcsolva</string>
+    <string name="status_accessid_disabled">A hozzáférési azonosító le van tiltva</string>
+
+    <string name="err_hostnotfound">A szerver címe nem található</string>
+    <string name="err_cantconnecttohost">Nem sikerült csatlakozni a megadott szerverhez</string>
+
+    <string name="channel_func_gateway">Kapu</string>
+    <string name="channel_func_gate">Átjáró:</string>
+    <string name="channel_func_garagedoor">Garázs kapu</string>
+    <string name="channel_func_door">Ajtó</string>
+    <string name="channel_func_rollershutter">Redőny</string>
+    <string name="channel_func_powerswith">Főkapcsoló</string>
+    <string name="channel_func_lightswith">Fény kapcsoló</string>
+    <string name="channel_func_thermometer">Hőmérő</string>
+    <string name="channel_func_humidity">Nedvességtartalom</string>
+    <string name="channel_func_humidityandtemperature">Hőmérséklet és páratartalom</string>
+    <string name="channel_func_windsensor">Szélsebesség</string>
+    <string name="channel_func_pressuresensor">Nyomásérzékelő</string>
+    <string name="channel_func_rainsensor">Csapadék mérése</string>
+    <string name="channel_func_weightsensor">Súly</string>
+    <string name="channel_func_dimmer">Fényerőszabályzó</string>
+    <string name="channel_func_rgblighting">RGB világítás</string>
+    <string name="channel_func_dimmerandrgblighting">Fényerőszabályzó és RGB világítás</string>
+    <string name="channel_func_noliquidsensor">Folyadékhiány-érzékelő</string>
+    <string name="channel_func_gatewayopeningsensor">Kiskapunyitás-érzékelő</string>
+    <string name="channel_func_gateopeningsensor">A kapunyitás érzékelő</string>
+    <string name="channel_func_garagedooropeningsensor">Garázskapu nyitás érzékelő</string>
+    <string name="channel_func_dooropeningsensor">Ajtónyitás érzékelő</string>
+    <string name="channel_func_rsopeningsensor">Redőny nyitó érzékelő</string>
+    <string name="channel_func_depthsensor">Mélységérzékelő</string>
+    <string name="channel_func_distancesensor">Távolságérzékelő</string>
+    <string name="channel_func_windowopeningsensor">Ablaknyitás-érzékelő</string>
+    <string name="channel_func_mailsensor">Levél érzékelő</string>
+
+    <string name="rgb_brightness">Fényerő</string>
+    <string name="rgb_color">Szín</string>
+    <string name="rgb_state">Állapot</string>
+
+    <string name="channel_btn_open">Megnyitás</string>
+    <string name="channel_btn_openclose">Nyitás / Bezárás</string>
+    <string name="channel_btn_on">Bekapcsolás</string>
+    <string name="channel_btn_off">Kikapcsolás</string>
+
+    <string name="event_openedthegateway">kinyitotta a kaput</string>
+    <string name="event_openedclosedthegate">kinyitotta / bezárta a kaput</string>
+    <string name="event_openedclosedthegatedoors">kinyitotta / bezárta a garázskaput</string>
+    <string name="event_openedthedoor">kinyitotta az ajtót</string>
+    <string name="event_openedcloserollershutter">felhúzta / lehúzta a redőnyt</string>
+    <string name="event_poweronoff">Tápellátás be / ki</string>
+    <string name="event_turnedthelightonoff">Fény be / ki</string>
+
+    <string name="server_address">A SZERVER CÍME</string>
+    <string name="access_id">HOZZÁFÉRÉSI ID</string>
+    <string name="password">JELSZÓ</string>
+    <string name="email">E-MAIL CÍM</string>
+    <string name="advanced_settings">Speciális beállítások</string>
+    <string name="create_account"><u> Fiók létrehozása </u></string>
+
+    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+
+    <string name="rate_msg">Ha tetszik ez az alkalmazás, kérjük, szánjon rá egy percet, hogy értékelje. Köszönjük a támogatást!</string>
+    <string name="rate_now">Értékelje most</string>
+    <string name="rate_later">Később</string>
+    <string name="rate_no_thanks">Nem, köszönöm</string>
+    <string name="rs_percent_caption">A bezárás százaléka</string>
+    <string name="calibration">[Kalibrálás]</string>
+
+    <string name="add_wizard_is_not_available">A Hozzáadási Varázsló  csak akkor érhető el, ha a kiszolgálóval a beállításokban a megadott e-mail cím alapján létrejött a kapcsolat!</string>
+    <string name="device_registration_disabled">Az I / O eszköz regisztrációja jelenleg le van tiltva. A folytatáshoz lépjen a %1$s oldalra, és a "Saját SUPLA" lapon engedélyezze az eszközök hozzáadását.</string>
+
+    <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
+    <string name="wizard_step1_txt2">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
+    <string name="next">Tovább</string>
+    <string name="start">START</string>>
+
+    <string name="wizard_step2_txt1">Írja be annak a WiFi hálózatnak a jelszavát, amelynek a neve</string>
+    <string name="wizard_step2_txt3">*) A(z) %1$s hálózatot a végrehajtó eszköz fogja használni a kiszolgálóhoz való csatlakozáshoz.</string>
+    <string name="wizard_remember_passwd">Emlékezzen a jelszavamra</string>
+
+    <string name="wizard_step3_txt1">Csatlakoztassa a végrehajtó eszközt a hálózathoz. Az eszköznek alapértelmezés szerint konfigurációs módban kell működnie, és az állapotjelző LED villogásával az alábbiak szerint kell jeleznie</string>
+    <string name="wizard_step3_txt2">Ha a készülék a tápellátás bekapcsolása után nem működik konfigurációs módban, tartsa lenyomva a <b> CONFIG </b> gombot legalább 5 másodpercig.</string>
+    <string name="wizard_step3_txt3">A konfiguráció elindításához nyomja meg a <b> START </b> gombot.</string>
+
+    <string name="wizard_server_compat_error">A szerver, amelyhez csatlakozott, nem támogatja ezt a funkciót!</string>
+    <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFI-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
+    <string name="wizard_wifi_error">A WiFi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
+    <string name="wizard_addnetwork_error">Nem lehet hozzáadni a WiFi hálózati konfigurációt!</string>
+    <string name="wizard_wifi_timeout">A várakozási idő túllépte a jelenlegi WiFi hálózati adatokat!</string>
+    <string name="wizard_scan_timeout">A WiFi halózat keresése a várakozási időt túllépte!</string>
+    <string name="wizard_connect_timeout">A végrehajtó eszközzel való kapcsolat létrehozásának várakozási ideje túllépve!</string>
+    <string name="wizard_configure_timeout">Az eszközkonfiguráció befejezésének várakozási ideje túllépve!</string>
+    <string name="wizard_reconnect_timeout">Az elsődleges WiFi hálózathoz való visszatérés várakozási ideje túllépve!</string>
+    <string name="device_reg_request_timeout">Az eszköz regisztráció elérhetőségére vonatkozó információk várakozási ideje túllépve!</string>
+
+    <string name="wizard_iodevice_notfound">Semmilyen eszköz sem található! Ellenőrizze, hogy a konfigurálni kívánt eszköz konfigurációs módban van-e, majd próbálja újra. FONTOS - Az Android néhány verziója megköveteli a GPS engedélyezését, hogy az alkalmazások lehetővé tegyék a WiFi hálózaton keresztüli keresést, ezért ellenőrizze, hogy a GPS is engedélyezve van-e.</string>
+
+
+    <string name="wizard_done">Az eszköz konfigurálása sikeres :)</string>
+    <string name="wizard_iodev_data">Eszköz adatok</string>
+    <string name="wizard_iodev_name">Megnevezés</string>
+    <string name="wizard_iodev_laststate">Előző állapot</string>
+
+    <string name="wizard_result_param_error">Érvénytelen bemeneti paraméterek!</string>
+    <string name="wizard_result_compat_error">A csatlakoztatott eszköz nem kompatibilis ezzel a varázslóval!</string>
+    <string name="wizard_result_conn_error">Nem lehet csatlakozni az eszközhöz!</string>
+    <string name="wizard_result_failed">Az újrakonfigurálás nem sikerült</string>
+    <string name="wizard_not_enought_permissions">Az alkalmazásnak nincs megfelelő engedélye. Nyissa meg az alkalmazáskezelést a rendszerbeállításokban. Ezután keresse meg a %1$s alkalmazást, és hagyja jóvá az összes szükséges engedélyt.</string>
+    <string name="help">Sugó</string>
+    <string name="channel_func_staircasetimer">Lépcsőautomata</string>
+
+    <string name="channel_func_electricitymeter">Elektromos energia mérő</string>
+    <string name="channel_func_gasmeter">Gázmérő</string>
+    <string name="channel_func_watermeter">Vízmérő</string>
+
+    <string name="em_total_forward_avtive_energy">Fogyasztott aktív energia</string>
+    <string name="em_reverse_active_energy">A visszatérített aktív energia</string>
+    <string name="em_total_forward_reactive_energy">Letöltött passzív energia</string>
+    <string name="em_total_reverse_reactive_energy">A visszatérített passzív energia</string>
+    <string name="em_frequency">Frekvencia</string>
+    <string name="em_voltage">Feszültség</string>
+    <string name="em_current">Áramerősség</string>
+    <string name="em_power_active">Hatásos teljesítmény</string>
+    <string name="em_power_reactive">Meddő teljesítmény</string>
+    <string name="em_power_factor">Teljesítménytényező</string>
+    <string name="em_phase_angle">Fázisszög</string>
+    <string name="em_power_apparent">Látszolágos teljesítmény</string>
+    <string name="em_phase1">1. sz. Fázis</string>
+    <string name="em_phase2">2. sz. Fázis</string>
+    <string name="em_phase3">3. sz. Fázis</string>
+    <string name="channel_func_thermostat">Termosztát</string>
+    <string name="channel_func_thermostat_hp_homeplus">Fűtés Home+</string>
+    <string name="hp_on">BEKAPCSOLVA</string>
+    <string name="hp_off">KIKAPCSOLVA</string>
+    <string name="hp_turn_on">BEKAPCSOLÁS</string>
+    <string name="hp_turn_off">KIKAPCSOLÁS</string>
+    <string name="hp_normal">NORMÁLIS</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBÓ</string>
+    <string name="hp_auto">AUTO</string>
+    <string name="hp_room_temperature">A terem hőmérséklete</string>
+    <string name="hp_cfg_turbo_time">A TURBÓ üzemmód időtartama</string>
+    <string name="hp_cfg_water_max">A víz maximális hőmérséklete</string>
+    <string name="hp_cfg_eco_reduction">Hőmérséklet csökkentése ECO módban</string>
+    <string name="hp_cfg_temp_comfort_auto">Kényelmi hőmérséklet AUTO módban</string>
+    <string name="hp_temp_comfort">Kényelem</string>
+    <string name="hp_cfg_temp_eco">ECO hőmérséklet AUTO módban</string>
+    <string name="hp_hour">godz.</string>
+    <string name="total_cost">Összköltség</string>
+    <string name="current_cost">A folyó hó költsége</string>
+    <string name="current_consumption">Fogyasztás a folyó hónapban</string>
+    <string name="impulses_count">Impulzusok száma</string>
+    <string name="meter_value">Mérőóra leolvasás</string>
+    <string name="channel_func_impulsecounter">Impulzusszámláló</string>
+    <string name="minutes">Perc</string>
+    <string name="hours">Órák</string>
+    <string name="days">Napok</string>
+    <string name="months">Hónapok</string>
+    <string name="years">Évek</string>
+    <string name="ranking_of_hours">Órák rangsorolása</string>
+    <string name="ranking_of_weekdays">A hét napjai rangsorolása</string>
+    <string name="ranking_of_months">Hónapok rangsorolása</string>
+    <string name="consumption_acording_to_phases">Fogyasztási fázisok szerint</string>
+    <string name="temperature">Hőmérséklet</string>
+    <string name="humidity">Nedvességtartalom</string>
+    <string name="last24hours">Az elmúlt 24 óra</string>
+    <string name="last7days">Az elmúlt 7 nap</string>
+    <string name="last30days">Az elmúlt 30 nap</string>
+    <string name="last90days">Az elmúlt 90 nap</string>
+    <string name="all_available_history">Az összes elérhető eseménytörténet</string>
+    <string name="retrieving_data_from_the_server">Adatok letöltése a szerverről ...</string>
+    <string name="no_chart_data_available">A diagramhoz nincs adat.</string>
+    <string name="comparsion_minmin">Percről percre összehasonlítás</string>
+    <string name="comparsion_hourhour">Óránkénti összehasonlítás</string>
+    <string name="comparsion_dayday">Napi összehasonlítás</string>
+    <string name="comparsion_monthmonth">Havi összehasonlítás</string>
+    <string name="comparsion_yearyear">Éves összehasonlítás</string>
+    <string name="hp_error_1">Nincs víz</string>
+    <string name="hp_error_2">Kiégett forraló</string>
+    <string name="hp_error_3">A vízhőmérséklet-érzékelő hibája</string>
+    <string name="hp_error_4">Helyiség hőmérséklet-érzékelő hibája</string>
+    <string name="hp_error_5">Nincs hálózat megszakítás</string>
+    <string name="production_acording_to_phases">Fázis szerinti gyártás</string>
+    <string name="current_production">Termelés a folyó hónapban</string>
+    <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+</resources>

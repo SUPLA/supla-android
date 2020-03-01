@@ -59,12 +59,10 @@ public class StatusActivity extends NavigationActivity {
         progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
 
         msg = findViewById(R.id.status_text);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        msg.setTypeface(type);
+        msg.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         btnSettings = findViewById(R.id.status_btn);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-        btnSettings.setTypeface(type);
+        btnSettings.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btnSettings.setTransformationMethod(null);
         btnSettings.setText(getResources().getText(R.string.settings));
         btnSettings.setOnClickListener(this);
@@ -84,7 +82,7 @@ public class StatusActivity extends NavigationActivity {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null
-                && client.Registered() ) {
+                && client.registered() ) {
             showMain(this);
         } else {
 
@@ -164,7 +162,7 @@ public class StatusActivity extends NavigationActivity {
         if ( v == btnSettings ) {
             NavigationActivity.showCfg(this);
         } else if ( v == btnRetry ) {
-            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         }
     }
 
@@ -192,7 +190,7 @@ public class StatusActivity extends NavigationActivity {
     protected void OnRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if ( !(CurrentActivity instanceof AddWizardActivity) ) {
+        if ( !(CurrentActivity instanceof AddDeviceWizardActivity) ) {
             showMain(this);
         }
 

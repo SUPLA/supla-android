@@ -19,7 +19,6 @@ package org.supla.android;
  */
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,7 +43,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,7 +50,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -68,10 +65,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
-public class AddWizardActivity extends NavigationActivity implements ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener {
+public class AddDeviceWizardActivity extends WizardActivity implements
+        ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
     private final int WIZARD_PERMISSIONS_REQUEST = 1;
-
     private final int STEP_NONE = 0;
     private final int STEP_CHECK_WIFI = 1;
     private final int STEP_CHECK_REGISTRATION_ENABLED_TRY1 = 2;
@@ -92,11 +89,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private int scanRetry;
 
-    private int pageId;
     private Timer watchDog;
     private Timer blinkTimer;
-    private Timer preloaderTimer;
-    private short preloaderPos;
 
     private int step;
     private Date step_time;
@@ -110,12 +104,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private int iodev_NetworkID = -1;
     private String iodev_SSID = "";
-
-    private View vStep1;
-    private View vStep2;
-    private View vStep3;
-    private View vError;
-    private View vDone;
 
     private Spinner spWifiList;
     private EditText edPassword;
@@ -133,28 +121,15 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     private TextView tvIODevMAC;
     private TextView tvIODevLastState;
 
-    private Button btnNext1;
-    private Button btnNext2;
-    private Button btnNext3;
-
-    private RelativeLayout rlStepContent;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        setContentView(R.layout.activity_wizard);
+        Typeface type = SuplaApp.getApp().getTypefaceQuicksandRegular();
 
-        rlStepContent = findViewById(R.id.wizard_step_content);
-
-        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
-
-        vStep1 = Inflate(R.layout.add_wizard_step1, null);
-        vStep1.setVisibility(View.GONE);
-        rlStepContent.addView(vStep1);
+        addStepPage(R.layout.add_device_step1, PAGE_STEP_1);
 
         TextView tv = findViewById(R.id.wizard_step1_txt1);
         tv.setTypeface(type);
@@ -162,9 +137,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tv = findViewById(R.id.wizard_step1_txt2);
         tv.setTypeface(type);
 
-        vStep2 = Inflate(R.layout.add_wizard_step2, null);
-        vStep2.setVisibility(View.GONE);
-        rlStepContent.addView(vStep2);
+        addStepPage(R.layout.add_device_step2, PAGE_STEP_2);
 
         tv = findViewById(R.id.wizard_step2_txt1);
         tv.setTypeface(type);
@@ -180,15 +153,18 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         btnViewPassword = findViewById(R.id.wizard_look_button);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
+            edPassword.setBackground(
+                    getResources().getDrawable(R.drawable.rounded_edittext_yellow));
         } else {
-            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext_yellow));
+            edPassword.setBackgroundDrawable(
+                    getResources().getDrawable(R.drawable.rounded_edittext_yellow));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             spWifiList.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
         } else {
-            spWifiList.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext));
+            spWifiList.setBackgroundDrawable(
+                    getResources().getDrawable(R.drawable.rounded_edittext));
         }
 
         cbSavePassword.setTypeface(type);
@@ -200,7 +176,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager
+                            = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     if (inputMethodManager != null) {
                         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
@@ -210,9 +187,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         edPassword.setOnFocusChangeListener(fcl);
 
-        vStep3 = Inflate(R.layout.add_wizard_step3, null);
-        vStep3.setVisibility(View.GONE);
-        rlStepContent.addView(vStep3);
+        addStepPage(R.layout.add_device_step3, PAGE_STEP_3);
 
         tv = findViewById(R.id.wizard_step3_txt1);
         tv.setTypeface(type);
@@ -225,21 +200,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
         ivDot = findViewById(R.id.wizard_dot);
 
-        vError = Inflate(R.layout.add_wizard_error, null);
-        vError.setVisibility(View.GONE);
-        rlStepContent.addView(vError);
+        addStepPage(R.layout.add_device_error, PAGE_ERROR);
 
         tvErrorMsg = findViewById(R.id.wizard_error_txt);
         tvErrorMsg.setTypeface(type);
 
-        vDone = Inflate(R.layout.add_wizard_done, null);
-        vDone.setVisibility(View.GONE);
-        rlStepContent.addView(vDone);
+        addStepPage(R.layout.add_device_done, PAGE_DONE);
 
         tv = findViewById(R.id.wizard_done_txt1);
         tv.setTypeface(type);
 
-        type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
+        type = SuplaApp.getApp().getTypefaceOpenSansRegular();
 
         tv = findViewById(R.id.wizard_done_txt2);
         tv.setTypeface(type);
@@ -268,17 +239,6 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tvIODevLastState = findViewById(R.id.wizard_done_iodev_laststate);
         tvIODevLastState.setTypeface(type);
 
-
-        btnNext1 = findViewById(R.id.wizard_next1);
-        btnNext1.setOnClickListener(this);
-
-        btnNext2 = findViewById(R.id.wizard_next2);
-        btnNext2.setOnClickListener(this);
-        btnNext2.setTypeface(type);
-
-        btnNext3 = findViewById(R.id.wizard_next3);
-        btnNext3.setOnClickListener(this);
-
         showMenuBar();
         RegisterMessageHandler();
     }
@@ -286,7 +246,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (pageId == PAGE_STEP_2
+        if (getVisiblePageId() == PAGE_STEP_2
                 && event.getAction() == MotionEvent.ACTION_DOWN
                 && edPassword.hasFocus()) {
 
@@ -297,52 +257,32 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         return super.onTouchEvent(event);
     }
 
-    private void setBtnEnabled(boolean enabled) {
-        btnNext1.setEnabled(enabled);
-        btnNext2.setEnabled(enabled);
-        btnNext3.setEnabled(enabled);
-    }
+    @Override
+    protected void showPage(int pageId) {
 
-    @SuppressLint("SetTextI18n")
-    private void showPage(int id) {
+        super.showPage(pageId);
 
         setStep(STEP_NONE);
-        vStep1.setVisibility(View.GONE);
-        vStep2.setVisibility(View.GONE);
-        vStep3.setVisibility(View.GONE);
-        vError.setVisibility(View.GONE);
-        vDone.setVisibility(View.GONE);
-        setPreloaderVisible(false);
-        setBtnEnabled(true);
-        btnNext2.setText(R.string.next, TextView.BufferType.NORMAL);
+        setBtnNextPreloaderVisible(false);
+        setBtnNextEnabled(true);
+        setBtnNextText(R.string.next);
 
-        switch (id) {
-            case PAGE_STEP_1:
-                vStep1.setVisibility(View.VISIBLE);
-                break;
+        switch (pageId) {
 
             case PAGE_STEP_2:
-                edPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                vStep2.setVisibility(View.VISIBLE);
+                edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
 
             case PAGE_STEP_3:
-                vStep3.setVisibility(View.VISIBLE);
-                btnNext2.setText(R.string.start, TextView.BufferType.NORMAL);
-                break;
-
-            case PAGE_ERROR:
-                vError.setVisibility(View.VISIBLE);
-                btnNext2.setText("OK", TextView.BufferType.NORMAL);
+                setBtnNextText(R.string.start);
                 break;
 
             case PAGE_DONE:
-                vDone.setVisibility(View.VISIBLE);
-                btnNext2.setText("OK", TextView.BufferType.NORMAL);
+            case PAGE_ERROR:
+                setBtnNextText(R.string.ok);
                 break;
         }
-
-        pageId = id;
     }
 
     private void showError(String error_msg) {
@@ -383,77 +323,16 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     }
 
-    private void setPreloaderVisible(boolean visible) {
-
-        if (preloaderTimer != null) {
-            preloaderPos = -1;
-            preloaderTimer.cancel();
-            preloaderTimer = null;
-        }
-
-
-        if (visible) {
-
-            btnNext1.setBackgroundResource(R.drawable.btnnextr2);
-
-            ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
-
-            btnNext1.setLayoutParams(params);
-
-            preloaderPos = 0;
-
-            preloaderTimer = new Timer();
-            preloaderTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-
-                            if (preloaderPos == -1) {
-                                return;
-                            }
-
-                            String txt = "";
-
-                            for (int a = 0; a < 10; a++) {
-                                txt += preloaderPos == a ? "|" : ".";
-                            }
-
-
-                            preloaderPos++;
-                            if (preloaderPos > 9) {
-                                preloaderPos = 0;
-                            }
-
-
-                            btnNext2.setText(txt, TextView.BufferType.NORMAL);
-
-
-                        }
-                    });
-                }
-            }, 0, 100);
-
-        } else {
-
-            btnNext1.setBackgroundResource(R.drawable.btnnextr);
-            ViewGroup.LayoutParams params = btnNext1.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
-            btnNext1.setLayoutParams(params);
-
-        }
-
-    }
-
     private boolean internetWiFi() {
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (cm != null) {
             NetworkInfo ni = cm.getActiveNetworkInfo();
-            return ni != null && ni.isConnected() && ni.getTypeName().equalsIgnoreCase("WIFI");
+            return ni != null
+                    && ni.isConnected()
+                    && ni.getTypeName().equalsIgnoreCase("WIFI");
         }
 
         return false;
@@ -484,7 +363,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
             return;
 
         } else if (SuplaApp.getApp().getSuplaClient() != null) {
-            int version = SuplaApp.getApp().getSuplaClient().GetProtoVersion();
+            int version = SuplaApp.getApp().getSuplaClient().getProtoVersion();
 
             if (version > 0 && version < 7) {
                 showError(R.string.wizard_server_compat_error);
@@ -524,7 +403,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                         if (timeout > 0
                                 && step_time != null
-                                && (System.currentTimeMillis() - step_time.getTime()) / 1000 >= timeout) {
+                                && (System.currentTimeMillis()
+                                - step_time.getTime()) / 1000 >= timeout) {
 
                             onWatchDogTimeout();
                         }
@@ -543,8 +423,9 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 runOnUiThread(new Runnable() {
                     public void run() {
 
-                        if (pageId == PAGE_STEP_3) {
-                            ivDot.setVisibility(ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+                        if (getVisiblePageId() == PAGE_STEP_3) {
+                            ivDot.setVisibility(ivDot.getVisibility()
+                                    == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
                         }
 
                     }
@@ -556,13 +437,17 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         showPage(PAGE_STEP_1);
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_NETWORK_STATE)
                 != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE)
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_WIFI_STATE)
                 != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE)
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CHANGE_WIFI_STATE)
                 != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
@@ -591,7 +476,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                         new String[]{Manifest.permission.ACCESS_NETWORK_STATE,
                                 Manifest.permission.ACCESS_WIFI_STATE,
                                 Manifest.permission.CHANGE_WIFI_STATE,
-                                Manifest.permission.ACCESS_FINE_LOCATION}, WIZARD_PERMISSIONS_REQUEST);
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        WIZARD_PERMISSIONS_REQUEST);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -606,19 +492,20 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
     protected void onPause() {
         super.onPause();
 
-        if (pageId >= PAGE_STEP_2) {
+        if (getVisiblePageId() >= PAGE_STEP_2) {
 
             Preferences prefs = new Preferences(this);
 
             if (cbSavePassword.isChecked()) {
-                prefs.wizardSetPassword(getSelectedSSID(), cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
+                prefs.wizardSetPassword(getSelectedSSID(),
+                        cbSavePassword.isChecked() ? edPassword.getText().toString() : "");
             }
 
             prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
         }
 
 
-        setPreloaderVisible(false);
+        setBtnNextPreloaderVisible(false);
         cleanUp();
     }
 
@@ -641,7 +528,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                 break;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                 setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY2);
-                SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
+                SuplaApp.getApp().SuplaClientInitIfNeed(
+                        getApplicationContext()).getRegistrationEnabled();
                 return;
             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
                 showError(R.string.device_reg_request_timeout);
@@ -715,72 +603,72 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     }
 
+    protected void onBtnNextClick() {
+        setBtnNextPreloaderVisible(true);
+        setBtnNextEnabled(false);
+
+        switch (getVisiblePageId()) {
+            case PAGE_STEP_1:
+
+                setStep(STEP_CHECK_WIFI);
+
+                if (!checkWiFi()) {
+                    showError(R.string.wizard_wifi_error);
+                }
+
+                break;
+            case PAGE_STEP_2:
+
+                if (edPassword.getText().toString().isEmpty()) {
+
+                    setBtnNextPreloaderVisible(false);
+                    setBtnNextEnabled(true);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        edPassword.setBackground(
+                                getResources().getDrawable(R.drawable.rounded_edittext_err));
+                    } else {
+                        edPassword.setBackgroundDrawable(
+                                getResources().getDrawable(R.drawable.rounded_edittext_err));
+                    }
+
+                } else {
+                    showPage(PAGE_STEP_3);
+
+                    // Autostart after 20 sec.
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (getVisiblePageId() == PAGE_STEP_3 && isBtnNextPreloaderVisible()) {
+                                onBtnNextClick();
+                            }
+
+                        }
+                    }, 20000);
+                }
+
+                break;
+            case PAGE_STEP_3:
+
+                setBtnNextText(R.string.dots);
+                setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY1);
+                SuplaApp.getApp().SuplaClientInitIfNeed(
+                        getApplicationContext()).getRegistrationEnabled();
+
+                break;
+            case PAGE_ERROR:
+            case PAGE_DONE:
+                showMain(this);
+                finish();
+                break;
+
+        }
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
-
-        if (v == btnNext1 || v == btnNext2 || v == btnNext3) {
-
-            setPreloaderVisible(true);
-            setBtnEnabled(false);
-
-            switch (pageId) {
-                case PAGE_STEP_1:
-
-                    setStep(STEP_CHECK_WIFI);
-
-                    if (!checkWiFi()) {
-                        showError(R.string.wizard_wifi_error);
-                    }
-
-                    break;
-                case PAGE_STEP_2:
-
-                    if (edPassword.getText().toString().isEmpty()) {
-
-                        setPreloaderVisible(false);
-                        setBtnEnabled(true);
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            edPassword.setBackground(getResources().getDrawable(R.drawable.rounded_edittext_err));
-                        } else {
-                            edPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_edittext_err));
-                        }
-
-                    } else {
-                        showPage(PAGE_STEP_3);
-
-                        // Autostart after 20 sec.
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (pageId == PAGE_STEP_3 && preloaderTimer == null) {
-                                    onClick(btnNext1);
-                                }
-
-                            }
-                        }, 20000);
-                    }
-
-                    break;
-                case PAGE_STEP_3:
-
-                    btnNext2.setText("....", TextView.BufferType.NORMAL);
-                    setStep(STEP_CHECK_REGISTRATION_ENABLED_TRY1);
-                    SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext()).GetRegistrationEnabled();
-
-                    break;
-                case PAGE_ERROR:
-                case PAGE_DONE:
-                    showMain(this);
-                    finish();
-                    break;
-
-            }
-
-            return;
-        }
 
         if (v == cbSavePassword) {
             Preferences prefs = new Preferences(this);
@@ -912,13 +800,16 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
                 for (ScanResult sr : scanned) {
 
-                    Set<String> set = new HashSet<String>(spinnerArray);
+                    Set<String> set = new HashSet<>(spinnerArray);
 
                     if (!sr.SSID.equals(SSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID))
                         spinnerArray.add(sr.SSID);
                 }
 
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerArray);
+                ArrayAdapter<String> spinnerArrayAdapter
+                        = new ArrayAdapter<>(context,
+                        android.R.layout.simple_spinner_item,
+                        spinnerArray);
                 spWifiList.setAdapter(spinnerArrayAdapter);
                 onWifiSelectionChange();
 
@@ -939,7 +830,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager cm
+                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             if (cm != null) {
                 cm.bindProcessToNetwork(null);
             }
@@ -951,7 +843,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
 
     private void bindNetwork() {
 
-        final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager cm
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Network[] ns = cm.getAllNetworks();
             for (Network n : ns) {
@@ -1035,8 +928,10 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                         stateChangedReceiver = null;
 
                         setStep(STEP_CONFIGURE);
-                        espConfigTask.execute(getSelectedSSID(), edPassword.getText().toString(), prefs.getServerAddress(), prefs.getEmail());
-
+                        espConfigTask.execute(getSelectedSSID(),
+                                edPassword.getText().toString(),
+                                prefs.getServerAddress(),
+                                prefs.getEmail());
                     }
 
                 }
@@ -1111,7 +1006,7 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                             stateChangedReceiver = null;
 
                             if (SuplaApp.getApp().getSuplaClient() != null) {
-                                SuplaApp.getApp().getSuplaClient().Reconnect();
+                                SuplaApp.getApp().getSuplaClient().reconnect();
                             }
 
                             setStep(STEP_DONE);
@@ -1165,7 +1060,8 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
         tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, getSelectedSSID()));
 
         cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(getSelectedSSID()));
-        edPassword.setText(cbSavePassword.isChecked() ? prefs.wizardGetPassword(getSelectedSSID()) : "");
+        edPassword.setText(
+                cbSavePassword.isChecked() ? prefs.wizardGetPassword(getSelectedSSID()) : "");
     }
 
     @Override
@@ -1192,11 +1088,13 @@ public class AddWizardActivity extends NavigationActivity implements ESPConfigur
                     break;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
-                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     break;
             }
         }
 
         return false;
     }
+
 }

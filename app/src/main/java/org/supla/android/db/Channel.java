@@ -22,9 +22,9 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.supla.android.Trace;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -300,6 +300,16 @@ public class Channel extends ChannelBase {
     }
     public CharSequence getHumanReadableValue() {
         return getHumanReadableValue(WhichOne.First, Value);
+    }
+
+    public SuplaChannelState getChannelState() {
+        ChannelExtendedValue ev = getExtendedValue();
+
+        if (ev != null && ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1) {
+            return ev.getExtendedValue().ChannelStateValue;
+        }
+
+        return null;
     }
 
 }

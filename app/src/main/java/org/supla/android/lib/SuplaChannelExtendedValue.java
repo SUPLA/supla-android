@@ -23,6 +23,7 @@ public class SuplaChannelExtendedValue {
     public SuplaChannelElectricityMeterValue ElectricityMeterValue;
     public SuplaChannelImpulseCounterValue ImpulseCounterValue;
     public SuplaChannelThermostatValue ThermostatValue;
+    public SuplaChannelState ChannelStateValue;
     public byte[] Value;
 
     public SuplaChannelExtendedValue() {

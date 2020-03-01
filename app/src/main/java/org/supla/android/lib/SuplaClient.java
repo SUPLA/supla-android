@@ -42,8 +42,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-
-@SuppressWarnings("JniMissingFunction")
+@SuppressWarnings("unused")
 public class SuplaClient extends Thread {
 
     private static final String log_tag = "SuplaClientThread";
@@ -84,7 +83,7 @@ public class SuplaClient extends Thread {
         return result;
     }
 
-    public native void CfgInit(SuplaCfg cfg);
+    public native void cfgInit(SuplaCfg cfg);
 
     private native long scInit(SuplaCfg cfg);
 
@@ -122,9 +121,19 @@ public class SuplaClient extends Thread {
     private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
                                                           SuplaThermostatScheduleCfg cfg);
 
-
     private native boolean scSuperUserAuthorizationRequest(long _supla_client,
                                                            String email, String password);
+
+    private native boolean scGetChannelState(long _supla_client, int ChannelID);
+
+    private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
+
+    private native boolean scSetChannelFunction(long _supla_client, int ChannelID, int Function);
+
+    private native boolean scReconnectAllClients(long _supla_client);
+
+    private native boolean scSetRegistrationEnabled(long _supla_client,
+                                                    int ioDeviceRegTimeSec, int clientRegTimeSec);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -133,7 +142,7 @@ public class SuplaClient extends Thread {
         }
     }
 
-    public void sendMessage(SuplaClientMsg msg) {
+    private void sendMessage(SuplaClientMsg msg) {
 
         if (canceled()) return;
 
@@ -143,53 +152,35 @@ public class SuplaClient extends Thread {
         }
     }
 
-    private boolean Init(SuplaCfg cfg) {
-
-        boolean result;
-
+    private void init(SuplaCfg cfg) {
         synchronized (sc_lck) {
             if (_supla_client_ptr == 0) {
                 _supla_client_ptr_counter = 0;
                 _supla_client_ptr = scInit(cfg);
             }
-
-            result = _supla_client_ptr != 0;
         }
-
-        return result;
     }
 
-    private long LockClientPtr() {
-        long result = 0;
-
+    private void lockClientPtr() {
         synchronized (sc_lck) {
             if (_supla_client_ptr != 0) {
                 _supla_client_ptr_counter++;
-                result = _supla_client_ptr;
             }
         }
 
-        return result;
     }
 
-    private boolean UnlockClientPtr() {
-
-        boolean result = false;
-
+    private void unlockClientPtr() {
         synchronized (sc_lck) {
             if (_supla_client_ptr != 0
                     && _supla_client_ptr_counter > 0) {
 
                 _supla_client_ptr_counter--;
-                result = true;
             }
         }
-
-        return result;
     }
 
-    private void Free() {
-
+    private void free() {
         boolean freed = false;
 
         while (!freed) {
@@ -208,29 +199,27 @@ public class SuplaClient extends Thread {
             if (!freed) {
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }
-
-
     }
 
-    public int GetId() {
+    public int getClientId() {
 
         int result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    private boolean Connect() {
+    private boolean connect() {
 
         boolean result = false;
 
@@ -240,84 +229,82 @@ public class SuplaClient extends Thread {
                 connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-            LockClientPtr();
+            lockClientPtr();
             try {
                 result = _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
             } finally {
-                UnlockClientPtr();
+                unlockClientPtr();
             }
         }
 
         return result;
     }
 
-    public void Reconnect() {
-        if (Connected()) Disconnect();
+    public void reconnect() {
+        if (connected()) disconnect();
     }
 
-    public boolean Connected() {
+    private boolean connected() {
 
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public boolean Registered() {
+    public boolean registered() {
 
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public void Disconnect() {
+    private void disconnect() {
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
                 scDisconnect(_supla_client_ptr);
             }
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
     }
 
-    private boolean Iterate(int wait_usec) {
-
-        return _supla_client_ptr != 0 && scIterate(_supla_client_ptr, wait_usec);
-
+    private boolean iterate() {
+        return _supla_client_ptr != 0 && scIterate(_supla_client_ptr, 100000);
     }
 
-    public boolean Open(int ID, boolean Group, int Open) {
+    public boolean open(int ID, boolean Group, int Open) {
 
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public boolean Open(int ChannelID, int Open) {
-        return Open(ChannelID, false, Open);
+    public boolean open(int ChannelID, int Open) {
+        return open(ChannelID, false, Open);
     }
 
     public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness,
@@ -325,13 +312,13 @@ public class SuplaClient extends Thread {
 
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0
                     && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
                     ColorBrightness, Brightness, TurnOnOff ? 1 : 0);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
@@ -342,123 +329,183 @@ public class SuplaClient extends Thread {
         return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness, TurnOnOff);
     }
 
-    public boolean GetRegistrationEnabled() {
+    public void getRegistrationEnabled() {
 
-        boolean result;
-
-        LockClientPtr();
+        lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scGetRegistrationEnabled(_supla_client_ptr);
+            if ( _supla_client_ptr != 0 ) {
+                scGetRegistrationEnabled(_supla_client_ptr);
+            }
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
-
-        return result;
     }
 
-    public int GetProtoVersion() {
+    public int getProtoVersion() {
 
         int result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public int GetMaxProtoVersion() {
+    public int getMaxProtoVersion() {
 
         int result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public boolean OAuthTokenRequest() {
-
-        boolean result;
-
+    public void oAuthTokenRequest() {
         long now = System.currentTimeMillis();
         if (now-lastTokenRequest <= 5000 ) {
             Trace.d(log_tag, "Token already requested: "
-                    + Long.toString(now - lastTokenRequest));
-            return false;
+                    + (now - lastTokenRequest));
+            return;
         }
 
-        LockClientPtr();
+        lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scOAuthTokenRequest(_supla_client_ptr);
-            if (result) {
+            if (_supla_client_ptr != 0 && scOAuthTokenRequest(_supla_client_ptr)) {
                 lastTokenRequest = now;
             }
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
-
-        return result;
     }
 
 
-    public boolean SuperUserAuthorizationRequest(String email, String password) {
-        boolean result;
+    public void superUserAuthorizationRequest(String email, String password) {
 
-        LockClientPtr();
+        lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scSuperUserAuthorizationRequest(_supla_client_ptr,
-                    email, password);
+            if ( _supla_client_ptr != 0) {
+                scSuperUserAuthorizationRequest(_supla_client_ptr, email, password);
+            }
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
-        return result;
     }
 
-    public boolean DeviceCalCfgRequest(int ID, boolean Group, int Command,
+    public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, Command, DataType, Data);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public boolean DeviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
-        return DeviceCalCfgRequest(ChannelID, false, Command, DataType,  Data);
+    public boolean deviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
+        return deviceCalCfgRequest(ChannelID, false, Command, DataType,  Data);
     }
 
-    public boolean ThermostatScheduleCfgRequest(int ID, boolean Group,
+    public boolean thermostatScheduleCfgRequest(int ID, boolean Group,
                                                 SuplaThermostatScheduleCfg cfg) {
         boolean result;
 
-        LockClientPtr();
+        lockClientPtr();
         try {
             result = _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, cfg);
         } finally {
-            UnlockClientPtr();
+            unlockClientPtr();
         }
 
         return result;
     }
 
-    public boolean ThermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
-        return ThermostatScheduleCfgRequest(ChannelID, false, cfg);
+    public boolean thermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
+        return thermostatScheduleCfgRequest(ChannelID, false, cfg);
+    }
+
+    public boolean getChannelState(int ChannelID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean getChannelBasicCfg(int ChannelID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean setChannelFunction(int ChannelID, int Function) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean reconnectAllClients() {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scReconnectAllClients(_supla_client_ptr);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean setRegistrationEnabled(int ioDeviceRegTimeSec, int clientRegTimeSec) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scSetRegistrationEnabled(_supla_client_ptr,
+                    ioDeviceRegTimeSec, clientRegTimeSec);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
     }
 
     private void onVersionError(SuplaVersionError versionError) {
@@ -477,7 +524,7 @@ public class SuplaClient extends Thread {
 
             // set prefered to lower
             prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
-            Reconnect();
+            reconnect();
             return;
         }
 
@@ -508,7 +555,7 @@ public class SuplaClient extends Thread {
     }
 
     private void onConnected() {
-        Trace.d(log_tag, "Connected");
+        Trace.d(log_tag, "connected");
 
         sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnected));
     }
@@ -527,26 +574,26 @@ public class SuplaClient extends Thread {
 
     private void onRegistered(SuplaRegisterResult registerResult) {
 
-        Trace.d(log_tag, "Registered");
+        Trace.d(log_tag, "registered");
 
         regTryCounter = 0;
         Preferences prefs = new Preferences(_context);
 
-        if (GetMaxProtoVersion() > 0
-                && prefs.getPreferedProtocolVersion() < GetMaxProtoVersion()
+        if (getMaxProtoVersion() > 0
+                && prefs.getPreferedProtocolVersion() < getMaxProtoVersion()
                 && registerResult.Version > prefs.getPreferedProtocolVersion()
-                && registerResult.Version <= GetMaxProtoVersion()) {
+                && registerResult.Version <= getMaxProtoVersion()) {
             prefs.setPreferedProtocolVersion(registerResult.Version);
         }
 
         _client_id = registerResult.ClientID;
 
         Trace.d(log_tag, "Protocol Version="
-                + Integer.toString(registerResult.Version));
+                + registerResult.Version);
         Trace.d(log_tag, "registerResult.ChannelCount="
-                + Integer.toString(registerResult.ChannelCount));
+                + registerResult.ChannelCount);
         Trace.d(log_tag, "registerResult.ChannelGroupCount="
-                + Integer.toString(registerResult.ChannelGroupCount));
+                + registerResult.ChannelGroupCount);
 
         if (registerResult.ChannelCount == 0
                 && DbH.setChannelsVisible(0, 2)) {
@@ -587,12 +634,12 @@ public class SuplaClient extends Thread {
     private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
 
         Trace.d(log_tag, "SuplaMinVersionRequired - CallType: "
-                + Long.toString(minVersionRequired.CallType) + " MinVersion: "
-                + Integer.toString(minVersionRequired.MinVersion));
+                + minVersionRequired.CallType + " MinVersion: "
+                + minVersionRequired.MinVersion);
 
     }
 
-    private void LocationUpdate(SuplaLocation location) {
+    private void locationUpdate(SuplaLocation location) {
         if (DbH.updateLocation(location)) {
             Trace.d(log_tag, "Location updated");
             onDataChanged();
@@ -605,16 +652,17 @@ public class SuplaClient extends Thread {
         return false;
     }
 
-    private void ChannelUpdate(SuplaChannel channel) {
+    private void channelUpdate(SuplaChannel channel) {
 
         boolean _DataChanged = false;
 
-        Trace.d(log_tag, "Channel Function" + Integer.toString(channel.Func)
-                + "  channel ID: " + Integer.toString(channel.Id)
-                + " channel Location ID: " + Integer.toString(channel.LocationID)
-                + " OnLine: " + Boolean.toString(channel.OnLine)
-                + " AltIcon: " + Integer.toString(channel.AltIcon)
-                + " UserIcon: " + Integer.toString(channel.UserIcon));
+        Trace.d(log_tag, "Channel Function" + channel.Func
+                + "  channel ID: " + channel.Id
+                + " channel Location ID: " + channel.LocationID
+                + " OnLine: " + channel.OnLine
+                + " AltIcon: " + channel.AltIcon
+                + " UserIcon: " + channel.UserIcon
+                + " Flags: " + channel.Flags);
 
         // Update channel value before update the channel
         if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
@@ -638,25 +686,23 @@ public class SuplaClient extends Thread {
 
     }
 
-    private void OnChannelGroupValueChanged() {
+    private void onChannelGroupValueChanged() {
         Integer[] groupIds = DbH.updateChannelGroups();
-        for (int a = 0; a < groupIds.length; a++) {
-
-            int groupId = groupIds[a].intValue();
+        for (int groupId : groupIds) {
             onDataChanged(0, groupId);
         }
     }
 
-    private void ChannelGroupUpdate(SuplaChannelGroup channel_group) {
+    private void channelGroupUpdate(SuplaChannelGroup channel_group) {
 
         boolean _DataChanged = false;
 
         Trace.d(log_tag, "Channel Group Function "
-                + Integer.toString(channel_group.Func) + "  group ID: "
-                + Integer.toString(channel_group.Id) + " group Location ID: "
-                + Integer.toString(channel_group.LocationID) + " AltIcon: "
-                + Integer.toString(channel_group.AltIcon) + " UserIcon: "
-                + Integer.toString(channel_group.UserIcon));
+                + channel_group.Func + "  group ID: "
+                + channel_group.Id + " group Location ID: "
+                + channel_group.LocationID + " AltIcon: "
+                + channel_group.AltIcon + " UserIcon: "
+                + channel_group.UserIcon);
 
         if (DbH.updateChannelGroup(channel_group)) {
             _DataChanged = true;
@@ -668,7 +714,7 @@ public class SuplaClient extends Thread {
         }
 
         if (channel_group.EOL) {
-            OnChannelGroupValueChanged();
+            onChannelGroupValueChanged();
         }
 
         if (_DataChanged) {
@@ -678,13 +724,13 @@ public class SuplaClient extends Thread {
 
     }
 
-    private void ChannelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
+    private void channelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
 
         boolean _DataChanged = false;
 
         Trace.d(log_tag, "Channel Group Relation group ID: "
-                + Integer.toString(channelgroup_relation.ChannelGroupID)
-                + " channel ID: " + Integer.toString(channelgroup_relation.ChannelID));
+                + channelgroup_relation.ChannelGroupID
+                + " channel ID: " + channelgroup_relation.ChannelID);
 
         if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
             _DataChanged = true;
@@ -696,7 +742,7 @@ public class SuplaClient extends Thread {
         }
 
         if (channelgroup_relation.EOL) {
-            OnChannelGroupValueChanged();
+            onChannelGroupValueChanged();
         }
 
         if (_DataChanged) {
@@ -706,22 +752,22 @@ public class SuplaClient extends Thread {
 
     }
 
-    private void ChannelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
+    private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if (DbH.updateChannelValue(channelValueUpdate)) {
 
-            Trace.d(log_tag, "Channel id" + Integer.toString(channelValueUpdate.Id)
-                    + " value updated" + " OnLine: " + Boolean.toString(channelValueUpdate.OnLine)
-                    + " value[0]: "+Byte.toString(channelValueUpdate.Value.Value[0]));
+            Trace.d(log_tag, "Channel id" + channelValueUpdate.Id
+                    + " value updated" + " OnLine: " + channelValueUpdate.OnLine
+                    + " value[0]: "+ channelValueUpdate.Value.Value[0]);
             onDataChanged(channelValueUpdate.Id, 0);
         }
 
         if (channelValueUpdate.EOL) {
-            OnChannelGroupValueChanged();
+            onChannelGroupValueChanged();
         }
     }
 
-    private void ChannelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
+    private void channelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
         if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
                 channelExtendedValueUpdate.Id)) {
             onDataChanged(channelExtendedValueUpdate.Id, 0);
@@ -740,11 +786,11 @@ public class SuplaClient extends Thread {
     private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
         Trace.d(log_tag, "OAuthToken"+(token == null ? " is null" : ""));
 
-        if (token.getUrl() == null) {
+        if (token != null && token.getUrl() == null) {
             Preferences prefs = new Preferences(_context);
             try {
                 token.setUrl(new URL("https://"+prefs.getServerAddress()));
-            } catch (MalformedURLException e) {
+            } catch (MalformedURLException ignored) {
             }
         }
 
@@ -763,6 +809,43 @@ public class SuplaClient extends Thread {
         msg.setData(Data);
         sendMessage(msg);
     }
+
+    private void onChannelState(SuplaChannelState state) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelState);
+        msg.setChannelState(state);
+        sendMessage(msg);
+    }
+
+    private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelBasicCfg);
+        msg.setChannelBasicCfg(cfg);
+        sendMessage(msg);
+    }
+
+    private void onChannelFunctionSetResult(int ChannelID, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelFunctionSetResult);
+        msg.setCode(ResultCode);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onClientsReconnectResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onClientsReconnectResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
+    }
+
+    private void onSetRegistrationEnabledResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSetRegistrationEnabledResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
+    }
+
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onSuperuserAuthorizationResult);
@@ -807,7 +890,7 @@ public class SuplaClient extends Thread {
         try {
             url = new URL(builder.build().toString());
 
-            String json = "";
+            StringBuilder json = new StringBuilder();
             String line;
 
             HttpsURLConnection https;
@@ -816,10 +899,10 @@ public class SuplaClient extends Thread {
                 BufferedReader br = new BufferedReader(new InputStreamReader(https.getInputStream()));
 
                 while ((line = br.readLine()) != null) {
-                    json += line;
+                    json.append(line);
                 }
 
-                JSONTokener tokener = new JSONTokener(json);
+                JSONTokener tokener = new JSONTokener(json.toString());
                 try {
                     JSONObject jsonResult = new JSONObject(tokener);
                     if (jsonResult.getString("email").equals(email)) {
@@ -885,7 +968,7 @@ public class SuplaClient extends Thread {
             try {
                 {
                     SuplaCfg cfg = new SuplaCfg();
-                    CfgInit(cfg);
+                    cfgInit(cfg);
 
                     Preferences prefs = new Preferences(_context);
 
@@ -909,7 +992,10 @@ public class SuplaClient extends Thread {
                         if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
-                            if (!cfg.Host.isEmpty()) {
+                            if (cfg.Host.isEmpty()) {
+                                onConnError(new SuplaConnError(
+                                        SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
+                            } else {
                                 prefs.setServerAddress(cfg.Host);
                             }
                         }
@@ -917,34 +1003,34 @@ public class SuplaClient extends Thread {
                     }
 
                     cfg.protocol_version = prefs.getPreferedProtocolVersion();
-                    Init(cfg);
+                    init(cfg);
 
 
                 }
 
-                if (Connect()) {
+                if (connect()) {
 
                     //noinspection StatementWithEmptyBody
-                    while (!canceled() && Iterate(100000)) {}
+                    while (!canceled() && iterate()) {}
 
                     if (!canceled()) {
                         try {
                             Thread.sleep(5000);
-                        } catch (InterruptedException e) {
+                        } catch (InterruptedException ignored) {
                         }
                     }
 
                 }
 
             } finally {
-                Free();
+                free();
             }
 
 
             if (!canceled()) {
                 try {
                     Thread.sleep(2000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }

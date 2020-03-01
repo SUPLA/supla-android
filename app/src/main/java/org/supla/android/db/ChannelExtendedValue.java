@@ -23,6 +23,7 @@ import android.database.Cursor;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -108,6 +109,11 @@ public class ChannelExtendedValue extends DbItem {
                     ExtendedValue.ThermostatValue = (SuplaChannelThermostatValue) obj;
                 }
                 break;
+            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
+                if (obj instanceof SuplaChannelState) {
+                    ExtendedValue.ChannelStateValue = (SuplaChannelState) obj;
+                }
+                break;
             default:
                 ExtendedValue.Value = value;
                 break;
@@ -147,6 +153,9 @@ public class ChannelExtendedValue extends DbItem {
                 break;
             case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
                 value = ObjectToByteArray(ExtendedValue.ThermostatValue);
+                break;
+            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
+                value = ObjectToByteArray(ExtendedValue.ChannelStateValue);
                 break;
             default:
                 if (ExtendedValue != null && ExtendedValue.Value != null) {

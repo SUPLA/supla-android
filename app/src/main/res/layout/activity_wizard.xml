@@ -29,12 +29,12 @@
         android:background="@color/menubar">
 
         <Button
-            android:id="@+id/wizard_next3"
+            android:id="@+id/wizard_next_left_part"
             android:layout_width="@dimen/wizard_btnnextl_width"
             android:layout_height="40dp"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/wizard_next2"
-            android:layout_toStartOf="@+id/wizard_next2"
+            android:layout_toLeftOf="@+id/wizard_next_middle_part"
+            android:layout_toStartOf="@+id/wizard_next_middle_part"
             android:background="@drawable/btnnextl"
             android:stateListAnimator="@null"
             android:textAlignment="gravity"
@@ -43,12 +43,12 @@
 
 
         <Button
-            android:id="@+id/wizard_next2"
+            android:id="@+id/wizard_next_middle_part"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/wizard_next1"
-            android:layout_toStartOf="@+id/wizard_next1"
+            android:layout_toStartOf="@+id/wizard_next_right_part"
+            android:layout_toLeftOf="@+id/wizard_next_right_part"
             android:background="@android:color/white"
             android:stateListAnimator="@null"
             android:text="@string/next"
@@ -56,7 +56,7 @@
             android:textColor="@color/activity_status_bg_normal" />
 
         <Button
-            android:id="@+id/wizard_next1"
+            android:id="@+id/wizard_next_right_part"
             android:layout_width="@dimen/wizard_btnnextr_width"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
@@ -68,7 +68,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/wizard_step_content"
+        android:id="@+id/wizard_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/wizard_navigation"

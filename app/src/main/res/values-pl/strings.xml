@@ -11,6 +11,7 @@
     <string name="about">O programie</string>
     <string name="settings">Ustawienia</string>
     <string name="add_device">Dodaj urządzenie</string>
+    <string name="z_wave" translatable="false">Most z-wave</string>
 
     <string name="status_connecting">Łączenie...</string>
     <string name="status_unknown_err">Nieznany błąd</string>
@@ -217,4 +218,12 @@
     <string name="production_acording_to_phases">Produkcja wg. faz</string>
     <string name="current_production">Produkcja w bieżącym miesiącu</string>
     <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+
+    <string name="channel_func_valve">Zawór</string>
+    <string name="channel_btn_close">Zamknij</string>
+    <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="channel_func_none">Brak funkcji</string>
+
 </resources>

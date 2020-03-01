@@ -166,9 +166,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         fieldMap.put("svr", params[2]);
         fieldMap.put("eml", params[3]);
 
-        if (fieldMap.get("upd") != null
-                && (result.deviceName.equals("NICE Wi-Fi SCREEN")
-                || result.deviceName.equals("ZAMEL SRW-01"))) {
+        if (fieldMap.get("upd") != null) {
             fieldMap.put("upd", "1");
         }
 

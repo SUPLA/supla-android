@@ -24,7 +24,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -34,9 +33,10 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
-@SuppressLint("Registered")
+@SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String INTENTSENDER = "sender";
@@ -45,25 +45,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout RootLayout;
     private RelativeLayout ContentLayout;
     private RelativeLayout MenuBarLayout;
-    private RelativeLayout MenuItemsLayout;
+    private MenuItemsLayout mMenuItemsLayout;
     private ViewGroup Content;
 
     private Button MenuButton;
     private Button GroupButton;
-
-    private Button MiSettings;
-    private Button MiAbout;
-    private Button MiDonate;
-    private Button MiHelp;
-    private Button MiAddDevice;
-
-    private Button SettingsButton;
-    private Button AboutButton;
-    private Button DonateButton;
-    private Button HelpButton;
-    private Button HomepageButton;
-    private Button AddDeviceButton;
-    private Button EmptySpaceButton;
 
     private boolean Anim = false;
 
@@ -110,8 +96,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuBarLayout.setVisibility(View.GONE);
 
             TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-            title.setTypeface(type);
+            title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
 
@@ -122,68 +107,22 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton = findViewById(R.id.groupbutton);
             GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
-            GroupButton.setTag(Integer.valueOf(0));
+            GroupButton.setTag(0);
 
         }
 
         return MenuBarLayout;
     }
 
-    private RelativeLayout getMenuItemsLayout() {
+    private MenuItemsLayout getMenuItemsLayout() {
 
-        if ( MenuItemsLayout == null ) {
-            MenuItemsLayout = (RelativeLayout)Inflate(R.layout.menuitems, null);
-            MenuItemsLayout.setVisibility(View.GONE);
-
-            MiSettings = MenuItemsLayout.findViewById(R.id.menuitem_settings);
-            MiAbout = MenuItemsLayout.findViewById(R.id.menuitem_about);
-            MiDonate = MenuItemsLayout.findViewById(R.id.menuitem_donate);
-            MiHelp = MenuItemsLayout.findViewById(R.id.menuitem_help);
-            MiAddDevice = MenuItemsLayout.findViewById(R.id.menuitem_add);
-
-            MiSettings.setOnClickListener(this);
-            MiAbout.setOnClickListener(this);
-            MiDonate.setOnClickListener(this);
-            MiHelp.setOnClickListener(this);
-            MiAddDevice.setOnClickListener(this);
-
-            SettingsButton = MenuItemsLayout.findViewById(R.id.btn_settings);
-            AboutButton = MenuItemsLayout.findViewById(R.id.btn_about);
-            DonateButton = MenuItemsLayout.findViewById(R.id.btn_donate);
-            HelpButton = MenuItemsLayout.findViewById(R.id.btn_help);
-            HomepageButton = MenuItemsLayout.findViewById(R.id.btn_homepage);
-            AddDeviceButton = MenuItemsLayout.findViewById(R.id.btn_add);
-            EmptySpaceButton = MenuItemsLayout.findViewById(R.id.btn_empty_space);
-
-            SettingsButton.setOnClickListener(this);
-            AboutButton.setOnClickListener(this);
-            DonateButton.setOnClickListener(this);
-            HelpButton.setOnClickListener(this);
-            HomepageButton.setOnClickListener(this);
-            AddDeviceButton.setOnClickListener(this);
-            EmptySpaceButton.setOnClickListener(this);
-
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-            SettingsButton.setTypeface(type);
-            AboutButton.setTypeface(type);
-            DonateButton.setTypeface(type);
-            HelpButton.setTypeface(type);
-            AddDeviceButton.setTypeface(type);
-
-            type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-            HomepageButton.setTypeface(type);
-
-            SettingsButton.setTransformationMethod(null);
-            AboutButton.setTransformationMethod(null);
-            DonateButton.setTransformationMethod(null);
-            HelpButton.setTransformationMethod(null);
-            HomepageButton.setTransformationMethod(null);
-            AddDeviceButton.setTransformationMethod(null);
-
-            getRootLayout().addView(MenuItemsLayout);
+        if ( mMenuItemsLayout == null ) {
+            mMenuItemsLayout = new MenuItemsLayout(this);
+            mMenuItemsLayout.setOnClickListener(this);
+            getRootLayout().addView(mMenuItemsLayout);
         }
 
-        return MenuItemsLayout;
+        return mMenuItemsLayout;
     }
 
     protected RelativeLayout getContentLayout() {
@@ -247,7 +186,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if ( Anim ) return;
 
-            getMenuItemsLayout().setTop(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight() );
+            DbHelper DbH = new DbHelper(this);
+
+            int btns = DbH.isZWaveBridgeOnlineChannelAvailable() ? MenuItemsLayout.BTN_ALL
+                    : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
+
+            getMenuItemsLayout().setButtonsAvailable(btns);
+            getMenuItemsLayout().setY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                    + getMenuBarLayout().getHeight() );
             getMenuItemsLayout().setVisibility(View.VISIBLE);
             getMenuItemsLayout().bringToFront();
             getMenuBarLayout().bringToFront();
@@ -280,7 +226,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
                 getMenuItemsLayout()
                         .animate()
-                        .translationY(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight())
+                        .translationY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                                + getMenuBarLayout().getHeight())
                         .setDuration(200)
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
@@ -343,12 +290,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
-    public void addDevice() {
-
-        showAddWizard();
-    }
-
-
     private static void showActivity(Activity sender,  Class<?> cls, int flags) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
@@ -364,15 +305,13 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if ( client != null
-                && client.Registered() ) {
+                && client.registered() ) {
 
             showActivity(sender, MainActivity.class, 0);
 
         } else {
             showStatus(sender);
         }
-
-
 
     }
 
@@ -393,7 +332,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showAddWizard() {
-        showActivity(this, AddWizardActivity.class, 0);
+        showActivity(this, AddDeviceWizardActivity.class, 0);
+    }
+
+    public void showZWaveConfigurationWizard() {
+        showActivity(this, ZWaveConfigurationWizardActivity.class, 0);
     }
 
     public void gotoMain() {
@@ -423,10 +366,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             int img;
 
             if (GroupButton.getTag() == Integer.valueOf(0)) {
-                GroupButton.setTag(Integer.valueOf(1));
+                GroupButton.setTag(1);
                 img = R.drawable.groupon;
             } else {
-                GroupButton.setTag(Integer.valueOf(0));
+                GroupButton.setTag(0);
                 img = R.drawable.groupoff;
             }
 
@@ -437,31 +380,30 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             }
 
             onGroupButtonTouch(img == R.drawable.groupon);
-
-        } else if ( v == MiSettings || v == SettingsButton) {
-
-            showCfg(this);
-
-        } else if ( v == MiAbout || v == AboutButton ) {
-
-            showAbout();
-
-        } else if ( v == MiAddDevice || v == AddDeviceButton ) {
-
-            addDevice();
-
-        } else if ( v == MiDonate || v == DonateButton ) {
-
-            donate();
-
-        } else if ( v == MiHelp || v == HelpButton ) {
-
-            openForumpage();
-
-        } else if ( v == HomepageButton ) {
-
-            openHomepage();
-
+        } else {
+            switch (MenuItemsLayout.getButtonId(v)) {
+                case MenuItemsLayout.BTN_SETTINGS:
+                    showCfg(this);
+                    break;
+                case MenuItemsLayout.BTN_ABOUT:
+                    showAbout();
+                    break;
+                case MenuItemsLayout.BTN_ADD_DEVICE:
+                    showAddWizard();
+                    break;
+                case MenuItemsLayout.BTN_Z_WAVE:
+                    showZWaveConfigurationWizard();
+                    break;
+                case MenuItemsLayout.BTN_DONATE:
+                    donate();
+                    break;
+                case MenuItemsLayout.BTN_HELP:
+                    openForumpage();
+                    break;
+                case MenuItemsLayout.BTN_HOMEPAGE:
+                    openHomepage();
+                    break;
+            }
         }
 
     }
@@ -474,7 +416,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         if (  CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity)
-                && !(CurrentActivity instanceof AddWizardActivity )
+                && !(CurrentActivity instanceof AddDeviceWizardActivity)
                 && !(CurrentActivity instanceof CreateAccountActivity )) {
             showStatus(this);
         }

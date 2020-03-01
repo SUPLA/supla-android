@@ -22,7 +22,9 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
@@ -91,8 +93,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_img = NotificationView.findViewById(R.id.notif_img);
         notif_text = NotificationView.findViewById(R.id.notif_txt);
 
-        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
-        notif_text.setTypeface(type);
+        notif_text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonTouchListener(this);
@@ -391,6 +392,35 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
+    private void ShowValveAlertDialog(final int channelId, final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setMessage(R.string.valve_open_warning);
+
+        builder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                        if (client != null) {
+                            SuplaApp.Vibrate(context);
+                            client.open(channelId, false, 1);
+                        }
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setNeutralButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
 
@@ -401,6 +431,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (client == null)
             return;
 
+        if (!up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
+            DbHelper dbH = new DbHelper(this);
+            Channel channel = dbH.getChannel(channelId);
+            if (channel != null
+                    && channel.getValue().isClosed()
+                    && (channel.getValue().flooding()
+                    || channel.getValue().isManuallyClosed())) {
+                ShowValveAlertDialog(channelId, this);
+                return;
+            }
+        }
 
         if (!up
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
@@ -412,7 +454,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (up) {
 
             if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.Open(channelId, clv == cgroupLV,  0);
+                client.open(channelId, clv == cgroupLV,  0);
 
         } else {
 
@@ -424,7 +466,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            client.Open(channelId, clv == cgroupLV, Open);
+            client.open(channelId, clv == cgroupLV, Open);
 
         }
 

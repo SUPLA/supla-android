@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
 
 public class SectionLayout extends LinearLayout {
 
@@ -62,8 +63,7 @@ public class SectionLayout extends LinearLayout {
             View lv = inflater.inflate(R.layout.listview_section, null);
 
             Caption = lv.findViewById(R.id.tvSectionCaption);
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-            Caption.setTypeface(type);
+            Caption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
 

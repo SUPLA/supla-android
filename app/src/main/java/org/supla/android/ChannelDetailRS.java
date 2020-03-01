@@ -93,7 +93,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
 
-        Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
+        Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
 
         tvPercentCaption = findViewById(R.id.rsDetailPercentCaption);
         tvPercentCaption.setTypeface(type);
@@ -101,10 +101,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
-
         tvTitle = findViewById(R.id.rsDetailTitle);
-        tvTitle.setTypeface(type);
+        tvTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         addOnLayoutChangeListener(this);
         delayTimer1 = null;
@@ -220,7 +218,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         if (client == null || !isDetailVisible())
             return;
         
-        client.Open(getRemoteId(), isGroup(), (int) (10 + percent));
+        client.open(getRemoteId(), isGroup(), (int) (10 + percent));
         OnChannelDataChanged();
     }
 
@@ -253,28 +251,28 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         if (v == btnUp) {
 
-            client.Open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
+            client.open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
 
         } else if (v == btnDown) {
 
-            client.Open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 1 : 0);
+            client.open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 1 : 0);
 
         } else if (v == btnStop) {
 
             if (action == MotionEvent.ACTION_DOWN)
-                client.Open(getRemoteId(), isGroup(), 0);
+                client.open(getRemoteId(), isGroup(), 0);
             else return false;
 
         } else if (v == btnOpen) {
 
             if (action == MotionEvent.ACTION_DOWN)
-                client.Open(getRemoteId(), isGroup(), 10);
+                client.open(getRemoteId(), isGroup(), 10);
             else return false;
 
         } else if (v == btnClose) {
 
             if (action == MotionEvent.ACTION_DOWN)
-                client.Open(getRemoteId(), isGroup(), 110);
+                client.open(getRemoteId(), isGroup(), 110);
             else return false;
         }
 

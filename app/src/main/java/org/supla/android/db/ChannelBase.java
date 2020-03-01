@@ -123,119 +123,125 @@ public abstract class ChannelBase extends DbItem {
         return Flags;
     }
 
+    public static String getFunctionName(int func, Context context) {
+        int idx = -1;
+
+        switch (func) {
+            case SuplaConst.SUPLA_CHANNELFNC_NONE:
+                idx = R.string.channel_func_none;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+                idx = R.string.channel_func_gatewayopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                idx = R.string.channel_func_gateway;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+                idx = R.string.channel_func_gateopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                idx = R.string.channel_func_gate;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+                idx = R.string.channel_func_garagedooropeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                idx = R.string.channel_func_garagedoor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+                idx = R.string.channel_func_dooropeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                idx = R.string.channel_func_door;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                idx = R.string.channel_func_rsopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                idx = R.string.channel_func_rollershutter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                idx = R.string.channel_func_powerswith;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                idx = R.string.channel_func_lightswith;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                idx = R.string.channel_func_thermometer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                idx = R.string.channel_func_humidity;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                idx = R.string.channel_func_humidityandtemperature;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
+                idx = R.string.channel_func_windsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
+                idx = R.string.channel_func_pressuresensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
+                idx = R.string.channel_func_rainsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                idx = R.string.channel_func_weightsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+                idx = R.string.channel_func_noliquidsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                idx = R.string.channel_func_dimmer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                idx = R.string.channel_func_rgblighting;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                idx = R.string.channel_func_dimmerandrgblighting;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
+                idx = R.string.channel_func_depthsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
+                idx = R.string.channel_func_distancesensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                idx = R.string.channel_func_windowopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+                idx = R.string.channel_func_mailsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                idx = R.string.channel_func_staircasetimer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                idx = R.string.channel_func_electricitymeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                idx = R.string.channel_func_gasmeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                idx = R.string.channel_func_watermeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                idx = R.string.channel_func_thermostat;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                idx = R.string.channel_func_thermostat_hp_homeplus;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                idx = R.string.channel_func_valve;
+                break;
+        }
+
+        return idx == -1 ? Integer.toString(func) : context.getResources().getString(idx);
+    }
+
     public String getNotEmptyCaption(Context context) {
 
         if (context != null && Caption.equals("")) {
-
-            int idx = -1;
-
-            switch (Func) {
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-                    idx = R.string.channel_func_gatewayopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                    idx = R.string.channel_func_gateway;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-                    idx = R.string.channel_func_gateopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                    idx = R.string.channel_func_gate;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-                    idx = R.string.channel_func_garagedooropeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                    idx = R.string.channel_func_garagedoor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-                    idx = R.string.channel_func_dooropeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                    idx = R.string.channel_func_door;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-                    idx = R.string.channel_func_rsopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                    idx = R.string.channel_func_rollershutter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                    idx = R.string.channel_func_powerswith;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                    idx = R.string.channel_func_lightswith;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    idx = R.string.channel_func_thermometer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-                    idx = R.string.channel_func_humidity;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    idx = R.string.channel_func_humidityandtemperature;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-                    idx = R.string.channel_func_windsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-                    idx = R.string.channel_func_pressuresensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-                    idx = R.string.channel_func_rainsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-                    idx = R.string.channel_func_weightsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                    idx = R.string.channel_func_noliquidsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                    idx = R.string.channel_func_dimmer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    idx = R.string.channel_func_rgblighting;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-                    idx = R.string.channel_func_dimmerandrgblighting;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-                    idx = R.string.channel_func_depthsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-                    idx = R.string.channel_func_distancesensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-                    idx = R.string.channel_func_windowopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-                    idx = R.string.channel_func_mailsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-                    idx = R.string.channel_func_staircasetimer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                    idx = R.string.channel_func_electricitymeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                    idx = R.string.channel_func_gasmeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                    idx = R.string.channel_func_watermeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-                    idx = R.string.channel_func_thermostat;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                    idx = R.string.channel_func_thermostat_hp_homeplus;
-                    break;
-            }
-
-            if (idx == -1)
-                Caption = Integer.toString(Func);
-            else
-                Caption = context.getResources().getString(idx);
+            return Channel.getFunctionName(Func, context);
         }
 
         return Caption;
@@ -263,6 +269,7 @@ public abstract class ChannelBase extends DbItem {
                 return value.getSubValueHi();
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
 
                 return 1;
 
@@ -282,6 +289,15 @@ public abstract class ChannelBase extends DbItem {
                     result |= 0x2;
 
                 return result;
+            }
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE: {
+                boolean warning = value.isManuallyClosed() || value.flooding();
+
+                if (value.isClosed()) {
+                    return warning ? 2 : 1;
+                } else {
+                    return warning ? -1 : 0;
+                }
             }
         }
 
@@ -523,6 +539,22 @@ public abstract class ChannelBase extends DbItem {
                 }
 
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                switch (active) {
+                    case -1:
+                        img_idx = R.drawable.valveopenwarning;
+                        break;
+                    case 1:
+                        img_idx = R.drawable.valveclosed;
+                        break;
+                    case 2:
+                        img_idx = R.drawable.valveclosedwarning;
+                        break;
+                    default:
+                        img_idx = R.drawable.valveopen;
+                        break;
+                }
+                break;
         }
 
         return new ImageId(img_idx);
@@ -628,7 +660,7 @@ public abstract class ChannelBase extends DbItem {
 
             if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
                 if (getOnLine()
-                        && value.getHumidity() > -1)
+                        && value.getHumidity() >= 0)
                     return String.format("%.1f", value.getHumidity());
                 else
                     return "---";
@@ -638,6 +670,7 @@ public abstract class ChannelBase extends DbItem {
         }
 
         switch (getFunc()) {
+
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
                 if (getOnLine()
@@ -647,52 +680,57 @@ public abstract class ChannelBase extends DbItem {
                     return "---";
                 }
 
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                double humidity = value.getHumidity();
+
+                if (getOnLine() && humidity >= 0) {
+                    return String.format("%.1f", humidity);
+                } else {
+                    return "---";
+                }
+
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                double temp = value.getTemp(getFunc());
                 if (getOnLine()
-                        && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
+                        && temp >= -273) {
+                    return String.format("%.1f\u00B0", temp);
                 } else {
                     return "---";
                 }
 
             case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-                if (getOnLine()) {
-                    double wind = value.getDouble(-1);
-                    return String.format("%.1f m/s", wind);
+                double wind = value.getDouble(-1);
 
+                if (getOnLine() && wind >= 0) {
+                    return String.format("%.1f m/s", wind);
                 } else {
                     return "--- m/s";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-                if (getOnLine()) {
-                    double pressure = value.getDouble(-1);
-                    return String.format("%d hPa", (int) pressure);
+                double pressure = value.getDouble(-1);
 
+                if (getOnLine() && pressure >= 0) {
+                    return String.format("%d hPa", (int) pressure);
                 } else {
                     return "--- hPa";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-                if (getOnLine()) {
-                    double rain = value.getDouble(-1);
-                    return String.format("%.2f l/m\u00B2", rain/1000.00);
+                double rain = value.getDouble(-1);
 
+                if (getOnLine() && rain >= 0) {
+                    return String.format("%.2f l/m\u00B2", rain/1000.00);
                 } else {
                     return "--- l/m\u00B2";
                 }
             case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-                if (getOnLine()) {
-                    double weight = value.getDouble(-1);
+                double weight = value.getDouble(-1);
 
+                if (getOnLine() && weight >= 0) {
                     if (Math.abs(weight) >= 2000) {
-
                         return String.format("%.2f kg", weight / 1000.00);
-
                     } else {
-
                         return String.format("%d g", (int) weight);
-
                     }
-
                 } else {
                     return "--- kg";
                 }
@@ -700,7 +738,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
             case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
                 if (getOnLine()
-                        && value.getDistance() > -1) {
+                        && value.getDistance() >= 0) {
 
                     double distance = value.getDistance();
 

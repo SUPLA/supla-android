@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -35,6 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.SuplaApp;
+import org.supla.android.db.Channel;
 import org.supla.android.images.ImageCache;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
@@ -42,6 +45,7 @@ import org.supla.android.ViewHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -65,6 +69,7 @@ public class ChannelLayout extends LinearLayout {
     private SuplaChannelStatus right_onlineStatus;
     private SuplaChannelStatus right_ActiveStatus;
     private SuplaChannelStatus left_onlineStatus;
+    private ImageView channelStateIcon;
 
     private LineView bottom_line;
 
@@ -90,9 +95,7 @@ public class ChannelLayout extends LinearLayout {
         public CaptionView(Context context, int imgl_id) {
             super(context);
 
-
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
-            setTypeface(type);
+            setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.channel_caption_text_size));
             setTextColor(getResources().getColor(R.color.channel_caption_text));
@@ -114,9 +117,7 @@ public class ChannelLayout extends LinearLayout {
         TextView tv = new TextView(context);
         tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-
-        tv.setTypeface(type);
+        tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.channel_btn_text_size));
@@ -126,7 +127,6 @@ public class ChannelLayout extends LinearLayout {
         return tv;
     }
 
-
     private class ChannelImageLayout extends RelativeLayout {
 
         private ImageView Img1;
@@ -135,6 +135,15 @@ public class ChannelLayout extends LinearLayout {
         private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
+
+        private ImageView newImageView(Context context) {
+
+            ImageView Img = new ImageView(context);
+            Img.setId(ViewHelper.generateViewId());
+            addView(Img);
+
+            return Img;
+        }
 
         public ChannelImageLayout(Context context) {
             super(context);
@@ -151,22 +160,12 @@ public class ChannelLayout extends LinearLayout {
             SetDimensions();
         }
 
-        private ImageView newImageView(Context context) {
-
-            ImageView Img = new ImageView(context);
-            Img.setId(ViewHelper.generateViewId());
-            addView(Img);
-
-            return Img;
-        }
-
         private TextView newTextView(Context context) {
 
             TextView Text = new TextView(context);
             Text.setId(ViewHelper.generateViewId());
 
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
-            Text.setTypeface(type);
+            Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
             Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.channel_imgtext_size));
             Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
@@ -230,6 +229,7 @@ public class ChannelLayout extends LinearLayout {
             int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
@@ -366,6 +366,21 @@ public class ChannelLayout extends LinearLayout {
         return lp;
     }
 
+    protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
+        lp.leftMargin = margin;
+
+        lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
+        lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
     protected SuplaChannelStatus newOnlineStatus(Context context, boolean right) {
 
         SuplaChannelStatus result = new SuplaChannelStatus(context);
@@ -418,7 +433,13 @@ public class ChannelLayout extends LinearLayout {
         right_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(right_onlineStatus);
         left_onlineStatus = newOnlineStatus(context, false);
+        left_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(left_onlineStatus);
+
+        channelStateIcon = new ImageView(context);
+        channelStateIcon.setId(ViewHelper.generateViewId());
+        content.addView(channelStateIcon);
+        channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
 
         right_ActiveStatus = new SuplaChannelStatus(context);
         right_ActiveStatus.setSingleColor(true);
@@ -441,17 +462,8 @@ public class ChannelLayout extends LinearLayout {
         bottom_line = new LineView(context);
         content.addView(bottom_line);
 
-        {
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
-
-            imgl = new ChannelImageLayout(context);
-            content.addView(imgl);
-        }
+        imgl = new ChannelImageLayout(context);
+        content.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId());
         content.addView(caption_text);
@@ -808,6 +820,8 @@ public class ChannelLayout extends LinearLayout {
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
 
+        channelStateIcon.setVisibility(INVISIBLE);
+
         if (OldFunc != mFunc) {
             imgl.SetDimensions();
         }
@@ -836,6 +850,25 @@ public class ChannelLayout extends LinearLayout {
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
+            if (cbase.getOnLine() && cbase instanceof Channel) {
+                SuplaChannelState state = ((Channel)cbase).getChannelState();
+                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                    switch (state.getDefaultIconField()) {
+                        case SuplaChannelState.FIELD_BATTERYPOWERED:
+                            if (state.getBatteryPowered()) {
+                                channelStateIcon.setImageResource(R.drawable.battery);
+                                channelStateIcon.setVisibility(VISIBLE);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            // Only when channelStateIcon is invisible !!
+            if (channelStateIcon.getVisibility() == INVISIBLE
+                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                // TODO: Show state icon/button
+            }
         }
 
         {
@@ -871,6 +904,11 @@ public class ChannelLayout extends LinearLayout {
                     lidx = R.string.channel_btn_off;
                     break;
 
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                    ridx = R.string.channel_btn_open;
+                    lidx = R.string.channel_btn_close;
+                    break;
+
             }
 
             setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
@@ -904,6 +942,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

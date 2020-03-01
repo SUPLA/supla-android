@@ -312,6 +312,10 @@ public class ChannelValue extends DbItem {
 
     }
 
+    public boolean isClosed() {
+        return hiValue();
+    }
+
     public byte getSubValueHi() {
 
         byte result = 0;
@@ -367,5 +371,19 @@ public class ChannelValue extends DbItem {
 
     public double getImpulseCounterCalculatedValue() {
         return getLong() / 1000.0;
+    }
+
+    public boolean isManuallyClosed() {
+        byte[] value = getChannelValue();
+
+        return value.length > 1
+                && (value[1] & SuplaConst.SUPLA_VALVE_FLAG_MANUALLY_CLOSED) > 0;
+    }
+
+    public boolean flooding() {
+        byte[] value = getChannelValue();
+
+        return value.length > 1
+                && (value[1] & SuplaConst.SUPLA_VALVE_FLAG_FLOODING) > 0;
     }
 }

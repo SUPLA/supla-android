@@ -18,6 +18,7 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@SuppressWarnings("unused")
 public class SuplaClientMsg {
 
     private SuplaClient Sender;
@@ -29,6 +30,8 @@ public class SuplaClientMsg {
     private SuplaEvent Event;
     private SuplaRegistrationEnabled RegistrationEnabled;
     private SuplaOAuthToken OAuthToken;
+    private SuplaChannelState ChannelState;
+    private SuplaChannelBasicCfg ChannelBasicCfg;
     private int ChannelId;
     private int ChannelGroupId;
     private boolean Success;
@@ -51,7 +54,11 @@ public class SuplaClientMsg {
     public final static int onOAuthTokenRequestResult = 12;
     public final static int onCalCfgResult = 13;
     public final static int onSuperuserAuthorizationResult = 14;
-
+    public final static int onChannelState = 15;
+    public final static int onChannelBasicCfg = 16;
+    public final static int onChannelFunctionSetResult = 17;
+    public final static int onClientsReconnectResult = 18;
+    public final static int onSetRegistrationEnabledResult = 19;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -179,5 +186,21 @@ public class SuplaClientMsg {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public void setChannelState(SuplaChannelState channelState) {
+        ChannelState = channelState;
+    }
+
+    public SuplaChannelState getChannelState() {
+        return ChannelState;
+    }
+
+    public SuplaChannelBasicCfg getChannelBasicCfg() {
+        return ChannelBasicCfg;
+    }
+
+    public void setChannelBasicCfg(SuplaChannelBasicCfg channelBasicCfg) {
+        ChannelBasicCfg = channelBasicCfg;
     }
 }

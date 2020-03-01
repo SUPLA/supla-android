@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.supla.android.Preferences;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
@@ -130,7 +129,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
-                client.SuperUserAuthorizationRequest(edEmail.getText().toString(),
+                client.superUserAuthorizationRequest(edEmail.getText().toString(),
                         edPassword.getText().toString());
             }
         }
