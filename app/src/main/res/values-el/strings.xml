@@ -204,4 +204,6 @@
     <string name="production_acording_to_phases">Παραγωγή ανάλογα με τις φάσεις</string>
     <string name="current_production">Παραγωγή τον τρέχοντα μήνα</string>
     <string name="enter_superuser_credentials">Καταχωρίστε τα διαπιστευτήρια superuser</string>
+
+    <string name="channel_func_heatmeter">Μετρητής θερμότητας</string>
 </resources>

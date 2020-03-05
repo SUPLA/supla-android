@@ -204,4 +204,6 @@
     <string name="production_acording_to_phases">Produksjon i forhold til faser</string>
     <string name="current_production">Produksjon i gjeldende måned</string>
     <string name="enter_superuser_credentials">Skriv inn superbrukerens legitimasjon</string>
+
+    <string name="channel_func_heatmeter">Varmemåler</string>
 </resources>

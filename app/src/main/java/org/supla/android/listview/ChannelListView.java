@@ -140,6 +140,7 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
 
                     // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
                     if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
@@ -197,6 +198,8 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+
                     // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
                     if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
                         mDetailLayout = new ChannelDetailIC(getContext(), this);

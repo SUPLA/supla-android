@@ -203,5 +203,7 @@
     <string name="hp_error_5">Nu există întreruperi în rețea</string>
     <string name="production_acording_to_phases">Producția conform fazelor</string>
     <string name="current_production">Producția în luna curentă</string>
-    <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+    <string name="enter_superuser_credentials">Introduceți datele de acreditare ale utilizatorului principal</string>
+
+    <string name="channel_func_heatmeter">Contorul de căldură</string>
 </resources>

@@ -224,4 +224,7 @@
     <string translatable="false" name="ok">OK</string>
     <string translatable="false" name="dots">....</string>
 
+    <string name="channel_func_heatmeter">Heat Meter</string>
+    <string translatable="false" name="zwave_select_channel">Select the z-wave bridge channel you want to configure.</string>
+
 </resources>

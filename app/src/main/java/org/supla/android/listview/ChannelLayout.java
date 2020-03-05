@@ -245,7 +245,8 @@ public class ChannelLayout extends LinearLayout {
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER) {
 
                 width *= 2.8;
 
@@ -974,6 +975,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
