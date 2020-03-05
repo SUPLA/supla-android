@@ -203,5 +203,7 @@
     <string name="hp_error_5">Nincs hálózat megszakítás</string>
     <string name="production_acording_to_phases">Fázis szerinti gyártás</string>
     <string name="current_production">Termelés a folyó hónapban</string>
-    <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+    <string name="enter_superuser_credentials">Írja be a fő felhasználó hitelesítő adatait</string>
+
+    <string name="channel_func_heatmeter">Hőmérő</string>
 </resources>

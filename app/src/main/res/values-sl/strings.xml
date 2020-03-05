@@ -204,4 +204,6 @@
     <string name="production_acording_to_phases">Izdelava v skladu s fazami</string>
     <string name="current_production">Proizvodnja v tekočem mesecu</string>
     <string name="enter_superuser_credentials">Vnesite poverilnice podupravitelja</string>
+
+    <string name="channel_func_heatmeter">Merilnik toplote</string>
 </resources>

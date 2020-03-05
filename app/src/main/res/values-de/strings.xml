@@ -200,4 +200,6 @@
     <string name="current_production">Produktion im laufenden Monat</string>
     <string name="production_acording_to_phases">Produktion nach Phase</string>
     <string name="enter_superuser_credentials">Geben Sie die Superuser-Anmeldeinformationen ein</string>
+
+    <string name="channel_func_heatmeter">Wärmezähler</string>
 </resources>

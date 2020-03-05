@@ -90,6 +90,7 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_IC_ELECTRICITY_METER          = 315;
     public final static int SUPLA_CHANNELFNC_IC_GAS_METER                  = 320;
     public final static int SUPLA_CHANNELFNC_IC_WATER_METER                = 330;
+    public final static int SUPLA_CHANNELFNC_IC_HEAT_METER                 = 340;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT                    = 400;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS   = 410;
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE               = 500;

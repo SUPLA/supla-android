@@ -206,4 +206,6 @@
     <string name="current_production">Production dans le mois courant</string>
     <string name="production_acording_to_phases">Production selon phases</string>
     <string name="enter_superuser_credentials">Entrez les informations d\'identification du superutilisateur</string>
+
+    <string name="channel_func_heatmeter">Compteur de chaleur</string>
 </resources>

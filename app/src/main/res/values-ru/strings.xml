@@ -212,5 +212,6 @@
     <string name="current_production">Производство в текущем месяце</string>
     <string name="enter_superuser_credentials">Введите учетные данные суперпользователя</string>
 
+    <string name="channel_func_heatmeter">Теплосчетчик</string>
 </resources>
 

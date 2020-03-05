@@ -226,4 +226,6 @@
     <string name="no">Nie</string>
     <string name="channel_func_none">Brak funkcji</string>
 
+    <string name="channel_func_heatmeter">Licznik ciepła</string>
+    <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
 </resources>

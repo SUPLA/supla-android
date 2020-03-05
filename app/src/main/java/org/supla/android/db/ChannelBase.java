@@ -224,6 +224,9 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                 idx = R.string.channel_func_watermeter;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+                idx = R.string.channel_func_heatmeter;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 idx = R.string.channel_func_thermostat;
                 break;
@@ -496,6 +499,10 @@ public abstract class ChannelBase extends DbItem {
 
             case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                 img_idx = R.drawable.watermeter;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+                img_idx = R.drawable.heatmeter;
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
