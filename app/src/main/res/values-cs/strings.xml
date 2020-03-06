@@ -185,7 +185,7 @@
 
     <string name="channel_btn_close">Zavřít</string>
     <string name="channel_func_valve">Ventil</string>
-    <string name="valve_open_warning">Ventil byl v manuálním režimu uzavřen. Před otevřením se ujistěte, že nebyl zavřen kvůli zaplavení. Chcete-li varování vypnout, otevřete ventil ručně. Opravdu jej chcete otevřít z aplikace?!</string>
+    <string name="valve_open_warning">POZOR! Ventil byl uzavřen dálkovým ovladačem (klíčenkou nebo záplavovým čidlem). Než ventil znovu otevřete, ujistěte se, že nebyl uzavřen kvůli úniku vody. Pokud je záplavové čidlo ve vodě,  NEvyšle ventilu  opakovaně signál pro uzavření. Chcete-li varování vypnout, otevřte ventil pomocí ovládacího tlačítka na ventilu.Opravdu chcete ventil otevřít pomocí aplikace?!</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
 
