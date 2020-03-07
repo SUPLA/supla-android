@@ -26,33 +26,33 @@
     <string name="err_hostnotfound">Naslova strežnika ni mogoče najti</string>
     <string name="err_cantconnecttohost">Ni mogoče se povezati s strežnikom.</string>
 
-    <string name="channel_func_gateway">Vratca</string>
-    <string name="channel_func_gate">Dvoriščna vrata</string>
-    <string name="channel_func_garagedoor">Garažna vrata</string>
-    <string name="channel_func_door">Vrata</string>
-    <string name="channel_func_rollershutter">Roleta</string>
-    <string name="channel_func_powerswith">Stikalo za vklop</string>
-    <string name="channel_func_lightswith">Stikalo luči</string>
-    <string name="channel_func_thermometer">Termometer</string>
-    <string name="channel_func_humidity">Vlažnost</string>
-    <string name="channel_func_humidityandtemperature">Temperatura in vlažnost</string>
-    <string name="channel_func_windsensor">Hitrost vetra</string>
-    <string name="channel_func_pressuresensor">Tlačni senzor</string>
-    <string name="channel_func_rainsensor">Merjenje padavin</string>
-    <string name="channel_func_weightsensor">Teža</string>
-    <string name="channel_func_dimmer">Zatemnilnik</string>
-    <string name="channel_func_rgblighting">RGB osvetlitev</string>
-    <string name="channel_func_dimmerandrgblighting">Zatemnilnik in RGB osvetlitev</string>
-    <string name="channel_func_noliquidsensor">Senzor pomanjkanja tekočine</string>
-    <string name="channel_func_gatewayopeningsensor">Senzor odprtja vratc</string>
-    <string name="channel_func_gateopeningsensor">Senzor odprtja dvoriščnih vrat</string>
-    <string name="channel_func_garagedooropeningsensor">Senzor odprtja garažnih vrat</string>
-    <string name="channel_func_dooropeningsensor">Senzor odprtja vrat</string>
-    <string name="channel_func_rsopeningsensor">Senzor odprtja rolet</string>
-    <string name="channel_func_depthsensor">Senzor globine</string>
-    <string name="channel_func_distancesensor">Senzor razdalje</string>
-    <string name="channel_func_windowopeningsensor">Senzor odprtja oken</string>
-    <string name="channel_func_mailsensor">Senzor pošte</string>
+    <string name="channel_caption_gateway">Vratca</string>
+    <string name="channel_caption_gate">Dvoriščna vrata</string>
+    <string name="channel_caption_garagedoor">Garažna vrata</string>
+    <string name="channel_caption_door">Vrata</string>
+    <string name="channel_caption_rollershutter">Roleta</string>
+    <string name="channel_caption_powerswith">Stikalo za vklop</string>
+    <string name="channel_caption_lightswith">Stikalo luči</string>
+    <string name="channel_caption_thermometer">Termometer</string>
+    <string name="channel_caption_humidity">Vlažnost</string>
+    <string name="channel_caption_humidityandtemperature">Temperatura in vlažnost</string>
+    <string name="channel_caption_windsensor">Hitrost vetra</string>
+    <string name="channel_caption_pressuresensor">Tlačni senzor</string>
+    <string name="channel_caption_rainsensor">Merjenje padavin</string>
+    <string name="channel_caption_weightsensor">Teža</string>
+    <string name="channel_caption_dimmer">Zatemnilnik</string>
+    <string name="channel_caption_rgblighting">RGB osvetlitev</string>
+    <string name="channel_caption_dimmerandrgblighting">Zatemnilnik in RGB osvetlitev</string>
+    <string name="channel_caption_noliquidsensor">Senzor pomanjkanja tekočine</string>
+    <string name="channel_caption_gatewayopeningsensor">Senzor odprtja vratc</string>
+    <string name="channel_caption_gateopeningsensor">Senzor odprtja dvoriščnih vrat</string>
+    <string name="channel_caption_garagedooropeningsensor">Senzor odprtja garažnih vrat</string>
+    <string name="channel_caption_dooropeningsensor">Senzor odprtja vrat</string>
+    <string name="channel_caption_rsopeningsensor">Senzor odprtja rolet</string>
+    <string name="channel_caption_depthsensor">Senzor globine</string>
+    <string name="channel_caption_distancesensor">Senzor razdalje</string>
+    <string name="channel_caption_windowopeningsensor">Senzor odprtja oken</string>
+    <string name="channel_caption_mailsensor">Senzor pošte</string>
 
     <string name="rgb_brightness">Svetlost</string>
     <string name="rgb_color">Barva</string>
@@ -128,11 +128,11 @@
     <string name="wizard_result_failed">Konfiguracija ni bila uspešna!</string>
     <string name="wizard_not_enought_permissions">Aplikacija nima zadostnih dovoljenj. Pojdite na upravljanje aplikacij v sistemskih nastavitvah. Nato poiščite aplikacijo %1$s in vklopite vsa dovoljenja, ki jih potrebuje.</string>
     <string name="help">Pomoč</string>
-    <string name="channel_func_staircasetimer">Stopniščni avtomat</string>
+    <string name="channel_caption_staircasetimer">Stopniščni avtomat</string>
 
-    <string name="channel_func_electricitymeter">Števec električne energije</string>
-    <string name="channel_func_gasmeter">Merilnik plina</string>
-    <string name="channel_func_watermeter">Merilnik vode</string>
+    <string name="channel_caption_electricitymeter">Števec električne energije</string>
+    <string name="channel_caption_gasmeter">Merilnik plina</string>
+    <string name="channel_caption_watermeter">Merilnik vode</string>
 
     <string name="em_total_forward_avtive_energy">Aktivna porabljena energija</string>
     <string name="em_reverse_active_energy">Aktivna vrnjena energija</string>
@@ -149,8 +149,8 @@
     <string name="em_phase1">1. faza</string>
     <string name="em_phase2">2. faza</string>
     <string name="em_phase3">3. faza</string>
-    <string name="channel_func_thermostat">Termostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Gralec Home+</string>
+    <string name="channel_caption_thermostat">Termostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Gralec Home+</string>
     <string name="hp_on">VKLJUČENO</string>
     <string name="hp_off">IZKLJUČENO</string>
     <string name="hp_turn_on">VKLJUČITE</string>
@@ -205,5 +205,5 @@
     <string name="current_production">Proizvodnja v tekočem mesecu</string>
     <string name="enter_superuser_credentials">Vnesite poverilnice podupravitelja</string>
 
-    <string name="channel_func_heatmeter">Merilnik toplote</string>
+    <string name="channel_caption_heatmeter">Merilnik toplote</string>
 </resources>

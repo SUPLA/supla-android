@@ -36,39 +36,39 @@
     <string name="err_hostnotfound">Host not found</string>
     <string name="err_cantconnecttohost">Can\'t connect to host</string>
 
-    <string name="channel_func_gateway">Gateway</string>
-    <string name="channel_func_gate">Gate</string>
-    <string name="channel_func_garagedoor">Garage door</string>
-    <string name="channel_func_door">Door</string>
-    <string name="channel_func_rollershutter">Roller shutter</string>
-    <string name="channel_func_powerswith">Power switch</string>
-    <string name="channel_func_lightswith">Lighting switch</string>
-    <string name="channel_func_thermometer">Thermometer</string>
-    <string name="channel_func_humidity">Humidity</string>
-    <string name="channel_func_humidityandtemperature">Temperature and Humidity</string>
-    <string name="channel_func_windsensor">Wind sensor</string>
-    <string name="channel_func_pressuresensor">Pressure sensor</string>
-    <string name="channel_func_rainsensor">Rain sensor</string>
-    <string name="channel_func_weightsensor">Weight sensor</string>
-    <string name="channel_func_dimmer">Dimmer</string>
-    <string name="channel_func_rgblighting">RGB Lighting</string>
-    <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
-    <string name="channel_func_noliquidsensor">No liquid sensor</string>
-    <string name="channel_func_gatewayopeningsensor">Gateway opening sensor</string>
-    <string name="channel_func_gateopeningsensor">Gate opening sensor</string>
-    <string name="channel_func_garagedooropeningsensor">Garage door opening sensor</string>
-    <string name="channel_func_dooropeningsensor">Door opening sensor</string>
-    <string name="channel_func_rsopeningsensor">Roller shutter opening sensor</string>
-    <string name="channel_func_depthsensor">Depth sensor</string>
-    <string name="channel_func_distancesensor">Distance sensor</string>
-    <string name="channel_func_windowopeningsensor">Window opening sensor</string>
-    <string name="channel_func_mailsensor">Mail sensor</string>
-    <string name="channel_func_staircasetimer">Staircase timer</string>
-    <string name="channel_func_electricitymeter">Electricity Meter</string>
-    <string name="channel_func_gasmeter">Gas Meter</string>
-    <string name="channel_func_watermeter">Water Meter</string>
-    <string name="channel_func_thermostat">Thermostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Home+ Heater</string>
+    <string name="channel_caption_gateway">Gateway</string>
+    <string name="channel_caption_gate">Gate</string>
+    <string name="channel_caption_garagedoor">Garage door</string>
+    <string name="channel_caption_door">Door</string>
+    <string name="channel_caption_rollershutter">Roller shutter</string>
+    <string name="channel_caption_powerswith">Power switch</string>
+    <string name="channel_caption_lightswith">Lighting switch</string>
+    <string name="channel_caption_thermometer">Thermometer</string>
+    <string name="channel_caption_humidity">Humidity</string>
+    <string name="channel_caption_humidityandtemperature">Temperature and Humidity</string>
+    <string name="channel_caption_windsensor">Wind sensor</string>
+    <string name="channel_caption_pressuresensor">Pressure sensor</string>
+    <string name="channel_caption_rainsensor">Rain sensor</string>
+    <string name="channel_caption_weightsensor">Weight sensor</string>
+    <string name="channel_caption_dimmer">Dimmer</string>
+    <string name="channel_caption_rgblighting">RGB Lighting</string>
+    <string name="channel_caption_dimmerandrgblighting">Dimmer and RGB lighting</string>
+    <string name="channel_caption_noliquidsensor">No liquid sensor</string>
+    <string name="channel_caption_gatewayopeningsensor">Gateway opening sensor</string>
+    <string name="channel_caption_gateopeningsensor">Gate opening sensor</string>
+    <string name="channel_caption_garagedooropeningsensor">Garage door opening sensor</string>
+    <string name="channel_caption_dooropeningsensor">Door opening sensor</string>
+    <string name="channel_caption_rsopeningsensor">Roller shutter opening sensor</string>
+    <string name="channel_caption_depthsensor">Depth sensor</string>
+    <string name="channel_caption_distancesensor">Distance sensor</string>
+    <string name="channel_caption_windowopeningsensor">Window opening sensor</string>
+    <string name="channel_caption_mailsensor">Mail sensor</string>
+    <string name="channel_caption_staircasetimer">Staircase timer</string>
+    <string name="channel_caption_electricitymeter">Electricity Meter</string>
+    <string name="channel_caption_gasmeter">Gas Meter</string>
+    <string name="channel_caption_watermeter">Water Meter</string>
+    <string name="channel_caption_thermostat">Thermostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Home+ Heater</string>
 
     <string name="rgb_brightness">Brightness</string>
     <string name="rgb_color">Color</string>
@@ -215,7 +215,7 @@
     <string name="production_acording_to_phases">Production according to phases</string>
     <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
-    <string translatable="false" name="channel_func_valve">Valve</string>
+    <string translatable="false" name="channel_caption_valve">Valve</string>
     <string translatable="false" name="channel_btn_close">Close</string>
     <string translatable="false" name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
     <string translatable="false" name="yes">Yes</string>
@@ -224,7 +224,7 @@
     <string translatable="false" name="ok">OK</string>
     <string translatable="false" name="dots">....</string>
 
-    <string name="channel_func_heatmeter">Heat Meter</string>
+    <string name="channel_caption_heatmeter">Heat Meter</string>
     <string translatable="false" name="zwave_select_channel">Select the z-wave bridge channel you want to configure.</string>
     <string translatable="false" name="device_name">Device name:</string>
     <string translatable="false" name="channel_number">Channel number:</string>

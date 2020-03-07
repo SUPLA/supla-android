@@ -26,33 +26,33 @@
     <string name="err_hostnotfound">Serveradresse ikke funnet</string>
     <string name="err_cantconnecttohost">Kan ikke koble til serveren</string>
 
-    <string name="channel_func_gateway">Hageport</string>
-    <string name="channel_func_gate">Port</string>
-    <string name="channel_func_garagedoor">Garasjeport</string>
-    <string name="channel_func_door">Dør</string>
-    <string name="channel_func_rollershutter">Rullegardiner</string>
-    <string name="channel_func_powerswith">Strømbryter</string>
-    <string name="channel_func_lightswith">Lysbryter</string>
-    <string name="channel_func_thermometer">Termometer</string>
-    <string name="channel_func_humidity">Fuktighet</string>
-    <string name="channel_func_humidityandtemperature">Temperatur og fuktighet</string>
-    <string name="channel_func_windsensor">Vindhastighet</string>
-    <string name="channel_func_pressuresensor">Trykksensor</string>
-    <string name="channel_func_rainsensor">Nedbørsmåling</string>
-    <string name="channel_func_weightsensor">Vekt</string>
-    <string name="channel_func_dimmer">Dimmer</string>
-    <string name="channel_func_rgblighting">RGB belysning</string>
-    <string name="channel_func_dimmerandrgblighting">Dimmer og RGB belysning</string>
-    <string name="channel_func_noliquidsensor">Væskemangelsensor</string>
-    <string name="channel_func_gatewayopeningsensor">Hageportåpner sensor</string>
-    <string name="channel_func_gateopeningsensor">Portåpner sensor</string>
-    <string name="channel_func_garagedooropeningsensor">Garasjeportåpner sensor</string>
-    <string name="channel_func_dooropeningsensor">Døråpner sensor</string>
-    <string name="channel_func_rsopeningsensor">Rullegardineråpner sensor</string>
-    <string name="channel_func_depthsensor">Dybdesensor</string>
-    <string name="channel_func_distancesensor">Avstandssensor</string>
-    <string name="channel_func_windowopeningsensor">Vindusåpner sensor</string>
-    <string name="channel_func_mailsensor">Postsensor</string>
+    <string name="channel_caption_gateway">Hageport</string>
+    <string name="channel_caption_gate">Port</string>
+    <string name="channel_caption_garagedoor">Garasjeport</string>
+    <string name="channel_caption_door">Dør</string>
+    <string name="channel_caption_rollershutter">Rullegardiner</string>
+    <string name="channel_caption_powerswith">Strømbryter</string>
+    <string name="channel_caption_lightswith">Lysbryter</string>
+    <string name="channel_caption_thermometer">Termometer</string>
+    <string name="channel_caption_humidity">Fuktighet</string>
+    <string name="channel_caption_humidityandtemperature">Temperatur og fuktighet</string>
+    <string name="channel_caption_windsensor">Vindhastighet</string>
+    <string name="channel_caption_pressuresensor">Trykksensor</string>
+    <string name="channel_caption_rainsensor">Nedbørsmåling</string>
+    <string name="channel_caption_weightsensor">Vekt</string>
+    <string name="channel_caption_dimmer">Dimmer</string>
+    <string name="channel_caption_rgblighting">RGB belysning</string>
+    <string name="channel_caption_dimmerandrgblighting">Dimmer og RGB belysning</string>
+    <string name="channel_caption_noliquidsensor">Væskemangelsensor</string>
+    <string name="channel_caption_gatewayopeningsensor">Hageportåpner sensor</string>
+    <string name="channel_caption_gateopeningsensor">Portåpner sensor</string>
+    <string name="channel_caption_garagedooropeningsensor">Garasjeportåpner sensor</string>
+    <string name="channel_caption_dooropeningsensor">Døråpner sensor</string>
+    <string name="channel_caption_rsopeningsensor">Rullegardineråpner sensor</string>
+    <string name="channel_caption_depthsensor">Dybdesensor</string>
+    <string name="channel_caption_distancesensor">Avstandssensor</string>
+    <string name="channel_caption_windowopeningsensor">Vindusåpner sensor</string>
+    <string name="channel_caption_mailsensor">Postsensor</string>
 
     <string name="rgb_brightness">Lysstyrke</string>
     <string name="rgb_color">Farge</string>
@@ -128,11 +128,11 @@
     <string name="wizard_result_failed">Konfigurasjon mislykket!</string>
     <string name="wizard_not_enought_permissions">Applikasjonen har ikke tilstrekkelige rettigheter. Gå til applikasjonsstyring i system innstillinger. Finn applikasjonen %1$s og skru på alle rettighetene som kreves av den.</string>
     <string name="help">Hjelp</string>
-    <string name="channel_func_staircasetimer">Trappeautomat</string>
+    <string name="channel_caption_staircasetimer">Trappeautomat</string>
 
-    <string name="channel_func_electricitymeter">Elektrisitetsmåler</string>
-    <string name="channel_func_gasmeter">Gassmåler</string>
-    <string name="channel_func_watermeter">Vannmåler</string>
+    <string name="channel_caption_electricitymeter">Elektrisitetsmåler</string>
+    <string name="channel_caption_gasmeter">Gassmåler</string>
+    <string name="channel_caption_watermeter">Vannmåler</string>
 
     <string name="em_total_forward_avtive_energy">Aktiv strøm mottatt</string>
     <string name="em_reverse_active_energy">Aktiv strøm returnert</string>
@@ -149,8 +149,8 @@
     <string name="em_phase1">Fase 1</string>
     <string name="em_phase2">Fase 2</string>
     <string name="em_phase3">Fase 3</string>
-    <string name="channel_func_thermostat">Termostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Varmeapparat Home+</string>
+    <string name="channel_caption_thermostat">Termostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Varmeapparat Home+</string>
     <string name="hp_on">PÅ</string>
     <string name="hp_off">AV</string>
     <string name="hp_turn_on">SKRU PÅ</string>
@@ -205,5 +205,5 @@
     <string name="current_production">Produksjon i gjeldende måned</string>
     <string name="enter_superuser_credentials">Skriv inn superbrukerens legitimasjon</string>
 
-    <string name="channel_func_heatmeter">Varmemåler</string>
+    <string name="channel_caption_heatmeter">Varmemåler</string>
 </resources>

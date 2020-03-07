@@ -26,33 +26,33 @@
     <string name="err_hostnotfound">Adresa serverului nu a fost găsită</string>
     <string name="err_cantconnecttohost">Nu vă  puteţi conecta la server</string>
 
-    <string name="channel_func_gateway">Portiță</string>
-    <string name="channel_func_gate">Poartă</string>
-    <string name="channel_func_garagedoor">Ușa garajului</string>
-    <string name="channel_func_door">Uși</string>
-    <string name="channel_func_rollershutter">Jaluzea</string>
-    <string name="channel_func_powerswith">Comutator de alimentare</string>
-    <string name="channel_func_lightswith">Întrerupător de lumină</string>
-    <string name="channel_func_thermometer">Termometru</string>
-    <string name="channel_func_humidity">Umiditate</string>
-    <string name="channel_func_humidityandtemperature">Temperatură și umiditate</string>
-    <string name="channel_func_windsensor">Viteza vântului</string>
-    <string name="channel_func_pressuresensor">Senzor de presiune</string>
-    <string name="channel_func_rainsensor">Măsurarea precipitațiilor</string>
-    <string name="channel_func_weightsensor">Greutate</string>
-    <string name="channel_func_dimmer">Variator de lumină</string>
-    <string name="channel_func_rgblighting">Iluminare RGB</string>
-    <string name="channel_func_dimmerandrgblighting">Variator și iluminare RGB</string>
-    <string name="channel_func_noliquidsensor">Senzor lipsă de lichid</string>
-    <string name="channel_func_gatewayopeningsensor">Senzor de deschidere a porții</string>
-    <string name="channel_func_gateopeningsensor">Senzor de deschidere a porții</string>
-    <string name="channel_func_garagedooropeningsensor">Senzor de deschidere a porții de la garaj</string>
-    <string name="channel_func_dooropeningsensor">Senzor de deschidere a ușii</string>
-    <string name="channel_func_rsopeningsensor">Senzor de deschidere a jaluzelelor</string>
-    <string name="channel_func_depthsensor">Senzor de adâncime</string>
-    <string name="channel_func_distancesensor">Senzor de distanță</string>
-    <string name="channel_func_windowopeningsensor">Senzor de deschidere a geamului</string>
-    <string name="channel_func_mailsensor">Senzor de poștă</string>
+    <string name="channel_caption_gateway">Portiță</string>
+    <string name="channel_caption_gate">Poartă</string>
+    <string name="channel_caption_garagedoor">Ușa garajului</string>
+    <string name="channel_caption_door">Uși</string>
+    <string name="channel_caption_rollershutter">Jaluzea</string>
+    <string name="channel_caption_powerswith">Comutator de alimentare</string>
+    <string name="channel_caption_lightswith">Întrerupător de lumină</string>
+    <string name="channel_caption_thermometer">Termometru</string>
+    <string name="channel_caption_humidity">Umiditate</string>
+    <string name="channel_caption_humidityandtemperature">Temperatură și umiditate</string>
+    <string name="channel_caption_windsensor">Viteza vântului</string>
+    <string name="channel_caption_pressuresensor">Senzor de presiune</string>
+    <string name="channel_caption_rainsensor">Măsurarea precipitațiilor</string>
+    <string name="channel_caption_weightsensor">Greutate</string>
+    <string name="channel_caption_dimmer">Variator de lumină</string>
+    <string name="channel_caption_rgblighting">Iluminare RGB</string>
+    <string name="channel_caption_dimmerandrgblighting">Variator și iluminare RGB</string>
+    <string name="channel_caption_noliquidsensor">Senzor lipsă de lichid</string>
+    <string name="channel_caption_gatewayopeningsensor">Senzor de deschidere a porții</string>
+    <string name="channel_caption_gateopeningsensor">Senzor de deschidere a porții</string>
+    <string name="channel_caption_garagedooropeningsensor">Senzor de deschidere a porții de la garaj</string>
+    <string name="channel_caption_dooropeningsensor">Senzor de deschidere a ușii</string>
+    <string name="channel_caption_rsopeningsensor">Senzor de deschidere a jaluzelelor</string>
+    <string name="channel_caption_depthsensor">Senzor de adâncime</string>
+    <string name="channel_caption_distancesensor">Senzor de distanță</string>
+    <string name="channel_caption_windowopeningsensor">Senzor de deschidere a geamului</string>
+    <string name="channel_caption_mailsensor">Senzor de poștă</string>
 
     <string name="rgb_brightness">Claritate</string>
     <string name="rgb_color">Culoare</string>
@@ -128,11 +128,11 @@
     <string name="wizard_result_failed">Configurația a eșuat!</string>
     <string name="wizard_not_enought_permissions">Aplicația nu are permisiuni suficiente. Accesați gestionarea aplicațiilor în setările sistemului. Apoi localizați aplicația %1$s și activați toate permisiunile de care are nevoie.</string>
     <string name="help">Ajutor</string>
-    <string name="channel_func_staircasetimer">Întrerupător automat scară</string>
+    <string name="channel_caption_staircasetimer">Întrerupător automat scară</string>
 
-    <string name="channel_func_electricitymeter">Contor de electricitate</string>
-    <string name="channel_func_gasmeter">Contor de gaz</string>
-    <string name="channel_func_watermeter">Contor de apă</string>
+    <string name="channel_caption_electricitymeter">Contor de electricitate</string>
+    <string name="channel_caption_gasmeter">Contor de gaz</string>
+    <string name="channel_caption_watermeter">Contor de apă</string>
 
     <string name="em_total_forward_avtive_energy">Energie activă consumată</string>
     <string name="em_reverse_active_energy">Energia activă returnată</string>
@@ -149,8 +149,8 @@
     <string name="em_phase1">Faza 1</string>
     <string name="em_phase2">Faza 2</string>
     <string name="em_phase3">Faza 3</string>
-    <string name="channel_func_thermostat">Termostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Încălzitor Home+</string>
+    <string name="channel_caption_thermostat">Termostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Încălzitor Home+</string>
     <string name="hp_on">ACTIVAT</string>
     <string name="hp_off">DEZACTIVAT</string>
     <string name="hp_turn_on">ACTIVEAZĂ</string>
@@ -205,5 +205,5 @@
     <string name="current_production">Producția în luna curentă</string>
     <string name="enter_superuser_credentials">Introduceți datele de acreditare ale utilizatorului principal</string>
 
-    <string name="channel_func_heatmeter">Contorul de căldură</string>
+    <string name="channel_caption_heatmeter">Contorul de căldură</string>
 </resources>

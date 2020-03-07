@@ -26,33 +26,33 @@
     <string name="err_hostnotfound">Serveeradres werd niet gevonden</string>
     <string name="err_cantconnecttohost">Kon geen verbinding maken met de host</string>
 
-    <string name="channel_func_gateway">Poortje</string>
-    <string name="channel_func_gate">Poort</string>
-    <string name="channel_func_garagedoor">Garagedeur</string>
-    <string name="channel_func_door">Deuren</string>
-    <string name="channel_func_rollershutter">Rolluik</string>
-    <string name="channel_func_powerswith">Aan / uit schakelaar</string>
-    <string name="channel_func_lightswith">Lichtschakelaar</string>
-    <string name="channel_func_thermometer">Thermometer</string>
-    <string name="channel_func_humidity">Vochtigheid</string>
-    <string name="channel_func_humidityandtemperature">Temperatuur en luchtvochtigheid</string>
-    <string name="channel_func_windsensor">Windsnelheid</string>
-    <string name="channel_func_pressuresensor">Druksensor</string>
-    <string name="channel_func_rainsensor">Neerslag meting</string>
-    <string name="channel_func_weightsensor">Gewicht</string>
-    <string name="channel_func_dimmer">Dimmer</string>
-    <string name="channel_func_rgblighting">RGB-verlichting</string>
-    <string name="channel_func_dimmerandrgblighting">Dimmer en RGB-verlichting</string>
-    <string name="channel_func_noliquidsensor">Vloeistofniveau-sensor</string>
-    <string name="channel_func_gatewayopeningsensor">Openingssensor van het poortje</string>
-    <string name="channel_func_gateopeningsensor">Poort open sensor</string>
-    <string name="channel_func_garagedooropeningsensor">Garagedeur openingssensor</string>
-    <string name="channel_func_dooropeningsensor">Sensor deuropening</string>
-    <string name="channel_func_rsopeningsensor">Rolluiken openen sensor</string>
-    <string name="channel_func_depthsensor">Dieptesensor</string>
-    <string name="channel_func_distancesensor">Afstandssensor</string>
-    <string name="channel_func_windowopeningsensor">Raamopeningssensor</string>
-    <string name="channel_func_mailsensor">Postsensor</string>
+    <string name="channel_caption_gateway">Poortje</string>
+    <string name="channel_caption_gate">Poort</string>
+    <string name="channel_caption_garagedoor">Garagedeur</string>
+    <string name="channel_caption_door">Deuren</string>
+    <string name="channel_caption_rollershutter">Rolluik</string>
+    <string name="channel_caption_powerswith">Aan / uit schakelaar</string>
+    <string name="channel_caption_lightswith">Lichtschakelaar</string>
+    <string name="channel_caption_thermometer">Thermometer</string>
+    <string name="channel_caption_humidity">Vochtigheid</string>
+    <string name="channel_caption_humidityandtemperature">Temperatuur en luchtvochtigheid</string>
+    <string name="channel_caption_windsensor">Windsnelheid</string>
+    <string name="channel_caption_pressuresensor">Druksensor</string>
+    <string name="channel_caption_rainsensor">Neerslag meting</string>
+    <string name="channel_caption_weightsensor">Gewicht</string>
+    <string name="channel_caption_dimmer">Dimmer</string>
+    <string name="channel_caption_rgblighting">RGB-verlichting</string>
+    <string name="channel_caption_dimmerandrgblighting">Dimmer en RGB-verlichting</string>
+    <string name="channel_caption_noliquidsensor">Vloeistofniveau-sensor</string>
+    <string name="channel_caption_gatewayopeningsensor">Openingssensor van het poortje</string>
+    <string name="channel_caption_gateopeningsensor">Poort open sensor</string>
+    <string name="channel_caption_garagedooropeningsensor">Garagedeur openingssensor</string>
+    <string name="channel_caption_dooropeningsensor">Sensor deuropening</string>
+    <string name="channel_caption_rsopeningsensor">Rolluiken openen sensor</string>
+    <string name="channel_caption_depthsensor">Dieptesensor</string>
+    <string name="channel_caption_distancesensor">Afstandssensor</string>
+    <string name="channel_caption_windowopeningsensor">Raamopeningssensor</string>
+    <string name="channel_caption_mailsensor">Postsensor</string>
 
     <string name="rgb_brightness">Helderheid</string>
     <string name="rgb_color">Kleur</string>
@@ -128,11 +128,11 @@
     <string name="wizard_result_failed">Configuratie mislukt!</string>
     <string name="wizard_not_enought_permissions">De applicatie heeft onvoldoende rechten. Ga naar applicatiebeheer in systeeminstellingen. Zoek vervolgens de toepassing %1$s en schakel alle benodigde machtigingen in.</string>
     <string name="help">Help</string>
-    <string name="channel_func_staircasetimer">Trap automaat</string>
+    <string name="channel_caption_staircasetimer">Trap automaat</string>
 
-    <string name="channel_func_electricitymeter">Kilowattuurmeter</string>
-    <string name="channel_func_gasmeter">Gasmeter</string>
-    <string name="channel_func_watermeter">Watermeter</string>
+    <string name="channel_caption_electricitymeter">Kilowattuurmeter</string>
+    <string name="channel_caption_gasmeter">Gasmeter</string>
+    <string name="channel_caption_watermeter">Watermeter</string>
 
     <string name="em_total_forward_avtive_energy">Opgenomen actieve energie</string>
     <string name="em_reverse_active_energy">Actieve energie geretourneerd</string>
@@ -149,8 +149,8 @@
     <string name="em_phase1">Fase 1</string>
     <string name="em_phase2">Fase 2</string>
     <string name="em_phase3">Fase 3</string>
-    <string name="channel_func_thermostat">Thermostaat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Verwarming Home +</string>
+    <string name="channel_caption_thermostat">Thermostaat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Verwarming Home +</string>
     <string name="hp_on">AAN</string>
     <string name="hp_off">UIT</string>
     <string name="hp_turn_on">INSCHAKELEN</string>
@@ -205,5 +205,5 @@
     <string name="current_production">Productie in de huidige maand</string>
     <string name="enter_superuser_credentials">Voer de inloggegevens van de superuser in</string>
 
-    <string name="channel_func_heatmeter">Warmtemeter</string>
+    <string name="channel_caption_heatmeter">Warmtemeter</string>
 </resources>

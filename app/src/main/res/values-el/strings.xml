@@ -26,33 +26,33 @@
     <string name="err_hostnotfound">Η διεύθυνση του διακομιστή δεν βρέθηκε</string>
     <string name="err_cantconnecttohost">Αδυναμία σύνδεσης με τον διακομιστή</string>
 
-    <string name="channel_func_gateway">Αυλόπορτα</string>
-    <string name="channel_func_gate">Πύλη</string>
-    <string name="channel_func_garagedoor">Γκαραζόπορτα</string>
-    <string name="channel_func_door">Πόρτα</string>
-    <string name="channel_func_rollershutter">Περσίδες</string>
-    <string name="channel_func_powerswith">Διακόπτης παροχής ρεύματος</string>
-    <string name="channel_func_lightswith">Διακόπτης φωτισμού</string>
-    <string name="channel_func_thermometer">Θερμόμετρο</string>
-    <string name="channel_func_humidity">Υγρασία</string>
-    <string name="channel_func_humidityandtemperature">Θερμοκρασία και υγρασία</string>
-    <string name="channel_func_windsensor">Ταχύτητα αέρα</string>
-    <string name="channel_func_pressuresensor">Αισθητήρας πίεσης</string>
-    <string name="channel_func_rainsensor">Μέτρηση βροχοπτώσεων</string>
-    <string name="channel_func_weightsensor">Βάρος</string>
-    <string name="channel_func_dimmer">Ρεοστάτης</string>
-    <string name="channel_func_rgblighting">Φωτισμός RGB</string>
-    <string name="channel_func_dimmerandrgblighting">Ρεοστάτης και φωτισμός RGB</string>
-    <string name="channel_func_noliquidsensor">Αισθητήρας έλλειψης υγρού</string>
-    <string name="channel_func_gatewayopeningsensor">Αισθητήρας ανοίγματος της αυλόπορτας</string>
-    <string name="channel_func_gateopeningsensor">Αισθητήρας ανοίγματος της πύλης</string>
-    <string name="channel_func_garagedooropeningsensor">Αισθητήρας ανοίγματος της γκαραζόπορτας</string>
-    <string name="channel_func_dooropeningsensor">Αισθητήρας ανοίγματος πόρτας</string>
-    <string name="channel_func_rsopeningsensor">Αισθητήρας ανοίγματος περσίδων</string>
-    <string name="channel_func_depthsensor">Αισθητήρας βάθους</string>
-    <string name="channel_func_distancesensor">Αισθητήρας απόστασης</string>
-    <string name="channel_func_windowopeningsensor">Αισθητήρας ανοίγματος παραθύρου</string>
-    <string name="channel_func_mailsensor">Αισθητήρας ταχυδρομείου</string>
+    <string name="channel_caption_gateway">Αυλόπορτα</string>
+    <string name="channel_caption_gate">Πύλη</string>
+    <string name="channel_caption_garagedoor">Γκαραζόπορτα</string>
+    <string name="channel_caption_door">Πόρτα</string>
+    <string name="channel_caption_rollershutter">Περσίδες</string>
+    <string name="channel_caption_powerswith">Διακόπτης παροχής ρεύματος</string>
+    <string name="channel_caption_lightswith">Διακόπτης φωτισμού</string>
+    <string name="channel_caption_thermometer">Θερμόμετρο</string>
+    <string name="channel_caption_humidity">Υγρασία</string>
+    <string name="channel_caption_humidityandtemperature">Θερμοκρασία και υγρασία</string>
+    <string name="channel_caption_windsensor">Ταχύτητα αέρα</string>
+    <string name="channel_caption_pressuresensor">Αισθητήρας πίεσης</string>
+    <string name="channel_caption_rainsensor">Μέτρηση βροχοπτώσεων</string>
+    <string name="channel_caption_weightsensor">Βάρος</string>
+    <string name="channel_caption_dimmer">Ρεοστάτης</string>
+    <string name="channel_caption_rgblighting">Φωτισμός RGB</string>
+    <string name="channel_caption_dimmerandrgblighting">Ρεοστάτης και φωτισμός RGB</string>
+    <string name="channel_caption_noliquidsensor">Αισθητήρας έλλειψης υγρού</string>
+    <string name="channel_caption_gatewayopeningsensor">Αισθητήρας ανοίγματος της αυλόπορτας</string>
+    <string name="channel_caption_gateopeningsensor">Αισθητήρας ανοίγματος της πύλης</string>
+    <string name="channel_caption_garagedooropeningsensor">Αισθητήρας ανοίγματος της γκαραζόπορτας</string>
+    <string name="channel_caption_dooropeningsensor">Αισθητήρας ανοίγματος πόρτας</string>
+    <string name="channel_caption_rsopeningsensor">Αισθητήρας ανοίγματος περσίδων</string>
+    <string name="channel_caption_depthsensor">Αισθητήρας βάθους</string>
+    <string name="channel_caption_distancesensor">Αισθητήρας απόστασης</string>
+    <string name="channel_caption_windowopeningsensor">Αισθητήρας ανοίγματος παραθύρου</string>
+    <string name="channel_caption_mailsensor">Αισθητήρας ταχυδρομείου</string>
 
     <string name="rgb_brightness">Φωτεινότητα</string>
     <string name="rgb_color">Χρώμα</string>
@@ -128,11 +128,11 @@
     <string name="wizard_result_failed">Η διαμόρφωση απέτυχε!</string>
     <string name="wizard_not_enought_permissions">Η εφαρμογή δε διαθέτει επαρκή δικαιώματα. Μεταβείτε στη διαχείριση εφαρμογών στις ρυθμίσεις του συστήματος. Στη συνέχεια, εντοπίστε την εφαρμογή %1$s και ενεργοποιήστε όλα τα δικαιώματα που χρειάζεται.</string>
     <string name="help">Βοήθεια</string>
-    <string name="channel_func_staircasetimer">Αυτόματη σκάλα</string>
+    <string name="channel_caption_staircasetimer">Αυτόματη σκάλα</string>
 
-    <string name="channel_func_electricitymeter">Μετρητής ηλεκτρικής ενέργειας</string>
-    <string name="channel_func_gasmeter">Μετρητής αερίου</string>
-    <string name="channel_func_watermeter">Μετρητής νερού</string>
+    <string name="channel_caption_electricitymeter">Μετρητής ηλεκτρικής ενέργειας</string>
+    <string name="channel_caption_gasmeter">Μετρητής αερίου</string>
+    <string name="channel_caption_watermeter">Μετρητής νερού</string>
 
     <string name="em_total_forward_avtive_energy">Ληφθείσα ενεργή ενέργεια</string>
     <string name="em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
@@ -149,8 +149,8 @@
     <string name="em_phase1">Φάση 1</string>
     <string name="em_phase2">Φάση 2</string>
     <string name="em_phase3">Φάση 3</string>
-    <string name="channel_func_thermostat">Θερμοστάτης</string>
-    <string name="channel_func_thermostat_hp_homeplus">Θερμαντήρας Home+</string>
+    <string name="channel_caption_thermostat">Θερμοστάτης</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Θερμαντήρας Home+</string>
     <string name="hp_on">ΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
     <string name="hp_off">ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
     <string name="hp_turn_on">ΕΝΕΡΓΟΠΟΙΗΣΗ</string>
@@ -205,5 +205,5 @@
     <string name="current_production">Παραγωγή τον τρέχοντα μήνα</string>
     <string name="enter_superuser_credentials">Καταχωρίστε τα διαπιστευτήρια superuser</string>
 
-    <string name="channel_func_heatmeter">Μετρητής θερμότητας</string>
+    <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
 </resources>

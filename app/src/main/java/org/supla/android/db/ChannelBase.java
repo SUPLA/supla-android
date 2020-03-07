@@ -130,110 +130,110 @@ public abstract class ChannelBase extends DbItem {
 
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-                    idx = R.string.channel_func_gatewayopeningsensor;
+                    idx = R.string.channel_caption_gatewayopeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                    idx = R.string.channel_func_gateway;
+                    idx = R.string.channel_caption_gateway;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-                    idx = R.string.channel_func_gateopeningsensor;
+                    idx = R.string.channel_caption_gateopeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                    idx = R.string.channel_func_gate;
+                    idx = R.string.channel_caption_gate;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-                    idx = R.string.channel_func_garagedooropeningsensor;
+                    idx = R.string.channel_caption_garagedooropeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                    idx = R.string.channel_func_garagedoor;
+                    idx = R.string.channel_caption_garagedoor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-                    idx = R.string.channel_func_dooropeningsensor;
+                    idx = R.string.channel_caption_dooropeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                    idx = R.string.channel_func_door;
+                    idx = R.string.channel_caption_door;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-                    idx = R.string.channel_func_rsopeningsensor;
+                    idx = R.string.channel_caption_rsopeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                    idx = R.string.channel_func_rollershutter;
+                    idx = R.string.channel_caption_rollershutter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                    idx = R.string.channel_func_powerswith;
+                    idx = R.string.channel_caption_powerswith;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                    idx = R.string.channel_func_lightswith;
+                    idx = R.string.channel_caption_lightswith;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    idx = R.string.channel_func_thermometer;
+                    idx = R.string.channel_caption_thermometer;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-                    idx = R.string.channel_func_humidity;
+                    idx = R.string.channel_caption_humidity;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    idx = R.string.channel_func_humidityandtemperature;
+                    idx = R.string.channel_caption_humidityandtemperature;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-                    idx = R.string.channel_func_windsensor;
+                    idx = R.string.channel_caption_windsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-                    idx = R.string.channel_func_pressuresensor;
+                    idx = R.string.channel_caption_pressuresensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-                    idx = R.string.channel_func_rainsensor;
+                    idx = R.string.channel_caption_rainsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-                    idx = R.string.channel_func_weightsensor;
+                    idx = R.string.channel_caption_weightsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                    idx = R.string.channel_func_noliquidsensor;
+                    idx = R.string.channel_caption_noliquidsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                    idx = R.string.channel_func_dimmer;
+                    idx = R.string.channel_caption_dimmer;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    idx = R.string.channel_func_rgblighting;
+                    idx = R.string.channel_caption_rgblighting;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-                    idx = R.string.channel_func_dimmerandrgblighting;
+                    idx = R.string.channel_caption_dimmerandrgblighting;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-                    idx = R.string.channel_func_depthsensor;
+                    idx = R.string.channel_caption_depthsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-                    idx = R.string.channel_func_distancesensor;
+                    idx = R.string.channel_caption_distancesensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-                    idx = R.string.channel_func_windowopeningsensor;
+                    idx = R.string.channel_caption_windowopeningsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-                    idx = R.string.channel_func_mailsensor;
+                    idx = R.string.channel_caption_mailsensor;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-                    idx = R.string.channel_func_staircasetimer;
+                    idx = R.string.channel_caption_staircasetimer;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                    idx = R.string.channel_func_electricitymeter;
+                    idx = R.string.channel_caption_electricitymeter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                    idx = R.string.channel_func_gasmeter;
+                    idx = R.string.channel_caption_gasmeter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                    idx = R.string.channel_func_watermeter;
+                    idx = R.string.channel_caption_watermeter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-                    idx = R.string.channel_func_heatmeter;
+                    idx = R.string.channel_caption_heatmeter;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-                    idx = R.string.channel_func_thermostat;
+                    idx = R.string.channel_caption_thermostat;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                    idx = R.string.channel_func_thermostat_hp_homeplus;
+                    idx = R.string.channel_caption_thermostat_hp_homeplus;
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-                    idx = R.string.channel_func_valve;
+                    idx = R.string.channel_caption_valve;
                     break;
             }
 
