@@ -37,7 +37,7 @@ import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 @SuppressLint("registered")
-public class NavigationActivity extends BaseActivity implements View.OnClickListener {
+public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
     public static final String INTENTSENDER = "sender";
     public static final String INTENTSENDER_MAIN = "main";
@@ -47,11 +47,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout MenuBarLayout;
     private MenuItemsLayout mMenuItemsLayout;
     private ViewGroup Content;
-
     private Button MenuButton;
     private Button GroupButton;
-
     private boolean Anim = false;
+    private SuperuserAuthorizationDialog mAuthDialog;
 
     @Override
     protected void onResume() {
@@ -392,7 +391,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     showAddWizard();
                     break;
                 case MenuItemsLayout.BTN_Z_WAVE:
-                    showZWaveConfigurationWizard();
+                    SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE);
                     break;
                 case MenuItemsLayout.BTN_DONATE:
                     donate();
@@ -422,4 +421,31 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    public void SuperUserAuthorize(int sourceBtnId) {
+        if (mAuthDialog!=null) {
+            mAuthDialog.close();
+            mAuthDialog = null;
+        }
+
+        mAuthDialog =
+                new SuperuserAuthorizationDialog(this);
+        mAuthDialog.setObject(sourceBtnId);
+        mAuthDialog.setOnAuthorizarionResultListener(this);
+        mAuthDialog.show();
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
+        if (dialog != null
+                && dialog == mAuthDialog
+                && dialog.getObject().equals(Integer.valueOf(MenuItemsLayout.BTN_Z_WAVE))) {
+            showZWaveConfigurationWizard();
+            mAuthDialog = null;
+        }
+    }
+
+    @Override
+    public void authorizationCanceled() {
+    }
 }

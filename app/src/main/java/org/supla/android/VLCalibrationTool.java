@@ -129,7 +129,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     @Override
-    public void onSuperuserOnAuthorizarionResult(boolean Success, int Code) {
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
         if (Success) {
             registerMessageHandler();
             calCfgRequest(VL_MSG_CONFIGURATION_MODE);
