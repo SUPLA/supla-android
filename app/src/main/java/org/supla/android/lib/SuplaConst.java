@@ -246,7 +246,7 @@ public class SuplaConst {
                 resId = R.string.channel_func_controllingthegaragedoor;
                 break;
             case SUPLA_CHANNELFNC_THERMOMETER:
-                resId = R.string.channel_func_thermostat;
+                resId = R.string.channel_func_thermometer;
                 break;
             case SUPLA_CHANNELFNC_HUMIDITY:
                 resId = R.string.channel_func_humidity;
@@ -324,8 +324,6 @@ public class SuplaConst {
                 resId = R.string.channel_func_staircasetimer;
                 break;
             case SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                resId = R.string.channel_func_electricity_meter;
-                break;
             case SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 resId = R.string.channel_func_electricity_meter;
                 break;
