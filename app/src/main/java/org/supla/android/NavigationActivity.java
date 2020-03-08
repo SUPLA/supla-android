@@ -440,8 +440,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         if (dialog != null
                 && dialog == mAuthDialog
                 && dialog.getObject().equals(Integer.valueOf(MenuItemsLayout.BTN_Z_WAVE))) {
-            showZWaveConfigurationWizard();
+            mAuthDialog.close();
             mAuthDialog = null;
+            showZWaveConfigurationWizard();
         }
     }
 
