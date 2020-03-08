@@ -207,5 +207,44 @@
     <string name="current_production">Produção no mês atual</string>
     <string name="enter_superuser_credentials">Digite as credenciais do superusuário</string>
 
+    <string name="channel_func_none">Falta de funções</string>
+    <string name="channel_func_controllingthegatewaylock">Abrir um portão</string>
+    <string name="channel_func_controllingthegate">Abrir/fechar um portão de entrada</string>
+    <string name="channel_func_controllingthegaragedoor">OAbrir/fechar um portão de garagem</string>
+    <string name="channel_func_thermometer">Termómetro</string>
+    <string name="channel_func_humidity">Sensor de humidade</string>
+    <string name="channel_func_humidityandtemperature">Sensor da temperatura e humidade</string>
+    <string name="channel_func_opensensor_gateway">Sensor da abertura do portão</string>
+    <string name="channel_func_opensensor_gate">Sensor da abertura do portão de entrada</string>
+    <string name="channel_func_opensensor_garagedoor">Sensor da abertura do portão de garagem</string>
+    <string name="channel_func_noliquidsensor">Sensor da falta do líquido</string>
+    <string name="channel_func_controllingthedoorlock">Abrir uma porta</string>
+    <string name="channel_func_opensensor_door">Sensor da abertura da porta</string>
+    <string name="channel_func_controllingtherollershutter">Abrir e fechar estores</string>
+    <string name="channel_func_opensensor_rollershutter">Sensor da abertura dos estores</string>
+    <string name="channel_func_powerswitch">Interruptor da alimentação</string>
+    <string name="channel_func_lightswitch">Interruptor da luz</string>
+    <string name="channel_func_dimmer">Controlador da luz</string>
+    <string name="channel_func_rgblighting">Iluminação RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Controlador da luz e iluminação RGB</string>
+    <string name="channel_func_depthsensor">Sensor da profundidade</string>
+    <string name="channel_func_distancesensor">Sensor da distância</string>
+    <string name="channel_func_openingsensor_window">Sensor de abertura para uma janela</string>
+    <string name="channel_func_mailsensor">Sensor de correio</string>
+    <string name="channel_func_windsensor">Sensor de vento</string>
+    <string name="channel_func_pressuresensor">Sensor de pressão</string>
+    <string name="channel_func_rainsensor">Sensor de chuva</string>
+    <string name="channel_func_weightsensor">Peso</string>
+    <string name="channel_func_weather_station">Estação meteorológica</string>
+    <string name="channel_func_staircasetimer">Comutador de escada</string>
+    <string name="channel_func_electricity_meter">Medidor de energia elétrica</string>
+    <string name="channel_func_gas_meter">Medidor de gás</string>
+    <string name="channel_func_water_meter">Medidor de água</string>
+    <string name="channel_func_heat_meter">Medidor de calor</string>
+    <string name="channel_func_thermostat">Termostato</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Aquecedor Home+</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
     <string name="channel_caption_heatmeter">Medidor de calor</string>
 </resources>

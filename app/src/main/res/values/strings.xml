@@ -215,7 +215,7 @@
     <string name="production_acording_to_phases">Production according to phases</string>
     <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
-    <string translatable="false" name="channel_func_none">No function</string>
+    <string name="channel_func_none">No function</string>
     <string name="channel_func_controllingthegatewaylock">Gateway lock operation</string>
     <string name="channel_func_controllingthegate">Gate operation</string>
     <string name="channel_func_controllingthegaragedoor">Garage door operation</string>

@@ -185,5 +185,44 @@
     <string name="production_acording_to_phases">Gamyba pagal fazes</string>
     <string name="enter_superuser_credentials">Įveskite pagrindinio vartotojo kredencialus</string>
 
+    <string name="channel_func_none">Funkcijų nėra</string>
+    <string name="channel_func_controllingthegatewaylock">Durelių atidarymas</string>
+    <string name="channel_func_controllingthegate">Įvažiavimo vartų atidarymas/uždarymas</string>
+    <string name="channel_func_controllingthegaragedoor">Garažo vartų atidarymas/uždarymas</string>
+    <string name="channel_func_thermometer">Termometras</string>
+    <string name="channel_func_humidity">Drėgmės jutiklis</string>
+    <string name="channel_func_humidityandtemperature">Temperatūros ir drėgmės jutiklis</string>
+    <string name="channel_func_opensensor_gateway">Durelių atidarymo jutiklis</string>
+    <string name="channel_func_opensensor_gate">Įvažiavimo vartų atidarymo jutiklis</string>
+    <string name="channel_func_opensensor_garagedoor">Garažo vartų atidarymo jutiklis</string>
+    <string name="channel_func_noliquidsensor">Skysčio stygiaus jutiklis</string>
+    <string name="channel_func_controllingthedoorlock">Durų atidarymas</string>
+    <string name="channel_func_opensensor_door">Durų atidarymo jutiklis</string>
+    <string name="channel_func_controllingtherollershutter">Žaliuzių atidengimas ir uždengimas</string>
+    <string name="channel_func_opensensor_rollershutter">Žaliuzių atidengimo jutiklis</string>
+    <string name="channel_func_powerswitch">Maitinimo jungiklis</string>
+    <string name="channel_func_lightswitch">Šviesos jungiklis</string>
+    <string name="channel_func_dimmer">Šviesos srauto reguliatorius</string>
+    <string name="channel_func_rgblighting">RGB apšvietimas</string>
+    <string name="channel_func_dimmerandrgblighting">Šviesos srauto reguliatorius ir RGB apšvietimas</string>
+    <string name="channel_func_depthsensor">Gilio jutiklis</string>
+    <string name="channel_func_distancesensor">Atstumo jutiklis</string>
+    <string name="channel_func_openingsensor_window">Lango atidarymo jutiklis</string>
+    <string name="channel_func_mailsensor">Pašto jutiklis</string>
+    <string name="channel_func_windsensor">Vėjo jutiklis</string>
+    <string name="channel_func_pressuresensor">Slėgio jutiklis</string>
+    <string name="channel_func_rainsensor">Lietaus jutiklis</string>
+    <string name="channel_func_weightsensor">Svoris</string>
+    <string name="channel_func_weather_station">Meteorologijos stotis</string>
+    <string name="channel_func_staircasetimer">Laiptų automatas</string>
+    <string name="channel_func_electricity_meter">Elektros energijos skaitiklis</string>
+    <string name="channel_func_gas_meter">Dujų skaitiklis</string>
+    <string name="channel_func_water_meter">Vandens skaitiklis</string>
+    <string name="channel_func_heat_meter">Šilumos skaitiklis</string>
+    <string name="channel_func_thermostat">Termostatas</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Šildytuvas Home+</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
     <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
 </resources>
