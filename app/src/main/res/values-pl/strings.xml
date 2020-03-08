@@ -118,7 +118,7 @@
     <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
 
     <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
-    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFI, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
+    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
     <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
     <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>
@@ -218,6 +218,45 @@
     <string name="production_acording_to_phases">Produkcja wg. faz</string>
     <string name="current_production">Produkcja w bieżącym miesiącu</string>
     <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
+
+    <string name="channel_func_none">Brak funkcji</string>
+    <string name="channel_func_controllingthegatewaylock">Otwieranie furtki</string>
+    <string name="channel_func_controllingthegate">Otwieranie/zamykanie bramy wjazdowej</string>
+    <string name="channel_func_controllingthegaragedoor">Otwieranie/zamykanie bramy garażowej</string>
+    <string name="channel_func_thermometer">Termometr</string>
+    <string name="channel_func_humidity">Czujnik wilgotności</string>
+    <string name="channel_func_humidityandtemperature">Czujnik temperatury i wilgotności</string>
+    <string name="channel_func_opensensor_gateway">Czujnik otwarcia furtki</string>
+    <string name="channel_func_opensensor_gate">Czujnik otwarcia bramy wjazdowej</string>
+    <string name="channel_func_opensensor_garagedoor">Czujnik otwarcia bramy garażowej</string>
+    <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
+    <string name="channel_func_controllingthedoorlock">Otwieranie drzwi</string>
+    <string name="channel_func_opensensor_door">Czujnik otwarcia drzwi</string>
+    <string name="channel_func_controllingtherollershutter">Otwieranie i zamykanie rolet</string>
+    <string name="channel_func_opensensor_rollershutter">Czujnik otwarcia rolet</string>
+    <string name="channel_func_powerswitch">Włącznik zasilania</string>
+    <string name="channel_func_lightswitch">Włącznik światła</string>
+    <string name="channel_func_dimmer">Ściemniacz</string>
+    <string name="channel_func_rgblighting">Oświetlenie RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
+    <string name="channel_func_depthsensor">Czujnik głębokości</string>
+    <string name="channel_func_distancesensor">Czujnik odległości</string>
+    <string name="channel_func_openingsensor_window">Czujnik otwarcia okna</string>
+    <string name="channel_func_mailsensor">Czujnik poczty</string>
+    <string name="channel_func_windsensor">Czujnik wiatru</string>
+    <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
+    <string name="channel_func_rainsensor">Czujnik deszczu</string>
+    <string name="channel_func_weightsensor">Waga</string>
+    <string name="channel_func_weather_station">Stacja pogodowa</string>
+    <string name="channel_func_staircasetimer">Automat schodowy</string>
+    <string name="channel_func_electricity_meter">Licznik energii elektrycznej</string>
+    <string name="channel_func_gas_meter">Licznik gazu</string>
+    <string name="channel_func_water_meter">Licznik wody</string>
+    <string name="channel_func_heat_meter">Licznik ciepła</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Grzałka Home+</string>
+    <string name="channel_func_valve_openclose">Zawór</string>
+    <string name="channel_func_valve_percentage">Zawór</string>
 
     <string name="channel_caption_valve">Zawór</string>
     <string name="channel_btn_close">Zamknij</string>
