@@ -263,7 +263,6 @@
     <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
-    <string name="channel_func_none">Brak funkcji</string>
 
     <string name="channel_caption_heatmeter">Licznik ciepła</string>
     <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
