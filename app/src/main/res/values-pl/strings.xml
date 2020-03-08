@@ -118,7 +118,7 @@
     <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
 
     <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
-    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFI, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
+    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
     <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
     <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>

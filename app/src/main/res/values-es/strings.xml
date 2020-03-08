@@ -123,7 +123,7 @@
     <string name="wizard_step1_txt1">Bienvenido al creador de adición de dispositivos, que te ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
     <string name="wizard_step2_txt1">Introduce la contraseña a tu red WiFi, llamada</string>
     <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera a la información sobre la disponibilidad de registro de dispositivos!</string>
-    <string name="wizard_no_internetwifi">Antes de empezar, accede a internet conectándote a una red WiFI que también será la utilizada por el actuador para conectarse al servidor.</string>
+    <string name="wizard_no_internetwifi">Antes de empezar, accede a internet conectándote a una red WiFi que también será la utilizada por el actuador para conectarse al servidor.</string>
     <string name="wizard_server_compat_error">¡El servidor al que te has conectado no es compatible con esta característica!</string>
     <string name="wizard_step2_txt3">*)El actuador usará la red %1$s para conectarse al servidor.</string>
     <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pasa al administrador de aplicaciones en los ajustes del sistema. A continuación, busca la aplicación %1$s y activa todos los permisos que exija.</string>
