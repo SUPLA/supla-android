@@ -39,6 +39,7 @@ public class SuplaClientMsg {
     private int Command;
     private int Result;
     private byte[] data;
+    private int Func;
 
     public final static int onDataChanged         = 1;
     public final static int onConnecting          = 2;
@@ -202,5 +203,13 @@ public class SuplaClientMsg {
 
     public void setChannelBasicCfg(SuplaChannelBasicCfg channelBasicCfg) {
         ChannelBasicCfg = channelBasicCfg;
+    }
+
+    public int getFunc() {
+        return Func;
+    }
+
+    public void setFunc(int func) {
+        Func = func;
     }
 }

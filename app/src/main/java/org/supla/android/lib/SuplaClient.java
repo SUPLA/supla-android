@@ -135,6 +135,8 @@ public class SuplaClient extends Thread {
     private native boolean scSetRegistrationEnabled(long _supla_client,
                                                     int ioDeviceRegTimeSec, int clientRegTimeSec);
 
+    private native boolean scReconnectDevice(long _supla_client, int DeviceID);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -508,6 +510,20 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean reconnectDevice(int DeviceId) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scReconnectDevice(_supla_client_ptr, DeviceId);
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -824,10 +840,11 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onChannelFunctionSetResult(int ChannelID, int ResultCode) {
+    private void onChannelFunctionSetResult(int ChannelID, int Func, int ResultCode) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onChannelFunctionSetResult);
         msg.setCode(ResultCode);
+        msg.setFunc(Func);
         msg.setChannelId(ChannelID);
         sendMessage(msg);
     }

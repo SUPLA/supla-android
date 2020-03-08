@@ -184,7 +184,7 @@ public class BaseActivity extends Activity {
                         OnChannelBasicCfg(_msg.getChannelBasicCfg());
                         break;
                     case SuplaClientMsg.onChannelFunctionSetResult:
-                        OnChannelFunctionSetResult(_msg.getChannelId(), _msg.getCode());
+                        OnChannelFunctionSetResult(_msg.getChannelId(), _msg.getFunc(), _msg.getCode());
                         break;
                     case SuplaClientMsg.onClientsReconnectResult:
                         OnClientsReconnectResult(_msg.getCode());
@@ -245,7 +245,7 @@ public class BaseActivity extends Activity {
 
     protected void OnChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
 
-    protected void OnChannelFunctionSetResult(int channelId, int code) {};
+    protected void OnChannelFunctionSetResult(int channelId, int func, int code) {};
 
     protected void OnClientsReconnectResult(int code) {};
 
