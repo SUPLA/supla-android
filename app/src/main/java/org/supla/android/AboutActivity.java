@@ -34,23 +34,18 @@ public class AboutActivity extends NavigationActivity {
         setContentView(R.layout.activity_about);
 
         TextView v = findViewById(R.id.about_project_name);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         v = findViewById(R.id.cfg_label_svr_address);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
 
         v.setText(getResources().getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
 
         v = findViewById(R.id.about_text);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-        v.setTypeface(type);
-
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         homepage = findViewById(R.id.about_homepage);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        homepage.setTypeface(type);
+        homepage.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
         homepage.setOnClickListener(this);
         homepage.setTransformationMethod(null);
 

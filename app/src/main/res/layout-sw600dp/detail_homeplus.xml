@@ -569,7 +569,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
-                android:text="@string/channel_func_thermostat_hp_homeplus"
+                android:text="@string/channel_caption_thermostat_hp_homeplus"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="20sp"
                 tools:ignore="HardcodedText" />

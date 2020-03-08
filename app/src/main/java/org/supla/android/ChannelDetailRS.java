@@ -93,7 +93,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
 
-        Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/OpenSans-Bold.ttf");
+        Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
 
         tvPercentCaption = findViewById(R.id.rsDetailPercentCaption);
         tvPercentCaption.setTypeface(type);
@@ -101,10 +101,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        type = Typeface.createFromAsset(getContext().getAssets(), "fonts/Quicksand-Regular.ttf");
-
         tvTitle = findViewById(R.id.rsDetailTitle);
-        tvTitle.setTypeface(type);
+        tvTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         addOnLayoutChangeListener(this);
         delayTimer1 = null;

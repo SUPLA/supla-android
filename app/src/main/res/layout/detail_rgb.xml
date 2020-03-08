@@ -193,7 +193,7 @@
                     android:layout_marginRight="@dimen/rgb_detail_tab_btn_margin"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_rgb_right_sel_btn"
-                    android:text="@string/channel_func_dimmer"
+                    android:text="@string/channel_caption_dimmer"
                     android:textSize="@dimen/rgb_detail_tab_btn_text" />
             </LinearLayout>
         </RelativeLayout>

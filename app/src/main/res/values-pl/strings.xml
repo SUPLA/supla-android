@@ -27,33 +27,33 @@
     <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
     <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
 
-    <string name="channel_func_gateway">Furtka</string>
-    <string name="channel_func_gate">Brama</string>
-    <string name="channel_func_garagedoor">Brama garażowa</string>
-    <string name="channel_func_door">Drzwi</string>
-    <string name="channel_func_rollershutter">Roleta</string>
-    <string name="channel_func_powerswith">Włącznik zasilania</string>
-    <string name="channel_func_lightswith">Włącznik światła</string>
-    <string name="channel_func_thermometer">Termometr</string>
-    <string name="channel_func_humidity">Wilgotność</string>
-    <string name="channel_func_humidityandtemperature">Temperatura i wilgotność</string>
-    <string name="channel_func_windsensor">Prędkość wiatru</string>
-    <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
-    <string name="channel_func_rainsensor">Pomiar opadów</string>
-    <string name="channel_func_weightsensor">Waga</string>
-    <string name="channel_func_dimmer">Ściemniacz</string>
-    <string name="channel_func_rgblighting">Oświetlenie RGB</string>
-    <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
-    <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
-    <string name="channel_func_gatewayopeningsensor">Czujnik otwacia furtki</string>
-    <string name="channel_func_gateopeningsensor">Czujnik otwarcia bramy</string>
-    <string name="channel_func_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
-    <string name="channel_func_dooropeningsensor">Czujnik otwacia drzwi</string>
-    <string name="channel_func_rsopeningsensor">Czujnik otwacia rolet</string>
-    <string name="channel_func_depthsensor">Czujnik głębokości</string>
-    <string name="channel_func_distancesensor">Czujnik odległości</string>
-    <string name="channel_func_windowopeningsensor">Czujnik otwarcia okna</string>
-    <string name="channel_func_mailsensor">Czujnik poczty</string>
+    <string name="channel_caption_gateway">Furtka</string>
+    <string name="channel_caption_gate">Brama</string>
+    <string name="channel_caption_garagedoor">Brama garażowa</string>
+    <string name="channel_caption_door">Drzwi</string>
+    <string name="channel_caption_rollershutter">Roleta</string>
+    <string name="channel_caption_powerswith">Włącznik zasilania</string>
+    <string name="channel_caption_lightswith">Włącznik światła</string>
+    <string name="channel_caption_thermometer">Termometr</string>
+    <string name="channel_caption_humidity">Wilgotność</string>
+    <string name="channel_caption_humidityandtemperature">Temperatura i wilgotność</string>
+    <string name="channel_caption_windsensor">Prędkość wiatru</string>
+    <string name="channel_caption_pressuresensor">Czujnik ciśnienia</string>
+    <string name="channel_caption_rainsensor">Pomiar opadów</string>
+    <string name="channel_caption_weightsensor">Waga</string>
+    <string name="channel_caption_dimmer">Ściemniacz</string>
+    <string name="channel_caption_rgblighting">Oświetlenie RGB</string>
+    <string name="channel_caption_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
+    <string name="channel_caption_noliquidsensor">Czujnik braku cieczy</string>
+    <string name="channel_caption_gatewayopeningsensor">Czujnik otwacia furtki</string>
+    <string name="channel_caption_gateopeningsensor">Czujnik otwarcia bramy</string>
+    <string name="channel_caption_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
+    <string name="channel_caption_dooropeningsensor">Czujnik otwacia drzwi</string>
+    <string name="channel_caption_rsopeningsensor">Czujnik otwacia rolet</string>
+    <string name="channel_caption_depthsensor">Czujnik głębokości</string>
+    <string name="channel_caption_distancesensor">Czujnik odległości</string>
+    <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
+    <string name="channel_caption_mailsensor">Czujnik poczty</string>
 
     <string name="rgb_brightness">Jasność</string>
     <string name="rgb_color">Kolor</string>
@@ -142,11 +142,11 @@
     <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
     <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez nią uprawnienia.</string>
     <string name="help">Pomoc</string>
-    <string name="channel_func_staircasetimer">Automat schodowy</string>
+    <string name="channel_caption_staircasetimer">Automat schodowy</string>
 
-    <string name="channel_func_electricitymeter">Licznik energii elektrycznej</string>
-    <string name="channel_func_gasmeter">Licznik gazu</string>
-    <string name="channel_func_watermeter">Licznik wody</string>
+    <string name="channel_caption_electricitymeter">Licznik energii elektrycznej</string>
+    <string name="channel_caption_gasmeter">Licznik gazu</string>
+    <string name="channel_caption_watermeter">Licznik wody</string>
 
     <string name="em_total_forward_avtive_energy">Energia czynna pobrana</string>
     <string name="em_reverse_active_energy">Energia czynna zwrócona</string>
@@ -163,8 +163,8 @@
     <string name="em_phase1">Faza 1</string>
     <string name="em_phase2">Faza 2</string>
     <string name="em_phase3">Faza 3</string>
-    <string name="channel_func_thermostat">Termostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Grzałka Home+</string>
+    <string name="channel_caption_thermostat">Termostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Grzałka Home+</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
     <string name="hp_turn_on">WŁĄCZ</string>
@@ -219,10 +219,21 @@
     <string name="current_production">Produkcja w bieżącym miesiącu</string>
     <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
 
-    <string name="channel_func_valve">Zawór</string>
+    <string name="channel_caption_valve">Zawór</string>
     <string name="channel_btn_close">Zamknij</string>
-    <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym. Zanim go otworzysz upewnij się, że nie został zamknięty z uwagi na zalanie. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz go otworzyć z aplikacji?!</string>
+    <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="channel_func_none">Brak funkcji</string>
 
+    <string name="channel_caption_heatmeter">Licznik ciepła</string>
+    <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
+    <string name="device_name">Nazwa urządzenia:</string>
+    <string name="channel_number">Numer kanału:</string>
+    <string name="channel_id">Id kanału:</string>
+    <string name="channel_caption">Podpis:</string>
+    <string name="soft_ver">Wersja opr.:</string>
+
+    <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
+    <string name="function">Funkcja</string>
 </resources>

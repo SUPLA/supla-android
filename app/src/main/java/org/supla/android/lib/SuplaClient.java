@@ -852,7 +852,6 @@ public class SuplaClient extends Thread {
         msg.setSuccess(authorized);
         msg.setCode(code);
         sendMessage(msg);
-        Trace.d(log_tag, "Authorized: "+Boolean.toString(authorized));
     }
 
     private void onDataChanged(int ChannelId, int GroupId) {
@@ -993,7 +992,10 @@ public class SuplaClient extends Thread {
                         if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
-                            if (!cfg.Host.isEmpty()) {
+                            if (cfg.Host.isEmpty()) {
+                                onConnError(new SuplaConnError(
+                                        SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
+                            } else {
                                 prefs.setServerAddress(cfg.Host);
                             }
                         }

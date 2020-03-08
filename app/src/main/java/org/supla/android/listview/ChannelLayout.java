@@ -36,9 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.Trace;
+import org.supla.android.SuplaApp;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.images.ImageCache;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
@@ -46,7 +45,6 @@ import org.supla.android.ViewHelper;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
@@ -97,9 +95,7 @@ public class ChannelLayout extends LinearLayout {
         public CaptionView(Context context, int imgl_id) {
             super(context);
 
-
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
-            setTypeface(type);
+            setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.channel_caption_text_size));
             setTextColor(getResources().getColor(R.color.channel_caption_text));
@@ -121,9 +117,7 @@ public class ChannelLayout extends LinearLayout {
         TextView tv = new TextView(context);
         tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-
-        tv.setTypeface(type);
+        tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.channel_btn_text_size));
@@ -171,8 +165,7 @@ public class ChannelLayout extends LinearLayout {
             TextView Text = new TextView(context);
             Text.setId(ViewHelper.generateViewId());
 
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
-            Text.setTypeface(type);
+            Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
             Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.channel_imgtext_size));
             Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
@@ -252,7 +245,8 @@ public class ChannelLayout extends LinearLayout {
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER) {
 
                 width *= 2.8;
 
@@ -981,6 +975,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:

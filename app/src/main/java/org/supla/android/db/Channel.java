@@ -277,6 +277,9 @@ public class Channel extends ChannelBase {
                 case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                     dUnit = "m\u00B3";
                     break;
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+                    dUnit = "GJ";
+                    break;
             }
             return getUnit(dUnit);
         }

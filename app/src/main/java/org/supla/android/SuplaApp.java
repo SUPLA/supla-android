@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 
@@ -34,6 +35,10 @@ import android.os.Vibrator;
 public class SuplaApp extends Application {
 
     private ArrayList<Handler>msgReceivers = new ArrayList<>();
+
+    private Typeface mTypefaceQuicksandRegular;
+    private Typeface mTypefaceOpenSansRegular;
+    private Typeface mTypefaceOpenSansBold;
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();
@@ -190,5 +195,38 @@ public class SuplaApp extends Application {
                 _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
             }
         }
+    }
+
+    public void initTypefaceCollection(Context context) {
+        if (context == null) {
+            return;
+        }
+
+        if (mTypefaceQuicksandRegular == null) {
+            mTypefaceQuicksandRegular = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/Quicksand-Regular.ttf");
+        }
+
+        if (mTypefaceOpenSansRegular == null) {
+            mTypefaceOpenSansRegular = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/OpenSans-Regular.ttf");
+        }
+
+        if (mTypefaceOpenSansBold == null) {
+            mTypefaceOpenSansBold = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/OpenSans-Bold.ttf");
+        }
+    }
+
+    public Typeface getTypefaceQuicksandRegular() {
+        return mTypefaceQuicksandRegular;
+    }
+
+    public Typeface getTypefaceOpenSansRegular() {
+        return mTypefaceOpenSansRegular;
+    }
+
+    public Typeface getTypefaceOpenSansBold() {
+        return mTypefaceOpenSansBold;
     }
 }

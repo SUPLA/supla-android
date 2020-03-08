@@ -105,9 +105,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
         chartHelper.setCombinedChart((CombinedChart)findViewById(R.id.thCombinedChart));
         tvTemperature = findViewById(R.id.thTvTemperature);
 
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-        tvTemperature.setTypeface(tf);
+        tvTemperature.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         Resources r = getResources();
 

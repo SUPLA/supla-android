@@ -20,13 +20,17 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import org.supla.android.lib.SuplaChannelBasicCfg;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaEvent;
+import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
@@ -43,6 +47,12 @@ public class BaseActivity extends Activity {
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
     protected static Activity CurrentActivity = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SuplaApp.getApp().initTypefaceCollection(this);
+    }
 
     @Override
     protected void onResume() {
@@ -155,6 +165,33 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onRegistrationEnabled:
                         OnRegistrationEnabled(_msg.getRegistrationEnabled());
                         break;
+                    case SuplaClientMsg.onOAuthTokenRequestResult:
+                        OnOAuthTokenRequestResult(_msg.getOAuthToken());
+                        break;
+                    case SuplaClientMsg.onCalCfgResult:
+                        OnCalCfgResult(_msg.getChannelId(),
+                                _msg.getCommand(),
+                                _msg.getResult(),
+                                _msg.getData());
+                        break;
+                    case SuplaClientMsg.onSuperuserAuthorizationResult:
+                        OnSuperuserAuthorizationResult(_msg.isSuccess(), _msg.getResult());
+                        break;
+                    case SuplaClientMsg.onChannelState:
+                        OnChannelState(_msg.getChannelState());
+                        break;
+                    case SuplaClientMsg.onChannelBasicCfg:
+                        OnChannelBasicCfg(_msg.getChannelBasicCfg());
+                        break;
+                    case SuplaClientMsg.onChannelFunctionSetResult:
+                        OnChannelFunctionSetResult(_msg.getChannelId(), _msg.getCode());
+                        break;
+                    case SuplaClientMsg.onClientsReconnectResult:
+                        OnClientsReconnectResult(_msg.getCode());
+                        break;
+                    case SuplaClientMsg.onSetRegistrationEnabledResult:
+                        OnSetRegistrationEnabledResult(_msg.getCode());
+                        break;
                 }
 
             }
@@ -197,4 +234,20 @@ public class BaseActivity extends Activity {
     protected void OnConnErrorMsg(SuplaConnError error) {}
 
     protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {}
+
+    protected void OnOAuthTokenRequestResult(SuplaOAuthToken token) {};
+
+    protected void OnCalCfgResult(int channelId, int command, int result, byte[] data) {};
+
+    protected void OnSuperuserAuthorizationResult(boolean success, int code) {};
+
+    protected void OnChannelState(SuplaChannelState state) {};
+
+    protected void OnChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
+
+    protected void OnChannelFunctionSetResult(int channelId, int code) {};
+
+    protected void OnClientsReconnectResult(int code) {};
+
+    protected void OnSetRegistrationEnabledResult(int code) {};
 }

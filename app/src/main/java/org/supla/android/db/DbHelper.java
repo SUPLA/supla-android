@@ -1386,7 +1386,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getChannelListCursor(String WHERE) {
+    private Cursor getChannelListCursor(String WHERE) {
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -1456,7 +1456,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " ON C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " = L."
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
                 + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
-                + " AND " + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 "
                 + WHERE
                 + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
@@ -1466,7 +1465,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getChannelListCursor() {
-        return getChannelListCursor("");
+        return getChannelListCursor(SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                + " <> 0 ");
     }
 
     public Cursor getChannelListCursorForGroup(int groupId) {
@@ -2489,13 +2489,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean isZWaveBridgeChannelAvailable() {
+    public boolean isZWaveBridgeOnlineChannelAvailable() {
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID
         };
 
-        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                + " > 0 AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = ?"
+                + " AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
                 + " AND ("
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
 
@@ -2521,6 +2525,34 @@ public class DbHelper extends SQLiteOpenHelper {
 
         c.close();
         db.close();
+
+        return result;
+    }
+
+    public ArrayList<Channel> getZWaveBridgeOnlineChannels() {
+        ArrayList<Channel>result = new ArrayList<>();
+
+        String conditions =
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                + " > 0 AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                + " = " + SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
+                + " AND ("
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+                + " & " + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
+                + " ) > 0";
+
+        Cursor cursor = getChannelListCursor(conditions);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Channel channel = new Channel();
+                channel.AssignCursorData(cursor);
+                result.add(channel);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
 
         return result;
     }

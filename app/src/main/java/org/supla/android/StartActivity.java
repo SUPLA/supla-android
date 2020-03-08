@@ -36,12 +36,10 @@ public class StartActivity extends Activity {
         setContentView(R.layout.splash);
 
         TextView v = findViewById(R.id.splash_name);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         v = findViewById(R.id.splash_slogan);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
 
         SuplaApp.getApp().SuplaClientInitIfNeed(this);
 

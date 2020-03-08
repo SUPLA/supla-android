@@ -4,7 +4,7 @@
     <dimen name="channel_layout_height">180dp</dimen>
     <dimen name="channel_layout_button_width">150dp</dimen>
     <dimen name="channel_dot_size">15dp</dimen>
-    <dimen name="channel_state_image_size">30dp</dimen>
+    <dimen name="channel_state_image_size">40dp</dimen>
     <dimen name="channel_btn_text_size">27sp</dimen>
     <dimen name="channel_caption_top_margin">25dp</dimen>
     <dimen name="channel_caption_text_size">17sp</dimen>

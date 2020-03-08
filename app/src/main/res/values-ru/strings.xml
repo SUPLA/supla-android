@@ -25,29 +25,29 @@
     <string name="err_hostnotfound">Хост не найден</string>
     <string name="err_cantconnecttohost">Не удается подключиться к хосту</string>
 
-    <string name="channel_func_gateway">Калитка</string>
-    <string name="channel_func_gate">Ворота</string>
-    <string name="channel_func_garagedoor">Гаражные ворота</string>
-    <string name="channel_func_door">Дверь</string>
-    <string name="channel_func_rollershutter">Роллеты</string>
-    <string name="channel_func_powerswith">Управление розеткой</string>
-    <string name="channel_func_lightswith">Управление светом</string>
-    <string name="channel_func_thermometer">Термометр</string>
-    <string name="channel_func_noliquidsensor">Датчик жидкости</string>
-    <string name="channel_func_gatewayopeningsensor">Датчик открытия калитки</string>
-    <string name="channel_func_gateopeningsensor">Датчик открытия ворот</string>
-    <string name="channel_func_garagedooropeningsensor">Датчик открытия гаражных ворот</string>
-    <string name="channel_func_dooropeningsensor">Датчик открытия двери</string>
-    <string name="channel_func_rsopeningsensor">Датчик открытия роллет</string>
-    <string name="channel_func_humidity">Влажность</string>
-    <string name="channel_func_humidityandtemperature">Температура и влажность</string>
-    <string name="channel_func_dimmer">Диммер</string>
-    <string name="channel_func_rgblighting">Контроллер освещения RGB  </string>
-    <string name="channel_func_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
-    <string name="channel_func_depthsensor">датчик глубины</string>
-    <string name="channel_func_distancesensor">датчик расстояния</string>
-    <string name="channel_func_windowopeningsensor">Датчик открытия окна</string>
-    <string name="channel_func_mailsensor">Сигнализатор наличия почты</string>
+    <string name="channel_caption_gateway">Калитка</string>
+    <string name="channel_caption_gate">Ворота</string>
+    <string name="channel_caption_garagedoor">Гаражные ворота</string>
+    <string name="channel_caption_door">Дверь</string>
+    <string name="channel_caption_rollershutter">Роллеты</string>
+    <string name="channel_caption_powerswith">Управление розеткой</string>
+    <string name="channel_caption_lightswith">Управление светом</string>
+    <string name="channel_caption_thermometer">Термометр</string>
+    <string name="channel_caption_noliquidsensor">Датчик жидкости</string>
+    <string name="channel_caption_gatewayopeningsensor">Датчик открытия калитки</string>
+    <string name="channel_caption_gateopeningsensor">Датчик открытия ворот</string>
+    <string name="channel_caption_garagedooropeningsensor">Датчик открытия гаражных ворот</string>
+    <string name="channel_caption_dooropeningsensor">Датчик открытия двери</string>
+    <string name="channel_caption_rsopeningsensor">Датчик открытия роллет</string>
+    <string name="channel_caption_humidity">Влажность</string>
+    <string name="channel_caption_humidityandtemperature">Температура и влажность</string>
+    <string name="channel_caption_dimmer">Диммер</string>
+    <string name="channel_caption_rgblighting">Контроллер освещения RGB  </string>
+    <string name="channel_caption_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
+    <string name="channel_caption_depthsensor">датчик глубины</string>
+    <string name="channel_caption_distancesensor">датчик расстояния</string>
+    <string name="channel_caption_windowopeningsensor">Датчик открытия окна</string>
+    <string name="channel_caption_mailsensor">Сигнализатор наличия почты</string>
 
     <string name="rgb_brightness">Яркость</string>
     <string name="rgb_color">Цвет</string>
@@ -133,10 +133,10 @@
     <string name="wizard_step2_txt3">*) Сеть %1$s будет использоваться через устройства ввода/вывода для подключения к серверу.</string>
     <string name="wizard_not_enought_permissions">Приложение не имеет достаточных разрешений. Перейдите в управление приложениями в системных настройках. Затем найдите приложение %1$s и включите все необходимые для него разрешения.</string>
     <string name="help">Помощь</string>
-    <string name="channel_func_staircasetimer">Лестничный автомат</string>
-    <string name="channel_func_electricitymeter">"Счётчик электроэнергии"</string>
-    <string name="channel_func_gasmeter">Счётчик газа</string>
-    <string name="channel_func_watermeter">Счётчик воды</string>
+    <string name="channel_caption_staircasetimer">Лестничный автомат</string>
+    <string name="channel_caption_electricitymeter">"Счётчик электроэнергии"</string>
+    <string name="channel_caption_gasmeter">Счётчик газа</string>
+    <string name="channel_caption_watermeter">Счётчик воды</string>
     <string name="em_total_forward_avtive_energy">Продвижение активной энергии</string>
     <string name="em_reverse_active_energy">Обратная активная энергия</string>
     <string name="em_total_forward_reactive_energy">Продвижение пассивной энергии</string>
@@ -195,8 +195,8 @@
     <string name="comparsion_dayday">Ежедневное сравнение</string>
     <string name="comparsion_monthmonth">Сравнение месяца к месяцу</string>
     <string name="comparsion_yearyear">Сравнение в год к году</string>
-    <string name="channel_func_thermostat">Термостат</string>
-    <string name="channel_func_thermostat_hp_homeplus">Дом + обогреватель</string>
+    <string name="channel_caption_thermostat">Термостат</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Дом + обогреватель</string>
     <string name="hp_turn_on">Включи</string>
     <string name="hp_turn_off">Выключи</string>
     <string name="hp_error_1">Нет Воды</string>
@@ -204,13 +204,14 @@
     <string name="hp_error_3">Ошибка датчика температуры воды</string>
     <string name="hp_error_4">Ошибка датчика комнатной температуры</string>
     <string name="hp_error_5">Нет сетевых прерываний</string>
-    <string name="channel_func_pressuresensor">Датчик давления</string>
-    <string name="channel_func_rainsensor">Измерение осадков</string>
-    <string name="channel_func_weightsensor">Вес</string>
-    <string name="channel_func_windsensor">Скорость ветра</string>
+    <string name="channel_caption_pressuresensor">Датчик давления</string>
+    <string name="channel_caption_rainsensor">Измерение осадков</string>
+    <string name="channel_caption_weightsensor">Вес</string>
+    <string name="channel_caption_windsensor">Скорость ветра</string>
     <string name="production_acording_to_phases">Производство по фазе</string>
     <string name="current_production">Производство в текущем месяце</string>
     <string name="enter_superuser_credentials">Введите учетные данные суперпользователя</string>
 
+    <string name="channel_caption_heatmeter">Теплосчетчик</string>
 </resources>
 

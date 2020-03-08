@@ -163,9 +163,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
         Button btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
         btn.setOnClickListener(this);
-        Typeface type = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-        btn.setTypeface(type);
+        btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.menuitem_text_size));
         btn.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
@@ -199,9 +197,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
             btn.setOnClickListener(this);
-            Typeface type = Typeface.createFromAsset(getContext().getAssets(),
-                    "fonts/OpenSans-Bold.ttf");
-            btn.setTypeface(type);
+            btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);
 
             params = new LayoutParams(

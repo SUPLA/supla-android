@@ -18,6 +18,10 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context;
+import org.supla.android.R;
+
+@SuppressWarnings("unused")
 public class SuplaConst {
 
     public final static int SUPLA_GUID_SIZE = 16;
@@ -90,10 +94,21 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_IC_ELECTRICITY_METER          = 315;
     public final static int SUPLA_CHANNELFNC_IC_GAS_METER                  = 320;
     public final static int SUPLA_CHANNELFNC_IC_WATER_METER                = 330;
+    public final static int SUPLA_CHANNELFNC_IC_HEAT_METER                 = 340;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT                    = 400;
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS   = 410;
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE               = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE              = 510;
+
+
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0001;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0002;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x0004;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK = 0x0008;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER = 0x0010;
+    public final static int SUPLA_BIT_FUNC_POWERSWITCH = 0x0020;
+    public final static int SUPLA_BIT_FUNC_LIGHTSWITCH = 0x0040;
+    public final static int SUPLA_BIT_FUNC_STAIRCASETIMER = 0x0080;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
     public final static int SUPLA_CHANNELTYPE_BRIDGE = 8000;
@@ -214,5 +229,157 @@ public class SuplaConst {
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
+    public static String getFunctionName(int func, Context context) {
+        int resId = -1;
 
+        switch (func) {
+            case SUPLA_CHANNELFNC_NONE:
+                resId = R.string.channel_func_none;
+                break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                resId = R.string.channel_func_controllingthegatewaylock;
+                break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                resId = R.string.channel_func_controllingthegate;
+                break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                resId = R.string.channel_func_controllingthegaragedoor;
+                break;
+            case SUPLA_CHANNELFNC_THERMOMETER:
+                resId = R.string.channel_func_thermostat;
+                break;
+            case SUPLA_CHANNELFNC_HUMIDITY:
+                resId = R.string.channel_func_humidity;
+                break;
+            case SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                resId = R.string.channel_func_humidityandtemperature;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+                resId = R.string.channel_func_opensensor_gateway;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+                resId = R.string.channel_func_opensensor_gate;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+                resId = R.string.channel_func_opensensor_garagedoor;
+                break;
+            case SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+                resId = R.string.channel_func_noliquidsensor;
+                break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                resId = R.string.channel_func_controllingthedoorlock;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+                resId = R.string.channel_func_opensensor_door;
+                break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                resId = R.string.channel_func_controllingtherollershutter;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                resId = R.string.channel_func_opensensor_rollershutter;
+                break;
+            case SUPLA_CHANNELFNC_POWERSWITCH:
+                resId = R.string.channel_func_powerswitch;
+                break;
+            case SUPLA_CHANNELFNC_LIGHTSWITCH:
+                resId = R.string.channel_func_lightswitch;
+                break;
+            case SUPLA_CHANNELFNC_DIMMER:
+                resId = R.string.channel_func_dimmer;
+                break;
+            case SUPLA_CHANNELFNC_RGBLIGHTING:
+                resId = R.string.channel_func_rgblighting;
+                break;
+            case SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                resId = R.string.channel_func_dimmerandrgblighting;
+                break;
+            case SUPLA_CHANNELFNC_DEPTHSENSOR:
+                resId = R.string.channel_func_depthsensor;
+                break;
+            case SUPLA_CHANNELFNC_DISTANCESENSOR:
+                resId = R.string.channel_func_distancesensor;
+                break;
+            case SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                resId = R.string.channel_func_openingsensor_window;
+                break;
+            case SUPLA_CHANNELFNC_MAILSENSOR:
+                resId = R.string.channel_func_mailsensor;
+                break;
+            case SUPLA_CHANNELFNC_WINDSENSOR:
+                resId = R.string.channel_func_windsensor;
+                break;
+            case SUPLA_CHANNELFNC_PRESSURESENSOR:
+                resId = R.string.channel_func_pressuresensor;
+                break;
+            case SUPLA_CHANNELFNC_RAINSENSOR:
+                resId = R.string.channel_func_rainsensor;
+                break;
+            case SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                resId = R.string.channel_func_weightsensor;
+                break;
+            case SUPLA_CHANNELFNC_WEATHER_STATION:
+                resId = R.string.channel_func_weather_station;
+                break;
+            case SUPLA_CHANNELFNC_STAIRCASETIMER:
+                resId = R.string.channel_func_staircasetimer;
+                break;
+            case SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                resId = R.string.channel_func_electricity_meter;
+                break;
+            case SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                resId = R.string.channel_func_electricity_meter;
+                break;
+            case SUPLA_CHANNELFNC_IC_GAS_METER:
+                resId = R.string.channel_func_gas_meter;
+                break;
+            case SUPLA_CHANNELFNC_IC_WATER_METER:
+                resId = R.string.channel_func_water_meter;
+                break;
+            case SUPLA_CHANNELFNC_IC_HEAT_METER:
+                resId = R.string.channel_func_heat_meter;
+                break;
+            case SUPLA_CHANNELFNC_THERMOSTAT:
+                resId = R.string.channel_func_thermostat;
+                break;
+            case SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                resId = R.string.channel_func_thermostat_heatpol_homeplus;
+                break;
+            case SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                resId = R.string.channel_func_valve_openclose;
+                break;
+            case SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
+                resId = R.string.channel_func_valve_percentage;
+                break;
+
+        }
+
+        return resId == -1 ? Integer.toString(func)
+                : context.getResources().getString(resId);
+    }
+
+    public static int functionBit2functionNumber(int bit) {
+
+        if (bit != 0) {
+            switch(bit) {
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEGATE:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEGATE;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
+                case SUPLA_BIT_FUNC_POWERSWITCH:
+                    return SUPLA_CHANNELFNC_POWERSWITCH;
+                case SUPLA_BIT_FUNC_LIGHTSWITCH:
+                    return SUPLA_CHANNELFNC_LIGHTSWITCH;
+                case SUPLA_BIT_FUNC_STAIRCASETIMER:
+                    return SUPLA_CHANNELFNC_STAIRCASETIMER;
+            }
+        }
+
+        return 0;
+    }
 }

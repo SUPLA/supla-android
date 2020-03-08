@@ -66,7 +66,7 @@
             android:launchMode="singleTop">
         </activity>
 
-        <activity android:name=".AddWizardActivity"
+        <activity android:name=".AddDeviceWizardActivity"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleTop">
         </activity>
