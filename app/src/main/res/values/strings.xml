@@ -215,12 +215,50 @@
     <string name="production_acording_to_phases">Production according to phases</string>
     <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
+    <string name="channel_func_none">No function</string>
+    <string name="channel_func_controllingthegatewaylock">Gateway lock operation</string>
+    <string name="channel_func_controllingthegate">Gate operation</string>
+    <string name="channel_func_controllingthegaragedoor">Garage door operation</string>
+    <string name="channel_func_thermometer">Thermometer</string>
+    <string name="channel_func_humidity">Humidity sensor</string>
+    <string name="channel_func_humidityandtemperature">Temperature and humidity sensor</string>
+    <string name="channel_func_opensensor_gateway">Gateway opening sensor</string>
+    <string name="channel_func_opensensor_gate">Gate opening sensor</string>
+    <string name="channel_func_opensensor_garagedoor">Garage door opening sensor</string>
+    <string name="channel_func_noliquidsensor">No liquid sensor</string>
+    <string name="channel_func_controllingthedoorlock">Door lock operation</string>
+    <string name="channel_func_opensensor_door">Door opening sensor</string>
+    <string name="channel_func_controllingtherollershutter">Roller shutter operation</string>
+    <string name="channel_func_opensensor_rollershutter">Roller shutter opening sensor</string>
+    <string name="channel_func_powerswitch">On/Off switch</string>
+    <string name="channel_func_lightswitch">Light switch</string>
+    <string name="channel_func_dimmer">Dimmer</string>
+    <string name="channel_func_rgblighting">RGB lighting</string>
+    <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
+    <string name="channel_func_depthsensor">Depth sensor</string>
+    <string name="channel_func_distancesensor">Distance sensor</string>
+    <string name="channel_func_openingsensor_window">Window opening sensor</string>
+    <string name="channel_func_mailsensor">Mail sensor</string>
+    <string name="channel_func_windsensor">Wind sensor</string>
+    <string name="channel_func_pressuresensor">Pressure sensor</string>
+    <string name="channel_func_rainsensor">Rain sensor</string>
+    <string name="channel_func_weightsensor">Weight sensor</string>
+    <string name="channel_func_weather_station">Weather Station</string>
+    <string name="channel_func_staircasetimer">Staircase timer</string>
+    <string name="channel_func_electricity_meter">Electricity meter</string>
+    <string name="channel_func_gas_meter">Gas meter</string>
+    <string name="channel_func_water_meter">Water meter</string>
+    <string name="channel_func_heat_meter">Heat meter</string>
+    <string name="channel_func_thermostat">Thermostat</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Home+ Heater</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
     <string translatable="false" name="channel_caption_valve">Valve</string>
     <string translatable="false" name="channel_btn_close">Close</string>
     <string translatable="false" name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
     <string translatable="false" name="yes">Yes</string>
     <string translatable="false" name="no">No</string>
-    <string translatable="false" name="channel_func_none">No function</string>
     <string translatable="false" name="ok">OK</string>
     <string translatable="false" name="dots">....</string>
 

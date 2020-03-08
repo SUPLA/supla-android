@@ -218,5 +218,44 @@
     <string name="current_production">Výroba v aktuálnom mesiaci</string>
     <string name="enter_superuser_credentials">Zadajte poverenia superužívateľa</string>
 
+    <string name="channel_func_none">Žiadna funkcia</string>
+    <string name="channel_func_controllingthegatewaylock">Otváranie bráničky</string>
+    <string name="channel_func_controllingthegate">Otváranie/zatváranie vjazdovej brány</string>
+    <string name="channel_func_controllingthegaragedoor">Otváranie/zatváranie garážovej brány</string>
+    <string name="channel_func_thermometer">Teplomer</string>
+    <string name="channel_func_humidity">Snímač vlhkosti</string>
+    <string name="channel_func_humidityandtemperature">Snímač teploty a vlhkosti</string>
+    <string name="channel_func_opensensor_gateway">Snímač otvorenia bráničky</string>
+    <string name="channel_func_opensensor_gate">Snímač otvorenia vjazdovej brány</string>
+    <string name="channel_func_opensensor_garagedoor">Snímač otvorenia garážovej brány</string>
+    <string name="channel_func_noliquidsensor">Snímač prítomnosti kvapaliny</string>
+    <string name="channel_func_controllingthedoorlock">Otváranie dverí</string>
+    <string name="channel_func_opensensor_door">Snímač otvorenia dverí</string>
+    <string name="channel_func_controllingtherollershutter">Otváranie a zatváranie roliet</string>
+    <string name="channel_func_opensensor_rollershutter">Snímač otvorenia roliet</string>
+    <string name="channel_func_powerswitch">Zapínač napájania</string>
+    <string name="channel_func_lightswitch">Zapínač svetla</string>
+    <string name="channel_func_dimmer">Stmievač</string>
+    <string name="channel_func_rgblighting">RGB osvetlenie</string>
+    <string name="channel_func_dimmerandrgblighting">Stmievač a RGB osvetlenie</string>
+    <string name="channel_func_depthsensor">Snímač hĺbky</string>
+    <string name="channel_func_distancesensor">Snímač vzdialenosti</string>
+    <string name="channel_func_openingsensor_window">Snímač otvorenia okna</string>
+    <string name="channel_func_mailsensor">Snímač pošty</string>
+    <string name="channel_func_windsensor">Snímač vetra</string>
+    <string name="channel_func_pressuresensor">Snímač tlaku</string>
+    <string name="channel_func_rainsensor">Snímač dažďa</string>
+    <string name="channel_func_weightsensor">Hmotnosť</string>
+    <string name="channel_func_weather_station">Meteorologická stanica</string>
+    <string name="channel_func_staircasetimer">Schodiskový automat</string>
+    <string name="channel_func_electricity_meter">Elektromer</string>
+    <string name="channel_func_gas_meter">Plynomer</string>
+    <string name="channel_func_water_meter">Vodomer</string>
+    <string name="channel_func_heat_meter">Merač tepla</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Špirála Home+</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
     <string name="channel_caption_heatmeter">Merač tepla</string>
 </resources>
