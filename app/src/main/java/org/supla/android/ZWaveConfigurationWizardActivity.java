@@ -175,7 +175,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 mFuncList.add(Integer.valueOf(func));
                 spinnerList.add(functionName);
                 if (func == basicCfg.getFunc()) {
-                    position = 1 + a;
+                    position = spinnerList.size() - 1;
                 }
             }
         }
