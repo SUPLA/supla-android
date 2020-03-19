@@ -272,5 +272,8 @@
 
     <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="function">Funkcja</string>
+    <string translatable="false" name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
+    <string translatable="false" name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
+    <string translatable="false" name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
 
 </resources>

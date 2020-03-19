@@ -274,4 +274,7 @@
 
     <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
     <string name="function">Funkcja</string>
+    <string translatable="false" name="zwave_error_function_change_error">Zmiana funckji kanału zakończona niepowodzeniem. Kod %1$s</string>
+    <string translatable="false" name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
+    <string translatable="false" name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
 </resources>

@@ -30,6 +30,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
+
 import android.os.Vibrator;
 
 public class SuplaApp extends Application {
@@ -229,4 +230,5 @@ public class SuplaApp extends Application {
     public Typeface getTypefaceOpenSansBold() {
         return mTypefaceOpenSansBold;
     }
+
 }

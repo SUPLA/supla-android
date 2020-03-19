@@ -24,7 +24,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -33,7 +32,6 @@ import org.supla.android.Preferences;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -136,6 +134,14 @@ public class SuplaClient extends Thread {
                                                     int ioDeviceRegTimeSec, int clientRegTimeSec);
 
     private native boolean scReconnectDevice(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveResetAndClear(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveAddNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveRemoveNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveGetNodeList(long _supla_client, int DeviceID);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -524,6 +530,62 @@ public class SuplaClient extends Thread {
         return result;
     }
 
+    public boolean zwaveResetAndClear(Integer DeviceID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scZWaveResetAndClear(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean zwaveAddNode(Integer DeviceID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scZWaveAddNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean zwaveRemoveNode(Integer DeviceID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scZWaveRemoveNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
+    public boolean zwaveGetNodeList(Integer DeviceID) {
+        boolean result;
+
+        lockClientPtr();
+        try {
+            result = _supla_client_ptr != 0
+                    && scZWaveGetNodeList(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+
+        return result;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -824,6 +886,7 @@ public class SuplaClient extends Thread {
         msg.setResult(Result);
         msg.setData(Data);
         sendMessage(msg);
+        Trace.d(log_tag, "onDeviceCalCfgResult");
     }
 
     private void onChannelState(SuplaChannelState state) {
@@ -883,6 +946,37 @@ public class SuplaClient extends Thread {
 
     private void onDataChanged() {
         onDataChanged(0, 0);
+    }
+
+    private void onZWaveResetAndClearResult(int result) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveResetAndClearResult);
+        msg.setResult(result);
+        sendMessage(msg);
+    }
+
+    private void onZWaveAddNodeResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAddNodeResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveRemoveNodeResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveRemoveNodeResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetNodeListResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetNodeListResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
     }
 
     public synchronized boolean canceled() {
