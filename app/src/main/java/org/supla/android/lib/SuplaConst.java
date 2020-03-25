@@ -229,6 +229,18 @@ public class SuplaConst {
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
+    public final static int SUPLA_CALCFG_RESULT_FALSE = 0;
+    public final static int SUPLA_CALCFG_RESULT_TRUE = 1;
+    public final static int SUPLA_CALCFG_RESULT_DONE = 2;
+    public final static int SUPLA_CALCFG_RESULT_IN_PROGRESS = 3;
+    public final static int SUPLA_CALCFG_RESULT_NODE_FOUND = 4;
+    public final static int SUPLA_CALCFG_RESULT_SENDER_CONFLICT = 100;
+    public final static int SUPLA_CALCFG_RESULT_TIMEOUT = 101;
+    public final static int SUPLA_CALCFG_RESULT_NOT_SUPPORTED = 102;
+    public final static int SUPLA_CALCFG_RESULT_ID_NOT_EXISTS = 103;
+    public final static int SUPLA_CALCFG_RESULT_UNAUTHORIZED = 104;
+    public final static int SUPLA_CALCFG_RESULT_DEBUG = 105;
+
     public static String  getCaption(int func, Context context) {
 
             int idx = -1;

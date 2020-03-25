@@ -116,6 +116,9 @@ public class SuplaClient extends Thread {
     private native boolean scDeviceCalCfgRequest(long _supla_client, int ID, int Group,
                                                  int Command, int DataType, byte[] Data);
 
+    private native boolean scDeviceCalCfgCancelAllCommands(long _supla_client,
+                                                           int DeviceID);
+
     private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
                                                           SuplaThermostatScheduleCfg cfg);
 
@@ -396,6 +399,16 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean deviceCalCfgCancelAllCommands(int DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scDeviceCalCfgCancelAllCommands(_supla_client_ptr,
+                    DeviceID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
     public boolean thermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
         return thermostatScheduleCfgRequest(ChannelID, false, cfg);
     }
@@ -499,7 +512,7 @@ public class SuplaClient extends Thread {
         }
     }
 
-    public boolean zwaveGetAssignedNodeId(long _supla_client, int ChannelID) {
+    public boolean zwaveGetAssignedNodeId(int ChannelID) {
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -509,7 +522,7 @@ public class SuplaClient extends Thread {
         }
     }
 
-    public boolean zwaveAssignNodeId(long _supla_client, int ChannelID, Short NodeId) {
+    public boolean zwaveAssignNodeId(int ChannelID, Short NodeId) {
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -819,7 +832,10 @@ public class SuplaClient extends Thread {
         msg.setResult(Result);
         msg.setData(Data);
         sendMessage(msg);
-        Trace.d(log_tag, "onDeviceCalCfgResult");
+    }
+
+    private void onDeviceCalCfgDebugString(String str) {
+        Trace.d("CalCfgDebugString", str);
     }
 
     private void onChannelState(SuplaChannelState state) {
@@ -882,7 +898,6 @@ public class SuplaClient extends Thread {
     }
 
     private void onZWaveResetAndClearResult(int result) {
-        Trace.d(log_tag, "onZWaveResetAndClearResult");
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveResetAndClearResult);
         msg.setResult(result);
@@ -890,7 +905,6 @@ public class SuplaClient extends Thread {
     }
 
     private void onZWaveAddNodeResult(int result, ZWaveNode node) {
-        Trace.d(log_tag, "onZWaveAddNodeResult"+(node == null ? "null" : "not null"));
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveAddNodeResult);
         msg.setResult(result);
@@ -898,8 +912,7 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onZWaveRemoveNodeResult(int result, short nodeId) {
-        Trace.d(log_tag, "onZWaveRemoveNodeResult");
+    private void onZWaveRemoveNodeResult(int result, Short nodeId) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveRemoveNodeResult);
         msg.setResult(result);
@@ -908,11 +921,18 @@ public class SuplaClient extends Thread {
     }
 
     private void onZWaveGetNodeListResult(int result, ZWaveNode node) {
-        Trace.d(log_tag, "onZWaveGetNodeListResult"+(node == null ? "null" : "not null"));
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveGetNodeListResult);
         msg.setResult(result);
         msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetAssignedNodeIdResult(int result, Short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetAssignedNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
         sendMessage(msg);
     }
 

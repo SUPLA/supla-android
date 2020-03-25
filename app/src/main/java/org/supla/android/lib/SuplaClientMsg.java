@@ -40,7 +40,7 @@ public class SuplaClientMsg {
     private int Result;
     private byte[] data;
     private int Func;
-    private short NodeId;
+    private Short NodeId;
     private ZWaveNode Node;
 
     public final static int onDataChanged         = 1;
@@ -66,6 +66,7 @@ public class SuplaClientMsg {
     public final static int onZWaveAddNodeResult = 21;
     public final static int onZWaveRemoveNodeResult = 22;
     public final static int onZWaveGetNodeListResult = 23;
+    public final static int onZWaveGetAssignedNodeIdResult = 24;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -219,11 +220,11 @@ public class SuplaClientMsg {
         Func = func;
     }
 
-    public short getNodeId() {
+    public Short getNodeId() {
         return NodeId;
     }
 
-    public void setNodeId(short nodeId) {
+    public void setNodeId(Short nodeId) {
         NodeId = nodeId;
     }
 

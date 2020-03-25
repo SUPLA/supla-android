@@ -266,14 +266,28 @@
     <string translatable="false" name="zwave_select_channel">Select the z-wave bridge channel you want to configure.</string>
     <string translatable="false" name="device_name">Device name:</string>
     <string translatable="false" name="channel_number">Channel number:</string>
+    <string translatable="false" name="device_id">Device id:</string>
     <string translatable="false" name="channel_id">Channel id:</string>
     <string translatable="false" name="channel_caption">Caption:</string>
     <string translatable="false" name="soft_ver">Software version:</string>
 
     <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="function">Funkcja</string>
+    <string translatable="false" name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
     <string translatable="false" name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
     <string translatable="false" name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
     <string translatable="false" name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
+    <string translatable="false" name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
+    <string translatable="false" name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
+    <string translatable="false" name="zwave_reset_and_clear">Reset network and settings</string>
+    <string translatable="false" name="zwave_add_device">Add device</string>
+    <string translatable="false" name="zwave_remove_device">Delete device</string>
+    <string translatable="false" name="zwave_network">Z-wave network</string>
+    <string translatable="false" name="zwave_select_node">Select the z-wave device that will be associated with the Supla channel.</string>
+    <string translatable="false" name="zwave_supla_channel">Channel</string>
+    <string translatable="false" name="zwave_device">Z-Wave device</string>
+    <string translatable="false" name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
+    <string translatable="false" name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
+    <string translatable="false" name="zwave_downloading_node_list">Downloading the list of devices added to the z-wave network.</string>
 
 </resources>

@@ -437,7 +437,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
                                                  boolean Success, int Code) {
-        if (dialog != null
+        if (Success
+                && dialog != null
                 && dialog == mAuthDialog
                 && dialog.getObject().equals(Integer.valueOf(MenuItemsLayout.BTN_Z_WAVE))) {
             mAuthDialog.close();

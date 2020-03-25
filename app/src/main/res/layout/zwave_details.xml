@@ -7,32 +7,125 @@
 
 
     <LinearLayout
+        android:id="@+id/llButtons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llList"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="10dp"
+        android:background="#8BC34A"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-        <Button
-            android:id="@+id/btnResetAndClear"
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reset and clear" />
+            android:text="@string/zwave_network"
+            android:textColor="#ffffffff" />
 
         <Button
             android:id="@+id/btnAddNode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADD node" />
+            android:text="@string/zwave_add_device" />
 
         <Button
             android:id="@+id/btnRemoveNode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remove node" />
+            android:text="@string/zwave_remove_device" />
 
         <Button
-            android:id="@+id/btnGetNodeList"
+            android:id="@+id/btnResetAndClear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GET Node LIST" />
+            android:text="@string/zwave_reset_and_clear"
+            android:textColor="#ffff0000" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/zwave_select_node"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/llList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView8"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/zwave_supla_channel"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_channel"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/zwave_device"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/zwave_node_list"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnGetNodeList"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:background="@drawable/refresh" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llButtons"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:background="#F3E98D"
+        android:text="Upłunął czas oczekiwania na naciśnięcie przycisku."
+        android:textColor="@android:color/holo_red_dark" />
 </RelativeLayout>

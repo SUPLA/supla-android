@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
+import org.supla.android.lib.ZWaveNode;
 
 import java.util.Date;
 import java.util.Timer;
@@ -192,6 +193,21 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onSetRegistrationEnabledResult:
                         OnSetRegistrationEnabledResult(_msg.getCode());
                         break;
+                    case SuplaClientMsg.onZWaveResetAndClearResult:
+                        OnZWaveResetAndClearResult(_msg.getResult());
+                        break;
+                    case SuplaClientMsg.onZWaveAddNodeResult:
+                        OnZWaveAddNodeResult(_msg.getResult(), _msg.getNode());
+                        break;
+                    case SuplaClientMsg.onZWaveRemoveNodeResult:
+                        OnZWaveRemoveNodeResult(_msg.getResult(), _msg.getNodeId());
+                        break;
+                    case SuplaClientMsg.onZWaveGetNodeListResult:
+                        OnZWaveGetNodeListResult(_msg.getResult(), _msg.getNode());
+                        break;
+                    case SuplaClientMsg.onZWaveGetAssignedNodeIdResult:
+                        OnZWaveGetAssignedNodeIdResult(_msg.getResult(), _msg.getNodeId());
+                        break;
                 }
 
             }
@@ -250,4 +266,14 @@ public class BaseActivity extends Activity {
     protected void OnClientsReconnectResult(int code) {};
 
     protected void OnSetRegistrationEnabledResult(int code) {};
+
+    protected void OnZWaveResetAndClearResult(int result) {};
+
+    protected void OnZWaveAddNodeResult(int result, ZWaveNode node) {};
+
+    protected void OnZWaveRemoveNodeResult(int result, Short nodeId) {};
+
+    protected void OnZWaveGetNodeListResult(int result, ZWaveNode node) {};
+
+    protected void OnZWaveGetAssignedNodeIdResult(int result, Short nodeId) {};
 }
