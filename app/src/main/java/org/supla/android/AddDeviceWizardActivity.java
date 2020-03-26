@@ -676,9 +676,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
-    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+    protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
 
-        super.OnRegistrationEnabled(registrationEnabled);
+        super.onRegistrationEnabled(registrationEnabled);
 
         if (registrationEnabled.IsIODeviceRegistrationEnabled()) {
 

@@ -362,7 +362,7 @@ public class SuplaConst {
             caption = getCaption(func, context);
         }
 
-        return caption.isEmpty() ? Integer.toString(func) : caption;
+        return caption.isEmpty() && func != 0 ? Integer.toString(func) : caption;
     }
 
     public static String getFunctionName(int func, Context context) {

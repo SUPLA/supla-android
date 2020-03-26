@@ -289,5 +289,9 @@
     <string translatable="false" name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
     <string translatable="false" name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
     <string translatable="false" name="zwave_downloading_node_list">Downloading the list of devices added to the z-wave network.</string>
+    <string translatable="false" name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
+    <string translatable="false" name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
+    <string translatable="false" name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
+    <string translatable="false" name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
 
 </resources>

@@ -936,6 +936,14 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onZWaveAssignNodeIdResult(int result, Short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAssignNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
     public synchronized boolean canceled() {
         return _canceled;
     }

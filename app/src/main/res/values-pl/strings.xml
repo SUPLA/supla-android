@@ -289,7 +289,11 @@
     <string name="zwave_supla_channel">Kanał</string>
     <string name="zwave_device">Urządzenie z-wave</string>
     <string name="zwave_waiting_for_button_press">Oczekiwanie na naciśnięcie przycisku w urządzeniu z-wave.</string>
-    <string name="zwave_button_press_timeout">Upłynął czas na naciśnięcie przycisku.</string>
-    <string translatable="false" name="zwave_downloading_node_list">Pobieranie listy urządzeń dodanych do sieci z-wave.</string>
+    <string name="zwave_button_press_timeout">Upłynął czas oczekiwania na naciśnięcie przycisku.</string>
+    <string name="zwave_downloading_node_list">Pobieranie listy urządzeń dodanych do sieci z-wave.</string>
+    <string name="zwave_remove_device_timeout">Upłynął czas oczekiwania na usunięcie urządzenia.</string>
+    <string name="zwave_waiting_for_reset">Oczekiwanie na potwierdzenie zresetowania sieci z-wave wraz z usunięciem ustawień.</string>
+    <string name="zwave_waiting_for_reset_timeout">Upłynął czas oczekiwania na reset sieci z-wave.</string>
+    <string name="zwave_error_assign_node_id_timeout">Upłynął czas oczekiwania na przypisanie urządzenia z-wave do kanału.</string>
 
 </resources>

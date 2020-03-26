@@ -67,6 +67,7 @@ public class SuplaClientMsg {
     public final static int onZWaveRemoveNodeResult = 22;
     public final static int onZWaveGetNodeListResult = 23;
     public final static int onZWaveGetAssignedNodeIdResult = 24;
+    public final static int onZWaveAssignNodeIdResult = 25;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
