@@ -19,7 +19,6 @@ package org.supla.android;
  */
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -167,27 +166,27 @@ public class StatusActivity extends NavigationActivity {
     }
 
     @Override
-    protected void OnDisconnectedMsg() {
+    protected void onDisconnectedMsg() {
         setStatusConnectingProgress(0);
     }
 
     @Override
-    protected void OnConnectingMsg() {
+    protected void onConnectingMsg() {
         setStatusConnectingProgress(25);
     }
 
     @Override
-    protected void OnConnectedMsg() {
+    protected void onConnectedMsg() {
         setStatusConnectingProgress(50);
     }
 
     @Override
-    protected void OnRegisteringMsg() {
+    protected void onRegisteringMsg() {
         setStatusConnectingProgress(75);
     }
 
     @Override
-    protected void OnRegisteredMsg() {
+    protected void onRegisteredMsg() {
         setStatusConnectingProgress(100);
 
         if ( !(CurrentActivity instanceof AddDeviceWizardActivity) ) {
@@ -201,20 +200,20 @@ public class StatusActivity extends NavigationActivity {
     }
 
     @Override
-    protected void OnRegisterErrorMsg(SuplaRegisterError error) {
+    protected void onRegisterErrorMsg(SuplaRegisterError error) {
 
-        super.OnRegisterErrorMsg(error);
+        super.onRegisterErrorMsg(error);
         _OnRegisterErrorMsg(error);
 
     }
 
     @Override
-    protected void OnVersionErrorMsg(SuplaVersionError error) {
+    protected void onVersionErrorMsg(SuplaVersionError error) {
         setStatusError(getResources().getString(R.string.status_version_error));
     }
 
     @Override
-    protected void OnConnErrorMsg(SuplaConnError error) {
+    protected void onConnErrorMsg(SuplaConnError error) {
         if ( error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND )
             setStatusError(getResources().getString(R.string.err_hostnotfound));
     }

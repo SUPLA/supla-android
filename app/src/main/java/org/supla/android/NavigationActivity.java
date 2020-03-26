@@ -409,8 +409,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
 
     @Override
-    protected void BeforeStatusMsg() {
-        super.BeforeStatusMsg();
+    protected void beforeStatusMsg() {
+        super.beforeStatusMsg();
 
         if (  CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
