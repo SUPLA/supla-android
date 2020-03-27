@@ -31,6 +31,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private final int PAGE_ZWAVE_DETAILS = 4;
 
     private Timer mWatchdogTimer;
+    private int mWatchdogTimeoutMsgId;
     private Spinner mChannelListSpinner;
     private Channel mSelectedCahnnel;
     private Integer mSelectedChannelFunc;
@@ -152,6 +153,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private void wathdogDeactivate() {
+        mWatchdogTimeoutMsgId = -1;
         if (mWatchdogTimer != null) {
             mWatchdogTimer.cancel();
             mWatchdogTimer = null;
@@ -170,6 +172,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             return;
         }
 
+        mWatchdogTimeoutMsgId = msgResId;
         mWatchdogTimer = new Timer();
         mWatchdogTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -527,6 +530,14 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     }
 
+    private boolean showTimeoutResult(int result) {
+        if (result == SuplaConst.SUPLA_CALCFG_RESULT_TIMEOUT && mWatchdogTimeoutMsgId > -1) {
+            showError(getResources().getString(mWatchdogTimeoutMsgId));
+            return true;
+        }
+        return false;
+    }
+
     private void showUnexpectedResponseError(int result) {
         StackTraceElement[] stackTrace = Thread.currentThread()
                 .getStackTrace();
@@ -578,7 +589,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             if (client!=null){
                 client.zwaveGetNodeList(getDevivceId());
             }
-        } else {
+        } else if (!showTimeoutResult(result)) {
             showUnexpectedResponseError(result);
         }
 
@@ -593,7 +604,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             setBtnNextPreloaderVisible(false);
             mAssignedNodeId = nodeId;
             showMain();
-        } else {
+        } else if (!showTimeoutResult(result)) {
             showUnexpectedResponseError(result);
         }
     }
@@ -635,7 +646,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     protected void onZWaveResetAndClearResult(int result) {
         if (result == SuplaConst.SUPLA_CALCFG_RESULT_TRUE) {
             zwaveGetNodeList();
-        } else {
+        } else if (!showTimeoutResult(result)) {
             showUnexpectedResponseError(result);
         }
     }
