@@ -263,6 +263,7 @@
     <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="exit">Wyjście</string>
 
     <string name="channel_caption_heatmeter">Licznik ciepła</string>
     <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
@@ -273,14 +274,16 @@
     <string name="channel_caption">Podpis:</string>
     <string name="soft_ver">Wersja opr.:</string>
 
-    <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
     <string name="function">Funkcja</string>
-    <string translatable="false" name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
-    <string translatable="false" name="zwave_error_function_change_error">Zmiana funckji kanału zakończona niepowodzeniem. Kod %1$s</string>
-    <string translatable="false" name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
-    <string translatable="false" name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
-    <string translatable="false" name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
-    <string translatable="false" name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzęń z-wave.</string>
+    <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
+    <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potwrać od kilku sekund do kilku minut.</string>
+    <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
+    <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
+    <string name="zwave_error_function_change_error">Zmiana funckji kanału zakończona niepowodzeniem. Kod %1$s</string>
+    <string name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
+    <string name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
+    <string name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
+    <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzęń z-wave.</string>
     <string name="zwave_reset_and_clear">Resetuj sieć i ustawienia</string>
     <string name="zwave_add_device">Dodaj urządzenie</string>
     <string name="zwave_remove_device">Usuń urządzenie</string>
@@ -290,10 +293,15 @@
     <string name="zwave_device">Urządzenie z-wave</string>
     <string name="zwave_waiting_for_button_press">Oczekiwanie na naciśnięcie przycisku w urządzeniu z-wave.</string>
     <string name="zwave_button_press_timeout">Upłynął czas oczekiwania na naciśnięcie przycisku.</string>
-    <string name="zwave_downloading_node_list">Pobieranie listy urządzeń dodanych do sieci z-wave.</string>
+    <string name="zwave_node_searching">Przeszukiwanie sieci z-wave w celu zbudowania listy urządzeń.</string>
     <string name="zwave_remove_device_timeout">Upłynął czas oczekiwania na usunięcie urządzenia.</string>
     <string name="zwave_waiting_for_reset">Oczekiwanie na potwierdzenie zresetowania sieci z-wave wraz z usunięciem ustawień.</string>
     <string name="zwave_waiting_for_reset_timeout">Upłynął czas oczekiwania na reset sieci z-wave.</string>
     <string name="zwave_error_assign_node_id_timeout">Upłynął czas oczekiwania na przypisanie urządzenia z-wave do kanału.</string>
+    <string name="zwave_bridge_offline">Most z-wave nie odpowiada. Sprawdź czy most jest połączony z serwerem.</string>
+    <string name="zwave_waiting_for_add">Oczekiwanie na dodanie urządzenia do sieci z-wave.</string>
+    <string name="zwave_waiting_for_add_timeout">Upłynął czas oczekiwania na dodanie urządzenia do sieci z-wave.</string>
+    <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
 
+    <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
 </resources>

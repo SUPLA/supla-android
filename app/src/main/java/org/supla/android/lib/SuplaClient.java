@@ -148,7 +148,7 @@ public class SuplaClient extends Thread {
 
     private native boolean scZWaveGetAssignedNodeId(long _supla_client, int ChannelID);
 
-    private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, Short NodeId);
+    private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, short NodeId);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -522,7 +522,7 @@ public class SuplaClient extends Thread {
         }
     }
 
-    public boolean zwaveAssignNodeId(int ChannelID, Short NodeId) {
+    public boolean zwaveAssignNodeId(int ChannelID, short NodeId) {
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -912,7 +912,7 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onZWaveRemoveNodeResult(int result, Short nodeId) {
+    private void onZWaveRemoveNodeResult(int result, short nodeId) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveRemoveNodeResult);
         msg.setResult(result);
@@ -928,7 +928,7 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onZWaveGetAssignedNodeIdResult(int result, Short nodeId) {
+    private void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveGetAssignedNodeIdResult);
         msg.setResult(result);
@@ -936,7 +936,7 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onZWaveAssignNodeIdResult(int result, Short nodeId) {
+    private void onZWaveAssignNodeIdResult(int result, short nodeId) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onZWaveAssignNodeIdResult);
         msg.setResult(result);

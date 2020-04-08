@@ -6,27 +6,17 @@
     android:background="@color/menubar">
 
     <TextView
-        android:id="@+id/tv_error_txt"
+        android:id="@+id/tv_before_search_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_error_icon"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         android:layout_marginRight="10dp"
         android:gravity="center_horizontal"
+        android:text="@string/zwave_before_search_message"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
-
-    <ImageView
-        android:id="@+id/tv_error_icon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp"
-        android:background="@drawable/wizard_error"
-        tools:ignore="ContentDescription" />
 
 
 </RelativeLayout>

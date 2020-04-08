@@ -40,7 +40,7 @@ public class SuplaClientMsg {
     private int Result;
     private byte[] data;
     private int Func;
-    private Short NodeId;
+    private short NodeId;
     private ZWaveNode Node;
 
     public final static int onDataChanged         = 1;
@@ -221,11 +221,11 @@ public class SuplaClientMsg {
         Func = func;
     }
 
-    public Short getNodeId() {
+    public short getNodeId() {
         return NodeId;
     }
 
-    public void setNodeId(Short nodeId) {
+    public void setNodeId(short nodeId) {
         NodeId = nodeId;
     }
 

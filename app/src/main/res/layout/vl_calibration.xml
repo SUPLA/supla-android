@@ -14,8 +14,19 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="170dp"
+        android:background="@drawable/close"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/vlBtnRestore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="100dp"
-        android:background="@drawable/error"
+        android:background="@drawable/restore"
         android:visibility="visible" />
 
     <Button
@@ -106,7 +117,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Drive" />
+            android:text="Boost" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,7 +125,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/vlCfgDriveAuto"
+                android:id="@+id/vlCfgBoostAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -123,7 +134,7 @@
                 android:textColor="@android:color/white" />
 
             <Button
-                android:id="@+id/vlCfgDriveYes"
+                android:id="@+id/vlCfgBoostYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-1dp"
@@ -133,7 +144,7 @@
                 android:text="YES" />
 
             <Button
-                android:id="@+id/vlCfgDriveNo"
+                android:id="@+id/vlCfgBoostNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -169,12 +180,12 @@
                 android:textColor="@android:color/white" />
 
             <Button
-                android:id="@+id/vlCfgDrive"
+                android:id="@+id/vlCfgBoost"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/vl_tab_off"
-                android:text="Drive"
+                android:text="Boost"
                 android:visibility="visible" />
         </LinearLayout>
 

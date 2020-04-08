@@ -125,7 +125,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
-        android:background="#F3E98D"
+        android:background="@color/zwave_info_bg"
         android:text="Upłunął czas oczekiwania na naciśnięcie przycisku."
-        android:textColor="@android:color/holo_red_dark" />
+        android:textColor="@color/zwave_info_text" />
 </RelativeLayout>

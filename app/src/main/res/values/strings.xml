@@ -261,6 +261,7 @@
     <string translatable="false" name="no">No</string>
     <string translatable="false" name="ok">OK</string>
     <string translatable="false" name="dots">....</string>
+    <string translatable="false" name="exit">Exit</string>
 
     <string name="channel_caption_heatmeter">Heat Meter</string>
     <string translatable="false" name="zwave_select_channel">Select the z-wave bridge channel you want to configure.</string>
@@ -271,8 +272,10 @@
     <string translatable="false" name="channel_caption">Caption:</string>
     <string translatable="false" name="soft_ver">Software version:</string>
 
-    <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="function">Funkcja</string>
+    <string translatable="false" name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
+    <string translatable="false" name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
+    <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
     <string translatable="false" name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
     <string translatable="false" name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
@@ -288,10 +291,15 @@
     <string translatable="false" name="zwave_device">Z-Wave device</string>
     <string translatable="false" name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
     <string translatable="false" name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
-    <string translatable="false" name="zwave_downloading_node_list">Downloading the list of devices added to the z-wave network.</string>
+    <string translatable="false" name="zwave_node_searching">Searching the z-wave network to build a list of devices.</string>
     <string translatable="false" name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
     <string translatable="false" name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
     <string translatable="false" name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
     <string translatable="false" name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
+    <string translatable="false" name="zwave_bridge_offline">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
+    <string translatable="false" name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
+    <string translatable="false" name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
+    <string translatable="false" name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
 
+    <string translatable="false" name="restore_question">Are you sure you want to restore the default settings?</string>
 </resources>

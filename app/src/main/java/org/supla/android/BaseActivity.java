@@ -274,11 +274,11 @@ public class BaseActivity extends Activity {
 
     protected void onZWaveAddNodeResult(int result, ZWaveNode node) {};
 
-    protected void onZWaveRemoveNodeResult(int result, Short nodeId) {};
+    protected void onZWaveRemoveNodeResult(int result, short nodeId) {};
 
     protected void onZWaveGetNodeListResult(int result, ZWaveNode node) {};
 
-    protected void onZWaveGetAssignedNodeIdResult(int result, Short nodeId) {};
+    protected void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {};
 
-    protected void onZWaveAssignNodeIdResult(int result, Short nodeId) {};
+    protected void onZWaveAssignNodeIdResult(int result, short nodeId) {};
 }

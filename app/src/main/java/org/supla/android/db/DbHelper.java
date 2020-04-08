@@ -1386,7 +1386,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    private Cursor getChannelListCursor(String WHERE) {
+    private Cursor getChannelListCursor(String WHERE, String OrderBY) {
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -1457,11 +1457,17 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
                 + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
                 + WHERE
-                + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                + " ORDER BY " + OrderBY;
+
+        return db.rawQuery(sql, null);
+    }
+
+    private Cursor getChannelListCursor(String WHERE) {
+        String OrderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
 
-        return db.rawQuery(sql, null);
+        return getChannelListCursor(WHERE, OrderBY);
     }
 
     public Cursor getChannelListCursor() {
@@ -2489,14 +2495,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean isZWaveBridgeOnlineChannelAvailable() {
+    public boolean isZWaveBridgeChannelAvailable() {
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID
         };
 
-        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
-                + " > 0 AND "
-                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = ?"
                 + " AND "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
@@ -2529,20 +2533,21 @@ public class DbHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public ArrayList<Channel> getZWaveBridgeOnlineChannels() {
+    public ArrayList<Channel> getZWaveBridgeChannels() {
         ArrayList<Channel>result = new ArrayList<>();
 
         String conditions =
-                SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
-                + " > 0 AND "
-                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = " + SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
                 + " AND ("
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + " & " + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
                 + " ) > 0";
 
-        Cursor cursor = getChannelListCursor(conditions);
+        String orderby = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + ", "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID;
+
+        Cursor cursor = getChannelListCursor(conditions, orderby);
 
         if (cursor.moveToFirst()) {
             do {

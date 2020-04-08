@@ -278,8 +278,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                 break;
 
             case PAGE_DONE:
-            case PAGE_ERROR:
                 setBtnNextText(R.string.ok);
+                break;
+            case PAGE_ERROR:
+                setBtnNextText(R.string.exit);
                 break;
         }
     }

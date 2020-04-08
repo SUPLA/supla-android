@@ -22,20 +22,11 @@ public class ZWaveNode {
     private short NodeId;
     private short SceneType;
     private String Name;
-    private boolean Online;
-    private short Errors;
-    private short Value;
-    private boolean EOL;
 
-    public ZWaveNode(short nodeId, short sceneType, String name,
-                     boolean online, short errors, short value, boolean EOL) {
+    public ZWaveNode(short nodeId, short sceneType, String name) {
         NodeId = nodeId;
         SceneType = sceneType;
         Name = name;
-        Online = online;
-        Errors = errors;
-        Value = value;
-        this.EOL = EOL;
     }
 
     public short getNodeId() {
@@ -60,37 +51,5 @@ public class ZWaveNode {
 
     public void setName(String name) {
         Name = name;
-    }
-
-    public boolean isOnline() {
-        return Online;
-    }
-
-    public void setOnline(boolean online) {
-        Online = online;
-    }
-
-    public short getErrors() {
-        return Errors;
-    }
-
-    public void setErrors(short errors) {
-        Errors = errors;
-    }
-
-    public short getValue() {
-        return Value;
-    }
-
-    public void setValue(short value) {
-        Value = value;
-    }
-
-    public boolean isEOL() {
-        return EOL;
-    }
-
-    public void setEOL(boolean EOL) {
-        this.EOL = EOL;
     }
 }
