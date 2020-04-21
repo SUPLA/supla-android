@@ -861,6 +861,15 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onChannelCaptionSetResult(int ChannelID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
     private void onClientsReconnectResult(int ResultCode) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onClientsReconnectResult);
