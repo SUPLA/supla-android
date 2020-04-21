@@ -52,7 +52,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -279,8 +278,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                 break;
 
             case PAGE_DONE:
-            case PAGE_ERROR:
                 setBtnNextText(R.string.ok);
+                break;
+            case PAGE_ERROR:
+                setBtnNextText(R.string.exit);
                 break;
         }
     }
@@ -347,6 +348,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (espConfigTask != null) {
+            // On Android 10, during WiFi configuration activity is paused and resumed
+            return;
+        }
 
         cleanUp();
 
@@ -491,6 +497,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (espConfigTask != null) {
+            // On Android 10, during WiFi configuration activity is paused and resumed
+            return;
+        }
 
         if (getVisiblePageId() >= PAGE_STEP_2) {
 
@@ -640,7 +651,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         @Override
                         public void run() {
 
-                            if (getVisiblePageId() == PAGE_STEP_3 && isBtnNextPreloaderVisible()) {
+                            if (getVisiblePageId() == PAGE_STEP_3 && !isBtnNextPreloaderVisible()) {
                                 onBtnNextClick();
                             }
 
@@ -677,9 +688,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
-    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+    protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
 
-        super.OnRegistrationEnabled(registrationEnabled);
+        super.onRegistrationEnabled(registrationEnabled);
 
         if (registrationEnabled.IsIODeviceRegistrationEnabled()) {
 
@@ -868,6 +879,17 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
+    private int getMaxConfigurationPriority() {
+        final List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
+        int maxPriority = 0;
+        for(final WifiConfiguration config : configurations) {
+            if(config.priority > maxPriority)
+                maxPriority = config.priority;
+        }
+
+        return maxPriority;
+    }
+
     private void connect() {
 
         setStep(STEP_CONNECT);
@@ -875,6 +897,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + iodev_SSID + "\"";
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        conf.priority = getMaxConfigurationPriority();
 
         iodev_NetworkID = -1;
 
@@ -913,8 +936,6 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             public void onReceive(Context c, Intent i) {
 
                 NetworkInfo info = i.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-
-                //Trace.d("Status", info.getState().toString());
 
                 if (info != null
                         && info.isConnected()) {
@@ -1036,7 +1057,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             }
         }
 
-
+        removeConfigTask();
         IntentFilter i = new IntentFilter();
         i.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(stateChangedReceiver, i);

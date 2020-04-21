@@ -20,8 +20,6 @@ package org.supla.android.lib;
 
 import android.support.annotation.IntDef;
 
-import org.supla.android.Trace;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;

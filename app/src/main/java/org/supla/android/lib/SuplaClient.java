@@ -24,7 +24,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -33,7 +32,6 @@ import org.supla.android.Preferences;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -118,6 +116,9 @@ public class SuplaClient extends Thread {
     private native boolean scDeviceCalCfgRequest(long _supla_client, int ID, int Group,
                                                  int Command, int DataType, byte[] Data);
 
+    private native boolean scDeviceCalCfgCancelAllCommands(long _supla_client,
+                                                           int DeviceID);
+
     private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
                                                           SuplaThermostatScheduleCfg cfg);
 
@@ -134,6 +135,20 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetRegistrationEnabled(long _supla_client,
                                                     int ioDeviceRegTimeSec, int clientRegTimeSec);
+
+    private native boolean scReconnectDevice(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveResetAndClear(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveAddNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveRemoveNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveGetNodeList(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveGetAssignedNodeId(long _supla_client, int ChannelID);
+
+    private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, short NodeId);
 
     public void setMsgHandler(Handler msgHandler) {
 
@@ -206,23 +221,15 @@ public class SuplaClient extends Thread {
     }
 
     public int getClientId() {
-
-        int result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
+            return _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     private boolean connect() {
-
-        boolean result = false;
-
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo =
@@ -231,13 +238,13 @@ public class SuplaClient extends Thread {
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
             lockClientPtr();
             try {
-                result = _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
+                return _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
             } finally {
                 unlockClientPtr();
             }
         }
 
-        return result;
+        return false;
     }
 
     public void reconnect() {
@@ -245,35 +252,24 @@ public class SuplaClient extends Thread {
     }
 
     private boolean connected() {
-
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
+            return _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean registered() {
-
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
+            return _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     private void disconnect() {
-
         lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
@@ -282,7 +278,6 @@ public class SuplaClient extends Thread {
         } finally {
             unlockClientPtr();
         }
-
     }
 
     private boolean iterate() {
@@ -290,17 +285,12 @@ public class SuplaClient extends Thread {
     }
 
     public boolean open(int ID, boolean Group, int Open) {
-
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
+            return _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean open(int ChannelID, int Open) {
@@ -309,19 +299,14 @@ public class SuplaClient extends Thread {
 
     public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness,
                            boolean TurnOnOff) {
-
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0
+            return _supla_client_ptr != 0
                     && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
                     ColorBrightness, Brightness, TurnOnOff ? 1 : 0);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness,
@@ -330,7 +315,6 @@ public class SuplaClient extends Thread {
     }
 
     public void getRegistrationEnabled() {
-
         lockClientPtr();
         try {
             if ( _supla_client_ptr != 0 ) {
@@ -342,31 +326,21 @@ public class SuplaClient extends Thread {
     }
 
     public int getProtoVersion() {
-
-        int result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
+            return _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public int getMaxProtoVersion() {
-
-        int result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
+            return _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public void oAuthTokenRequest() {
@@ -389,7 +363,6 @@ public class SuplaClient extends Thread {
 
 
     public void superUserAuthorizationRequest(String email, String password) {
-
         lockClientPtr();
         try {
             if ( _supla_client_ptr != 0) {
@@ -398,22 +371,17 @@ public class SuplaClient extends Thread {
         } finally {
             unlockClientPtr();
         }
-
     }
 
     public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
+            return _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, Command, DataType, Data);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean deviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
@@ -422,17 +390,23 @@ public class SuplaClient extends Thread {
 
     public boolean thermostatScheduleCfgRequest(int ID, boolean Group,
                                                 SuplaThermostatScheduleCfg cfg) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
+            return _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, cfg);
         } finally {
             unlockClientPtr();
         }
+    }
 
-        return result;
+    public boolean deviceCalCfgCancelAllCommands(int DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scDeviceCalCfgCancelAllCommands(_supla_client_ptr,
+                    DeviceID);
+        } finally {
+            unlockClientPtr();
+        }
     }
 
     public boolean thermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
@@ -440,72 +414,122 @@ public class SuplaClient extends Thread {
     }
 
     public boolean getChannelState(int ChannelID) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
+            return _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean getChannelBasicCfg(int ChannelID) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
+            return _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean setChannelFunction(int ChannelID, int Function) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0
+            return _supla_client_ptr != 0
                     && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean reconnectAllClients() {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0
+            return _supla_client_ptr != 0
                     && scReconnectAllClients(_supla_client_ptr);
         } finally {
             unlockClientPtr();
         }
-
-        return result;
     }
 
     public boolean setRegistrationEnabled(int ioDeviceRegTimeSec, int clientRegTimeSec) {
-        boolean result;
-
         lockClientPtr();
         try {
-            result = _supla_client_ptr != 0
+            return _supla_client_ptr != 0
                     && scSetRegistrationEnabled(_supla_client_ptr,
                     ioDeviceRegTimeSec, clientRegTimeSec);
         } finally {
             unlockClientPtr();
         }
+    }
 
-        return result;
+    public boolean reconnectDevice(int DeviceId) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scReconnectDevice(_supla_client_ptr, DeviceId);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveResetAndClear(Integer DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveResetAndClear(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveAddNode(Integer DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveAddNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveRemoveNode(Integer DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveRemoveNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetNodeList(Integer DeviceID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetNodeList(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetAssignedNodeId(int ChannelID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetAssignedNodeId(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveAssignNodeId(int ChannelID, short NodeId) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveAssignNodeId(_supla_client_ptr, ChannelID, NodeId);
+        } finally {
+            unlockClientPtr();
+        }
     }
 
     private void onVersionError(SuplaVersionError versionError) {
@@ -810,6 +834,10 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onDeviceCalCfgDebugString(String str) {
+        Trace.d("CalCfgDebugString", str);
+    }
+
     private void onChannelState(SuplaChannelState state) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onChannelState);
@@ -824,10 +852,11 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onChannelFunctionSetResult(int ChannelID, int ResultCode) {
+    private void onChannelFunctionSetResult(int ChannelID, int Func, int ResultCode) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onChannelFunctionSetResult);
         msg.setCode(ResultCode);
+        msg.setFunc(Func);
         msg.setChannelId(ChannelID);
         sendMessage(msg);
     }
@@ -866,6 +895,53 @@ public class SuplaClient extends Thread {
 
     private void onDataChanged() {
         onDataChanged(0, 0);
+    }
+
+    private void onZWaveResetAndClearResult(int result) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveResetAndClearResult);
+        msg.setResult(result);
+        sendMessage(msg);
+    }
+
+    private void onZWaveAddNodeResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAddNodeResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveRemoveNodeResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveRemoveNodeResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetNodeListResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetNodeListResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetAssignedNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveAssignNodeIdResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAssignNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
     }
 
     public synchronized boolean canceled() {

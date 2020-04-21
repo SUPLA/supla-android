@@ -63,15 +63,15 @@ public class SuplaRangeCalibrationWheel extends View {
     private double maximum = maxRange;
     private double leftEdge = 0;
     private double rightEdge = maxRange;
-    private double driveLevel = 0;
-    private boolean driveVisible = false;
+    private double boostLevel = 0;
+    private boolean boostVisible = false;
 
     private OnChangeListener onChangeListener = null;
 
 
     public interface OnChangeListener {
         void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum);
-        void onDriveChanged(SuplaRangeCalibrationWheel calibrationWheel);
+        void onBoostChanged(SuplaRangeCalibrationWheel calibrationWheel);
     }
 
     private void init() {
@@ -157,8 +157,8 @@ public class SuplaRangeCalibrationWheel extends View {
             minimum = leftEdge;
         }
 
-        if (minimum > driveLevel) {
-            driveLevel = minimum;
+        if (minimum > boostLevel) {
+            boostLevel = minimum;
         }
 
         this.minimum = minimum;
@@ -184,8 +184,8 @@ public class SuplaRangeCalibrationWheel extends View {
             maximum = rightEdge;
         }
 
-        if (maximum < driveLevel) {
-            driveLevel = maximum;
+        if (maximum < boostLevel) {
+            boostLevel = maximum;
         }
 
         this.maximum = maximum;
@@ -242,32 +242,32 @@ public class SuplaRangeCalibrationWheel extends View {
         setMaximum(getMaximum());
     }
 
-    public void setDriveLevel(double driveLevel) {
-        if (driveLevel < minimum) {
-            driveLevel = minimum;
+    public void setBoostLevel(double boostLevel) {
+        if (boostLevel < minimum) {
+            boostLevel = minimum;
         }
 
-        if (driveLevel > maximum) {
-            driveLevel = maximum;
+        if (boostLevel > maximum) {
+            boostLevel = maximum;
         }
 
-        this.driveLevel = driveLevel;
-        if (driveVisible) {
+        this.boostLevel = boostLevel;
+        if (boostVisible) {
             invalidate();
         }
     }
 
-    public double getDriveLevel() {
-        return driveLevel;
+    public double getBoostLevel() {
+        return boostLevel;
     }
 
-    public void setDriveVisible(boolean driveVisible) {
-        this.driveVisible = driveVisible;
+    public void setBoostVisible(boolean boostVisible) {
+        this.boostVisible = boostVisible;
         invalidate();
     }
 
-    public boolean isDriveVisible() {
-        return driveVisible;
+    public boolean isBoostVisible() {
+        return boostVisible;
     }
 
     private void drawBtnLines(Canvas canvas, RectF rectF) {
@@ -374,9 +374,9 @@ public class SuplaRangeCalibrationWheel extends View {
                 paint
         );
 
-        if (driveVisible) {
-            vleft = left + (float)((right-left) * driveLevel *100F/maxRange/100F);
-            if (driveLevel >= (maximum-minimum) / 2) {
+        if (boostVisible) {
+            vleft = left + (float)((right-left) * boostLevel *100F/maxRange/100F);
+            if (boostLevel >= (maximum-minimum) / 2) {
                 vleft-=borderLineWidth;
             } else {
                 vleft+=borderLineWidth;
@@ -411,12 +411,12 @@ public class SuplaRangeCalibrationWheel extends View {
 
         if (touched == TOUCHED_NONE) {
             btnRightCenter = drawButton(canvas, 0);
-            btnLeftCenter = drawButton(canvas, (float)Math.toRadians(180), !driveVisible);
+            btnLeftCenter = drawButton(canvas, (float)Math.toRadians(180), !boostVisible);
         } else {
             if (touched == TOUCHED_RIGHT) {
                 drawButton(canvas, btnRad);
             } else if (touched == TOUCHED_LEFT) {
-                drawButton(canvas, btnRad, !driveVisible);
+                drawButton(canvas, btnRad, !boostVisible);
             }
         }
 
@@ -444,9 +444,9 @@ public class SuplaRangeCalibrationWheel extends View {
         }
     }
 
-    private void onDriveChanged() {
+    private void onBoostChanged() {
         if (onChangeListener!=null) {
-            onChangeListener.onDriveChanged(this);
+            onChangeListener.onBoostChanged(this);
         }
     }
 
@@ -469,13 +469,13 @@ public class SuplaRangeCalibrationWheel extends View {
 
             case MotionEvent.ACTION_DOWN:
                 if (touched==TOUCHED_NONE) {
-                    if (!driveVisible && btnTouched(btnLeftCenter, touchPoint)) {
+                    if (!boostVisible && btnTouched(btnLeftCenter, touchPoint)) {
                         touched = TOUCHED_LEFT;
                         onRangeChanged(true);
                     } else if (btnTouched(btnRightCenter, touchPoint)) {
                         touched = TOUCHED_RIGHT;
-                        if (driveVisible) {
-                            onDriveChanged();
+                        if (boostVisible) {
+                            onBoostChanged();
                         } else {
                             onRangeChanged(false);
                         }
@@ -511,9 +511,9 @@ public class SuplaRangeCalibrationWheel extends View {
                             setMinimum(getMinimum()-diff, false);
                             onRangeChanged(true);
                         } else {
-                            if (driveVisible) {
-                                setDriveLevel(getDriveLevel()+diff);
-                                onDriveChanged();
+                            if (boostVisible) {
+                                setBoostLevel(getBoostLevel()+diff);
+                                onBoostChanged();
                             } else {
                                 setMaximum(getMaximum()+diff, false);
                                 onRangeChanged(false);

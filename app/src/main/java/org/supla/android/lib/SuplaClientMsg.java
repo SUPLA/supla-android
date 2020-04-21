@@ -39,6 +39,9 @@ public class SuplaClientMsg {
     private int Command;
     private int Result;
     private byte[] data;
+    private int Func;
+    private short NodeId;
+    private ZWaveNode Node;
 
     public final static int onDataChanged         = 1;
     public final static int onConnecting          = 2;
@@ -59,6 +62,12 @@ public class SuplaClientMsg {
     public final static int onChannelFunctionSetResult = 17;
     public final static int onClientsReconnectResult = 18;
     public final static int onSetRegistrationEnabledResult = 19;
+    public final static int onZWaveResetAndClearResult = 20;
+    public final static int onZWaveAddNodeResult = 21;
+    public final static int onZWaveRemoveNodeResult = 22;
+    public final static int onZWaveGetNodeListResult = 23;
+    public final static int onZWaveGetAssignedNodeIdResult = 24;
+    public final static int onZWaveAssignNodeIdResult = 25;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -202,5 +211,29 @@ public class SuplaClientMsg {
 
     public void setChannelBasicCfg(SuplaChannelBasicCfg channelBasicCfg) {
         ChannelBasicCfg = channelBasicCfg;
+    }
+
+    public int getFunc() {
+        return Func;
+    }
+
+    public void setFunc(int func) {
+        Func = func;
+    }
+
+    public short getNodeId() {
+        return NodeId;
+    }
+
+    public void setNodeId(short nodeId) {
+        NodeId = nodeId;
+    }
+
+    public ZWaveNode getNode() {
+        return Node;
+    }
+
+    public void setNode(ZWaveNode node) {
+        Node = node;
     }
 }

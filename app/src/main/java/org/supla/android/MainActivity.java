@@ -25,7 +25,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
@@ -204,7 +203,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnDataChangedMsg(int ChannelId, int GroupId) {
+    protected void onDataChangedMsg(int ChannelId, int GroupId) {
 
         ChannelListView LV = null;
         int Id = 0;
@@ -237,12 +236,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnRegisteredMsg() {
+    protected void onRegisteredMsg() {
         runDownloadTask();
     }
 
     @Override
-    protected void OnDisconnectedMsg() {
+    protected void onDisconnectedMsg() {
 
         if (channelListViewCursorAdapter != null)
             channelListViewCursorAdapter.changeCursor(null);
@@ -250,14 +249,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnConnectingMsg() {
+    protected void onConnectingMsg() {
         SetListCursorAdapter();
         SetGroupListCursorAdapter();
     }
 
     @Override
-    protected void OnEventMsg(SuplaEvent event) {
-        super.OnEventMsg(event);
+    protected void onEventMsg(SuplaEvent event) {
+        super.onEventMsg(event);
 
         if (event.Owner || event.ChannelID == 0) return;
 

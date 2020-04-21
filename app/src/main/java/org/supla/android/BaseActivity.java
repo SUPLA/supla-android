@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
+import org.supla.android.lib.ZWaveNode;
 
 import java.util.Date;
 import java.util.Timer;
@@ -127,70 +128,88 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onDisconnected:
                     case SuplaClientMsg.onConnected:
                     case SuplaClientMsg.onVersionError:
-                        BeforeStatusMsg();
+                        beforeStatusMsg();
                         break;
                 }
 
                 switch(_msg.getType()) {
                     case SuplaClientMsg.onDataChanged:
-                        OnDataChangedMsg(_msg.getChannelId(), _msg.getChannelGroupId());
+                        onDataChangedMsg(_msg.getChannelId(), _msg.getChannelGroupId());
                         break;
                     case SuplaClientMsg.onConnecting:
-                        OnConnectingMsg();
+                        onConnectingMsg();
                         break;
                     case SuplaClientMsg.onRegistering:
-                        OnRegisteringMsg();
+                        onRegisteringMsg();
                         break;
                     case SuplaClientMsg.onRegistered:
-                        OnRegisteredMsg();
+                        onRegisteredMsg();
                         break;
                     case SuplaClientMsg.onRegisterError:
-                        OnRegisterErrorMsg(_msg.getRegisterError());
+                        onRegisterErrorMsg(_msg.getRegisterError());
                         break;
                     case SuplaClientMsg.onDisconnected:
-                        OnDisconnectedMsg();
+                        onDisconnectedMsg();
                         break;
                     case SuplaClientMsg.onConnected:
-                        OnConnectedMsg();
+                        onConnectedMsg();
                         break;
                     case SuplaClientMsg.onVersionError:
-                        OnVersionErrorMsg(_msg.getVersionError());
+                        onVersionErrorMsg(_msg.getVersionError());
                         break;
                     case SuplaClientMsg.onEvent:
-                        OnEventMsg(_msg.getEvent());
+                        onEventMsg(_msg.getEvent());
                         break;
                     case SuplaClientMsg.onConnError:
-                        OnConnErrorMsg(_msg.getConnError());
+                        onConnErrorMsg(_msg.getConnError());
                         break;
                     case SuplaClientMsg.onRegistrationEnabled:
-                        OnRegistrationEnabled(_msg.getRegistrationEnabled());
+                        onRegistrationEnabled(_msg.getRegistrationEnabled());
                         break;
                     case SuplaClientMsg.onOAuthTokenRequestResult:
-                        OnOAuthTokenRequestResult(_msg.getOAuthToken());
+                        onOAuthTokenRequestResult(_msg.getOAuthToken());
                         break;
                     case SuplaClientMsg.onCalCfgResult:
-                        OnCalCfgResult(_msg.getChannelId(),
+                        onCalCfgResult(_msg.getChannelId(),
                                 _msg.getCommand(),
                                 _msg.getResult(),
                                 _msg.getData());
                         break;
                     case SuplaClientMsg.onSuperuserAuthorizationResult:
-                        OnSuperuserAuthorizationResult(_msg.isSuccess(), _msg.getResult());
+                        onSuperuserAuthorizationResult(_msg.isSuccess(), _msg.getResult());
                         break;
                     case SuplaClientMsg.onChannelState:
-                        OnChannelState(_msg.getChannelState());
+                        onChannelState(_msg.getChannelState());
                         break;
                     case SuplaClientMsg.onChannelBasicCfg:
-                        OnChannelBasicCfg(_msg.getChannelBasicCfg());
+                        onChannelBasicCfg(_msg.getChannelBasicCfg());
                         break;
                     case SuplaClientMsg.onChannelFunctionSetResult:
-                        OnChannelFunctionSetResult(_msg.getChannelId(), _msg.getCode());
+                        onChannelFunctionSetResult(_msg.getChannelId(), _msg.getFunc(), _msg.getCode());
                         break;
                     case SuplaClientMsg.onClientsReconnectResult:
-                        OnClientsReconnectResult(_msg.getCode());
+                        onClientsReconnectResult(_msg.getCode());
                         break;
                     case SuplaClientMsg.onSetRegistrationEnabledResult:
-                        OnSetRegistrationEnabledResult(_msg.getCode());
+                        onSetRegistrationEnabledResult(_msg.getCode());
+                        break;
+                    case SuplaClientMsg.onZWaveResetAndClearResult:
+                        onZWaveResetAndClearResult(_msg.getResult());
+                        break;
+                    case SuplaClientMsg.onZWaveAddNodeResult:
+                        onZWaveAddNodeResult(_msg.getResult(), _msg.getNode());
+                        break;
+                    case SuplaClientMsg.onZWaveRemoveNodeResult:
+                        onZWaveRemoveNodeResult(_msg.getResult(), _msg.getNodeId());
+                        break;
+                    case SuplaClientMsg.onZWaveGetNodeListResult:
+                        onZWaveGetNodeListResult(_msg.getResult(), _msg.getNode());
+                        break;
+                    case SuplaClientMsg.onZWaveGetAssignedNodeIdResult:
+                        onZWaveGetAssignedNodeIdResult(_msg.getResult(), _msg.getNodeId());
+                        break;
+                    case SuplaClientMsg.onZWaveAssignNodeIdResult:
+                        onZWaveAssignNodeIdResult(_msg.getResult(), _msg.getNodeId());
                         break;
                 }
 
@@ -211,43 +230,55 @@ public class BaseActivity extends Activity {
 
     }
 
-    protected void BeforeStatusMsg() {}
+    protected void beforeStatusMsg() {}
 
-    protected void OnDataChangedMsg(int ChannelId, int GroupId) {}
+    protected void onDataChangedMsg(int ChannelId, int GroupId) {}
 
-    protected void OnConnectingMsg() {}
+    protected void onConnectingMsg() {}
 
-    protected void OnRegisteringMsg() {}
+    protected void onRegisteringMsg() {}
 
-    protected void OnRegisteredMsg() {}
+    protected void onRegisteredMsg() {}
 
-    protected void OnRegisterErrorMsg(SuplaRegisterError error) {}
+    protected void onRegisterErrorMsg(SuplaRegisterError error) {}
 
-    protected void OnDisconnectedMsg() {}
+    protected void onDisconnectedMsg() {}
 
-    protected void OnConnectedMsg() {}
+    protected void onConnectedMsg() {}
 
-    protected void OnVersionErrorMsg(SuplaVersionError error) {}
+    protected void onVersionErrorMsg(SuplaVersionError error) {}
 
-    protected void OnEventMsg(SuplaEvent event) {}
+    protected void onEventMsg(SuplaEvent event) {}
 
-    protected void OnConnErrorMsg(SuplaConnError error) {}
+    protected void onConnErrorMsg(SuplaConnError error) {}
 
-    protected void OnRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {}
+    protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {}
 
-    protected void OnOAuthTokenRequestResult(SuplaOAuthToken token) {};
+    protected void onOAuthTokenRequestResult(SuplaOAuthToken token) {};
 
-    protected void OnCalCfgResult(int channelId, int command, int result, byte[] data) {};
+    protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {};
 
-    protected void OnSuperuserAuthorizationResult(boolean success, int code) {};
+    protected void onSuperuserAuthorizationResult(boolean success, int code) {};
 
-    protected void OnChannelState(SuplaChannelState state) {};
+    protected void onChannelState(SuplaChannelState state) {};
 
-    protected void OnChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
+    protected void onChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
 
-    protected void OnChannelFunctionSetResult(int channelId, int code) {};
+    protected void onChannelFunctionSetResult(int channelId, int func, int code) {};
 
-    protected void OnClientsReconnectResult(int code) {};
+    protected void onClientsReconnectResult(int code) {};
 
-    protected void OnSetRegistrationEnabledResult(int code) {};
+    protected void onSetRegistrationEnabledResult(int code) {};
+
+    protected void onZWaveResetAndClearResult(int result) {};
+
+    protected void onZWaveAddNodeResult(int result, ZWaveNode node) {};
+
+    protected void onZWaveRemoveNodeResult(int result, short nodeId) {};
+
+    protected void onZWaveGetNodeListResult(int result, ZWaveNode node) {};
+
+    protected void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {};
+
+    protected void onZWaveAssignNodeIdResult(int result, short nodeId) {};
 }

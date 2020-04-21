@@ -27,9 +27,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private TextView tvErrorMessage;
     private Handler _sc_msg_handler = null;
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
+    private Object object;
 
     public interface OnAuthorizarionResultListener {
-        void onSuperuserOnAuthorizarionResult(boolean Success, int Code);
+        void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                              boolean Success, int Code);
         void authorizationCanceled();
     }
 
@@ -70,16 +72,18 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         if ( _sc_msg_handler != null )
             return;
 
+        final SuperuserAuthorizationDialog dialog = this;
+
         _sc_msg_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
-
                     if (onAuthorizarionResultListener!= null) {
                         onAuthorizarionResultListener
-                                .onSuperuserOnAuthorizarionResult(_msg.isSuccess(), _msg.getCode());
+                                .onSuperuserOnAuthorizarionResult(dialog,
+                                        _msg.isSuccess(), _msg.getCode());
                     }
 
                     if (!_msg.isSuccess()) {
@@ -163,4 +167,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         onAuthorizarionResultListener = null;
     }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
 }

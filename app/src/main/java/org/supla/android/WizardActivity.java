@@ -50,6 +50,12 @@ public abstract class WizardActivity extends NavigationActivity {
             stepPage.setTag(pageId);
             mContent.addView(stepPage);
             mPages.add(stepPage);
+
+            if (stepPage instanceof RelativeLayout) {
+                stepPage.setLayoutParams(
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT));
+            }
         }
         return stepPage;
     }

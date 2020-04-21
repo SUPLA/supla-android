@@ -40,5 +40,9 @@
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
     <color name="vl_settings_bg">#ededed</color>
+    <color name="vl_btn_disabled">#CECECE</color>
+
+    <color name="zwave_info_bg">#24B331</color>
+    <color name="zwave_info_text">#FFFFFF</color>
 
 </resources>
