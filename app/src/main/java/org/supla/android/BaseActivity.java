@@ -269,7 +269,7 @@ public class BaseActivity extends Activity {
 
     protected void onChannelFunctionSetResult(int channelId, int func, int code) {};
 
-    protected void onChannelCaptionSetResult(int channelId, String Caption, int code) {};
+    protected void onChannelCaptionSetResult(int channelId, String caption, int code) {};
 
     protected void onClientsReconnectResult(int code) {};
 

@@ -269,17 +269,19 @@
     <string translatable="false" name="channel_number">Channel number:</string>
     <string translatable="false" name="device_id">Device id:</string>
     <string translatable="false" name="channel_id">Channel id:</string>
-    <string translatable="false" name="channel_caption">Caption:</string>
     <string translatable="false" name="soft_ver">Software version:</string>
 
     <string translatable="false" name="function">Funkcja</string>
+    <string translatable="false" name="caption">Caption</string>
     <string translatable="false" name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
     <string translatable="false" name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
     <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
     <string translatable="false" name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
+    <string translatable="false" name="zwave_error_caption_change_error">The channel caption change failed. Code %1$s</string>
     <string translatable="false" name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
     <string translatable="false" name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
+    <string translatable="false" name="zwave_error_set_caption_timeout">The waiting time for changing the channel caption has expired.</string>
     <string translatable="false" name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
     <string translatable="false" name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
     <string translatable="false" name="zwave_reset_and_clear">Reset network and settings</string>
@@ -300,6 +302,8 @@
     <string translatable="false" name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
     <string translatable="false" name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
     <string translatable="false" name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
+    <string translatable="false" name="zwave_offline">Offline?</string>
+    <string translatable="false" name="zwave_used">Assigned to:</string>
 
     <string translatable="false" name="restore_question">Are you sure you want to restore the default settings?</string>
 </resources>
