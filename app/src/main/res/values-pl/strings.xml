@@ -304,7 +304,11 @@
     <string name="zwave_waiting_for_add">Oczekiwanie na dodanie urządzenia do sieci z-wave.</string>
     <string name="zwave_waiting_for_add_timeout">Upłynął czas oczekiwania na dodanie urządzenia do sieci z-wave.</string>
     <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
-    <string translatable="false" name="zwave_used">Przypisano do:</string>
+    <string name="zwave_used">Przypisano do:</string>
+    <string name="zwave_node_assign_confirm_question">Wybrane urządzenie z-wave jest już powiązane z innym kanałem. Czy na pewno chcesz przenieść to urządzenie do tego kanału?</string>
 
     <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
+    <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
+    <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
+    <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
 </resources>

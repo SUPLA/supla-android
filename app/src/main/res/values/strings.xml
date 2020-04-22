@@ -304,6 +304,10 @@
     <string translatable="false" name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
     <string translatable="false" name="zwave_offline">Offline?</string>
     <string translatable="false" name="zwave_used">Assigned to:</string>
+    <string translatable="false" name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
 
     <string translatable="false" name="restore_question">Are you sure you want to restore the default settings?</string>
+    <string translatable="false" name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
+    <string translatable="false" name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
+    <string translatable="false" name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
 </resources>

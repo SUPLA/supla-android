@@ -466,6 +466,37 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         alert.show();
     }
 
+    private void assignNodeId() {
+        hideInfoMessage();
+        wathdogActivate(ASSIGN_NODE_ID_TIMEOUT_SEC,
+                R.string.zwave_error_assign_node_id_timeout, true);
+        setBtnNextPreloaderVisible(true);
+        assignNodeIdIfChanged();
+    }
+
+    private void showNodeAssignConfirmDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.zwave_node_assign_confirm_question);
+
+        builder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        assignNodeId();
+                    }
+                });
+
+        builder.setNeutralButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -510,11 +541,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 zwaveGetNodeList();
                 break;
             case PAGE_ZWAVE_DETAILS:
-                hideInfoMessage();
-                wathdogActivate(ASSIGN_NODE_ID_TIMEOUT_SEC,
-                        R.string.zwave_error_assign_node_id_timeout, true);
-                setBtnNextPreloaderVisible(true);
-                assignNodeIdIfChanged();
+                ZWaveNode node = getSelectedNode();
+                if (node == null
+                        || node.getChannelId() == null
+                        || node.getChannelId() == 0
+                        || node.getChannelId() == mSelectedCahnnel.getChannelId() ) {
+                    assignNodeId();
+                } else {
+                    showNodeAssignConfirmDialog();
+                }
                 break;
         }
     }
@@ -573,14 +608,19 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         }
     }
 
-    private short getSelectedNodeId() {
+    private ZWaveNode getSelectedNode() {
         short selectedNodeId = 0;
         if (mNodeListSpinner.getSelectedItemPosition() > 0
                 && mNodeListSpinner.getSelectedItemPosition() <= mNodeList.size()) {
-            selectedNodeId = mNodeList.get(mNodeListSpinner.getSelectedItemPosition()-1).getNodeId();
+            return mNodeList.get(mNodeListSpinner.getSelectedItemPosition()-1);
         }
 
-        return selectedNodeId;
+        return null;
+    }
+
+    private short getSelectedNodeId() {
+        ZWaveNode node = getSelectedNode();
+        return node == null ? 0 : node.getNodeId();
     }
 
     private void assignNodeIdIfChanged() {
@@ -719,8 +759,28 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         wathdogDeactivate();
 
         if (code != SuplaConst.SUPLA_RESULTCODE_TRUE) {
-            showError(getResources().getString(R.string.zwave_error_function_change_error,
-                Integer.toString(code)));
+
+            Integer msgErrResId = null;
+
+            switch (code) {
+                case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_BELONG_TO_GROUP:
+                    msgErrResId = R.string.belongs_to_group_error;
+                    break;
+                case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_HAS_SCHEDULE:
+                    msgErrResId = R.string.has_schedule_error;
+                    break;
+                case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE:
+                    msgErrResId = R.string.associeted_with_scene_error;
+                    break;
+            }
+
+            if (msgErrResId == null) {
+                showError(getResources().getString(R.string.zwave_error_function_change_error,
+                        Integer.toString(code)));
+            } else {
+                showError(getResources().getString(msgErrResId.intValue()));
+            }
+
             return;
         }
 
