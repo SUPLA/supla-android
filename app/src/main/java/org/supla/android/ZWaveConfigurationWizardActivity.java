@@ -923,6 +923,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         if (result == SuplaConst.SUPLA_CALCFG_RESULT_TRUE) {
             zwaveGetNodeList();
+            setBtnNextEnabled(true);
         } else if (!showTimeoutResult(result)) {
             showUnexpectedResponseError(result);
         }
@@ -931,6 +932,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     @Override
     protected void onZWaveAddNodeResult(int result, ZWaveNode node) {
         super.onZWaveAddNodeResult(result, node);
+
+        if (result == SuplaConst.SUPLA_CALCFG_RESULT_IN_PROGRESS) {
+            return;
+        }
+
+        setBtnNextEnabled(true);
 
         if (result == SuplaConst.SUPLA_CALCFG_RESULT_NODE_FOUND) {
 
@@ -950,6 +957,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     @Override
     protected void onZWaveRemoveNodeResult(int result, short nodeId) {
         super.onZWaveRemoveNodeResult(result, nodeId);
+
+        if (result == SuplaConst.SUPLA_CALCFG_RESULT_IN_PROGRESS) {
+            return;
+        }
+
+        setBtnNextEnabled(true);
 
         if (result == SuplaConst.SUPLA_CALCFG_RESULT_TRUE) {
             wathdogDeactivate();
