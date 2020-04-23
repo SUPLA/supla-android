@@ -267,15 +267,18 @@
 
     <string name="channel_caption_heatmeter">Licznik ciepła</string>
     <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
-    <string name="device_name">Nazwa urządzenia:</string>
-    <string name="channel_number">Numer kanału:</string>
-    <string name="device_id">Id urządzenia:</string>
-    <string name="channel_id">Id kanału:</string>
-    <string name="soft_ver">Wersja opr.:</string>
+    <string name="device_name">Nazwa urządzenia</string>
+    <string name="channel_number">Numer kanału</string>
+    <string name="device_id">Id urządzenia</string>
+    <string name="channel_id">Id kanału</string>
+    <string name="soft_ver">Wersja opr.</string>
 
     <string name="function">Funkcja</string>
     <string name="caption">Podpis</string>
+    <string name="device">Urządzenie</string>
+    <string name="zwave_welcome_title">Kreator z-wave</string>
     <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
+    <string name="zwave_before_search_title">To chwilę zajmie</string>
     <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potwrać od kilku sekund do kilku minut.</string>
     <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
     <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>

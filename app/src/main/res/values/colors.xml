@@ -42,7 +42,11 @@
     <color name="vl_settings_bg">#ededed</color>
     <color name="vl_btn_disabled">#CECECE</color>
 
-    <color name="zwave_info_bg">#24B331</color>
-    <color name="zwave_info_text">#FFFFFF</color>
+    <color name="zwave_btn_separator">#B4B7BA</color>
+    <color name="zwave_info_label_bg">#FFE804</color>
+    <color name="zwave_info_label_text">#000000</color>
+    <color name="zwave_info_table_bg">#F5F6F7</color>
+    <color name="zwave_info_table_text">#000000</color>
+    <color name="zwave_info_table_separator">#B4B7BA</color>
 
 </resources>

@@ -38,6 +38,7 @@ public class SuplaApp extends Application {
     private ArrayList<Handler>msgReceivers = new ArrayList<>();
 
     private Typeface mTypefaceQuicksandRegular;
+    private Typeface mTypefaceQuicksandLight;
     private Typeface mTypefaceOpenSansRegular;
     private Typeface mTypefaceOpenSansBold;
 
@@ -208,6 +209,11 @@ public class SuplaApp extends Application {
                     context.getAssets(), "fonts/Quicksand-Regular.ttf");
         }
 
+        if (mTypefaceQuicksandLight == null) {
+            mTypefaceQuicksandLight = Typeface.createFromAsset(
+                    context.getAssets(), "fonts/Quicksand-Light.ttf");
+        }
+
         if (mTypefaceOpenSansRegular == null) {
             mTypefaceOpenSansRegular = Typeface.createFromAsset(
                     context.getAssets(), "fonts/OpenSans-Regular.ttf");
@@ -221,6 +227,10 @@ public class SuplaApp extends Application {
 
     public Typeface getTypefaceQuicksandRegular() {
         return mTypefaceQuicksandRegular;
+    }
+
+    public Typeface getTypefaceQuicksandLight() {
+        return mTypefaceQuicksandLight;
     }
 
     public Typeface getTypefaceOpenSansRegular() {

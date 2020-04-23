@@ -265,15 +265,18 @@
 
     <string name="channel_caption_heatmeter">Heat Meter</string>
     <string translatable="false" name="zwave_select_channel">Select the z-wave bridge channel you want to configure.</string>
-    <string translatable="false" name="device_name">Device name:</string>
-    <string translatable="false" name="channel_number">Channel number:</string>
-    <string translatable="false" name="device_id">Device id:</string>
-    <string translatable="false" name="channel_id">Channel id:</string>
-    <string translatable="false" name="soft_ver">Software version:</string>
+    <string translatable="false" name="device_name">Device name</string>
+    <string translatable="false" name="channel_number">Channel number</string>
+    <string translatable="false" name="device_id">Device id</string>
+    <string translatable="false" name="channel_id">Channel id</string>
+    <string translatable="false" name="soft_ver">Software version</string>
 
     <string translatable="false" name="function">Funkcja</string>
     <string translatable="false" name="caption">Caption</string>
+    <string translatable="false" name="device">Device</string>
+    <string translatable="false" name="zwave_welcome_title">Z-Wave wizard</string>
     <string translatable="false" name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
+    <string translatable="false" name="zwave_before_search_title">It will take a while</string>
     <string translatable="false" name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
     <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
     <string translatable="false" name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>

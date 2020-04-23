@@ -2,7 +2,6 @@ package org.supla.android;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -234,7 +233,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
         addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
         addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
-        addButton(BTN_Z_WAVE, R.drawable.z_wave, R.string.z_wave);
+        addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
         addButton(BTN_ABOUT, R.drawable.info, R.string.about);
         addButton(BTN_DONATE, R.drawable.donate, R.string.donate_title);
         addButton(BTN_HELP, R.drawable.help, R.string.help);

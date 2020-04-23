@@ -67,9 +67,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private TextView mTvChannelId;
     private TextView mTvDeviceId;
     private EditText mEtCaption;
-    private Button mBtnResetAndClear;
-    private Button mBtnAddNode;
-    private Button mBtnRemoveNode;
+    private Button mBtnResetAndClearLeft;
+    private Button mBtnResetAndClearRight;
+    private Button mBtnAddNodeLeft;
+    private Button mBtnAddNodeRight;
+    private Button mBtnRemoveNodeLeft;
+    private Button mBtnRemoveNodeRight;
     private Button mBtnGetNodeList;
     private ArrayList<ZWaveNode> mNodeList;
     private Spinner mNodeListSpinner;
@@ -78,6 +81,10 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private int mWaitMessagePreloaderDotCount;
     private Timer mWaitMessagePreloaderTimer;
     private short mAssignedNodeId;
+
+    private final int ERROR_TYPE_OTHERS = 0;
+    private final int ERROR_TYPE_TIMEOUT = 1;
+    private final int ERROR_TYPE_DISCONNECTED = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +104,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         addStepPage(R.layout.zwave_before_search, PAGE_BEFORE_SEARCH);
         addStepPage(R.layout.zwave_details, PAGE_ZWAVE_DETAILS);
 
-        TextView label = findViewById(R.id.zwave_select_channel_txt);
+        TextView label = findViewById(R.id.tv_select_channel_description);
         label.setTypeface(typeface);
 
         mTvErrorMessage = findViewById(R.id.tv_error_txt);
@@ -110,21 +117,45 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mTvChannelId = findViewById(R.id.tv_channel_id);
         mTvDeviceId = findViewById(R.id.tv_device_id);
         mEtCaption = findViewById(R.id.et_caption);
-        mBtnResetAndClear = findViewById(R.id.btnResetAndClear);
-        mBtnAddNode = findViewById(R.id.btnAddNode);
-        mBtnRemoveNode = findViewById(R.id.btnRemoveNode);
+        mBtnResetAndClearLeft = findViewById(R.id.btnResetAndClearLeft);
+        mBtnResetAndClearRight = findViewById(R.id.btnResetAndClearRight);
+        mBtnAddNodeLeft = findViewById(R.id.btnAddNodeLeft);
+        mBtnAddNodeRight = findViewById(R.id.btnAddNodeRight);
+        mBtnRemoveNodeLeft = findViewById(R.id.btnRemoveNodeLeft);
+        mBtnRemoveNodeRight = findViewById(R.id.btnRemoveNodeRight);
         mBtnGetNodeList = findViewById(R.id.btnGetNodeList);
         mNodeListSpinner = findViewById(R.id.zwave_node_list);
-        mTvChannel = findViewById(R.id.tv_channel);
+        mTvChannel = findViewById(R.id.tv_details_channel_text);
         mTvInfo = findViewById(R.id.tv_info);
 
-        mBtnResetAndClear.setOnClickListener(this);
-        mBtnAddNode.setOnClickListener(this);
-        mBtnRemoveNode.setOnClickListener(this);
+        mBtnResetAndClearLeft.setOnClickListener(this);
+        mBtnResetAndClearRight.setOnClickListener(this);
+        mBtnAddNodeLeft.setOnClickListener(this);
+        mBtnAddNodeRight.setOnClickListener(this);
+        mBtnRemoveNodeLeft.setOnClickListener(this);
+        mBtnRemoveNodeRight.setOnClickListener(this);
         mBtnGetNodeList.setOnClickListener(this);
 
         mChannelListSpinner.setOnItemSelectedListener(this);
         mFunctionListSpinner.setOnItemSelectedListener(this);
+
+        Typeface quicksandLight = SuplaApp.getApp().getTypefaceQuicksandLight();
+        Typeface openSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
+
+        ((TextView)findViewById(R.id.tv_welcome_title)).setTypeface(quicksandLight);
+        ((TextView)findViewById(R.id.tv_welcome_description)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_select_channel_title)).setTypeface(quicksandLight);
+        ((TextView)findViewById(R.id.tv_select_channel_description)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_before_search_title)).setTypeface(quicksandLight);
+        ((TextView)findViewById(R.id.tv_before_seatch_msg)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_channel_detail_title)).setTypeface(quicksandLight);
+        ((TextView)findViewById(R.id.tv_channel_detail_description)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
+        ((TextView)findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);
+        ((TextView)findViewById(R.id.tv_details_device_title)).setTypeface(openSansRegular);
+        mTvInfo.setTypeface(openSansRegular);
     }
 
     private String getChannelName(Channel channel, Integer func) {
@@ -246,7 +277,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            showError(R.string.zwave_bridge_offline);
+                            showError(R.string.zwave_bridge_offline, ERROR_TYPE_DISCONNECTED);
                         }
                     });
                 }
@@ -258,10 +289,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mWatchdogTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        showError(msgResId);
+                        showError(msgResId, ERROR_TYPE_TIMEOUT);
                     }
                 });
             }
@@ -356,7 +386,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
                         mTvInfo.setText(msg, TextView.BufferType.SPANNABLE);
                         Spannable s = (Spannable)mTvInfo.getText();
-                        s.setSpan(new ForegroundColorSpan(res.getColor(R.color.zwave_info_bg)),
+                        s.setSpan(new ForegroundColorSpan(res.getColor(R.color.zwave_info_label_bg)),
                                 msg.length()-(max-mWaitMessagePreloaderDotCount),
                                 msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -505,11 +535,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             return;
         }
 
-        if (v == mBtnResetAndClear) {
+        if (v == mBtnResetAndClearLeft || v == mBtnResetAndClearRight) {
             showResetConfirmDialog();
-        } else if (v == mBtnAddNode) {
+        } else if (v == mBtnAddNodeLeft || v == mBtnAddNodeRight) {
             zwaveAddNode();
-        } else if (v == mBtnRemoveNode) {
+        } else if (v == mBtnRemoveNodeLeft || v == mBtnRemoveNodeRight) {
             zwaveRemoveNode();
         } else if (v ==mBtnGetNodeList) {
             zwaveGetNodeList();
@@ -721,21 +751,27 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         showPage(PAGE_ZWAVE_ERROR);
     }
 
-    private void showError(String message) {
-        showError(message, R.drawable.wizard_error);
+    private void showError(int msgResId, int errorType) {
+        switch (errorType) {
+            case ERROR_TYPE_DISCONNECTED:
+                showError(getResources().getString(msgResId), R.drawable.bridge_disconnected);
+                break;
+            case ERROR_TYPE_TIMEOUT:
+                showError(getResources().getString(msgResId), R.drawable.zwave_timeout);
+                break;
+            default:
+                showError(getResources().getString(msgResId), R.drawable.wizard_error);
+                break;
+        }
     }
 
-    private void showError(int msgResId) {
-        if (msgResId == R.string.zwave_bridge_offline) {
-            showError(getResources().getString(msgResId), R.drawable.bridge_disconnected);
-        } else {
-            showError(getResources().getString(msgResId));
-        }
+    private void showError(String message) {
+        showError(message, ERROR_TYPE_OTHERS);
     }
 
     private boolean showTimeoutResult(int result) {
         if (result == SuplaConst.SUPLA_CALCFG_RESULT_TIMEOUT && mWatchdogTimeoutMsgId > -1) {
-            showError(mWatchdogTimeoutMsgId);
+            showError(mWatchdogTimeoutMsgId, ERROR_TYPE_TIMEOUT);
             return true;
         }
         return false;
