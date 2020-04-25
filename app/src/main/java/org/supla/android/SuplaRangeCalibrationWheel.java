@@ -141,7 +141,6 @@ public class SuplaRangeCalibrationWheel extends View {
 
     public void setNumerOfTurns(double numerOfTurns) {
         this.numerOfTurns = numerOfTurns;
-        invalidate();
     }
 
     public double getNumerOfTurns() {
@@ -343,10 +342,10 @@ public class SuplaRangeCalibrationWheel extends View {
 
     private void drawValue(Canvas canvas) {
 
-        float distance = halfBtnSize + borderLineWidth * 2;
-        float left = btnLeftCenter.x+distance;
+        float distanceToEdge = halfBtnSize + borderLineWidth * 2;
+        float left = btnLeftCenter.x+distanceToEdge;
         float top = btnLeftCenter.y-halfBtnSize;
-        float right = btnRightCenter.x-distance;
+        float right = btnRightCenter.x-distanceToEdge;
         float bottom = btnRightCenter.y+halfBtnSize;
 
         float vleft = left + (float)((right-left) * minimum *100F/maxRange/100F);
