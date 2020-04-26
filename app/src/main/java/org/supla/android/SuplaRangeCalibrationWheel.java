@@ -470,9 +470,11 @@ public class SuplaRangeCalibrationWheel extends View {
                 if (touched==TOUCHED_NONE) {
                     if (!boostVisible && btnTouched(btnLeftCenter, touchPoint)) {
                         touched = TOUCHED_LEFT;
+                        btnRad = Math.toRadians(180);
                         onRangeChanged(true);
                     } else if (btnTouched(btnRightCenter, touchPoint)) {
                         touched = TOUCHED_RIGHT;
+                        btnRad = 0;
                         if (boostVisible) {
                             onBoostChanged();
                         } else {
@@ -490,7 +492,7 @@ public class SuplaRangeCalibrationWheel extends View {
 
             case MotionEvent.ACTION_MOVE:
                 if (touched!=TOUCHED_NONE) {
-             
+
                     btnRad = touchPointToRadian(touchPoint);
                     double touchedDegree = Math.toDegrees(btnRad);
 
