@@ -507,7 +507,7 @@ public class SuplaRangeCalibrationWheel extends View {
                     if (Math.abs(diff) <= 20) {
                         diff = (diff*100.0/360.0)*maxRange/100/numerOfTurns;
                         if (touched==TOUCHED_LEFT) {
-                            setMinimum(getMinimum()-diff, false);
+                            setMinimum(getMinimum()+diff, false);
                             onRangeChanged(true);
                         } else {
                             if (boostVisible) {
