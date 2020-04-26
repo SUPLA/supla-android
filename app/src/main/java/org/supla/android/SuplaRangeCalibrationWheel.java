@@ -490,9 +490,7 @@ public class SuplaRangeCalibrationWheel extends View {
 
             case MotionEvent.ACTION_MOVE:
                 if (touched!=TOUCHED_NONE) {
-                    btnRad = (float) Math.atan2(touchPoint.y-wheelCenterY,
-                            touchPoint.x-wheelCenterX);
-
+             
                     btnRad = touchPointToRadian(touchPoint);
                     double touchedDegree = Math.toDegrees(btnRad);
 
