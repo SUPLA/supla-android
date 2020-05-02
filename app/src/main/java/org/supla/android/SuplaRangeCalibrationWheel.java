@@ -50,11 +50,13 @@ public class SuplaRangeCalibrationWheel extends View {
     private double btnRad;
     private double lastTouchedDegree;
 
-    private int colorWheel = Color.parseColor("#c6d6ef");
-    private int colorBorder = Color.parseColor("#4585e8");
-    private int colorBtn = Color.parseColor("#4585e8");
-    private int colorValue = Color.parseColor("#fee618");
-    private int colorInsideBtn = Color.WHITE;
+    private int wheelColor = Color.parseColor("#c6d6ef");
+
+    private int borderColor = Color.parseColor("#4585e8");
+    private int btnColor = Color.parseColor("#4585e8");
+    private int valueColor = Color.parseColor("#fee618");
+    private int boostLineColor = Color.RED;
+    private int insideBtnColor = Color.WHITE;
 
     private double maxRange = 1000;
     private double minRange = maxRange * 0.1;
@@ -315,7 +317,7 @@ public class SuplaRangeCalibrationWheel extends View {
         canvas.save();
         canvas.rotate((float)Math.toDegrees(rad), wheelCenterX, wheelCenterY);
 
-        paint.setColor(colorBtn);
+        paint.setColor(btnColor);
         paint.setStyle(Paint.Style.FILL);
         rectF.set(x-halfBtnSize, wheelCenterY-halfBtnSize,
                 x+halfBtnSize, wheelCenterY+halfBtnSize);
@@ -327,7 +329,7 @@ public class SuplaRangeCalibrationWheel extends View {
                 paint
         );
 
-        paint.setColor(colorInsideBtn);
+        paint.setColor(insideBtnColor);
 
         drawBtnLines(canvas, rectF);
 
@@ -351,7 +353,7 @@ public class SuplaRangeCalibrationWheel extends View {
         float vleft = left + (float)((right-left) * minimum *100F/maxRange/100F);
         float vright = left + (float)((right-left) * maximum *100F/maxRange/100F);
 
-        paint.setColor(colorValue);
+        paint.setColor(valueColor);
         paint.setStyle(Paint.Style.FILL);
         rectF.set(vleft, top, vright, bottom);
 
@@ -361,7 +363,7 @@ public class SuplaRangeCalibrationWheel extends View {
                 15,
                 paint);
 
-        paint.setColor(colorBorder);
+        paint.setColor(borderColor);
         paint.setStrokeWidth(borderLineWidth);
         paint.setStyle(Paint.Style.STROKE);
         rectF.set(left, top, right, bottom);
@@ -380,7 +382,7 @@ public class SuplaRangeCalibrationWheel extends View {
             } else {
                 vleft+=borderLineWidth;
             }
-            paint.setColor(Color.RED);
+            paint.setColor(boostLineColor);
             canvas.drawLine(vleft, top-borderLineWidth,
                     vleft, bottom+borderLineWidth, paint);
         }
@@ -398,14 +400,14 @@ public class SuplaRangeCalibrationWheel extends View {
         wheelWidth = wheelRadius * 0.25F;
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(colorBorder);
+        paint.setColor(borderColor);
         paint.setStrokeWidth(wheelWidth);
         rectF.set(wheelCenterX-wheelRadius, wheelCenterY-wheelRadius,
                 wheelCenterX+wheelRadius, wheelCenterY+wheelRadius);
         canvas.drawOval(rectF, paint);
 
         paint.setStrokeWidth(wheelWidth-borderLineWidth*2);
-        paint.setColor(colorWheel);
+        paint.setColor(wheelColor);
         canvas.drawOval(rectF, paint);
 
         if (touched == TOUCHED_NONE) {
@@ -533,5 +535,59 @@ public class SuplaRangeCalibrationWheel extends View {
 
     public void setOnChangeListener(OnChangeListener onChangeListener) {
         this.onChangeListener = onChangeListener;
+    }
+
+    public int getWheelColor() {
+        return wheelColor;
+    }
+
+    public void setWheelColor(int wheelColor) {
+        this.wheelColor = wheelColor;
+        invalidate();
+    }
+
+    public int getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+        invalidate();
+    }
+
+    public int getBtnColor() {
+        return btnColor;
+    }
+
+    public void setBtnColor(int btnColor) {
+        this.btnColor = btnColor;
+        invalidate();
+    }
+
+    public int getValueColor() {
+        return valueColor;
+    }
+
+    public void setValueColor(int valueColor) {
+        this.valueColor = valueColor;
+        invalidate();
+    }
+
+    public int getBoostLineColor() {
+        return boostLineColor;
+    }
+
+    public void setBoostLineColor(int boostLineColor) {
+        this.boostLineColor = boostLineColor;
+        invalidate();
+    }
+
+    public int getInsideBtnColor() {
+        return insideBtnColor;
+    }
+
+    public void setInsideBtnColor(int insideBtnColor) {
+        this.insideBtnColor = insideBtnColor;
+        invalidate();
     }
 }
