@@ -38,6 +38,7 @@ public class SuplaRangeCalibrationWheel extends View {
 
     private Paint paint;
     private RectF rectF;
+
     private float borderLineWidth;
     private float wheelCenterX;
     private float wheelCenterY;
@@ -590,5 +591,16 @@ public class SuplaRangeCalibrationWheel extends View {
     public void setInsideBtnColor(int insideBtnColor) {
         this.insideBtnColor = insideBtnColor;
         invalidate();
+    }
+
+    public float getBorderLineWidth() {
+        return borderLineWidth;
+    }
+
+    public void setBorderLineWidth(float borderLineWidth) {
+        if (borderLineWidth < 0.1F) {
+            borderLineWidth = 0.1F;
+        }
+        this.borderLineWidth = borderLineWidth;
     }
 }
