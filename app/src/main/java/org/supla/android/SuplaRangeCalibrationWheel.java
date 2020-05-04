@@ -59,7 +59,7 @@ public class SuplaRangeCalibrationWheel extends View {
     private int insideBtnColor = Color.WHITE;
 
     private double maximumValue = 1000;
-    private double minimumDistance = maximumValue * 0.1;
+    private double minimumRange = maximumValue * 0.1;
     private double numerOfTurns = 5;
     private double minimum = 0;
     private double maximum = maximumValue;
@@ -125,21 +125,21 @@ public class SuplaRangeCalibrationWheel extends View {
         return maximumValue;
     }
 
-    public void setMinimumDistance(double minimumDistance) {
-        if (minimumDistance < 0) {
-            minimumDistance = 0;
+    public void setMinimumRange(double minimumRange) {
+        if (minimumRange < 0) {
+            minimumRange = 0;
         }
-        if (minimumDistance > maximumValue) {
-            minimumDistance = maximumValue;
+        if (minimumRange > maximumValue) {
+            minimumRange = maximumValue;
         }
-        this.minimumDistance = minimumDistance;
+        this.minimumRange = minimumRange;
 
         setMinimum(getMinimum(), false);
         setMaximum(getMaximum());
     }
 
-    public double getMinimumDistance() {
-        return this.minimumDistance;
+    public double getMinimumRange() {
+        return this.minimumRange;
     }
 
     public void setNumerOfTurns(double numerOfTurns) {
@@ -151,8 +151,8 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMinimum(double minimum, boolean inv) {
-        if (minimum+ minimumDistance > maximum) {
-            minimum = maximum - minimumDistance;
+        if (minimum+ minimumRange > maximum) {
+            minimum = maximum - minimumRange;
         }
 
         if (minimum < leftEdge) {
@@ -178,8 +178,8 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMaximum(double maximum, boolean inv) {
-        if (minimum+ minimumDistance > maximum) {
-            maximum = minimum+ minimumDistance;
+        if (minimum+ minimumRange > maximum) {
+            maximum = minimum+ minimumRange;
         }
 
         if (maximum > rightEdge) {
