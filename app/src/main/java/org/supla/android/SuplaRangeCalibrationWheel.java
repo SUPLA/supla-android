@@ -58,13 +58,13 @@ public class SuplaRangeCalibrationWheel extends View {
     private int boostLineColor = Color.RED;
     private int insideBtnColor = Color.WHITE;
 
-    private double rangeMax = 1000;
-    private double rangeMin = rangeMax * 0.1;
+    private double maximumValue = 1000;
+    private double minimumDistance = maximumValue * 0.1;
     private double numerOfTurns = 5;
     private double minimum = 0;
-    private double maximum = rangeMax;
+    private double maximum = maximumValue;
     private double leftEdge = 0;
-    private double rightEdge = rangeMax;
+    private double rightEdge = maximumValue;
     private double boostLevel = 0;
     private boolean boostVisible = false;
 
@@ -110,35 +110,36 @@ public class SuplaRangeCalibrationWheel extends View {
         init();
     }
 
-    public void setRangeMax(double rangeMax) {
-        if (leftEdge > rangeMax) {
-            rangeMax = leftEdge;
+    public void setMaximumValue(double maximumValue) {
+
+        this.maximumValue = maximumValue;
+
+        if (rightEdge > maximumValue) {
+            setRightEdge(maximumValue);
         }
 
-        if (rightEdge > rangeMax) {
-            rangeMax = rightEdge;
-        }
-        this.rangeMax = rangeMax;
         invalidate();
     }
 
-    public double getRangeMax() {
-        return rangeMax;
+    public double getMaximumValue() {
+        return maximumValue;
     }
 
-    public void setRangeMin(double rangeMin) {
-        if (rangeMin < 0) {
-            rangeMin = 0;
+    public void setMinimumDistance(double minimumDistance) {
+        if (minimumDistance < 0) {
+            minimumDistance = 0;
         }
-        if (rangeMin > rangeMax) {
-            rangeMin = rangeMax;
+        if (minimumDistance > maximumValue) {
+            minimumDistance = maximumValue;
         }
-        this.rangeMin = rangeMin;
-        invalidate();
+        this.minimumDistance = minimumDistance;
+
+        setMinimum(getMinimum(), false);
+        setMaximum(getMaximum());
     }
 
-    public double getRangeMin() {
-        return this.rangeMin;
+    public double getMinimumDistance() {
+        return this.minimumDistance;
     }
 
     public void setNumerOfTurns(double numerOfTurns) {
@@ -150,8 +151,8 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMinimum(double minimum, boolean inv) {
-        if (minimum+ rangeMin > maximum) {
-            minimum = maximum - rangeMin;
+        if (minimum+ minimumDistance > maximum) {
+            minimum = maximum - minimumDistance;
         }
 
         if (minimum < leftEdge) {
@@ -177,8 +178,8 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMaximum(double maximum, boolean inv) {
-        if (minimum+ rangeMin > maximum) {
-            maximum = minimum+ rangeMin;
+        if (minimum+ minimumDistance > maximum) {
+            maximum = minimum+ minimumDistance;
         }
 
         if (maximum > rightEdge) {
@@ -212,8 +213,8 @@ public class SuplaRangeCalibrationWheel extends View {
             rightEdge = leftEdge;
         }
 
-        if (rightEdge > rangeMax) {
-            rightEdge = rangeMax;
+        if (rightEdge > maximumValue) {
+            rightEdge = maximumValue;
         }
 
         this.rightEdge = rightEdge;
@@ -234,8 +235,8 @@ public class SuplaRangeCalibrationWheel extends View {
             leftEdge = rightEdge;
         }
 
-        if (leftEdge > rangeMax) {
-            leftEdge = rangeMax;
+        if (leftEdge > maximumValue) {
+            leftEdge = maximumValue;
         }
 
         this.leftEdge = leftEdge;
@@ -350,8 +351,8 @@ public class SuplaRangeCalibrationWheel extends View {
         float right = btnRightCenter.x-distanceToEdge;
         float bottom = btnRightCenter.y+halfBtnSize;
 
-        float vleft = left + (float)((right-left) * minimum *100F/ rangeMax /100F);
-        float vright = left + (float)((right-left) * maximum *100F/ rangeMax /100F);
+        float vleft = left + (float)((right-left) * minimum *100F/ maximumValue /100F);
+        float vright = left + (float)((right-left) * maximum *100F/ maximumValue /100F);
 
         paint.setColor(valueColor);
         paint.setStyle(Paint.Style.FILL);
@@ -376,7 +377,7 @@ public class SuplaRangeCalibrationWheel extends View {
         );
 
         if (boostVisible) {
-            vleft = left + (float)((right-left) * boostLevel/ rangeMax);
+            vleft = left + (float)((right-left) * boostLevel/ maximumValue);
             if (boostLevel >= (maximum-minimum) / 2) {
                 vleft-=borderLineWidth;
             } else {
@@ -507,7 +508,7 @@ public class SuplaRangeCalibrationWheel extends View {
                     }
 
                     if (Math.abs(diff) <= 20) {
-                        diff = (diff*100.0/360.0)* rangeMax /100/numerOfTurns;
+                        diff = (diff*100.0/360.0)* maximumValue /100/numerOfTurns;
                         if (touched==TOUCHED_LEFT) {
                             setMinimum(getMinimum()+diff, false);
                             onRangeChanged(true);
