@@ -376,7 +376,7 @@ public class SuplaRangeCalibrationWheel extends View {
         );
 
         if (boostVisible) {
-            vleft = left + (float)((right-left) * boostLevel *100F/maxRange/100F);
+            vleft = left + (float)((right-left) * boostLevel/maxRange);
             if (boostLevel >= (maximum-minimum) / 2) {
                 vleft-=borderLineWidth;
             } else {
