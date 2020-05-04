@@ -54,7 +54,7 @@ public class SuplaRangeCalibrationWheel extends View {
 
     private int borderColor = Color.parseColor("#4585e8");
     private int btnColor = Color.parseColor("#4585e8");
-    private int valueColor = Color.parseColor("#fee618");
+    private int rangeColor = Color.parseColor("#fee618");
     private int boostLineColor = Color.RED;
     private int insideBtnColor = Color.WHITE;
 
@@ -354,7 +354,7 @@ public class SuplaRangeCalibrationWheel extends View {
         float vleft = left + (float)((right-left) * minimum / maximumValue);
         float vright = left + (float)((right-left) * maximum / maximumValue);
 
-        paint.setColor(valueColor);
+        paint.setColor(rangeColor);
         paint.setStyle(Paint.Style.FILL);
         rectF.set(vleft, top, vright, bottom);
 
@@ -565,12 +565,12 @@ public class SuplaRangeCalibrationWheel extends View {
         invalidate();
     }
 
-    public int getValueColor() {
-        return valueColor;
+    public int getRangeColor() {
+        return rangeColor;
     }
 
-    public void setValueColor(int valueColor) {
-        this.valueColor = valueColor;
+    public void setRangeColor(int rangeColor) {
+        this.rangeColor = rangeColor;
         invalidate();
     }
 
