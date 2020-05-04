@@ -351,8 +351,8 @@ public class SuplaRangeCalibrationWheel extends View {
         float right = btnRightCenter.x-distanceToEdge;
         float bottom = btnRightCenter.y+halfBtnSize;
 
-        float vleft = left + (float)((right-left) * minimum *100F/ maximumValue /100F);
-        float vright = left + (float)((right-left) * maximum *100F/ maximumValue /100F);
+        float vleft = left + (float)((right-left) * minimum / maximumValue);
+        float vright = left + (float)((right-left) * maximum / maximumValue);
 
         paint.setColor(valueColor);
         paint.setStyle(Paint.Style.FILL);
