@@ -322,12 +322,9 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         if (force || System.currentTimeMillis() - lastCalCfgTime >= DISPLAY_DELAY_TIME) {
             setMode();
             setBoost();
-            // First set right edge then left edge
             calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
             calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
-            // First set maximum and then minimum
-            calibrationWheel.setMaximum(cfgParameters.getMaximum());
-            calibrationWheel.setMinimum(cfgParameters.getMinimum());
+            calibrationWheel.setMinMax(cfgParameters.getMinimum(), cfgParameters.getMaximum());
             calibrationWheel.setBoostLevel(cfgParameters.getBoostLevel());
         } else {
 

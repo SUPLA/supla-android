@@ -113,9 +113,13 @@ public class SuplaRangeCalibrationWheel extends View {
 
     public void setMaximumValue(double maximumValue) {
 
+        if (maximumValue < getMinimumRange()) {
+            maximumValue = getMinimumRange();
+        }
+
         this.maximumValue = maximumValue;
 
-        if (rightEdge > maximumValue) {
+        if (getRightEdge() > maximumValue) {
             setRightEdge(maximumValue);
         }
 
@@ -130,13 +134,40 @@ public class SuplaRangeCalibrationWheel extends View {
         if (minimumRange < 0) {
             minimumRange = 0;
         }
-        if (minimumRange > maximumValue) {
-            minimumRange = maximumValue;
+
+        if (minimumRange > getMaximumValue()) {
+            minimumRange = getMaximumValue();
         }
+
         this.minimumRange = minimumRange;
 
-        setMinimum(getMinimum(), false);
-        setMaximum(getMaximum());
+        if (minimumRange >getRightEdge()-getLeftEdge()) {
+            double diff = (minimumRange - (getRightEdge()-getLeftEdge())) / 2.0F;
+            if (diff > getLeftEdge()) {
+                setLeftEdge(0);
+                setRightEdge(minimumRange);
+            } else if (diff + getRightEdge() > getMaximumValue()) {
+                setRightEdge(getMaximumValue());
+                setLeftEdge(getRightEdge()-minimumRange);
+            } else {
+                setLeftEdge(getLeftEdge()-diff);
+                setRightEdge(getRightEdge()+diff);
+            }
+        }
+
+        if (minimumRange > getMaximum() - getMinimum()) {
+            double diff = (minimumRange - (getMaximum()-getMinimum())) / 2;
+            if (getMinimum()-diff < getLeftEdge()) {
+                setMinimum(getLeftEdge());
+                setMaximum(getMinimum()+minimumRange);
+            } else if (getMaximum() + diff > getRightEdge()) {
+                setMaximum(getRightEdge());
+                setMinimum(getMaximum()-minimumRange);
+            } else {
+                setMinimum(getMinimum()-diff);
+                setMaximum(getMaximum()+diff);
+            }
+        }
     }
 
     public double getMinimumRange() {
@@ -152,19 +183,22 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMinimum(double minimum, boolean inv) {
-        if (minimum+ minimumRange > maximum) {
-            minimum = maximum - minimumRange;
+
+        if (minimum < getLeftEdge()) {
+            minimum = getLeftEdge();
         }
 
-        if (minimum < leftEdge) {
-            minimum = leftEdge;
-        }
-
-        if (minimum > boostLevel) {
-            boostLevel = minimum;
+        if (minimum + getMinimumRange() > getMaximum()) {
+            minimum = getMaximum() - getMinimumRange();
         }
 
         this.minimum = minimum;
+
+        if (minimum > getBoostLevel()) {
+            boostLevel = minimum;
+        }
+
+
         if (inv) {
             invalidate();
         }
@@ -179,19 +213,25 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMaximum(double maximum, boolean inv) {
-        if (minimum+ minimumRange > maximum) {
-            maximum = minimum+ minimumRange;
+
+        if (maximum > getRightEdge()) {
+            maximum = getRightEdge();
+        }
+
+        if (getMinimum()+getMinimumRange() > maximum) {
+            maximum = getMinimum()+getMinimumRange();
         }
 
         if (maximum > rightEdge) {
             maximum = rightEdge;
         }
 
+        this.maximum = maximum;
+
         if (maximum < boostLevel) {
             boostLevel = maximum;
         }
 
-        this.maximum = maximum;
         if (inv) {
             invalidate();
         }
@@ -206,21 +246,25 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     public void setRightEdge(double rightEdge) {
-        if (rightEdge < 0) {
-            rightEdge = 0;
+
+        if (rightEdge < getMinimumRange()) {
+            rightEdge = getMinimumRange();
         }
 
-        if (leftEdge > rightEdge) {
-            rightEdge = leftEdge;
-        }
-
-        if (rightEdge > maximumValue) {
-            rightEdge = maximumValue;
+        if (rightEdge > getMaximumValue()) {
+            rightEdge = getMaximumValue();
         }
 
         this.rightEdge = rightEdge;
-        setMinimum(getMinimum());
-        setMaximum(getMaximum());
+
+        if (getLeftEdge()+getMinimumRange() > rightEdge) {
+            setLeftEdge(rightEdge-getMinimumRange());
+        }
+
+        double min = getMinimum();
+        setMinimum(0, false);
+        setMaximum(getMaximum(), false);
+        setMinimum(min);
     }
 
     public double getRightEdge() {
@@ -232,29 +276,30 @@ public class SuplaRangeCalibrationWheel extends View {
             leftEdge = 0;
         }
 
-        if (leftEdge > rightEdge) {
-            leftEdge = rightEdge;
-        }
-
-        if (leftEdge > maximumValue) {
-            leftEdge = maximumValue;
+        if (leftEdge+getMinimumRange() > getRightEdge()) {
+            setRightEdge(leftEdge+getMinimumRange());
         }
 
         this.leftEdge = leftEdge;
+
         setMinimum(getMinimum());
-        setMaximum(getMaximum());
+    }
+
+    public double getLeftEdge() {
+        return leftEdge;
     }
 
     public void setBoostLevel(double boostLevel) {
-        if (boostLevel < minimum) {
-            boostLevel = minimum;
+        if (boostLevel < getMinimum()) {
+            boostLevel = getMinimum();
         }
 
-        if (boostLevel > maximum) {
-            boostLevel = maximum;
+        if (boostLevel > getMaximum()) {
+            boostLevel = getMaximum();
         }
 
         this.boostLevel = boostLevel;
+
         if (boostVisible) {
             invalidate();
         }
@@ -602,5 +647,12 @@ public class SuplaRangeCalibrationWheel extends View {
             borderLineWidth = 0.1F;
         }
         this.borderLineWidth = borderLineWidth;
+    }
+
+    public void setMinMax(double min, double max) {
+        setMinimum(0, false);
+        setMaximum(getMaximumValue(), false);
+        setMinimum(min, false);
+        setMaximum(max);
     }
 }
