@@ -271,7 +271,7 @@
     <string translatable="false" name="channel_id">Channel id</string>
     <string translatable="false" name="soft_ver">Software version</string>
 
-    <string translatable="false" name="function">Funkcja</string>
+    <string translatable="false" name="function">Function</string>
     <string translatable="false" name="caption">Caption</string>
     <string translatable="false" name="device">Device</string>
     <string translatable="false" name="zwave_welcome_title">Z-Wave wizard</string>
