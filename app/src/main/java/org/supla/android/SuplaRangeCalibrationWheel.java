@@ -276,11 +276,11 @@ public class SuplaRangeCalibrationWheel extends View {
             leftEdge = 0;
         }
 
+        this.leftEdge = leftEdge;
+
         if (leftEdge+getMinimumRange() > getRightEdge()) {
             setRightEdge(leftEdge+getMinimumRange());
         }
-
-        this.leftEdge = leftEdge;
 
         setMinimum(getMinimum());
     }
