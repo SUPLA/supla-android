@@ -315,5 +315,14 @@ public class Channel extends ChannelBase {
         return null;
     }
 
+    public int getChannelWarningLevel() {
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
+                return getValue().isManuallyClosed()|| getValue().flooding() ? 2 : 0;
+        }
+        return 0;
+    }
+
 }
 
