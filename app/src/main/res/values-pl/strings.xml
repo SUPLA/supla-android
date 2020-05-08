@@ -309,9 +309,15 @@
     <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
     <string name="zwave_used">Przypisano do:</string>
     <string name="zwave_node_assign_confirm_question">Wybrane urządzenie z-wave jest już powiązane z innym kanałem. Czy na pewno chcesz przenieść to urządzenie do tego kanału?</string>
+    <string name="zwave_error_common_message">Naciśnij wstecz aby wrócić do poprzedniego kroku lub \"Wyjście\" aby zakończyć.</string>
+    <string name="zwave_error_slave_mode">Ta funkcja nie jest dostępna gdy most pracuje w trybie podrzędnym.</string>
+    <string name="zwave_done">Gotowe! Teraz możesz zakończyć proces konfiguracji naciskając przycisk \"ok\" lub możesz nacisnąć wstecz aby skonfigurować kolejny kanał lub zmienić dotychczasowe ustawienia.</string>
 
     <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
     <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
     <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
     <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
+    <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
+    <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
+
 </resources>

@@ -308,9 +308,15 @@
     <string translatable="false" name="zwave_offline">Offline?</string>
     <string translatable="false" name="zwave_used">Assigned to:</string>
     <string translatable="false" name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
+    <string translatable="false" name="zwave_error_common_message">Press back to return to the previous step or \"Exit\" to finish.</string>
+    <string translatable="false" name="zwave_error_slave_mode">This function is not available when the bridge is in slave mode.</string>
+    <string translatable="false" name="zwave_done">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
 
     <string translatable="false" name="restore_question">Are you sure you want to restore the default settings?</string>
     <string translatable="false" name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
     <string translatable="false" name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
     <string translatable="false" name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
+    <string translatable="false" name="event_openedclosedthevalve">opened / closed the valve</string>
+    <string translatable="false" name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
+
 </resources>

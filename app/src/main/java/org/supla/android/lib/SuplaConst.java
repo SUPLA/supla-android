@@ -106,7 +106,6 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE               = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE              = 510;
 
-
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0001;
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0002;
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x0004;
@@ -145,7 +144,8 @@ public class SuplaConst {
     public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER        = 50;
     public final static int SUPLA_EVENT_POWERONOFF                         = 60;
     public final static int SUPLA_EVENT_LIGHTONOFF                         = 70;
-
+    public final static int SUPLA_EVENT_VALVEOPENCLOSE                     = 90;
+    public final static int SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED            = 100;
 
     public final static int SUPLA_DCS_CALL_GETVERSION                      =   10;
     public final static int SUPLA_SDC_CALL_GETVERSION_RESULT               =   20;
@@ -182,11 +182,9 @@ public class SuplaConst {
     public final static int SUPLA_CS_CALL_GET_OAUTH_PARAMETERS              =  340;
     public final static int SUPLA_SC_CALL_GET_OAUTH_PARAMETERS_RESULT       =  350;
 
-
     public final static int SUPLA_RESULT_CALL_NOT_ALLOWED     =  -5;
     public final static int SUPLA_RESULT_FALSE                =   0;
     public final static int SUPLA_RESULT_TRUE                 =   1;
-
 
     public final static int EM_VAR_FREQ = 0x0001;
     public final static int EM_VAR_VOLTAGE = 0x0002;
@@ -246,6 +244,7 @@ public class SuplaConst {
     public final static int SUPLA_CALCFG_RESULT_ID_NOT_EXISTS = 103;
     public final static int SUPLA_CALCFG_RESULT_UNAUTHORIZED = 104;
     public final static int SUPLA_CALCFG_RESULT_DEBUG = 105;
+    public final static int SUPLA_CALCFG_RESULT_NOT_SUPPORTED_IN_SLAVE_MODE = 106;
 
     public static String  getCaption(int func, Context context) {
 

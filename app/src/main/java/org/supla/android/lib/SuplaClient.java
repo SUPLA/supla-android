@@ -140,6 +140,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scReconnectDevice(long _supla_client, int DeviceID);
 
+    private native boolean scZWaveConfigModeActive(long _supla_client, int DeviceID);
+
     private native boolean scZWaveResetAndClear(long _supla_client, int DeviceID);
 
     private native boolean scZWaveAddNode(long _supla_client, int DeviceID);
@@ -484,7 +486,25 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean zwaveConfigModeActive(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveConfigModeActive(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
     public boolean zwaveResetAndClear(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -495,6 +515,10 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveAddNode(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -505,6 +529,10 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveRemoveNode(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
@@ -515,6 +543,10 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveGetNodeList(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
         lockClientPtr();
         try {
             return _supla_client_ptr != 0
