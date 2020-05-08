@@ -586,6 +586,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     private void gotoChannelDetailsPage() {
         if (mSelectedCahnnel != null) {
+            
+            if (!mDevicesToRestart.contains(getDevivceId())) {
+                mDevicesToRestart.add(getDevivceId());
+            }
+
             wathdogActivate(GET_BASIC_CFG_TIMEOUT_SEC,
                     R.string.zwave_error_get_basic_cfg_timeout, false);
             setBtnNextEnabled(false);
@@ -609,9 +614,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                     mChannelBasicCfg.getFunc(),
                     SuplaConst.SUPLA_RESULTCODE_TRUE);
         } else {
-            if (!mDevicesToRestart.contains(getDevivceId())) {
-                mDevicesToRestart.add(getDevivceId());
-            }
             wathdogActivate(SET_CHANNEL_FUNCTION_TIMEOUT_SEC,
                     R.string.zwave_error_set_function_timeout, false);
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
