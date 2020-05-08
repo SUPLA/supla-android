@@ -377,7 +377,10 @@ public class ChannelLayout extends LinearLayout {
         lp.leftMargin = margin;
 
         lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
-        lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+        }
 
         lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         return lp;
@@ -392,7 +395,10 @@ public class ChannelLayout extends LinearLayout {
         lp.rightMargin = margin;
 
         lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
-        lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
+        }
 
         lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         return lp;
