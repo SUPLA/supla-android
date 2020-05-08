@@ -341,11 +341,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private int getDevivceId() {
-        return mChannelBasicCfg == null ? 0 : mChannelBasicCfg.getDeviceId();
+        return mSelectedCahnnel == null ? 0 : mSelectedCahnnel.getDeviceID();
     }
 
     private int getChannelId() {
-        return mChannelBasicCfg == null ? 0 : mChannelBasicCfg.getChannelId();
+        return mSelectedCahnnel == null ? 0 : mSelectedCahnnel.getChannelId();
     }
 
     private void hideInfoMessage() {
