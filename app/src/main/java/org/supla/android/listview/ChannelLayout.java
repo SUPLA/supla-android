@@ -70,6 +70,7 @@ public class ChannelLayout extends LinearLayout {
     private SuplaChannelStatus right_ActiveStatus;
     private SuplaChannelStatus left_onlineStatus;
     private ImageView channelStateIcon;
+    private ImageView channelWarningIcon;
 
     private LineView bottom_line;
 
@@ -376,7 +377,28 @@ public class ChannelLayout extends LinearLayout {
         lp.leftMargin = margin;
 
         lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
-        lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+        }
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
+    protected RelativeLayout.LayoutParams getChannelWarningImageLayoutParams() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.channel_warning_image_size);
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
+        lp.rightMargin = margin;
+
+        lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
+        }
 
         lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         return lp;
@@ -441,6 +463,11 @@ public class ChannelLayout extends LinearLayout {
         channelStateIcon.setId(ViewHelper.generateViewId());
         content.addView(channelStateIcon);
         channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
+
+        channelWarningIcon = new ImageView(context);
+        channelWarningIcon.setId(ViewHelper.generateViewId());
+        content.addView(channelWarningIcon);
+        channelWarningIcon.setLayoutParams(getChannelWarningImageLayoutParams());
 
         right_ActiveStatus = new SuplaChannelStatus(context);
         right_ActiveStatus.setSingleColor(true);
@@ -822,6 +849,7 @@ public class ChannelLayout extends LinearLayout {
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
 
         channelStateIcon.setVisibility(INVISIBLE);
+        channelWarningIcon.setVisibility(INVISIBLE);
 
         if (OldFunc != mFunc) {
             imgl.SetDimensions();
@@ -863,6 +891,23 @@ public class ChannelLayout extends LinearLayout {
                             break;
                     }
                 }
+
+                int warningIcon = -1;
+
+                    switch(((Channel)cbase).getChannelWarningLevel()) {
+                        case 1:
+                            warningIcon = R.drawable.channel_warning_level1;
+                            break;
+                        case 2:
+                            warningIcon = R.drawable.channel_warning_level2;
+                            break;
+                    }
+
+                if (warningIcon != -1) {
+                    channelWarningIcon.setImageResource(warningIcon);
+                    channelWarningIcon.setVisibility(VISIBLE);
+                }
+
             }
 
             // Only when channelStateIcon is invisible !!

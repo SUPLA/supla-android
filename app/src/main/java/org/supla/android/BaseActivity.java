@@ -187,6 +187,9 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onChannelFunctionSetResult:
                         onChannelFunctionSetResult(_msg.getChannelId(), _msg.getFunc(), _msg.getCode());
                         break;
+                    case SuplaClientMsg.onChannelCaptionSetResult:
+                        onChannelCaptionSetResult(_msg.getChannelId(), _msg.getText(), _msg.getCode());
+                        break;
                     case SuplaClientMsg.onClientsReconnectResult:
                         onClientsReconnectResult(_msg.getCode());
                         break;
@@ -265,6 +268,8 @@ public class BaseActivity extends Activity {
     protected void onChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
 
     protected void onChannelFunctionSetResult(int channelId, int func, int code) {};
+
+    protected void onChannelCaptionSetResult(int channelId, String caption, int code) {};
 
     protected void onClientsReconnectResult(int code) {};
 

@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menubar">
 
+    <ImageView
+        android:id="@+id/img_welcome"
+        android:layout_width="150dp"
+        android:layout_height="86dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/z_wave"
+        android:scaleType="fitCenter"
+        tools:ignore="ContentDescription" />
+
     <TextView
-        android:id="@+id/tv_welcome_txt"
+        android:id="@+id/tv_welcome_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_welcome_title"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:text="@string/zwave_welcome_message"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_welcome_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_welcome"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/zwave_welcome_title"
+        android:textColor="@android:color/white"
+        android:textSize="40sp" />
 
 
 </RelativeLayout>

@@ -131,6 +131,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetChannelFunction(long _supla_client, int ChannelID, int Function);
 
+    private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
+
     private native boolean scReconnectAllClients(long _supla_client);
 
     private native boolean scSetRegistrationEnabled(long _supla_client,
@@ -436,6 +438,16 @@ public class SuplaClient extends Thread {
         try {
             return _supla_client_ptr != 0
                     && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setChannelCaption(int ChannelID, String Caption) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
         } finally {
             unlockClientPtr();
         }
@@ -857,6 +869,15 @@ public class SuplaClient extends Thread {
                 SuplaClientMsg.onChannelFunctionSetResult);
         msg.setCode(ResultCode);
         msg.setFunc(Func);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onChannelCaptionSetResult(int ChannelID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
         msg.setChannelId(ChannelID);
         sendMessage(msg);
     }

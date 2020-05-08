@@ -267,21 +267,26 @@
 
     <string name="channel_caption_heatmeter">Licznik ciepła</string>
     <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
-    <string name="device_name">Nazwa urządzenia:</string>
-    <string name="channel_number">Numer kanału:</string>
-    <string name="device_id">Id urządzenia:</string>
-    <string name="channel_id">Id kanału:</string>
-    <string name="channel_caption">Podpis:</string>
-    <string name="soft_ver">Wersja opr.:</string>
+    <string name="device_name">Nazwa urządzenia</string>
+    <string name="channel_number">Numer kanału</string>
+    <string name="device_id">Id urządzenia</string>
+    <string name="channel_id">Id kanału</string>
+    <string name="soft_ver">Wersja opr.</string>
 
     <string name="function">Funkcja</string>
+    <string name="caption">Podpis</string>
+    <string name="device">Urządzenie</string>
+    <string name="zwave_welcome_title">Kreator z-wave</string>
     <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
+    <string name="zwave_before_search_title">To chwilę zajmie</string>
     <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potwrać od kilku sekund do kilku minut.</string>
     <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
     <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
     <string name="zwave_error_function_change_error">Zmiana funckji kanału zakończona niepowodzeniem. Kod %1$s</string>
+    <string name="zwave_error_caption_change_error">Zmiana podpisu kanału zakończona niepowodzeniem. Kod %1$s</string>
     <string name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
     <string name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
+    <string name="zwave_error_set_caption_timeout">Upłynął czas oczekiwania na zmianę podpisu kanału.</string>
     <string name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
     <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzęń z-wave.</string>
     <string name="zwave_reset_and_clear">Resetuj sieć i ustawienia</string>
@@ -302,6 +307,11 @@
     <string name="zwave_waiting_for_add">Oczekiwanie na dodanie urządzenia do sieci z-wave.</string>
     <string name="zwave_waiting_for_add_timeout">Upłynął czas oczekiwania na dodanie urządzenia do sieci z-wave.</string>
     <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
+    <string name="zwave_used">Przypisano do:</string>
+    <string name="zwave_node_assign_confirm_question">Wybrane urządzenie z-wave jest już powiązane z innym kanałem. Czy na pewno chcesz przenieść to urządzenie do tego kanału?</string>
 
     <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
+    <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
+    <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
+    <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
 </resources>
