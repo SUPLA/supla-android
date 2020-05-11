@@ -42,6 +42,8 @@
     <color name="vl_settings_bg">#ededed</color>
     <color name="vl_btn_disabled">#CECECE</color>
 
+    <color name="wizart_next_btn_text_enabled">#12a71e</color>
+    <color name="wizart_next_btn_text_disabled">#B4B7BA</color>
     <color name="zwave_btn_separator">#B4B7BA</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>

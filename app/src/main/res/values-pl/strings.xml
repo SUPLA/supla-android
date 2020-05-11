@@ -266,7 +266,7 @@
     <string name="exit">Wyjście</string>
 
     <string name="channel_caption_heatmeter">Licznik ciepła</string>
-    <string name="zwave_select_channel">Wybierz kanał mostu z-wave, który chcesz skonfigurować.</string>
+    <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
     <string name="device_name">Nazwa urządzenia</string>
     <string name="channel_number">Numer kanału</string>
     <string name="device_id">Id urządzenia</string>
@@ -319,5 +319,5 @@
     <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
     <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
-
+    <string name="bridge">Most</string>
 </resources>

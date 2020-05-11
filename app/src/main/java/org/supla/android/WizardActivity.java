@@ -41,6 +41,7 @@ public abstract class WizardActivity extends NavigationActivity {
         mBtnNextLeftPart.setOnClickListener(this);
 
         mContent = findViewById(R.id.wizard_content);
+        setBtnNextEnabled(false);
     }
 
     protected View addStepPage(int layoutResId, int pageId) {
@@ -77,18 +78,57 @@ public abstract class WizardActivity extends NavigationActivity {
         return 0;
     }
 
+    protected void setBtnNextVisible(boolean visible) {
+        if (visible) {
+            mBtnNextLeftPart.setVisibility(View.VISIBLE);
+            mBtnNextMiddlePart.setVisibility(View.VISIBLE);
+            mBtnNextRightPart.setVisibility(View.VISIBLE);
+        } else {
+            mBtnNextLeftPart.setVisibility(View.GONE);
+            mBtnNextMiddlePart.setVisibility(View.GONE);
+            mBtnNextRightPart.setVisibility(View.GONE);
+        }
+
+    }
+
     protected void setBtnNextEnabled(boolean enabled) {
         mBtnNextLeftPart.setEnabled(enabled);
         mBtnNextMiddlePart.setEnabled(enabled);
         mBtnNextRightPart.setEnabled(enabled);
+        mBtnNextMiddlePart.setTextColor(
+                getResources().getColor(enabled ? R.color.wizart_next_btn_text_enabled
+                        : R.color.wizart_next_btn_text_disabled));
+
+        setArrowVisible(enabled);
     }
 
     protected void setBtnNextText(int resId) {
         mBtnNextMiddlePart.setText(resId, TextView.BufferType.NORMAL);
     }
 
+    protected void setBtnNextText(String text) {
+        mBtnNextMiddlePart.setText(text, TextView.BufferType.NORMAL);
+    }
+
     protected boolean isBtnNextPreloaderVisible() {
         return mBtnNextPreloaderTimer != null;
+    }
+
+    private void setArrowVisible(boolean visible) {
+        if (visible) {
+            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr);
+            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
+            mBtnNextRightPart.setLayoutParams(params);
+        } else {
+            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr2);
+
+            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
+
+            mBtnNextRightPart.setLayoutParams(params);
+
+        }
     }
 
     protected void setBtnNextPreloaderVisible(boolean visible) {
@@ -99,15 +139,9 @@ public abstract class WizardActivity extends NavigationActivity {
             mBtnNextPreloaderTimer = null;
         }
 
+        setArrowVisible(!visible);
 
         if (visible) {
-
-            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr2);
-
-            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
-
-            mBtnNextRightPart.setLayoutParams(params);
 
             mBtnNextPreloaderPos = 0;
 
@@ -143,13 +177,6 @@ public abstract class WizardActivity extends NavigationActivity {
                     });
                 }
             }, 0, 100);
-
-        } else {
-
-            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr);
-            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
-            mBtnNextRightPart.setLayoutParams(params);
 
         }
 

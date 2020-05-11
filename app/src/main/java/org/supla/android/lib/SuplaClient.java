@@ -878,6 +878,15 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onDeviceCalCfgProgressReport(int ChannelId, int Command, short Progress) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onCalCfgProgressReport);
+        msg.setChannelId(ChannelId);
+        msg.setCommand(Command);
+        msg.setProgress(Progress);
+        sendMessage(msg);
+    }
+
     private void onDeviceCalCfgDebugString(String str) {
         Trace.d("CalCfgDebugString", str);
     }
