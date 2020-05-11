@@ -510,7 +510,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             case PAGE_ZWAVE_DETAILS:
                 updateSelectedChannel();
                 mTvChannel.setText(getChannelName(mSelectedCahnnel, mSelectedCahnnel.getFunc()));
+                mNodeListSpinner.setAdapter(null);
                 hideInfoMessage();
+                zwaveGetNodeList();
                 break;
         }
     }
@@ -755,7 +757,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 break;
             case PAGE_BEFORE_SEARCH:
                 showPage(PAGE_ZWAVE_DETAILS);
-                zwaveGetNodeList();
                 break;
             case PAGE_ZWAVE_DETAILS:
                 ZWaveNode node = getSelectedNode();
