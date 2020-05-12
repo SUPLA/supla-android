@@ -512,7 +512,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 mTvChannel.setText(getChannelName(mSelectedCahnnel, mSelectedCahnnel.getFunc()));
                 mNodeListSpinner.setAdapter(null);
                 hideInfoMessage();
-                zwaveGetNodeList();
+                if (mNodeList.size() == 0) {
+                    zwaveGetNodeList();
+                } else {
+                    loadNodeListSpinner();
+                }
                 break;
         }
     }
@@ -1310,7 +1314,13 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         if (parent == mDeviceListSpinner) {
             loadChannelListSpinner();
         } else if (parent == mChannelListSpinner) {
-            mSelectedCahnnel = getChannelListSpinnerSelectedChannel();
+            Channel selectedChannel = getChannelListSpinnerSelectedChannel();
+            if ( mSelectedCahnnel == null
+                    || selectedChannel == null
+                    || selectedChannel.getDeviceID() != mSelectedCahnnel.getDeviceID() ) {
+                mNodeList.size();
+            }
+            mSelectedCahnnel = selectedChannel;
         } else if (parent == mFunctionListSpinner
                 && position >= 0 && position < mFuncList.size()) {
             if (mFuncList.get(position) == 0) {
