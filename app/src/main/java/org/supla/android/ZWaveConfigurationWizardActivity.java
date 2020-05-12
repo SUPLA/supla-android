@@ -512,11 +512,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 mTvChannel.setText(getChannelName(mSelectedCahnnel, mSelectedCahnnel.getFunc()));
                 mNodeListSpinner.setAdapter(null);
                 hideInfoMessage();
-                if (mNodeList.size() == 0) {
-                    zwaveGetNodeList();
-                } else {
-                    loadNodeListSpinner();
-                }
+                zwaveGetNodeList();
                 break;
         }
     }
@@ -656,9 +652,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         mProgress = 0;
 
-        showWaitMessage(R.string.zwave_node_searching,
-                GET_ASSIGNED_NODE_ID_TIMEOUT_SEC,
-                R.string.zwave_error_get_assigned_node_id_timeout, true);
+        if (mNodeList.isEmpty()) {
+            showWaitMessage(R.string.zwave_node_searching,
+                    GET_ASSIGNED_NODE_ID_TIMEOUT_SEC,
+                    R.string.zwave_error_get_assigned_node_id_timeout, true);
+        }
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
         if (client!=null){
@@ -735,6 +733,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         } else if (v == mBtnRemoveNodeLeft || v == mBtnRemoveNodeRight) {
             zwaveRemoveNode();
         } else if (v ==mBtnGetNodeList) {
+            mNodeList.clear();
             zwaveGetNodeList();
         }
     }
@@ -1067,7 +1066,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             showMain();
         } else {
             fetchChannelBasicCfg(channelId);
-            showPage(PAGE_BEFORE_SEARCH);
+            if (mNodeList.size() == 0) {
+                showPage(PAGE_BEFORE_SEARCH);
+            } else {
+                showPage(PAGE_ZWAVE_DETAILS);
+            }
         }
     }
 
@@ -1123,15 +1126,18 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         wathdogDeactivate();
 
         mAssignedNodeId = nodeId;
-        mNodeList.clear();
-        wathdogActivate(GET_NODE_LIST_TIMEOUT_SEC,
-                R.string.zwave_error_get_node_list_timeout, true);
 
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
-            client.zwaveGetNodeList(getDevivceId());
+        if (mNodeList.isEmpty()) {
+            wathdogActivate(GET_NODE_LIST_TIMEOUT_SEC,
+                    R.string.zwave_error_get_node_list_timeout, true);
+
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
+            if (client!=null){
+                client.zwaveGetNodeList(getDevivceId());
+            }
+        } else {
+            loadNodeListSpinner();
         }
-
     }
 
     @Override
@@ -1318,7 +1324,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             if ( mSelectedCahnnel == null
                     || selectedChannel == null
                     || selectedChannel.getDeviceID() != mSelectedCahnnel.getDeviceID() ) {
-                mNodeList.size();
+                mNodeList.clear();
             }
             mSelectedCahnnel = selectedChannel;
         } else if (parent == mFunctionListSpinner
