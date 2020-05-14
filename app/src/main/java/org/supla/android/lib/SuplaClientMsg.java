@@ -43,6 +43,7 @@ public class SuplaClientMsg {
     private short NodeId;
     private ZWaveNode Node;
     private String Text;
+    private short Progress;
 
     public final static int onDataChanged         = 1;
     public final static int onConnecting          = 2;
@@ -70,7 +71,7 @@ public class SuplaClientMsg {
     public final static int onZWaveGetNodeListResult = 24;
     public final static int onZWaveGetAssignedNodeIdResult = 25;
     public final static int onZWaveAssignNodeIdResult = 26;
-
+    public final static int onCalCfgProgressReport = 27;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -246,5 +247,13 @@ public class SuplaClientMsg {
 
     public void setText(String text) {
         Text = text;
+    }
+
+    public short getProgress() {
+        return Progress;
+    }
+
+    public void setProgress(short progress) {
+        Progress = progress;
     }
 }

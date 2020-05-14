@@ -53,7 +53,7 @@
             android:stateListAnimator="@null"
             android:text="@string/next"
             android:textAllCaps="false"
-            android:textColor="@color/activity_status_bg_normal" />
+            android:textColor="@color/wizart_next_btn_text_enabled" />
 
         <Button
             android:id="@+id/wizard_next_right_part"

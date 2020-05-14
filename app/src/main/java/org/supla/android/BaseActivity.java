@@ -214,6 +214,10 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onZWaveAssignNodeIdResult:
                         onZWaveAssignNodeIdResult(_msg.getResult(), _msg.getNodeId());
                         break;
+                    case SuplaClientMsg.onCalCfgProgressReport:
+                        onCalCfgProgressReport(_msg.getChannelId(),
+                                _msg.getCommand(), _msg.getProgress());
+                        break;
                 }
 
             }
@@ -260,6 +264,8 @@ public class BaseActivity extends Activity {
     protected void onOAuthTokenRequestResult(SuplaOAuthToken token) {};
 
     protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {};
+
+    protected void onCalCfgProgressReport(int channelId, int command, short progress) {};
 
     protected void onSuperuserAuthorizationResult(boolean success, int code) {};
 

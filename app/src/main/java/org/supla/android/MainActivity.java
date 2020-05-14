@@ -25,6 +25,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
@@ -258,56 +259,72 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     protected void onEventMsg(SuplaEvent event) {
         super.onEventMsg(event);
 
-        if (event.Owner || event.ChannelID == 0) return;
+        if (event == null
+                || (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED)
+                || event.ChannelID == 0) return;
 
         DbHelper DbH = new DbHelper(this);
 
         Channel channel = DbH.getChannel(event.ChannelID);
-
         if (channel == null) return;
 
-        ImageId ImgIdx = channel.getImageIdx();
 
-        if (ImgIdx == null) return;
+        int imgResId = 0;
+        ImageId imgId = null;
+        String msg = "";
 
-        String msg;
-
-        switch (event.Event) {
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
-                msg = getResources().getString(R.string.event_openedthegateway);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE:
-                msg = getResources().getString(R.string.event_openedclosedthegate);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR:
-                msg = getResources().getString(R.string.event_openedclosedthegatedoors);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK:
-                msg = getResources().getString(R.string.event_openedthedoor);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
-                msg = getResources().getString(R.string.event_openedcloserollershutter);
-                break;
-            case SuplaConst.SUPLA_EVENT_POWERONOFF:
-                msg = getResources().getString(R.string.event_poweronoff);
-                break;
-            case SuplaConst.SUPLA_EVENT_LIGHTONOFF:
-                msg = getResources().getString(R.string.event_turnedthelightonoff);
-                break;
-            default:
+        if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
+            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE) > 0) {
+                msg = getResources().getString(R.string.zwave_device_communication_error);
+                imgResId = R.drawable.zwave_device_error;
+            } else {
                 return;
+            }
+        } else {
+            int msgId = 0;
+            switch (event.Event) {
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
+                    msgId = R.string.event_openedthegateway;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE:
+                    msgId = R.string.event_openedclosedthegate;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR:
+                    msgId = R.string.event_openedclosedthegatedoors;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK:
+                    msgId = R.string.event_openedthedoor;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
+                    msgId = R.string.event_openedcloserollershutter;
+                    break;
+                case SuplaConst.SUPLA_EVENT_POWERONOFF:
+                    msgId = R.string.event_poweronoff;
+                    break;
+                case SuplaConst.SUPLA_EVENT_LIGHTONOFF:
+                    msgId = R.string.event_turnedthelightonoff;
+                    break;
+                case SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE:
+                    msgId = R.string.event_openedclosedthevalve;
+                    break;
+                default:
+                    return;
+            }
+
+            imgId = channel.getImageIdx();
+            msg = getResources().getString(msgId);
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
         }
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
-
 
         if (!channel.getCaption().equals("")) {
             msg = msg + " (" + channel.getCaption() + ")";
         }
 
 
-        ShowNotificationMessage(msg, ImgIdx);
+        ShowNotificationMessage(msg, imgId, imgResId);
+
     }
 
     private void ShowHideNotificationView(final boolean show) {
@@ -338,9 +355,25 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
-    public void ShowNotificationMessage(String msg, ImageId imgId) {
+    public void ShowNotificationMessage(String msg, ImageId imgId, int imgResId) {
 
-        notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
+        notif_img.setImageBitmap(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notif_img.setBackground(null);
+        } else {
+            notif_img.setBackgroundDrawable(null);
+        }
+
+        if (imgId != null) {
+            notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
+        } else if (imgResId > 0){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                notif_img.setBackground(getResources().getDrawable(imgResId));
+            } else {
+                notif_img.setBackgroundDrawable(getResources().getDrawable(imgResId));
+            }
+        }
+
         notif_text.setText(msg);
 
         ShowHideNotificationView(true);

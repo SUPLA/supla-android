@@ -229,4 +229,5 @@
     <string name="no">Ne</string>
 
     <string name="channel_caption_heatmeter">Měřič tepla</string>
+    <string name="event_openedclosedthevalve">otevřel / zavřel ventil</string>
 </resources>
