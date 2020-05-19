@@ -148,10 +148,19 @@ public abstract class ChannelBase extends DbItem {
 
                 return value.getSubValueHi();
 
-            case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-
-                return 1;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+            case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+            case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                return value.hiValue() ? 1 : 0;
 
             case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 return value.getBrightness() > 0 ? 1 : 0;
@@ -174,8 +183,7 @@ public abstract class ChannelBase extends DbItem {
                 return value.isClosed() ? 1 : 0;
         }
 
-
-        return value.hiValue() ? 1 : 0;
+        return 0;
     }
 
     protected ImageId getImageIdx(WhichOne whichImage, int active) {
