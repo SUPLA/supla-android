@@ -319,6 +319,6 @@
     <string translatable="false" name="event_openedclosedthevalve">opened / closed the valve</string>
     <string translatable="false" name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
     <string translatable="false" name="bridge">Bridge</string>
-    <string translatable="false" name="em_phase_to_phase_balance">Phase-to-phase balance</string>
+    <string translatable="false" name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
 
 </resources>
