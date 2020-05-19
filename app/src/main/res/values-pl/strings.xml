@@ -320,4 +320,5 @@
     <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
     <string name="bridge">Most</string>
+    <string translatable="false" name="em_phase_to_phase_balance">Bilans międzyfazowy</string>
 </resources>

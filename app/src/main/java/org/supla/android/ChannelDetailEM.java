@@ -92,6 +92,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private TextView tvPhaseReverseReactiveEnergy;
     private TextView tvlPhaseReverseReactiveEnergy;
 
+    private TextView tvPhaseForwardActiveEnergyBalanced;
+    private TextView tvlPhaseForwardActiveEnergyBalanced;
+    private TextView tvPhaseReverseActiveEnergyBalanced;
+    private TextView tvlPhaseReverseActiveEnergyBalanced;
+
     private ImageView emImgIcon;
     private TextView tvChannelTitle;
 
@@ -110,6 +115,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Spinner emSpinnerMaster;
     private Spinner emSpinnerSlave;
     private ProgressBar emProgress;
+    private LinearLayout llBalance;
+    private TextView tvlBalance;
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
 
@@ -166,8 +173,20 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tvPhaseReverseReactiveEnergy = findViewById(R.id.emtv_PhaseReverseRectiveEnergy);
         tvlPhaseReverseReactiveEnergy = findViewById(R.id.emtv_lPhaseReverseRectiveEnergy);
 
+        tvPhaseForwardActiveEnergyBalanced =
+                findViewById(R.id.emtv_PhaseForwardActiveEnergyBalanced);
+        tvlPhaseForwardActiveEnergyBalanced =
+                findViewById(R.id.emtv_lPhaseForwardActiveEnergyBalanced);
+        tvPhaseReverseActiveEnergyBalanced =
+                findViewById(R.id.emtv_PhaseReverseActiveEnergyBalanced);
+        tvlPhaseReverseActiveEnergyBalanced =
+                findViewById(R.id.emtv_lPhaseReverseActiveEnergyBalanced);
+
         emImgIcon = findViewById(R.id.emimgIcon);
         tvChannelTitle = findViewById(R.id.emtv_ChannelTitle);
+
+        llBalance = findViewById(R.id.emtv_llBalance);
+        tvlBalance = findViewById(R.id.emtv_lBalance);
 
         btnPhase1 = findViewById(R.id.embtn_Phase1);
         btnPhase2 = findViewById(R.id.embtn_Phase2);
@@ -319,6 +338,21 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvPhaseForwardReactiveEnergy, tvlPhaseForwardReactiveEnergy);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_REACTIVE_ENERGY,
                 tvPhaseReverseReactiveEnergy, tvlPhaseReverseReactiveEnergy);
+
+        if (sum && ((vars & SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED) > 0
+            || (vars & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED) > 0)) {
+            llBalance.setVisibility(VISIBLE);
+            tvlBalance.setVisibility(VISIBLE);
+
+            displayMeasurementDetail(vars, SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED,
+                    tvPhaseForwardActiveEnergyBalanced, tvlPhaseForwardActiveEnergyBalanced);
+            displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED,
+                    tvPhaseReverseActiveEnergyBalanced, tvlPhaseReverseActiveEnergyBalanced);
+        } else {
+            llBalance.setVisibility(INVISIBLE);
+            tvlBalance.setVisibility(INVISIBLE);
+        }
+
     }
 
     public void channelExtendedDataToViews(boolean setIcon) {
@@ -357,6 +391,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         tvPhaseReverseActiveEnergy.setText(empty);
         tvPhaseForwardReactiveEnergy.setText(empty);
         tvPhaseReverseReactiveEnergy.setText(empty);
+        tvPhaseForwardActiveEnergyBalanced.setText(empty);
+        tvPhaseReverseActiveEnergyBalanced.setText(empty);
 
         int vars = 0;
 
@@ -476,6 +512,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", totalRAE));
             tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", totalFRE));
             tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", totalRRE));
+
+            tvPhaseForwardActiveEnergyBalanced.setText(format("%.5f kWh",
+                    em.getTotalForwardActiveEnergyBalanced()));
+            tvPhaseReverseActiveEnergyBalanced.setText(format("%.5f kWh",
+                    em.getTotalReverseActiveEnergyBalanced()));
 
             chartHelper.setTotalActiveEnergy(
                     em.getTotalActiveEnergyForAllPhases(chartHelper.isProductionDataSource()));

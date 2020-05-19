@@ -288,8 +288,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:id="@+id/emrlDetails"
         android:layout_width="match_parent"
         android:layout_height="211dp"
@@ -319,200 +318,268 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="visible">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/emtv_lFreq"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/emtv_lFreq"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_frequency"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lVoltage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_voltage"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lCurrent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_current"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPowerActive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_power_active"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPowerReactive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_power_reactive"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPowerApparent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_power_apparent"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPowerFactor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_power_factor"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseAngle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_phase_angle"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseForwardActiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_total_forward_avtive_energy"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseReverseActiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_reverse_active_energy"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseForwardRectiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_total_forward_reactive_energy"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseReverseRectiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_total_reverse_reactive_energy"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/em_frequency"
-                    android:textSize="12sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/emtv_lVoltage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_voltage"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_Freq"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="50,00 Hz"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lCurrent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_current"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_Voltage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="240,00 V"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPowerActive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_power_active"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_Current"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0,454 A"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPowerReactive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_power_reactive"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PowerActive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="74.672960 W"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPowerApparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_power_apparent"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PowerReactive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="-28.250560 var"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPowerFactor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_power_factor"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PowerApparent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="92.860160 VA"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPhaseAngle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_phase_angle"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PowerFactor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0.804000"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPhaseForwardActiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_total_forward_avtive_energy"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseAngle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0.034150"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPhaseReverseActiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_reverse_active_energy"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseForwardActiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPhaseForwardRectiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_total_forward_reactive_energy"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseReverseActiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_lPhaseReverseRectiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/em_total_reverse_reactive_energy"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseForwardRectiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_PhaseReverseRectiveEnergy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/emtv_lBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/em_phase_to_phase_balance"
+                android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/emtv_llBalance"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/emtv_Freq"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseForwardActiveEnergyBalanced"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_total_forward_avtive_energy"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/emtv_lPhaseReverseActiveEnergyBalanced"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_reverse_active_energy"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="50,00 Hz"
-                    android:textSize="12sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/emtv_Voltage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="240,00 V"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseForwardActiveEnergyBalanced"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_Current"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0,454 A"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/emtv_PhaseReverseActiveEnergyBalanced"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="09,0001 kWh"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/emtv_PowerActive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="74.672960 W"
-                    android:textSize="12sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/emtv_PowerReactive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="-28.250560 var"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PowerApparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="92.860160 VA"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PowerFactor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0.804000"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PhaseAngle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0.034150"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PhaseForwardActiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="09,0001 kWh"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PhaseReverseActiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="09,0001 kWh"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PhaseForwardRectiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="09,0001 kWh"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/emtv_PhaseReverseRectiveEnergy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="09,0001 kWh"
-                    android:textSize="12sp" />
             </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
 

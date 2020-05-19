@@ -199,9 +199,12 @@ public class SuplaConst {
     public final static int EM_VAR_FORWARD_REACTIVE_ENERGY = 0x0400;
     public final static int EM_VAR_REVERSE_REACTIVE_ENERGY = 0x0800;
     public final static int EM_VAR_CURRENT_OVER_65A = 0x1000;
+    public final static int EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED = 0x2000;
+    public final static int EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED = 0x4000;
     public final static int EM_VAR_ALL = 0xFFFF;
 
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
+    public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2 = 12;
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
     public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
     public final static int EV_TYPE_CHANNEL_STATE_V1 = 40;

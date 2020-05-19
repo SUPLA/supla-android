@@ -202,6 +202,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_FRE = "phase3_fre";
         public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
 
+        public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
+        public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
+
         public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
@@ -221,6 +224,10 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE1_RAE = "phase1_rae";
         public static final String COLUMN_NAME_PHASE2_RAE = "phase2_rae";
         public static final String COLUMN_NAME_PHASE3_RAE = "phase3_rae";
+
+        public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
+        public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
+
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
 
     }
