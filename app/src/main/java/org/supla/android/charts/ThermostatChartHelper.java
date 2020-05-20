@@ -60,8 +60,7 @@ public class ThermostatChartHelper extends ChartHelper {
     }
 
     @Override
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf, Cursor c,
-                                 ArrayList<PieEntry> entries) {
+    protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
 
     }
 

@@ -262,7 +262,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         }
 
         setFaeBalanced(getFaeBalanced() - emi.getFaeBalanced());
-        setRaeBalanced(getFaeBalanced() - emi.getRaeBalanced());
+        setRaeBalanced(getRaeBalanced() - emi.getRaeBalanced());
 
         Calculated = true;
     }
@@ -276,7 +276,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         }
 
         setFaeBalanced(getFaeBalanced() / div);
-        setRaeBalanced(getFaeBalanced() / div);
+        setRaeBalanced(getRaeBalanced() / div);
 
         Divided = true;
     }

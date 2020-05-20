@@ -321,4 +321,14 @@
     <string translatable="false" name="bridge">Bridge</string>
     <string translatable="false" name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
 
+    <string translatable="false" name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
+    <string translatable="false" name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
+    <string translatable="false" name="aritmetic_balance_days">Arithmetic balance - Days</string>
+    <string translatable="false" name="aritmetic_balance_months">Arithmetic balance - Months</string>
+    <string translatable="false" name="aritmetic_balance_years">Arithmetic balance - Years</string>
+    <string translatable="false" name="vector_balance_minutes">Vector balance - Minutes</string>
+    <string translatable="false" name="vector_balance_hours">Vector balance - Hours</string>
+    <string translatable="false" name="vector_balance_days">Vector balance - Days</string>
+    <string translatable="false" name="vector_balance_months">Vector balance - Months</string>
+    <string translatable="false" name="vector_balance_years">Vector balance - Years</string>
 </resources>

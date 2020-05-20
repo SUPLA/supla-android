@@ -119,6 +119,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private TextView tvlBalance;
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
+    private boolean mBalanceAvailable;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -266,7 +267,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             ivGraph.setTag(1);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                    android.R.layout.simple_spinner_item, chartHelper.getMasterSpinnerItems(0));
+                    android.R.layout.simple_spinner_item,
+                    chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
             emSpinnerMaster.setAdapter(adapter);
 
             postDelayed(new Runnable() {
@@ -339,8 +341,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_REVERSE_REACTIVE_ENERGY,
                 tvPhaseReverseReactiveEnergy, tvlPhaseReverseReactiveEnergy);
 
-        if (sum && ((vars & SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED) > 0
-            || (vars & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED) > 0)) {
+        mBalanceAvailable = ((vars & SuplaConst.EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED) > 0
+                || (vars & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED) > 0);
+
+        if (sum && mBalanceAvailable) {
             llBalance.setVisibility(VISIBLE);
             tvlBalance.setVisibility(VISIBLE);
 

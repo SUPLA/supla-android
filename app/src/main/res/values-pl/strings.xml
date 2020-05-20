@@ -320,5 +320,15 @@
     <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
     <string name="bridge">Most</string>
-    <string translatable="false" name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
+    <string name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
+    <string name="aritmetic_balance_minutes">Bilans arytmetyczny - Minuty</string>
+    <string name="aritmetic_balance_hours">Bilans arytmetyczny - Godziny</string>
+    <string name="aritmetic_balance_days">Bilans arytmetyczny - Dni</string>
+    <string name="aritmetic_balance_months">Bilans arytmetyczny - Miesiące</string>
+    <string name="aritmetic_balance_years">Bilans arytmetyczny - Lata</string>
+    <string name="vector_balance_minutes">Bilans wektorowy - Minuty</string>
+    <string name="vector_balance_hours">Bilans wektorowy - Godziny</string>
+    <string name="vector_balance_days">Bilans wektorowy - Dni</string>
+    <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
+    <string name="vector_balance_years">Bilans wektorowy - Lata</string>
 </resources>
