@@ -34,8 +34,6 @@ public class SuplaCfg {
     int ssl_port;
     boolean ssl_enabled;
     int protocol_version = 0;
-    int registration_flags;
-
 
     void setClientGUID(byte[] clientGUID) {
 
