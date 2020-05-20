@@ -64,8 +64,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries) {
+    protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry>entries) {
 
         float value;
         value = (float) c.getDouble(

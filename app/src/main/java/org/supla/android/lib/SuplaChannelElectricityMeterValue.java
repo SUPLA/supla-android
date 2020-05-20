@@ -91,9 +91,14 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     private int Period;
     private double PricePerUnit;
     private String Currency;
+    // Unit - kWh
+    private double TotalForwardActiveEnergyBalanced;
+    private double TotalReverseActiveEnergyBalanced;
 
     SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
-                                      int TotalCost, int PricePerUnit, String Currency) {
+                                      int TotalCost, int PricePerUnit, String Currency,
+                                      long TotalForwardActiveEnergyBalanced,
+                                      long TotalReverseActiveEnergyBalanced) {
         sumList = new ArrayList<>();
         mp1List = new ArrayList<>();
         mp2List = new ArrayList<>();
@@ -104,11 +109,15 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         this.TotalCost = TotalCost / 100.00;
         this.PricePerUnit = PricePerUnit / 10000.00;
         this.Currency = Currency;
+        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced / 100000.00;
+        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
     }
 
 
     SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
-                                      double TotalCost, double PricePerUnit, String Currency) {
+                                      double TotalCost, double PricePerUnit, String Currency,
+                                      double TotalForwardActiveEnergyBalanced,
+                                      double TotalReverseActiveEnergyBalanced) {
         sumList = new ArrayList<>();
         mp1List = new ArrayList<>();
         mp2List = new ArrayList<>();
@@ -119,6 +128,8 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         this.TotalCost = TotalCost;
         this.PricePerUnit = PricePerUnit;
         this.Currency = Currency;
+        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced;
+        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced;
     }
 
     public double getTotalCost() {
@@ -162,6 +173,14 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
 
     public String getCurrency() {
         return Currency;
+    }
+
+    public double getTotalForwardActiveEnergyBalanced() {
+        return TotalForwardActiveEnergyBalanced;
+    }
+
+    public double getTotalReverseActiveEnergyBalanced() {
+        return TotalReverseActiveEnergyBalanced;
     }
 
     public class Summary implements Serializable {

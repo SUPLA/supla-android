@@ -46,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supla.db";
     private Context context;
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private boolean measurements;
 
@@ -311,6 +311,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED + " REAL NULL," +
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED +
                 " INTEGER NOT NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT +
@@ -366,6 +368,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE+", "
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE+", "
+
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED+", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED+" "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED+", "
 
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT+" "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
@@ -701,7 +708,20 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeToV13(SQLiteDatabase db) {
-        recreateViews(db);
+        // Views are recreated at the end of each database structure update
+        // recreateViews(db);
+    }
+
+    private void upgradeToV14(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED
+                + " REAL NULL");
+
+        addColumn(db, "ALTER TABLE "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED
+                + " REAL NULL");
     }
 
     private void recreateViews(SQLiteDatabase db) {
@@ -770,6 +790,10 @@ public class DbHelper extends SQLiteOpenHelper {
                         break;
                     case 12:
                         upgradeToV13(db);
+                        break;
+                    case 13:
+                        upgradeToV14(db);
+                        break;
                 }
             }
 
@@ -1913,6 +1937,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT
         };
@@ -1973,6 +1999,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE + ", "
                 + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE + ")" +
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE + ", "
+
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED + ", "
+                + " SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED + ")" +
+                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED + ", "
 
                 + " MAX(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ")" +
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_DATE + ", "

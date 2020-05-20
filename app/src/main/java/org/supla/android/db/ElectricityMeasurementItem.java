@@ -23,6 +23,7 @@ import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.Trace;
 
 public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
@@ -30,6 +31,8 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     private double[] rae;
     private double[] fre;
     private double[] rre;
+    private double faeBalanced;
+    private double raeBalanced;
 
 
     public ElectricityMeasurementItem() {
@@ -46,6 +49,8 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         rae = emi.rae.clone();
         fre = emi.fre.clone();
         rre = emi.rre.clone();
+        faeBalanced = emi.faeBalanced;
+        raeBalanced = emi.raeBalanced;
     }
 
     public void setFae(int phase, double fae) {
@@ -108,6 +113,22 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         return 0;
     }
 
+    public double getFaeBalanced() {
+        return faeBalanced;
+    }
+
+    public void setFaeBalanced(double faeBalanced) {
+        this.faeBalanced = faeBalanced;
+    }
+
+    public double getRaeBalanced() {
+        return raeBalanced;
+    }
+
+    public void setRaeBalanced(double raeBalanced) {
+        this.raeBalanced = raeBalanced;
+    }
+
     public void AssignJSONObject(JSONObject obj) throws JSONException {
 
         setTimestamp(obj.getLong("date_timestamp"));
@@ -118,6 +139,9 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
             setFre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_fre") / 100000.00);
             setRre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_rre") / 100000.00);
         }
+
+        setFaeBalanced(getLong(obj,"fae_balanced") / 100000.00);
+        setRaeBalanced(getLong(obj,"rae_balanced") / 100000.00);
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -165,6 +189,12 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         setRre(3, cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE)));
 
+        setFaeBalanced(cursor.getDouble(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED)));
+
+        setRaeBalanced(cursor.getDouble(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED)));
+
         Calculated = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED)) > 0;
 
@@ -206,6 +236,12 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         putNullOrDouble(values,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE, getRre(3));
 
+        putNullOrDouble(values,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED, getFaeBalanced());
+
+        putNullOrDouble(values,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED, getRaeBalanced());
+
         values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
                 isCalculated() ? 1 : 0);
 
@@ -225,6 +261,9 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
             setRre(phase, getRre(phase) - emi.getRre(phase));
         }
 
+        setFaeBalanced(getFaeBalanced() - emi.getFaeBalanced());
+        setRaeBalanced(getRaeBalanced() - emi.getRaeBalanced());
+
         Calculated = true;
     }
 
@@ -235,6 +274,9 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
             setFre(phase, getFre(phase) / div);
             setRre(phase, getRre(phase) / div);
         }
+
+        setFaeBalanced(getFaeBalanced() / div);
+        setRaeBalanced(getRaeBalanced() / div);
 
         Divided = true;
     }

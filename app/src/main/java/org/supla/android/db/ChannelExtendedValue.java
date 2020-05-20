@@ -95,6 +95,7 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
+            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
                 if (obj instanceof SuplaChannelElectricityMeterValue) {
                     ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
                 }
@@ -146,6 +147,7 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
+            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
                 value = ObjectToByteArray(ExtendedValue.ElectricityMeterValue);
                 break;
             case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
