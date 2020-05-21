@@ -606,6 +606,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onDetailShow() {
         super.onDetailShow();
 
+        mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
