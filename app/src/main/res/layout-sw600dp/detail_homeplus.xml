@@ -94,8 +94,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_turbo_time" />
+                android:text="@string/hp_cfg_turbo_time"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -134,8 +134,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_water_max" />
+                android:text="@string/hp_cfg_water_max"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -174,8 +174,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_eco_reduction" />
+                android:text="@string/hp_cfg_eco_reduction"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -214,8 +214,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_temp_comfort_auto" />
+                android:text="@string/hp_cfg_temp_comfort_auto"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -254,8 +254,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_temp_eco" />
+                android:text="@string/hp_cfg_temp_eco"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -385,11 +385,11 @@
                                 android:id="@+id/hpBtnOnOff"
                                 android:layout_width="wrap_content"
                                 android:layout_height="80dp"
+                                android:layout_marginRight="3dp"
                                 android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
                                 android:background="@drawable/hp_button_off"
                                 android:text="@string/hp_on"
-                                android:layout_marginRight="3dp"
-                                android:layout_weight="1"
                                 android:textColor="@android:color/white" />
 
                         </LinearLayout>
@@ -495,7 +495,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:id="@+id/hpllChart"

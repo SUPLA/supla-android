@@ -39,12 +39,12 @@ import org.supla.android.lib.SuplaClient;
 
 public abstract class DetailLayout extends FrameLayout {
 
+    protected DbHelper DBH;
     private ChannelListView cLV;
     private ChannelBase channelBase;
     private View mContentView;
     private int mRemoteId;
     private boolean Group;
-    protected DbHelper DBH;
 
     public DetailLayout(Context context, ChannelListView cLV) {
         super(context);
@@ -147,15 +147,19 @@ public abstract class DetailLayout extends FrameLayout {
         return channelBase;
     }
 
-    public boolean isGroup() { return Group; }
+    public boolean isGroup() {
+        return Group;
+    }
 
     public boolean isDetailVisible() {
         return cLV.isDetailVisible();
     }
 
-    public void onDetailShow() {}
+    public void onDetailShow() {
+    }
 
-    public void onDetailHide() {}
+    public void onDetailHide() {
+    }
 
     public SuplaClient getClient(boolean force) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -173,7 +177,7 @@ public abstract class DetailLayout extends FrameLayout {
 
     public void deviceCalCfgRequest(int cmd, int dataType, byte[] data, boolean force) {
         SuplaClient client = getClient(force);
-        if (client!=null) {
+        if (client != null) {
             client.deviceCalCfgRequest(getRemoteId(), isGroup(), cmd, dataType, data);
         }
     }
@@ -195,9 +199,9 @@ public abstract class DetailLayout extends FrameLayout {
 
     public void deviceCalCfgRequest(int cmd, Short data) {
         byte[] arr = new byte[2];
-        if (data!=null) {
-            arr[0] = (byte)(data.shortValue() & 0x00FF);
-            arr[1] = (byte)((data.shortValue() & 0xFF00) >> 8);
+        if (data != null) {
+            arr[0] = (byte) (data.shortValue() & 0x00FF);
+            arr[1] = (byte) ((data.shortValue() & 0xFF00) >> 8);
         }
 
         deviceCalCfgRequest(cmd, 0, data == null ? null : arr);

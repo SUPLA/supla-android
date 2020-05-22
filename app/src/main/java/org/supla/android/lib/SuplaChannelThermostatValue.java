@@ -18,11 +18,132 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace;
-
 import java.io.Serializable;
 
 public class SuplaChannelThermostatValue implements Serializable {
+
+    private Double[] MeasuredTemperature;
+    private Double[] PresetTemperature;
+    private Integer[] Flags;
+    private Integer[] Values;
+    private Schedule mSchedule;
+    private Time mTime;
+    SuplaChannelThermostatValue() {
+        MeasuredTemperature = null;
+        PresetTemperature = null;
+        Values = null;
+        Flags = null;
+        mSchedule = null;
+        mTime = null;
+    }
+
+    public Double getMeasuredTemperature(int idx) {
+        return MeasuredTemperature != null
+                && idx >= 0 && idx < MeasuredTemperature.length ? MeasuredTemperature[idx] : null;
+    }
+
+    boolean setMeasuredTemperature(int idx, double temperature) {
+        if (idx >= 0 && idx < 10) {
+            if (MeasuredTemperature == null) {
+                MeasuredTemperature = new Double[10];
+
+                for (int a = 0; a < MeasuredTemperature.length; a++) {
+                    MeasuredTemperature[a] = -273.0;
+                }
+            }
+            MeasuredTemperature[idx] = temperature;
+            return true;
+        }
+        return false;
+    }
+
+    public Double getPresetTemperature(int idx) {
+        return PresetTemperature != null
+                && idx >= 0 && idx < PresetTemperature.length ? PresetTemperature[idx] : null;
+    }
+
+    boolean setPresetTemperature(int idx, double temperature) {
+        if (idx >= 0 && idx < 10) {
+
+            if (PresetTemperature == null) {
+                PresetTemperature = new Double[10];
+
+                for (int a = 0; a < PresetTemperature.length; a++) {
+                    PresetTemperature[a] = -273.0;
+                }
+            }
+
+            PresetTemperature[idx] = temperature;
+            return true;
+        }
+        return false;
+    }
+
+    public Integer getFlags(int idx) {
+        return Flags != null && idx >= 0 && idx < Flags.length ? Flags[idx] : null;
+    }
+
+    boolean setFlags(int idx, int flags) {
+        if (idx >= 0 && idx < 8) {
+            if (Flags == null) {
+                Flags = new Integer[8];
+            }
+            Flags[idx] = flags;
+            return true;
+        }
+        return false;
+    }
+
+    public int getValues(int idx) {
+        return Values != null && idx >= 0 && idx < Values.length ? Values[idx] : null;
+    }
+
+    public boolean setValues(int idx, int values) {
+        if (idx >= 0 && idx < 8) {
+            if (Values == null) {
+                Values = new Integer[8];
+            }
+            Values[idx] = values;
+            return true;
+        }
+        return false;
+    }
+
+    public void setScheduleValue(byte day, byte hour, byte value) {
+        if (mSchedule == null) {
+            mSchedule = new Schedule();
+        }
+
+        mSchedule.setValue(day, hour, value);
+    }
+
+    public void setScheduleValueType(byte type) {
+        if (mSchedule == null) {
+            mSchedule = new Schedule();
+        }
+
+        mSchedule.setType(type);
+    }
+
+    public Schedule getSchedule() {
+        return mSchedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        mSchedule = schedule;
+    }
+
+    public void setTime(byte second, byte minute, byte hour, byte dayOfWeek) {
+        mTime = new Time(second, minute, hour, dayOfWeek);
+    }
+
+    public Time getTime() {
+        return mTime;
+    }
+
+    public void setTime(Time time) {
+        mTime = time;
+    }
 
     public class Schedule implements Serializable {
 
@@ -55,12 +176,12 @@ public class SuplaChannelThermostatValue implements Serializable {
                     && hour >= 0 && hour < HourValue[day].length ? HourValue[day][hour] : 0;
         }
 
-        public void setType(byte type) {
-            Type = type;
-        }
-
         public byte getType() {
             return Type;
+        }
+
+        public void setType(byte type) {
+            Type = type;
         }
     }
 
@@ -108,129 +229,5 @@ public class SuplaChannelThermostatValue implements Serializable {
         public void setDayOfWeek(byte dayOfWeek) {
             DayOfWeek = dayOfWeek;
         }
-    }
-
-    private Double[] MeasuredTemperature;
-    private Double[] PresetTemperature;
-    private Integer[] Flags;
-    private Integer[] Values;
-    private Schedule mSchedule;
-    private Time mTime;
-
-    SuplaChannelThermostatValue() {
-        MeasuredTemperature = null;
-        PresetTemperature = null;
-        Values = null;
-        Flags = null;
-        mSchedule = null;
-        mTime = null;
-    }
-
-    public Double getMeasuredTemperature(int idx) {
-        return MeasuredTemperature != null
-               && idx >= 0 && idx < MeasuredTemperature.length ? MeasuredTemperature[idx] : null;
-    }
-
-    boolean setMeasuredTemperature(int idx, double temperature) {
-        if (idx >= 0 && idx < 10) {
-            if (MeasuredTemperature == null) {
-                MeasuredTemperature = new Double[10];
-
-                for(int a=0;a<MeasuredTemperature.length;a++) {
-                    MeasuredTemperature[a] = -273.0;
-                }
-            }
-            MeasuredTemperature[idx] = temperature;
-            return true;
-        }
-        return false;
-    }
-
-    public Double getPresetTemperature(int idx) {
-        return PresetTemperature != null
-               && idx >= 0 && idx < PresetTemperature.length ? PresetTemperature[idx] : null;
-    }
-
-    boolean setPresetTemperature(int idx, double temperature) {
-        if (idx >= 0 && idx < 10) {
-
-            if (PresetTemperature== null) {
-                PresetTemperature = new Double[10];
-
-                for(int a=0;a<PresetTemperature.length;a++) {
-                    PresetTemperature[a] = -273.0;
-                }
-            }
-
-            PresetTemperature[idx] = temperature;
-            return true;
-        }
-        return false;
-    }
-
-    public Integer getFlags(int idx) {
-        return Flags != null && idx >= 0 && idx < Flags.length ? Flags[idx] : null;
-    }
-
-    boolean setFlags(int idx, int flags) {
-        if (idx >= 0 && idx < 8) {
-            if (Flags == null) {
-                Flags = new Integer[8];
-            }
-            Flags[idx] = flags;
-            return true;
-        }
-        return false;
-    }
-
-    public int getValues(int idx) {
-        return Values != null && idx >= 0 && idx < Values.length ? Values[idx] : null;
-    }
-
-    public boolean setValues(int idx, int values) {
-        if (idx >= 0 && idx < 8) {
-            if (Values == null) {
-                Values = new Integer[8];
-            }
-            Values[idx] = values;
-            return true;
-        }
-        return false;
-    }
-
-    public void setSchedule(Schedule schedule) {
-        mSchedule = schedule;
-    }
-
-    public void setScheduleValue(byte day, byte hour, byte value) {
-        if (mSchedule == null) {
-            mSchedule = new Schedule();
-        }
-
-        mSchedule.setValue(day, hour, value);
-    }
-
-    public void setScheduleValueType(byte type) {
-        if (mSchedule == null) {
-            mSchedule = new Schedule();
-        }
-
-        mSchedule.setType(type);
-    }
-
-    public Schedule getSchedule() {
-        return mSchedule;
-    }
-
-    public void setTime(Time time) {
-        mTime = time;
-    }
-
-    public void setTime(byte second, byte minute, byte hour, byte dayOfWeek) {
-        mTime = new Time(second, minute, hour, dayOfWeek);
-    }
-
-    public Time getTime() {
-        return mTime;
     }
 }

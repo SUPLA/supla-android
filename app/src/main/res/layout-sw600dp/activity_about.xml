@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg"
     android:clickable="true"
     android:focusableInTouchMode="true"
-    tools:context="org.supla.android.CfgActivity"
-    android:background="@color/activity_bg">
+    tools:context="org.supla.android.CfgActivity">
 
     <TextView
+        android:id="@+id/cfg_label_svr_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cfg_label_svr_address"
-        android:gravity="center_horizontal"
         android:layout_below="@+id/about_project_name"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
         android:text="@string/version"
         android:textColor="@android:color/black"
         android:textSize="25sp" />
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="350dp"
         android:layout_height="350dp"
-        android:id="@+id/imageView"
+        android:layout_alignParentLeft="false"
         android:layout_alignParentTop="true"
+        android:layout_alignParentRight="false"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/logosupla"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentRight="false"
         tools:ignore="ContentDescription" />
 
     <TextView
+        android:id="@+id/about_project_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menubar_title"
-        android:id="@+id/about_project_name"
-        android:gravity="center_horizontal"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:textSize="60sp"
-        android:textColor="@android:color/black" />
+        android:gravity="center_horizontal"
+        android:text="@string/menubar_title"
+        android:textColor="@android:color/black"
+        android:textSize="60sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,42 +53,42 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:fillViewport="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false"
             android:layout_above="@+id/about_homepage"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
-            android:layout_alignParentLeft="false">
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:fillViewport="true"
+            android:scrollbars="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/about_text"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:text="@string/about_app" />
+            <TextView
+                android:id="@+id/about_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/about_app"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
         </ScrollView>
 
         <Button
+            android:id="@+id/about_homepage"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/homepage"
-            android:id="@+id/about_homepage"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="32dp"
-            android:textSize="20sp"
             android:background="@color/activity_bg"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_centerHorizontal="true" />
+            android:text="@string/homepage"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </RelativeLayout>

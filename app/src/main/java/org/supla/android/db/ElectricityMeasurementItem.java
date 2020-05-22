@@ -23,7 +23,6 @@ import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.supla.android.Trace;
 
 public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
@@ -54,14 +53,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setFae(int phase, double fae) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.fae[phase] = fae;
         }
     }
 
     public double getFae(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.fae[phase];
         }
@@ -69,14 +68,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setRae(int phase, double rae) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.rae[phase] = rae;
         }
     }
 
     public double getRae(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.rae[phase];
         }
@@ -84,14 +83,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setFre(int phase, double fre) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.fre[phase] = fre;
         }
     }
 
     public double getFre(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.fre[phase];
         }
@@ -99,14 +98,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setRre(int phase, double rre) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.rre[phase] = rre;
         }
     }
 
     public double getRre(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.rre[phase];
         }
@@ -133,15 +132,15 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
         setTimestamp(obj.getLong("date_timestamp"));
 
-        for(int phase=1;phase<=3;phase++) {
-            setFae(phase, getLong(obj,"phase"+Integer.toString(phase)+"_fae") / 100000.00);
-            setRae(phase, getLong(obj,"phase"+Integer.toString(phase)+"_rae") / 100000.00);
-            setFre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_fre") / 100000.00);
-            setRre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_rre") / 100000.00);
+        for (int phase = 1; phase <= 3; phase++) {
+            setFae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fae") / 100000.00);
+            setRae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rae") / 100000.00);
+            setFre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fre") / 100000.00);
+            setRre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rre") / 100000.00);
         }
 
-        setFaeBalanced(getLong(obj,"fae_balanced") / 100000.00);
-        setRaeBalanced(getLong(obj,"rae_balanced") / 100000.00);
+        setFaeBalanced(getLong(obj, "fae_balanced") / 100000.00);
+        setRaeBalanced(getLong(obj, "rae_balanced") / 100000.00);
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -252,9 +251,9 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void Calculate(IncrementalMeasurementItem item) {
-        ElectricityMeasurementItem emi = (ElectricityMeasurementItem)item;
+        ElectricityMeasurementItem emi = (ElectricityMeasurementItem) item;
 
-        for(int phase = 1; phase <= 3; phase++) {
+        for (int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) - emi.getFae(phase));
             setRae(phase, getRae(phase) - emi.getRae(phase));
             setFre(phase, getFre(phase) - emi.getFre(phase));
@@ -268,7 +267,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void DivideBy(long div) {
-        for(int phase = 1; phase <= 3; phase++) {
+        for (int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) / div);
             setRae(phase, getRae(phase) / div);
             setFre(phase, getFre(phase) / div);

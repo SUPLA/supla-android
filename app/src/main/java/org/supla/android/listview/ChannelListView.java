@@ -34,10 +34,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGB;
 import org.supla.android.ChannelDetailRS;
-import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailTempHumidity;
 import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
@@ -66,18 +66,6 @@ public class ChannelListView extends ListView {
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
-
-    public interface OnChannelButtonTouchListener {
-
-        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
-    }
-
-    public interface OnDetailListener {
-
-        void onChannelDetailShow();
-
-        void onChannelDetailHide();
-    }
 
     public ChannelListView(Context context) {
         super(context);
@@ -114,7 +102,6 @@ public class ChannelListView extends ListView {
         mDetailVisible = false;
 
     }
-
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
 
@@ -240,7 +227,6 @@ public class ChannelListView extends ListView {
 
         return mDetailLayout;
     }
-
 
     @Override
     public void setAdapter(ListAdapter adapter) {
@@ -565,7 +551,6 @@ public class ChannelListView extends ListView {
 
     }
 
-
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
@@ -734,10 +719,6 @@ public class ChannelListView extends ListView {
 
     }
 
-    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
-        this.onChannelButtonTouchListener = onChannelButtonTouchListener;
-    }
-
     public void setOnDetailListener(OnDetailListener onDetailListener) {
         this.onDetailListener = onDetailListener;
     }
@@ -746,11 +727,16 @@ public class ChannelListView extends ListView {
         return onChannelButtonTouchListener;
     }
 
+    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
+        this.onChannelButtonTouchListener = onChannelButtonTouchListener;
+    }
+
     public boolean isDetailVisible() {
         return mDetailVisible && mDetailLayout != null;
     }
 
-    public void onBackPressed() {};
+    public void onBackPressed() {
+    }
 
     public void hideDetail(boolean animated) {
         if (isDetailVisible())
@@ -780,6 +766,8 @@ public class ChannelListView extends ListView {
         return null;
     }
 
+    ;
+
     public int detail_getRemoteId() {
 
         if (isDetailVisible()) {
@@ -794,5 +782,17 @@ public class ChannelListView extends ListView {
         if (isDetailVisible())
             mDetailLayout.OnChannelDataChanged();
 
+    }
+
+    public interface OnChannelButtonTouchListener {
+
+        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
+    }
+
+    public interface OnDetailListener {
+
+        void onChannelDetailShow();
+
+        void onChannelDetailHide();
     }
 }

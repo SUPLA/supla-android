@@ -32,7 +32,7 @@ public class SuplaEvent {
     }
 
     public SuplaEvent(SuplaEvent event) {
-        if (event!=null) {
+        if (event != null) {
             Owner = event.Owner;
             Event = event.Event;
             ChannelID = event.ChannelID;

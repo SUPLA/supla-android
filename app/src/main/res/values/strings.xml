@@ -254,81 +254,81 @@
     <string name="channel_func_valve_openclose">Valve</string>
     <string name="channel_func_valve_percentage">Valve</string>
 
-    <string translatable="false" name="channel_caption_valve">Valve</string>
-    <string translatable="false" name="channel_btn_close">Close</string>
-    <string translatable="false" name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
-    <string translatable="false" name="yes">Yes</string>
-    <string translatable="false" name="no">No</string>
-    <string translatable="false" name="ok">OK</string>
-    <string translatable="false" name="dots">....</string>
-    <string translatable="false" name="exit">Exit</string>
+    <string name="channel_caption_valve" translatable="false">Valve</string>
+    <string name="channel_btn_close" translatable="false">Close</string>
+    <string name="valve_open_warning" translatable="false">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
+    <string name="yes" translatable="false">Yes</string>
+    <string name="no" translatable="false">No</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="dots" translatable="false">....</string>
+    <string name="exit" translatable="false">Exit</string>
 
     <string name="channel_caption_heatmeter">Heat Meter</string>
-    <string translatable="false" name="zwave_select_channel">Select the z-wave bridge and then the channel you want to configure.</string>
-    <string translatable="false" name="device_name">Device name</string>
-    <string translatable="false" name="channel_number">Channel number</string>
-    <string translatable="false" name="device_id">Device id</string>
-    <string translatable="false" name="channel_id">Channel id</string>
-    <string translatable="false" name="soft_ver">Software version</string>
+    <string name="zwave_select_channel" translatable="false">Select the z-wave bridge and then the channel you want to configure.</string>
+    <string name="device_name" translatable="false">Device name</string>
+    <string name="channel_number" translatable="false">Channel number</string>
+    <string name="device_id" translatable="false">Device id</string>
+    <string name="channel_id" translatable="false">Channel id</string>
+    <string name="soft_ver" translatable="false">Software version</string>
 
-    <string translatable="false" name="function">Function</string>
-    <string translatable="false" name="caption">Caption</string>
-    <string translatable="false" name="device">Device</string>
-    <string translatable="false" name="zwave_welcome_title">Z-Wave wizard</string>
-    <string translatable="false" name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
-    <string translatable="false" name="zwave_before_search_title">It will take a while</string>
-    <string translatable="false" name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
-    <string translatable="false" name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
-    <string translatable="false" name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
-    <string translatable="false" name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
-    <string translatable="false" name="zwave_error_caption_change_error">The channel caption change failed. Code %1$s</string>
-    <string translatable="false" name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
-    <string translatable="false" name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
-    <string translatable="false" name="zwave_error_set_caption_timeout">The waiting time for changing the channel caption has expired.</string>
-    <string translatable="false" name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
-    <string translatable="false" name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
-    <string translatable="false" name="zwave_reset_and_clear">Reset network and settings</string>
-    <string translatable="false" name="zwave_add_device">Add device</string>
-    <string translatable="false" name="zwave_remove_device">Delete device</string>
-    <string translatable="false" name="zwave_network">Z-wave network</string>
-    <string translatable="false" name="zwave_select_node">Select the z-wave device that will be associated with the Supla channel.</string>
-    <string translatable="false" name="zwave_supla_channel">Channel</string>
-    <string translatable="false" name="zwave_device">Z-Wave device</string>
-    <string translatable="false" name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
-    <string translatable="false" name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
-    <string translatable="false" name="zwave_node_searching">Searching the z-wave network to build a list of devices.</string>
-    <string translatable="false" name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
-    <string translatable="false" name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
-    <string translatable="false" name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
-    <string translatable="false" name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
-    <string translatable="false" name="zwave_bridge_offline">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
-    <string translatable="false" name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
-    <string translatable="false" name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
-    <string translatable="false" name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
-    <string translatable="false" name="zwave_offline">Offline?</string>
-    <string translatable="false" name="zwave_used">Assigned to:</string>
-    <string translatable="false" name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
-    <string translatable="false" name="zwave_error_common_message">Press back to return to the previous step or \"Exit\" to finish.</string>
-    <string translatable="false" name="zwave_error_slave_mode">This function is not available when the bridge is in slave mode.</string>
-    <string translatable="false" name="zwave_done">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
+    <string name="function" translatable="false">Function</string>
+    <string name="caption" translatable="false">Caption</string>
+    <string name="device" translatable="false">Device</string>
+    <string name="zwave_welcome_title" translatable="false">Z-Wave wizard</string>
+    <string name="zwave_welcome_message" translatable="false">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
+    <string name="zwave_before_search_title" translatable="false">It will take a while</string>
+    <string name="zwave_before_search_message" translatable="false">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
+    <string name="zwave_error_unexpected_response" translatable="false">Device response not as expected. Method:%1$s Code:%2$s</string>
+    <string name="zwave_error_function_change_error" translatable="false">The channel function change failed. Code %1$s</string>
+    <string name="zwave_error_caption_change_error" translatable="false">The channel caption change failed. Code %1$s</string>
+    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">The waiting time for basic channel configuration data has expired.</string>
+    <string name="zwave_error_set_function_timeout" translatable="false">The waiting time for changing the channel function has expired.</string>
+    <string name="zwave_error_set_caption_timeout" translatable="false">The waiting time for changing the channel caption has expired.</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">The waiting time for the ID of the assigned z-wave device has expired.</string>
+    <string name="zwave_error_get_node_list_timeout" translatable="false">The waiting time for the list of z-wave devices has expired.</string>
+    <string name="zwave_reset_and_clear" translatable="false">Reset network and settings</string>
+    <string name="zwave_add_device" translatable="false">Add device</string>
+    <string name="zwave_remove_device" translatable="false">Delete device</string>
+    <string name="zwave_network" translatable="false">Z-wave network</string>
+    <string name="zwave_select_node" translatable="false">Select the z-wave device that will be associated with the Supla channel.</string>
+    <string name="zwave_supla_channel" translatable="false">Channel</string>
+    <string name="zwave_device" translatable="false">Z-Wave device</string>
+    <string name="zwave_waiting_for_button_press" translatable="false">Waiting for button press on the z-wave device.</string>
+    <string name="zwave_button_press_timeout" translatable="false">The waiting time for pressing the button has elapsed.</string>
+    <string name="zwave_node_searching" translatable="false">Searching the z-wave network to build a list of devices.</string>
+    <string name="zwave_remove_device_timeout" translatable="false">The waiting time to remove the device has expired.</string>
+    <string name="zwave_waiting_for_reset" translatable="false">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
+    <string name="zwave_waiting_for_reset_timeout" translatable="false">The waiting time for the z-wave network reset has expired.</string>
+    <string name="zwave_error_assign_node_id_timeout" translatable="false">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
+    <string name="zwave_bridge_offline" translatable="false">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
+    <string name="zwave_waiting_for_add" translatable="false">Waiting for the device to be added to the z-wave network.</string>
+    <string name="zwave_waiting_for_add_timeout" translatable="false">The waiting time for adding the device to the z-wave network has expired.</string>
+    <string name="zwave_reset_confirm_question" translatable="false">Are you sure you want to reset the settings and z-wave network?</string>
+    <string name="zwave_offline" translatable="false">Offline?</string>
+    <string name="zwave_used" translatable="false">Assigned to:</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
+    <string name="zwave_error_common_message" translatable="false">Press back to return to the previous step or \"Exit\" to finish.</string>
+    <string name="zwave_error_slave_mode" translatable="false">This function is not available when the bridge is in slave mode.</string>
+    <string name="zwave_done" translatable="false">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
 
-    <string translatable="false" name="restore_question">Are you sure you want to restore the default settings?</string>
-    <string translatable="false" name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
-    <string translatable="false" name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
-    <string translatable="false" name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
-    <string translatable="false" name="event_openedclosedthevalve">opened / closed the valve</string>
-    <string translatable="false" name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
-    <string translatable="false" name="bridge">Bridge</string>
-    <string translatable="false" name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
+    <string name="restore_question" translatable="false">Are you sure you want to restore the default settings?</string>
+    <string name="belongs_to_group_error" translatable="false">You cannot change the function of a channel that belongs to a group.</string>
+    <string name="has_schedule_error" translatable="false">You cannot change the function of a channel that has a schedule.</string>
+    <string name="associeted_with_scene_error" translatable="false">You cannot change the function of a channel that is associated with a scene.</string>
+    <string name="event_openedclosedthevalve" translatable="false">opened / closed the valve</string>
+    <string name="zwave_device_communication_error" translatable="false">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
+    <string name="bridge" translatable="false">Bridge</string>
+    <string name="em_phase_to_phase_balance" translatable="false">Vector phase-to-phase balancing</string>
 
-    <string translatable="false" name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
-    <string translatable="false" name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
-    <string translatable="false" name="aritmetic_balance_days">Arithmetic balance - Days</string>
-    <string translatable="false" name="aritmetic_balance_months">Arithmetic balance - Months</string>
-    <string translatable="false" name="aritmetic_balance_years">Arithmetic balance - Years</string>
-    <string translatable="false" name="vector_balance_minutes">Vector balance - Minutes</string>
-    <string translatable="false" name="vector_balance_hours">Vector balance - Hours</string>
-    <string translatable="false" name="vector_balance_days">Vector balance - Days</string>
-    <string translatable="false" name="vector_balance_months">Vector balance - Months</string>
-    <string translatable="false" name="vector_balance_years">Vector balance - Years</string>
+    <string name="aritmetic_balance_minutes" translatable="false">Arithmetic balance - Minutes</string>
+    <string name="aritmetic_balance_hours" translatable="false">Arithmetic balance - Hours</string>
+    <string name="aritmetic_balance_days" translatable="false">Arithmetic balance - Days</string>
+    <string name="aritmetic_balance_months" translatable="false">Arithmetic balance - Months</string>
+    <string name="aritmetic_balance_years" translatable="false">Arithmetic balance - Years</string>
+    <string name="vector_balance_minutes" translatable="false">Vector balance - Minutes</string>
+    <string name="vector_balance_hours" translatable="false">Vector balance - Hours</string>
+    <string name="vector_balance_days" translatable="false">Vector balance - Days</string>
+    <string name="vector_balance_months" translatable="false">Vector balance - Months</string>
+    <string name="vector_balance_years" translatable="false">Vector balance - Years</string>
 </resources>

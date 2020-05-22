@@ -18,15 +18,17 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
+
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
+
 import java.util.Random;
 
 public class Preferences {
@@ -53,7 +55,7 @@ public class Preferences {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
         _context = context;
 
-        if ( getCfgVersion() == 0 ) {
+        if (getCfgVersion() == 0) {
 
             setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
             setCfgVersion(2);
@@ -82,13 +84,13 @@ public class Preferences {
                 Id = Settings.Secure.getString(_context.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
             } else {
-                Id =  Build.SERIAL;
+                Id = Build.SERIAL;
             }
 
-            Id += "-" + Build.BOARD+
-                    "-"+Build.BRAND+
-                    "-"+Build.DEVICE+
-                    "-"+Build.HARDWARE;
+            Id += "-" + Build.BOARD +
+                    "-" + Build.BRAND +
+                    "-" + Build.DEVICE +
+                    "-" + Build.HARDWARE;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,32 +99,32 @@ public class Preferences {
     }
 
     private void encryptAndSave(String pref_key, byte[] data) {
-            SharedPreferences.Editor editor = _prefs.edit();
-            editor.putString(pref_key,
-                    Base64.encodeToString(
-                            Encryption.encryptDataWithNullOnException(
-                                    data, getDeviceID()), Base64.DEFAULT));
-            editor.putBoolean(pref_key+"_encrypted", true);
-            editor.apply();
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putString(pref_key,
+                Base64.encodeToString(
+                        Encryption.encryptDataWithNullOnException(
+                                data, getDeviceID()), Base64.DEFAULT));
+        editor.putBoolean(pref_key + "_encrypted", true);
+        editor.apply();
     }
 
     private byte[] getRandom(String pref_key, int size) {
 
         byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
-        if ( !_prefs.getBoolean(pref_key+"_encrypted", false) ) {
+        if (!_prefs.getBoolean(pref_key + "_encrypted", false)) {
             encryptAndSave(pref_key, result);
         } else {
             result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
         }
 
-        if ( result == null || result.length != size ) {
+        if (result == null || result.length != size) {
 
             Random random = new Random();
             result = new byte[size];
 
-            for(int a=0;a<size;a++) {
-                result[a] = (byte)random.nextInt(255);
+            for (int a = 0; a < size; a++) {
+                result[a] = (byte) random.nextInt(255);
             }
 
             encryptAndSave(pref_key, result);
@@ -186,20 +188,20 @@ public class Preferences {
 
     public boolean configIsSet() {
 
-        if ( isAdvancedCfg() )
+        if (isAdvancedCfg())
             return !getServerAddress().equals("") && getAccessID() != 0 && !getAccessIDpwd().equals("");
 
         return !getEmail().equals("");
+    }
+
+    public boolean isAdvancedCfg() {
+        return _prefs.getBoolean(pref_advanced, false);
     }
 
     public void setAdvancedCfg(Boolean advanced) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putBoolean(pref_advanced, advanced);
         editor.apply();
-    }
-
-    public boolean isAdvancedCfg() {
-        return _prefs.getBoolean(pref_advanced, false);
     }
 
     public int getPreferedProtocolVersion() {
@@ -219,22 +221,22 @@ public class Preferences {
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
-        return _prefs.getBoolean(pref_wizard_save_password+SSID, true);
+        return _prefs.getBoolean(pref_wizard_save_password + SSID, true);
     }
 
     public void wizardSetSavePasswordEnabled(String SSID, boolean enabled) {
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putBoolean(pref_wizard_save_password+SSID, enabled);
+        editor.putBoolean(pref_wizard_save_password + SSID, enabled);
         editor.apply();
     }
 
     public String wizardGetPassword(String SSID) {
-        return _prefs.getString(pref_wizard_password+SSID, "");
+        return _prefs.getString(pref_wizard_password + SSID, "");
     }
 
     public void wizardSetPassword(String SSID, String password) {
         SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_wizard_password+SSID, password);
+        editor.putString(pref_wizard_password + SSID, password);
         editor.apply();
     }
 

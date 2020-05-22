@@ -35,7 +35,7 @@ public class SuplaRegisterResult {
     }
 
     public SuplaRegisterResult(SuplaRegisterResult result) {
-        if (result!=null) {
+        if (result != null) {
             ResultCode = result.ResultCode;
             ClientID = result.ClientID;
             LocationCount = result.LocationCount;

@@ -18,7 +18,6 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +55,7 @@ public class AboutActivity extends NavigationActivity {
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v == homepage ) {
+        if (v == homepage) {
             openHomepage();
         }
     }

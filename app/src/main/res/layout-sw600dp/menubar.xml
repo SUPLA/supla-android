@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/menubar"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/menubar">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -11,36 +12,36 @@
         android:background="@color/menubar">
 
         <Button
+            android:id="@+id/menubutton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:id="@+id/menubutton"
             android:layout_gravity="center_vertical|left"
             android:layout_marginLeft="16dp"
-            android:clickable="true"
+            android:layout_marginTop="7dp"
             android:background="@drawable/menu"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_marginTop="7dp" />
+            android:clickable="true" />
 
         <TextView
+            android:id="@+id/menubar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/MenuBarTitle"
-            android:text="@string/menubar_title"
-            android:id="@+id/menubar_title"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
+            android:text="@string/menubar_title"
+            android:textAppearance="@style/MenuBarTitle"
             android:textSize="50sp" />
 
 
         <Button
+            android:id="@+id/groupbutton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:id="@+id/groupbutton"
             android:layout_gravity="center_vertical|right"
+            android:layout_marginTop="1dp"
             android:layout_marginRight="16dp"
-            android:clickable="true"
             android:background="@drawable/groupoff"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_marginTop="1dp" />
+            android:clickable="true" />
     </FrameLayout>
 </RelativeLayout>

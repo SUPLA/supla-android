@@ -35,9 +35,12 @@ import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class TemperatureChartHelper extends ChartHelper {
+
+    public TemperatureChartHelper(Context context) {
+        super(context);
+    }
 
     @Override
     protected Cursor getCursor(DbHelper DBH,
@@ -72,10 +75,6 @@ public class TemperatureChartHelper extends ChartHelper {
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP));
-    }
-
-    public TemperatureChartHelper(Context context) {
-        super(context);
     }
 
     @Override

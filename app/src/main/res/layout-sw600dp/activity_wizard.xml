@@ -23,9 +23,9 @@
         android:id="@+id/wizard_navigation"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/menubar">
 
         <Button
@@ -33,8 +33,8 @@
             android:layout_width="@dimen/wizard_btnnextl_width"
             android:layout_height="70dp"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/wizard_next_middle_part"
             android:layout_toStartOf="@+id/wizard_next_middle_part"
+            android:layout_toLeftOf="@+id/wizard_next_middle_part"
             android:background="@drawable/btnnextl"
             android:stateListAnimator="@null"
             android:textAlignment="gravity"
@@ -47,8 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/wizard_next_right_part"
             android:layout_toStartOf="@+id/wizard_next_right_part"
+            android:layout_toLeftOf="@+id/wizard_next_right_part"
             android:background="@android:color/white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -62,8 +62,8 @@
             android:id="@+id/wizard_next_right_part"
             android:layout_width="@dimen/wizard_btnnextr_width"
             android:layout_height="70dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
             android:background="@drawable/btnnextr"
             android:stateListAnimator="@null" />
@@ -75,9 +75,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/wizard_navigation"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/wizard_top_line"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:background="@color/menubar">
 
     </RelativeLayout>

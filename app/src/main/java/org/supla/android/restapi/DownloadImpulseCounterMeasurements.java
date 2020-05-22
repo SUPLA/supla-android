@@ -2,6 +2,7 @@ package org.supla.android.restapi;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.IncrementalMeasurementItem;
 
@@ -34,7 +35,7 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
     }
 
     protected IncrementalMeasurementItem newObject(IncrementalMeasurementItem src) {
-        return new ImpulseCounterMeasurementItem((ImpulseCounterMeasurementItem)src);
+        return new ImpulseCounterMeasurementItem((ImpulseCounterMeasurementItem) src);
     }
 
     protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(

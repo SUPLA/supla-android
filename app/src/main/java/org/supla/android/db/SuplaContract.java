@@ -22,7 +22,8 @@ import android.provider.BaseColumns;
 
 public class SuplaContract {
 
-    public SuplaContract() {}
+    public SuplaContract() {
+    }
 
 
     public static abstract class LocationEntry implements BaseColumns {
@@ -279,7 +280,7 @@ public class SuplaContract {
         public static final String _ID = "_temperature_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_TIMESTAMP = "date";
-        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
+        public static final String COLUMN_NAME_TEMPERATURE = "temperature";
     }
 
     public static abstract class TempHumidityLogEntry implements BaseColumns {
@@ -289,8 +290,8 @@ public class SuplaContract {
         public static final String _ID = "_temphumidit_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_TIMESTAMP = "date";
-        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
-        public static final String COLUMN_NAME_HUMIDITY= "humidity";
+        public static final String COLUMN_NAME_TEMPERATURE = "temperature";
+        public static final String COLUMN_NAME_HUMIDITY = "humidity";
     }
 
 

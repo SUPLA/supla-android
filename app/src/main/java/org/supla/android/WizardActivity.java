@@ -71,7 +71,7 @@ public abstract class WizardActivity extends NavigationActivity {
     protected int getVisiblePageId() {
         for (View page : mPages) {
             if (page.getVisibility() == View.VISIBLE) {
-                return (Integer)page.getTag();
+                return (Integer) page.getTag();
             }
         }
 
@@ -112,23 +112,6 @@ public abstract class WizardActivity extends NavigationActivity {
 
     protected boolean isBtnNextPreloaderVisible() {
         return mBtnNextPreloaderTimer != null;
-    }
-
-    private void setArrowVisible(boolean visible) {
-        if (visible) {
-            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr);
-            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
-            mBtnNextRightPart.setLayoutParams(params);
-        } else {
-            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr2);
-
-            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
-            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
-
-            mBtnNextRightPart.setLayoutParams(params);
-
-        }
     }
 
     protected void setBtnNextPreloaderVisible(boolean visible) {
@@ -182,6 +165,22 @@ public abstract class WizardActivity extends NavigationActivity {
 
     }
 
+    private void setArrowVisible(boolean visible) {
+        if (visible) {
+            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr);
+            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextr_width);
+            mBtnNextRightPart.setLayoutParams(params);
+        } else {
+            mBtnNextRightPart.setBackgroundResource(R.drawable.btnnextr2);
+
+            ViewGroup.LayoutParams params = mBtnNextRightPart.getLayoutParams();
+            params.width = getResources().getDimensionPixelSize(R.dimen.wizard_btnnextl_width);
+
+            mBtnNextRightPart.setLayoutParams(params);
+
+        }
+    }
 
     @Override
     public void onClick(View v) {

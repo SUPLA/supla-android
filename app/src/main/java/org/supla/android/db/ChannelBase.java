@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
+
 import org.supla.android.R;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
@@ -39,48 +40,127 @@ public abstract class ChannelBase extends DbItem {
     private int UserIconId;
     private int Flags;
 
-    public void setRemoteId(int id) {
-        RemoteId = id;
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo,
+                                                                     float measuredRelativeSize,
+                                                                     float presetdRelativeSize) {
+
+        if (measuredTempFrom != null && measuredTempTo != null
+                && measuredTempFrom.doubleValue() > measuredTempTo.doubleValue()) {
+            Double f = measuredTempFrom;
+            measuredTempFrom = measuredTempTo;
+            measuredTempTo = f;
+        }
+
+        if (presetTempFrom != null && presetTempTo != null
+                && presetTempFrom.doubleValue() > presetTempTo.doubleValue()) {
+            Double f = presetTempFrom;
+            presetTempFrom = presetTempTo;
+            presetTempTo = f;
+        }
+
+        String measured;
+        String preset;
+
+        if (measuredTempFrom != null && measuredTempFrom > -273) {
+            measured = String.format("%.2f", measuredTempFrom)
+                    + (char) 0x00B0;
+            if (measuredTempTo != null && measuredTempTo > -273) {
+                measured += String.format(" - %.2f", measuredTempTo)
+                        + (char) 0x00B0;
+            }
+        } else {
+            measured = "---" + (char) 0x00B0;
+        }
+
+        if (presetTempFrom != null && presetTempFrom > -273) {
+            preset = "/" + Integer.toString(presetTempFrom.intValue())
+                    + (char) 0x00B0;
+            if (presetTempTo != null && presetTempTo > -273) {
+                preset += " - " + Integer.toString(presetTempTo.intValue())
+                        + (char) 0x00B0;
+            }
+        } else {
+            preset = "/---" + (char) 0x00B0;
+        }
+
+        SpannableString ss = new SpannableString(measured + preset);
+        ss.setSpan(new RelativeSizeSpan(measuredRelativeSize),
+                0,
+                measured.length(),
+                0);
+
+        ss.setSpan(new RelativeSizeSpan(presetdRelativeSize),
+                measured.length(),
+                measured.length() + preset.length(),
+                0);
+
+        return ss;
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+                                                                     Double measuredTempTo,
+                                                                     Double presetTempFrom,
+                                                                     Double presetTempTo) {
+
+        return getHumanReadableThermostatTemperature(measuredTempFrom, measuredTempTo,
+                presetTempFrom, presetTempTo,
+                1.0f, 0.7f);
+    }
+
+    @SuppressLint("DefaultLocale")
+    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+                                                                     Double presetTemp) {
+        return getHumanReadableThermostatTemperature(measuredTemp,
+                null, presetTemp, null);
     }
 
     public int getRemoteId() {
         return RemoteId;
     }
 
-    public void setCaption(String caption) {
-        Caption = caption;
+    public void setRemoteId(int id) {
+        RemoteId = id;
     }
 
     public String getCaption() {
         return Caption;
     }
 
-    public void setVisible(int visible) {
-        Visible = visible;
+    public void setCaption(String caption) {
+        Caption = caption;
     }
 
     public int getVisible() {
         return Visible;
     }
 
-    public void setLocationId(long locationId) {
-        LocationId = locationId;
+    public void setVisible(int visible) {
+        Visible = visible;
     }
 
     public long getLocationId() {
         return LocationId;
     }
 
+    public void setLocationId(long locationId) {
+        LocationId = locationId;
+    }
+
     public int getType() {
         return 0;
     }
 
-    public void setFunc(int func) {
-        Func = func;
-    }
-
     public int getFunc() {
         return Func;
+    }
+
+    public void setFunc(int func) {
+        Func = func;
     }
 
     protected abstract int _getOnLine();
@@ -99,12 +179,12 @@ public abstract class ChannelBase extends DbItem {
         return getOnLinePercent() > 0;
     }
 
-    public void setAltIcon(int altIcon) {
-        AltIcon = altIcon;
-    }
-
     public int getAltIcon() {
         return AltIcon;
+    }
+
+    public void setAltIcon(int altIcon) {
+        AltIcon = altIcon;
     }
 
     public int getUserIconId() {
@@ -115,21 +195,16 @@ public abstract class ChannelBase extends DbItem {
         UserIconId = userIconId;
     }
 
-    public void setFlags(int flags) {
-        Flags = flags;
-    }
-
     public int getFlags() {
         return Flags;
     }
 
-    public String getNotEmptyCaption(Context context) {
-        return SuplaConst.getNotEmptyCaption(getCaption(), getFunc(), context);
+    public void setFlags(int flags) {
+        Flags = flags;
     }
 
-    public enum WhichOne {
-        First,
-        Second
+    public String getNotEmptyCaption(Context context) {
+        return SuplaConst.getNotEmptyCaption(getCaption(), getFunc(), context);
     }
 
     protected int imgActive(ChannelValue value) {
@@ -207,7 +282,7 @@ public abstract class ChannelBase extends DbItem {
                             : ((active & 0x2) > 0 ? 3 : 1));
                     break;
                 default:
-                    Id = new ImageId(getUserIconId(), active+1);
+                    Id = new ImageId(getUserIconId(), active + 1);
                     break;
             }
 
@@ -229,7 +304,7 @@ public abstract class ChannelBase extends DbItem {
                 switch (getAltIcon()) {
                     case 1:
 
-                        if ( _50percent ) {
+                        if (_50percent) {
                             img_idx = R.drawable.gatealt1closed50percent;
                         } else {
                             img_idx = active > 0 ? R.drawable.gatealt1closed : R.drawable.gatealt1open;
@@ -240,7 +315,7 @@ public abstract class ChannelBase extends DbItem {
                         img_idx = active > 0 ? R.drawable.barierclosed : R.drawable.barieropen;
                         break;
                     default:
-                        if ( _50percent ) {
+                        if (_50percent) {
                             img_idx = R.drawable.gateclosed50percent;
                         } else {
                             img_idx = active > 0 ? R.drawable.gateclosed : R.drawable.gateopen;
@@ -425,7 +500,7 @@ public abstract class ChannelBase extends DbItem {
 
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-                img_idx = active == 1 ? R.drawable.valveclosed :  R.drawable.valveopen;
+                img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
                 break;
         }
 
@@ -440,85 +515,6 @@ public abstract class ChannelBase extends DbItem {
 
     public ImageId getImageIdx() {
         return getImageIdx(WhichOne.First);
-    }
-
-    @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
-                                                                     Double measuredTempTo,
-                                                                     Double presetTempFrom,
-                                                                     Double presetTempTo,
-                                                                     float measuredRelativeSize,
-                                                                     float presetdRelativeSize) {
-
-        if (measuredTempFrom != null && measuredTempTo != null
-                    && measuredTempFrom.doubleValue() > measuredTempTo.doubleValue()) {
-                Double f = measuredTempFrom;
-                measuredTempFrom = measuredTempTo;
-                measuredTempTo = f;
-        }
-
-        if (presetTempFrom != null && presetTempTo != null
-                    && presetTempFrom.doubleValue() > presetTempTo.doubleValue()) {
-                Double f = presetTempFrom;
-                presetTempFrom = presetTempTo;
-                presetTempTo = f;
-        }
-
-        String measured;
-        String preset;
-
-        if (measuredTempFrom != null && measuredTempFrom > -273) {
-            measured = String.format("%.2f", measuredTempFrom)
-                    + (char) 0x00B0;
-            if (measuredTempTo != null && measuredTempTo > -273) {
-                measured += String.format(" - %.2f", measuredTempTo)
-                        + (char) 0x00B0;
-            }
-        } else {
-            measured = "---" + (char) 0x00B0;
-        }
-
-        if (presetTempFrom != null && presetTempFrom > -273) {
-            preset = "/"+Integer.toString(presetTempFrom.intValue())
-                    + (char) 0x00B0;
-            if (presetTempTo != null && presetTempTo > -273) {
-                preset += " - " + Integer.toString(presetTempTo.intValue())
-                        + (char) 0x00B0;
-            }
-        } else {
-            preset = "/---"+ (char) 0x00B0;
-        }
-
-        SpannableString ss =  new SpannableString(measured+preset);
-        ss.setSpan(new RelativeSizeSpan(measuredRelativeSize),
-                0,
-                measured.length(),
-                0);
-
-        ss.setSpan(new RelativeSizeSpan(presetdRelativeSize),
-                measured.length(),
-                measured.length()+preset.length(),
-                0);
-
-        return ss;
-    }
-
-    @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
-                                                                     Double measuredTempTo,
-                                                                     Double presetTempFrom,
-                                                                     Double presetTempTo) {
-
-        return getHumanReadableThermostatTemperature(measuredTempFrom, measuredTempTo,
-                presetTempFrom, presetTempTo,
-                1.0f, 0.7f);
-    }
-
-    @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
-                                                              Double presetTemp) {
-        return getHumanReadableThermostatTemperature(measuredTemp,
-                null, presetTemp,null);
     }
 
     @SuppressLint("DefaultLocale")
@@ -590,7 +586,7 @@ public abstract class ChannelBase extends DbItem {
                 double rain = value.getDouble(-1);
 
                 if (getOnLine() && rain >= 0) {
-                    return String.format("%.2f l/m\u00B2", rain/1000.00);
+                    return String.format("%.2f l/m\u00B2", rain / 1000.00);
                 } else {
                     return "--- l/m\u00B2";
                 }
@@ -661,6 +657,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
+
     public abstract CharSequence getHumanReadableValue();
 
     public void Assign(SuplaChannelBase base) {
@@ -694,6 +691,11 @@ public abstract class ChannelBase extends DbItem {
                 || base.getFlags() != getFlags()
                 || base.getAltIcon() != getAltIcon()
                 || base.getUserIconId() != getUserIconId();
+    }
+
+    public enum WhichOne {
+        First,
+        Second
     }
 
 }

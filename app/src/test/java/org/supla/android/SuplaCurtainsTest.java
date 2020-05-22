@@ -1,11 +1,12 @@
 package org.supla.android;
 
 import android.content.Context;
+import android.view.MotionEvent;
+
 import junit.framework.TestCase;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import android.view.MotionEvent;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.

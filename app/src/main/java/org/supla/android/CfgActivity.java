@@ -36,20 +36,17 @@ import org.supla.android.db.DbHelper;
 
 public class CfgActivity extends NavigationActivity {
 
+    static final short CFG_LAYOUT_ADVANCED = 0;
+    static final short CFG_LAYOUT_BASIC = 1;
     private View vBasic;
     private View vAdvanced;
     private RelativeLayout rlContent;
-
     private EditText edServerAddr;
     private EditText edAccessID;
     private EditText edAccessIDpwd;
     private EditText edEmail;
     private CheckBox cbAdvanced;
-
     private Button btnSaveBasic, btnSaveAdv, btnCreate;
-
-    static final short CFG_LAYOUT_ADVANCED = 0;
-    static final short CFG_LAYOUT_BASIC = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -23,6 +23,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -32,21 +33,20 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
     private static SecretKey generateKey(String password)
-            throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
         // *Password
         // This is not a good implementation but sufficient for current use
-        
+
         if (password == null) {
             password = "";
         }
 
         String alignment = "";
-        for(int a=0;a<32-password.length();a++) {
-            alignment+="0";
+        for (int a = 0; a < 32 - password.length(); a++) {
+            alignment += "0";
         }
 
-        password+=alignment;
+        password += alignment;
         password = password.substring(0, 32);
 
         return new SecretKeySpec(password.getBytes(), "AES");
@@ -95,7 +95,7 @@ public class Encryption {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
         return result;

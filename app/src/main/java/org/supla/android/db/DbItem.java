@@ -24,14 +24,15 @@ import android.database.Cursor;
 public abstract class DbItem {
     private long Id;
 
-    public void setId(long id) {
-        Id = id;
-    }
-
     public long getId() {
         return Id;
     }
 
+    public void setId(long id) {
+        Id = id;
+    }
+
     public abstract void AssignCursorData(Cursor cursor);
+
     public abstract ContentValues getContentValues();
 }

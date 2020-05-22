@@ -27,9 +27,9 @@ public class VLCfgParameters {
     private short Minimum;
     private short Maximum;
     private byte Mode;
-    private byte ModeMask = (byte)0xFF;
+    private byte ModeMask = (byte) 0xFF;
     private byte Boost;
-    private byte BoostMask = (byte)0xFF;
+    private byte BoostMask = (byte) 0xFF;
     private short BoostLevel;
 
     public short getLeftEdge() {
@@ -52,7 +52,9 @@ public class VLCfgParameters {
         return Mode;
     }
 
-    public byte getModeMask() { return ModeMask; }
+    public byte getModeMask() {
+        return ModeMask;
+    }
 
     public boolean isModeDisabled(int mode) {
 
@@ -74,7 +76,9 @@ public class VLCfgParameters {
         return Boost;
     }
 
-    public byte getBoostMask() { return BoostMask; }
+    public byte getBoostMask() {
+        return BoostMask;
+    }
 
     public short getBoostLevel() {
         return BoostLevel;
@@ -95,10 +99,10 @@ public class VLCfgParameters {
     }
 
     private short getShort(byte[] data, int offset) {
-        int x = (int)data[offset+1] & 0xFF;
-        x<<=8;
-        x|=(int)data[offset] & 0xFF;
-        return (short)x;
+        int x = (int) data[offset + 1] & 0xFF;
+        x <<= 8;
+        x |= (int) data[offset] & 0xFF;
+        return (short) x;
     }
 
     public boolean setParams(byte[] data) {

@@ -52,6 +52,39 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
 
+    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+
+        Intent i = new Intent(sender.getBaseContext(), cls);
+        i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
+        i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
+        sender.startActivity(i);
+
+        sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    public static void showMain(Activity sender) {
+
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+        if (client != null
+                && client.registered()) {
+
+            showActivity(sender, MainActivity.class, 0);
+
+        } else {
+            showStatus(sender);
+        }
+
+    }
+
+    public static void showStatus(Activity sender) {
+        showActivity(sender, StatusActivity.class, 0);
+    }
+
+    public static void showCfg(Activity sender) {
+        showActivity(sender, CfgActivity.class, 0);
+    }
+
     @Override
     protected void onResume() {
 
@@ -63,15 +96,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     protected void onPause() {
         super.onPause();
 
-        if ( CurrentActivity == this ) {
+        if (CurrentActivity == this) {
             CurrentActivity = null;
         }
     }
 
-
     protected RelativeLayout getRootLayout() {
 
-        if ( RootLayout == null ) {
+        if (RootLayout == null) {
 
             RootLayout = new RelativeLayout(this);
             RootLayout.setId(ViewHelper.generateViewId());
@@ -83,15 +115,15 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     protected View Inflate(int resID, ViewGroup root) {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         return inflater == null ? null : inflater.inflate(resID, root);
     }
 
     private RelativeLayout getMenuBarLayout() {
 
-        if ( MenuBarLayout == null ) {
+        if (MenuBarLayout == null) {
 
-            MenuBarLayout = (RelativeLayout)Inflate(R.layout.menubar, null);
+            MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
             MenuBarLayout.setVisibility(View.GONE);
 
             TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
@@ -115,7 +147,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     private MenuItemsLayout getMenuItemsLayout() {
 
-        if ( mMenuItemsLayout == null ) {
+        if (mMenuItemsLayout == null) {
             mMenuItemsLayout = new MenuItemsLayout(this);
             mMenuItemsLayout.setOnClickListener(this);
             getRootLayout().addView(mMenuItemsLayout);
@@ -126,7 +158,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     protected RelativeLayout getContentLayout() {
 
-        if ( ContentLayout == null ) {
+        if (ContentLayout == null) {
 
             ContentLayout = new RelativeLayout(this);
             ContentLayout.setId(ViewHelper.generateViewId());
@@ -149,12 +181,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     @Override
     public void setContentView(int layoutResID) {
 
-        if ( Content != null ) {
+        if (Content != null) {
             getContentLayout().removeView(Content);
             Content = null;
         }
 
-        Content = (ViewGroup)Inflate(layoutResID, getContentLayout());
+        Content = (ViewGroup) Inflate(layoutResID, getContentLayout());
 
     }
 
@@ -170,7 +202,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         GroupButton.setVisibility(View.GONE);
     }
 
-    protected void onGroupButtonTouch(boolean On) {}
+    protected void onGroupButtonTouch(boolean On) {
+    }
 
     public boolean menuIsVisible() {
         return getMenuItemsLayout().getVisibility() == View.VISIBLE;
@@ -178,12 +211,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     private void showHideMenu(boolean Show, boolean Animated) {
 
-        if ( Show && menuIsVisible() ) return;
-        if ( !Show && !menuIsVisible() ) return;
+        if (Show && menuIsVisible()) return;
+        if (!Show && !menuIsVisible()) return;
 
-        if ( Show ) {
+        if (Show) {
 
-            if ( Anim ) return;
+            if (Anim) return;
 
             DbHelper DbH = new DbHelper(this);
 
@@ -192,12 +225,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             getMenuItemsLayout().setButtonsAvailable(btns);
             getMenuItemsLayout().setY(getMenuItemsLayout().getBtnAreaHeight() * -1
-                    + getMenuBarLayout().getHeight() );
+                    + getMenuBarLayout().getHeight());
             getMenuItemsLayout().setVisibility(View.VISIBLE);
             getMenuItemsLayout().bringToFront();
             getMenuBarLayout().bringToFront();
 
-            if ( Animated ) {
+            if (Animated) {
 
                 Anim = true;
 
@@ -218,9 +251,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         } else {
 
-            if ( Animated ) {
+            if (Animated) {
 
-                if ( Anim ) return;
+                if (Anim) return;
                 Anim = true;
 
                 getMenuItemsLayout()
@@ -251,7 +284,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         lp.addRule(RelativeLayout.BELOW, getMenuBarLayout().getId());
         getContentLayout().setLayoutParams(lp);
 
-        if ( MenuBarLayout != null )
+        if (MenuBarLayout != null)
             MenuBarLayout.setVisibility(View.VISIBLE);
     }
 
@@ -261,7 +294,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         getContentLayout().setLayoutParams(lp);
 
-        if ( MenuBarLayout != null )
+        if (MenuBarLayout != null)
             MenuBarLayout.setVisibility(View.GONE);
     }
 
@@ -289,39 +322,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
-    private static void showActivity(Activity sender,  Class<?> cls, int flags) {
-
-        Intent i = new Intent(sender.getBaseContext(), cls);
-        i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
-        i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
-        sender.startActivity(i);
-
-        sender.overridePendingTransition( R.anim.fade_in, R.anim.fade_out);
-    }
-
-    public static void showMain(Activity sender) {
-
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-        if ( client != null
-                && client.registered() ) {
-
-            showActivity(sender, MainActivity.class, 0);
-
-        } else {
-            showStatus(sender);
-        }
-
-    }
-
-    public static void showStatus(Activity sender) {
-        showActivity(sender, StatusActivity.class, 0);
-    }
-
-    public static void showCfg(Activity sender) {
-        showActivity(sender, CfgActivity.class, 0);
-    }
-
     public void showAbout() {
         showActivity(this, AboutActivity.class, 0);
     }
@@ -347,20 +347,20 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        if (  v != MenuButton
-              && menuIsVisible() ) {
+        if (v != MenuButton
+                && menuIsVisible()) {
 
             hideMenu(true);
         }
 
-        if ( v == MenuButton )  {
+        if (v == MenuButton) {
 
-            if ( menuIsVisible() )
+            if (menuIsVisible())
                 hideMenu(true);
             else
                 showMenu(true);
 
-        } else if ( v == GroupButton ) {
+        } else if (v == GroupButton) {
 
             int img;
 
@@ -412,17 +412,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     protected void beforeStatusMsg() {
         super.beforeStatusMsg();
 
-        if (  CurrentActivity != null
+        if (CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity)
                 && !(CurrentActivity instanceof AddDeviceWizardActivity)
-                && !(CurrentActivity instanceof CreateAccountActivity )) {
+                && !(CurrentActivity instanceof CreateAccountActivity)) {
             showStatus(this);
         }
     }
 
     public void SuperUserAuthorize(int sourceBtnId) {
-        if (mAuthDialog!=null) {
+        if (mAuthDialog != null) {
             mAuthDialog.close();
             mAuthDialog = null;
         }

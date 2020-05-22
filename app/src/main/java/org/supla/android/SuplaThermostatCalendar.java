@@ -65,15 +65,31 @@ public class SuplaThermostatCalendar extends View {
     private boolean mTouched = false;
     private OnCalendarTouchListener mOnCalendarTouchListener;
 
-    public interface OnCalendarTouchListener {
-        void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour,
-                                boolean program1);
+    public SuplaThermostatCalendar(Context context) {
+        super(context);
+        init();
+    }
+
+    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
     private void init() {
 
         Resources res = getResources();
-        if (res==null) {
+        if (res == null) {
             mSpacing = 5;
             mTextSize = 20;
         } else {
@@ -99,27 +115,6 @@ public class SuplaThermostatCalendar extends View {
         mPaint.setTextSize(mTextSize);
     }
 
-    public SuplaThermostatCalendar(Context context) {
-        super(context);
-        init();
-    }
-
-    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     protected void calculateGridArea() {
         mGridHeight = getHeight();
         mGridWidth = getWidth();
@@ -130,9 +125,9 @@ public class SuplaThermostatCalendar extends View {
 
     protected RectF getRectangle(int day, int hour) {
         float leftOffset = day * (mBoxWidth + mSpacing);
-        float topOffset = (hour+1) * (mBoxHeight + mSpacing);
+        float topOffset = (hour + 1) * (mBoxHeight + mSpacing);
 
-        return new RectF(leftOffset, topOffset, leftOffset+mBoxWidth, topOffset+mBoxHeight);
+        return new RectF(leftOffset, topOffset, leftOffset + mBoxWidth, topOffset + mBoxHeight);
     }
 
     protected Rect drawText(Canvas canvas, String label, RectF frm, boolean alignLeft) {
@@ -147,15 +142,15 @@ public class SuplaThermostatCalendar extends View {
 
     protected short drawLabel(Canvas canvas, short offset, String label, int color) {
         if (label != null) {
-            RectF frm = getRectangle(offset+1, 24);
-            frm.right = getRectangle(offset+3, 24).right;
+            RectF frm = getRectangle(offset + 1, 24);
+            frm.right = getRectangle(offset + 3, 24).right;
 
             mPaint.setColor(color);
             canvas.drawRoundRect(frm, 6, 6, mPaint);
 
             mPaint.setColor(mFontColor);
             drawText(canvas, label, frm, false);
-            offset+=3;
+            offset += 3;
         }
 
         return offset;
@@ -163,9 +158,9 @@ public class SuplaThermostatCalendar extends View {
 
     public short dayWithOffset(short day) {
 
-        day = (short)(day+mFirtsDay-1);
+        day = (short) (day + mFirtsDay - 1);
         if (day > 7) {
-            day-=7;
+            day -= 7;
         }
 
         return day;
@@ -177,33 +172,33 @@ public class SuplaThermostatCalendar extends View {
         calculateGridArea();
         RectF frm;
 
-        for(short d = 0; d <= 7; d++) {
-            for(short h = -1; h < 24; h++) {
+        for (short d = 0; d <= 7; d++) {
+            for (short h = -1; h < 24; h++) {
 
-               frm = getRectangle(d, h);
-               short dayIdx = (short)(dayWithOffset(d)-1);
+                frm = getRectangle(d, h);
+                short dayIdx = (short) (dayWithOffset(d) - 1);
 
-               if (h == -1 || d == 0) {
-                   String label = "";
+                if (h == -1 || d == 0) {
+                    String label = "";
 
-                   if (h == -1 && d > 0) {
-                       label = mDayNames[dayIdx+1];
-                   } else if ( h > -1 )  {
-                       label = String.format("%02d", h);
-                   }
+                    if (h == -1 && d > 0) {
+                        label = mDayNames[dayIdx + 1];
+                    } else if (h > -1) {
+                        label = String.format("%02d", h);
+                    }
 
-                   mPaint.setColor(mFontColor);
-                   drawText(canvas, label, frm, false);
+                    mPaint.setColor(mFontColor);
+                    drawText(canvas, label, frm, false);
 
-               } else {
-                   mPaint.setColor(mHourProgramGrid[dayIdx][h]
-                           ? mHourProgram1Color : mHourProgram0Color);
-                   canvas.drawRoundRect(frm, 6, 6, mPaint);
-               }
+                } else {
+                    mPaint.setColor(mHourProgramGrid[dayIdx][h]
+                            ? mHourProgram1Color : mHourProgram0Color);
+                    canvas.drawRoundRect(frm, 6, 6, mPaint);
+                }
             }
         }
 
-        short offset = drawLabel(canvas, (short)0, mProgram0Label, mHourProgram0Color);
+        short offset = drawLabel(canvas, (short) 0, mProgram0Label, mHourProgram0Color);
         drawLabel(canvas, offset, mProgram1Label, mHourProgram1Color);
 
     }
@@ -211,9 +206,9 @@ public class SuplaThermostatCalendar extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if( mReadOnly
-                || ( event.getAction() != MotionEvent.ACTION_DOWN
-                && event.getAction() != MotionEvent.ACTION_MOVE) ) {
+        if (mReadOnly
+                || (event.getAction() != MotionEvent.ACTION_DOWN
+                && event.getAction() != MotionEvent.ACTION_MOVE)) {
             mLastHour = -1;
             mLastDay = -1;
             mTouched = false;
@@ -221,20 +216,20 @@ public class SuplaThermostatCalendar extends View {
 
         }
 
-        float X =event.getX();
-        float Y =event.getY();
+        float X = event.getX();
+        float Y = event.getY();
         mTouched = true;
 
-        if ( X < mBoxWidth
+        if (X < mBoxWidth
                 || Y < mBoxHeight
-                || Y > getHeight()-mBoxHeight) {
+                || Y > getHeight() - mBoxHeight) {
             return false;
         }
 
-        for(short d = 1; d <= 7; d++) {
+        for (short d = 1; d <= 7; d++) {
             for (short h = 0; h < 24; h++) {
                 RectF frm = getRectangle(d, h);
-                short dayIdx = (short)(dayWithOffset(d) - 1);
+                short dayIdx = (short) (dayWithOffset(d) - 1);
                 if (X >= frm.left
                         && Y >= frm.top
                         && X <= frm.right
@@ -249,7 +244,7 @@ public class SuplaThermostatCalendar extends View {
                         mLastDay = d;
                         mLastHour = h;
 
-                        if (mOnCalendarTouchListener!=null) {
+                        if (mOnCalendarTouchListener != null) {
                             mOnCalendarTouchListener.onHourValueChanged(this, d, h,
                                     mSetHourProgramTo1);
                         }
@@ -271,20 +266,24 @@ public class SuplaThermostatCalendar extends View {
 
     public void setHourProgramTo1(short day, short hour, boolean one) {
         if (areTheDayAndHourCorrect(day, hour)) {
-            mHourProgramGrid[day-1][hour] = one;
+            mHourProgramGrid[day - 1][hour] = one;
         }
     }
 
     public boolean isHourProgramIsSetTo1(short day, short hour) {
-        return areTheDayAndHourCorrect(day, hour) && mHourProgramGrid[day-1][hour];
+        return areTheDayAndHourCorrect(day, hour) && mHourProgramGrid[day - 1][hour];
+    }
+
+    public boolean isReadOnly() {
+        return mReadOnly;
     }
 
     public void setReadOnly(boolean readOnly) {
         this.mReadOnly = readOnly;
     }
 
-    public boolean isReadOnly() {
-        return mReadOnly;
+    public int getHourProgram0Color() {
+        return mHourProgram0Color;
     }
 
     public void setHourProgram0Color(int hourProgram0Color) {
@@ -292,9 +291,17 @@ public class SuplaThermostatCalendar extends View {
         invalidate();
     }
 
+    public int getHourProgram1Color() {
+        return mHourProgram1Color;
+    }
+
     public void setHourProgram1Color(int hourProgram1Color) {
         this.mHourProgram1Color = hourProgram1Color;
         invalidate();
+    }
+
+    public int getFontColor() {
+        return mFontColor;
     }
 
     public void setFontColor(int fontColor) {
@@ -302,9 +309,17 @@ public class SuplaThermostatCalendar extends View {
         invalidate();
     }
 
+    public float getTextSize() {
+        return mTextSize;
+    }
+
     public void setTextSize(float textSize) {
         this.mTextSize = textSize;
         invalidate();
+    }
+
+    public String getProgram0Label() {
+        return mProgram0Label;
     }
 
     public void setProgram0Label(String program0Label) {
@@ -312,9 +327,17 @@ public class SuplaThermostatCalendar extends View {
         invalidate();
     }
 
+    public String getProgram1Label() {
+        return mProgram1Label;
+    }
+
     public void setProgram1Label(String program1Label) {
         this.mProgram1Label = program1Label;
         invalidate();
+    }
+
+    public int getFirtsDay() {
+        return mFirtsDay;
     }
 
     public void setFirtsDay(int firtsDay) {
@@ -324,49 +347,26 @@ public class SuplaThermostatCalendar extends View {
         }
     }
 
-    public int getHourProgram0Color() {
-        return mHourProgram0Color;
-    }
-
-    public int getHourProgram1Color() {
-        return mHourProgram1Color;
-    }
-
-    public int getFontColor() {
-        return mFontColor;
-    }
-
-    public float getTextSize() {
-        return mTextSize;
-    }
-
-    public String getProgram0Label() {
-        return mProgram0Label;
-    }
-
-    public String getProgram1Label() {
-        return mProgram1Label;
-    }
-
-    public int getFirtsDay() {
-        return mFirtsDay;
-    }
-
     public OnCalendarTouchListener getOnCalendarTouchListener() {
         return mOnCalendarTouchListener;
-    }
-
-    public boolean isTouched() {
-        return mTouched;
     }
 
     public void setOnCalendarTouchListener(OnCalendarTouchListener mOnCalendarTouchListener) {
         this.mOnCalendarTouchListener = mOnCalendarTouchListener;
     }
 
+    public boolean isTouched() {
+        return mTouched;
+    }
+
     public void clear() {
         mHourProgramGrid = new boolean[7][24];
         invalidate();
+    }
+
+    public interface OnCalendarTouchListener {
+        void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour,
+                                boolean program1);
     }
 
 }

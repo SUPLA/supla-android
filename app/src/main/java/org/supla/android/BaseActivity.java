@@ -44,10 +44,20 @@ import java.util.concurrent.TimeUnit;
 @SuppressLint("registered")
 public class BaseActivity extends Activity {
 
-    private Handler _sc_msg_handler = null;
+    protected static Activity CurrentActivity = null;
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
-    protected static Activity CurrentActivity = null;
+    private Handler _sc_msg_handler = null;
+
+    public static long getBackgroundTime() {
+
+        if (BackgroundTime != null) {
+            long diffInMs = (new Date()).getTime() - BackgroundTime.getTime();
+            return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+        }
+
+        return 0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +69,7 @@ public class BaseActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if ( bgTimer != null ) {
+        if (bgTimer != null) {
             bgTimer.cancel();
             bgTimer = null;
         }
@@ -75,7 +85,7 @@ public class BaseActivity extends Activity {
         super.onPause();
         BackgroundTime = new Date();
 
-        if ( bgTimer == null ) {
+        if (bgTimer == null) {
             bgTimer = new Timer();
             bgTimer.schedule(new TimerTask() {
                 @Override
@@ -83,10 +93,10 @@ public class BaseActivity extends Activity {
 
                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-                    if ( client == null
-                            || getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout) ) {
+                    if (client == null
+                            || getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)) {
 
-                        if ( client != null ) {
+                        if (client != null) {
                             client.cancel();
                         }
 
@@ -99,28 +109,18 @@ public class BaseActivity extends Activity {
         }
     }
 
-    public static long getBackgroundTime() {
-
-        if ( BackgroundTime != null ) {
-            long diffInMs = (new Date()).getTime() - BackgroundTime.getTime();
-            return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-        }
-
-        return 0;
-    }
-
     protected void RegisterMessageHandler() {
 
-        if ( _sc_msg_handler != null )
+        if (_sc_msg_handler != null)
             return;
 
         _sc_msg_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
 
-                SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
+                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
 
-                switch(_msg.getType()) {
+                switch (_msg.getType()) {
                     case SuplaClientMsg.onConnecting:
                     case SuplaClientMsg.onRegistering:
                     case SuplaClientMsg.onRegistered:
@@ -132,7 +132,7 @@ public class BaseActivity extends Activity {
                         break;
                 }
 
-                switch(_msg.getType()) {
+                switch (_msg.getType()) {
                     case SuplaClientMsg.onDataChanged:
                         onDataChangedMsg(_msg.getChannelId(), _msg.getChannelGroupId());
                         break;
@@ -230,66 +230,126 @@ public class BaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if ( _sc_msg_handler != null ) {
+        if (_sc_msg_handler != null) {
             SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
             _sc_msg_handler = null;
         }
 
     }
 
-    protected void beforeStatusMsg() {}
+    protected void beforeStatusMsg() {
+    }
 
-    protected void onDataChangedMsg(int ChannelId, int GroupId) {}
+    protected void onDataChangedMsg(int ChannelId, int GroupId) {
+    }
 
-    protected void onConnectingMsg() {}
+    protected void onConnectingMsg() {
+    }
 
-    protected void onRegisteringMsg() {}
+    protected void onRegisteringMsg() {
+    }
 
-    protected void onRegisteredMsg() {}
+    protected void onRegisteredMsg() {
+    }
 
-    protected void onRegisterErrorMsg(SuplaRegisterError error) {}
+    protected void onRegisterErrorMsg(SuplaRegisterError error) {
+    }
 
-    protected void onDisconnectedMsg() {}
+    protected void onDisconnectedMsg() {
+    }
 
-    protected void onConnectedMsg() {}
+    protected void onConnectedMsg() {
+    }
 
-    protected void onVersionErrorMsg(SuplaVersionError error) {}
+    protected void onVersionErrorMsg(SuplaVersionError error) {
+    }
 
-    protected void onEventMsg(SuplaEvent event) {}
+    protected void onEventMsg(SuplaEvent event) {
+    }
 
-    protected void onConnErrorMsg(SuplaConnError error) {}
+    protected void onConnErrorMsg(SuplaConnError error) {
+    }
 
-    protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {}
+    protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+    }
 
-    protected void onOAuthTokenRequestResult(SuplaOAuthToken token) {};
+    protected void onOAuthTokenRequestResult(SuplaOAuthToken token) {
+    }
 
-    protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {};
+    ;
 
-    protected void onCalCfgProgressReport(int channelId, int command, short progress) {};
+    protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {
+    }
 
-    protected void onSuperuserAuthorizationResult(boolean success, int code) {};
+    ;
 
-    protected void onChannelState(SuplaChannelState state) {};
+    protected void onCalCfgProgressReport(int channelId, int command, short progress) {
+    }
 
-    protected void onChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {};
+    ;
 
-    protected void onChannelFunctionSetResult(int channelId, int func, int code) {};
+    protected void onSuperuserAuthorizationResult(boolean success, int code) {
+    }
 
-    protected void onChannelCaptionSetResult(int channelId, String caption, int code) {};
+    ;
 
-    protected void onClientsReconnectResult(int code) {};
+    protected void onChannelState(SuplaChannelState state) {
+    }
 
-    protected void onSetRegistrationEnabledResult(int code) {};
+    ;
 
-    protected void onZWaveResetAndClearResult(int result) {};
+    protected void onChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {
+    }
 
-    protected void onZWaveAddNodeResult(int result, ZWaveNode node) {};
+    ;
 
-    protected void onZWaveRemoveNodeResult(int result, short nodeId) {};
+    protected void onChannelFunctionSetResult(int channelId, int func, int code) {
+    }
 
-    protected void onZWaveGetNodeListResult(int result, ZWaveNode node) {};
+    ;
 
-    protected void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {};
+    protected void onChannelCaptionSetResult(int channelId, String caption, int code) {
+    }
 
-    protected void onZWaveAssignNodeIdResult(int result, short nodeId) {};
+    ;
+
+    protected void onClientsReconnectResult(int code) {
+    }
+
+    ;
+
+    protected void onSetRegistrationEnabledResult(int code) {
+    }
+
+    ;
+
+    protected void onZWaveResetAndClearResult(int result) {
+    }
+
+    ;
+
+    protected void onZWaveAddNodeResult(int result, ZWaveNode node) {
+    }
+
+    ;
+
+    protected void onZWaveRemoveNodeResult(int result, short nodeId) {
+    }
+
+    ;
+
+    protected void onZWaveGetNodeListResult(int result, ZWaveNode node) {
+    }
+
+    ;
+
+    protected void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
+    }
+
+    ;
+
+    protected void onZWaveAssignNodeIdResult(int result, short nodeId) {
+    }
+
+    ;
 }

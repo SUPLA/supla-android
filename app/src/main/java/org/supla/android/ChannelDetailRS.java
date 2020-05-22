@@ -217,7 +217,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         if (client == null || !isDetailVisible())
             return;
-        
+
         client.open(getRemoteId(), isGroup(), (int) (10 + percent));
         OnChannelDataChanged();
     }

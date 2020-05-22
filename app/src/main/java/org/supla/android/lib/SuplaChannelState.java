@@ -53,7 +53,7 @@ public class SuplaChannelState implements Serializable {
     private Long connectionUptime;
     private Byte batteryHealth;
     private Byte lastConnectionResetCause;
-    
+
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
@@ -146,7 +146,7 @@ public class SuplaChannelState implements Serializable {
 
     public String getMacAddressString() {
         StringBuilder sb = new StringBuilder(macAddress.length * 3 - 1);
-        for(byte b: macAddress) {
+        for (byte b : macAddress) {
             if (sb.length() > 0) {
                 sb.append(":");
             }

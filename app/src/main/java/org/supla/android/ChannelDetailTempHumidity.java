@@ -20,7 +20,6 @@ package org.supla.android;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -101,7 +100,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     }
 
     private TempHumidityChartHelper getTempHumidityChartHelper() {
-        return (TempHumidityChartHelper)chartHelper;
+        return (TempHumidityChartHelper) chartHelper;
     }
 
     @Override

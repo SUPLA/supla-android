@@ -22,13 +22,15 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
+
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     public ElectricityChartHelper(Context context) {
         super(context);
-        totalActiveEnergy = new double[]{0,0,0};
+        totalActiveEnergy = new double[]{0, 0, 0};
         setProductionDataSource(false);
     }
 
@@ -66,7 +68,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                 double cons = c.getDouble(
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED));
-                value = (float)(cons-prod);
+                value = (float) (cons - prod);
             } else {
                 double prod1 = c.getDouble(
                         c.getColumnIndex(
@@ -88,7 +90,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
 
-                value = (float)((cons1+cons2+cons3)-(prod1+prod2+prod3));
+                value = (float) ((cons1 + cons2 + cons3) - (prod1 + prod2 + prod3));
             }
 
             entries.add(new BarEntry(n, value));
@@ -112,7 +114,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry>entries) {
+    protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
 

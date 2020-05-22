@@ -19,6 +19,7 @@ package org.supla.android.lib;
  */
 
 import android.content.Context;
+
 import org.supla.android.R;
 
 @SuppressWarnings("unused")
@@ -32,79 +33,79 @@ public class SuplaConst {
     public final static int SUPLA_EMAIL_MAXSIZE = 256;
     public final static int SUPLA_PASSWORD_MAXSIZE = 64;
     public final static int SUPLA_CHANNELVALUE_SIZE = 8;
-    public final static int SUPLA_RESULTCODE_NONE                      = 0;
-    public final static int SUPLA_RESULTCODE_UNSUPORTED                = 1;
-    public final static int SUPLA_RESULTCODE_FALSE                     = 2;
-    public final static int SUPLA_RESULTCODE_TRUE                      = 3;
-    public final static int SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE   = 4;
-    public final static int SUPLA_RESULTCODE_BAD_CREDENTIALS           = 5;
-    public final static int SUPLA_RESULTCODE_LOCATION_CONFLICT         = 6;
-    public final static int SUPLA_RESULTCODE_CHANNEL_CONFLICT          = 7;
-    public final static int SUPLA_RESULTCODE_DEVICE_DISABLED           = 8;
-    public final static int SUPLA_RESULTCODE_ACCESSID_DISABLED         = 9;
-    public final static int SUPLA_RESULTCODE_LOCATION_DISABLED         = 10;
-    public final static int SUPLA_RESULTCODE_CLIENT_DISABLED           = 11;
-    public final static int SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED      = 12;
-    public final static int SUPLA_RESULTCODE_DEVICE_LIMITEXCEEDED      = 13;
-    public final static int SUPLA_RESULTCODE_GUID_ERROR                = 14;
-    public final static int SUPLA_RESULTCODE_HOSTNOTFOUND              = 15;
-    public final static int SUPLA_RESULTCODE_CANTCONNECTTOHOST         = 16;
-    public final static int SUPLA_RESULTCODE_REGISTRATION_DISABLED     = 17;
-    public final static int SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED     = 18;
-    public final static int SUPLA_RESULTCODE_AUTHKEY_ERROR             = 19;
-    public final static int SUPLA_RESULTCODE_NO_LOCATION_AVAILABLE     = 20;
-    public final static int SUPLA_RESULTCODE_USER_CONFLICT             = 21;
-    public final static int SUPLA_RESULTCODE_UNAUTHORIZED              = 22;
-    public final static int SUPLA_RESULTCODE_AUTHORIZED                = 23;
-    public final static int SUPLA_RESULTCODE_NOT_ALLOWED               = 24;
-    public final static int SUPLA_RESULTCODE_CHANNELNOTFOUND           = 25;
-    public final static int SUPLA_RESULTCODE_UNKNOWN_ERROR             = 26;
-    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_BELONG_TO_GROUP          = 27;
-    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_HAS_SCHEDULE             = 28;
+    public final static int SUPLA_RESULTCODE_NONE = 0;
+    public final static int SUPLA_RESULTCODE_UNSUPORTED = 1;
+    public final static int SUPLA_RESULTCODE_FALSE = 2;
+    public final static int SUPLA_RESULTCODE_TRUE = 3;
+    public final static int SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE = 4;
+    public final static int SUPLA_RESULTCODE_BAD_CREDENTIALS = 5;
+    public final static int SUPLA_RESULTCODE_LOCATION_CONFLICT = 6;
+    public final static int SUPLA_RESULTCODE_CHANNEL_CONFLICT = 7;
+    public final static int SUPLA_RESULTCODE_DEVICE_DISABLED = 8;
+    public final static int SUPLA_RESULTCODE_ACCESSID_DISABLED = 9;
+    public final static int SUPLA_RESULTCODE_LOCATION_DISABLED = 10;
+    public final static int SUPLA_RESULTCODE_CLIENT_DISABLED = 11;
+    public final static int SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED = 12;
+    public final static int SUPLA_RESULTCODE_DEVICE_LIMITEXCEEDED = 13;
+    public final static int SUPLA_RESULTCODE_GUID_ERROR = 14;
+    public final static int SUPLA_RESULTCODE_HOSTNOTFOUND = 15;
+    public final static int SUPLA_RESULTCODE_CANTCONNECTTOHOST = 16;
+    public final static int SUPLA_RESULTCODE_REGISTRATION_DISABLED = 17;
+    public final static int SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED = 18;
+    public final static int SUPLA_RESULTCODE_AUTHKEY_ERROR = 19;
+    public final static int SUPLA_RESULTCODE_NO_LOCATION_AVAILABLE = 20;
+    public final static int SUPLA_RESULTCODE_USER_CONFLICT = 21;
+    public final static int SUPLA_RESULTCODE_UNAUTHORIZED = 22;
+    public final static int SUPLA_RESULTCODE_AUTHORIZED = 23;
+    public final static int SUPLA_RESULTCODE_NOT_ALLOWED = 24;
+    public final static int SUPLA_RESULTCODE_CHANNELNOTFOUND = 25;
+    public final static int SUPLA_RESULTCODE_UNKNOWN_ERROR = 26;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_BELONG_TO_GROUP = 27;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_HAS_SCHEDULE = 28;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE = 29;
 
-    public final static int SUPLA_CHANNELFNC_NONE                          =  0;
-    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK     = 10;
-    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATE            = 20;
-    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR      = 30;
-    public final static int SUPLA_CHANNELFNC_THERMOMETER                   = 40;
-    public final static int SUPLA_CHANNELFNC_HUMIDITY                      = 42;
-    public final static int SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE        = 45;
-    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY            = 50;
-    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATE               = 60;
-    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR         = 70;
-    public final static int SUPLA_CHANNELFNC_NOLIQUIDSENSOR                = 80;
-    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK        = 90;
-    public final static int SUPLA_CHANNELFNC_OPENSENSOR_DOOR               = 100;
-    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER   = 110;
-    public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER      = 120;
-    public final static int SUPLA_CHANNELFNC_POWERSWITCH                   = 130;
-    public final static int SUPLA_CHANNELFNC_LIGHTSWITCH                   = 140;
-    public final static int SUPLA_CHANNELFNC_RING                          = 150;
-    public final static int SUPLA_CHANNELFNC_ALARM                         = 160;
-    public final static int SUPLA_CHANNELFNC_NOTIFICATION                  = 170;
-    public final static int SUPLA_CHANNELFNC_DIMMER                        = 180;
-    public final static int SUPLA_CHANNELFNC_RGBLIGHTING                   = 190;
-    public final static int SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING          = 200;
-    public final static int SUPLA_CHANNELFNC_DEPTHSENSOR                   = 210;
-    public final static int SUPLA_CHANNELFNC_DISTANCESENSOR                = 220;
-    public final static int SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW          = 230;
-    public final static int SUPLA_CHANNELFNC_MAILSENSOR                    = 240;
-    public final static int SUPLA_CHANNELFNC_WINDSENSOR                    = 250;
-    public final static int SUPLA_CHANNELFNC_PRESSURESENSOR                = 260;
-    public final static int SUPLA_CHANNELFNC_RAINSENSOR                    = 270;
-    public final static int SUPLA_CHANNELFNC_WEIGHTSENSOR                  = 280;
-    public final static int SUPLA_CHANNELFNC_WEATHER_STATION               = 290;
-    public final static int SUPLA_CHANNELFNC_STAIRCASETIMER                = 300;
-    public final static int SUPLA_CHANNELFNC_ELECTRICITY_METER             = 310;
-    public final static int SUPLA_CHANNELFNC_IC_ELECTRICITY_METER          = 315;
-    public final static int SUPLA_CHANNELFNC_IC_GAS_METER                  = 320;
-    public final static int SUPLA_CHANNELFNC_IC_WATER_METER                = 330;
-    public final static int SUPLA_CHANNELFNC_IC_HEAT_METER                 = 340;
-    public final static int SUPLA_CHANNELFNC_THERMOSTAT                    = 400;
-    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS   = 410;
-    public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE               = 500;
-    public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE              = 510;
+    public final static int SUPLA_CHANNELFNC_NONE = 0;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK = 10;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATE = 20;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR = 30;
+    public final static int SUPLA_CHANNELFNC_THERMOMETER = 40;
+    public final static int SUPLA_CHANNELFNC_HUMIDITY = 42;
+    public final static int SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE = 45;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY = 50;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GATE = 60;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR = 70;
+    public final static int SUPLA_CHANNELFNC_NOLIQUIDSENSOR = 80;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK = 90;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_DOOR = 100;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER = 110;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER = 120;
+    public final static int SUPLA_CHANNELFNC_POWERSWITCH = 130;
+    public final static int SUPLA_CHANNELFNC_LIGHTSWITCH = 140;
+    public final static int SUPLA_CHANNELFNC_RING = 150;
+    public final static int SUPLA_CHANNELFNC_ALARM = 160;
+    public final static int SUPLA_CHANNELFNC_NOTIFICATION = 170;
+    public final static int SUPLA_CHANNELFNC_DIMMER = 180;
+    public final static int SUPLA_CHANNELFNC_RGBLIGHTING = 190;
+    public final static int SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING = 200;
+    public final static int SUPLA_CHANNELFNC_DEPTHSENSOR = 210;
+    public final static int SUPLA_CHANNELFNC_DISTANCESENSOR = 220;
+    public final static int SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW = 230;
+    public final static int SUPLA_CHANNELFNC_MAILSENSOR = 240;
+    public final static int SUPLA_CHANNELFNC_WINDSENSOR = 250;
+    public final static int SUPLA_CHANNELFNC_PRESSURESENSOR = 260;
+    public final static int SUPLA_CHANNELFNC_RAINSENSOR = 270;
+    public final static int SUPLA_CHANNELFNC_WEIGHTSENSOR = 280;
+    public final static int SUPLA_CHANNELFNC_WEATHER_STATION = 290;
+    public final static int SUPLA_CHANNELFNC_STAIRCASETIMER = 300;
+    public final static int SUPLA_CHANNELFNC_ELECTRICITY_METER = 310;
+    public final static int SUPLA_CHANNELFNC_IC_ELECTRICITY_METER = 315;
+    public final static int SUPLA_CHANNELFNC_IC_GAS_METER = 320;
+    public final static int SUPLA_CHANNELFNC_IC_WATER_METER = 330;
+    public final static int SUPLA_CHANNELFNC_IC_HEAT_METER = 340;
+    public final static int SUPLA_CHANNELFNC_THERMOSTAT = 400;
+    public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
+    public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
+    public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
 
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0001;
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0002;
@@ -137,54 +138,54 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_RS_AUTOCALIBRATION = 0x00100000;
     public final static int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
 
-    public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK          = 10;
-    public final static int SUPLA_EVENT_CONTROLLINGTHEGATE                 = 20;
-    public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR           = 30;
-    public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK             = 40;
-    public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER        = 50;
-    public final static int SUPLA_EVENT_POWERONOFF                         = 60;
-    public final static int SUPLA_EVENT_LIGHTONOFF                         = 70;
-    public final static int SUPLA_EVENT_VALVEOPENCLOSE                     = 90;
-    public final static int SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED            = 100;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK = 40;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER = 50;
+    public final static int SUPLA_EVENT_POWERONOFF = 60;
+    public final static int SUPLA_EVENT_LIGHTONOFF = 70;
+    public final static int SUPLA_EVENT_VALVEOPENCLOSE = 90;
+    public final static int SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED = 100;
 
-    public final static int SUPLA_DCS_CALL_GETVERSION                      =   10;
-    public final static int SUPLA_SDC_CALL_GETVERSION_RESULT               =   20;
-    public final static int SUPLA_SDC_CALL_VERSIONERROR                    =   30;
-    public final static int SUPLA_DCS_CALL_PING_SERVER                     =   40;
-    public final static int SUPLA_SDC_CALL_PING_SERVER_RESULT              =   50;
-    public final static int SUPLA_DS_CALL_REGISTER_DEVICE                  =   60;
-    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_B                =   65;
-    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_C                =   67;
-    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_D                =   68;
-    public final static int SUPLA_SD_CALL_REGISTER_DEVICE_RESULT           =   70;
-    public final static int SUPLA_CS_CALL_REGISTER_CLIENT                  =   80;
-    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_B                =   85;
-    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_C                =   86;
-    public final static int SUPLA_SC_CALL_REGISTER_CLIENT_RESULT           =   90;
-    public final static int SUPLA_DS_CALL_DEVICE_CHANNEL_VALUE_CHANGED     =   100;
-    public final static int SUPLA_SD_CALL_CHANNEL_SET_VALUE                =   110;
-    public final static int SUPLA_DS_CALL_CHANNEL_SET_VALUE_RESULT         =   120;
-    public final static int SUPLA_SC_CALL_LOCATION_UPDATE                  =   130;
-    public final static int SUPLA_SC_CALL_LOCATIONPACK_UPDATE              =   140;
-    public final static int SUPLA_SC_CALL_CHANNEL_UPDATE                   =   150;
-    public final static int SUPLA_SC_CALL_CHANNELPACK_UPDATE               =   160;
-    public final static int SUPLA_SC_CALL_CHANNEL_VALUE_UPDATE             =   170;
-    public final static int SUPLA_CS_CALL_GET_NEXT                         =   180;
-    public final static int SUPLA_SC_CALL_EVENT                            =   190;
-    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE                =   200;
-    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE_B              =   205;
-    public final static int SUPLA_DCS_CALL_SET_ACTIVITY_TIMEOUT            =   210;
-    public final static int SUPLA_SDC_CALL_SET_ACTIVITY_TIMEOUT_RESULT     =   220;
-    public final static int SUPLA_DS_CALL_GET_FIRMWARE_UPDATE_URL          =   300;
-    public final static int SUPLA_SD_CALL_GET_FIRMWARE_UPDATE_URL_RESULT   =   310;
-    public final static int SUPLA_DCS_CALL_GET_REGISTRATION_ENABLED        =   320;
-    public final static int SUPLA_SDC_CALL_GET_REGISTRATION_ENABLED_RESULT =   330;
-    public final static int SUPLA_CS_CALL_GET_OAUTH_PARAMETERS              =  340;
-    public final static int SUPLA_SC_CALL_GET_OAUTH_PARAMETERS_RESULT       =  350;
+    public final static int SUPLA_DCS_CALL_GETVERSION = 10;
+    public final static int SUPLA_SDC_CALL_GETVERSION_RESULT = 20;
+    public final static int SUPLA_SDC_CALL_VERSIONERROR = 30;
+    public final static int SUPLA_DCS_CALL_PING_SERVER = 40;
+    public final static int SUPLA_SDC_CALL_PING_SERVER_RESULT = 50;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE = 60;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_B = 65;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_C = 67;
+    public final static int SUPLA_DS_CALL_REGISTER_DEVICE_D = 68;
+    public final static int SUPLA_SD_CALL_REGISTER_DEVICE_RESULT = 70;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT = 80;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_B = 85;
+    public final static int SUPLA_CS_CALL_REGISTER_CLIENT_C = 86;
+    public final static int SUPLA_SC_CALL_REGISTER_CLIENT_RESULT = 90;
+    public final static int SUPLA_DS_CALL_DEVICE_CHANNEL_VALUE_CHANGED = 100;
+    public final static int SUPLA_SD_CALL_CHANNEL_SET_VALUE = 110;
+    public final static int SUPLA_DS_CALL_CHANNEL_SET_VALUE_RESULT = 120;
+    public final static int SUPLA_SC_CALL_LOCATION_UPDATE = 130;
+    public final static int SUPLA_SC_CALL_LOCATIONPACK_UPDATE = 140;
+    public final static int SUPLA_SC_CALL_CHANNEL_UPDATE = 150;
+    public final static int SUPLA_SC_CALL_CHANNELPACK_UPDATE = 160;
+    public final static int SUPLA_SC_CALL_CHANNEL_VALUE_UPDATE = 170;
+    public final static int SUPLA_CS_CALL_GET_NEXT = 180;
+    public final static int SUPLA_SC_CALL_EVENT = 190;
+    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE = 200;
+    public final static int SUPLA_CS_CALL_CHANNEL_SET_VALUE_B = 205;
+    public final static int SUPLA_DCS_CALL_SET_ACTIVITY_TIMEOUT = 210;
+    public final static int SUPLA_SDC_CALL_SET_ACTIVITY_TIMEOUT_RESULT = 220;
+    public final static int SUPLA_DS_CALL_GET_FIRMWARE_UPDATE_URL = 300;
+    public final static int SUPLA_SD_CALL_GET_FIRMWARE_UPDATE_URL_RESULT = 310;
+    public final static int SUPLA_DCS_CALL_GET_REGISTRATION_ENABLED = 320;
+    public final static int SUPLA_SDC_CALL_GET_REGISTRATION_ENABLED_RESULT = 330;
+    public final static int SUPLA_CS_CALL_GET_OAUTH_PARAMETERS = 340;
+    public final static int SUPLA_SC_CALL_GET_OAUTH_PARAMETERS_RESULT = 350;
 
-    public final static int SUPLA_RESULT_CALL_NOT_ALLOWED     =  -5;
-    public final static int SUPLA_RESULT_FALSE                =   0;
-    public final static int SUPLA_RESULT_TRUE                 =   1;
+    public final static int SUPLA_RESULT_CALL_NOT_ALLOWED = -5;
+    public final static int SUPLA_RESULT_FALSE = 0;
+    public final static int SUPLA_RESULT_TRUE = 1;
 
     public final static int EM_VAR_FREQ = 0x0001;
     public final static int EM_VAR_VOLTAGE = 0x0002;
@@ -251,118 +252,118 @@ public class SuplaConst {
     public final static int SUPLA_CALCFG_RESULT_DEBUG = 105;
     public final static int SUPLA_CALCFG_RESULT_NOT_SUPPORTED_IN_SLAVE_MODE = 106;
 
-    public static String  getCaption(int func, Context context) {
+    public static String getCaption(int func, Context context) {
 
-            int idx = -1;
+        int idx = -1;
 
-            switch (func) {
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-                    idx = R.string.channel_caption_gatewayopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-                    idx = R.string.channel_caption_gateway;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-                    idx = R.string.channel_caption_gateopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                    idx = R.string.channel_caption_gate;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-                    idx = R.string.channel_caption_garagedooropeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                    idx = R.string.channel_caption_garagedoor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-                    idx = R.string.channel_caption_dooropeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-                    idx = R.string.channel_caption_door;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-                    idx = R.string.channel_caption_rsopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                    idx = R.string.channel_caption_rollershutter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                    idx = R.string.channel_caption_powerswith;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                    idx = R.string.channel_caption_lightswith;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    idx = R.string.channel_caption_thermometer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-                    idx = R.string.channel_caption_humidity;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    idx = R.string.channel_caption_humidityandtemperature;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-                    idx = R.string.channel_caption_windsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-                    idx = R.string.channel_caption_pressuresensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-                    idx = R.string.channel_caption_rainsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-                    idx = R.string.channel_caption_weightsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-                    idx = R.string.channel_caption_noliquidsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                    idx = R.string.channel_caption_dimmer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    idx = R.string.channel_caption_rgblighting;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-                    idx = R.string.channel_caption_dimmerandrgblighting;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-                    idx = R.string.channel_caption_depthsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-                    idx = R.string.channel_caption_distancesensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-                    idx = R.string.channel_caption_windowopeningsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-                    idx = R.string.channel_caption_mailsensor;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-                    idx = R.string.channel_caption_staircasetimer;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                    idx = R.string.channel_caption_electricitymeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                    idx = R.string.channel_caption_gasmeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                    idx = R.string.channel_caption_watermeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-                    idx = R.string.channel_caption_heatmeter;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-                    idx = R.string.channel_caption_thermostat;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                    idx = R.string.channel_caption_thermostat_hp_homeplus;
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-                    idx = R.string.channel_caption_valve;
-                    break;
-            }
+        switch (func) {
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+                idx = R.string.channel_caption_gatewayopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                idx = R.string.channel_caption_gateway;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+                idx = R.string.channel_caption_gateopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                idx = R.string.channel_caption_gate;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+                idx = R.string.channel_caption_garagedooropeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                idx = R.string.channel_caption_garagedoor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+                idx = R.string.channel_caption_dooropeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                idx = R.string.channel_caption_door;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                idx = R.string.channel_caption_rsopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                idx = R.string.channel_caption_rollershutter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                idx = R.string.channel_caption_powerswith;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                idx = R.string.channel_caption_lightswith;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+                idx = R.string.channel_caption_thermometer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
+                idx = R.string.channel_caption_humidity;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+                idx = R.string.channel_caption_humidityandtemperature;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
+                idx = R.string.channel_caption_windsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
+                idx = R.string.channel_caption_pressuresensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
+                idx = R.string.channel_caption_rainsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
+                idx = R.string.channel_caption_weightsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+                idx = R.string.channel_caption_noliquidsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                idx = R.string.channel_caption_dimmer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                idx = R.string.channel_caption_rgblighting;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+                idx = R.string.channel_caption_dimmerandrgblighting;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
+                idx = R.string.channel_caption_depthsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
+                idx = R.string.channel_caption_distancesensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+                idx = R.string.channel_caption_windowopeningsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+                idx = R.string.channel_caption_mailsensor;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                idx = R.string.channel_caption_staircasetimer;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+            case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                idx = R.string.channel_caption_electricitymeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                idx = R.string.channel_caption_gasmeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                idx = R.string.channel_caption_watermeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+                idx = R.string.channel_caption_heatmeter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                idx = R.string.channel_caption_thermostat;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                idx = R.string.channel_caption_thermostat_hp_homeplus;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                idx = R.string.channel_caption_valve;
+                break;
+        }
 
         return idx == -1 || context == null ? "" : context.getResources().getString(idx);
     }
@@ -504,7 +505,7 @@ public class SuplaConst {
     public static int functionBit2functionNumber(int bit) {
 
         if (bit != 0) {
-            switch(bit) {
+            switch (bit) {
                 case SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK:
                     return SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK;
                 case SUPLA_BIT_FUNC_CONTROLLINGTHEGATE:

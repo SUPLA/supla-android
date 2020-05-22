@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/activity_bg"/>
+    <solid android:color="@color/activity_bg" />
 
-    <stroke android:width="1dp"
-        android:color="#12a71e"
-        />
+    <stroke
+        android:width="1dp"
+        android:color="#12a71e" />
 
-    <padding android:left="1dp"
-        android:top="1dp"
-        android:right="1dp"
+    <padding
         android:bottom="1dp"
-        />
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
 
-    <corners android:bottomRightRadius="3dp" android:bottomLeftRadius="3dp"
-        android:topLeftRadius="3dp" android:topRightRadius="3dp"/>
+    <corners
+        android:bottomLeftRadius="3dp"
+        android:bottomRightRadius="3dp"
+        android:topLeftRadius="3dp"
+        android:topRightRadius="3dp" />
 </shape>

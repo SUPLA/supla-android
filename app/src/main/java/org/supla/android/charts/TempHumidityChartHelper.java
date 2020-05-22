@@ -23,13 +23,13 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,10 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
 
     boolean temperatureVisible;
     boolean humidityVisible;
+
+    public TempHumidityChartHelper(Context context) {
+        super(context);
+    }
 
     @Override
     protected Cursor getCursor(DbHelper DBH,
@@ -73,20 +77,16 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
                         SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE));
     }
 
-    public TempHumidityChartHelper(Context context) {
-        super(context);
-    }
-
     public boolean isTemperatureVisible() {
         return temperatureVisible;
     }
 
-    public boolean isHumidityVisible() {
-        return humidityVisible;
-    }
-
     public void setTemperatureVisible(boolean temperatureVisible) {
         this.temperatureVisible = temperatureVisible;
+    }
+
+    public boolean isHumidityVisible() {
+        return humidityVisible;
     }
 
     public void setHumidityVisible(boolean humidityVisible) {

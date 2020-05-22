@@ -20,10 +20,12 @@ package org.supla.android.charts;
 
 import android.content.Context;
 import android.widget.TextView;
+
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
+
 import org.supla.android.R;
 
 public class SuplaMarkerView extends MarkerView {
@@ -55,7 +57,7 @@ public class SuplaMarkerView extends MarkerView {
 
     protected String getTime(Entry e) {
         if (e instanceof PieEntry) {
-            return ((PieEntry)e).getLabel();
+            return ((PieEntry) e).getLabel();
         }
         return helper.getFormattedValue(e.getX(), null);
     }
@@ -65,7 +67,7 @@ public class SuplaMarkerView extends MarkerView {
     }
 
     protected String getValue2(Entry e) {
-        return String.format("%.2f "+getString(helper.getUnit()), e.getY());
+        return String.format("%.2f " + getString(helper.getUnit()), e.getY());
     }
 
     @Override

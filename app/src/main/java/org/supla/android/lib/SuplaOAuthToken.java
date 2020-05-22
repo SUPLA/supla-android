@@ -18,10 +18,7 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context;
 import android.util.Base64;
-
-import org.supla.android.Trace;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,8 +72,8 @@ public class SuplaOAuthToken {
 
         String[] t = Token.split("\\.");
         if (t.length > 1) {
-            byte [] data = Base64.decode(t[t.length-1], Base64.DEFAULT);
-            if (data!=null) {
+            byte[] data = Base64.decode(t[t.length - 1], Base64.DEFAULT);
+            if (data != null) {
                 try {
                     Url = new URL(new String(data));
                 } catch (MalformedURLException e) {
@@ -94,7 +91,7 @@ public class SuplaOAuthToken {
     }
 
     public boolean isAlive() {
-        return Birthday+ExpiresIn - (System.currentTimeMillis() / 1000L) >= 20;
+        return Birthday + ExpiresIn - (System.currentTimeMillis() / 1000L) >= 20;
     }
 
 }
