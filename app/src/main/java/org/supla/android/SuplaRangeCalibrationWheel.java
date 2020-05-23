@@ -16,6 +16,7 @@
 package org.supla.android;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -51,13 +52,12 @@ public class SuplaRangeCalibrationWheel extends View {
     private double btnRad;
     private double lastTouchedDegree;
 
-    private int wheelColor = Color.parseColor("#c6d6ef");
-
-    private int borderColor = Color.parseColor("#4585e8");
-    private int btnColor = Color.parseColor("#4585e8");
-    private int rangeColor = Color.parseColor("#fee618");
-    private int boostLineColor = Color.RED;
-    private int insideBtnColor = Color.WHITE;
+    private int wheelColor = 0xB0ABAB;
+    private int borderColor = 0x575757;
+    private int btnColor = 0x575757;
+    private int rangeColor = 0xFFE617;
+    private int boostLineColor = 0x12A61F;
+    private int insideBtnColor = 0xFFFFFF;
 
     private double maximumValue = 1000;
     private double minimumRange = maximumValue * 0.1;
@@ -101,9 +101,15 @@ public class SuplaRangeCalibrationWheel extends View {
         btnRightCenter = null;
         btnRad = 0;
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        borderLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                1.5F, metrics);
+        Resources res = getResources();
+        if (res == null) {
+            borderLineWidth = (float) 1.5;
+        } else {
+            DisplayMetrics metrics = res.getDisplayMetrics();
+            borderLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    1.5F, metrics);
+        }
+
     }
 
     public double getMaximumValue() {
@@ -150,21 +156,17 @@ public class SuplaRangeCalibrationWheel extends View {
                 setLeftEdge(getRightEdge() - minimumRange);
             } else {
                 setLeftEdge(getLeftEdge() - diff);
-                setRightEdge(getRightEdge() + diff);
             }
         }
 
         if (minimumRange > getMaximum() - getMinimum()) {
             double diff = (minimumRange - (getMaximum() - getMinimum())) / 2;
             if (getMinimum() - diff < getLeftEdge()) {
-                setMinimum(getLeftEdge());
-                setMaximum(getMinimum() + minimumRange);
+                setMinMax(getLeftEdge(), getMinimum() + minimumRange);
             } else if (getMaximum() + diff > getRightEdge()) {
-                setMaximum(getRightEdge());
-                setMinimum(getMaximum() - minimumRange);
+                setMinMax(getMaximum() - minimumRange, getRightEdge());
             } else {
-                setMinimum(getMinimum() - diff);
-                setMaximum(getMaximum() + diff);
+                setMinMax(getMinimum() - diff, getMaximum() + diff);
             }
         }
     }
@@ -178,13 +180,12 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMinimum(double minimum, boolean inv) {
+        if (minimum + getMinimumRange() > getMaximum()) {
+            minimum = getMaximum() - getMinimumRange();
+        }
 
         if (minimum < getLeftEdge()) {
             minimum = getLeftEdge();
-        }
-
-        if (minimum + getMinimumRange() > getMaximum()) {
-            minimum = getMaximum() - getMinimumRange();
         }
 
         this.minimum = minimum;
@@ -208,17 +209,12 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     private void setMaximum(double maximum, boolean inv) {
-
-        if (maximum > getRightEdge()) {
-            maximum = getRightEdge();
-        }
-
         if (getMinimum() + getMinimumRange() > maximum) {
             maximum = getMinimum() + getMinimumRange();
         }
 
-        if (maximum > rightEdge) {
-            maximum = rightEdge;
+        if (maximum > getRightEdge()) {
+            maximum = getRightEdge();
         }
 
         this.maximum = maximum;
