@@ -140,19 +140,19 @@ public class SuplaRangeCalibrationWheelTest extends TestCase {
         Assert.assertEquals(450, calibrationWheel.getMinimum(), 0);
         Assert.assertEquals(650, calibrationWheel.getMaximum(), 0);
 
-        Assert.assertTrue(calibrationWheel.getRightEdge()-calibrationWheel.getLeftEdge()
+        Assert.assertTrue(calibrationWheel.getRightEdge() - calibrationWheel.getLeftEdge()
                 >= calibrationWheel.getMinimumRange());
 
-        Assert.assertTrue(calibrationWheel.getRightEdge()-calibrationWheel.getLeftEdge()
+        Assert.assertTrue(calibrationWheel.getRightEdge() - calibrationWheel.getLeftEdge()
                 <= calibrationWheel.getMaximumValue());
 
-        Assert.assertTrue(calibrationWheel.getMaximum()-calibrationWheel.getMinimum()
+        Assert.assertTrue(calibrationWheel.getMaximum() - calibrationWheel.getMinimum()
                 >= calibrationWheel.getMinimumRange());
 
-        Assert.assertTrue(calibrationWheel.getMaximum()-calibrationWheel.getMinimum()
+        Assert.assertTrue(calibrationWheel.getMaximum() - calibrationWheel.getMinimum()
                 <= calibrationWheel.getMaximumValue());
 
-        calibrationWheel.setMinimumRange(calibrationWheel.getMaximumValue()+1);
+        calibrationWheel.setMinimumRange(calibrationWheel.getMaximumValue() + 1);
 
         Assert.assertEquals(calibrationWheel.getMaximumValue(),
                 calibrationWheel.getMinimumRange(), 0);
@@ -182,42 +182,178 @@ public class SuplaRangeCalibrationWheelTest extends TestCase {
         Assert.assertEquals(100, calibrationWheel.getLeftEdge(), 0);
         Assert.assertEquals(900, calibrationWheel.getRightEdge(), 0);
 
-        Assert.assertTrue(calibrationWheel.getMaximum()-calibrationWheel.getMinimum()
+        Assert.assertTrue(calibrationWheel.getMaximum() - calibrationWheel.getMinimum()
                 >= calibrationWheel.getMinimumRange());
-        Assert.assertTrue(calibrationWheel.getMaximum()-calibrationWheel.getMinimum()
+        Assert.assertTrue(calibrationWheel.getMaximum() - calibrationWheel.getMinimum()
                 <= calibrationWheel.getMaximumValue());
     }
 
     @Test
     public void testNumberOfTurnsSetterAndGetter() {
-
+        Assert.assertEquals(5, calibrationWheel.getNumerOfTurns(), 0);
+        calibrationWheel.setNumerOfTurns(0);
+        Assert.assertEquals(1, calibrationWheel.getNumerOfTurns(), 0);
+        calibrationWheel.setNumerOfTurns(10);
+        Assert.assertEquals(10, calibrationWheel.getNumerOfTurns(), 0);
     }
 
     public void testMinimumSetterAndGetter() {
+        Assert.assertEquals(calibrationWheel.getLeftEdge(), calibrationWheel.getMinimum(), 0);
+        calibrationWheel.setMinimum(300);
+        calibrationWheel.setMaximum(600);
 
+        Assert.assertEquals(300, calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(600, calibrationWheel.getMaximum(), 0);
+
+        calibrationWheel.setMinimum(1000);
+
+        Assert.assertEquals(
+                calibrationWheel.getMaximum() - calibrationWheel.getMinimumRange(),
+                calibrationWheel.getMinimum(), 0);
+
+        calibrationWheel.setLeftEdge(200);
+        calibrationWheel.setMinimum(-10);
+
+        Assert.assertEquals(calibrationWheel.getLeftEdge(), calibrationWheel.getMinimum(), 0);
+
+        calibrationWheel.setLeftEdge(0);
+        calibrationWheel.setMinimum(-10);
+
+        Assert.assertEquals(0, calibrationWheel.getMinimum(), 0);
     }
 
     public void testMaximumSetterAndGetter() {
+        Assert.assertEquals(calibrationWheel.getRightEdge(), calibrationWheel.getMaximum(), 0);
 
+        calibrationWheel.setMinimum(300);
+        calibrationWheel.setMaximum(600);
+        calibrationWheel.setRightEdge(700);
+        calibrationWheel.setMaximum(calibrationWheel.getRightEdge() + 10);
+
+        Assert.assertEquals(calibrationWheel.getRightEdge(), calibrationWheel.getMaximum(), 0);
+
+        calibrationWheel.setMaximum(0);
+
+        Assert.assertEquals(
+                calibrationWheel.getMinimum() + calibrationWheel.getMinimumRange(),
+                calibrationWheel.getMaximum(), 0);
+
+        calibrationWheel.setMaximum(800);
+
+        Assert.assertEquals(calibrationWheel.getRightEdge(), calibrationWheel.getMaximum(), 0);
     }
 
     public void testLeftEdgeSetterAndGetter() {
+        Assert.assertEquals(0, calibrationWheel.getLeftEdge(), 0);
 
+        calibrationWheel.setLeftEdge(100);
+        calibrationWheel.setRightEdge(300);
+        calibrationWheel.setMinimum(100);
+        calibrationWheel.setMaximum(300);
+        calibrationWheel.setMinimumRange(200);
+
+        Assert.assertEquals(100, calibrationWheel.getLeftEdge(), 0);
+        Assert.assertEquals(300, calibrationWheel.getRightEdge(), 0);
+        Assert.assertEquals(100, calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(300, calibrationWheel.getMaximum(), 0);
+        Assert.assertEquals(200, calibrationWheel.getMinimumRange(), 0);
+
+        calibrationWheel.setLeftEdge(200);
+
+        Assert.assertEquals(200, calibrationWheel.getLeftEdge(), 0);
+        Assert.assertEquals(400, calibrationWheel.getRightEdge(), 0);
+        Assert.assertEquals(200, calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(400, calibrationWheel.getMaximum(), 0);
+
+        calibrationWheel.setLeftEdge(calibrationWheel.getMaximumValue() + 10);
+
+        Assert.assertEquals(
+                calibrationWheel.getMaximumValue() - calibrationWheel.getMinimumRange(),
+                calibrationWheel.getLeftEdge(), 0);
+
+        Assert.assertEquals(calibrationWheel.getMaximumValue(),
+                calibrationWheel.getRightEdge(), 0);
+        Assert.assertEquals(calibrationWheel.getLeftEdge(), calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(calibrationWheel.getRightEdge(), calibrationWheel.getMaximum(), 0);
+
+        calibrationWheel.setLeftEdge(-10);
+
+        Assert.assertEquals(0, calibrationWheel.getLeftEdge(), 0);
     }
 
     public void testRightEdgeSetterAndGetter() {
+        Assert.assertEquals(calibrationWheel.getMaximumValue(),
+                calibrationWheel.getRightEdge(), 0);
 
+        calibrationWheel.setLeftEdge(100);
+        calibrationWheel.setRightEdge(300);
+        calibrationWheel.setMinimum(100);
+        calibrationWheel.setMaximum(300);
+        calibrationWheel.setMinimumRange(200);
+
+        Assert.assertEquals(100, calibrationWheel.getLeftEdge(), 0);
+        Assert.assertEquals(300, calibrationWheel.getRightEdge(), 0);
+        Assert.assertEquals(100, calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(300, calibrationWheel.getMaximum(), 0);
+        Assert.assertEquals(200, calibrationWheel.getMinimumRange(), 0);
+
+        calibrationWheel.setRightEdge(calibrationWheel.getMaximumValue() + 10);
+
+        Assert.assertEquals(calibrationWheel.getMaximumValue(),
+                calibrationWheel.getRightEdge(), 0);
+
+        Assert.assertEquals(100, calibrationWheel.getLeftEdge(), 0);
+
+        calibrationWheel.setRightEdge(-10);
+
+        Assert.assertEquals(calibrationWheel.getMinimumRange(),
+                calibrationWheel.getRightEdge(), 0);
+        Assert.assertEquals(0, calibrationWheel.getLeftEdge(), 0);
+        Assert.assertEquals(calibrationWheel.getLeftEdge(),
+                calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(calibrationWheel.getRightEdge(),
+                calibrationWheel.getMaximum(), 0);
     }
 
     public void testBoostLevelSetterAndGetter() {
+        Assert.assertEquals(0, calibrationWheel.getLeftEdge(), 0);
+        Assert.assertEquals(0, calibrationWheel.getMinimum(), 0);
+        Assert.assertEquals(0, calibrationWheel.getBoostLevel(), 0);
 
+        calibrationWheel.setLeftEdge(400);
+
+        Assert.assertEquals(400, calibrationWheel.getBoostLevel(), 0);
+
+        calibrationWheel.setLeftEdge(400);
+
+        Assert.assertEquals(400, calibrationWheel.getBoostLevel(), 0);
+
+        calibrationWheel.setRightEdge(0);
+
+        Assert.assertEquals(100, calibrationWheel.getBoostLevel(), 0);
+
+        calibrationWheel.setBoostLevel(-1);
+
+        Assert.assertEquals(0, calibrationWheel.getBoostLevel(), 0);
+
+        calibrationWheel.setBoostLevel(200);
+
+        Assert.assertEquals(100, calibrationWheel.getBoostLevel(), 0);
     }
 
     public void testBoostHiddenSetterAndGetter() {
-
+        Assert.assertFalse(calibrationWheel.isBoostVisible());
+        calibrationWheel.setBoostVisible(true);
+        Assert.assertTrue(calibrationWheel.isBoostVisible());
     }
 
     public void testBoostLineHeightSetterAndGetter() {
-
+        Assert.assertEquals(1.8, calibrationWheel.getBoostLineHeightFactor(), 0.01);
+        calibrationWheel.setBoostLineHeightFactor(0);
+        Assert.assertEquals(1.8, calibrationWheel.getBoostLineHeightFactor(), 0.01);
+        calibrationWheel.setBoostLineHeightFactor(1.1);
+        Assert.assertEquals(1.1, calibrationWheel.getBoostLineHeightFactor(), 0.01);
+        calibrationWheel.setBoostLineHeightFactor(2.1);
+        Assert.assertEquals(1.1, calibrationWheel.getBoostLineHeightFactor(), 0.01);
     }
 }

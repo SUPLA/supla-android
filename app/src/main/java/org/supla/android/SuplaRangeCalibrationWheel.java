@@ -18,7 +18,6 @@ package org.supla.android;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -68,6 +67,7 @@ public class SuplaRangeCalibrationWheel extends View {
     private double rightEdge = maximumValue;
     private double boostLevel = 0;
     private boolean boostVisible = false;
+    private double boostLineHeightFactor = 1.8;
 
     private OnChangeListener onChangeListener = null;
 
@@ -176,6 +176,9 @@ public class SuplaRangeCalibrationWheel extends View {
     }
 
     public void setNumerOfTurns(double numerOfTurns) {
+        if (numerOfTurns < 1) {
+            numerOfTurns = 1;
+        }
         this.numerOfTurns = numerOfTurns;
     }
 
@@ -420,9 +423,13 @@ public class SuplaRangeCalibrationWheel extends View {
             } else {
                 vleft += borderLineWidth;
             }
+
+            float hh = ((bottom - top) + borderLineWidth * 2.0f)
+                    * (float)boostLineHeightFactor / 2.0f;
+
             paint.setColor(boostLineColor);
-            canvas.drawLine(vleft, top - borderLineWidth,
-                    vleft, bottom + borderLineWidth, paint);
+            canvas.drawLine(vleft, btnLeftCenter.y - hh ,
+                    vleft, btnLeftCenter.y + hh, paint);
         }
     }
 
@@ -618,6 +625,16 @@ public class SuplaRangeCalibrationWheel extends View {
     public void setBoostLineColor(int boostLineColor) {
         this.boostLineColor = boostLineColor;
         invalidate();
+    }
+
+    public double getBoostLineHeightFactor() {
+        return boostLineHeightFactor;
+    }
+
+    public void setBoostLineHeightFactor(double boostLineHeightFactor) {
+        if (boostLineHeightFactor > 0 && boostLineHeightFactor <= 2) {
+            this.boostLineHeightFactor = boostLineHeightFactor;
+        }
     }
 
     public int getInsideBtnColor() {
