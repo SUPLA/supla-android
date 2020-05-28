@@ -23,7 +23,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -37,6 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThermostatChartHelper extends ChartHelper {
+
+    public ThermostatChartHelper(Context context) {
+        super(context);
+    }
 
     @Override
     protected Cursor getCursor(DbHelper DBH,
@@ -68,10 +71,6 @@ public class ThermostatChartHelper extends ChartHelper {
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP));
-    }
-
-    public ThermostatChartHelper(Context context) {
-        super(context);
     }
 
     @Override

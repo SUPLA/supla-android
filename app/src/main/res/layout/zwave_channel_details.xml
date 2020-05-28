@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menubar">
@@ -33,9 +32,9 @@
         android:id="@+id/ll_channel_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/zwave_info_table_separator"
         android:layout_below="@+id/tv_channel_detail_description"
         android:layout_marginTop="20dp"
+        android:background="@color/zwave_info_table_separator"
         android:orientation="vertical">
 
         <LinearLayout
@@ -182,7 +181,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
     </LinearLayout>
 
     <LinearLayout

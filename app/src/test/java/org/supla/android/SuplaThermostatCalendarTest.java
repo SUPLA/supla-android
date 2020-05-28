@@ -22,8 +22,6 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class SuplaThermostatCalendarTest extends TestCase {
     SuplaThermostatCalendar calendar;
 
@@ -34,7 +32,7 @@ public class SuplaThermostatCalendarTest extends TestCase {
 
     @Test
     public void testSettingFirtsDay() {
-        for(short a=1;a<=7;a++) {
+        for (short a = 1; a <= 7; a++) {
             calendar.setFirtsDay(a);
             Assert.assertEquals(a, calendar.getFirtsDay());
         }
@@ -49,10 +47,10 @@ public class SuplaThermostatCalendarTest extends TestCase {
     public void testGettingDayOffset() {
 
         {
-            int d[] = { 1, 2, 3, 4, 5, 6, 7 };
+            int d[] = {1, 2, 3, 4, 5, 6, 7};
 
-            for(short a=1;a<=7;a++) {
-                Assert.assertEquals(d[a-1], calendar.dayWithOffset(a));
+            for (short a = 1; a <= 7; a++) {
+                Assert.assertEquals(d[a - 1], calendar.dayWithOffset(a));
             }
         }
 
@@ -60,20 +58,20 @@ public class SuplaThermostatCalendarTest extends TestCase {
         calendar.setFirtsDay(2);
 
         {
-            int d[] = { 2, 3, 4, 5, 6, 7, 1 };
+            int d[] = {2, 3, 4, 5, 6, 7, 1};
 
-            for(short a=1;a<=7;a++) {
-                Assert.assertEquals(d[a-1], calendar.dayWithOffset(a));
+            for (short a = 1; a <= 7; a++) {
+                Assert.assertEquals(d[a - 1], calendar.dayWithOffset(a));
             }
         }
 
         calendar.setFirtsDay(7);
 
         {
-            int d[] = { 7, 1, 2, 3, 4, 5, 6 };
+            int d[] = {7, 1, 2, 3, 4, 5, 6};
 
-            for(short a=1;a<=7;a++) {
-                Assert.assertEquals(d[a-1], calendar.dayWithOffset(a));
+            for (short a = 1; a <= 7; a++) {
+                Assert.assertEquals(d[a - 1], calendar.dayWithOffset(a));
             }
         }
 
@@ -82,10 +80,10 @@ public class SuplaThermostatCalendarTest extends TestCase {
     @Test
     public void testSettingHourProgramTo1() {
 
-        short d,h;
+        short d, h;
 
-        for(d=1;d<=7;d++) {
-            for(h=0;h<24;h++) {
+        for (d = 1; d <= 7; d++) {
+            for (h = 0; h < 24; h++) {
                 Assert.assertEquals(false, calendar.isHourProgramIsSetTo1(d, h));
                 calendar.setHourProgramTo1(d, h, true);
                 Assert.assertEquals(true, calendar.isHourProgramIsSetTo1(d, h));

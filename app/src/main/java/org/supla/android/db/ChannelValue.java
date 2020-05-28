@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
-import org.supla.android.Trace;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -45,20 +44,16 @@ public class ChannelValue extends DbItem {
         return !Arrays.equals(v1, v2);
     }
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
-    }
-
     public int getChannelId() {
         return ChannelId;
     }
 
-    byte[] getChannelValue() {
-        return Value.clone();
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
-    String getChannelStringValue() {
-        return Base64.encodeToString(Value, Base64.DEFAULT);
+    byte[] getChannelValue() {
+        return Value.clone();
     }
 
     void setChannelValue(byte[] value) {
@@ -66,6 +61,10 @@ public class ChannelValue extends DbItem {
                 || value.length == SuplaConst.SUPLA_CHANNELVALUE_SIZE
                 || value.length == 0)
             Value = value;
+    }
+
+    String getChannelStringValue() {
+        return Base64.encodeToString(Value, Base64.DEFAULT);
     }
 
     void setChannelStringValue(String value) {
@@ -76,15 +75,15 @@ public class ChannelValue extends DbItem {
         return SubValue;
     }
 
-    String getChannelStringSubValue() {
-        return Base64.encodeToString(SubValue, Base64.DEFAULT);
-    }
-
     void setChannelSubValue(byte[] value) {
         if (value == null
                 || value.length == SuplaConst.SUPLA_CHANNELVALUE_SIZE
                 || value.length == 0)
             SubValue = value;
+    }
+
+    String getChannelStringSubValue() {
+        return Base64.encodeToString(SubValue, Base64.DEFAULT);
     }
 
     void setChannelStringSubValue(String value) {
@@ -136,14 +135,13 @@ public class ChannelValue extends DbItem {
         return ValueDiff(channelValue.Value, Value) || ValueDiff(channelValue.SubValue, SubValue);
     }
 
-    public void setOnLine(boolean onLine) {
-        OnLine = onLine;
-    }
-
     public boolean getOnLine() {
         return OnLine;
     }
 
+    public void setOnLine(boolean onLine) {
+        OnLine = onLine;
+    }
 
     public double getDouble(double unknown) {
 
@@ -208,13 +206,13 @@ public class ChannelValue extends DbItem {
 
                 return getDouble(-275);
             } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ) {
+                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
 
                 byte[] t = getChannelValue();
                 if (t.length >= 4) {
-                    int x = (int)t[3] & 0xFF;
-                    x<<=8;
-                    x|=(int)t[2] & 0xFF;
+                    int x = (int) t[3] & 0xFF;
+                    x <<= 8;
+                    x |= (int) t[2] & 0xFF;
 
                     return x * 0.01;
                 }
@@ -233,13 +231,13 @@ public class ChannelValue extends DbItem {
     public double getPresetTemp(int func) {
         if (Value != null) {
             if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ) {
+                    || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
 
                 byte[] t = getChannelValue();
                 if (t.length >= 6) {
-                    int x = (int)t[5] & 0xFF;
-                    x<<=8;
-                    x|=(int)t[4] & 0xFF;
+                    int x = (int) t[5] & 0xFF;
+                    x <<= 8;
+                    x |= (int) t[4] & 0xFF;
 
                     return x * 0.01;
                 }
@@ -321,13 +319,13 @@ public class ChannelValue extends DbItem {
         byte result = 0;
 
         byte[] sub_value = getChannelSubValue();
-        if ( sub_value.length > 0
-                && sub_value[0] == 1 ) {
+        if (sub_value.length > 0
+                && sub_value[0] == 1) {
             result = 0x1;
         }
 
-        if ( sub_value.length > 1
-                && sub_value[1] == 1 ) {
+        if (sub_value.length > 1
+                && sub_value[1] == 1) {
             result |= 0x2;
         }
 
@@ -359,8 +357,8 @@ public class ChannelValue extends DbItem {
 
             byte[] i = new byte[8];
 
-            for(int a=0;a<8;a++) {
-                i[a] = t[7-a];
+            for (int a = 0; a < 8; a++) {
+                i[a] = t[7 - a];
             }
 
             return ByteBuffer.wrap(i).getLong();

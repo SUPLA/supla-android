@@ -42,18 +42,20 @@ public class Channel extends ChannelBase {
         return getRemoteId();
     }
 
-    public int getType() { return Type; }
+    public int getType() {
+        return Type;
+    }
 
     public void setType(int type) {
         Type = type;
     }
 
-    public void setProtocolVersion(int protocolVersion) {
-        ProtocolVersion = protocolVersion;
-    }
-
     public int getProtocolVersion() {
         return ProtocolVersion;
+    }
+
+    public void setProtocolVersion(int protocolVersion) {
+        ProtocolVersion = protocolVersion;
     }
 
     public short getManufacturerID() {
@@ -84,14 +86,6 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getOnLine() ? 100 : 0;
     }
 
-    public void setValue(ChannelValue value) {
-        Value = value;
-    }
-
-    public void setExtendedValue(ChannelExtendedValue extendedValue) {
-        ExtendedValue = extendedValue;
-    }
-
     public ChannelValue getValue() {
 
         if (Value == null)
@@ -100,8 +94,16 @@ public class Channel extends ChannelBase {
         return Value;
     }
 
+    public void setValue(ChannelValue value) {
+        Value = value;
+    }
+
     public ChannelExtendedValue getExtendedValue() {
         return ExtendedValue;
+    }
+
+    public void setExtendedValue(ChannelExtendedValue extendedValue) {
+        ExtendedValue = extendedValue;
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -291,8 +293,8 @@ public class Channel extends ChannelBase {
         // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
             return getOnLine() ?
-                    String.format("%.1f "+getUnit(), value.getImpulseCounterCalculatedValue()) :
-                    "--- "+getUnit();
+                    String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue()) :
+                    "--- " + getUnit();
         }
 
         return super.getHumanReadableValue(whichOne, value);
@@ -301,6 +303,7 @@ public class Channel extends ChannelBase {
     public CharSequence getHumanReadableValue(WhichOne whichOne) {
         return getHumanReadableValue(whichOne, Value);
     }
+
     public CharSequence getHumanReadableValue() {
         return getHumanReadableValue(WhichOne.First, Value);
     }
@@ -319,7 +322,7 @@ public class Channel extends ChannelBase {
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
-                return getValue().isManuallyClosed()|| getValue().flooding() ? 2 : 0;
+                return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
         }
         return 0;
     }

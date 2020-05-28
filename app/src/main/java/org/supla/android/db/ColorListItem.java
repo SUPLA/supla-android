@@ -37,9 +37,13 @@ public class ColorListItem extends DbItem {
         RemoteId = remoteId;
     }
 
-    public boolean getGroup() { return Group; }
+    public boolean getGroup() {
+        return Group;
+    }
 
-    public void setGroup(boolean group) { Group = group; }
+    public void setGroup(boolean group) {
+        Group = group;
+    }
 
     public int getIdx() {
         return Idx;

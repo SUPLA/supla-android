@@ -17,6 +17,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
+    private final static int VL_MSG_RESTORE_DEFAULTS = 0x4E;
+    private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
+    private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
+    private final static int VL_MSG_CONFIGURATION_QUERY = 0x15;
+    private final static int VL_MSG_CONFIGURATION_REPORT = 0x51;
+    private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
+    private final static int VL_MSG_SET_MODE = 0x58;
+    private final static int VL_MSG_SET_MINIMUM = 0x59;
+    private final static int VL_MSG_SET_MAXIMUM = 0x5A;
+    private final static int VL_MSG_SET_BOOST = 0x5B;
+    private final static int VL_MSG_SET_BOOST_LEVEL = 0x5C;
+    private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
+    private final static int UI_REFRESH_LOCK_TIME = 2000;
+    private final static int MIN_SEND_DELAY_TIME = 500;
+    private final static int DISPLAY_DELAY_TIME = 1000;
     private ChannelDetailRGB detailRGB;
     private Button btnOK;
     private Button btnRestore;
@@ -37,54 +52,16 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private boolean configStarted = false;
     private VLCfgParameters cfgParameters;
     private int mColorDisabled;
-
-    private final static int VL_MSG_RESTORE_DEFAULTS = 0x4E;
-    private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
-    private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
-    private final static int VL_MSG_CONFIGURATION_QUERY = 0x15;
-    private final static int VL_MSG_CONFIGURATION_REPORT = 0x51;
-    private final static int VL_MSG_CONFIG_COMPLETE = 0x46;
-    private final static int VL_MSG_SET_MODE = 0x58;
-    private final static int VL_MSG_SET_MINIMUM = 0x59;
-    private final static int VL_MSG_SET_MAXIMUM = 0x5A;
-    private final static int VL_MSG_SET_BOOST = 0x5B;
-    private final static int VL_MSG_SET_BOOST_LEVEL = 0x5C;
-    private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
-
-    private final static int UI_REFRESH_LOCK_TIME = 2000;
-    private final static int MIN_SEND_DELAY_TIME = 500;
-    private final static int DISPLAY_DELAY_TIME = 1000;
-
     private Timer delayTimer1 = null;
     private Timer delayTimer2 = null;
 
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
 
-    class DisplayDelayedTask extends TimerTask {
-        private int msg;
-
-        DisplayDelayedTask(int msg) {
-            this.msg = msg;
-        }
-
-        @Override
-        public void run() {
-            if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
-                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        calCfgDelayed(msg);
-                    }
-                });
-            }
-        }
-    }
-
     public VLCalibrationTool(ChannelDetailRGB detailRGB) {
 
         this.detailRGB = detailRGB;
-        mainView = (RelativeLayout)detailRGB.inflateLayout(R.layout.vl_calibration);
+        mainView = (RelativeLayout) detailRGB.inflateLayout(R.layout.vl_calibration);
         mainView.setVisibility(View.GONE);
         detailRGB.addView(mainView);
 
@@ -110,13 +87,13 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void registerMessageHandler() {
-        if ( _sc_msg_handler != null)
+        if (_sc_msg_handler != null)
             return;
 
         _sc_msg_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
+                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onCalCfgResult
                         && detailRGB != null
@@ -131,7 +108,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void unregisterMessageHandler() {
-        if ( _sc_msg_handler != null ) {
+        if (_sc_msg_handler != null) {
             SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
             _sc_msg_handler = null;
         }
@@ -219,7 +196,6 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         btn.setBackgroundResource(resid);
         btn.setTextColor(textColor);
     }
-
 
     private void setMode(int mode) {
 
@@ -314,7 +290,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void displayCfgParameters(boolean force) {
-        if (delayTimer2!=null) {
+        if (delayTimer2 != null) {
             delayTimer2.cancel();
             delayTimer2 = null;
         }
@@ -358,11 +334,11 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void LockUIrefresh() {
-        uiRefreshLockTime = System.currentTimeMillis()+UI_REFRESH_LOCK_TIME;
+        uiRefreshLockTime = System.currentTimeMillis() + UI_REFRESH_LOCK_TIME;
     }
 
     private void calCfgRequest(int cmd, Byte bdata, Short sdata) {
-        if (detailRGB ==null) {
+        if (detailRGB == null) {
             return;
         }
 
@@ -422,13 +398,13 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         int mode = viewToMode(v);
         if (mode != VLCfgParameters.MODE_UNKNOWN) {
             setMode(mode);
-            calCfgRequest(VL_MSG_SET_MODE, (byte)(mode & 0xFF), null);
+            calCfgRequest(VL_MSG_SET_MODE, (byte) (mode & 0xFF), null);
         }
 
         int boost = viewToBoost(v);
         if (boost != VLCfgParameters.BOOST_UNKNOWN) {
             setBoost(boost);
-            calCfgRequest(VL_MSG_SET_BOOST, (byte)(boost & 0xFF), null);
+            calCfgRequest(VL_MSG_SET_BOOST, (byte) (boost & 0xFF), null);
 
             if (boost == VLCfgParameters.BOOST_YES) {
                 onBoostChanged(calibrationWheel);
@@ -443,7 +419,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     public void Show() {
-        if (authDialog!=null) {
+        if (authDialog != null) {
             authDialog.close();
             authDialog = null;
         }
@@ -475,7 +451,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void calCfgDelayed(int msg) {
-        if (delayTimer1!=null) {
+        if (delayTimer1 != null) {
             delayTimer1.cancel();
             delayTimer1 = null;
         }
@@ -484,15 +460,15 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
             switch (msg) {
                 case VL_MSG_SET_MINIMUM:
                     calCfgRequest(msg, null,
-                            new Short((short)calibrationWheel.getMinimum()));
+                            new Short((short) calibrationWheel.getMinimum()));
                     break;
                 case VL_MSG_SET_MAXIMUM:
                     calCfgRequest(msg, null,
-                            new Short((short)calibrationWheel.getMaximum()));
+                            new Short((short) calibrationWheel.getMaximum()));
                     break;
                 case VL_MSG_SET_BOOST_LEVEL:
                     calCfgRequest(msg, null,
-                            new Short((short)calibrationWheel.getBoostLevel()));
+                            new Short((short) calibrationWheel.getBoostLevel()));
                     break;
                 default:
                     calCfgRequest(msg);
@@ -513,7 +489,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
             delayTimer1.schedule(new DisplayDelayedTask(msg), delayTime, 1000);
         }
-        
+
     }
 
     @Override
@@ -526,5 +502,25 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     public void onBoostChanged(SuplaRangeCalibrationWheel calibrationWheel) {
         LockUIrefresh();
         calCfgDelayed(VL_MSG_SET_BOOST_LEVEL);
+    }
+
+    class DisplayDelayedTask extends TimerTask {
+        private int msg;
+
+        DisplayDelayedTask(int msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public void run() {
+            if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
+                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        calCfgDelayed(msg);
+                    }
+                });
+            }
+        }
     }
 }

@@ -29,12 +29,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
 
-    public interface OnAuthorizarionResultListener {
-        void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
-                                              boolean Success, int Code);
-        void authorizationCanceled();
-    }
-
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -69,7 +63,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     private void registerMessageHandler() {
-        if ( _sc_msg_handler != null )
+        if (_sc_msg_handler != null)
             return;
 
         final SuperuserAuthorizationDialog dialog = this;
@@ -77,10 +71,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         _sc_msg_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
+                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
-                    if (onAuthorizarionResultListener!= null) {
+                    if (onAuthorizarionResultListener != null) {
                         onAuthorizarionResultListener
                                 .onSuperuserOnAuthorizarionResult(dialog,
                                         _msg.isSuccess(), _msg.getCode());
@@ -88,7 +82,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                     if (!_msg.isSuccess()) {
 
-                        switch(_msg.getCode()) {
+                        switch (_msg.getCode()) {
                             case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
                                 ShowError(R.string.status_bad_credentials);
                                 break;
@@ -140,7 +134,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     private void unregisterMessageHandler() {
-        if ( _sc_msg_handler != null ) {
+        if (_sc_msg_handler != null) {
             SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
             _sc_msg_handler = null;
         }
@@ -150,7 +144,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     public void onCancel(DialogInterface dialogInterface) {
         unregisterMessageHandler();
 
-        if (onAuthorizarionResultListener!= null) {
+        if (onAuthorizarionResultListener != null) {
             onAuthorizarionResultListener.authorizationCanceled();
         }
     }
@@ -173,5 +167,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public interface OnAuthorizarionResultListener {
+        void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                              boolean Success, int Code);
+
+        void authorizationCanceled();
     }
 }

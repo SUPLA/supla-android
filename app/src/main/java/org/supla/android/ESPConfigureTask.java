@@ -34,27 +34,13 @@ import java.util.regex.Pattern;
 
 public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTask.ConfigResult> {
 
-    public static final int RESULT_PARAM_ERROR   = -3;
-    public static final int RESULT_COMPAT_ERROR  = -2;
-    public static final int RESULT_CONN_ERROR    = -1;
-    public static final int RESULT_FAILED        =  0;
-    public static final int RESULT_SUCCESS       =  1;
+    public static final int RESULT_PARAM_ERROR = -3;
+    public static final int RESULT_COMPAT_ERROR = -2;
+    public static final int RESULT_CONN_ERROR = -1;
+    public static final int RESULT_FAILED = 0;
+    public static final int RESULT_SUCCESS = 1;
 
     private AsyncResponse delegate;
-
-    public interface AsyncResponse {
-        void espConfigFinished(ConfigResult result);
-    }
-
-    public class ConfigResult {
-        int resultCode;
-
-        String deviceName;
-        String deviceLastState;
-        String deviceFirmwareVersion;
-        String deviceGUID;
-        String deviceMAC;
-    }
 
     public void setDelegate(AsyncResponse delegate) {
         this.delegate = delegate;
@@ -65,10 +51,10 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
         ConfigResult result = new ConfigResult();
 
-        if ( params.length != 4
+        if (params.length != 4
                 || params[0].isEmpty()
                 || params[2].isEmpty()
-                || params[3].isEmpty() ) {
+                || params[3].isEmpty()) {
 
             result.resultCode = RESULT_PARAM_ERROR;
             return result;
@@ -77,7 +63,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         int retryCount = 10;
         Map<String, String> fieldMap = new HashMap<>();
 
-        while(retryCount > 0)
+        while (retryCount > 0)
             try {
 
                 Thread.sleep(1500);
@@ -85,7 +71,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
                 Elements inputs = doc.getElementsByTag("input");
 
-                if ( inputs != null ) {
+                if (inputs != null) {
                     for (Element element : inputs) {
                         fieldMap.put(element.attr("name"), element.val());
                     }
@@ -93,34 +79,34 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
                 Elements sel = doc.getElementsByTag("select");
 
-                if ( sel != null ) {
+                if (sel != null) {
                     for (Element element : sel) {
                         Elements option = element.select("option[selected]");
 
-                        if ( option != null && option.hasAttr("selected") ) {
+                        if (option != null && option.hasAttr("selected")) {
                             fieldMap.put(element.attr("name"), option.val());
                         }
                     }
                 }
 
                 Elements h1 = doc.getElementsByTag("h1");
-                if ( h1 != null ) {
+                if (h1 != null) {
 
                     Elements next = h1.next();
-                    if ( next != null ) {
+                    if (next != null) {
 
                         for (Element element : next) {
 
-                            if ( element.html().contains("LAST STATE") ) {
+                            if (element.html().contains("LAST STATE")) {
 
                                 Pattern mPattern = Pattern.compile("^LAST\\ STATE:\\ (.*)\\<br\\>Firmware:\\ (.*)\\<br\\>GUID:\\ (.*)\\<br\\>MAC:\\ (.*)$");
 
                                 Matcher matcher = mPattern.matcher(element.html());
-                                if(matcher.find() && matcher.groupCount() == 4)  {
+                                if (matcher.find() && matcher.groupCount() == 4) {
 
                                     result.deviceName = h1.html();
                                     result.deviceLastState = matcher.group(1);
-                                    result.deviceFirmwareVersion  = matcher.group(2);
+                                    result.deviceFirmwareVersion = matcher.group(2);
                                     result.deviceGUID = matcher.group(3);
                                     result.deviceMAC = matcher.group(4);
                                 }
@@ -133,7 +119,6 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                 }
 
 
-
                 retryCount = -1;
 
             } catch (IOException e) {
@@ -143,19 +128,19 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                 e.printStackTrace();
             }
 
-        if ( retryCount > -1 ) {
+        if (retryCount > -1) {
 
             result.resultCode = RESULT_CONN_ERROR;
             return result;
         }
 
 
-        if ( fieldMap.get("sid") == null
+        if (fieldMap.get("sid") == null
                 || fieldMap.get("wpw") == null
                 || fieldMap.get("svr") == null
                 || fieldMap.get("eml") == null
                 || result.deviceFirmwareVersion == null
-                || result.deviceFirmwareVersion.isEmpty() ) {
+                || result.deviceFirmwareVersion.isEmpty()) {
 
             result.resultCode = RESULT_COMPAT_ERROR;
             return result;
@@ -172,44 +157,43 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
         retryCount = 3;
 
-        while(retryCount > 0)
-        try {
-            Thread.sleep(2000);
+        while (retryCount > 0)
+            try {
+                Thread.sleep(2000);
 
-            Document doc = Jsoup.connect("http://192.168.4.1")
-                    .data(fieldMap)
-                    .referrer("http://192.168.4.1").method(Connection.Method.POST).execute().parse();
+                Document doc = Jsoup.connect("http://192.168.4.1")
+                        .data(fieldMap)
+                        .referrer("http://192.168.4.1").method(Connection.Method.POST).execute().parse();
 
-            Element msg = doc.getElementById("msg");
-            if ( msg != null && msg.html().toLowerCase().contains("data saved") ) {
+                Element msg = doc.getElementById("msg");
+                if (msg != null && msg.html().toLowerCase().contains("data saved")) {
 
-                Trace.d("TRY RBT", "RBT");
+                    Trace.d("TRY RBT", "RBT");
 
-                Thread.sleep(1000);
+                    Thread.sleep(1000);
 
-                fieldMap.put("rbt", "1"); // reboot
+                    fieldMap.put("rbt", "1"); // reboot
 
-                try {
-                    Jsoup.connect("http://192.168.4.1")
-                            .data(fieldMap)
-                            .referrer("http://192.168.4.1").method(Connection.Method.POST).execute();
+                    try {
+                        Jsoup.connect("http://192.168.4.1")
+                                .data(fieldMap)
+                                .referrer("http://192.168.4.1").method(Connection.Method.POST).execute();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    result.resultCode = RESULT_SUCCESS;
+                    return result;
                 }
 
-
-
-                result.resultCode = RESULT_SUCCESS;
-                return result;
+            } catch (IOException e) {
+                e.printStackTrace();
+                retryCount--;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            retryCount--;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
 
         result.resultCode = RESULT_FAILED;
@@ -219,5 +203,19 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
     @Override
     protected void onPostExecute(ConfigResult result) {
         delegate.espConfigFinished(result);
+    }
+
+    public interface AsyncResponse {
+        void espConfigFinished(ConfigResult result);
+    }
+
+    public class ConfigResult {
+        int resultCode;
+
+        String deviceName;
+        String deviceLastState;
+        String deviceFirmwareVersion;
+        String deviceGUID;
+        String deviceMAC;
     }
 }

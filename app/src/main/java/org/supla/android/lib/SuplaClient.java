@@ -24,6 +24,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -32,6 +33,7 @@ import org.supla.android.Preferences;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -321,7 +323,7 @@ public class SuplaClient extends Thread {
     public void getRegistrationEnabled() {
         lockClientPtr();
         try {
-            if ( _supla_client_ptr != 0 ) {
+            if (_supla_client_ptr != 0) {
                 scGetRegistrationEnabled(_supla_client_ptr);
             }
         } finally {
@@ -349,7 +351,7 @@ public class SuplaClient extends Thread {
 
     public void oAuthTokenRequest() {
         long now = System.currentTimeMillis();
-        if (now-lastTokenRequest <= 5000 ) {
+        if (now - lastTokenRequest <= 5000) {
             Trace.d(log_tag, "Token already requested: "
                     + (now - lastTokenRequest));
             return;
@@ -369,7 +371,7 @@ public class SuplaClient extends Thread {
     public void superUserAuthorizationRequest(String email, String password) {
         lockClientPtr();
         try {
-            if ( _supla_client_ptr != 0) {
+            if (_supla_client_ptr != 0) {
                 scSuperUserAuthorizationRequest(_supla_client_ptr, email, password);
             }
         } finally {
@@ -389,7 +391,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean deviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
-        return deviceCalCfgRequest(ChannelID, false, Command, DataType,  Data);
+        return deviceCalCfgRequest(ChannelID, false, Command, DataType, Data);
     }
 
     public boolean thermostatScheduleCfgRequest(int ID, boolean Group,
@@ -826,7 +828,7 @@ public class SuplaClient extends Thread {
 
             Trace.d(log_tag, "Channel id" + channelValueUpdate.Id
                     + " value updated" + " OnLine: " + channelValueUpdate.OnLine
-                    + " value[0]: "+ channelValueUpdate.Value.Value[0]);
+                    + " value[0]: " + channelValueUpdate.Value.Value[0]);
             onDataChanged(channelValueUpdate.Id, 0);
         }
 
@@ -852,12 +854,12 @@ public class SuplaClient extends Thread {
     }
 
     private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
-        Trace.d(log_tag, "OAuthToken"+(token == null ? " is null" : ""));
+        Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
 
         if (token != null && token.getUrl() == null) {
             Preferences prefs = new Preferences(_context);
             try {
-                token.setUrl(new URL("https://"+prefs.getServerAddress()));
+                token.setUrl(new URL("https://" + prefs.getServerAddress()));
             } catch (MalformedURLException ignored) {
             }
         }
@@ -1099,8 +1101,8 @@ public class SuplaClient extends Thread {
             }
 
             onConnecting();
-            setVisible(0,2); // Cleanup
-            setVisible(2,1);
+            setVisible(0, 2); // Cleanup
+            setVisible(2, 1);
 
 
             try {
@@ -1149,7 +1151,8 @@ public class SuplaClient extends Thread {
                 if (connect()) {
 
                     //noinspection StatementWithEmptyBody
-                    while (!canceled() && iterate()) {}
+                    while (!canceled() && iterate()) {
+                    }
 
                     if (!canceled()) {
                         try {

@@ -39,8 +39,10 @@ public class SuplaBarDataSet extends BarDataSet {
 
         try {
             result = super.getEntryForIndex(index);
+        } catch (IndexOutOfBoundsException exception) {
+            result = null;
         }
-        catch (IndexOutOfBoundsException exception) {result = null;};
+        ;
 
         return result;
     }
@@ -50,7 +52,7 @@ public class SuplaBarDataSet extends BarDataSet {
         if (colorDependsOnTheValue) {
             BarEntry e = getEntryForIndex(index);
 
-            if (e!=null) {
+            if (e != null) {
                 return e.getY() >= 0 ?
                         mColors.get(0 % mColors.size()) : mColors.get(1 % mColors.size());
             }

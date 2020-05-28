@@ -23,6 +23,179 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SuplaChannelElectricityMeterValue implements Serializable {
+    private double TotalCost;
+    private List<Summary> sumList;
+    private List<Measurement> mp1List;
+    private List<Measurement> mp2List;
+    private List<Measurement> mp3List;
+    private int MeasuredValues;
+    private int Period;
+    private double PricePerUnit;
+    private String Currency;
+    // Unit - kWh
+    private double TotalForwardActiveEnergyBalanced;
+    private double TotalReverseActiveEnergyBalanced;
+    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
+                                      int TotalCost, int PricePerUnit, String Currency,
+                                      long TotalForwardActiveEnergyBalanced,
+                                      long TotalReverseActiveEnergyBalanced) {
+        sumList = new ArrayList<>();
+        mp1List = new ArrayList<>();
+        mp2List = new ArrayList<>();
+        mp3List = new ArrayList<>();
+
+        this.MeasuredValues = MeasuredValues;
+        this.Period = Period;
+        this.TotalCost = TotalCost / 100.00;
+        this.PricePerUnit = PricePerUnit / 10000.00;
+        this.Currency = Currency;
+        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced / 100000.00;
+        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
+    }
+
+    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
+                                      double TotalCost, double PricePerUnit, String Currency,
+                                      double TotalForwardActiveEnergyBalanced,
+                                      double TotalReverseActiveEnergyBalanced) {
+        sumList = new ArrayList<>();
+        mp1List = new ArrayList<>();
+        mp2List = new ArrayList<>();
+        mp3List = new ArrayList<>();
+
+        this.MeasuredValues = MeasuredValues;
+        this.Period = Period;
+        this.TotalCost = TotalCost;
+        this.PricePerUnit = PricePerUnit;
+        this.Currency = Currency;
+        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced;
+        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced;
+    }
+
+    public double getTotalCost() {
+        return TotalCost;
+    }
+
+    public void addSummary(int Phase, Summary Sum) {
+        if (Phase >= 1 && Phase <= 3) {
+            if (sumList.size() >= Phase) {
+                sumList.set(Phase - 1, Sum);
+            }
+            sumList.add(Phase - 1, Sum);
+        }
+    }
+
+    public void addMeasurement(int Phase, Measurement m) {
+        switch (Phase) {
+            case 1:
+                mp1List.add(m);
+                break;
+            case 2:
+                mp2List.add(m);
+                break;
+            case 3:
+                mp3List.add(m);
+                break;
+        }
+    }
+
+    public int getMeasuredValues() {
+        return MeasuredValues;
+    }
+
+    public boolean currentIsOver65A() {
+        return (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT_OVER_65A) > 0
+                && (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT) == 0;
+    }
+
+    public int getPeriod() {
+        return Period;
+    }
+
+    public double getPricePerUnit() {
+        return PricePerUnit;
+    }
+
+    public String getCurrency() {
+        return Currency;
+    }
+
+    public double getTotalForwardActiveEnergyBalanced() {
+        return TotalForwardActiveEnergyBalanced;
+    }
+
+    public double getTotalReverseActiveEnergyBalanced() {
+        return TotalReverseActiveEnergyBalanced;
+    }
+
+    public int getMeasurementSize(int Phase) {
+        switch (Phase) {
+            case 1:
+                return mp1List.size();
+            case 2:
+                return mp2List.size();
+            case 3:
+                return mp3List.size();
+        }
+        return 0;
+    }
+
+    public Measurement getMeasurement(int Phase, int index) {
+        switch (Phase) {
+            case 1:
+                return (mp1List.size() > index) ? mp1List.get(index) : null;
+            case 2:
+                return (mp2List.size() > index) ? mp2List.get(index) : null;
+            case 3:
+                return (mp3List.size() > index) ? mp3List.get(index) : null;
+        }
+        return null;
+    }
+
+    public Summary getSummary() {
+        Summary SummaryP1 = getSummary(1);
+        Summary SummaryP2 = getSummary(2);
+        Summary SummaryP3 = getSummary(3);
+
+        return new Summary(SummaryP1.getTotalForwardActiveEnergy()
+                + SummaryP2.getTotalForwardActiveEnergy()
+                + SummaryP3.getTotalForwardActiveEnergy(),
+                SummaryP1.getTotalReverseActiveEnergy()
+                        + SummaryP2.getTotalReverseActiveEnergy()
+                        + SummaryP3.getTotalReverseActiveEnergy(),
+                SummaryP1.getTotalForwardReactiveEnergy()
+                        + SummaryP2.getTotalForwardReactiveEnergy()
+                        + SummaryP3.getTotalForwardReactiveEnergy(),
+                SummaryP1.getTotalReverseReactiveEnergy()
+                        + SummaryP2.getTotalReverseReactiveEnergy()
+                        + SummaryP3.getTotalReverseReactiveEnergy()
+        );
+    }
+
+    public Summary getSummary(int Phase) {
+        if (Phase >= 1 && Phase <= 3) {
+            if (sumList.size() >= Phase) {
+                return sumList.get(Phase - 1);
+            }
+            return new Summary(0.00,
+                    0.00,
+                    0.00,
+                    0.00);
+        }
+        return null;
+    }
+
+    public double[] getTotalActiveEnergyForAllPhases(boolean reverse) {
+        double result[] = new double[3];
+        for (int a = 0; a < 3; a++) {
+            if (reverse) {
+                result[a] = getSummary(a + 1).getTotalReverseActiveEnergy();
+            } else {
+                result[a] = getSummary(a + 1).getTotalForwardActiveEnergy();
+            }
+        }
+        return result;
+    }
+
     public class Measurement implements Serializable {
         private double Freq; // Hz
         private double Voltage; // V
@@ -80,109 +253,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         }
     }
 
-    private double TotalCost;
-
-    private List<Summary> sumList;
-    private List<Measurement> mp1List;
-    private List<Measurement> mp2List;
-    private List<Measurement> mp3List;
-
-    private int MeasuredValues;
-    private int Period;
-    private double PricePerUnit;
-    private String Currency;
-    // Unit - kWh
-    private double TotalForwardActiveEnergyBalanced;
-    private double TotalReverseActiveEnergyBalanced;
-
-    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
-                                      int TotalCost, int PricePerUnit, String Currency,
-                                      long TotalForwardActiveEnergyBalanced,
-                                      long TotalReverseActiveEnergyBalanced) {
-        sumList = new ArrayList<>();
-        mp1List = new ArrayList<>();
-        mp2List = new ArrayList<>();
-        mp3List = new ArrayList<>();
-
-        this.MeasuredValues = MeasuredValues;
-        this.Period = Period;
-        this.TotalCost = TotalCost / 100.00;
-        this.PricePerUnit = PricePerUnit / 10000.00;
-        this.Currency = Currency;
-        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced / 100000.00;
-        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
-    }
-
-
-    SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
-                                      double TotalCost, double PricePerUnit, String Currency,
-                                      double TotalForwardActiveEnergyBalanced,
-                                      double TotalReverseActiveEnergyBalanced) {
-        sumList = new ArrayList<>();
-        mp1List = new ArrayList<>();
-        mp2List = new ArrayList<>();
-        mp3List = new ArrayList<>();
-
-        this.MeasuredValues = MeasuredValues;
-        this.Period = Period;
-        this.TotalCost = TotalCost;
-        this.PricePerUnit = PricePerUnit;
-        this.Currency = Currency;
-        this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced;
-        this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced;
-    }
-
-    public double getTotalCost() {
-        return TotalCost;
-    }
-
-    public void addSummary(int Phase, Summary Sum) {
-        if (Phase >= 1 && Phase <= 3) {
-            if (sumList.size() >= Phase) {
-                sumList.set(Phase-1, Sum);
-            }
-            sumList.add(Phase-1, Sum);
-        }
-    }
-
-    public void addMeasurement(int Phase, Measurement m) {
-        switch(Phase) {
-            case 1: mp1List.add(m); break;
-            case 2: mp2List.add(m); break;
-            case 3: mp3List.add(m); break;
-        }
-    }
-
-    public int getMeasuredValues() {
-        return MeasuredValues;
-    }
-
-    public boolean currentIsOver65A() {
-        return (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT_OVER_65A) > 0
-                && (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT) == 0;
-    }
-
-
-    public int getPeriod() {
-        return Period;
-    }
-
-    public double getPricePerUnit() {
-        return PricePerUnit;
-    }
-
-    public String getCurrency() {
-        return Currency;
-    }
-
-    public double getTotalForwardActiveEnergyBalanced() {
-        return TotalForwardActiveEnergyBalanced;
-    }
-
-    public double getTotalReverseActiveEnergyBalanced() {
-        return TotalReverseActiveEnergyBalanced;
-    }
-
     public class Summary implements Serializable {
         // Unit - kWh
         private double TotalForwardActiveEnergy;
@@ -223,69 +293,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
             return TotalReverseReactiveEnergy;
         }
 
-    }
-
-    public int getMeasurementSize(int Phase) {
-        switch(Phase) {
-            case 1: return mp1List.size();
-            case 2: return mp2List.size();
-            case 3: return mp3List.size();
-        }
-        return 0;
-    }
-
-    public Measurement getMeasurement(int Phase, int index) {
-        switch(Phase) {
-            case 1: return ( mp1List.size() > index ) ? mp1List.get(index) : null;
-            case 2: return ( mp2List.size() > index ) ? mp2List.get(index) : null;
-            case 3: return ( mp3List.size() > index ) ? mp3List.get(index) : null;
-        }
-        return null;
-    }
-
-    public Summary getSummary() {
-        Summary SummaryP1 = getSummary(1);
-        Summary SummaryP2 = getSummary(2);
-        Summary SummaryP3 = getSummary(3);
-
-        return new Summary(SummaryP1.getTotalForwardActiveEnergy()
-                +SummaryP2.getTotalForwardActiveEnergy()
-                +SummaryP3.getTotalForwardActiveEnergy(),
-                SummaryP1.getTotalReverseActiveEnergy()
-                +SummaryP2.getTotalReverseActiveEnergy()
-                +SummaryP3.getTotalReverseActiveEnergy(),
-                SummaryP1.getTotalForwardReactiveEnergy()
-                +SummaryP2.getTotalForwardReactiveEnergy()
-                +SummaryP3.getTotalForwardReactiveEnergy(),
-                SummaryP1.getTotalReverseReactiveEnergy()
-                +SummaryP2.getTotalReverseReactiveEnergy()
-                +SummaryP3.getTotalReverseReactiveEnergy()
-        );
-    }
-
-    public Summary getSummary(int Phase) {
-        if (Phase >= 1 && Phase <= 3 ) {
-            if (sumList.size() >= Phase) {
-                return sumList.get(Phase-1);
-            }
-            return new Summary(0.00,
-                    0.00,
-                    0.00,
-                    0.00);
-        }
-        return null;
-    }
-
-    public double[] getTotalActiveEnergyForAllPhases(boolean reverse) {
-        double result[] = new double[3];
-        for(int a=0;a<3;a++) {
-            if (reverse) {
-                result[a] = getSummary(a+1).getTotalReverseActiveEnergy();
-            } else {
-                result[a] = getSummary(a+1).getTotalForwardActiveEnergy();
-            }
-        }
-        return result;
     }
 
 }

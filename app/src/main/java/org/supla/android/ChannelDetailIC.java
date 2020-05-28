@@ -29,8 +29,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
+
 import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -42,12 +44,14 @@ import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
         AdapterView.OnItemSelectedListener, View.OnClickListener {
 
+    final Handler mHandler = new Handler();
     private ImpulseCounterChartHelper chartHelper;
     private DownloadImpulseCounterMeasurements dtm;
     private ProgressBar icProgress;
@@ -60,7 +64,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private Spinner icSpinnerMaster;
     private Spinner icSpinnerSlave;
     private ImageView ivGraph;
-    final Handler mHandler = new Handler();
     private Timer timer1;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
@@ -160,16 +163,16 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
                         channel.getChannelId());
                 double v1 = mDBH.getLastImpulseCounterMeasurementValue(-1,
                         channel.getChannelId());
-                currentConsumption = v0-v1;
+                currentConsumption = v0 - v1;
                 currentCost = currentConsumption * ic.getPricePerUnit();
             }
 
-            tvCurrentCost.setText(String.format("%.2f "+ic.getCurrency(),
+            tvCurrentCost.setText(String.format("%.2f " + ic.getCurrency(),
                     currentCost));
 
-            tvMeterValue.setText(String.format("%.2f "+channel.getUnit(), ic.getCalculatedValue()));
-            tvCurrentConsumption.setText(String.format("%.2f "+channel.getUnit(), currentConsumption));
-            tvTotalCost.setText(String.format("%.2f "+ic.getCurrency(), ic.getTotalCost()));
+            tvMeterValue.setText(String.format("%.2f " + channel.getUnit(), ic.getCalculatedValue()));
+            tvCurrentConsumption.setText(String.format("%.2f " + channel.getUnit(), currentConsumption));
+            tvTotalCost.setText(String.format("%.2f " + ic.getCurrency(), ic.getTotalCost()));
             chartHelper.setPricePerUnit(ic.getPricePerUnit());
             chartHelper.setCurrency(ic.getCurrency());
 

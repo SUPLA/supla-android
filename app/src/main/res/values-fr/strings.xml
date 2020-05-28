@@ -86,10 +86,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l\u0027évaluer. Nous vous remercions de votre support !</string> 
+    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l\u0027évaluer. Nous vous remercions de votre support !</string>
     <string name="rate_now">Évaluer maintenant</string>
-     <string name="rate_later">Plus tard</string>
-     <string name="rate_no_thanks">Non, merci</string>
+    <string name="rate_later">Plus tard</string>
+    <string name="rate_no_thanks">Non, merci</string>
     <string name="rs_percent_caption">Pourcentage fermeture</string>
     <string name="calibration">[Calibration]</string>
     <string name="wizard_step1_txt2">Pour continuer, appuyez sur <b>Continuer</b>.</string>

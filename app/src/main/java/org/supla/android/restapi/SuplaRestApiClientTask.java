@@ -65,18 +65,12 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         _context = context;
     }
 
-    public interface IAsyncResults {
-        void onRestApiTaskStarted(SuplaRestApiClientTask task);
-        void onRestApiTaskFinished(SuplaRestApiClientTask task);
-        void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress);
-    }
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         setToken(SuplaApp.getApp().RegisterRestApiClientTask(this));
 
-        if (delegate!=null) {
+        if (delegate != null) {
             delegate.onRestApiTaskStarted(this);
         }
     }
@@ -86,7 +80,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         super.onPostExecute(o);
         SuplaApp.getApp().UnregisterRestApiClientTask(this);
 
-        if (delegate!=null) {
+        if (delegate != null) {
             delegate.onRestApiTaskFinished(this);
         }
     }
@@ -95,12 +89,12 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     protected void onProgressUpdate(Object[] values) {
         super.onProgressUpdate(values);
 
-        if (delegate!=null
+        if (delegate != null
                 && values != null
                 && values.length > 0
                 && values[0] instanceof Double) {
 
-            delegate.onRestApiTaskProgressUpdate(this, (Double)values[0]);
+            delegate.onRestApiTaskProgressUpdate(this, (Double) values[0]);
         }
     }
 
@@ -110,12 +104,12 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         SuplaApp.getApp().UnregisterRestApiClientTask(this);
     }
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
-    }
-
     public int getChannelId() {
         return ChannelId;
+    }
+
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
     public IAsyncResults getDelegate() {
@@ -126,13 +120,13 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         this.delegate = delegate;
     }
 
+    public synchronized SuplaOAuthToken getToken() {
+        return new SuplaOAuthToken(mToken);
+    }
+
     public synchronized void setToken(SuplaOAuthToken token) {
         mToken = token == null ? null : new SuplaOAuthToken(token);
         notify();
-    }
-
-    public synchronized SuplaOAuthToken getToken() {
-        return new SuplaOAuthToken(mToken);
     }
 
     public synchronized SuplaOAuthToken getTokenWhenIsAlive() {
@@ -186,31 +180,6 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
         return MDbH;
     }
 
-    protected class ApiRequestResult {
-
-        private Object JObj;
-        private int Code;
-        private int TotalCount;
-
-        ApiRequestResult(Object jobj, int code, int totalCount) {
-            JObj = jobj;
-            Code = code;
-            TotalCount = totalCount;
-        }
-
-        public Object getJObj() {
-            return JObj;
-        }
-
-        public int getCode() {
-            return Code;
-        }
-
-        public int getTotalCount() {
-            return TotalCount;
-        }
-    }
-
     private ApiRequestResult apiRequest(boolean retry, String endpint) {
 
         makeTokenRequest();
@@ -249,7 +218,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
         HttpsURLConnection conn;
         try {
-            conn = (HttpsURLConnection)url.openConnection();
+            conn = (HttpsURLConnection) url.openConnection();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -311,17 +280,15 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
 
-            conn.addRequestProperty("Authorization", "Bearer "+Token.getToken());
+            conn.addRequestProperty("Authorization", "Bearer " + Token.getToken());
 
             conn.connect();
-            try
-            {
-                Trace.d(log_tag, "CODE: "+conn.getResponseCode());
-                Trace.d(log_tag, "URL: "+url.toString());
+            try {
+                Trace.d(log_tag, "CODE: " + conn.getResponseCode());
+                Trace.d(log_tag, "URL: " + url.toString());
 
                 int TotalCount;
-                try
-                {
+                try {
                     TotalCount = Integer.parseInt(conn.getHeaderField("X-Total-Count"));
                 } catch (NumberFormatException e) {
                     TotalCount = 0;
@@ -329,7 +296,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
                 JsonReader reader = new JsonReader(
                         new InputStreamReader(conn.getResponseCode() == 200 ?
-                                conn.getInputStream() : conn.getErrorStream(),"UTF-8"));
+                                conn.getInputStream() : conn.getErrorStream(), "UTF-8"));
 
                 InputStream ins = new BufferedInputStream(conn.getResponseCode() == 200 ?
                         conn.getInputStream() : conn.getErrorStream());
@@ -367,6 +334,39 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     protected ApiRequestResult apiRequest(String endpint) {
 
         return apiRequest(true, endpint);
+    }
+
+    public interface IAsyncResults {
+        void onRestApiTaskStarted(SuplaRestApiClientTask task);
+
+        void onRestApiTaskFinished(SuplaRestApiClientTask task);
+
+        void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress);
+    }
+
+    protected class ApiRequestResult {
+
+        private Object JObj;
+        private int Code;
+        private int TotalCount;
+
+        ApiRequestResult(Object jobj, int code, int totalCount) {
+            JObj = jobj;
+            Code = code;
+            TotalCount = totalCount;
+        }
+
+        public Object getJObj() {
+            return JObj;
+        }
+
+        public int getCode() {
+            return Code;
+        }
+
+        public int getTotalCount() {
+            return TotalCount;
+        }
     }
 
 }

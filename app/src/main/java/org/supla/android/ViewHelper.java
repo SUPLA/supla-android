@@ -26,7 +26,7 @@ public class ViewHelper {
 
     // Copy of View.generateViewId (API Level 17)
     public static int generateViewId() {
-        for (;;) {
+        for (; ; ) {
             final int result = sNextGeneratedId.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;

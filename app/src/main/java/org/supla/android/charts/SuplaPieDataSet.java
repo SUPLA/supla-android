@@ -34,8 +34,10 @@ public class SuplaPieDataSet extends PieDataSet {
 
         try {
             result = super.getEntryForIndex(index);
+        } catch (IndexOutOfBoundsException exception) {
+            result = null;
         }
-        catch (IndexOutOfBoundsException exception) {result = null;};
+        ;
 
         return result;
     }

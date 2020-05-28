@@ -37,12 +37,22 @@ public class ChannelExtendedValue extends DbItem {
     private int ChannelId;
     private SuplaChannelExtendedValue ExtendedValue;
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
+    public static boolean valueExists(Cursor cursor) {
+        int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
+
+        return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
+                && vidx > -1
+                && !cursor.isNull(vidx);
     }
 
     public int getChannelId() {
         return ChannelId;
+    }
+
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
     public SuplaChannelExtendedValue getExtendedValue() {
@@ -69,16 +79,6 @@ public class ChannelExtendedValue extends DbItem {
         }
 
         return null;
-    }
-
-    public static boolean valueExists(Cursor cursor) {
-        int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
-
-        return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
-                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
-                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
-                && vidx > -1
-                && !cursor.isNull(vidx);
     }
 
     public void AssignCursorData(Cursor cursor) {

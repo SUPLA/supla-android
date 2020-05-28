@@ -51,7 +51,7 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
 
-        TemperatureMeasurementItem ti  = new TemperatureMeasurementItem();
+        TemperatureMeasurementItem ti = new TemperatureMeasurementItem();
         ti.AssignJSONObject(obj);
         ti.setChannelId(getChannelId());
 

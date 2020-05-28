@@ -31,13 +31,6 @@ import android.view.View;
 
 public class SuplaChannelStatus extends View {
 
-    public enum ShapeType {
-        LinearVertical,
-        LinearHorizontal,
-        Dot,
-        Ring,
-    }
-
     private ShapeType shapeType = ShapeType.LinearVertical;
     private float Percent = 50;
     private int OnlineColor = Color.GREEN;
@@ -49,7 +42,6 @@ public class SuplaChannelStatus extends View {
     private DisplayMetrics metrics = getResources().getDisplayMetrics();
     private float FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             (float) 1, metrics);
-
     public SuplaChannelStatus(Context context) {
         super(context);
     }
@@ -62,17 +54,12 @@ public class SuplaChannelStatus extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setShapeType(ShapeType shapeType) {
-        this.shapeType = shapeType;
-        invalidate();
-    }
-
     public ShapeType getShapeType() {
         return shapeType;
     }
 
-    public void setPercent(float percent) {
-        Percent = percent;
+    public void setShapeType(ShapeType shapeType) {
+        this.shapeType = shapeType;
         invalidate();
     }
 
@@ -80,8 +67,8 @@ public class SuplaChannelStatus extends View {
         return Percent;
     }
 
-    public void setOnlineColor(int onlineColor) {
-        OnlineColor = onlineColor;
+    public void setPercent(float percent) {
+        Percent = percent;
         invalidate();
     }
 
@@ -89,8 +76,8 @@ public class SuplaChannelStatus extends View {
         return OnlineColor;
     }
 
-    public void setOfflineColor(int offlineColor) {
-        OfflineColor = offlineColor;
+    public void setOnlineColor(int onlineColor) {
+        OnlineColor = onlineColor;
         invalidate();
     }
 
@@ -98,13 +85,8 @@ public class SuplaChannelStatus extends View {
         return OfflineColor;
     }
 
-    public void setBorderLineColor(int borderLineColor) {
-        BorderlineColor = borderLineColor;
-        invalidate();
-    }
-
-    public void setSingleColor(boolean singleColor) {
-        mSingleColor = singleColor;
+    public void setOfflineColor(int offlineColor) {
+        OfflineColor = offlineColor;
         invalidate();
     }
 
@@ -112,8 +94,18 @@ public class SuplaChannelStatus extends View {
         return mSingleColor;
     }
 
+    public void setSingleColor(boolean singleColor) {
+        mSingleColor = singleColor;
+        invalidate();
+    }
+
     public int getBorderLineColor() {
         return BorderlineColor;
+    }
+
+    public void setBorderLineColor(int borderLineColor) {
+        BorderlineColor = borderLineColor;
+        invalidate();
     }
 
     public float getBorderLineWidth() {
@@ -174,5 +166,12 @@ public class SuplaChannelStatus extends View {
         paint.setStyle(Paint.Style.STROKE);
         rectf.set(0, 0, getWidth(), getHeight());
         canvas.drawRect(rectf, paint);
+    }
+
+    public enum ShapeType {
+        LinearVertical,
+        LinearHorizontal,
+        Dot,
+        Ring,
     }
 }

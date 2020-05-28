@@ -69,7 +69,7 @@ public class StatusActivity extends NavigationActivity {
         btnRetry = findViewById(R.id.retry_btn);
         btnRetry.setOnClickListener(this);
 
-        layout = (RelativeLayout)msg.getParent();
+        layout = (RelativeLayout) msg.getParent();
 
         setStatusConnectingProgress(0);
         RegisterMessageHandler();
@@ -80,14 +80,14 @@ public class StatusActivity extends NavigationActivity {
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if ( client != null
-                && client.registered() ) {
+        if (client != null
+                && client.registered()) {
             showMain(this);
         } else {
 
             SuplaRegisterError error = SuplaClient.getLastRegisterError();
 
-            if ( error != null )
+            if (error != null)
                 _OnRegisterErrorMsg(error);
         }
 
@@ -96,7 +96,7 @@ public class StatusActivity extends NavigationActivity {
 
     public void setStatusError(String message) {
 
-        if ( mode != 1 ) {
+        if (mode != 1) {
             mode = 1;
 
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
@@ -121,7 +121,7 @@ public class StatusActivity extends NavigationActivity {
     }
 
     public void setStatusConnectingProgress(int value) {
-        if ( mode != 2 ) {
+        if (mode != 2) {
             mode = 2;
 
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
@@ -158,9 +158,9 @@ public class StatusActivity extends NavigationActivity {
 
         super.onClick(v);
 
-        if ( v == btnSettings ) {
+        if (v == btnSettings) {
             NavigationActivity.showCfg(this);
-        } else if ( v == btnRetry ) {
+        } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         }
     }
@@ -189,7 +189,7 @@ public class StatusActivity extends NavigationActivity {
     protected void onRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if ( !(CurrentActivity instanceof AddDeviceWizardActivity) ) {
+        if (!(CurrentActivity instanceof AddDeviceWizardActivity)) {
             showMain(this);
         }
 
@@ -214,12 +214,12 @@ public class StatusActivity extends NavigationActivity {
 
     @Override
     protected void onConnErrorMsg(SuplaConnError error) {
-        if ( error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND )
+        if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND)
             setStatusError(getResources().getString(R.string.err_hostnotfound));
     }
 
     @Override
     public void onBackPressed() {
-       gotoMain();
+        gotoMain();
     }
 }

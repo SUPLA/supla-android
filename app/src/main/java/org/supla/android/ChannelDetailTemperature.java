@@ -21,7 +21,6 @@ package org.supla.android;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,7 +30,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.CombinedChart;
+
 import org.supla.android.charts.ChartHelper;
 import org.supla.android.charts.TemperatureChartHelper;
 import org.supla.android.db.Channel;
@@ -42,8 +43,7 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTemperatureMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,6 +51,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
         SuplaRestApiClientTask.IAsyncResults, View.OnClickListener,
         AdapterView.OnItemSelectedListener {
 
+    final Handler mHandler = new Handler();
     protected ChartHelper chartHelper;
     private DownloadMeasurementLogs downloadMeasurementLogs;
     private ProgressBar tvProgress;
@@ -59,7 +60,6 @@ public class ChannelDetailTemperature extends DetailLayout implements
     private Spinner thSpinner;
     private ImageView ivGraph;
     private TextView tvTemperature;
-    final Handler mHandler = new Handler();
     private Timer timer1;
 
     public ChannelDetailTemperature(Context context, ChannelListView cLV) {
@@ -102,7 +102,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
         ivGraph = findViewById(R.id.thGraphImg);
         ivGraph.setOnClickListener(this);
         chartHelper = getChartHelperInstance();
-        chartHelper.setCombinedChart((CombinedChart)findViewById(R.id.thCombinedChart));
+        chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.thCombinedChart));
         tvTemperature = findViewById(R.id.thTvTemperature);
 
         tvTemperature.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
@@ -158,7 +158,10 @@ public class ChannelDetailTemperature extends DetailLayout implements
         chartHelper.setDownloadProgress(0d);
     }
 
-    protected void beforeLoadChart() {};
+    protected void beforeLoadChart() {
+    }
+
+    ;
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
@@ -174,10 +177,11 @@ public class ChannelDetailTemperature extends DetailLayout implements
     }
 
     private TemperatureChartHelper getTemperatureChartHelper() {
-        return (TemperatureChartHelper)chartHelper;
+        return (TemperatureChartHelper) chartHelper;
     }
 
-    protected void __onDetailShow() { }
+    protected void __onDetailShow() {
+    }
 
     @Override
     public void onDetailShow() {
@@ -224,7 +228,8 @@ public class ChannelDetailTemperature extends DetailLayout implements
     public void onClick(View v) {
         if (v == ivGraph && tvProgress.getVisibility() == INVISIBLE) {
             runDownloadTask();
-        };
+        }
+        ;
     }
 
     @Override

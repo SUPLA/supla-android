@@ -19,12 +19,6 @@ import java.util.ArrayList;
 
 public class MenuItemsLayout extends LinearLayout implements View.OnClickListener {
 
-    private LinearLayout mMainButtonsAreaLayout = null;
-    private boolean mInitialized = false;
-    private int availableButtons = 0;
-    private OnClickListener mOnClickListener;
-    ArrayList<Button> buttons = new ArrayList<>();
-
     public static final int BTN_SETTINGS = 0x1;
     public static final int BTN_ADD_DEVICE = 0x2;
     public static final int BTN_ABOUT = 0x4;
@@ -34,24 +28,11 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     public static final int BTN_FREE_SPACE = 0x40;
     public static final int BTN_Z_WAVE = 0x80;
     public static final int BTN_ALL = 0xFFFF;
-
-    private void initialize() {
-        if (!mInitialized) {
-            mInitialized = true;
-            setVisibility(GONE);
-            setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT));
-            setOrientation(VERTICAL);
-
-            mMainButtonsAreaLayout = new LinearLayout(getContext());
-            mMainButtonsAreaLayout.setLayoutParams(
-                    new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT));
-            mMainButtonsAreaLayout.setOrientation(VERTICAL);
-            mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));
-            addView(mMainButtonsAreaLayout);
-        }
-    }
+    ArrayList<Button> buttons = new ArrayList<>();
+    private LinearLayout mMainButtonsAreaLayout = null;
+    private boolean mInitialized = false;
+    private int availableButtons = 0;
+    private OnClickListener mOnClickListener;
 
     public MenuItemsLayout(Context context) {
         super(context);
@@ -72,6 +53,31 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     public MenuItemsLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initialize();
+    }
+
+    public static int getButtonId(View v) {
+        if (v != null && v.getTag() instanceof Integer) {
+            return ((Integer) v.getTag()).intValue();
+        }
+        return 0;
+    }
+
+    private void initialize() {
+        if (!mInitialized) {
+            mInitialized = true;
+            setVisibility(GONE);
+            setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT));
+            setOrientation(VERTICAL);
+
+            mMainButtonsAreaLayout = new LinearLayout(getContext());
+            mMainButtonsAreaLayout.setLayoutParams(
+                    new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                            LayoutParams.WRAP_CONTENT));
+            mMainButtonsAreaLayout.setOrientation(VERTICAL);
+            mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));
+            addView(mMainButtonsAreaLayout);
+        }
     }
 
     private void addLongSeparator() {
@@ -105,7 +111,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 margin * 2 + width, separator_height
-                );
+        );
         view.setLayoutParams(params);
 
         view = new View(getContext());
@@ -150,7 +156,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 height, height);
-        params.setMargins(margin,0,margin,0);
+        params.setMargins(margin, 0, margin, 0);
 
         iv.setLayoutParams(params);
 
@@ -165,7 +171,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.menuitem_text_size));
-        btn.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
+        btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         btn.setTextColor(Color.WHITE);
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
@@ -256,12 +262,5 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         mOnClickListener = l;
-    }
-
-    public static int getButtonId(View v) {
-        if (v != null && v.getTag() instanceof Integer) {
-            return ((Integer) v.getTag()).intValue();
-        }
-        return 0;
     }
 }

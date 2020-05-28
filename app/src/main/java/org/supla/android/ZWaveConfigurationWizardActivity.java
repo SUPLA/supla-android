@@ -31,14 +31,6 @@ import java.util.TimerTask;
 
 public class ZWaveConfigurationWizardActivity extends WizardActivity implements AdapterView.OnItemSelectedListener {
 
-    private final int PAGE_WELCOME = 1;
-    private final int PAGE_ZWAVE_ERROR = 2;
-    private final int PAGE_SELECT_CHANNEL = 3;
-    private final int PAGE_CHANNEL_DETAILS = 4;
-    private final int PAGE_BEFORE_SEARCH = 5;
-    private final int PAGE_ZWAVE_DETAILS = 6;
-    private final int PAGE_ZWAVE_DONE = 7;
-
     protected final int RESET_TIMEOUT_SEC = 15;
     protected final int ADD_NODE_BUTTON_PRESS_TIMEOUT_SEC = 35;
     protected final int ADD_NODE_TIMEOUT_SEC = 30; // After button press
@@ -49,7 +41,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     protected final int SET_CHANNEL_CAPTION_TIMEOUT_SEC = 5;
     protected final int ASSIGN_NODE_ID_TIMEOUT_SEC = 15;
     protected final int GET_NODE_LIST_TIMEOUT_SEC = 250;
-
+    private final int PAGE_WELCOME = 1;
+    private final int PAGE_ZWAVE_ERROR = 2;
+    private final int PAGE_SELECT_CHANNEL = 3;
+    private final int PAGE_CHANNEL_DETAILS = 4;
+    private final int PAGE_BEFORE_SEARCH = 5;
+    private final int PAGE_ZWAVE_DETAILS = 6;
+    private final int PAGE_ZWAVE_DONE = 7;
+    private final int ERROR_TYPE_TIMEOUT = 1;
+    private final int ERROR_TYPE_DISCONNECTED = 2;
     private int mPreviousPage;
     private Timer mAnyCalCfgResultWatchdogTimer;
     private Timer mWatchdogTimer;
@@ -59,7 +59,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private Spinner mDeviceListSpinner;
     private Channel mSelectedCahnnel;
     private ArrayList<SuplaChannelBasicCfg> mChannelBasicCfgList;
-    private ArrayList<Integer>mDeviceList;
+    private ArrayList<Integer> mDeviceList;
     private ArrayList<Channel> mChannelList;
     private Spinner mFunctionListSpinner;
     private ArrayList<Integer> mFuncList;
@@ -88,9 +88,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private Timer mWaitMessagePreloaderTimer;
     private short mAssignedNodeId;
     private short mProgress;
-
-    private final int ERROR_TYPE_TIMEOUT = 1;
-    private final int ERROR_TYPE_DISCONNECTED = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,34 +151,34 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         Typeface quicksandLight = SuplaApp.getApp().getTypefaceQuicksandLight();
         Typeface openSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
 
-        ((TextView)findViewById(R.id.tv_welcome_title)).setTypeface(quicksandLight);
-        ((TextView)findViewById(R.id.tv_welcome_description)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_select_channel_title)).setTypeface(quicksandLight);
-        ((TextView)findViewById(R.id.tv_select_channel_description)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_device_list_title)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_channel_list_title)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_before_search_title)).setTypeface(quicksandLight);
-        ((TextView)findViewById(R.id.tv_before_seatch_msg)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_channel_detail_title)).setTypeface(quicksandLight);
-        ((TextView)findViewById(R.id.tv_channel_detail_description)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_error_txt_common)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_done_txt)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
-        ((TextView)findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);
-        ((TextView)findViewById(R.id.tv_details_device_title)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_welcome_title)).setTypeface(quicksandLight);
+        ((TextView) findViewById(R.id.tv_welcome_description)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_select_channel_title)).setTypeface(quicksandLight);
+        ((TextView) findViewById(R.id.tv_select_channel_description)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_device_list_title)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_channel_list_title)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_before_search_title)).setTypeface(quicksandLight);
+        ((TextView) findViewById(R.id.tv_before_seatch_msg)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_channel_detail_title)).setTypeface(quicksandLight);
+        ((TextView) findViewById(R.id.tv_channel_detail_description)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_error_txt_common)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_done_txt)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
+        ((TextView) findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_details_device_title)).setTypeface(openSansRegular);
         mTvInfo.setTypeface(openSansRegular);
     }
 
     private String getChannelName(Channel channel, Integer func) {
-        return "#"+channel.getChannelId()
+        return "#" + channel.getChannelId()
                 + " " + SuplaConst.getNotEmptyCaption(channel.getCaption(),
                 func == null ? channel.getFunc() : func, this);
     }
 
     private Channel getChannelById(int id) {
-        for(Channel channel: mChannelList) {
+        for (Channel channel : mChannelList) {
             if (channel.getChannelId() == id) {
                 return channel;
             }
@@ -191,7 +188,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private SuplaChannelBasicCfg getChannelBasicCfgWithDeviceId(int deviceId) {
-        for(SuplaChannelBasicCfg cfg: mChannelBasicCfgList) {
+        for (SuplaChannelBasicCfg cfg : mChannelBasicCfgList) {
             if (cfg.getDeviceId() == deviceId) {
                 return cfg;
             }
@@ -200,7 +197,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private SuplaChannelBasicCfg getChannelBasicCfgWithChannelId(int channelId) {
-        for(SuplaChannelBasicCfg cfg: mChannelBasicCfgList) {
+        for (SuplaChannelBasicCfg cfg : mChannelBasicCfgList) {
             if (cfg.getChannelId() == channelId) {
                 return cfg;
             }
@@ -222,7 +219,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         wathdogActivate(GET_BASIC_CFG_TIMEOUT_SEC,
                 R.string.zwave_error_get_basic_cfg_timeout, false);
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null) {
+        if (client != null) {
             client.getChannelBasicCfg(channelId);
         }
     }
@@ -234,10 +231,10 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mDeviceList.clear();
         mChannelList = dbHelper.getZWaveBridgeChannels();
 
-        for(Channel channel: mChannelList) {
+        for (Channel channel : mChannelList) {
             boolean exists = false;
 
-            for(Channel fc: mChannelBasicCfgToFetch) {
+            for (Channel fc : mChannelBasicCfgToFetch) {
                 if (fc.getDeviceID() == channel.getDeviceID()) {
                     exists = true;
                     break;
@@ -252,9 +249,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private void loadDeviceListSpinner() {
-        ArrayList<String>spinnerList = new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
 
-        for(Channel channel: mChannelList) {
+        for (Channel channel : mChannelList) {
             if (!mDeviceList.contains(channel.getDeviceID())) {
                 mDeviceList.add(channel.getDeviceID());
             }
@@ -262,12 +259,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         int position = 0;
 
-        for(Integer deviceId: mDeviceList) {
+        for (Integer deviceId : mDeviceList) {
             if (mSelectedCahnnel != null && mSelectedCahnnel.getDeviceID() == deviceId) {
                 position = spinnerList.size();
             }
             SuplaChannelBasicCfg cfg = getChannelBasicCfgWithDeviceId(deviceId);
-            spinnerList.add("#"+deviceId.toString()+(cfg==null ? "" : (" "+cfg.getDeviceName())));
+            spinnerList.add("#" + deviceId.toString() + (cfg == null ? "" : (" " + cfg.getDeviceName())));
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -288,9 +285,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         }
 
         int position = mChannelListSpinner.getSelectedItemPosition();
-        int n=0;
+        int n = 0;
 
-        for(Channel channel: mChannelList) {
+        for (Channel channel : mChannelList) {
             if (channel.getDeviceID() != deviceId) {
                 continue;
             }
@@ -311,10 +308,10 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             return;
         }
 
-        ArrayList<String>spinnerList = new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
         int position = 0;
 
-        for(Channel channel: mChannelList) {
+        for (Channel channel : mChannelList) {
             if (channel.getDeviceID() != deviceId) {
                 continue;
             }
@@ -334,19 +331,19 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     }
 
     private void loadNodeListSpinner(Short selectNodeId) {
-        ArrayList<String>spinnerList = new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
         spinnerList.add("");
 
         int position = 0;
         int n = 0;
         String used = getResources().getString(R.string.zwave_used);
 
-        for(ZWaveNode node: mNodeList) {
+        for (ZWaveNode node : mNodeList) {
             n++;
-            String title = "#"+node.getNodeId() + " " + node.getName();
+            String title = "#" + node.getNodeId() + " " + node.getName();
             if (node.getChannelId() != null
                     && node.getChannelId() != mSelectedCahnnel.getChannelId()) {
-                title += " ("+used+" #"+node.getChannelId().toString()+")";
+                title += " (" + used + " #" + node.getChannelId().toString() + ")";
             }
             spinnerList.add(title);
             if ((selectNodeId != null && node.getNodeId() == selectNodeId)
@@ -407,7 +404,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                         if (getVisiblePageId() != PAGE_SELECT_CHANNEL
                                 && getDevivceId() > 0) {
                             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-                            if (client!=null){
+                            if (client != null) {
                                 client.zwaveConfigModeActive(getDevivceId());
                             }
                         }
@@ -467,7 +464,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                     }
                 });
             }
-        }, timeoutSec*1000, 1000);
+        }, timeoutSec * 1000, 1000);
     }
 
     protected int getNextButtonTextForThePage(int pageId) {
@@ -568,9 +565,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                         }
 
                         mTvInfo.setText(msg.toString(), TextView.BufferType.SPANNABLE);
-                        Spannable s = (Spannable)mTvInfo.getText();
+                        Spannable s = (Spannable) mTvInfo.getText();
                         s.setSpan(new ForegroundColorSpan(res.getColor(R.color.zwave_info_label_bg)),
-                                msg.length()-(max-mWaitMessagePreloaderDotCount),
+                                msg.length() - (max - mWaitMessagePreloaderDotCount),
                                 msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         mWaitMessagePreloaderDotCount++;
@@ -595,7 +592,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         }
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
+        if (client != null) {
             client.deviceCalCfgCancelAllCommands(getDevivceId());
         }
     }
@@ -609,7 +606,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 RESET_TIMEOUT_SEC, R.string.zwave_waiting_for_reset_timeout);
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
+        if (client != null) {
             client.zwaveResetAndClear(getDevivceId());
         }
     }
@@ -625,7 +622,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 R.string.zwave_button_press_timeout);
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
+        if (client != null) {
             client.zwaveAddNode(getDevivceId());
         }
     }
@@ -639,7 +636,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 REMOVE_NODE_TIMEOUT_SEC, R.string.zwave_remove_device_timeout);
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
+        if (client != null) {
             client.zwaveRemoveNode(getDevivceId());
         }
     }
@@ -659,7 +656,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         }
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client!=null){
+        if (client != null) {
             client.zwaveGetAssignedNodeId(getChannelId());
         }
     }
@@ -732,7 +729,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             zwaveAddNode();
         } else if (v == mBtnRemoveNodeLeft || v == mBtnRemoveNodeRight) {
             zwaveRemoveNode();
-        } else if (v ==mBtnGetNodeList) {
+        } else if (v == mBtnGetNodeList) {
             mNodeList.clear();
             zwaveGetNodeList();
         }
@@ -767,7 +764,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 if (node == null
                         || node.getChannelId() == null
                         || node.getChannelId() == 0
-                        || node.getChannelId() == mSelectedCahnnel.getChannelId() ) {
+                        || node.getChannelId() == mSelectedCahnnel.getChannelId()) {
                     assignNodeId();
                 } else {
                     showNodeAssignConfirmDialog();
@@ -814,15 +811,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mEtCaption.setEnabled(true);
 
         String functionName = SuplaConst.getFunctionName(0, this);
-        ArrayList<String>spinnerList = new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
         int position = 0;
 
         mFuncList.clear();
         mFuncList.add(0);
-        spinnerList .add(functionName);
+        spinnerList.add(functionName);
 
-        for(int a=0;a<32;a++) {
-            int func = SuplaConst.functionBit2functionNumber(basicCfg.getFuncList() & 1<<a);
+        for (int a = 0; a < 32; a++) {
+            int func = SuplaConst.functionBit2functionNumber(basicCfg.getFuncList() & 1 << a);
             if (func > 0) {
                 functionName = SuplaConst.getFunctionName(func, this);
                 mFuncList.add(func);
@@ -860,7 +857,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             wathdogActivate(SET_CHANNEL_FUNCTION_TIMEOUT_SEC,
                     R.string.zwave_error_set_function_timeout, false);
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client!=null){
+            if (client != null) {
                 client.setChannelFunction(getChannelId(),
                         mFuncList.get(position));
             }
@@ -882,7 +879,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             wathdogActivate(SET_CHANNEL_CAPTION_TIMEOUT_SEC,
                     R.string.zwave_error_set_caption_timeout, false);
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client!=null){
+            if (client != null) {
                 client.setChannelCaption(getChannelId(), mEtCaption.getText().toString());
             }
         }
@@ -891,7 +888,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private ZWaveNode getSelectedNode() {
         if (mNodeListSpinner.getSelectedItemPosition() > 0
                 && mNodeListSpinner.getSelectedItemPosition() <= mNodeList.size()) {
-            return mNodeList.get(mNodeListSpinner.getSelectedItemPosition()-1);
+            return mNodeList.get(mNodeListSpinner.getSelectedItemPosition() - 1);
         }
 
         return null;
@@ -907,7 +904,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         if (selectedNodeId != mAssignedNodeId) {
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client!=null){
+            if (client != null) {
                 client.zwaveAssignNodeId(getChannelId(), selectedNodeId);
             }
         } else {
@@ -933,7 +930,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             return;
         }
 
-        for(SuplaChannelBasicCfg cfg: mChannelBasicCfgList) {
+        for (SuplaChannelBasicCfg cfg : mChannelBasicCfgList) {
             if (cfg.getChannelId() == basicCfg.getChannelId()) {
                 mChannelBasicCfgList.remove(cfg);
                 break;
@@ -963,7 +960,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         if (mDevicesToRestart.size() > 0) {
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client!=null){
+            if (client != null) {
                 while (mDevicesToRestart.size() > 0) {
                     client.reconnectDevice(mDevicesToRestart.get(0));
                     mDevicesToRestart.remove(0);
@@ -1094,9 +1091,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         super.onCalCfgResult(channelId, command, result, data);
         if (command != 5000) {
             Trace.d("onCalCfgResult", channelId
-                    +","+ command
-                    +","+ result
-                    +","+ (data == null ? 0 : data.length));
+                    + "," + command
+                    + "," + result
+                    + "," + (data == null ? 0 : data.length));
         }
 
         if (mSelectedCahnnel != null) {
@@ -1132,7 +1129,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                     R.string.zwave_error_get_node_list_timeout, true);
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client!=null){
+            if (client != null) {
                 client.zwaveGetNodeList(getDevivceId());
             }
         } else {
@@ -1198,7 +1195,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
             if (mAssignedNodeId > 0 && nodeIdNotExists(mAssignedNodeId)) {
                 node = new ZWaveNode(mAssignedNodeId,
-                        (short)0,
+                        (short) 0,
                         mSelectedCahnnel == null ? 0 : mSelectedCahnnel.getChannelId(),
                         getResources().getString(R.string.zwave_offline));
                 mNodeList.add(node);
@@ -1303,7 +1300,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         hideInfoMessage();
 
         if (nodeId > 0) {
-            for(ZWaveNode node: mNodeList) {
+            for (ZWaveNode node : mNodeList) {
                 if (node.getNodeId() == nodeId) {
                     mNodeList.remove(node);
                     break;
@@ -1321,9 +1318,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
             loadChannelListSpinner();
         } else if (parent == mChannelListSpinner) {
             Channel selectedChannel = getChannelListSpinnerSelectedChannel();
-            if ( mSelectedCahnnel == null
+            if (mSelectedCahnnel == null
                     || selectedChannel == null
-                    || selectedChannel.getDeviceID() != mSelectedCahnnel.getDeviceID() ) {
+                    || selectedChannel.getDeviceID() != mSelectedCahnnel.getDeviceID()) {
                 mNodeList.clear();
             }
             mSelectedCahnnel = selectedChannel;

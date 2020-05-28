@@ -35,37 +35,47 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     }
 
     abstract protected long getMinTimestamp();
+
     abstract protected long getMaxTimestamp();
+
     abstract protected int getLocalTotalCount();
+
     abstract protected void EraseMeasurements(SQLiteDatabase db);
+
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
-    protected void onFirstItem(SQLiteDatabase db) throws JSONException {}
-    protected void onLastItem(SQLiteDatabase db) throws JSONException {}
 
-    protected int itemsLimitPerRequest() {return 1000;}
+    protected void onFirstItem(SQLiteDatabase db) throws JSONException {
+    }
+
+    protected void onLastItem(SQLiteDatabase db) throws JSONException {
+    }
+
+    protected int itemsLimitPerRequest() {
+        return 1000;
+    }
 
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        if (getChannelId() <=0) {
+        if (getChannelId() <= 0) {
             return null;
         }
 
         ApiRequestResult result = apiRequest("channels/"
-                +Integer.toString(getChannelId())
-                +"/measurement-logs?order=ASC"
-                +"&limit=2&offset=0");
+                + Integer.toString(getChannelId())
+                + "/measurement-logs?order=ASC"
+                + "&limit=2&offset=0");
 
-        if (result!=null && result.getCode() == 200) {
+        if (result != null && result.getCode() == 200) {
             boolean doErase = false;
             if (result.getTotalCount() == 0) {
                 doErase = true;
             } else if (result.getJObj() instanceof JSONArray) {
-                JSONArray arr = (JSONArray)result.getJObj();
+                JSONArray arr = (JSONArray) result.getJObj();
                 boolean found = false;
                 long min = getMinTimestamp();
-                for(int a=0;a<arr.length();a++) {
+                for (int a = 0; a < arr.length(); a++) {
                     try {
                         JSONObject obj = arr.getJSONObject(a);
                         if (min == obj.getLong("date_timestamp")) {
@@ -86,19 +96,19 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             }
         }
 
-        AfterTimestamp = getMaxTimestamp()+1;
+        AfterTimestamp = getMaxTimestamp() + 1;
         int LocalTotalCount = getLocalTotalCount();
         Double percent = 0d;
 
         do {
             result = apiRequest("channels/"
-                    +Integer.toString(getChannelId())
-                    +"/measurement-logs?order=ASC"
-                    +"&limit="+Integer.toString(itemsLimitPerRequest())
-                    +"&afterTimestamp="
-                    +Long.toString(AfterTimestamp));
+                    + Integer.toString(getChannelId())
+                    + "/measurement-logs?order=ASC"
+                    + "&limit=" + Integer.toString(itemsLimitPerRequest())
+                    + "&afterTimestamp="
+                    + Long.toString(AfterTimestamp));
 
-            if (result==null || result.getCode() != 200) {
+            if (result == null || result.getCode() != 200) {
                 return null;
             }
 
@@ -106,7 +116,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 return null;
             }
 
-            JSONArray arr = (JSONArray)result.getJObj();
+            JSONArray arr = (JSONArray) result.getJObj();
 
             if (arr == null || arr.length() <= 0) {
                 break;
@@ -120,7 +130,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 db.beginTransaction();
                 try {
 
-                    for(int a=0;a<arr.length();a++) {
+                    for (int a = 0; a < arr.length(); a++) {
 
                         JSONObject obj = obj = arr.getJSONObject(a);
                         long timestamp = obj.getLong("date_timestamp");
@@ -139,7 +149,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
                         SaveMeasurementItem(db, timestamp, obj);
 
-                        if (a == arr.length()-1) {
+                        if (a == arr.length() - 1) {
                             onLastItem(db);
                         }
 
@@ -151,7 +161,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                         LocalTotalCount++;
 
                         if (result.getTotalCount() > 0) {
-                            Double new_percent = LocalTotalCount*100d/result.getTotalCount();
+                            Double new_percent = LocalTotalCount * 100d / result.getTotalCount();
                             if (new_percent - percent >= 1d) {
                                 percent = new_percent;
                                 publishProgress(percent);
@@ -175,11 +185,9 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 db.close();
             }
 
-            Trace.d(log_tag, "TIME: "+Long.toString(System.currentTimeMillis()-t));
+            Trace.d(log_tag, "TIME: " + Long.toString(System.currentTimeMillis() - t));
 
         } while (!isCancelled());
-
-
 
 
         return null;

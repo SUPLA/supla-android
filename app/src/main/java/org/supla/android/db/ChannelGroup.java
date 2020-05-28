@@ -23,7 +23,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -299,7 +298,7 @@ public class ChannelGroup extends ChannelBase {
                 try {
                     Double v = Double.valueOf(n[idx]);
 
-                    if (result!=null) {
+                    if (result != null) {
                         if ((min && v.doubleValue() < result.doubleValue())
                                 || (!min && v.doubleValue() > result.doubleValue())) {
                             result = v;

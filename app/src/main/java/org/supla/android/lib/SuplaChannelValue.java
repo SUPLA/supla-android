@@ -21,7 +21,7 @@ package org.supla.android.lib;
 
 public class SuplaChannelValue {
 
-   public byte[] Value;
-   public byte[] SubValue;
+    public byte[] Value;
+    public byte[] SubValue;
 
 }

@@ -52,6 +52,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -868,8 +869,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         cm.bindProcessToNetwork(n);
                     } else //noinspection ConstantConditions
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ConnectivityManager.setProcessDefaultNetwork(n);
-                    }
+                            ConnectivityManager.setProcessDefaultNetwork(n);
+                        }
 
                 }
 
@@ -882,8 +883,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private int getMaxConfigurationPriority() {
         final List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
         int maxPriority = 0;
-        for(final WifiConfiguration config : configurations) {
-            if(config.priority > maxPriority)
+        for (final WifiConfiguration config : configurations) {
+            if (config.priority > maxPriority)
                 maxPriority = config.priority;
         }
 

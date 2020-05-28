@@ -25,7 +25,6 @@ import android.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.supla.android.Trace;
 
 import java.util.ArrayList;
 
@@ -48,28 +47,28 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
         }
 
         SQLiteDatabase db = getDbH().getReadableDatabase();
-        ArrayList<Integer>ids = getDbH().iconsToDownload(db);
+        ArrayList<Integer> ids = getDbH().iconsToDownload(db);
         db.close();
 
         String package_ids = "";
-        for(int a=0;a<ids.size();a++) {
+        for (int a = 0; a < ids.size(); a++) {
 
             if (!package_ids.isEmpty()) {
-                package_ids+=",";
+                package_ids += ",";
             }
 
-            package_ids+=ids.get(a).toString();
+            package_ids += ids.get(a).toString();
 
-            if (a%PACKAGE_SIZE == PACKAGE_SIZE-1 || a == ids.size()-1) {
+            if (a % PACKAGE_SIZE == PACKAGE_SIZE - 1 || a == ids.size() - 1) {
                 ApiRequestResult result = apiRequest(
-                        "user-icons?include=images&ids="+package_ids);
+                        "user-icons?include=images&ids=" + package_ids);
 
-                if (result!=null
+                if (result != null
                         && result.getCode() == 200
                         && result.getJObj() instanceof JSONArray) {
 
-                    JSONArray arr = (JSONArray)result.getJObj();
-                    for(int b=0;b<arr.length();b++) {
+                    JSONArray arr = (JSONArray) result.getJObj();
+                    for (int b = 0; b < arr.length(); b++) {
                         try {
                             JSONObject obj = arr.getJSONObject(b);
                             int imgId = obj.getInt("id");

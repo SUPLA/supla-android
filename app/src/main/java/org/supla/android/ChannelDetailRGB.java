@@ -49,6 +49,8 @@ import java.util.TimerTask;
 
 public class ChannelDetailRGB extends DetailLayout implements View.OnClickListener, SuplaColorBrightnessPicker.OnColorBrightnessChangeListener, SuplaColorListPicker.OnColorListTouchListener {
 
+    final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
+    final static private long MIN_UPDATE_DELAY = 2000;
     private SuplaColorBrightnessPicker rgbPicker;
     private SuplaColorListPicker clPicker;
     private Button tabRGB;
@@ -58,7 +60,6 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private Button btnSettings;
     private RelativeLayout rlMain;
     private VLCalibrationTool vlCalibrationTool = null;
-
     private TextView tvStateCaption;
     private ImageView stateImage;
     private long remoteUpdateTime;
@@ -66,13 +67,9 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
     private Timer delayTimer1;
     private Timer delayTimer2;
     private SuplaChannelStatus status;
-
     private int lastColor;
     private int lastColorBrightness;
     private int lastBrightness;
-
-    final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
-    final static private long MIN_UPDATE_DELAY = 2000;
 
     public ChannelDetailRGB(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -205,7 +202,7 @@ public class ChannelDetailRGB extends DetailLayout implements View.OnClickListen
                 }
 
                 if (channel instanceof Channel) {
-                    Channel c = (Channel)channel;
+                    Channel c = (Channel) channel;
                     if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
                             && c.getProductID() == 1) {
                         vlCalibrationTool = new VLCalibrationTool(this);

@@ -26,8 +26,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
@@ -44,7 +45,6 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
-import org.supla.android.db.DbHelper;
 import org.supla.android.listview.SectionLayout;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
@@ -366,7 +366,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (imgId != null) {
             notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
-        } else if (imgResId > 0){
+        } else if (imgResId > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 notif_img.setBackground(getResources().getDrawable(imgResId));
             } else {
@@ -486,7 +486,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (up) {
 
             if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.open(channelId, clv == cgroupLV,  0);
+                client.open(channelId, clv == cgroupLV, 0);
 
         } else {
 
@@ -567,14 +567,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
-        if (downloadUserIcons!=null) {
+        if (downloadUserIcons != null) {
             if (downloadUserIcons.downloadCount() > 0) {
-                if (channelLV!=null) {
+                if (channelLV != null) {
                     channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
                 }
 
-                if (cgroupLV!=null) {
-                    cgroupLV.Refresh( DbH_ListView.getGroupListCursor(), true);
+                if (cgroupLV != null) {
+                    cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
                 }
             }
             downloadUserIcons = null;

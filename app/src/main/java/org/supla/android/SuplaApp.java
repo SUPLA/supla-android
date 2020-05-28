@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
@@ -31,23 +32,18 @@ import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
 
-import android.os.Vibrator;
-
 public class SuplaApp extends Application {
-
-    private ArrayList<Handler>msgReceivers = new ArrayList<>();
-
-    private Typeface mTypefaceQuicksandRegular;
-    private Typeface mTypefaceQuicksandLight;
-    private Typeface mTypefaceOpenSansRegular;
-    private Typeface mTypefaceOpenSansBold;
 
     private static final Object _lck1 = new Object();
     private static final Object _lck2 = new Object();
     private static final Object _lck3 = new Object();
-
     private static SuplaClient _SuplaClient = null;
     private static SuplaApp _SuplaApp = null;
+    private ArrayList<Handler> msgReceivers = new ArrayList<>();
+    private Typeface mTypefaceQuicksandRegular;
+    private Typeface mTypefaceQuicksandLight;
+    private Typeface mTypefaceOpenSansRegular;
+    private Typeface mTypefaceOpenSansBold;
     private SuplaOAuthToken _OAuthToken;
     private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
 
@@ -55,14 +51,14 @@ public class SuplaApp extends Application {
         @Override
         public void handleMessage(Message msg) {
 
-            SuplaClientMsg _msg = (SuplaClientMsg)msg.obj;
+            SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
 
-            if ( _msg != null ) {
+            if (_msg != null) {
 
                 if (_msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
                     synchronized (_lck3) {
                         _OAuthToken = _msg.getOAuthToken();
-                        for(int a = 0; a< _RestApiClientTasks.size(); a++) {
+                        for (int a = 0; a < _RestApiClientTasks.size(); a++) {
                             _RestApiClientTasks.get(a).setToken(_OAuthToken);
                         }
                     }
@@ -70,7 +66,7 @@ public class SuplaApp extends Application {
 
                 synchronized (_lck2) {
 
-                    for(int a=0;a<msgReceivers.size();a++) {
+                    for (int a = 0; a < msgReceivers.size(); a++) {
                         Handler msgReceiver = msgReceivers.get(a);
                         msgReceiver.sendMessage(msgReceiver.obtainMessage(_msg.getType(), _msg));
                     }
@@ -82,10 +78,31 @@ public class SuplaApp extends Application {
         }
     };
 
+    public static SuplaApp getApp() {
+
+        synchronized (_lck1) {
+
+            if (_SuplaApp == null) {
+                _SuplaApp = new SuplaApp();
+            }
+
+        }
+
+        return _SuplaApp;
+    }
+
+    public static void Vibrate(Context context) {
+
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (v != null)
+            v.vibrate(100);
+    }
+
     public void addMsgReceiver(Handler msgReceiver) {
         synchronized (_lck2) {
 
-            if ( msgReceivers.indexOf(msgReceiver) == -1 )
+            if (msgReceivers.indexOf(msgReceiver) == -1)
                 msgReceivers.add(msgReceiver);
 
         }
@@ -103,7 +120,7 @@ public class SuplaApp extends Application {
 
         synchronized (_lck1) {
 
-            if (_SuplaClient == null || _SuplaClient.canceled() ) {
+            if (_SuplaClient == null || _SuplaClient.canceled()) {
                 _SuplaClient = new SuplaClient(context);
                 _SuplaClient.setMsgHandler(_sc_msg_handler);
                 _SuplaClient.start();
@@ -129,7 +146,7 @@ public class SuplaApp extends Application {
 
         synchronized (_lck1) {
 
-            if (_SuplaClient == sender ) {
+            if (_SuplaClient == sender) {
                 _SuplaClient = null;
             }
         }
@@ -144,27 +161,6 @@ public class SuplaApp extends Application {
         }
 
         return result;
-    }
-
-    public static SuplaApp getApp() {
-
-        synchronized (_lck1) {
-
-            if (_SuplaApp == null) {
-                _SuplaApp = new SuplaApp();
-            }
-
-        }
-
-        return _SuplaApp;
-    }
-
-    public static void Vibrate(Context context) {
-
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-
-        if ( v != null )
-            v.vibrate(100);
     }
 
     public SuplaOAuthToken RegisterRestApiClientTask(SuplaRestApiClientTask task) {
@@ -193,7 +189,7 @@ public class SuplaApp extends Application {
 
     public void CancelAllRestApiClientTasks(boolean mayInterruptIfRunning) {
         synchronized (_lck3) {
-            for(int a = 0; a< _RestApiClientTasks.size(); a++) {
+            for (int a = 0; a < _RestApiClientTasks.size(); a++) {
                 _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
             }
         }
