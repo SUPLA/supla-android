@@ -323,7 +323,10 @@ public class SuplaColorBrightnessPicker extends View {
 
     }
 
-    private void drawOuterPointerArrow(Canvas canvas, PointerTop top, double topAngle, float wheelRadius, float wheelWidth, double arrowOffset, double arrowHeight_a, double arrowHeight_b, int color, Path arrowPath, Paint arrowPaint) {
+    private void drawOuterPointerArrow(Canvas canvas, PointerTop top, double topAngle,
+                                       float wheelRadius, float wheelWidth, double arrowOffset,
+                                       double arrowHeight_a, double arrowHeight_b,
+                                       int color, Path arrowPath, Paint arrowPaint) {
 
         top.X = Math.cos(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
         top.Y = Math.sin(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
