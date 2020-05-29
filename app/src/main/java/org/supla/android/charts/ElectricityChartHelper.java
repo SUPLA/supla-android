@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -59,16 +60,16 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         if (isBalanceChartType(ctype)) {
 
-            float value = 0;
+            float cons = 0;
+            float prod = 0;
 
             if (isVectorBalanceChartType(ctype)) {
-                double prod = c.getDouble(
+                prod = (float)c.getDouble(
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED));
-                double cons = c.getDouble(
+                cons = (float)c.getDouble(
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED));
-                value = (float) (cons - prod);
             } else {
                 double prod1 = c.getDouble(
                         c.getColumnIndex(
@@ -90,10 +91,20 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
 
-                value = (float) ((cons1 + cons2 + cons3) - (prod1 + prod2 + prod3));
+                cons = (float)(cons1 + cons2 + cons3);
+                prod = (float)(prod1 + prod2 + prod3);
             }
 
-            entries.add(new BarEntry(n, value));
+            float cons_diff = prod > cons ? cons : prod;
+            float prod_diff = cons > prod ? prod : cons;
+
+            float[] values = new float[4];
+            values[0] = prod_diff * -1;
+            values[1] = (prod - prod_diff) * -1;
+            values[2] = cons - cons_diff;
+            values[3] = cons_diff;
+
+            entries.add(new BarEntry(n, values));
 
         } else {
             float[] phases = new float[3];
@@ -158,26 +169,41 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
         Resources res = context.getResources();
 
-        result.setStackLabels(new String[]{
-                res.getString(R.string.em_phase1),
-                res.getString(R.string.em_phase2),
-                res.getString(R.string.em_phase3)});
+        if (isBalanceChartType(ctype)) {
+            result.setStackLabels(new String[]{
+                    "",
+                    "",
+                    ""});
 
-        List<Integer> Colors = new ArrayList<Integer>(3);
-        Colors.add(res.getColor(R.color.phase1));
-        Colors.add(res.getColor(R.color.phase2));
-        Colors.add(res.getColor(R.color.phase3));
-        result.setColors(Colors);
+
+            List<Integer> Colors = new ArrayList<Integer>(4);
+            Colors.add(Color.GRAY);
+            Colors.add(res.getColor(R.color.chart_color_value_negative));
+            Colors.add(res.getColor(R.color.chart_color_value_positive));
+            Colors.add(Color.GRAY);
+            result.setColors(Colors);
+        } else {
+            result.setStackLabels(new String[]{
+                    res.getString(R.string.em_phase1),
+                    res.getString(R.string.em_phase2),
+                    res.getString(R.string.em_phase3)});
+
+
+            List<Integer> Colors = new ArrayList<Integer>(3);
+            Colors.add(res.getColor(R.color.phase1));
+            Colors.add(res.getColor(R.color.phase2));
+            Colors.add(res.getColor(R.color.phase3));
+            result.setColors(Colors);
+        }
 
         return result;
     }
 
     @Override
     protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
-        if ((isProductionDataSource() && isComparsionChartType(ctype))
-                || isBalanceChartType(ctype)) {
+        if ((isProductionDataSource() && isComparsionChartType(ctype))) {
             barDataSet.setColorDependsOnTheValue(true);
-            barDataSet.setColors(getBarChartComparsionColors(!isBalanceChartType(ctype)));
+            barDataSet.setColors(getBarChartComparsionColors(true));
         } else {
             super.prepareBarDataSet(barDataSet);
         }
