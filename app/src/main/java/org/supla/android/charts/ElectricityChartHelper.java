@@ -64,10 +64,10 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
             float prod = 0;
 
             if (isVectorBalanceChartType(ctype)) {
-                prod = (float)c.getDouble(
+                prod = (float) c.getDouble(
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED));
-                cons = (float)c.getDouble(
+                cons = (float) c.getDouble(
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED));
             } else {
@@ -91,8 +91,8 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
                         c.getColumnIndex(
                                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
 
-                cons = (float)(cons1 + cons2 + cons3);
-                prod = (float)(prod1 + prod2 + prod3);
+                cons = (float) (cons1 + cons2 + cons3);
+                prod = (float) (prod1 + prod2 + prod3);
             }
 
             float cons_diff = prod > cons ? cons : prod;
