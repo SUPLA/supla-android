@@ -463,7 +463,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (client == null)
             return;
 
-        if (!up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+        if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
             DbHelper dbH = new DbHelper(this);
             Channel channel = dbH.getChannel(channelId);
