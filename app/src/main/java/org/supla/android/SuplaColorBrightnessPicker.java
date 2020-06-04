@@ -10,11 +10,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.ArrayList;
 
 /*
@@ -33,10 +31,6 @@ import java.util.ArrayList;
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
- Fragments of code based on:
-    https://github.com/chiralcode/Android-Color-Picker/blob/master/src/com/chiralcode/colorpicker/ColorPicker.java
-    https://github.com/LarsWerkman/HoloColorPicker/blob/master/libary/src/main/java/com/larswerkman/holocolorpicker/ColorPicker.java
  */
 
 public class SuplaColorBrightnessPicker extends View {
@@ -60,8 +54,6 @@ public class SuplaColorBrightnessPicker extends View {
     private RectF rectF = new RectF();
     private float centerX;
     private float centerY;
-    private float wheelWidth;
-    private float arrowHeight;
     private float outerWheelWidth;
     private double outerArrowHeight_a;
     private double outerArrowHeight_b;
@@ -74,7 +66,6 @@ public class SuplaColorBrightnessPicker extends View {
     private double innerWheelPointerAngle;
     private int selectedColor;
     private double selectedBrightness;
-    private int selectedBrightnessColor;
     private Path outerArrowPath;
     private Paint outerArrowPaint;
     private Path innerArrowPath;
@@ -86,17 +77,16 @@ public class SuplaColorBrightnessPicker extends View {
     private Shader bwShader; // brightness wheel shader
     private Matrix gradientRotationMatrix;
     private boolean colorWheelVisible;
-    private boolean bwBrightnessWheelVisible;
-    private boolean colorBrightnessWheelVisible;
-    private boolean percentVisible;
     private boolean colorWheelMove;
     private boolean brightnessWheelMove;
+    private boolean colorfulBrightnessWheel;
+    private boolean circleInsteadArrow;
     private double lastTouchedAngle;
     private OnColorBrightnessChangeListener mOnChangeListener;
     private Rect bounds;
-    private Paint textPaint;
     private ArrayList<Double> ColorMarkers;
     private ArrayList<Double> BrightnessMarkers;
+
     public SuplaColorBrightnessPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
@@ -115,8 +105,6 @@ public class SuplaColorBrightnessPicker extends View {
     private void init() {
 
         colorWheelVisible = true;
-        bwBrightnessWheelVisible = false;
-        colorBrightnessWheelVisible = false;
 
         paint = new Paint();
 
@@ -141,7 +129,6 @@ public class SuplaColorBrightnessPicker extends View {
         innerArrowPaint = new Paint();
 
         innerWheelPointerAngle = Math.toRadians(-90);
-        selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
         selectedBrightness = 0;
 
         gradientRotationMatrix = new Matrix();
@@ -150,18 +137,12 @@ public class SuplaColorBrightnessPicker extends View {
 
         colorWheelMove = false;
         brightnessWheelMove = false;
-
-        percentVisible = true;
+        colorfulBrightnessWheel = true;
+        circleInsteadArrow = false;
 
         bounds = new Rect();
-        textPaint = new Paint();
 
-        textPaint.setAntiAlias(true);
-        textPaint.setColor(Color.BLACK);
-
-        setWheelWidth(100);
-        setArrowHeight(100);
-
+        setBWcolor();
     }
 
     private int ave(int s, int d, float p) {
@@ -252,81 +233,91 @@ public class SuplaColorBrightnessPicker extends View {
 
     }
 
+    private void drawCirclePointer(Canvas canvas, double angle,
+                                   float wheelRadius, float wheelWidth) {
+
+        float x = (float)Math.cos(angle) * wheelRadius;
+        float y = (float)Math.sin(angle) * wheelRadius;
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.BLACK);
+
+        canvas.drawCircle(x, y, wheelWidth * 0.47f, paint);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
 
         canvas.translate(centerX, centerY);
-
 
         if (colorWheelVisible) {
 
             cwPaint.setShader(cwShader);
             rectF.set(-outerWheelRadius, -outerWheelRadius, outerWheelRadius, outerWheelRadius);
             canvas.drawOval(rectF, cwPaint);
-            drawOuterPointerArrow(canvas, outerTop,
-                    outerWheelPointerAngle,
-                    outerWheelRadius,
-                    outerWheelWidth,
-                    -(outerArrowHeight_a / 4),
-                    outerArrowHeight_a,
-                    outerArrowHeight_b,
-                    selectedColor,
-                    outerArrowPath,
-                    outerArrowPaint);
+
+            if (circleInsteadArrow) {
+                drawCirclePointer(canvas, outerWheelPointerAngle,
+                        outerWheelRadius, outerWheelWidth);
+            } else {
+                drawArrow(canvas, outerTop,
+                        outerWheelPointerAngle,
+                        outerWheelRadius,
+                        outerWheelWidth,
+                        -(outerArrowHeight_a / 4),
+                        outerArrowHeight_a,
+                        outerArrowHeight_b,
+                        selectedColor,
+                        outerArrowPath,
+                        outerArrowPaint);
+            }
+
 
             drawMarkers(canvas, outerWheelRadius,
                     outerWheelWidth / 6, ColorMarkers, false);
         }
 
-        if (bwBrightnessWheelVisible
-                || colorBrightnessWheelVisible) {
+        bwPaint.setShader(bwShader);
+        rectF.set(-innerWheelRadius, -innerWheelRadius, innerWheelRadius, innerWheelRadius);
+        canvas.drawOval(rectF, bwPaint);
 
-            bwPaint.setShader(bwShader);
-            rectF.set(-innerWheelRadius, -innerWheelRadius, innerWheelRadius, innerWheelRadius);
-            canvas.drawOval(rectF, bwPaint);
+        int negative;
+        double arrowOffset;
 
-            int negative;
-            double arrowOffset;
+        if (colorWheelVisible) {
+            negative = -1;
+            arrowOffset = innerArrowHeight_a / 4 - innerWheelWidth;
+        } else {
+            negative = 1;
+            arrowOffset = -(innerArrowHeight_a / 4);
+        }
 
-            if (colorWheelVisible) {
-                negative = -1;
-                arrowOffset = innerArrowHeight_a / 4 - innerWheelWidth;
-            } else {
-                negative = 1;
-                arrowOffset = -(innerArrowHeight_a / 4);
-            }
-
-            drawOuterPointerArrow(canvas, innerTop,
+        if (circleInsteadArrow) {
+            drawCirclePointer(canvas, innerWheelPointerAngle,
+                    innerWheelRadius, innerWheelWidth);
+        } else {
+            drawArrow(canvas, innerTop,
                     innerWheelPointerAngle,
                     innerWheelRadius,
                     innerWheelWidth,
                     arrowOffset,
                     negative * innerArrowHeight_a,
                     negative * innerArrowHeight_b,
-                    selectedBrightnessColor,
+                    calculateColor((float) (innerWheelPointerAngle - m90d), BW),
                     innerArrowPath,
                     innerArrowPaint);
-
-            if (percentVisible) {
-
-                String text = Integer.toString((int) selectedBrightness) + "%";
-
-                textPaint.getTextBounds(text, 0, text.length(), bounds);
-                canvas.drawText(text, -(bounds.width() / 2), bounds.height() / 2, textPaint);
-            }
-
-            drawMarkers(canvas, innerWheelRadius, innerWheelWidth / 6,
-                    BrightnessMarkers, true);
-
         }
+
+        drawMarkers(canvas, innerWheelRadius, innerWheelWidth / 6,
+                BrightnessMarkers, true);
 
 
     }
 
-    private void drawOuterPointerArrow(Canvas canvas, PointerTop top, double topAngle,
-                                       float wheelRadius, float wheelWidth, double arrowOffset,
-                                       double arrowHeight_a, double arrowHeight_b,
-                                       int color, Path arrowPath, Paint arrowPaint) {
+    private void drawArrow(Canvas canvas, PointerTop top, double topAngle,
+                           float wheelRadius, float wheelWidth, double arrowOffset,
+                           double arrowHeight_a, double arrowHeight_b,
+                           int color, Path arrowPath, Paint arrowPaint) {
 
         top.X = Math.cos(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
         top.Y = Math.sin(topAngle) * (wheelRadius + wheelWidth / 2 + arrowOffset);
@@ -370,7 +361,7 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     private void setBWcolor() {
-        int color = colorBrightnessWheelVisible ? selectedColor : Color.WHITE;
+        int color = colorWheelVisible && colorfulBrightnessWheel ? selectedColor : Color.WHITE;
 
         if (BW[1] != color) {
             BW[1] = color;
@@ -382,6 +373,16 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     private void _onSizeChanged() {
+
+        float arrowHeight = 0;
+        float wheelWidth = this.getWidth() > this.getHeight() ? this.getHeight() : this.getWidth();
+
+        if (circleInsteadArrow) {
+            wheelWidth /= 7.0f;
+        } else {
+            wheelWidth /= 10.0f;
+            arrowHeight = wheelWidth * 0.9f;
+        }
 
         outerWheelWidth = wheelWidth / 2;
         outerArrowHeight_a = arrowHeight;
@@ -396,15 +397,15 @@ public class SuplaColorBrightnessPicker extends View {
         centerX = this.getWidth() / 2;
         centerY = this.getHeight() / 2;
 
-        if (colorWheelVisible
-                && (bwBrightnessWheelVisible || colorBrightnessWheelVisible)) {
+        if (colorWheelVisible && !circleInsteadArrow) {
             outerWheelWidth = wheelWidth / 2;
         } else {
             outerWheelWidth = wheelWidth;
         }
 
         innerWheelWidth = outerWheelWidth;
-        outerWheelRadius = Math.min(centerX, centerY) - outerWheelWidth / 2 - (int) (arrowHeight);
+        int margin = circleInsteadArrow ? 0 : (int) (arrowHeight);
+        outerWheelRadius = Math.min(centerX, centerY) - outerWheelWidth / 2 - margin;
 
         if (colorWheelVisible) {
             innerWheelRadius = outerWheelRadius - innerWheelWidth;
@@ -412,7 +413,6 @@ public class SuplaColorBrightnessPicker extends View {
             innerWheelRadius = outerWheelRadius;
         }
 
-        textPaint.setTextSize((int) (innerWheelRadius * 0.4));
         cwPaint.setStrokeWidth(outerWheelWidth);
         bwPaint.setStrokeWidth(innerWheelWidth);
     }
@@ -504,8 +504,7 @@ public class SuplaColorBrightnessPicker extends View {
                     colorWheelMove = true;
                     brightnessWheelMove = false;
 
-                } else if ((bwBrightnessWheelVisible || colorBrightnessWheelVisible)
-                        && Math.abs(innerTop.X - x) <= innerTop.Height
+                } else if (Math.abs(innerTop.X - x) <= innerTop.Height
                         && Math.abs(innerTop.Y - y) <= innerTop.Height
                         && ((colorWheelVisible
                         && sqrt <= innerWheelRadius - innerWheelWidth / 2
@@ -521,7 +520,7 @@ public class SuplaColorBrightnessPicker extends View {
 
                 lastTouchedAngle = inRads;
 
-                if (!getMoving())
+                if (!isMoving())
                     return super.onTouchEvent(event);
 
                 break;
@@ -536,8 +535,8 @@ public class SuplaColorBrightnessPicker extends View {
 
                     if (newColor != selectedColor) {
 
-                        selectedColor = newColor;
                         setBWcolor();
+                        selectedColor = newColor;
                         invalidate();
 
                         if (mOnChangeListener != null)
@@ -584,11 +583,6 @@ public class SuplaColorBrightnessPicker extends View {
 
                 }
 
-                if ((colorWheelMove || brightnessWheelMove)
-                        && (bwBrightnessWheelVisible || colorBrightnessWheelVisible)) {
-                    selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
-                }
-
                 lastTouchedAngle = inRads;
 
                 break;
@@ -611,9 +605,7 @@ public class SuplaColorBrightnessPicker extends View {
             color = 0xFFFFFFFF;
 
         if (selectedColor != color) {
-
             selectedColor = color;
-            setBWcolor();
             outerWheelPointerAngle = colorToAngle(color);
 
             if (color == Color.WHITE)
@@ -621,10 +613,8 @@ public class SuplaColorBrightnessPicker extends View {
             else
                 selectedColor = calculateColor((float) outerWheelPointerAngle, Colors);
 
-            setBWcolor();
-            setBrightnessValue(selectedBrightness);
+            invalidate();
         }
-
     }
 
     public boolean getColorWheelVisible() {
@@ -632,27 +622,10 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public void setColorWheelVisible(boolean visible) {
-
         if (visible != colorWheelVisible) {
-
-            if (visible) {
-                bwBrightnessWheelVisible = false;
-                colorBrightnessWheelVisible = false;
-            } else {
-                bwBrightnessWheelVisible = true;
-                colorBrightnessWheelVisible = false;
-            }
-
             colorWheelVisible = visible;
+            setBWcolor();
             _onSizeChanged();
-            invalidate();
-        }
-
-    }
-
-    public void setPercentVisible(boolean visible) {
-        if (percentVisible != visible) {
-            percentVisible = visible;
             invalidate();
         }
     }
@@ -664,10 +637,8 @@ public class SuplaColorBrightnessPicker extends View {
     public void setBrightnessValue(double value) {
 
         innerWheelPointerAngle = brightnessToAngle(value);
-        selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
         selectedBrightness = value;
         invalidate();
-
 
     }
 
@@ -696,82 +667,7 @@ public class SuplaColorBrightnessPicker extends View {
         return result;
     }
 
-    public float getWheelWidth() {
-        return wheelWidth;
-    }
-
-    public void setWheelWidth(float wheelWidth) {
-        this.wheelWidth = wheelWidth;
-        _onSizeChanged();
-        invalidate();
-    }
-
-    public float getArrowHeight() {
-        return arrowHeight;
-    }
-
-    public void setArrowHeight(float arrowHeight) {
-        this.arrowHeight = arrowHeight;
-    }
-
-    public void setTextTypeface(Typeface typeface) {
-
-        textPaint.setTypeface(typeface);
-        invalidate();
-    }
-
-    public boolean getColorBrightnessWheelVisible() {
-        return colorBrightnessWheelVisible;
-    }
-
-    public void setColorBrightnessWheelVisible(boolean visible) {
-
-        if (visible != colorBrightnessWheelVisible) {
-
-            if (visible) {
-                colorWheelVisible = true;
-                bwBrightnessWheelVisible = false;
-            }
-
-            colorBrightnessWheelVisible = visible;
-
-            setBWcolor();
-            selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
-
-            _onSizeChanged();
-            invalidate();
-        }
-
-    }
-
-    public boolean getBWBrightnessWheelVisible() {
-        return bwBrightnessWheelVisible;
-    }
-
-    public void setBWBrightnessWheelVisible(boolean visible) {
-
-        if (visible != bwBrightnessWheelVisible) {
-
-            if (visible) {
-                colorBrightnessWheelVisible = false;
-                colorWheelVisible = false;
-            } else {
-                colorBrightnessWheelVisible = false;
-                colorWheelVisible = true;
-            }
-
-            bwBrightnessWheelVisible = visible;
-
-            setBWcolor();
-            selectedBrightnessColor = calculateColor((float) (innerWheelPointerAngle - m90d), BW);
-
-            _onSizeChanged();
-            invalidate();
-        }
-
-    }
-
-    public boolean getMoving() {
+    public boolean isMoving() {
         return colorWheelMove || brightnessWheelMove;
     }
 
@@ -790,6 +686,26 @@ public class SuplaColorBrightnessPicker extends View {
 
     public void setBrightnessMarkers(ArrayList<Double> brightnessMarkers) {
         BrightnessMarkers = brightnessMarkers == null ? null : new ArrayList<>(brightnessMarkers);
+        invalidate();
+    }
+
+    public boolean isColorfulBrightnessWheel() {
+        return colorfulBrightnessWheel;
+    }
+
+    public void setColorfulBrightnessWheel(boolean colorfulBrightnessWheel) {
+        this.colorfulBrightnessWheel = colorfulBrightnessWheel;
+        setBWcolor();
+        invalidate();
+    }
+
+    public boolean isCircleInsteadArrow() {
+        return circleInsteadArrow;
+    }
+
+    public void setCircleInsteadArrow(boolean circleInsteadArrow) {
+        this.circleInsteadArrow = circleInsteadArrow;
+        _onSizeChanged();
         invalidate();
     }
 
