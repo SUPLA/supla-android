@@ -87,6 +87,13 @@ public class SuplaColorBrightnessPicker extends View {
     private ArrayList<Double> brightnessMarkers;
     private boolean sliderVisible;
     private RectF sliderRect;
+    private boolean powerButtonVisible;
+    private boolean powerButtonEnabled;
+    private boolean powerButtonOn;
+    private int powerButtonColorOn;
+    private int powerButtonColorOff;
+    private float powerButtonRadius;
+    private boolean powerButtonTouched;
 
     public SuplaColorBrightnessPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -135,6 +142,10 @@ public class SuplaColorBrightnessPicker extends View {
         brightnessWheelPointerMoving = false;
         colorfulBrightnessWheel = true;
         circleInsteadArrow = false;
+        powerButtonColorOn = Color.parseColor("#f7f0dc");
+        powerButtonColorOff = Color.parseColor("#404040");
+
+        powerButtonEnabled = true;
 
         setBWcolor();
     }
@@ -280,6 +291,27 @@ public class SuplaColorBrightnessPicker extends View {
         return rad;
     }
 
+    private void drawPowerButton(Canvas canvas, float wheelRadius) {
+        powerButtonRadius = wheelRadius * 0.3f;
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(powerButtonOn ? powerButtonColorOn : powerButtonColorOff);
+        paint.setStrokeWidth(powerButtonRadius * 0.2f);
+
+        Path path = new Path();
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        RectF rect = new RectF(-powerButtonRadius, -powerButtonRadius,
+                powerButtonRadius, powerButtonRadius);
+        path.addArc(rect, -60f, 300f);
+        path.moveTo(0f, powerButtonRadius * -1f - powerButtonRadius * 0.15f);
+        path.lineTo(0f, powerButtonRadius * -1f + powerButtonRadius * 0.6f);
+
+        canvas.drawPath(path, paint);
+
+    }
+
     private void drawWheel(Canvas canvas) {
 
         if (colorWheelVisible) {
@@ -350,6 +382,9 @@ public class SuplaColorBrightnessPicker extends View {
                 brightnessWheelWidth / (circleInsteadArrow ? 9 : 6),
                 brightnessMarkers, true);
 
+        if (powerButtonVisible) {
+            drawPowerButton(canvas, brightnessWheelRadius * 0.8f);
+        }
     }
 
     private void drawSlider(Canvas canvas) {
@@ -546,15 +581,24 @@ public class SuplaColorBrightnessPicker extends View {
                 colorPointerMoving = false;
                 brightnessWheelPointerMoving = false;
 
-                if (mOnChangeListener != null)
-                    mOnChangeListener.onChangeFinished();
+                if (powerButtonTouched) {
+                    setPowerButtonOn(!isPowerButtonOn());
 
+                    if (mOnChangeListener != null)
+                        mOnChangeListener.onPowerButtonClick(this);
+                }
+
+                if (mOnChangeListener != null)
+                    mOnChangeListener.onChangeFinished(this);
+
+                powerButtonTouched = false;
                 break;
 
             case MotionEvent.ACTION_DOWN:
 
                 colorPointerMoving = false;
                 brightnessWheelPointerMoving = false;
+                powerButtonTouched = false;
 
                 if (!sliderVisible
                         && colorWheelVisible
@@ -568,9 +612,14 @@ public class SuplaColorBrightnessPicker extends View {
                     } else {
                         touchDiff = pointToRadians(brightnessPointerCenter) - touchAngle;
                     }
+                } else if (powerButtonVisible
+                        && powerButtonEnabled
+                        && touchOverPointer(touchPoint, new PointF(0, 0),
+                        powerButtonRadius * 2.2)) {
+                    powerButtonTouched = true;
                 }
 
-                if (!isMoving()) {
+                if (!isMoving() && !powerButtonTouched) {
                     return super.onTouchEvent(event);
                 }
                 break;
@@ -812,12 +861,58 @@ public class SuplaColorBrightnessPicker extends View {
         invalidate();
     }
 
+    public boolean isPowerButtonVisible() {
+        return powerButtonVisible;
+    }
+
+    public void setPowerButtonVisible(boolean powerButtonVisible) {
+        this.powerButtonVisible = powerButtonVisible;
+        invalidate();
+    }
+
+    public boolean isPowerButtonEnabled() {
+        return powerButtonEnabled;
+    }
+
+    public void setPowerButtonEnabled(boolean powerButtonEnabled) {
+        this.powerButtonEnabled = powerButtonEnabled;
+    }
+
+    public boolean isPowerButtonOn() {
+        return powerButtonOn;
+    }
+
+    public void setPowerButtonOn(boolean powerButtonOn) {
+        this.powerButtonOn = powerButtonOn;
+        invalidate();
+    }
+
+    public int getPowerButtonColorOn() {
+        return powerButtonColorOn;
+    }
+
+    public void setPowerButtonColorOn(int powerButtonColorOn) {
+        this.powerButtonColorOn = powerButtonColorOn;
+        invalidate();
+    }
+
+    public int getPowerButtonColorOff() {
+        return powerButtonColorOff;
+    }
+
+    public void setPowerButtonColorOff(int powerButtonColorOff) {
+        this.powerButtonColorOff = powerButtonColorOff;
+        invalidate();
+    }
+
     public interface OnColorBrightnessChangeListener {
         void onColorChanged(SuplaColorBrightnessPicker scbPicker, int color);
 
         void onBrightnessChanged(SuplaColorBrightnessPicker scbPicker, double brightness);
 
-        void onChangeFinished();
+        void onChangeFinished(SuplaColorBrightnessPicker scbPicker);
+
+        void onPowerButtonClick(SuplaColorBrightnessPicker scbPicker);
     }
 
 }
