@@ -39,7 +39,7 @@ android {
     lintOptions { checkReleaseBuilds false }
     testOptions { unitTests.returnDefaultValues = true }
 
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.3'
 }
 
 repositories {
