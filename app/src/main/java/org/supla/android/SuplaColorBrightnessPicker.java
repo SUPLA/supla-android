@@ -139,6 +139,7 @@ public class SuplaColorBrightnessPicker extends View {
         powerButtonColorOn = 0xfff7f0dc;
         powerButtonColorOff = 0xff404040;
 
+        powerButtonVisible = true;
         powerButtonEnabled = true;
 
         setBrightnessValue(0);

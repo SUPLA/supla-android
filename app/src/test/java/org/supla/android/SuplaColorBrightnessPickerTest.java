@@ -76,11 +76,11 @@ public class SuplaColorBrightnessPickerTest extends TestCase {
     }
 
     public void testPowerButtonVisibleSetterAndGetter() {
-        Assert.assertFalse(picker.isPowerButtonVisible());
-        picker.setPowerButtonVisible(true);
         Assert.assertTrue(picker.isPowerButtonVisible());
         picker.setPowerButtonVisible(false);
         Assert.assertFalse(picker.isPowerButtonVisible());
+        picker.setPowerButtonVisible(true);
+        Assert.assertTrue(picker.isPowerButtonVisible());
     }
 
     public void testPowerButtonEnabledSetterAndGetter() {
