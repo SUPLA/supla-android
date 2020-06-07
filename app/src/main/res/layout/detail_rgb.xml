@@ -31,7 +31,7 @@
             android:layout_alignParentTop="false">
 
             <org.supla.android.SuplaColorBrightnessPicker
-                android:id="@+id/rgbPicker"
+                android:id="@+id/cbPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/clPicker"
