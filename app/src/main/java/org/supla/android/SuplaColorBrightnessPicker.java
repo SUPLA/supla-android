@@ -135,7 +135,7 @@ public class SuplaColorBrightnessPicker extends View {
         colorPointerMoving = false;
         brightnessWheelPointerMoving = false;
         colorfulBrightnessWheel = true;
-        circleInsteadArrow = false;
+        circleInsteadArrow = true;
         powerButtonColorOn = 0xfff7f0dc;
         powerButtonColorOff = 0xff404040;
 

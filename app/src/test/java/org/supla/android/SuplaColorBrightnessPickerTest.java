@@ -52,11 +52,11 @@ public class SuplaColorBrightnessPickerTest extends TestCase {
     }
 
     public void testCircleInsteadArrowSetterAndGetter() {
-        Assert.assertFalse(picker.isCircleInsteadArrow());
-        picker.setCircleInsteadArrow(true);
         Assert.assertTrue(picker.isCircleInsteadArrow());
         picker.setCircleInsteadArrow(false);
         Assert.assertFalse(picker.isCircleInsteadArrow());
+        picker.setCircleInsteadArrow(true);
+        Assert.assertTrue(picker.isCircleInsteadArrow());
     }
 
     public void testColorfulBrightnessWheelSetterAndGetter() {
