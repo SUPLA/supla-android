@@ -1,13 +1,4 @@
 package org.supla.android;
-
-import android.content.Context;
-import android.view.MotionEvent;
-
-import junit.framework.TestCase;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -25,6 +16,14 @@ import static org.mockito.Mockito.when;
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+import android.content.Context;
+import android.view.MotionEvent;
+
+import junit.framework.TestCase;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SuplaCurtainsTest extends TestCase {
 
