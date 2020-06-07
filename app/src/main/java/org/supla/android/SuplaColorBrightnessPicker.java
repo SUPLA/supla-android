@@ -129,25 +129,20 @@ public class SuplaColorBrightnessPicker extends View {
         colorPointerCenter = new PointF();
         brightnessPointerCenter = new PointF();
 
-        colorWheelPointerAngle = Math.toRadians(-90);
-        selectedColor = calculateColor((float) colorWheelPointerAngle, Colors);
-
         brightnessArrowPath = new Path();
         brightnessArrowPaint = new Paint();
-
-        brightnessWheelPointerAngle = Math.toRadians(-90);
-        selectedBrightness = 0;
 
         colorPointerMoving = false;
         brightnessWheelPointerMoving = false;
         colorfulBrightnessWheel = true;
         circleInsteadArrow = false;
-        powerButtonColorOn = Color.parseColor("#f7f0dc");
-        powerButtonColorOff = Color.parseColor("#404040");
+        powerButtonColorOn = 0xfff7f0dc;
+        powerButtonColorOff = 0xff404040;
 
         powerButtonEnabled = true;
 
-        setBWcolor();
+        setBrightnessValue(0);
+        setColor(0xff00ff00);
     }
 
     private int ave(int s, int d, float p) {
@@ -718,19 +713,10 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public void setColor(int color) {
-
-        if ((color & 0xFFFFFF) == 0xFFFFFF)
-            color = 0xFFFFFFFF;
-
         if (selectedColor != color) {
             selectedColor = color;
             colorWheelPointerAngle = colorToAngle(color);
-
-            if (color == Color.WHITE)
-                selectedColor = color;
-            else
-                selectedColor = calculateColor((float) colorWheelPointerAngle, Colors);
-
+            setBWcolor();
             invalidate();
         }
     }
@@ -796,7 +782,7 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public ArrayList<Double> getColorMarkers() {
-        return new ArrayList<>(colorMarkers);
+        return colorMarkers == null ? null : new ArrayList<>(colorMarkers);
     }
 
     public void setColorMarkers(ArrayList<Double> colorMarkers) {
@@ -807,7 +793,7 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public ArrayList<Double> getBrightnessMarkers() {
-        return new ArrayList<>(brightnessMarkers);
+        return brightnessMarkers == null ? null : new ArrayList<>(brightnessMarkers);
     }
 
     public void setBrightnessMarkers(ArrayList<Double> brightnessMarkers) {
