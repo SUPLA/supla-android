@@ -83,7 +83,7 @@ public class SuplaColorBrightnessPicker extends View {
     private boolean circleInsteadArrow;
     private double touchDiff;
     private OnColorBrightnessChangeListener mOnChangeListener;
-    private ArrayList<Double> ColorMarkers;
+    private ArrayList<Double> colorMarkers;
     private ArrayList<Double> brightnessMarkers;
     private boolean sliderVisible;
     private RectF sliderRect;
@@ -338,7 +338,7 @@ public class SuplaColorBrightnessPicker extends View {
 
             drawWheelMarkers(canvas, colorWheelRadius,
                     colorWheelWidth / (circleInsteadArrow ? 9 : 6),
-                    ColorMarkers, false);
+                    colorMarkers, false);
         }
 
         bwPaint.setStyle(Paint.Style.STROKE);
@@ -735,7 +735,7 @@ public class SuplaColorBrightnessPicker extends View {
         }
     }
 
-    public boolean getColorWheelVisible() {
+    public boolean isColorWheelVisible() {
         return colorWheelVisible;
     }
 
@@ -795,27 +795,13 @@ public class SuplaColorBrightnessPicker extends View {
         return colorPointerMoving || brightnessWheelPointerMoving;
     }
 
-    public ArrayList<Integer> getColorMarkers() {
-        if (ColorMarkers != null && ColorMarkers.size() > 0) {
-            ArrayList<Integer> result = new ArrayList<>();
-            for (Double color : ColorMarkers) {
-                result.add(color.intValue());
-            }
-            return result;
-        }
-
-        return null;
+    public ArrayList<Double> getColorMarkers() {
+        return new ArrayList<>(colorMarkers);
     }
 
-    public void setColorMarkers(ArrayList<Integer> colorMarkers) {
-        ColorMarkers = null;
-
-        if (colorMarkers != null && colorMarkers.size() > 0) {
-            ColorMarkers = new ArrayList<>();
-            for (Integer color : colorMarkers) {
-                ColorMarkers.add(color.doubleValue());
-            }
-        }
+    public void setColorMarkers(ArrayList<Double> colorMarkers) {
+        this.colorMarkers = colorMarkers == null ?
+                null : new ArrayList<>(colorMarkers);
 
         invalidate();
     }
