@@ -44,7 +44,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
     private SuplaRollerShutter rs;
     private SuplaChannelStatus status;
-    private TextView tvTitle;
     private TextView tvPercentCaption;
     private TextView tvPercent;
     private Button btnUp;
@@ -101,9 +100,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        tvTitle = findViewById(R.id.rsDetailTitle);
-        tvTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
         addOnLayoutChangeListener(this);
         delayTimer1 = null;
     }
@@ -126,8 +122,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             byte p = channel.getRollerShutterPosition();
 
-            tvTitle.setText(channel.getNotEmptyCaption(getContext()));
-
             rs.setMarkers(null);
             rs.setPercent(p);
 
@@ -140,7 +134,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             status.setVisibility(View.VISIBLE);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
-            tvTitle.setText(cgroup.getNotEmptyCaption(getContext()));
             rs.setPercent(0);
 
             status.setPercent(cgroup.getOnLinePercent());

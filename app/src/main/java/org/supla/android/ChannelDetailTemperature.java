@@ -55,7 +55,6 @@ public class ChannelDetailTemperature extends DetailLayout implements
     protected ChartHelper chartHelper;
     private DownloadMeasurementLogs downloadMeasurementLogs;
     private ProgressBar tvProgress;
-    private TextView tvChannelTitle;
     private ImageView ivThermometerIcon;
     private Spinner thSpinner;
     private ImageView ivGraph;
@@ -95,7 +94,6 @@ public class ChannelDetailTemperature extends DetailLayout implements
     protected void init() {
         super.init();
         tvProgress = findViewById(R.id.thProgressBar);
-        tvChannelTitle = findViewById(R.id.thtv_ChannelTitle);
         thSpinner = findViewById(R.id.thSpinner);
         ivThermometerIcon = findViewById(R.id.thThermometerIcon);
 
@@ -133,7 +131,6 @@ public class ChannelDetailTemperature extends DetailLayout implements
     }
 
     protected void OnChannelDataChanged(Channel channel) {
-        tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
         tvTemperature.setText(channel.getHumanReadableValue());
     }
 

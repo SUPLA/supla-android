@@ -55,7 +55,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImpulseCounterChartHelper chartHelper;
     private DownloadImpulseCounterMeasurements dtm;
     private ProgressBar icProgress;
-    private TextView tvChannelTitle;
     private TextView tvMeterValue;
     private TextView tvCurrentConsumption;
     private TextView tvCurrentCost;
@@ -86,7 +85,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     protected void init() {
         super.init();
         icProgress = findViewById(R.id.icProgressBar);
-        tvChannelTitle = findViewById(R.id.ictv_ChannelTitle);
         tvMeterValue = findViewById(R.id.ictv_MeterValue);
         tvTotalCost = findViewById(R.id.ictv_TotalCost);
         tvCurrentConsumption = findViewById(R.id.ictv_CurrentConsumption);
@@ -130,7 +128,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     private void channelExtendedDataToViews(boolean setIcon) {
         Channel channel = (Channel) getChannelFromDatabase();
-        tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
         if (setIcon) {
             icImgIcon.setBackgroundColor(Color.TRANSPARENT);

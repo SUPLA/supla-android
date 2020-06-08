@@ -517,8 +517,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
     @Override
-    public void onChannelDetailShow() {
-        hideMenuButton();
+    public void onChannelDetailShow(ChannelBase channel) {
+        setMenubarDetailTitle(channel.getNotEmptyCaption(this));
     }
 
     @Override

@@ -96,7 +96,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private TextView tvPhaseReverseActiveEnergyBalanced;
     private TextView tvlPhaseReverseActiveEnergyBalanced;
     private ImageView emImgIcon;
-    private TextView tvChannelTitle;
     private Button btnPhase1;
     private Button btnPhase2;
     private Button btnPhase3;
@@ -178,7 +177,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 findViewById(R.id.emtv_lPhaseReverseActiveEnergyBalanced);
 
         emImgIcon = findViewById(R.id.emimgIcon);
-        tvChannelTitle = findViewById(R.id.emtv_ChannelTitle);
 
         llBalance = findViewById(R.id.emtv_llBalance);
         tvlBalance = findViewById(R.id.emtv_lBalance);
@@ -361,8 +359,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             emImgIcon.setBackgroundColor(Color.TRANSPARENT);
             emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
         }
-
-        tvChannelTitle.setText(channel.getNotEmptyCaption(getContext()));
 
         ChannelExtendedValue cev = channel.getExtendedValue();
 

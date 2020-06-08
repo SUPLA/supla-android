@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ import android.widget.TextView;
 
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
+
+import java.lang.reflect.TypeVariable;
 
 @SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
@@ -51,6 +54,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private Button GroupButton;
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
+    private TextView title;
+    private TextView detailTitle;
 
     private static void showActivity(Activity sender, Class<?> cls, int flags) {
 
@@ -126,17 +131,20 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
             MenuBarLayout.setVisibility(View.GONE);
 
-            TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
+            title = MenuBarLayout.findViewById(R.id.menubar_title);
             title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+            detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
+            detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
 
             MenuButton = findViewById(R.id.menubutton);
-            MenuButton.setVisibility(View.GONE);
+            MenuButton.setVisibility(View.INVISIBLE);
             MenuButton.setOnClickListener(this);
 
             GroupButton = findViewById(R.id.groupbutton);
-            GroupButton.setVisibility(View.GONE);
+            GroupButton.setVisibility(View.INVISIBLE);
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(0);
 
@@ -194,12 +202,21 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         getMenuBarLayout();
         MenuButton.setVisibility(View.VISIBLE);
         GroupButton.setVisibility(View.VISIBLE);
+        title.setVisibility(View.VISIBLE);
+        detailTitle.setVisibility(View.INVISIBLE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
-        MenuButton.setVisibility(View.GONE);
-        GroupButton.setVisibility(View.GONE);
+        MenuButton.setVisibility(View.INVISIBLE);
+        GroupButton.setVisibility(View.INVISIBLE);
+    }
+
+    public void setMenubarDetailTitle(String txt) {
+        hideMenuButton();
+        detailTitle.setText(txt);
+        title.setVisibility(View.INVISIBLE);
+        detailTitle.setVisibility(View.VISIBLE);
     }
 
     protected void onGroupButtonTouch(boolean On) {

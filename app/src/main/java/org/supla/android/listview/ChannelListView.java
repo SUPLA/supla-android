@@ -599,7 +599,7 @@ public class ChannelListView extends ListView {
         mDetailLayout.onDetailShow();
 
         if (onDetailListener != null)
-            onDetailListener.onChannelDetailShow();
+            onDetailListener.onChannelDetailShow(mDetailLayout.getChannelBase());
     }
 
     private void onDetailHide() {
@@ -791,7 +791,7 @@ public class ChannelListView extends ListView {
 
     public interface OnDetailListener {
 
-        void onChannelDetailShow();
+        void onChannelDetailShow(ChannelBase channel);
 
         void onChannelDetailHide();
     }

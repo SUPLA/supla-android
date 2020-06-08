@@ -2,46 +2,65 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menubar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_gravity="center_horizontal|top"
-        android:background="@color/menubar">
-
-        <Button
-            android:id="@+id/menubutton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/menu"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/menubar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:text="@string/menubar_title"
-            android:textAppearance="@style/MenuBarTitle"
-            android:textSize="50sp" />
+    android:layout_height="85dp"
+    android:layout_alignParentTop="true"
+    android:background="@color/menubar">
 
 
-        <Button
-            android:id="@+id/groupbutton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_vertical|right"
-            android:layout_marginTop="1dp"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/groupoff"
-            android:clickable="true" />
-    </FrameLayout>
+    <Button
+        android:id="@+id/menubutton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/menu"
+        android:clickable="true" />
+
+    <TextView
+        android:id="@+id/menubar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:text="@string/menubar_title"
+        android:textAppearance="@style/MenuBarTitle"
+        android:textSize="50sp" />
+
+    <TextView
+        android:id="@+id/menubar_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        android:text=""
+        android:textAppearance="@style/MenuBarTitle"
+        android:textSize="30sp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/groupbutton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/groupoff"
+        android:clickable="true" />
+
 </RelativeLayout>
