@@ -331,4 +331,6 @@
     <string name="vector_balance_days" translatable="false">Vector balance - Days</string>
     <string name="vector_balance_months" translatable="false">Vector balance - Months</string>
     <string name="vector_balance_years" translatable="false">Vector balance - Years</string>
+    <string name="wheel" translatable="false">Wheel</string>
+    <string name="slider" translatable="false">Slider</string>
 </resources>

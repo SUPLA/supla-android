@@ -36,7 +36,7 @@ import android.widget.RelativeLayout;
 
 import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
-import org.supla.android.ChannelDetailRGB;
+import org.supla.android.ChannelDetailRGBW;
 import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailTempHumidity;
 import org.supla.android.ChannelDetailTemperature;
@@ -112,7 +112,7 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
 
-                    if (!(mDetailLayout instanceof ChannelDetailRGB))
+                    if (!(mDetailLayout instanceof ChannelDetailRGBW))
                         mDetailLayout = null;
 
                     break;
@@ -176,7 +176,7 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    mDetailLayout = new ChannelDetailRGB(getContext(), this);
+                    mDetailLayout = new ChannelDetailRGBW(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);

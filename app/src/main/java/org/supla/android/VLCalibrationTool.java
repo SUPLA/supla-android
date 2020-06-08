@@ -32,7 +32,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private final static int UI_REFRESH_LOCK_TIME = 2000;
     private final static int MIN_SEND_DELAY_TIME = 500;
     private final static int DISPLAY_DELAY_TIME = 1000;
-    private ChannelDetailRGB detailRGB;
+    private ChannelDetailRGBW detailRGB;
     private Button btnOK;
     private Button btnRestore;
     private Button btnCancel;
@@ -58,7 +58,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
 
-    public VLCalibrationTool(ChannelDetailRGB detailRGB) {
+    public VLCalibrationTool(ChannelDetailRGBW detailRGB) {
 
         this.detailRGB = detailRGB;
         mainView = (RelativeLayout) detailRGB.inflateLayout(R.layout.vl_calibration);

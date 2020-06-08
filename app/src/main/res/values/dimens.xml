@@ -28,9 +28,7 @@
     <dimen name="channel_distanceimg_width">150dp</dimen>
     <dimen name="channel_distanceimg_height">15dp</dimen>
     <dimen name="rgb_detail_tab_height">80dp</dimen>
-    <dimen name="rgb_detail_tab_btn_margin">15dp</dimen>
-    <dimen name="rgb_detail_tab_btn_height">25dp</dimen>
-    <dimen name="rgb_detail_tab_btn_text">8sp</dimen>
+    <dimen name="rgb_detail_tab_btn_text">10sp</dimen>
     <dimen name="rgb_detail_title_text">18sp</dimen>
     <dimen name="rgb_detail_info_text">11sp</dimen>
     <dimen name="rgb_detail_info_text_margin">5dp</dimen>

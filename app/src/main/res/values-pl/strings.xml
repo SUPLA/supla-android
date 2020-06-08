@@ -331,4 +331,6 @@
     <string name="vector_balance_days">Bilans wektorowy - Dni</string>
     <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
     <string name="vector_balance_years">Bilans wektorowy - Lata</string>
+    <string name="wheel">Koło</string>
+    <string name="slider">Suwak</string>
 </resources>
