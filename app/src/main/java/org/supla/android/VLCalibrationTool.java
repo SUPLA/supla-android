@@ -67,7 +67,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
         btnOK = getBtn(R.id.vlBtnOK);
         btnRestore = getBtn(R.id.vlBtnRestore);
-        btnCancel = getBtn(R.id.vlBtnCancel);
+        btnCancel = getBtn(R.id.vlBtnInfo);
         btnDmAuto = getBtn(R.id.vlCfgDmAuto);
         btnDm1 = getBtn(R.id.vlCfgDm1);
         btnDm2 = getBtn(R.id.vlCfgDm2);

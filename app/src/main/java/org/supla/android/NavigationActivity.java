@@ -140,11 +140,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             getRootLayout().addView(MenuBarLayout);
 
             MenuButton = findViewById(R.id.menubutton);
-            MenuButton.setVisibility(View.INVISIBLE);
+            MenuButton.setVisibility(View.GONE);
             MenuButton.setOnClickListener(this);
 
             GroupButton = findViewById(R.id.groupbutton);
-            GroupButton.setVisibility(View.INVISIBLE);
+            GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(0);
 
@@ -208,8 +208,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void hideMenuButton() {
         getMenuBarLayout();
-        MenuButton.setVisibility(View.INVISIBLE);
-        GroupButton.setVisibility(View.INVISIBLE);
+        MenuButton.setVisibility(View.GONE);
+        GroupButton.setVisibility(View.GONE);
     }
 
     public void setMenubarDetailTitle(String txt) {

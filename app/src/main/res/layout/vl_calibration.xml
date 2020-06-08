@@ -6,31 +6,31 @@
     android:background="@color/vl_settings_bg">
 
     <Button
-        android:id="@+id/vlBtnCancel"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/vlBtnInfo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
         android:layout_marginRight="170dp"
-        android:background="@drawable/close"
+        android:background="@drawable/vlinfo"
         android:visibility="visible" />
 
     <Button
         android:id="@+id/vlBtnRestore"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
         android:layout_marginRight="100dp"
-        android:background="@drawable/restore"
+        android:background="@drawable/vlrestore"
         android:visibility="visible" />
 
     <Button
         android:id="@+id/vlBtnOK"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
@@ -46,7 +46,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical">
 
@@ -54,11 +54,14 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dimming mode" />
+            android:text="Dimming mode"
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_tab_background"
             android:orientation="horizontal">
 
             <Button
@@ -66,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/vl_left_btn_on"
+                android:background="@drawable/rounded_sel_btn"
                 android:text="AUTO"
                 android:textColor="@android:color/white" />
 
@@ -77,7 +80,7 @@
                 android:layout_marginLeft="-1dp"
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
-                android:background="@drawable/vl_middle_btn_off"
+                android:background="@android:color/transparent"
                 android:text="MODE 1" />
 
             <Button
@@ -86,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
-                android:background="@drawable/vl_middle_btn_off"
+                android:background="@android:color/transparent"
                 android:text="MODE 2" />
 
             <Button
@@ -94,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/vl_right_btn_off"
+                android:background="@android:color/transparent"
                 android:text="MODE 3" />
         </LinearLayout>
     </LinearLayout>
@@ -115,11 +118,14 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Boost" />
+            android:text="Boost"
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_tab_background"
             android:orientation="horizontal">
 
             <Button
@@ -127,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/vl_left_btn_on"
+                android:background="@drawable/rounded_sel_btn"
                 android:text="AUTO"
                 android:textColor="@android:color/white" />
 
@@ -138,7 +144,7 @@
                 android:layout_marginLeft="-1dp"
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
-                android:background="@drawable/vl_middle_btn_off"
+                android:background="@android:color/transparent"
                 android:text="YES" />
 
             <Button
@@ -146,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/vl_right_btn_off"
+                android:background="@android:color/transparent"
                 android:text="NO" />
         </LinearLayout>
 
@@ -157,9 +163,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/vlcfgLL2"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -171,18 +179,18 @@
             <Button
                 android:id="@+id/vlCfgOpRange"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@drawable/vl_tab_on"
+                android:background="@drawable/vl_tab"
                 android:text="Operating range"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/black" />
 
             <Button
                 android:id="@+id/vlCfgBoost"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@drawable/vl_tab_off"
+                android:background="@android:color/transparent"
                 android:text="Boost"
                 android:visibility="visible" />
         </LinearLayout>
@@ -191,7 +199,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/vl_middle_btn_off"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
 
@@ -205,11 +213,11 @@
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="76dp"
-        android:layout_height="40dp"
+        android:layout_height="57dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/vllogo" />
+        android:background="@drawable/vprosmart" />
 </RelativeLayout>

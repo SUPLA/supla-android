@@ -422,7 +422,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         if (v == tabRGB) {
             showRGB();
 
-            setBtnBackground(tabRGB, R.drawable.rounded_rgbw_sel_btn);
+            setBtnBackground(tabRGB, R.drawable.rounded_sel_btn);
             setBtnBackground(tabDimmer, 0);
 
             tabRGB.setTextColor(Color.WHITE);
@@ -430,13 +430,13 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         } else if (v == tabDimmer) {
             showDimmer();
 
-            setBtnBackground(tabDimmer, R.drawable.rounded_rgbw_sel_btn);
+            setBtnBackground(tabDimmer, R.drawable.rounded_sel_btn);
             setBtnBackground(tabRGB, 0);
 
             tabRGB.setTextColor(Color.BLACK);
             tabDimmer.setTextColor(Color.WHITE);
         } else if (v == tabWheel) {
-            setBtnBackground(tabWheel, R.drawable.rounded_rgbw_sel_btn);
+            setBtnBackground(tabWheel, R.drawable.rounded_sel_btn);
             setBtnBackground(tabSlider, 0);
 
             tabWheel.setTextColor(Color.WHITE);
@@ -445,7 +445,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         } else if (v == tabSlider) {
             setBtnBackground(tabWheel, 0);
-            setBtnBackground(tabSlider, R.drawable.rounded_rgbw_sel_btn);
+            setBtnBackground(tabSlider, R.drawable.rounded_sel_btn);
 
             tabWheel.setTextColor(Color.BLACK);
             tabSlider.setTextColor(Color.WHITE);
