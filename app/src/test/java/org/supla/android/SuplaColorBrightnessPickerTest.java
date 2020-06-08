@@ -100,7 +100,7 @@ public class SuplaColorBrightnessPickerTest extends TestCase {
     }
 
     public void testPowerButtonColorOnSetterAndGetter() {
-        Assert.assertEquals(0xfff7f0dc, picker.getPowerButtonColorOn());
+        Assert.assertEquals(0xffffffff, picker.getPowerButtonColorOn());
         picker.setPowerButtonColorOn(Color.BLUE);
         Assert.assertEquals(Color.BLUE, picker.getPowerButtonColorOn());
     }
