@@ -88,6 +88,9 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         mColorDisabled =
                 detailRGB.getContext().getResources().getColor(R.color.vl_btn_disabled);
+
+        btnDmAuto.setVisibility(View.GONE);
+        btnBoostAuto.setVisibility(View.GONE);
     }
 
     private void registerMessageHandler() {
@@ -229,9 +232,8 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         btn.setTextColor(textColor);
     }
-
+    
     private void setMode(int mode) {
-
         setBtnApparance(btnDmAuto, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO)
                         ? mColorDisabled : Color.BLACK);
