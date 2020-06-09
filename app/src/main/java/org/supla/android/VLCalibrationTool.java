@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -16,7 +18,9 @@ import org.supla.android.lib.SuplaConst;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibrationWheel.OnChangeListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
+public class VLCalibrationTool implements View.OnClickListener,
+        SuplaRangeCalibrationWheel.OnChangeListener,
+        SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
     private final static int VL_MSG_RESTORE_DEFAULTS = 0x4E;
     private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
     private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
@@ -35,7 +39,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     private ChannelDetailRGBW detailRGB;
     private Button btnOK;
     private Button btnRestore;
-    private Button btnCancel;
+    private Button btnInfo;
     private Button btnDmAuto;
     private Button btnDm1;
     private Button btnDm2;
@@ -67,7 +71,7 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
         btnOK = getBtn(R.id.vlBtnOK);
         btnRestore = getBtn(R.id.vlBtnRestore);
-        btnCancel = getBtn(R.id.vlBtnInfo);
+        btnInfo = getBtn(R.id.vlBtnInfo);
         btnDmAuto = getBtn(R.id.vlCfgDmAuto);
         btnDm1 = getBtn(R.id.vlCfgDm1);
         btnDm2 = getBtn(R.id.vlCfgDm2);
@@ -152,10 +156,6 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
         }
     }
 
-    public View getMainView() {
-        return getMainView();
-    }
-
     private Button getBtn(int resid) {
         Button btn = mainView.findViewById(resid);
         btn.setOnClickListener(this);
@@ -192,44 +192,64 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
                 VLCfgParameters.BOOST_UNKNOWN : boost;
     }
 
+    private Button modeToBtn(int mode) {
+        switch (mode) {
+            case VLCfgParameters.MODE_AUTO:
+                return btnDmAuto;
+            case VLCfgParameters.MODE_1:
+                return btnDm1;
+            case VLCfgParameters.MODE_2:
+                return btnDm2;
+            case VLCfgParameters.MODE_3:
+                return btnDm3;
+        }
+        return null;
+    }
+
+    private Button boostToBtn(int boost) {
+        switch (boost) {
+            case VLCfgParameters.BOOST_AUTO:
+                return btnBoostAuto;
+            case VLCfgParameters.BOOST_YES:
+                return btnBoostYes;
+            case VLCfgParameters.BOOST_NO:
+                return btnBoostNo;
+        }
+        return null;
+    }
+
     private void setBtnApparance(Button btn, int resid, int textColor) {
-        btn.setBackgroundResource(resid);
+        Drawable d = resid == 0 ? null : detailRGB.getResources().getDrawable(resid);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            btn.setBackground(d);
+        } else {
+            btn.setBackgroundDrawable(d);
+        }
+
         btn.setTextColor(textColor);
     }
 
     private void setMode(int mode) {
 
-        setBtnApparance(btnDmAuto, R.drawable.vl_left_btn_off,
+        setBtnApparance(btnDmAuto, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO)
                         ? mColorDisabled : Color.BLACK);
 
-        setBtnApparance(btnDm1, R.drawable.vl_middle_btn_off,
+        setBtnApparance(btnDm1, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_1)
                         ? mColorDisabled : Color.BLACK);
 
-        setBtnApparance(btnDm2, R.drawable.vl_middle_btn_off,
+        setBtnApparance(btnDm2, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_2)
                         ? mColorDisabled : Color.BLACK);
 
-        setBtnApparance(btnDm3, R.drawable.vl_right_btn_off,
+        setBtnApparance(btnDm3, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_3)
                         ? mColorDisabled : Color.BLACK);
 
         if (!cfgParameters.isModeDisabled(mode)) {
-            switch (mode) {
-                case VLCfgParameters.MODE_AUTO:
-                    setBtnApparance(btnDmAuto, R.drawable.vl_left_btn_on, Color.WHITE);
-                    break;
-                case VLCfgParameters.MODE_1:
-                    setBtnApparance(btnDm1, R.drawable.vl_middle_btn_on, Color.WHITE);
-                    break;
-                case VLCfgParameters.MODE_2:
-                    setBtnApparance(btnDm2, R.drawable.vl_middle_btn_on, Color.WHITE);
-                    break;
-                case VLCfgParameters.MODE_3:
-                    setBtnApparance(btnDm3, R.drawable.vl_right_btn_on, Color.WHITE);
-                    break;
-            }
+            setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
         }
     }
 
@@ -238,30 +258,20 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
     }
 
     private void setBoost(int boost) {
-        setBtnApparance(btnBoostAuto, R.drawable.vl_left_btn_off,
+        setBtnApparance(btnBoostAuto, 0,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_AUTO)
                         ? mColorDisabled : Color.BLACK);
 
-        setBtnApparance(btnBoostYes, R.drawable.vl_middle_btn_off,
+        setBtnApparance(btnBoostYes, 0,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_YES)
                         ? mColorDisabled : Color.BLACK);
 
-        setBtnApparance(btnBoostNo, R.drawable.vl_right_btn_off,
+        setBtnApparance(btnBoostNo, 0,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO)
                         ? mColorDisabled : Color.BLACK);
 
         if (!cfgParameters.isBoostDisabled(boost)) {
-            switch (boost) {
-                case VLCfgParameters.BOOST_AUTO:
-                    setBtnApparance(btnBoostAuto, R.drawable.vl_left_btn_on, Color.WHITE);
-                    break;
-                case VLCfgParameters.BOOST_YES:
-                    setBtnApparance(btnBoostYes, R.drawable.vl_middle_btn_on, Color.WHITE);
-                    break;
-                case VLCfgParameters.BOOST_NO:
-                    setBtnApparance(btnBoostNo, R.drawable.vl_right_btn_on, Color.WHITE);
-                    break;
-            }
+            setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
 
             if (boost == VLCfgParameters.BOOST_YES) {
                 btnBoost.setVisibility(View.VISIBLE);
@@ -279,12 +289,12 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
 
     private void displayOpRange(boolean display) {
         if (display) {
-            setBtnApparance(btnOpRange, R.drawable.vl_tab_on, Color.WHITE);
-            setBtnApparance(btnBoost, R.drawable.vl_tab_off, Color.BLACK);
+            setBtnApparance(btnOpRange, R.drawable.vl_tab, Color.BLACK);
+            setBtnApparance(btnBoost, 0, Color.BLACK);
             calibrationWheel.setBoostVisible(false);
         } else {
-            setBtnApparance(btnOpRange, R.drawable.vl_tab_off, Color.BLACK);
-            setBtnApparance(btnBoost, R.drawable.vl_tab_on, Color.WHITE);
+            setBtnApparance(btnOpRange, 0, Color.BLACK);
+            setBtnApparance(btnBoost, R.drawable.vl_tab, Color.BLACK);
             calibrationWheel.setBoostVisible(true);
         }
     }
@@ -390,8 +400,8 @@ public class VLCalibrationTool implements View.OnClickListener, SuplaRangeCalibr
             return;
         } else if (v == btnRestore) {
             showRestoreConfirmDialog();
-        } else if (v == btnCancel) {
-            Hide();
+        } else if (v == btnInfo) {
+            //Hide();
             return;
         }
 
