@@ -199,10 +199,6 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         channelDataToViews();
     }
 
-    public void onBackPressed() {
-
-    }
-
     @Override
     public void onDetailHide() {
         super.onDetailHide();
@@ -369,6 +365,14 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             lastColorBrightness = brightness;
         else
             lastBrightness = brightness;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
+            return vlCalibrationTool.onBackPressed();
+        }
+        return true;
     }
 
     private void sendNewValues(boolean force, boolean turnOnOff) {

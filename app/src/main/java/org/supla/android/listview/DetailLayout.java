@@ -206,4 +206,8 @@ public abstract class DetailLayout extends FrameLayout {
 
         deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
     }
+
+    public boolean onBackPressed() {
+        return true;
+    }
 }

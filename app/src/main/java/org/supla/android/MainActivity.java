@@ -508,7 +508,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onBackPressed() {
 
         if (channelLV.isDetailVisible()) {
-            channelLV.hideDetail(true);
+            channelLV.onBackPressed();
         } else {
             gotoMain();
         }
@@ -519,6 +519,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onChannelDetailShow(ChannelBase channel) {
         setMenubarDetailTitle(channel.getNotEmptyCaption(this));
+        showBackButton();
     }
 
     @Override

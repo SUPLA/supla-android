@@ -736,6 +736,9 @@ public class ChannelListView extends ListView {
     }
 
     public void onBackPressed() {
+        if (mDetailLayout.onBackPressed()) {
+            hideDetail(true);
+        }
     }
 
     public void hideDetail(boolean animated) {

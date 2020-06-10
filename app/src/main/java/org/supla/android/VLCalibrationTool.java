@@ -147,6 +147,12 @@ public class VLCalibrationTool implements View.OnClickListener,
         switch (Command) {
             case VL_MSG_CONFIGURATION_ACK:
                 if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && authDialog != null) {
+
+                    NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
+                    if (activity!=null) {
+                        activity.showBackButton();
+                    }
+
                     authDialog.close();
                     authDialog = null;
 
@@ -491,6 +497,7 @@ public class VLCalibrationTool implements View.OnClickListener,
     public void Hide() {
 
         unregisterMessageHandler();
+
         if (mainView.getVisibility() == View.VISIBLE) {
             mainView.setVisibility(View.GONE);
             detailRGB.getContentView().setVisibility(View.VISIBLE);
@@ -560,6 +567,11 @@ public class VLCalibrationTool implements View.OnClickListener,
     public void onBoostChanged(SuplaRangeCalibrationWheel calibrationWheel) {
         LockUIrefresh();
         calCfgDelayed(VL_MSG_SET_BOOST_LEVEL);
+    }
+
+    public boolean onBackPressed() {
+        Hide();
+        return false;
     }
 
     class DisplayDelayedTask extends TimerTask {
