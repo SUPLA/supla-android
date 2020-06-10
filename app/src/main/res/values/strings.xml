@@ -344,7 +344,7 @@
     <string name="vl_cfg_op_range" translatable="false">Operating range</string>
     <string name="vl_cfg_boost" translatable="false">Boost</string>
 
-    <string name="informations" translatable="false">Informations</string>
+    <string name="information" translatable="false">Information</string>
     <string name="vl_dimmer_info_txt1" translatable="false">Dimmer control</string>
     <string name="vl_dimmer_info_txt2" translatable="false">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
     <string name="vl_dimmer_info_txt3" translatable="false">Switch on and off by tapping the on/off button.</string>

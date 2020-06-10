@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/informations"
+            android:text="@string/information"
             android:textColor="@color/vl_infotitle"
             android:textSize="30sp" />
 

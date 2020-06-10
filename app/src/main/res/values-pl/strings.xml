@@ -344,7 +344,7 @@
     <string name="vl_cfg_op_range">Zakres pracy</string>
     <string name="vl_cfg_boost">Wzmocnienie</string>
 
-    <string name="informations">Informacje</string>
+    <string name="information">Informacje</string>
     <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
     <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
     <string name="vl_dimmer_info_txt3">Przyciskiem włącz/wyłącz możesz całkowicie wyłączyć lub włączyć oświetlenie.</string>
