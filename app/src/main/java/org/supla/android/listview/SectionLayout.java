@@ -36,6 +36,7 @@ public class SectionLayout extends LinearLayout {
     private TextView Caption;
     private FrameLayout frmCollapsed;
     private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
+
     public SectionLayout(Context context) {
         super(context);
         Init(context);

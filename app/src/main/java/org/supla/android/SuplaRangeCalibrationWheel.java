@@ -425,10 +425,10 @@ public class SuplaRangeCalibrationWheel extends View {
             }
 
             float hh = ((bottom - top) + borderLineWidth * 2.0f)
-                    * (float)boostLineHeightFactor / 2.0f;
+                    * (float) boostLineHeightFactor / 2.0f;
 
             paint.setColor(boostLineColor);
-            canvas.drawLine(vleft, btnLeftCenter.y - hh ,
+            canvas.drawLine(vleft, btnLeftCenter.y - hh,
                     vleft, btnLeftCenter.y + hh, paint);
         }
     }

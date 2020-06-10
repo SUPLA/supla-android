@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -27,10 +28,12 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -73,6 +76,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private int lastColorBrightness;
     private int lastBrightness;
     private Button btnPowerOnOff;
+    private Boolean varilight;
 
     public ChannelDetailRGBW(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -169,7 +173,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         clPicker.setVisibility(View.GONE);
         pickerTypeTabs.setVisibility(VISIBLE);
 
-        boolean varilight = false;
+        varilight = false;
 
         if (getChannelBase() instanceof Channel) {
             Channel c = (Channel) getChannelBase();
@@ -220,6 +224,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         super.setData(channel);
         llExtraButtons.setVisibility(GONE);
         pickerTypeTabs.setVisibility(GONE);
+
+        varilight = false;
 
         if (vlCalibrationTool != null) {
             vlCalibrationTool.Hide();
@@ -417,6 +423,35 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         sendNewValues(false, false);
     }
 
+    private void showInformationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.vl_dimmer_info,
+                viewGroup, false);
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+
+        dialogView.findViewById(R.id.btnClose).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
+        Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
+        Typeface opensans = SuplaApp.getApp().getTypefaceOpenSansRegular();
+
+        ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
+
+        alertDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         if (v == tabRGB) {
@@ -451,13 +486,15 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             tabSlider.setTextColor(Color.WHITE);
             btnPowerOnOff.setVisibility(VISIBLE);
         } else if (v == btnSettings
-                   && vlCalibrationTool != null) {
+                && vlCalibrationTool != null) {
             vlCalibrationTool.Show();
         } else if (v == btnPowerOnOff) {
             cbPicker.setPowerButtonOn(!cbPicker.isPowerButtonOn());
             onPowerButtonClick(cbPicker);
         } else if (v == btnInfo) {
-
+            if (varilight) {
+                showInformationDialog();
+            }
         }
 
         if (v == tabDimmer || v == tabRGB) {

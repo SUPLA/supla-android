@@ -42,6 +42,7 @@ public class SuplaChannelStatus extends View {
     private DisplayMetrics metrics = getResources().getDisplayMetrics();
     private float FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             (float) 1, metrics);
+
     public SuplaChannelStatus(Context context) {
         super(context);
     }

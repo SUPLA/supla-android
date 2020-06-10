@@ -90,6 +90,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private LinearLayout llChart;
     private ListView lvChannelList;
     private TextView tvErrorMessage;
+
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
     }

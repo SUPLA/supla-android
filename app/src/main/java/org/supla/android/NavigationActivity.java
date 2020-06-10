@@ -26,7 +26,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,6 @@ import android.widget.TextView;
 
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
-
-import java.lang.reflect.TypeVariable;
 
 @SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvInfoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/informations"
+            android:textColor="@color/vl_infotitle"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0"
+            android:background="@drawable/infoclose" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/vl_infoline" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvInfoTxt1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/vl_dimmer_cfg_info_txt1"
+                android:textColor="@color/vl_infotitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvInfoTxt2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vl_dimmer_cfg_info_txt2"
+                android:textColor="@color/vl_infotext" />
+
+            <TextView
+                android:id="@+id/tvInfoTxt3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/vl_dimmer_cfg_info_txt3"
+                android:textColor="@color/vl_infotitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvInfoTxt4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vl_dimmer_cfg_info_txt4"
+                android:textColor="@color/vl_infotext" />
+
+            <TextView
+                android:id="@+id/tvInfoTxt5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/vl_dimmer_cfg_info_txt5"
+                android:textColor="@color/vl_infotext" />
+
+            <Button
+                android:id="@+id/btnUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:background="@android:color/transparent"
+                android:gravity="left|center_vertical"
+                android:text="@string/vl_dimmer_cfg_info_txt6"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

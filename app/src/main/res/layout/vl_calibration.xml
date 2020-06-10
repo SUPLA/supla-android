@@ -54,7 +54,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dimming mode"
+            android:text="@string/vl_cfg_mode"
             android:textColor="@android:color/black" />
 
         <LinearLayout
@@ -62,7 +62,8 @@
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_tab_background"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <Button
                 android:id="@+id/vlCfgDmAuto"
@@ -70,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_sel_btn"
-                android:text="AUTO"
+                android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -81,7 +82,7 @@
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="MODE 1" />
+                android:text="@string/vl_cfg_mode1" />
 
             <Button
                 android:id="@+id/vlCfgDm2"
@@ -90,7 +91,7 @@
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="MODE 2" />
+                android:text="@string/vl_cfg_mode2" />
 
             <Button
                 android:id="@+id/vlCfgDm3"
@@ -98,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="MODE 3" />
+                android:text="@string/vl_cfg_mode3" />
         </LinearLayout>
     </LinearLayout>
 
@@ -118,7 +119,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Boost"
+            android:text="@string/vl_cfg_boost"
             android:textColor="@android:color/black" />
 
         <LinearLayout
@@ -126,7 +127,8 @@
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_tab_background"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <Button
                 android:id="@+id/vlCfgBoostAuto"
@@ -134,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_sel_btn"
-                android:text="AUTO"
+                android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -145,7 +147,7 @@
                 android:layout_marginRight="-1dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="YES" />
+                android:text="@string/vl_cfg_yes" />
 
             <Button
                 android:id="@+id/vlCfgBoostNo"
@@ -153,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="NO" />
+                android:text="@string/vl_cfg_no" />
         </LinearLayout>
 
     </LinearLayout>
@@ -182,7 +184,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/vl_tab"
-                android:text="Operating range"
+                android:text="@string/vl_cfg_op_range"
                 android:textColor="@android:color/black" />
 
             <Button
@@ -191,7 +193,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:text="Boost"
+                android:text="@string/vl_cfg_boost"
                 android:visibility="visible" />
         </LinearLayout>
 

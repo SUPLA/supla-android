@@ -357,7 +357,7 @@ public class SuplaColorBrightnessPicker extends View {
         if (circleInsteadArrow) {
             float angle = (float) (brightnessWheelPointerAngle - m90d);
             if (!colorfulBrightnessWheel || !colorWheelVisible
-                    || (colorWheelVisible && (selectedColor & 0xffffff) == 0xffffff )) {
+                    || (colorWheelVisible && (selectedColor & 0xffffff) == 0xffffff)) {
                 angle = trimBrightnessColorAngle(angle);
             }
             drawCirclePointer(canvas, brightnessWheelPointerAngle,

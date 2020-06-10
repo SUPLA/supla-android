@@ -35,6 +35,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     // Unit - kWh
     private double TotalForwardActiveEnergyBalanced;
     private double TotalReverseActiveEnergyBalanced;
+
     SuplaChannelElectricityMeterValue(int MeasuredValues, int Period,
                                       int TotalCost, int PricePerUnit, String Currency,
                                       long TotalForwardActiveEnergyBalanced,

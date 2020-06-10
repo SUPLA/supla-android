@@ -3,14 +3,20 @@ package org.supla.android;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
@@ -232,7 +238,7 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         btn.setTextColor(textColor);
     }
-    
+
     private void setMode(int mode) {
         setBtnApparance(btnDmAuto, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO)
@@ -393,6 +399,46 @@ public class VLCalibrationTool implements View.OnClickListener,
         alert.show();
     }
 
+    private void showInformationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(detailRGB.getContext());
+        ViewGroup viewGroup = detailRGB.findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(
+                detailRGB.getContext()).inflate(R.layout.vl_dimmer_config_info,
+                viewGroup, false);
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+
+        dialogView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        dialogView.findViewById(R.id.btnUrl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(((Button) v).getText().toString()));
+                detailRGB.getContext().startActivity(browserIntent);
+            }
+        });
+
+        Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
+        Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
+        Typeface opensans = SuplaApp.getApp().getTypefaceOpenSansRegular();
+
+        ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
+
+        alertDialog.show();
+    }
+
     public void onClick(View v) {
 
         if (v == btnOK) {
@@ -403,7 +449,7 @@ public class VLCalibrationTool implements View.OnClickListener,
         } else if (v == btnRestore) {
             showRestoreConfirmDialog();
         } else if (v == btnInfo) {
-            //Hide();
+            showInformationDialog();
             return;
         }
 
