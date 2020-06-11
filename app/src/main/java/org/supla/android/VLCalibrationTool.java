@@ -438,9 +438,12 @@ public class VLCalibrationTool implements View.OnClickListener,
         ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
-        ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensans);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt6)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt7)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt8)).setTypeface(opensans);
 
         alertDialog.show();
     }

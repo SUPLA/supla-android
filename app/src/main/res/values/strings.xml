@@ -351,10 +351,13 @@
     <string name="vl_dimmer_info_txt4" translatable="false">The dimmer will remember the previous brightness setting.</string>
     <string name="vl_dimmer_info_txt5" translatable="false">Tap the config icon to adjust dimming settings.</string>
     <string name="vl_dimmer_cfg_info_txt1" translatable="false">Dimming Mode / Operating Range</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Fine tune the performance of your LED lights by selecting a different dimming mode (1 - Trailing Edge, 2 - Leading Edge, 3 - Trailing Edge with patented waveform) or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Boost</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">More information on can be found at</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">https://www.varilight.co.uk/vps001</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Mode 1: V-Pro Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Mode 2: Leading-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Mode 3: Alternative Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Boost</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">More information on can be found at</string>
+    <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
 
 </resources>
