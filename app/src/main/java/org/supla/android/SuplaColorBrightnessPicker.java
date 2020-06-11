@@ -3,6 +3,7 @@ package org.supla.android;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -72,6 +73,8 @@ public class SuplaColorBrightnessPicker extends View {
     private Path brightnessArrowPath;
     private Paint brightnessArrowPaint;
     private Paint paint;
+    private Paint slPaint;   // slider paint
+    private Shader slShader; // slider shader
     private Paint cwPaint;   // color wheel paint
     private Shader cwShader; // color wheel shader
     private Paint bwPaint;   // brightness wheel paint
@@ -122,6 +125,11 @@ public class SuplaColorBrightnessPicker extends View {
 
         bwPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bwPaint.setStyle(Paint.Style.STROKE);
+
+        slPaint = new Paint();
+        slPaint.setAntiAlias(true);
+        slPaint.setStyle(Paint.Style.FILL);
+        slPaint.setStrokeWidth(2);
 
         colorArrowPath = new Path();
         colorArrowPaint = new Paint();
@@ -385,29 +393,19 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     private void drawSlider(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-
         float height = getHeight() - (float) pointerHeight / 2;
         float x = (float) pointerHeight / -2;
         float y = height / -2;
 
-        Path path = new Path();
         sliderRect = new RectF(x, y, x + (float) pointerHeight, y + height);
-        path.addRoundRect(sliderRect, 90, 90, Path.Direction.CW);
-        canvas.clipPath(path);
 
-        float[] hsv = new float[3];
-        Color.colorToHSV(Color.WHITE, hsv);
-
-        for (float a = 0; a < height; a++) {
-            hsv[2] = 1 - 1 * (a * 100f / height) / 100f;
-            paint.setColor(Color.HSVToColor(hsv));
-            canvas.drawLine(x, y + a, x + (float) pointerHeight, y + a, paint);
+        if (slShader == null) {
+            slShader  = new LinearGradient(0, height/-3, 0, height/2, Color.WHITE,
+                    Color.BLACK, Shader.TileMode.CLAMP);
+            slPaint.setShader(slShader);
         }
 
+        canvas.drawRoundRect(sliderRect, 90, 90, slPaint);
 
         height -= pointerHeight;
 
@@ -422,6 +420,8 @@ public class SuplaColorBrightnessPicker extends View {
             percent = 15f;
         }
 
+        float[] hsv = new float[3];
+        Color.colorToHSV(Color.WHITE, hsv);
         hsv[2] = 1 * percent / 100f;
         drawCirclePointer(canvas, Color.HSVToColor(hsv), brightnessPointerCenter);
         drawSliderMarkers(canvas, (float) pointerHeight / 10f);
@@ -544,6 +544,8 @@ public class SuplaColorBrightnessPicker extends View {
 
         cwPaint.setStrokeWidth(colorWheelWidth);
         bwPaint.setStrokeWidth(brightnessWheelWidth);
+
+        slShader = null;
     }
 
     @Override
