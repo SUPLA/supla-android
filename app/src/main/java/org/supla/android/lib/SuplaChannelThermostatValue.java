@@ -28,6 +28,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     private Integer[] Values;
     private Schedule mSchedule;
     private Time mTime;
+
     SuplaChannelThermostatValue() {
         MeasuredTemperature = null;
         PresetTemperature = null;

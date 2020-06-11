@@ -331,4 +331,33 @@
     <string name="vector_balance_days" translatable="false">Vector balance - Days</string>
     <string name="vector_balance_months" translatable="false">Vector balance - Months</string>
     <string name="vector_balance_years" translatable="false">Vector balance - Years</string>
+    <string name="wheel" translatable="false">Wheel</string>
+    <string name="slider" translatable="false">Slider</string>
+
+    <string name="vl_cfg_mode" translatable="false">Dimming mode</string>
+    <string name="vl_cfg_auto" translatable="false">AUTO</string>
+    <string name="vl_cfg_mode1" translatable="false">MODE 1</string>
+    <string name="vl_cfg_mode2" translatable="false">MODE 2</string>
+    <string name="vl_cfg_mode3" translatable="false">MODE 3</string>
+    <string name="vl_cfg_yes" translatable="false">YES</string>
+    <string name="vl_cfg_no" translatable="false">NO</string>
+    <string name="vl_cfg_op_range" translatable="false">Operating range</string>
+    <string name="vl_cfg_boost" translatable="false">Boost</string>
+
+    <string name="information" translatable="false">Information</string>
+    <string name="vl_dimmer_info_txt1" translatable="false">Dimmer control</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">Switch on and off by tapping the on/off button.</string>
+    <string name="vl_dimmer_info_txt4" translatable="false">The dimmer will remember the previous brightness setting.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Tap the config icon to adjust dimming settings.</string>
+    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Dimming Mode / Operating Range</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Mode 1: V-Pro Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Mode 2: Leading-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Mode 3: Alternative Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Boost</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">More information on can be found at</string>
+    <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
+
 </resources>

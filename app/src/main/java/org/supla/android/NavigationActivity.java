@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -51,6 +52,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private Button GroupButton;
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
+    private TextView title;
+    private TextView detailTitle;
 
     private static void showActivity(Activity sender, Class<?> cls, int flags) {
 
@@ -126,8 +129,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
             MenuBarLayout.setVisibility(View.GONE);
 
-            TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
+            title = MenuBarLayout.findViewById(R.id.menubar_title);
             title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+            detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
+            detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
 
@@ -192,14 +198,33 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     public void showMenuButton() {
         getMenuBarLayout();
+        setBtnBackground(MenuButton, R.drawable.menu);
         MenuButton.setVisibility(View.VISIBLE);
+        MenuButton.setTag(Integer.valueOf(0));
         GroupButton.setVisibility(View.VISIBLE);
+        title.setVisibility(View.VISIBLE);
+        detailTitle.setVisibility(View.INVISIBLE);
+    }
+
+    public void showBackButton() {
+        getMenuBarLayout();
+        setBtnBackground(MenuButton, R.drawable.back);
+        MenuButton.setVisibility(View.VISIBLE);
+        MenuButton.setTag(Integer.valueOf(1));
+        GroupButton.setVisibility(View.GONE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
         GroupButton.setVisibility(View.GONE);
+    }
+
+    public void setMenubarDetailTitle(String txt) {
+        getMenuBarLayout();
+        detailTitle.setText(txt);
+        title.setVisibility(View.INVISIBLE);
+        detailTitle.setVisibility(View.VISIBLE);
     }
 
     protected void onGroupButtonTouch(boolean On) {
@@ -344,8 +369,21 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(intent);
     }
 
+    private void setBtnBackground(Button btn, int imgResId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            btn.setBackground(getResources().getDrawable(imgResId));
+        } else {
+            btn.setBackgroundDrawable(getResources().getDrawable(imgResId));
+        }
+    }
+
     @Override
     public void onClick(View v) {
+
+        if (v == MenuButton && MenuButton.getTag().equals(Integer.valueOf(1))) {
+            onBackPressed();
+            return;
+        }
 
         if (v != MenuButton
                 && menuIsVisible()) {
@@ -372,12 +410,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 img = R.drawable.groupoff;
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                GroupButton.setBackground(getResources().getDrawable(img));
-            } else {
-                GroupButton.setBackgroundDrawable(getResources().getDrawable(img));
-            }
-
+            setBtnBackground(GroupButton, img);
             onGroupButtonTouch(img == R.drawable.groupon);
         } else {
             switch (MenuItemsLayout.getButtonId(v)) {
@@ -419,6 +452,13 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 && !(CurrentActivity instanceof CreateAccountActivity)) {
             showStatus(this);
         }
+    }
+
+    public static NavigationActivity getCurrentNavigationActivity() {
+        if (CurrentActivity != null && CurrentActivity instanceof NavigationActivity) {
+            return (NavigationActivity)CurrentActivity;
+        }
+        return null;
     }
 
     public void SuperUserAuthorize(int sourceBtnId) {

@@ -1,5 +1,4 @@
 package org.supla.android;
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -16,7 +15,7 @@ package org.supla.android;
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+*/
 
 import junit.framework.TestCase;
 
@@ -25,7 +24,7 @@ import org.junit.Test;
 
 public class SuplaRangeCalibrationWheelTest extends TestCase {
 
-    private static final int REFCOLOR = 0xAABBCC;
+    private static final int REFCOLOR = 0xFFAABBCC;
     private SuplaRangeCalibrationWheel calibrationWheel;
 
     @Override
@@ -33,45 +32,44 @@ public class SuplaRangeCalibrationWheelTest extends TestCase {
         calibrationWheel = new SuplaRangeCalibrationWheel(null);
     }
 
-
     @Test
     public void testWheelColorSetterAndGetter() {
-        Assert.assertEquals(0xB0ABAB, calibrationWheel.getWheelColor());
+        Assert.assertEquals(0xFFB0ABAB, calibrationWheel.getWheelColor());
         calibrationWheel.setWheelColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getWheelColor());
     }
 
     @Test
     public void testBorderColorSetterAndGetter() {
-        Assert.assertEquals(0x575757, calibrationWheel.getBorderColor());
+        Assert.assertEquals(0xFF575757, calibrationWheel.getBorderColor());
         calibrationWheel.setBorderColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getBorderColor());
     }
 
     @Test
     public void testBtnColorSetterAndGetter() {
-        Assert.assertEquals(0x575757, calibrationWheel.getBtnColor());
+        Assert.assertEquals(0xFF575757, calibrationWheel.getBtnColor());
         calibrationWheel.setBtnColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getBtnColor());
     }
 
     @Test
     public void testRangeColorSetterAndGetter() {
-        Assert.assertEquals(0xFFE617, calibrationWheel.getRangeColor());
+        Assert.assertEquals(0xFFFFE617, calibrationWheel.getRangeColor());
         calibrationWheel.setRangeColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getRangeColor());
     }
 
     @Test
     public void testInsideBtnColorSetterAndGetter() {
-        Assert.assertEquals(0xFFFFFF, calibrationWheel.getInsideBtnColor());
+        Assert.assertEquals(0xFFFFFFFF, calibrationWheel.getInsideBtnColor());
         calibrationWheel.setInsideBtnColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getInsideBtnColor());
     }
 
     @Test
     public void testBoostLineColorSetterAndGetter() {
-        Assert.assertEquals(0x12A61F, calibrationWheel.getBoostLineColor());
+        Assert.assertEquals(0xFF12A61F, calibrationWheel.getBoostLineColor());
         calibrationWheel.setBoostLineColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, calibrationWheel.getBoostLineColor());
     }

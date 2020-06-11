@@ -5,7 +5,7 @@
     <color name="channel_btn_pressed">#5ae966</color>
     <color name="channel_cell">#fafbfc</color>
     <color name="channel_section_cell">#edfbee</color>
-    <color name="detail_rgb_gb">#ffe804</color>
+    <color name="detail_rgb_gb">#ffededed</color>
     <color name="detail_rs_bg">#fffafafa</color>
     <color name="detail_rs_marker">#12a71e</color>
     <color name="activity_bg">#fafbfc</color>
@@ -39,8 +39,11 @@
     <color name="th_temperature_line_color">#fd4a4d</color>
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
-    <color name="vl_settings_bg">#ededed</color>
+    <color name="vl_settings_bg">#ffededed</color>
     <color name="vl_btn_disabled">#CECECE</color>
+    <color name="vl_infotitle">#000000</color>
+    <color name="vl_infotext">#606060</color>
+    <color name="vl_infoline">#B4B7BA</color>
 
     <color name="wizart_next_btn_text_enabled">#12a71e</color>
     <color name="wizart_next_btn_text_disabled">#B4B7BA</color>
@@ -50,5 +53,6 @@
     <color name="zwave_info_table_bg">#F5F6F7</color>
     <color name="zwave_info_table_text">#000000</color>
     <color name="zwave_info_table_separator">#B4B7BA</color>
+
 
 </resources>

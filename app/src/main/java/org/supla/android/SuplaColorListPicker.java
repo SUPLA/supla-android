@@ -38,7 +38,8 @@ public class SuplaColorListPicker extends View {
     private ArrayList<ListItem> Items = null;
     private float Space = 0;
     private float BorderWidth = 0;
-    private int BorderColor = Color.BLACK;
+    private int BorderColor = Color.WHITE;
+    private int BrightnessLevelColor = Color.BLACK;
     private int BorderColorSelected = Color.YELLOW;
     private ListItem TouchedItem = null;
     private OnColorListTouchListener mOnTouchListener;
@@ -203,6 +204,15 @@ public class SuplaColorListPicker extends View {
         invalidate();
     }
 
+    public int getBrightnessLevelColor() {
+        return BrightnessLevelColor;
+    }
+
+    public void setBrightnessLevelColor(int brightnessLevelColor) {
+        BrightnessLevelColor = brightnessLevelColor;
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
 
@@ -239,7 +249,7 @@ public class SuplaColorListPicker extends View {
 
             if (i.getPercent() > 0) {
 
-                p.setColor(BorderColor);
+                p.setColor(BrightnessLevelColor);
 
                 double rl_margin = width * 0.05;
                 double b_margin = width * 0.1;

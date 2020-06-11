@@ -51,12 +51,12 @@ public class SuplaRangeCalibrationWheel extends View {
     private double btnRad;
     private double lastTouchedDegree;
 
-    private int wheelColor = 0xB0ABAB;
-    private int borderColor = 0x575757;
-    private int btnColor = 0x575757;
-    private int rangeColor = 0xFFE617;
-    private int boostLineColor = 0x12A61F;
-    private int insideBtnColor = 0xFFFFFF;
+    private int wheelColor = 0xFFB0ABAB;
+    private int borderColor = 0xFF575757;
+    private int btnColor = 0xFF575757;
+    private int rangeColor = 0xFFFFE617;
+    private int boostLineColor = 0xFF12A61F;
+    private int insideBtnColor = 0xFFFFFFFF;
 
     private double maximumValue = 1000;
     private double minimumRange = maximumValue * 0.1;
@@ -425,10 +425,10 @@ public class SuplaRangeCalibrationWheel extends View {
             }
 
             float hh = ((bottom - top) + borderLineWidth * 2.0f)
-                    * (float)boostLineHeightFactor / 2.0f;
+                    * (float) boostLineHeightFactor / 2.0f;
 
             paint.setColor(boostLineColor);
-            canvas.drawLine(vleft, btnLeftCenter.y - hh ,
+            canvas.drawLine(vleft, btnLeftCenter.y - hh,
                     vleft, btnLeftCenter.y + hh, paint);
         }
     }

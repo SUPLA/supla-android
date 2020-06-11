@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeplus_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -563,30 +562,6 @@
                 android:text="@string/hp_error_2"
                 android:textColor="@color/hp_error_text_color"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/hptv_ChannelTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/channel_caption_thermostat_hp_homeplus"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/black" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-            </LinearLayout>
 
 
         </LinearLayout>

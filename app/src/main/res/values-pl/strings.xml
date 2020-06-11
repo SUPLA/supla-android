@@ -331,4 +331,32 @@
     <string name="vector_balance_days">Bilans wektorowy - Dni</string>
     <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
     <string name="vector_balance_years">Bilans wektorowy - Lata</string>
+    <string name="wheel">Koło</string>
+    <string name="slider">Suwak</string>
+
+    <string name="vl_cfg_mode">Tryb ściemniania</string>
+    <string name="vl_cfg_auto">AUTO</string>
+    <string name="vl_cfg_mode1">TRYB 1</string>
+    <string name="vl_cfg_mode2">TRYB 2</string>
+    <string name="vl_cfg_mode3">TRYB 3</string>
+    <string name="vl_cfg_yes">TAK</string>
+    <string name="vl_cfg_no">NIE</string>
+    <string name="vl_cfg_op_range">Zakres pracy</string>
+    <string name="vl_cfg_boost">Wzmocnienie</string>
+
+    <string name="information">Informacje</string>
+    <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
+    <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
+    <string name="vl_dimmer_info_txt3">Przyciskiem włącz/wyłącz możesz całkowicie wyłączyć lub włączyć oświetlenie.</string>
+    <string name="vl_dimmer_info_txt4">Ściemniacz zapamięta poziom jasności sprzed wyłączenia oświetlenia.</string>
+    <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
+    <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
+    <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
+    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zbiczem opadającym (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4">Tryb 2: Ściemnianie zboczem narastającym</string>
+    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zbiczem opadającym (Alternatywne)</string>
+    <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
+    <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
+    <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
+    <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
 </resources>

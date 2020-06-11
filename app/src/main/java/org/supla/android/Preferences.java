@@ -47,6 +47,8 @@ public class Preferences {
     private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
     private static final String pref_hp_turbo_time = "pref_hp_turbo_time";
     private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
+    private static final String pref_brightness_picker_type_slider
+            = "pref_brightness_picker_type_slider";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -248,5 +250,18 @@ public class Preferences {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putString(pref_wizard_selected_wifi, SSID);
         editor.apply();
+    }
+
+    public void setBrightnessPickerTypeSlider(boolean slider) {
+        SharedPreferences.Editor editor = _prefs.edit();
+        editor.putBoolean(pref_brightness_picker_type_slider, slider);
+        editor.apply();
+    }
+
+    public Boolean isBrightnessPickerTypeSlider() {
+        if (_prefs.contains(pref_brightness_picker_type_slider)) {
+            return _prefs.getBoolean(pref_brightness_picker_type_slider, false);
+        }
+        return null;
     }
 }

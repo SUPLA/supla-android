@@ -7,52 +7,6 @@
     android:background="@color/detail_rs_bg"
     android:visibility="visible">
 
-    <RelativeLayout
-        android:id="@+id/emFooter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/emtv_ChannelTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/channel_caption_electricitymeter"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/black" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-    </RelativeLayout>
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/emHeader"
@@ -292,8 +246,8 @@
         android:id="@+id/emrlDetails"
         android:layout_width="match_parent"
         android:layout_height="211dp"
-        android:layout_above="@+id/emFooter"
         android:layout_below="@+id/emrlButtons1"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
