@@ -859,9 +859,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvPhaseReverseReactiveEnergy2.setText(format("%.1f ", em.getSummary(2).getTotalReverseReactiveEnergy()));
             tvPhaseReverseReactiveEnergy3.setText(format("%.1f ", em.getSummary(3).getTotalReverseReactiveEnergy()));
 
-            tvPhaseForwardActiveEnergyBalanced.setText(format("%.5f kWh",
+            tvPhaseForwardActiveEnergyBalanced.setText(format("%.5f ",
                     em.getTotalForwardActiveEnergyBalanced()));
-            tvPhaseReverseActiveEnergyBalanced.setText(format("%.5f kWh",
+            tvPhaseReverseActiveEnergyBalanced.setText(format("%.5f ",
                     em.getTotalReverseActiveEnergyBalanced()));
 
             chartHelper.setTotalActiveEnergy(
