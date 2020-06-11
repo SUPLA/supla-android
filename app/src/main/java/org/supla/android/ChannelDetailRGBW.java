@@ -53,7 +53,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         SuplaColorListPicker.OnColorListTouchListener {
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
-    final static private long MIN_UPDATE_DELAY = 2000;
+    final static private long MIN_UPDATE_DELAY = 3500;
     private SuplaColorBrightnessPicker cbPicker;
     private SuplaColorListPicker clPicker;
     private Button tabRGB;
