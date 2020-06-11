@@ -649,9 +649,8 @@ public class SuplaColorBrightnessPicker extends View {
                     int newColor = calculateColor((float) colorWheelPointerAngle, Colors);
 
                     if (newColor != selectedColor) {
-
-                        setBWcolor();
                         selectedColor = newColor;
+                        setBWcolor();
                         invalidate();
 
                         if (mOnChangeListener != null)
@@ -715,6 +714,8 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     public void setColor(int color) {
+        color |= 0xff000000;
+
         if (selectedColor != color) {
             selectedColor = color;
             colorWheelPointerAngle = colorToAngle(color);
