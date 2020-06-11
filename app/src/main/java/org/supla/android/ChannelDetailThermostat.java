@@ -21,10 +21,7 @@ package org.supla.android;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 
-import org.supla.android.lib.SuplaClient;
-import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
@@ -53,7 +50,7 @@ public class ChannelDetailThermostat extends DetailLayout implements View.OnClic
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_thermostat);
     }
 

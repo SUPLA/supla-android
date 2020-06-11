@@ -23,7 +23,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
@@ -121,6 +120,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
             case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
             case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 break;
             default:
                 return;
@@ -151,6 +151,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
@@ -297,7 +298,7 @@ public class ChannelGroup extends ChannelBase {
                 try {
                     Double v = Double.valueOf(n[idx]);
 
-                    if (result!=null) {
+                    if (result != null) {
                         if ((min && v.doubleValue() < result.doubleValue())
                                 || (!min && v.doubleValue() > result.doubleValue())) {
                             result = v;
@@ -350,6 +351,7 @@ public class ChannelGroup extends ChannelBase {
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                     try {
                         sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;
                     } catch (NumberFormatException e) {

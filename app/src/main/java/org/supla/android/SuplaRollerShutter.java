@@ -36,6 +36,8 @@ import java.util.ArrayList;
 
 public class SuplaRollerShutter extends View {
 
+    Path markerPath = new Path();
+    DisplayMetrics metrics = getResources().getDisplayMetrics();
     private float FrameLineWidth = 1;
     private float Percent = 0;
     private float virtPercent = 0;
@@ -53,25 +55,6 @@ public class SuplaRollerShutter extends View {
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
     private ArrayList<Integer> Markers = null;
-    Path markerPath = new Path();
-    DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-    public interface OnTouchListener {
-        void onPercentChanged(SuplaRollerShutter rs, float percent);
-
-        void onPercentChangeing(SuplaRollerShutter rs, float percent);
-    }
-
-    private void init() {
-
-        FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 2, metrics);
-
-        Spaceing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                (float) 3, metrics);
-
-        LouverSpaceing = Spaceing;
-    }
 
     public SuplaRollerShutter(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -88,22 +71,33 @@ public class SuplaRollerShutter extends View {
         init();
     }
 
-    void setFrameLineWidth(float frameLineWidth) {
-        FrameLineWidth = frameLineWidth;
-        invalidate();
+    private void init() {
+
+        FrameLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                (float) 2, metrics);
+
+        Spaceing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                (float) 3, metrics);
+
+        LouverSpaceing = Spaceing;
     }
 
     float getFrameLineWidth() {
         return FrameLineWidth;
     }
 
-    void setSpaceing(float spaceing) {
-        Spaceing = spaceing;
+    void setFrameLineWidth(float frameLineWidth) {
+        FrameLineWidth = frameLineWidth;
         invalidate();
     }
 
     float getSpaceing() {
         return Spaceing;
+    }
+
+    void setSpaceing(float spaceing) {
+        Spaceing = spaceing;
+        invalidate();
     }
 
     int getWindowColor() {
@@ -287,7 +281,7 @@ public class SuplaRollerShutter extends View {
             for (int a = 0; a < Markers.size(); a++) {
                 pos = (float) ((getHeight() - markerHalfHeight * 2) * Markers.get(a) / 100.00) + markerHalfHeight;
 
-                for(short b=0;b<2;b++) {
+                for (short b = 0; b < 2; b++) {
 
                     if (b == 0) {
                         paint.setStyle(Paint.Style.FILL);
@@ -419,5 +413,11 @@ public class SuplaRollerShutter extends View {
 
     void setOnPercentTouchListener(OnTouchListener l) {
         mOnTouchListener = l;
+    }
+
+    public interface OnTouchListener {
+        void onPercentChanged(SuplaRollerShutter rs, float percent);
+
+        void onPercentChangeing(SuplaRollerShutter rs, float percent);
     }
 }

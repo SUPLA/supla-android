@@ -19,7 +19,6 @@ package org.supla.android;
  */
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -59,12 +58,10 @@ public class StatusActivity extends NavigationActivity {
         progress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
 
         msg = findViewById(R.id.status_text);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        msg.setTypeface(type);
+        msg.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         btnSettings = findViewById(R.id.status_btn);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-        btnSettings.setTypeface(type);
+        btnSettings.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btnSettings.setTransformationMethod(null);
         btnSettings.setText(getResources().getText(R.string.settings));
         btnSettings.setOnClickListener(this);
@@ -72,7 +69,7 @@ public class StatusActivity extends NavigationActivity {
         btnRetry = findViewById(R.id.retry_btn);
         btnRetry.setOnClickListener(this);
 
-        layout = (RelativeLayout)msg.getParent();
+        layout = (RelativeLayout) msg.getParent();
 
         setStatusConnectingProgress(0);
         RegisterMessageHandler();
@@ -83,14 +80,14 @@ public class StatusActivity extends NavigationActivity {
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-        if ( client != null
-                && client.Registered() ) {
+        if (client != null
+                && client.registered()) {
             showMain(this);
         } else {
 
             SuplaRegisterError error = SuplaClient.getLastRegisterError();
 
-            if ( error != null )
+            if (error != null)
                 _OnRegisterErrorMsg(error);
         }
 
@@ -99,7 +96,7 @@ public class StatusActivity extends NavigationActivity {
 
     public void setStatusError(String message) {
 
-        if ( mode != 1 ) {
+        if (mode != 1) {
             mode = 1;
 
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
@@ -124,7 +121,7 @@ public class StatusActivity extends NavigationActivity {
     }
 
     public void setStatusConnectingProgress(int value) {
-        if ( mode != 2 ) {
+        if (mode != 2) {
             mode = 2;
 
             layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
@@ -161,38 +158,38 @@ public class StatusActivity extends NavigationActivity {
 
         super.onClick(v);
 
-        if ( v == btnSettings ) {
+        if (v == btnSettings) {
             NavigationActivity.showCfg(this);
-        } else if ( v == btnRetry ) {
-            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
+        } else if (v == btnRetry) {
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         }
     }
 
     @Override
-    protected void OnDisconnectedMsg() {
+    protected void onDisconnectedMsg() {
         setStatusConnectingProgress(0);
     }
 
     @Override
-    protected void OnConnectingMsg() {
+    protected void onConnectingMsg() {
         setStatusConnectingProgress(25);
     }
 
     @Override
-    protected void OnConnectedMsg() {
+    protected void onConnectedMsg() {
         setStatusConnectingProgress(50);
     }
 
     @Override
-    protected void OnRegisteringMsg() {
+    protected void onRegisteringMsg() {
         setStatusConnectingProgress(75);
     }
 
     @Override
-    protected void OnRegisteredMsg() {
+    protected void onRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if ( !(CurrentActivity instanceof AddWizardActivity) ) {
+        if (!(CurrentActivity instanceof AddDeviceWizardActivity)) {
             showMain(this);
         }
 
@@ -203,26 +200,26 @@ public class StatusActivity extends NavigationActivity {
     }
 
     @Override
-    protected void OnRegisterErrorMsg(SuplaRegisterError error) {
+    protected void onRegisterErrorMsg(SuplaRegisterError error) {
 
-        super.OnRegisterErrorMsg(error);
+        super.onRegisterErrorMsg(error);
         _OnRegisterErrorMsg(error);
 
     }
 
     @Override
-    protected void OnVersionErrorMsg(SuplaVersionError error) {
+    protected void onVersionErrorMsg(SuplaVersionError error) {
         setStatusError(getResources().getString(R.string.status_version_error));
     }
 
     @Override
-    protected void OnConnErrorMsg(SuplaConnError error) {
-        if ( error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND )
+    protected void onConnErrorMsg(SuplaConnError error) {
+        if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND)
             setStatusError(getResources().getString(R.string.err_hostnotfound));
     }
 
     @Override
     public void onBackPressed() {
-       gotoMain();
+        gotoMain();
     }
 }

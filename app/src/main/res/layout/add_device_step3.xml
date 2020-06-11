@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menubar">
+
+    <TextView
+        android:id="@+id/wizard_step3_txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_step3_txt1"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="200dp"
+        android:layout_height="146dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:background="@drawable/plug"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/wizard_step3_txt3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wizard_step3_txt2"
+        android:layout_alignStart="@+id/wizard_step3_txt2"
+        android:layout_alignLeft="@+id/wizard_step3_txt2"
+        android:layout_alignEnd="@+id/wizard_step3_txt2"
+        android:layout_alignRight="@+id/wizard_step3_txt2"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_step3_txt3"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/wizard_step3_txt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wizard_dot"
+        android:layout_alignStart="@+id/wizard_step3_txt1"
+        android:layout_alignLeft="@+id/wizard_step3_txt1"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_step3_txt2"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/wizard_dot"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/wizard_step3_txt1"
+        android:layout_alignEnd="@+id/wizard_step3_txt1"
+        android:layout_alignRight="@+id/wizard_step3_txt1"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@drawable/greendot"
+        tools:ignore="ContentDescription" />
+</RelativeLayout>

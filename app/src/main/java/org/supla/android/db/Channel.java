@@ -22,9 +22,9 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.supla.android.Trace;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -42,18 +42,20 @@ public class Channel extends ChannelBase {
         return getRemoteId();
     }
 
-    public int getType() { return Type; }
+    public int getType() {
+        return Type;
+    }
 
     public void setType(int type) {
         Type = type;
     }
 
-    public void setProtocolVersion(int protocolVersion) {
-        ProtocolVersion = protocolVersion;
-    }
-
     public int getProtocolVersion() {
         return ProtocolVersion;
+    }
+
+    public void setProtocolVersion(int protocolVersion) {
+        ProtocolVersion = protocolVersion;
     }
 
     public short getManufacturerID() {
@@ -84,14 +86,6 @@ public class Channel extends ChannelBase {
         return Value != null && Value.getOnLine() ? 100 : 0;
     }
 
-    public void setValue(ChannelValue value) {
-        Value = value;
-    }
-
-    public void setExtendedValue(ChannelExtendedValue extendedValue) {
-        ExtendedValue = extendedValue;
-    }
-
     public ChannelValue getValue() {
 
         if (Value == null)
@@ -100,8 +94,16 @@ public class Channel extends ChannelBase {
         return Value;
     }
 
+    public void setValue(ChannelValue value) {
+        Value = value;
+    }
+
     public ChannelExtendedValue getExtendedValue() {
         return ExtendedValue;
+    }
+
+    public void setExtendedValue(ChannelExtendedValue extendedValue) {
+        ExtendedValue = extendedValue;
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -197,7 +199,7 @@ public class Channel extends ChannelBase {
     }
 
     public double getTemp() {
-        return Value != null ? Value.getTemp(getFunc()) : -275;
+        return Value != null ? Value.getTemp(getFunc()) : -273;
     }
 
     public double getDistance() {
@@ -248,6 +250,7 @@ public class Channel extends ChannelBase {
     }
 
     public String getUnit(String defaultUnit) {
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
                 && getExtendedValue() != null
                 && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
@@ -263,16 +266,21 @@ public class Channel extends ChannelBase {
     }
 
     public String getUnit() {
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
 
             String dUnit = "";
             switch (getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                     dUnit = "kWh";
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
                     dUnit = "m\u00B3";
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+                    dUnit = "GJ";
                     break;
             }
             return getUnit(dUnit);
@@ -282,11 +290,11 @@ public class Channel extends ChannelBase {
     }
 
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
-
+        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
             return getOnLine() ?
-                    String.format("%.1f "+getUnit(), value.getImpulseCounterCalculatedValue()) :
-                    "--- "+getUnit();
+                    String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue()) :
+                    "--- " + getUnit();
         }
 
         return super.getHumanReadableValue(whichOne, value);
@@ -295,8 +303,28 @@ public class Channel extends ChannelBase {
     public CharSequence getHumanReadableValue(WhichOne whichOne) {
         return getHumanReadableValue(whichOne, Value);
     }
+
     public CharSequence getHumanReadableValue() {
         return getHumanReadableValue(WhichOne.First, Value);
+    }
+
+    public SuplaChannelState getChannelState() {
+        ChannelExtendedValue ev = getExtendedValue();
+
+        if (ev != null && ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1) {
+            return ev.getExtendedValue().ChannelStateValue;
+        }
+
+        return null;
+    }
+
+    public int getChannelWarningLevel() {
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+            case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
+                return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
+        }
+        return 0;
     }
 
 }

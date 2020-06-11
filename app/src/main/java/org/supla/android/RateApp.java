@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Window;
+
 import org.supla.android.db.DbHelper;
 
 import java.util.Calendar;
@@ -37,6 +38,10 @@ public class RateApp {
     private final String PN_RATE_TIME = "rate_time";
     private Context context;
 
+    RateApp(Context context) {
+        this.context = context;
+    }
+
     private void moreTime(int days) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -49,11 +54,6 @@ public class RateApp {
         editor.putLong(PN_RATE_TIME, cal.getTime().getTime());
         editor.apply();
 
-    }
-
-
-    RateApp(Context context) {
-        this.context = context;
     }
 
     private void ShowAlertDialog() {
@@ -107,14 +107,14 @@ public class RateApp {
 
         Date now = new Date();
 
-        if ( rt == 0 ) {
+        if (rt == 0) {
 
             moreTime(1);
 
-        } else if ( now.getTime() >= rt ) {
+        } else if (now.getTime() >= rt) {
 
             DbHelper DbH = new DbHelper(context);
-            if ( DbH.getChannelCount() > 0 ) {
+            if (DbH.getChannelCount() > 0) {
 
                 moreTime(1);
 

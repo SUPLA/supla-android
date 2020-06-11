@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeplus_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -94,8 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_turbo_time" />
+                android:text="@string/hp_cfg_turbo_time"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -134,8 +133,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_water_max" />
+                android:text="@string/hp_cfg_water_max"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -174,8 +173,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_eco_reduction" />
+                android:text="@string/hp_cfg_eco_reduction"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -214,8 +213,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_temp_comfort_auto" />
+                android:text="@string/hp_cfg_temp_comfort_auto"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -254,8 +253,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="30sp"
-                android:text="@string/hp_cfg_temp_eco" />
+                android:text="@string/hp_cfg_temp_eco"
+                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -385,11 +384,11 @@
                                 android:id="@+id/hpBtnOnOff"
                                 android:layout_width="wrap_content"
                                 android:layout_height="80dp"
+                                android:layout_marginRight="3dp"
                                 android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
                                 android:background="@drawable/hp_button_off"
                                 android:text="@string/hp_on"
-                                android:layout_marginRight="3dp"
-                                android:layout_weight="1"
                                 android:textColor="@android:color/white" />
 
                         </LinearLayout>
@@ -495,7 +494,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:id="@+id/hpllChart"
@@ -563,30 +562,6 @@
                 android:text="@string/hp_error_2"
                 android:textColor="@color/hp_error_text_color"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/hptv_ChannelTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/channel_func_thermostat_hp_homeplus"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/black" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-            </LinearLayout>
 
 
         </LinearLayout>

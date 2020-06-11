@@ -36,20 +36,17 @@ import org.supla.android.db.DbHelper;
 
 public class CfgActivity extends NavigationActivity {
 
+    static final short CFG_LAYOUT_ADVANCED = 0;
+    static final short CFG_LAYOUT_BASIC = 1;
     private View vBasic;
     private View vAdvanced;
     private RelativeLayout rlContent;
-
     private EditText edServerAddr;
     private EditText edAccessID;
     private EditText edAccessIDpwd;
     private EditText edEmail;
     private CheckBox cbAdvanced;
-
     private Button btnSaveBasic, btnSaveAdv, btnCreate;
-
-    static final short CFG_LAYOUT_ADVANCED = 0;
-    static final short CFG_LAYOUT_BASIC = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +87,7 @@ public class CfgActivity extends NavigationActivity {
         edAccessIDpwd.setOnFocusChangeListener(fcl);
         edEmail.setOnFocusChangeListener(fcl);
 
-        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
+        Typeface type = SuplaApp.getApp().getTypefaceOpenSansRegular();
         edServerAddr.setTypeface(type);
         edAccessID.setTypeface(type);
         edAccessIDpwd.setTypeface(type);
@@ -99,7 +96,7 @@ public class CfgActivity extends NavigationActivity {
         btnCreate = findViewById(R.id.cfg_create_account);
         btnCreate.setOnClickListener(this);
 
-        type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
+        type = SuplaApp.getApp().getTypefaceOpenSansBold();
         TextView v = findViewById(R.id.cfg_label_svr_address);
         v.setTypeface(type);
 
@@ -113,7 +110,7 @@ public class CfgActivity extends NavigationActivity {
         v.setTypeface(type);
 
 
-        type = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Regular.ttf");
+        type = SuplaApp.getApp().getTypefaceQuicksandRegular();
         v = findViewById(R.id.cfg_label_title_basic);
         v.setTypeface(type);
 
@@ -251,7 +248,7 @@ public class CfgActivity extends NavigationActivity {
             prefs.setPreferedProtocolVersion();
 
             showStatus(this);
-            SuplaApp.getApp().SuplaClientInitIfNeed(this).Reconnect();
+            SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
 
         } else {
             showMain(this);

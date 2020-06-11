@@ -28,8 +28,6 @@ import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ThermostatHP;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.lib.SuplaConst;
 
 public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     public ThermostatHPListViewCursorAdapter(Context context, int layout, Cursor c) {
@@ -45,16 +43,16 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     }
 
     private boolean isOn(TextView tv) {
-        return tv != null && ((Integer)tv.getTag()).intValue() == 1;
+        return tv != null && ((Integer) tv.getTag()).intValue() == 1;
     }
 
     private void setOn(TextView tv, boolean on) {
-        if (tv!=null) {
+        if (tv != null) {
             if (on) {
-                tv.setBackgroundResource( R.drawable.hp_button_on);
+                tv.setBackgroundResource(R.drawable.hp_button_on);
                 tv.setTag(1);
             } else {
-                tv.setBackgroundResource( R.drawable.hp_button_off);
+                tv.setBackgroundResource(R.drawable.hp_button_off);
                 tv.setTag(0);
             }
         }

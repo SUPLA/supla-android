@@ -23,8 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.supla.android.Trace;
-import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
@@ -53,7 +51,7 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
 
-        ThermostatMeasurementItem thi  = new ThermostatMeasurementItem();
+        ThermostatMeasurementItem thi = new ThermostatMeasurementItem();
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
 

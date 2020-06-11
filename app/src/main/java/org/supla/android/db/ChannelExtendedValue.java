@@ -23,6 +23,7 @@ import android.database.Cursor;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -36,12 +37,22 @@ public class ChannelExtendedValue extends DbItem {
     private int ChannelId;
     private SuplaChannelExtendedValue ExtendedValue;
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
+    public static boolean valueExists(Cursor cursor) {
+        int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
+
+        return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
+                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
+                && vidx > -1
+                && !cursor.isNull(vidx);
     }
 
     public int getChannelId() {
         return ChannelId;
+    }
+
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
     public SuplaChannelExtendedValue getExtendedValue() {
@@ -70,16 +81,6 @@ public class ChannelExtendedValue extends DbItem {
         return null;
     }
 
-    public static boolean valueExists(Cursor cursor) {
-        int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
-
-        return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
-                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
-                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
-                && vidx > -1
-                && !cursor.isNull(vidx);
-    }
-
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
@@ -94,6 +95,7 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
+            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
                 if (obj instanceof SuplaChannelElectricityMeterValue) {
                     ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
                 }
@@ -106,6 +108,11 @@ public class ChannelExtendedValue extends DbItem {
             case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
                 if (obj instanceof SuplaChannelThermostatValue) {
                     ExtendedValue.ThermostatValue = (SuplaChannelThermostatValue) obj;
+                }
+                break;
+            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
+                if (obj instanceof SuplaChannelState) {
+                    ExtendedValue.ChannelStateValue = (SuplaChannelState) obj;
                 }
                 break;
             default:
@@ -140,6 +147,7 @@ public class ChannelExtendedValue extends DbItem {
 
         switch (getType()) {
             case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
+            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
                 value = ObjectToByteArray(ExtendedValue.ElectricityMeterValue);
                 break;
             case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
@@ -147,6 +155,9 @@ public class ChannelExtendedValue extends DbItem {
                 break;
             case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
                 value = ObjectToByteArray(ExtendedValue.ThermostatValue);
+                break;
+            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
+                value = ObjectToByteArray(ExtendedValue.ChannelStateValue);
                 break;
             default:
                 if (ExtendedValue != null && ExtendedValue.Value != null) {

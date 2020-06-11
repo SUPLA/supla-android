@@ -22,12 +22,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
+
 import org.supla.android.R;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +46,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     public ElectricityChartHelper(Context context) {
         super(context);
-        totalActiveEnergy = new double[]{0,0,0};
+        totalActiveEnergy = new double[]{0, 0, 0};
         setProductionDataSource(false);
     }
 
@@ -54,15 +58,65 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     @Override
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
-        float[] phases = new float[3];
-        phases[0] = (float) c.getDouble(
-                c.getColumnIndex(colPhase1));
-        phases[1] = (float) c.getDouble(
-                c.getColumnIndex(colPhase2));
-        phases[2] = (float) c.getDouble(
-                c.getColumnIndex(colPhase3));
+        if (isBalanceChartType(ctype)) {
 
-        entries.add(new BarEntry(n, phases));
+            float cons = 0;
+            float prod = 0;
+
+            if (isVectorBalanceChartType(ctype)) {
+                prod = (float) c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED));
+                cons = (float) c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_FAE_BALANCED));
+            } else {
+                double prod1 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_RAE));
+                double prod2 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_RAE));
+                double prod3 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_RAE));
+
+                double cons1 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE));
+                double cons2 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE2_FAE));
+                double cons3 = c.getDouble(
+                        c.getColumnIndex(
+                                SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE3_FAE));
+
+                cons = (float) (cons1 + cons2 + cons3);
+                prod = (float) (prod1 + prod2 + prod3);
+            }
+
+            float cons_diff = prod > cons ? cons : prod;
+            float prod_diff = cons > prod ? prod : cons;
+
+            float[] values = new float[4];
+            values[0] = prod_diff * -1;
+            values[1] = (prod - prod_diff) * -1;
+            values[2] = cons - cons_diff;
+            values[3] = cons_diff;
+
+            entries.add(new BarEntry(n, values));
+
+        } else {
+            float[] phases = new float[3];
+            phases[0] = (float) c.getDouble(
+                    c.getColumnIndex(colPhase1));
+            phases[1] = (float) c.getDouble(
+                    c.getColumnIndex(colPhase2));
+            phases[2] = (float) c.getDouble(
+                    c.getColumnIndex(colPhase3));
+
+            entries.add(new BarEntry(n, phases));
+        }
     }
 
     @Override
@@ -71,8 +125,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected void addPieEntries(ChartType ctype, SimpleDateFormat spf,
-                                 Cursor c, ArrayList<PieEntry>entries) {
+    protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
 
@@ -116,27 +169,43 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
         Resources res = context.getResources();
 
-        result.setStackLabels(new String[]{
-                res.getString(R.string.em_phase1),
-                res.getString(R.string.em_phase2),
-                res.getString(R.string.em_phase3)});
+        if (isBalanceChartType(ctype)) {
+            result.setStackLabels(new String[]{
+                    "",
+                    "",
+                    ""});
 
-        List<Integer> Colors = new ArrayList<Integer>(3);
-        Colors.add(res.getColor(R.color.phase1));
-        Colors.add(res.getColor(R.color.phase2));
-        Colors.add(res.getColor(R.color.phase3));
-        result.setColors(Colors);
+
+            List<Integer> Colors = new ArrayList<Integer>(4);
+            Colors.add(Color.GRAY);
+            Colors.add(res.getColor(R.color.chart_color_value_negative));
+            Colors.add(res.getColor(R.color.chart_color_value_positive));
+            Colors.add(Color.GRAY);
+            result.setColors(Colors);
+        } else {
+            result.setStackLabels(new String[]{
+                    res.getString(R.string.em_phase1),
+                    res.getString(R.string.em_phase2),
+                    res.getString(R.string.em_phase3)});
+
+
+            List<Integer> Colors = new ArrayList<Integer>(3);
+            Colors.add(res.getColor(R.color.phase1));
+            Colors.add(res.getColor(R.color.phase2));
+            Colors.add(res.getColor(R.color.phase3));
+            result.setColors(Colors);
+        }
 
         return result;
     }
 
     @Override
     protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
-        if (!isProductionDataSource() || !isComparsionChartType(ctype)) {
-            super.prepareBarDataSet(barDataSet);
-        } else {
+        if ((isProductionDataSource() && isComparsionChartType(ctype))) {
             barDataSet.setColorDependsOnTheValue(true);
             barDataSet.setColors(getBarChartComparsionColors(true));
+        } else {
+            super.prepareBarDataSet(barDataSet);
         }
     }
 

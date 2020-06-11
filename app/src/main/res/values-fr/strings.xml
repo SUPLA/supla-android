@@ -17,37 +17,37 @@
     <string name="status_bad_credentials">Informations d\u0027identification invalides</string>
     <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
     <string name="status_version_error">Incompatibilité de la version du serveur</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+    <string name="status_reg_disabled">L\'inscription est actuellement désactivée. Pour l\'activer, allez vers l\'onglet \"Smartphones\" à la page %1$s.</string>
+    <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page %1$s et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
+    <string name="status_device_disabled">Le dispositif est éteint</string>
+    <string name="status_accessid_disabled">L\'identifiant d\'accès est désactivé</string>
 
     <string name="err_hostnotfound">Nous n\u0027avons pas pu trouver cette adresse du serveur</string>
     <string name="err_cantconnecttohost">Impossible de se connecter au serveur</string>
 
-    <string name="channel_func_gateway">Portillon</string>
-    <string name="channel_func_gate">Portail</string>
-    <string name="channel_func_garagedoor">Porte garage</string>
-    <string name="channel_func_door">Porte</string>
-    <string name="channel_func_rollershutter">Volet roulant</string>
-    <string name="channel_func_powerswith">Interrupteur d\u0027alimentation</string>
-    <string name="channel_func_lightswith">Interrupteur de lumière</string>
-    <string name="channel_func_thermometer">Thermomètre</string>
-    <string name="channel_func_humidity">Humidité</string>
-    <string name="channel_func_humidityandtemperature">Température et humidité</string>
-    <string name="channel_func_dimmer">Variateur de luminosité</string>
-    <string name="channel_func_rgblighting">Éclairage RGB</string>
-    <string name="channel_func_dimmerandrgblighting">Variateur de luminosité et éclairage RGB</string>
-    <string name="channel_func_noliquidsensor">Capteur d\u0027absence de liquide</string>
-    <string name="channel_func_gatewayopeningsensor">Capteur d\u0027ouverture de portillon</string>
-    <string name="channel_func_gateopeningsensor">Capteur d\u0027ouverture de portail</string>
-    <string name="channel_func_garagedooropeningsensor">Capteur d\u0027ouverture de porte garage</string>
-    <string name="channel_func_dooropeningsensor">Capteur d\u0027ouverture de porte</string>
-    <string name="channel_func_rsopeningsensor">Capteur d\u0027ouverture des volet</string>
-    <string name="channel_func_depthsensor">Capteur de profondeur</string>
-    <string name="channel_func_distancesensor">Capteur de distance</string>
-    <string name="channel_func_windowopeningsensor">Capteur d\'ouverture de fenêtre</string>
-    <string name="channel_func_mailsensor">Détecteur de courrier</string>
+    <string name="channel_caption_gateway">Portillon</string>
+    <string name="channel_caption_gate">Portail</string>
+    <string name="channel_caption_garagedoor">Porte garage</string>
+    <string name="channel_caption_door">Porte</string>
+    <string name="channel_caption_rollershutter">Volet roulant</string>
+    <string name="channel_caption_powerswith">Interrupteur d\u0027alimentation</string>
+    <string name="channel_caption_lightswith">Interrupteur de lumière</string>
+    <string name="channel_caption_thermometer">Thermomètre</string>
+    <string name="channel_caption_humidity">Humidité</string>
+    <string name="channel_caption_humidityandtemperature">Température et humidité</string>
+    <string name="channel_caption_dimmer">Variateur de luminosité</string>
+    <string name="channel_caption_rgblighting">Éclairage RGB</string>
+    <string name="channel_caption_dimmerandrgblighting">Variateur de luminosité et éclairage RGB</string>
+    <string name="channel_caption_noliquidsensor">Capteur d\u0027absence de liquide</string>
+    <string name="channel_caption_gatewayopeningsensor">Capteur d\u0027ouverture de portillon</string>
+    <string name="channel_caption_gateopeningsensor">Capteur d\u0027ouverture de portail</string>
+    <string name="channel_caption_garagedooropeningsensor">Capteur d\u0027ouverture de porte garage</string>
+    <string name="channel_caption_dooropeningsensor">Capteur d\u0027ouverture de porte</string>
+    <string name="channel_caption_rsopeningsensor">Capteur d\u0027ouverture des volet</string>
+    <string name="channel_caption_depthsensor">Capteur de profondeur</string>
+    <string name="channel_caption_distancesensor">Capteur de distance</string>
+    <string name="channel_caption_windowopeningsensor">Capteur d\'ouverture de fenêtre</string>
+    <string name="channel_caption_mailsensor">Détecteur de courrier</string>
 
     <string name="rgb_brightness">Luminosité</string>
     <string name="rgb_color">Couleur</string>
@@ -69,7 +69,7 @@
     <string name="server_address">ADRESSE DU SERVEUR</string>
     <string name="access_id">IDENTIFIANT D\u0027ACCÈS</string>
     <string name="password">MOT DE PASSE</string>
-    <string name="create_account">Créer un nouveau compte</string>
+    <string name="create_account">Créer un compte</string>
 
     <string name="about_app">This program is free software; you can redistribute it and/or\n
  modify it under the terms of the GNU General Public License\n
@@ -86,10 +86,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l\u0027évaluer. Nous vous remercions de votre support !</string> 
+    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l\u0027évaluer. Nous vous remercions de votre support !</string>
     <string name="rate_now">Évaluer maintenant</string>
-     <string name="rate_later">Plus tard</string>
-     <string name="rate_no_thanks">Non, merci</string>
+    <string name="rate_later">Plus tard</string>
+    <string name="rate_no_thanks">Non, merci</string>
     <string name="rs_percent_caption">Pourcentage fermeture</string>
     <string name="calibration">[Calibration]</string>
     <string name="wizard_step1_txt2">Pour continuer, appuyez sur <b>Continuer</b>.</string>
@@ -128,11 +128,11 @@
     <string name="wizard_step2_txt3">*) Le réseau %1$s sera utilisé par vos actionneurs pour vous connecter au serveur.</string>
     <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
     <string name="help">Aide</string>
-    <string name="channel_func_staircasetimer">Minuterie d\'escalier</string>
-    <string name="channel_func_electricitymeter">Compteur d\'énergie</string>
-    <string name="channel_func_gasmeter">Compteur de gaz</string>
-    <string name="channel_func_watermeter">Compteur d\'eau</string>
-    <string name="em_total_forward_avtive_energy">Energie active  importée</string>
+    <string name="channel_caption_staircasetimer">Minuterie d\'escalier</string>
+    <string name="channel_caption_electricitymeter">Compteur d\'énergie</string>
+    <string name="channel_caption_gasmeter">Compteur de gaz</string>
+    <string name="channel_caption_watermeter">Compteur d\'eau</string>
+    <string name="em_total_forward_avtive_energy">Energie active importée</string>
     <string name="em_reverse_active_energy">Energie active rendue</string>
     <string name="em_total_forward_reactive_energy">Energie passive importée</string>
     <string name="em_total_reverse_reactive_energy">Energie passive rendue</string>
@@ -147,8 +147,8 @@
     <string name="em_phase1">Phase 1</string>
     <string name="em_phase2">Phase 2</string>
     <string name="em_phase3">Phase 3</string>
-    <string name="channel_func_thermostat">Thermostat</string>
-    <string name="channel_func_thermostat_hp_homeplus">Élément chauffant Home+</string>
+    <string name="channel_caption_thermostat">Thermostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Élément chauffant Home+</string>
     <string name="hp_on">ACTIVÉ</string>
     <string name="hp_off">DÉSACTIVÉ</string>
     <string name="hp_normal">NORMAL</string>
@@ -162,11 +162,12 @@
     <string name="hp_cfg_temp_comfort_auto">Température de confort en mode AUTO</string>
     <string name="hp_temp_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Température ECO en mode AUTO</string>
+    <string name="hp_hour">h</string>
     <string name="total_cost">Coût total</string>
     <string name="current_cost">Coût dans le mois courant</string>
     <string name="current_consumption">Consommation dans le mois courant</string>
     <string name="impulses_count">Nombre d\'impulsions</string>
-    <string name="meter_value">"Valeur du compteur "</string>
+    <string name="meter_value">"Valeur du compteur"</string>
     <string name="channel_func_impulsecounter">Compteur d\'impulsions</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Heures</string>
@@ -198,10 +199,52 @@
     <string name="hp_error_3">Erreur du capteur de température de l\'eau</string>
     <string name="hp_error_4">Erreur du capteur de température ambiante</string>
     <string name="hp_error_5">Pas d\'interruption de réseau</string>
-    <string name="channel_func_pressuresensor">Capteur de pression</string>
-    <string name="channel_func_rainsensor">Mesure des précipitations</string>
-    <string name="channel_func_weightsensor">Poids</string>
-    <string name="channel_func_windsensor">Vitesse du vent</string>
+    <string name="channel_caption_pressuresensor">Capteur de pression</string>
+    <string name="channel_caption_rainsensor">Mesure des précipitations</string>
+    <string name="channel_caption_weightsensor">Poids</string>
+    <string name="channel_caption_windsensor">Vitesse du vent</string>
     <string name="current_production">Production dans le mois courant</string>
     <string name="production_acording_to_phases">Production selon phases</string>
+    <string name="enter_superuser_credentials">Entrez les informations d\'identification du superutilisateur</string>
+
+    <string name="channel_func_none">Aucune fonction</string>
+    <string name="channel_func_controllingthegatewaylock">Ouverture de portillon</string>
+    <string name="channel_func_controllingthegate">Ouverture/fermeture de portail</string>
+    <string name="channel_func_controllingthegaragedoor">Ouverture/fermeture de porte garage</string>
+    <string name="channel_func_thermometer">Thermomètre</string>
+    <string name="channel_func_humidity">Capteur d\'humidité</string>
+    <string name="channel_func_humidityandtemperature">Capteur de température et d\'humidité</string>
+    <string name="channel_func_opensensor_gateway">Capteur d\'ouverture de portillon</string>
+    <string name="channel_func_opensensor_gate">Capteur d\'ouverture de portail</string>
+    <string name="channel_func_opensensor_garagedoor">Capteur d\'ouverture de porte garage</string>
+    <string name="channel_func_noliquidsensor">Capteur d\'absence de liquide</string>
+    <string name="channel_func_controllingthedoorlock">Ouverture de porte</string>
+    <string name="channel_func_opensensor_door">Capteur d\'ouverture de porte</string>
+    <string name="channel_func_controllingtherollershutter">Ouverture et fermeture de volets roulants</string>
+    <string name="channel_func_opensensor_rollershutter">Capteur d\'ouverture de volets</string>
+    <string name="channel_func_powerswitch">Interrputeur d\'alimentation</string>
+    <string name="channel_func_lightswitch">Interrupteur de lumière</string>
+    <string name="channel_func_dimmer">Variateur de luminosité</string>
+    <string name="channel_func_rgblighting">Éclairage RGB</string>
+    <string name="channel_func_dimmerandrgblighting">Variateur de luminosité et éclairage RGB</string>
+    <string name="channel_func_depthsensor">Capteur de profondeur</string>
+    <string name="channel_func_distancesensor">Capteur de distance</string>
+    <string name="channel_func_openingsensor_window">Capteur d\'ouverture de fenêtre</string>
+    <string name="channel_func_mailsensor">Détecteur de courrier</string>
+    <string name="channel_func_windsensor">Capteur de vent</string>
+    <string name="channel_func_pressuresensor">Capteur de pression</string>
+    <string name="channel_func_rainsensor">Capteur de pluie</string>
+    <string name="channel_func_weightsensor">Poids</string>
+    <string name="channel_func_weather_station">Station météo</string>
+    <string name="channel_func_staircasetimer">Minuterie d\'escalier</string>
+    <string name="channel_func_electricity_meter">Compteur d\'énergie</string>
+    <string name="channel_func_gas_meter">Compteur de gaz</string>
+    <string name="channel_func_water_meter">Compteur d\'eau</string>
+    <string name="channel_func_heat_meter">Compteur de chaleur</string>
+    <string name="channel_func_thermostat">Thermostat</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Élément chauffant Home+</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
+    <string name="channel_caption_heatmeter">Compteur de chaleur</string>
 </resources>

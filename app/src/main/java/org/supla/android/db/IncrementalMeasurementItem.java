@@ -34,13 +34,13 @@ public abstract class IncrementalMeasurementItem extends MeasurementItem {
         return Complement;
     }
 
+    public void setComplement(boolean complement) {
+        Complement = complement;
+    }
+
     public abstract void AssignJSONObject(JSONObject obj) throws JSONException;
 
     public abstract void DivideBy(long div);
 
     public abstract void Calculate(IncrementalMeasurementItem item);
-
-    public void setComplement(boolean complement) {
-        Complement = complement;
-    }
 }

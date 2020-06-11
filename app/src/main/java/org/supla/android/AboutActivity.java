@@ -18,7 +18,6 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,23 +33,18 @@ public class AboutActivity extends NavigationActivity {
         setContentView(R.layout.activity_about);
 
         TextView v = findViewById(R.id.about_project_name);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         v = findViewById(R.id.cfg_label_svr_address);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
 
         v.setText(getResources().getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
 
         v = findViewById(R.id.about_text);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-        v.setTypeface(type);
-
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         homepage = findViewById(R.id.about_homepage);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        homepage.setTypeface(type);
+        homepage.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
         homepage.setOnClickListener(this);
         homepage.setTransformationMethod(null);
 
@@ -61,7 +55,7 @@ public class AboutActivity extends NavigationActivity {
     public void onClick(View v) {
         super.onClick(v);
 
-        if ( v == homepage ) {
+        if (v == homepage) {
             openHomepage();
         }
     }

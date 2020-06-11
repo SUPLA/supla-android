@@ -34,10 +34,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import org.supla.android.ChannelDetailIC;
-import org.supla.android.ChannelDetailRGB;
-import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailEM;
+import org.supla.android.ChannelDetailIC;
+import org.supla.android.ChannelDetailRGBW;
+import org.supla.android.ChannelDetailRS;
 import org.supla.android.ChannelDetailTempHumidity;
 import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
@@ -66,18 +66,6 @@ public class ChannelListView extends ListView {
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
-
-    public interface OnChannelButtonTouchListener {
-
-        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
-    }
-
-    public interface OnDetailListener {
-
-        void onChannelDetailShow();
-
-        void onChannelDetailHide();
-    }
 
     public ChannelListView(Context context) {
         super(context);
@@ -115,7 +103,6 @@ public class ChannelListView extends ListView {
 
     }
 
-
     private DetailLayout getDetailLayout(ChannelBase cbase) {
 
         if (mDetailLayout != null) {
@@ -125,7 +112,7 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
 
-                    if (!(mDetailLayout instanceof ChannelDetailRGB))
+                    if (!(mDetailLayout instanceof ChannelDetailRGBW))
                         mDetailLayout = null;
 
                     break;
@@ -137,9 +124,12 @@ public class ChannelListView extends ListView {
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
 
+                    // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
                     if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
                         if (!(mDetailLayout instanceof ChannelDetailIC))
                             mDetailLayout = null;
@@ -186,14 +176,18 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    mDetailLayout = new ChannelDetailRGB(getContext(), this);
+                    mDetailLayout = new ChannelDetailRGBW(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+
+                    // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
                     if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
                         mDetailLayout = new ChannelDetailIC(getContext(), this);
                     } else {
@@ -233,7 +227,6 @@ public class ChannelListView extends ListView {
 
         return mDetailLayout;
     }
-
 
     @Override
     public void setAdapter(ListAdapter adapter) {
@@ -558,7 +551,6 @@ public class ChannelListView extends ListView {
 
     }
 
-
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
@@ -607,7 +599,7 @@ public class ChannelListView extends ListView {
         mDetailLayout.onDetailShow();
 
         if (onDetailListener != null)
-            onDetailListener.onChannelDetailShow();
+            onDetailListener.onChannelDetailShow(mDetailLayout.getChannelBase());
     }
 
     private void onDetailHide() {
@@ -727,10 +719,6 @@ public class ChannelListView extends ListView {
 
     }
 
-    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
-        this.onChannelButtonTouchListener = onChannelButtonTouchListener;
-    }
-
     public void setOnDetailListener(OnDetailListener onDetailListener) {
         this.onDetailListener = onDetailListener;
     }
@@ -739,13 +727,21 @@ public class ChannelListView extends ListView {
         return onChannelButtonTouchListener;
     }
 
+    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
+        this.onChannelButtonTouchListener = onChannelButtonTouchListener;
+    }
+
     public boolean isDetailVisible() {
         return mDetailVisible && mDetailLayout != null;
     }
 
+    public void onBackPressed() {
+        if (mDetailLayout.onBackPressed()) {
+            hideDetail(true);
+        }
+    }
+
     public void hideDetail(boolean animated) {
-
-
         if (isDetailVisible())
 
             if (animated) {
@@ -773,6 +769,8 @@ public class ChannelListView extends ListView {
         return null;
     }
 
+    ;
+
     public int detail_getRemoteId() {
 
         if (isDetailVisible()) {
@@ -787,5 +785,17 @@ public class ChannelListView extends ListView {
         if (isDetailVisible())
             mDetailLayout.OnChannelDataChanged();
 
+    }
+
+    public interface OnChannelButtonTouchListener {
+
+        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
+    }
+
+    public interface OnDetailListener {
+
+        void onChannelDetailShow(ChannelBase channel);
+
+        void onChannelDetailHide();
     }
 }

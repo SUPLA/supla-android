@@ -20,7 +20,6 @@ package org.supla.android;
 
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
@@ -36,17 +35,15 @@ public class StartActivity extends Activity {
         setContentView(R.layout.splash);
 
         TextView v = findViewById(R.id.splash_name);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         v = findViewById(R.id.splash_slogan);
-        type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-        v.setTypeface(type);
+        v.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
 
         SuplaApp.getApp().SuplaClientInitIfNeed(this);
 
         Display display = getWindowManager().getDefaultDisplay();
-        Trace.d("ScreenSize", Integer.toString(display.getWidth())+"x"+Integer.toString(display.getHeight()));
+        Trace.d("ScreenSize", Integer.toString(display.getWidth()) + "x" + Integer.toString(display.getHeight()));
         Trace.d("Density", Double.toString(getResources().getDisplayMetrics().density));
     }
 
@@ -57,7 +54,7 @@ public class StartActivity extends Activity {
         final Preferences prefs = new Preferences(this);
         final StartActivity startActivity = this;
 
-                (new Handler()).postDelayed(new Runnable() {
+        (new Handler()).postDelayed(new Runnable() {
             @Override
             public void run() {
 

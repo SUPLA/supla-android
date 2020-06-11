@@ -21,8 +21,6 @@ package org.supla.android.restapi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.IncrementalMeasurementItem;
 
@@ -56,7 +54,7 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
     }
 
     protected IncrementalMeasurementItem newObject(IncrementalMeasurementItem src) {
-        return new ElectricityMeasurementItem((ElectricityMeasurementItem)src);
+        return new ElectricityMeasurementItem((ElectricityMeasurementItem) src);
     }
 
     protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
@@ -67,12 +65,13 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
     }
 
     protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
-                                                                      int channelId) {
+                                                             int channelId) {
         getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(db,
                 channelId);
     }
+
     protected void addIncrementalMeasurement(SQLiteDatabase db,
-                                                      IncrementalMeasurementItem item) {
+                                             IncrementalMeasurementItem item) {
         getMeasurementsDbH().addElectricityMeasurement(db, (ElectricityMeasurementItem) item);
     }
 

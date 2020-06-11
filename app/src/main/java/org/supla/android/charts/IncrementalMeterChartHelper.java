@@ -24,6 +24,7 @@ import android.database.Cursor;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.IMarker;
+
 import org.supla.android.R;
 
 import java.text.SimpleDateFormat;
@@ -63,12 +64,12 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
         return "";
     }
 
-    public void setPricePerUnit(double pricePerUnit) {
-        this.pricePerUnit = pricePerUnit;
-    }
-
     public double getPricePerUnit() {
         return pricePerUnit;
+    }
+
+    public void setPricePerUnit(double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
     }
 
     public String getCurrency() {

@@ -22,7 +22,8 @@ import android.provider.BaseColumns;
 
 public class SuplaContract {
 
-    public SuplaContract() {}
+    public SuplaContract() {
+    }
 
 
     public static abstract class LocationEntry implements BaseColumns {
@@ -202,6 +203,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE3_FRE = "phase3_fre";
         public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
 
+        public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
+        public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
+
         public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
@@ -221,6 +225,10 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PHASE1_RAE = "phase1_rae";
         public static final String COLUMN_NAME_PHASE2_RAE = "phase2_rae";
         public static final String COLUMN_NAME_PHASE3_RAE = "phase3_rae";
+
+        public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
+        public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
+
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
 
     }
@@ -272,7 +280,7 @@ public class SuplaContract {
         public static final String _ID = "_temperature_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_TIMESTAMP = "date";
-        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
+        public static final String COLUMN_NAME_TEMPERATURE = "temperature";
     }
 
     public static abstract class TempHumidityLogEntry implements BaseColumns {
@@ -282,8 +290,8 @@ public class SuplaContract {
         public static final String _ID = "_temphumidit_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_TIMESTAMP = "date";
-        public static final String COLUMN_NAME_TEMPERATURE= "temperature";
-        public static final String COLUMN_NAME_HUMIDITY= "humidity";
+        public static final String COLUMN_NAME_TEMPERATURE = "temperature";
+        public static final String COLUMN_NAME_HUMIDITY = "humidity";
     }
 
 

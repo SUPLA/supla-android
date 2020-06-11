@@ -19,7 +19,6 @@ package org.supla.android.listview;
  */
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,13 +26,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
 
 public class SectionLayout extends LinearLayout {
-
-    public interface OnSectionLayoutTouchListener {
-        void onSectionLayoutTouch(Object sender, String caption, int locationId);
-    }
 
     private int locationId;
     private TextView Caption;
@@ -62,8 +59,7 @@ public class SectionLayout extends LinearLayout {
             View lv = inflater.inflate(R.layout.listview_section, null);
 
             Caption = lv.findViewById(R.id.tvSectionCaption);
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-            Caption.setTypeface(type);
+            Caption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
 
@@ -87,7 +83,7 @@ public class SectionLayout extends LinearLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             onSectionLayoutTouchListener.onSectionLayoutTouch(this, Caption.getText().toString(), locationId);
         }
 
@@ -97,6 +93,10 @@ public class SectionLayout extends LinearLayout {
 
     public void setCollapsed(boolean collapsed) {
         frmCollapsed.setVisibility(collapsed ? VISIBLE : INVISIBLE);
+    }
+
+    public interface OnSectionLayoutTouchListener {
+        void onSectionLayoutTouch(Object sender, String caption, int locationId);
     }
 }
 

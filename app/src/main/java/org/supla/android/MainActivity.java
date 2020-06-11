@@ -22,10 +22,12 @@ syays GNU General Public License for more details.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
-import android.os.Handler;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
@@ -42,7 +45,6 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
-import org.supla.android.db.DbHelper;
 import org.supla.android.listview.SectionLayout;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
@@ -91,8 +93,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_img = NotificationView.findViewById(R.id.notif_img);
         notif_text = NotificationView.findViewById(R.id.notif_txt);
 
-        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Regular.ttf");
-        notif_text.setTypeface(type);
+        notif_text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonTouchListener(this);
@@ -203,7 +204,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnDataChangedMsg(int ChannelId, int GroupId) {
+    protected void onDataChangedMsg(int ChannelId, int GroupId) {
 
         ChannelListView LV = null;
         int Id = 0;
@@ -236,12 +237,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnRegisteredMsg() {
+    protected void onRegisteredMsg() {
         runDownloadTask();
     }
 
     @Override
-    protected void OnDisconnectedMsg() {
+    protected void onDisconnectedMsg() {
 
         if (channelListViewCursorAdapter != null)
             channelListViewCursorAdapter.changeCursor(null);
@@ -249,65 +250,81 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void OnConnectingMsg() {
+    protected void onConnectingMsg() {
         SetListCursorAdapter();
         SetGroupListCursorAdapter();
     }
 
     @Override
-    protected void OnEventMsg(SuplaEvent event) {
-        super.OnEventMsg(event);
+    protected void onEventMsg(SuplaEvent event) {
+        super.onEventMsg(event);
 
-        if (event.Owner || event.ChannelID == 0) return;
+        if (event == null
+                || (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED)
+                || event.ChannelID == 0) return;
 
         DbHelper DbH = new DbHelper(this);
 
         Channel channel = DbH.getChannel(event.ChannelID);
-
         if (channel == null) return;
 
-        ImageId ImgIdx = channel.getImageIdx();
 
-        if (ImgIdx == null) return;
+        int imgResId = 0;
+        ImageId imgId = null;
+        String msg = "";
 
-        String msg;
-
-        switch (event.Event) {
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
-                msg = getResources().getString(R.string.event_openedthegateway);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE:
-                msg = getResources().getString(R.string.event_openedclosedthegate);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR:
-                msg = getResources().getString(R.string.event_openedclosedthegatedoors);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK:
-                msg = getResources().getString(R.string.event_openedthedoor);
-                break;
-            case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
-                msg = getResources().getString(R.string.event_openedcloserollershutter);
-                break;
-            case SuplaConst.SUPLA_EVENT_POWERONOFF:
-                msg = getResources().getString(R.string.event_poweronoff);
-                break;
-            case SuplaConst.SUPLA_EVENT_LIGHTONOFF:
-                msg = getResources().getString(R.string.event_turnedthelightonoff);
-                break;
-            default:
+        if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
+            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE) > 0) {
+                msg = getResources().getString(R.string.zwave_device_communication_error);
+                imgResId = R.drawable.zwave_device_error;
+            } else {
                 return;
+            }
+        } else {
+            int msgId = 0;
+            switch (event.Event) {
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
+                    msgId = R.string.event_openedthegateway;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE:
+                    msgId = R.string.event_openedclosedthegate;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR:
+                    msgId = R.string.event_openedclosedthegatedoors;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEDOORLOCK:
+                    msgId = R.string.event_openedthedoor;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
+                    msgId = R.string.event_openedcloserollershutter;
+                    break;
+                case SuplaConst.SUPLA_EVENT_POWERONOFF:
+                    msgId = R.string.event_poweronoff;
+                    break;
+                case SuplaConst.SUPLA_EVENT_LIGHTONOFF:
+                    msgId = R.string.event_turnedthelightonoff;
+                    break;
+                case SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE:
+                    msgId = R.string.event_openedclosedthevalve;
+                    break;
+                default:
+                    return;
+            }
+
+            imgId = channel.getImageIdx();
+            msg = getResources().getString(msgId);
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
         }
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        msg = sdf.format(new Date()) + " " + event.SenderName + " " + msg;
-
 
         if (!channel.getCaption().equals("")) {
             msg = msg + " (" + channel.getCaption() + ")";
         }
 
 
-        ShowNotificationMessage(msg, ImgIdx);
+        ShowNotificationMessage(msg, imgId, imgResId);
+
     }
 
     private void ShowHideNotificationView(final boolean show) {
@@ -338,9 +355,25 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
-    public void ShowNotificationMessage(String msg, ImageId imgId) {
+    public void ShowNotificationMessage(String msg, ImageId imgId, int imgResId) {
 
-        notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
+        notif_img.setImageBitmap(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notif_img.setBackground(null);
+        } else {
+            notif_img.setBackgroundDrawable(null);
+        }
+
+        if (imgId != null) {
+            notif_img.setImageBitmap(ImageCache.getBitmap(this, imgId));
+        } else if (imgResId > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                notif_img.setBackground(getResources().getDrawable(imgResId));
+            } else {
+                notif_img.setBackgroundDrawable(getResources().getDrawable(imgResId));
+            }
+        }
+
         notif_text.setText(msg);
 
         ShowHideNotificationView(true);
@@ -391,6 +424,35 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
+    private void ShowValveAlertDialog(final int channelId, final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setMessage(R.string.valve_open_warning);
+
+        builder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                        if (client != null) {
+                            SuplaApp.Vibrate(context);
+                            client.open(channelId, false, 1);
+                        }
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setNeutralButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
 
@@ -401,6 +463,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (client == null)
             return;
 
+        if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
+            DbHelper dbH = new DbHelper(this);
+            Channel channel = dbH.getChannel(channelId);
+            if (channel != null
+                    && channel.getValue().isClosed()
+                    && (channel.getValue().flooding()
+                    || channel.getValue().isManuallyClosed())) {
+                ShowValveAlertDialog(channelId, this);
+                return;
+            }
+        }
 
         if (!up
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
@@ -412,7 +486,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (up) {
 
             if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.Open(channelId, clv == cgroupLV,  0);
+                client.open(channelId, clv == cgroupLV, 0);
 
         } else {
 
@@ -424,7 +498,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            client.Open(channelId, clv == cgroupLV, Open);
+            client.open(channelId, clv == cgroupLV, Open);
 
         }
 
@@ -434,7 +508,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onBackPressed() {
 
         if (channelLV.isDetailVisible()) {
-            channelLV.hideDetail(true);
+            channelLV.onBackPressed();
         } else {
             gotoMain();
         }
@@ -443,8 +517,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
     @Override
-    public void onChannelDetailShow() {
-        hideMenuButton();
+    public void onChannelDetailShow(ChannelBase channel) {
+        setMenubarDetailTitle(channel.getNotEmptyCaption(this));
+        showBackButton();
     }
 
     @Override
@@ -493,14 +568,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
-        if (downloadUserIcons!=null) {
+        if (downloadUserIcons != null) {
             if (downloadUserIcons.downloadCount() > 0) {
-                if (channelLV!=null) {
+                if (channelLV != null) {
                     channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
                 }
 
-                if (cgroupLV!=null) {
-                    cgroupLV.Refresh( DbH_ListView.getGroupListCursor(), true);
+                if (cgroupLV != null) {
+                    cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
                 }
             }
             downloadUserIcons = null;

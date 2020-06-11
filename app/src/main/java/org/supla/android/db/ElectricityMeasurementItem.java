@@ -30,6 +30,8 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     private double[] rae;
     private double[] fre;
     private double[] rre;
+    private double faeBalanced;
+    private double raeBalanced;
 
 
     public ElectricityMeasurementItem() {
@@ -46,17 +48,19 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         rae = emi.rae.clone();
         fre = emi.fre.clone();
         rre = emi.rre.clone();
+        faeBalanced = emi.faeBalanced;
+        raeBalanced = emi.raeBalanced;
     }
 
     public void setFae(int phase, double fae) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.fae[phase] = fae;
         }
     }
 
     public double getFae(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.fae[phase];
         }
@@ -64,14 +68,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setRae(int phase, double rae) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.rae[phase] = rae;
         }
     }
 
     public double getRae(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.rae[phase];
         }
@@ -79,14 +83,14 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setFre(int phase, double fre) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.fre[phase] = fre;
         }
     }
 
     public double getFre(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.fre[phase];
         }
@@ -94,30 +98,49 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void setRre(int phase, double rre) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             this.rre[phase] = rre;
         }
     }
 
     public double getRre(int phase) {
-        if (phase>=1 && phase<=3) {
+        if (phase >= 1 && phase <= 3) {
             phase--;
             return this.rre[phase];
         }
         return 0;
     }
 
+    public double getFaeBalanced() {
+        return faeBalanced;
+    }
+
+    public void setFaeBalanced(double faeBalanced) {
+        this.faeBalanced = faeBalanced;
+    }
+
+    public double getRaeBalanced() {
+        return raeBalanced;
+    }
+
+    public void setRaeBalanced(double raeBalanced) {
+        this.raeBalanced = raeBalanced;
+    }
+
     public void AssignJSONObject(JSONObject obj) throws JSONException {
 
         setTimestamp(obj.getLong("date_timestamp"));
 
-        for(int phase=1;phase<=3;phase++) {
-            setFae(phase, getLong(obj,"phase"+Integer.toString(phase)+"_fae") / 100000.00);
-            setRae(phase, getLong(obj,"phase"+Integer.toString(phase)+"_rae") / 100000.00);
-            setFre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_fre") / 100000.00);
-            setRre(phase, getLong(obj,"phase"+Integer.toString(phase)+"_rre") / 100000.00);
+        for (int phase = 1; phase <= 3; phase++) {
+            setFae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fae") / 100000.00);
+            setRae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rae") / 100000.00);
+            setFre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fre") / 100000.00);
+            setRre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rre") / 100000.00);
         }
+
+        setFaeBalanced(getLong(obj, "fae_balanced") / 100000.00);
+        setRaeBalanced(getLong(obj, "rae_balanced") / 100000.00);
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -165,6 +188,12 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         setRre(3, cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE)));
 
+        setFaeBalanced(cursor.getDouble(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED)));
+
+        setRaeBalanced(cursor.getDouble(cursor.getColumnIndex(
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED)));
+
         Calculated = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED)) > 0;
 
@@ -206,6 +235,12 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         putNullOrDouble(values,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE, getRre(3));
 
+        putNullOrDouble(values,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED, getFaeBalanced());
+
+        putNullOrDouble(values,
+                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED, getRaeBalanced());
+
         values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
                 isCalculated() ? 1 : 0);
 
@@ -216,25 +251,31 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void Calculate(IncrementalMeasurementItem item) {
-        ElectricityMeasurementItem emi = (ElectricityMeasurementItem)item;
+        ElectricityMeasurementItem emi = (ElectricityMeasurementItem) item;
 
-        for(int phase = 1; phase <= 3; phase++) {
+        for (int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) - emi.getFae(phase));
             setRae(phase, getRae(phase) - emi.getRae(phase));
             setFre(phase, getFre(phase) - emi.getFre(phase));
             setRre(phase, getRre(phase) - emi.getRre(phase));
         }
 
+        setFaeBalanced(getFaeBalanced() - emi.getFaeBalanced());
+        setRaeBalanced(getRaeBalanced() - emi.getRaeBalanced());
+
         Calculated = true;
     }
 
     public void DivideBy(long div) {
-        for(int phase = 1; phase <= 3; phase++) {
+        for (int phase = 1; phase <= 3; phase++) {
             setFae(phase, getFae(phase) / div);
             setRae(phase, getRae(phase) / div);
             setFre(phase, getFre(phase) / div);
             setRre(phase, getRre(phase) / div);
         }
+
+        setFaeBalanced(getFaeBalanced() / div);
+        setRaeBalanced(getRaeBalanced() / div);
 
         Divided = true;
     }

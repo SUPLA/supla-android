@@ -20,7 +20,6 @@ package org.supla.android;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -63,7 +62,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_temphumidity);
     }
 
@@ -82,9 +81,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
         tvHumidity = findViewById(R.id.thTvHumidity);
         ivHumidityIcon = findViewById(R.id.thHumidityIcon);
 
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-        tvHumidity.setTypeface(tf);
+        tvHumidity.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
     }
 
     @Override
@@ -103,7 +100,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     }
 
     private TempHumidityChartHelper getTempHumidityChartHelper() {
-        return (TempHumidityChartHelper)chartHelper;
+        return (TempHumidityChartHelper) chartHelper;
     }
 
     @Override

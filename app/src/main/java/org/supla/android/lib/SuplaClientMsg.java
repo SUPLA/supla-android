@@ -18,8 +18,36 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@SuppressWarnings("unused")
 public class SuplaClientMsg {
 
+    public final static int onDataChanged = 1;
+    public final static int onConnecting = 2;
+    public final static int onRegistered = 3;
+    public final static int onRegistering = 4;
+    public final static int onRegisterError = 5;
+    public final static int onDisconnected = 6;
+    public final static int onConnected = 7;
+    public final static int onVersionError = 8;
+    public final static int onEvent = 9;
+    public final static int onConnError = 10;
+    public final static int onRegistrationEnabled = 11;
+    public final static int onOAuthTokenRequestResult = 12;
+    public final static int onCalCfgResult = 13;
+    public final static int onSuperuserAuthorizationResult = 14;
+    public final static int onChannelState = 15;
+    public final static int onChannelBasicCfg = 16;
+    public final static int onChannelFunctionSetResult = 17;
+    public final static int onChannelCaptionSetResult = 18;
+    public final static int onClientsReconnectResult = 19;
+    public final static int onSetRegistrationEnabledResult = 20;
+    public final static int onZWaveResetAndClearResult = 21;
+    public final static int onZWaveAddNodeResult = 22;
+    public final static int onZWaveRemoveNodeResult = 23;
+    public final static int onZWaveGetNodeListResult = 24;
+    public final static int onZWaveGetAssignedNodeIdResult = 25;
+    public final static int onZWaveAssignNodeIdResult = 26;
+    public final static int onCalCfgProgressReport = 27;
     private SuplaClient Sender;
     private int Type;
     private SuplaVersionError VersionError;
@@ -29,6 +57,8 @@ public class SuplaClientMsg {
     private SuplaEvent Event;
     private SuplaRegistrationEnabled RegistrationEnabled;
     private SuplaOAuthToken OAuthToken;
+    private SuplaChannelState ChannelState;
+    private SuplaChannelBasicCfg ChannelBasicCfg;
     private int ChannelId;
     private int ChannelGroupId;
     private boolean Success;
@@ -36,22 +66,11 @@ public class SuplaClientMsg {
     private int Command;
     private int Result;
     private byte[] data;
-
-    public final static int onDataChanged         = 1;
-    public final static int onConnecting          = 2;
-    public final static int onRegistered          = 3;
-    public final static int onRegistering         = 4;
-    public final static int onRegisterError       = 5;
-    public final static int onDisconnected        = 6;
-    public final static int onConnected           = 7;
-    public final static int onVersionError        = 8;
-    public final static int onEvent               = 9;
-    public final static int onConnError           = 10;
-    public final static int onRegistrationEnabled = 11;
-    public final static int onOAuthTokenRequestResult = 12;
-    public final static int onCalCfgResult = 13;
-    public final static int onSuperuserAuthorizationResult = 14;
-
+    private int Func;
+    private short NodeId;
+    private ZWaveNode Node;
+    private String Text;
+    private short Progress;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -112,16 +131,16 @@ public class SuplaClientMsg {
         return ChannelId;
     }
 
-    public void setChannelGroupId(int channelGroupId) {
-        ChannelGroupId = channelGroupId;
+    public void setChannelId(int channelId) {
+        ChannelId = channelId;
     }
 
     public int getChannelGroupId() {
         return ChannelGroupId;
     }
 
-    public void setChannelId(int channelId) {
-        ChannelId = channelId;
+    public void setChannelGroupId(int channelGroupId) {
+        ChannelGroupId = channelGroupId;
     }
 
     public SuplaRegistrationEnabled getRegistrationEnabled() {
@@ -133,12 +152,12 @@ public class SuplaClientMsg {
                 == null ? null : new SuplaRegistrationEnabled(registrationEnabled);
     }
 
-    public void setOAuthToken(SuplaOAuthToken token) {
-        OAuthToken = token == null ? null : new SuplaOAuthToken(token);
-    }
-
     public SuplaOAuthToken getOAuthToken() {
         return OAuthToken;
+    }
+
+    public void setOAuthToken(SuplaOAuthToken token) {
+        OAuthToken = token == null ? null : new SuplaOAuthToken(token);
     }
 
     public boolean isSuccess() {
@@ -179,5 +198,61 @@ public class SuplaClientMsg {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public SuplaChannelState getChannelState() {
+        return ChannelState;
+    }
+
+    public void setChannelState(SuplaChannelState channelState) {
+        ChannelState = channelState;
+    }
+
+    public SuplaChannelBasicCfg getChannelBasicCfg() {
+        return ChannelBasicCfg;
+    }
+
+    public void setChannelBasicCfg(SuplaChannelBasicCfg channelBasicCfg) {
+        ChannelBasicCfg = channelBasicCfg;
+    }
+
+    public int getFunc() {
+        return Func;
+    }
+
+    public void setFunc(int func) {
+        Func = func;
+    }
+
+    public short getNodeId() {
+        return NodeId;
+    }
+
+    public void setNodeId(short nodeId) {
+        NodeId = nodeId;
+    }
+
+    public ZWaveNode getNode() {
+        return Node;
+    }
+
+    public void setNode(ZWaveNode node) {
+        Node = node;
+    }
+
+    public String getText() {
+        return Text;
+    }
+
+    public void setText(String text) {
+        Text = text;
+    }
+
+    public short getProgress() {
+        return Progress;
+    }
+
+    public void setProgress(short progress) {
+        Progress = progress;
     }
 }

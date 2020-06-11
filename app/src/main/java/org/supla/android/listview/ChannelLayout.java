@@ -22,7 +22,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -35,13 +34,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.images.ImageCache;
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ViewHelper;
+import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -65,6 +67,8 @@ public class ChannelLayout extends LinearLayout {
     private SuplaChannelStatus right_onlineStatus;
     private SuplaChannelStatus right_ActiveStatus;
     private SuplaChannelStatus left_onlineStatus;
+    private ImageView channelStateIcon;
+    private ImageView channelWarningIcon;
 
     private LineView bottom_line;
 
@@ -74,307 +78,6 @@ public class ChannelLayout extends LinearLayout {
     private boolean LeftButtonEnabled;
     private boolean DetailSliderEnabled;
 
-
-    private class AnimParams {
-        public int content_left;
-        public int content_right;
-        public int left_btn_rotation;
-        public int left_btn_left;
-        public int left_btn_right;
-    }
-
-
-    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
-
-
-        public CaptionView(Context context, int imgl_id) {
-            super(context);
-
-
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
-            setTypeface(type);
-            setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.channel_caption_text_size));
-            setTextColor(getResources().getColor(R.color.channel_caption_text));
-            setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
-            if (imgl_id != -1)
-                lp.addRule(RelativeLayout.BELOW, imgl_id);
-
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
-            setLayoutParams(lp);
-        }
-
-    }
-
-    private TextView newTextView(Context context) {
-
-        TextView tv = new TextView(context);
-        tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-
-        tv.setTypeface(type);
-
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.channel_btn_text_size));
-        tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
-        tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-        return tv;
-    }
-
-
-    private class ChannelImageLayout extends RelativeLayout {
-
-        private ImageView Img1;
-        private ImageView Img2;
-        private ImageId Img1Id;
-        private ImageId Img2Id;
-        private TextView Text1;
-        private TextView Text2;
-
-        public ChannelImageLayout(Context context) {
-            super(context);
-
-            setId(ViewHelper.generateViewId());
-            mFunc = 0;
-
-            Img1 = newImageView(context);
-            Img2 = newImageView(context);
-
-            Text1 = newTextView(context);
-            Text2 = newTextView(context);
-
-            SetDimensions();
-        }
-
-        private ImageView newImageView(Context context) {
-
-            ImageView Img = new ImageView(context);
-            Img.setId(ViewHelper.generateViewId());
-            addView(Img);
-
-            return Img;
-        }
-
-        private TextView newTextView(Context context) {
-
-            TextView Text = new TextView(context);
-            Text.setId(ViewHelper.generateViewId());
-
-            Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
-            Text.setTypeface(type);
-            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.channel_imgtext_size));
-            Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
-            Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-
-            addView(Text);
-
-            return Text;
-        }
-
-        private void SetTextDimensions(TextView Text, ImageView Img,
-                                       Boolean visible, int width) {
-
-            Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-
-            lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
-
-            Text.setLayoutParams(lp);
-            Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-
-
-        }
-
-        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
-
-            SetTextDimensions(Text, Img, visible,
-                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width));
-
-        }
-
-        private void SetImgDimensions(ImageView Img, int width, int height) {
-
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, height);
-
-
-            if (Img == Img1) {
-                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            } else {
-                lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
-            }
-
-            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-
-            Img.setLayoutParams(lp);
-
-        }
-
-        private void SetImgDimensions(ImageView Img) {
-            SetImgDimensions(Img,
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width),
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-        }
-
-        private void SetDimensions() {
-
-            int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
-
-            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
-
-                width *= 2.5;
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-
-                width *= 4.3;
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WATER_METER) {
-
-                width *= 2.8;
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-                width *= 3;
-            }
-
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
-
-            setLayoutParams(lp);
-            SetImgDimensions(Img1);
-
-            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
-
-                RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width),
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
-
-                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-                _lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-
-                Img1.setLayoutParams(_lp);
-                Img1.setVisibility(View.VISIBLE);
-
-
-                _lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width),
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
-
-                _lp.addRule(RelativeLayout.ABOVE, Img1.getId());
-                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-
-                Text1.setLayoutParams(_lp);
-                Text1.setVisibility(View.VISIBLE);
-
-            } else  {
-                SetTextDimensions(Text1, Img1, true,
-                        getResources().getDimensionPixelSize(
-                                mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ?
-                                        R.dimen.channel_imgtext_thermometer_width :
-                                        R.dimen.channel_imgtext_width));
-
-                SetImgDimensions(Img2);
-                SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
-            }
-
-        }
-
-        public void setImage(ImageId img1Id, ImageId img2Id) {
-
-            if (ImageId.equals(img1Id, Img1Id)
-                    && ImageId.equals(img2Id, Img2Id)) {
-                return;
-            }
-
-            Img1Id = img1Id;
-            Img2Id = img2Id;
-
-            if (Img1Id == null) {
-                Img1.setVisibility(View.INVISIBLE);
-            } else {
-                Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
-                Img1.setVisibility(View.VISIBLE);
-            }
-
-            if (Img2Id == null) {
-                Img2.setVisibility(View.INVISIBLE);
-            } else {
-                Img2.setImageBitmap(ImageCache.getBitmap(getContext(), img2Id));
-                Img2.setVisibility(View.VISIBLE);
-            }
-
-        }
-
-        private void setText(CharSequence text, TextView tv) {
-            if (text == null) {
-                text = "";
-            }
-            if (!text.equals(tv.getText())) {
-                tv.setText(text);
-            }
-        }
-
-        public void setText1(CharSequence text) {
-            setText(text, Text1);
-        }
-
-        public void setText2(CharSequence text) {
-            setText(text, Text2);
-        }
-
-    }
-
-    protected RelativeLayout.LayoutParams getOnlineStatusLayoutParams(boolean right) {
-
-        int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
-
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                mGroup ? dot_size / 2 : dot_size, mGroup ? dot_size * 2 : dot_size);
-
-        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
-
-        if (right) {
-            lp.rightMargin = margin;
-            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        } else {
-            lp.leftMargin = margin;
-            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-        }
-
-        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        return lp;
-    }
-
-    protected SuplaChannelStatus newOnlineStatus(Context context, boolean right) {
-
-        SuplaChannelStatus result = new SuplaChannelStatus(context);
-
-        result.setLayoutParams(getOnlineStatusLayoutParams(right));
-        result.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
-        result.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
-
-        return result;
-    }
 
     public ChannelLayout(Context context, ChannelListView parentListView) {
         super(context);
@@ -417,7 +120,18 @@ public class ChannelLayout extends LinearLayout {
         right_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(right_onlineStatus);
         left_onlineStatus = newOnlineStatus(context, false);
+        left_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(left_onlineStatus);
+
+        channelStateIcon = new ImageView(context);
+        channelStateIcon.setId(ViewHelper.generateViewId());
+        content.addView(channelStateIcon);
+        channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
+
+        channelWarningIcon = new ImageView(context);
+        channelWarningIcon.setId(ViewHelper.generateViewId());
+        content.addView(channelWarningIcon);
+        channelWarningIcon.setLayoutParams(getChannelWarningImageLayoutParams());
 
         right_ActiveStatus = new SuplaChannelStatus(context);
         right_ActiveStatus.setSingleColor(true);
@@ -426,7 +140,7 @@ public class ChannelLayout extends LinearLayout {
         {
             int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    dot_size / 2 , dot_size * 2);
+                    dot_size / 2, dot_size * 2);
 
             lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
             lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -440,17 +154,8 @@ public class ChannelLayout extends LinearLayout {
         bottom_line = new LineView(context);
         content.addView(bottom_line);
 
-        {
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_width), getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
-
-            imgl = new ChannelImageLayout(context);
-            content.addView(imgl);
-        }
+        imgl = new ChannelImageLayout(context);
+        content.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId());
         content.addView(caption_text);
@@ -483,6 +188,89 @@ public class ChannelLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    private TextView newTextView(Context context) {
+
+        TextView tv = new TextView(context);
+        tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.channel_btn_text_size));
+        tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
+        tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+        return tv;
+    }
+
+    protected RelativeLayout.LayoutParams getOnlineStatusLayoutParams(boolean right) {
+
+        int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                mGroup ? dot_size / 2 : dot_size, mGroup ? dot_size * 2 : dot_size);
+
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        if (right) {
+            lp.rightMargin = margin;
+            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        } else {
+            lp.leftMargin = margin;
+            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+        }
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
+    protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
+        lp.leftMargin = margin;
+
+        lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
+        }
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
+    protected RelativeLayout.LayoutParams getChannelWarningImageLayoutParams() {
+
+        int size = getResources().getDimensionPixelSize(R.dimen.channel_warning_image_size);
+        int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
+        lp.rightMargin = margin;
+
+        lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
+        }
+
+        lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        return lp;
+    }
+
+    protected SuplaChannelStatus newOnlineStatus(Context context, boolean right) {
+
+        SuplaChannelStatus result = new SuplaChannelStatus(context);
+
+        result.setLayoutParams(getOnlineStatusLayoutParams(right));
+        result.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
+        result.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+
+        return result;
+    }
+
     public void setLeftBtnText(String Text) {
         left_btn_text.setText(Text);
     }
@@ -490,7 +278,6 @@ public class ChannelLayout extends LinearLayout {
     public void setRightBtnText(String Text) {
         right_btn_text.setText(Text);
     }
-
 
     public void Slide(int delta) {
 
@@ -738,6 +525,9 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
+    public boolean getRightButtonEnabled() {
+        return RightButtonEnabled;
+    }
 
     private void setRightButtonEnabled(boolean rightButtonEnabled) {
 
@@ -748,12 +538,6 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-
-    public boolean getRightButtonEnabled() {
-        return RightButtonEnabled;
-    }
-
-
     private void setLeftButtonEnabled(boolean leftButtonEnabled) {
 
         if (LeftButtonEnabled != leftButtonEnabled) {
@@ -761,6 +545,11 @@ public class ChannelLayout extends LinearLayout {
             LeftButtonEnabled = leftButtonEnabled;
         }
 
+    }
+
+    public boolean getDetailSliderEnabled() {
+
+        return DetailSliderEnabled;
     }
 
     private void setDetailSliderEnabled(boolean detailSliderEnabled) {
@@ -773,15 +562,9 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-    public boolean getDetailSliderEnabled() {
-
-        return DetailSliderEnabled;
-    }
-
     public boolean getButtonsEnabled() {
         return LeftButtonEnabled || RightButtonEnabled;
     }
-
 
     public String getCaption() {
         return caption_text.getText().toString();
@@ -795,7 +578,6 @@ public class ChannelLayout extends LinearLayout {
             content.setBackgroundColor(color);
     }
 
-
     public void setChannelData(ChannelBase cbase) {
 
         int OldFunc = mFunc;
@@ -806,6 +588,9 @@ public class ChannelLayout extends LinearLayout {
 
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
+
+        channelStateIcon.setVisibility(INVISIBLE);
+        channelWarningIcon.setVisibility(INVISIBLE);
 
         if (OldFunc != mFunc) {
             imgl.SetDimensions();
@@ -830,11 +615,47 @@ public class ChannelLayout extends LinearLayout {
         int activePercent;
 
         if (mGroup
-                && (activePercent = ((ChannelGroup)cbase).getActivePercent()) >= 0) {
+                && (activePercent = ((ChannelGroup) cbase).getActivePercent()) >= 0) {
             right_ActiveStatus.setVisibility(View.VISIBLE);
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
+            if (cbase.getOnLine() && cbase instanceof Channel) {
+                SuplaChannelState state = ((Channel) cbase).getChannelState();
+                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                    switch (state.getDefaultIconField()) {
+                        case SuplaChannelState.FIELD_BATTERYPOWERED:
+                            if (state.getBatteryPowered()) {
+                                channelStateIcon.setImageResource(R.drawable.battery);
+                                channelStateIcon.setVisibility(VISIBLE);
+                            }
+                            break;
+                    }
+                }
+
+                int warningIcon = -1;
+
+                switch (((Channel) cbase).getChannelWarningLevel()) {
+                    case 1:
+                        warningIcon = R.drawable.channel_warning_level1;
+                        break;
+                    case 2:
+                        warningIcon = R.drawable.channel_warning_level2;
+                        break;
+                }
+
+                if (warningIcon != -1) {
+                    channelWarningIcon.setImageResource(warningIcon);
+                    channelWarningIcon.setVisibility(VISIBLE);
+                }
+
+            }
+
+            // Only when channelStateIcon is invisible !!
+            if (channelStateIcon.getVisibility() == INVISIBLE
+                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                // TODO: Show state icon/button
+            }
         }
 
         {
@@ -870,6 +691,11 @@ public class ChannelLayout extends LinearLayout {
                     lidx = R.string.channel_btn_off;
                     break;
 
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                    ridx = R.string.channel_btn_open;
+                    lidx = R.string.channel_btn_close;
+                    break;
+
             }
 
             setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
@@ -903,6 +729,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
@@ -931,8 +758,10 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
@@ -963,6 +792,256 @@ public class ChannelLayout extends LinearLayout {
 
         imgl.setText1(cbase.getHumanReadableValue());
         imgl.setText2(cbase.getHumanReadableValue(ChannelBase.WhichOne.Second));
+
+    }
+
+    private class AnimParams {
+        public int content_left;
+        public int content_right;
+        public int left_btn_rotation;
+        public int left_btn_left;
+        public int left_btn_right;
+    }
+
+    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
+
+
+        public CaptionView(Context context, int imgl_id) {
+            super(context);
+
+            setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
+            setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.channel_caption_text_size));
+            setTextColor(getResources().getColor(R.color.channel_caption_text));
+            setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+            if (imgl_id != -1)
+                lp.addRule(RelativeLayout.BELOW, imgl_id);
+
+            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
+            setLayoutParams(lp);
+        }
+
+    }
+
+    private class ChannelImageLayout extends RelativeLayout {
+
+        private ImageView Img1;
+        private ImageView Img2;
+        private ImageId Img1Id;
+        private ImageId Img2Id;
+        private TextView Text1;
+        private TextView Text2;
+
+        public ChannelImageLayout(Context context) {
+            super(context);
+
+            setId(ViewHelper.generateViewId());
+            mFunc = 0;
+
+            Img1 = newImageView(context);
+            Img2 = newImageView(context);
+
+            Text1 = newTextView(context);
+            Text2 = newTextView(context);
+
+            SetDimensions();
+        }
+
+        private ImageView newImageView(Context context) {
+
+            ImageView Img = new ImageView(context);
+            Img.setId(ViewHelper.generateViewId());
+            addView(Img);
+
+            return Img;
+        }
+
+        private TextView newTextView(Context context) {
+
+            TextView Text = new TextView(context);
+            Text.setId(ViewHelper.generateViewId());
+
+            Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.channel_imgtext_size));
+            Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
+            Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+
+            addView(Text);
+
+            return Text;
+        }
+
+        private void SetTextDimensions(TextView Text, ImageView Img,
+                                       Boolean visible, int width) {
+
+            Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+
+            lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
+            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
+
+            Text.setLayoutParams(lp);
+            Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+
+
+        }
+
+        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
+
+            SetTextDimensions(Text, Img, visible,
+                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width));
+
+        }
+
+        private void SetImgDimensions(ImageView Img, int width, int height) {
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    width, height);
+
+
+            if (Img == Img1) {
+                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            } else {
+                lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
+            }
+
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+
+            Img.setLayoutParams(lp);
+
+        }
+
+        private void SetImgDimensions(ImageView Img) {
+            SetImgDimensions(Img,
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_width),
+                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+        }
+
+        private void SetDimensions() {
+
+            int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
+
+            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
+
+                width *= 2.5;
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+
+                width *= 4.3;
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER) {
+
+                width *= 2.8;
+
+            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+                width *= 3;
+            }
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    width, getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+
+            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
+
+            setLayoutParams(lp);
+            SetImgDimensions(Img1);
+
+            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
+
+                RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width),
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
+
+                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                _lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+                Img1.setLayoutParams(_lp);
+                Img1.setVisibility(View.VISIBLE);
+
+
+                _lp = new RelativeLayout.LayoutParams(
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width),
+                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
+
+                _lp.addRule(RelativeLayout.ABOVE, Img1.getId());
+                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+
+                Text1.setLayoutParams(_lp);
+                Text1.setVisibility(View.VISIBLE);
+
+            } else {
+                SetTextDimensions(Text1, Img1, true,
+                        getResources().getDimensionPixelSize(
+                                mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ?
+                                        R.dimen.channel_imgtext_thermometer_width :
+                                        R.dimen.channel_imgtext_width));
+
+                SetImgDimensions(Img2);
+                SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+            }
+
+        }
+
+        public void setImage(ImageId img1Id, ImageId img2Id) {
+
+            if (ImageId.equals(img1Id, Img1Id)
+                    && ImageId.equals(img2Id, Img2Id)) {
+                return;
+            }
+
+            Img1Id = img1Id;
+            Img2Id = img2Id;
+
+            if (Img1Id == null) {
+                Img1.setVisibility(View.INVISIBLE);
+            } else {
+                Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
+                Img1.setVisibility(View.VISIBLE);
+            }
+
+            if (Img2Id == null) {
+                Img2.setVisibility(View.INVISIBLE);
+            } else {
+                Img2.setImageBitmap(ImageCache.getBitmap(getContext(), img2Id));
+                Img2.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+        private void setText(CharSequence text, TextView tv) {
+            if (text == null) {
+                text = "";
+            }
+            if (!text.equals(tv.getText())) {
+                tv.setText(text);
+            }
+        }
+
+        public void setText1(CharSequence text) {
+            setText(text, Text1);
+        }
+
+        public void setText2(CharSequence text) {
+            setText(text, Text2);
+        }
 
     }
 }

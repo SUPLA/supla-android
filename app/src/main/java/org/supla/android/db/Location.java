@@ -29,32 +29,31 @@ public class Location extends DbItem {
     private String Caption;
     private int Visible;
     private int collapsed; // 0 - channels visible
-                            // 0x1 - channels collapsed
-                            // 0x2 - channel groups collapsed
-
-
-    public void setLocationId(int locationId) {
-        LocationId = locationId;
-    }
+    // 0x1 - channels collapsed
+    // 0x2 - channel groups collapsed
 
     public int getLocationId() {
         return LocationId;
     }
 
-    public void setCaption(String caption) {
-        Caption = caption;
+    public void setLocationId(int locationId) {
+        LocationId = locationId;
     }
 
     public String getCaption() {
         return Caption;
     }
 
-    public void setVisible(int visible) {
-        Visible = visible;
+    public void setCaption(String caption) {
+        Caption = caption;
     }
 
     public int getVisible() {
         return Visible;
+    }
+
+    public void setVisible(int visible) {
+        Visible = visible;
     }
 
     public int getCollapsed() {

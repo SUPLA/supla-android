@@ -1,0 +1,248 @@
+<resources>
+
+    <string name="feedback_title">Pošljite e-sporočilo</string>
+    <string name="donate_title">Podprite projekt</string>
+    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+
+    <string name="version">različica</string>
+
+    <string name="feedback">Povratne informacije</string>
+    <string name="about">O programu</string>
+    <string name="settings">Nastavitve</string>
+    <string name="add_device">Dodajte napravo</string>
+
+    <string name="status_connecting">Povezovanje...</string>
+    <string name="status_unknown_err">Neznana napaka</string>
+    <string name="status_temporarily_unavailable">Storitev trenutno ni na voljo</string>
+    <string name="status_bad_credentials">Napačne poverilnice</string>
+    <string name="status_climit_exceded">Omejitev odjemalskih aplikacij je presežena</string>
+    <string name="status_version_error">Nezdružljiva različica strežnika</string>
+    <string name="status_reg_disabled">Registracija je trenutno izklopljena. Če jo želite omogočiti, pojdite na zavihek \"Pametni telefoni\" na strani %1$s</string>
+    <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran %1$s in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
+    <string name="status_device_disabled">Naprava je izklopljena</string>
+    <string name="status_accessid_disabled">Identifikator dostopa je izklopljen</string>
+
+    <string name="err_hostnotfound">Naslova strežnika ni mogoče najti</string>
+    <string name="err_cantconnecttohost">Ni mogoče se povezati s strežnikom.</string>
+
+    <string name="channel_caption_gateway">Vratca</string>
+    <string name="channel_caption_gate">Dvoriščna vrata</string>
+    <string name="channel_caption_garagedoor">Garažna vrata</string>
+    <string name="channel_caption_door">Vrata</string>
+    <string name="channel_caption_rollershutter">Roleta</string>
+    <string name="channel_caption_powerswith">Stikalo za vklop</string>
+    <string name="channel_caption_lightswith">Stikalo luči</string>
+    <string name="channel_caption_thermometer">Termometer</string>
+    <string name="channel_caption_humidity">Vlažnost</string>
+    <string name="channel_caption_humidityandtemperature">Temperatura in vlažnost</string>
+    <string name="channel_caption_windsensor">Hitrost vetra</string>
+    <string name="channel_caption_pressuresensor">Tlačni senzor</string>
+    <string name="channel_caption_rainsensor">Merjenje padavin</string>
+    <string name="channel_caption_weightsensor">Teža</string>
+    <string name="channel_caption_dimmer">Zatemnilnik</string>
+    <string name="channel_caption_rgblighting">RGB osvetlitev</string>
+    <string name="channel_caption_dimmerandrgblighting">Zatemnilnik in RGB osvetlitev</string>
+    <string name="channel_caption_noliquidsensor">Senzor pomanjkanja tekočine</string>
+    <string name="channel_caption_gatewayopeningsensor">Senzor odprtja vratc</string>
+    <string name="channel_caption_gateopeningsensor">Senzor odprtja dvoriščnih vrat</string>
+    <string name="channel_caption_garagedooropeningsensor">Senzor odprtja garažnih vrat</string>
+    <string name="channel_caption_dooropeningsensor">Senzor odprtja vrat</string>
+    <string name="channel_caption_rsopeningsensor">Senzor odprtja rolet</string>
+    <string name="channel_caption_depthsensor">Senzor globine</string>
+    <string name="channel_caption_distancesensor">Senzor razdalje</string>
+    <string name="channel_caption_windowopeningsensor">Senzor odprtja oken</string>
+    <string name="channel_caption_mailsensor">Senzor pošte</string>
+
+    <string name="rgb_brightness">Svetlost</string>
+    <string name="rgb_color">Barva</string>
+    <string name="rgb_state">Stanje</string>
+
+    <string name="channel_btn_open">Odprite</string>
+    <string name="channel_btn_openclose">Odprite Zaprite</string>
+    <string name="channel_btn_on">Vklopite</string>
+    <string name="channel_btn_off">Izklopite</string>
+
+    <string name="event_openedthegateway">odprl je vratca</string>
+    <string name="event_openedclosedthegate">odprl / zaprl je dvoriščna vrata</string>
+    <string name="event_openedclosedthegatedoors">odprl / zaprl je garažna vrata</string>
+    <string name="event_openedthedoor">odprl je vrata</string>
+    <string name="event_openedcloserollershutter">odprl / zaprl je roleto</string>
+    <string name="event_poweronoff">vklopil / izklopil je napajanje</string>
+    <string name="event_turnedthelightonoff">vklopil / izklopil je luč</string>
+
+    <string name="server_address">NASLOV STREžNIKA</string>
+    <string name="access_id">IDENTIFIKATOR DOSTOPA</string>
+    <string name="password">GESLO</string>
+    <string name="email">E-POŠTNI NASLOV</string>
+    <string name="advanced_settings">Napredne nastavitve</string>
+    <string name="create_account"><u>Ustvarite račun</u></string>
+
+    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+
+    <string name="rate_msg">Če vam je ta aplikacija všeč, prosim, da posvetite trenutek in jo ocenite. Hvala za vašo podporo!</string>
+    <string name="rate_now">Ocenite zdaj</string>
+    <string name="rate_later">Pozneje</string>
+    <string name="rate_no_thanks">Ne, hvala</string>
+    <string name="rs_percent_caption">Odstotek zapiranja</string>
+    <string name="calibration">[Kalibracija]</string>
+
+    <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo samo, če je vzpostavljena povezava s strežnikom na podlagi e-naslova, vpisanega v nastavitvah!</string>
+    <string name="device_registration_disabled">Registracija naprav je trenutno izklopljena. Za nadaljevanje pojdite na stran %1$s in v zavihku "Moja SUPLA" omogočite dodajanje naprav.</string>
+
+    <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
+    <string name="wizard_step1_txt2">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
+    <string name="next">Naprej</string>
+    <string name="start">START</string>>
+
+    <string name="wizard_step2_txt1">Vnesite geslo v svoje omrežje WiFi, katerega ime je</string>
+    <string name="wizard_step2_txt3">*) Izvršilna naprava bo za povezovanje s strežnikom uporabila omrežje %1$s.</string>
+    <string name="wizard_remember_passwd">Shranite geslo</string>
+
+    <string name="wizard_step3_txt1">Priključite svojo izvršno napravo na napajanje. Naprava naj bi privzeto delovala v konfiguracijskem načinu in to signalizirala z utripanjem LED diode na naslednji način</string>
+    <string name="wizard_step3_txt2">Če naprava po vklopu napajanja ne deluje v konfiguracijskem načinu, držite gumb <b> CONFIG </b> najmanj 5 sekund.</string>
+    <string name="wizard_step3_txt3">Pritisnite tipko <b> START </b> da začnete konfiguracijo.</string>
+
+    <string name="wizard_server_compat_error">Strežnik, na katerega ste se povezali, ne podpira te funkcije!</string>
+    <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja WiFi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
+    <string name="wizard_wifi_error">Omrežje WiFi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
+    <string name="wizard_addnetwork_error">Konfiguracije omrežja WiFi ni mogoče dodati!</string>
+    <string name="wizard_wifi_timeout">Čakalna doba za trenutne podatke WiFi je prekoračena!</string>
+    <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja WiFi je prekoračena!</string>
+    <string name="wizard_connect_timeout">Čakalna doba za vzpostavitev povezave z izvršilno napravo je prekoračena!</string>
+    <string name="wizard_configure_timeout">Čakalna doba za dokončanje konfiguracije naprave je prekoračena!</string>
+    <string name="wizard_reconnect_timeout">Čakalna doba za vrnitev v primarno omrežje WiFi je prekoračena!</string>
+    <string name="device_reg_request_timeout">Čakalna doba za pridobitev informacije o razpoložljivosti registracije naprav je prekoračena!</string>
+
+    <string name="wizard_iodevice_notfound">Ni najdenih naprav! Prepričajte se, da je naprava, ki jo želite konfigurirati, v konfiguracijskem načinu in poskusite znova. POMEMBNO - Nekatere različice Androida zahtevajo, da je vklopljen GPS, kar aplikacijam omogoča iskanje po omrežju WiFi, zato preverite tudi, ali je vklopljen GPS.</string>
+
+
+    <string name="wizard_done">Konfiguracija naprave je bila uspešna :)</string>
+    <string name="wizard_iodev_data">Podatki o napravi</string>
+    <string name="wizard_iodev_name">Ime</string>
+    <string name="wizard_iodev_laststate">Prejšnji status</string>
+
+    <string name="wizard_result_param_error">Napačni vhodni parametri!</string>
+    <string name="wizard_result_compat_error">Naprava, na katero ste se povezali, ni združljiva s tem čarovnikom!</string>
+    <string name="wizard_result_conn_error">Ni mogoče povezati z napravo!</string>
+    <string name="wizard_result_failed">Konfiguracija ni bila uspešna!</string>
+    <string name="wizard_not_enought_permissions">Aplikacija nima zadostnih dovoljenj. Pojdite na upravljanje aplikacij v sistemskih nastavitvah. Nato poiščite aplikacijo %1$s in vklopite vsa dovoljenja, ki jih potrebuje.</string>
+    <string name="help">Pomoč</string>
+    <string name="channel_caption_staircasetimer">Stopniščni avtomat</string>
+
+    <string name="channel_caption_electricitymeter">Števec električne energije</string>
+    <string name="channel_caption_gasmeter">Merilnik plina</string>
+    <string name="channel_caption_watermeter">Merilnik vode</string>
+
+    <string name="em_total_forward_avtive_energy">Aktivna porabljena energija</string>
+    <string name="em_reverse_active_energy">Aktivna vrnjena energija</string>
+    <string name="em_total_forward_reactive_energy">Reaktivna porabljena energija</string>
+    <string name="em_total_reverse_reactive_energy">Reaktivna vrnjena energija</string>
+    <string name="em_frequency">Pogostost</string>
+    <string name="em_voltage">Napetost</string>
+    <string name="em_current">Intenzivnost</string>
+    <string name="em_power_active">Aktivna moč</string>
+    <string name="em_power_reactive">Reaktivna moč</string>
+    <string name="em_power_factor">Faktor moči</string>
+    <string name="em_phase_angle">Fazni kot</string>
+    <string name="em_power_apparent">Navidezna moč</string>
+    <string name="em_phase1">1. faza</string>
+    <string name="em_phase2">2. faza</string>
+    <string name="em_phase3">3. faza</string>
+    <string name="channel_caption_thermostat">Termostat</string>
+    <string name="channel_caption_thermostat_hp_homeplus">Gralec Home+</string>
+    <string name="hp_on">VKLJUČENO</string>
+    <string name="hp_off">IZKLJUČENO</string>
+    <string name="hp_turn_on">VKLJUČITE</string>
+    <string name="hp_turn_off">IZKLJUČITE</string>
+    <string name="hp_normal">NORMAL</string>
+    <string name="hp_eco">ECO</string>
+    <string name="hp_turbo">TURBO</string>
+    <string name="hp_auto">AVTO</string>
+    <string name="hp_room_temperature">Temperatura v prostoru</string>
+    <string name="hp_cfg_turbo_time">Čas trajanja načina TURBO</string>
+    <string name="hp_cfg_water_max">Najvišja temperatura vode</string>
+    <string name="hp_cfg_eco_reduction">Znižanje temperature v ECO načinu</string>
+    <string name="hp_cfg_temp_comfort_auto">Udobna temperatura v načinu AUTO</string>
+    <string name="hp_temp_comfort">Udobje</string>
+    <string name="hp_cfg_temp_eco">ECO temperatura v načinu AUTO</string>
+    <string name="hp_hour">ura</string>
+    <string name="total_cost">Skupni stroški</string>
+    <string name="current_cost">Stroški v tekočem mesecu</string>
+    <string name="current_consumption">Poraba v tekočem mesecu</string>
+    <string name="impulses_count">Število impulzov</string>
+    <string name="meter_value">Stanje števca</string>
+    <string name="channel_func_impulsecounter">Števec impulzov</string>
+    <string name="minutes">Minute</string>
+    <string name="hours">Ure</string>
+    <string name="days">Dni</string>
+    <string name="months">Meseci</string>
+    <string name="years">Leta</string>
+    <string name="ranking_of_hours">Razvrstitev ur</string>
+    <string name="ranking_of_weekdays">Razvrstitev dni v tednu</string>
+    <string name="ranking_of_months">Razvrstitev mesecev</string>
+    <string name="consumption_acording_to_phases">Poraba v skladu s fazami</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Vlažnost</string>
+    <string name="last24hours">Zadnjih 24 ur</string>
+    <string name="last7days">Zadnjih 7 dni</string>
+    <string name="last30days">Zadnjih 30 dni</string>
+    <string name="last90days">Zadnjih 90 dni</string>
+    <string name="all_available_history">Vsa zgodovina je na voljo</string>
+    <string name="retrieving_data_from_the_server">Prenos podatkov s strežnika...</string>
+    <string name="no_chart_data_available">Za tabelo ni podatkov.</string>
+    <string name="comparsion_minmin">Primerjava iz minute v minuto</string>
+    <string name="comparsion_hourhour">Primerjava iz ure v uro</string>
+    <string name="comparsion_dayday">Primerjava iz dneva v dan</string>
+    <string name="comparsion_monthmonth">Primerjava iz meseca v mesec</string>
+    <string name="comparsion_yearyear">Primerjava iz leta v leto</string>
+    <string name="hp_error_1">Brez vode</string>
+    <string name="hp_error_2">Izgoreli grelec</string>
+    <string name="hp_error_3">Napaka senzorja temperature vode</string>
+    <string name="hp_error_4">Napaka senzorja sobne temperature</string>
+    <string name="hp_error_5">Brez prekinitev omrežja</string>
+    <string name="production_acording_to_phases">Izdelava v skladu s fazami</string>
+    <string name="current_production">Proizvodnja v tekočem mesecu</string>
+    <string name="enter_superuser_credentials">Vnesite poverilnice podupravitelja</string>
+
+    <string name="channel_func_none">Brez funkcije</string>
+    <string name="channel_func_controllingthegatewaylock">Odpiranje vratc</string>
+    <string name="channel_func_controllingthegate">Odpiranje/zapiranje vhodnih vrat</string>
+    <string name="channel_func_controllingthegaragedoor">Odpiranje/zapiranje garažnih vrat</string>
+    <string name="channel_func_thermometer">Termometer</string>
+    <string name="channel_func_humidity">Senzor vlažnosti</string>
+    <string name="channel_func_humidityandtemperature">Senzor temperature in vlažnosti</string>
+    <string name="channel_func_opensensor_gateway">Senzor odprtja vratc</string>
+    <string name="channel_func_opensensor_gate">Senzor odprtja vhodnih vrat</string>
+    <string name="channel_func_opensensor_garagedoor">Senzor odprja garažnih vrat</string>
+    <string name="channel_func_noliquidsensor">Senzor pomanjkanja tekočine</string>
+    <string name="channel_func_controllingthedoorlock">Odpiranje vrat</string>
+    <string name="channel_func_opensensor_door">Senzor odprtja vrat</string>
+    <string name="channel_func_controllingtherollershutter">Odpiranje in zapiranje rolet</string>
+    <string name="channel_func_opensensor_rollershutter">Senzor odprtja rolet</string>
+    <string name="channel_func_powerswitch">Stikalo za vklop</string>
+    <string name="channel_func_lightswitch">Stikalo luči</string>
+    <string name="channel_func_dimmer">Zatemnilnik</string>
+    <string name="channel_func_rgblighting">RGB osvetlitev</string>
+    <string name="channel_func_dimmerandrgblighting">Zatemnilnik in RGB osvetlitev</string>
+    <string name="channel_func_depthsensor">Senzor globine</string>
+    <string name="channel_func_distancesensor">Senzor razdalje</string>
+    <string name="channel_func_openingsensor_window">Senzor odprtja oken</string>
+    <string name="channel_func_mailsensor">Senzor pošte</string>
+    <string name="channel_func_windsensor">Senzor za veter</string>
+    <string name="channel_func_pressuresensor">Tlačni senzor</string>
+    <string name="channel_func_rainsensor">Senzor za dež</string>
+    <string name="channel_func_weightsensor">Teža</string>
+    <string name="channel_func_weather_station">Vremenska postaja</string>
+    <string name="channel_func_staircasetimer">Stopniščni avtomat</string>
+    <string name="channel_func_electricity_meter">Števec električne energije</string>
+    <string name="channel_func_gas_meter">Merilnik plina</string>
+    <string name="channel_func_water_meter">Merilnik vode</string>
+    <string name="channel_func_heat_meter">Merilnik toplote</string>
+    <string name="channel_func_thermostat">Termostat</string>
+    <string name="channel_func_thermostat_heatpol_homeplus">Home+ grelec</string>
+    <string name="channel_func_valve_openclose">Valve</string>
+    <string name="channel_func_valve_percentage">Valve</string>
+
+    <string name="channel_caption_heatmeter">Merilnik toplote</string>
+</resources>

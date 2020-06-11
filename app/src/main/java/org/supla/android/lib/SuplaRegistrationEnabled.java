@@ -17,6 +17,7 @@ package org.supla.android.lib;
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 import java.util.Date;
 
 public class SuplaRegistrationEnabled {
@@ -29,14 +30,14 @@ public class SuplaRegistrationEnabled {
     }
 
     public SuplaRegistrationEnabled(SuplaRegistrationEnabled regen) {
-        if (regen!=null) {
+        if (regen != null) {
             ClientTimestamp = regen.ClientTimestamp;
             IODeviceTimestamp = regen.IODeviceTimestamp;
         }
     }
 
     public Date ClientRegistrationExpirationDate() {
-        if ( ClientTimestamp > 0 ) {
+        if (ClientTimestamp > 0) {
             return new Date(ClientTimestamp * 1000L);
         }
 
@@ -44,7 +45,7 @@ public class SuplaRegistrationEnabled {
     }
 
     public Date IODeviceRegistrationExpirationDate() {
-        if ( IODeviceTimestamp > 0 ) {
+        if (IODeviceTimestamp > 0) {
             return new Date(IODeviceTimestamp * 1000L);
         }
 

@@ -24,20 +24,21 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
-@SuppressLint("Registered")
-public class NavigationActivity extends BaseActivity implements View.OnClickListener {
+@SuppressLint("registered")
+public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
     public static final String INTENTSENDER = "sender";
     public static final String INTENTSENDER_MAIN = "main";
@@ -45,27 +46,47 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout RootLayout;
     private RelativeLayout ContentLayout;
     private RelativeLayout MenuBarLayout;
-    private RelativeLayout MenuItemsLayout;
+    private MenuItemsLayout mMenuItemsLayout;
     private ViewGroup Content;
-
     private Button MenuButton;
     private Button GroupButton;
-
-    private Button MiSettings;
-    private Button MiAbout;
-    private Button MiDonate;
-    private Button MiHelp;
-    private Button MiAddDevice;
-
-    private Button SettingsButton;
-    private Button AboutButton;
-    private Button DonateButton;
-    private Button HelpButton;
-    private Button HomepageButton;
-    private Button AddDeviceButton;
-    private Button EmptySpaceButton;
-
     private boolean Anim = false;
+    private SuperuserAuthorizationDialog mAuthDialog;
+    private TextView title;
+    private TextView detailTitle;
+
+    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+
+        Intent i = new Intent(sender.getBaseContext(), cls);
+        i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
+        i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
+        sender.startActivity(i);
+
+        sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    public static void showMain(Activity sender) {
+
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+        if (client != null
+                && client.registered()) {
+
+            showActivity(sender, MainActivity.class, 0);
+
+        } else {
+            showStatus(sender);
+        }
+
+    }
+
+    public static void showStatus(Activity sender) {
+        showActivity(sender, StatusActivity.class, 0);
+    }
+
+    public static void showCfg(Activity sender) {
+        showActivity(sender, CfgActivity.class, 0);
+    }
 
     @Override
     protected void onResume() {
@@ -78,15 +99,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     protected void onPause() {
         super.onPause();
 
-        if ( CurrentActivity == this ) {
+        if (CurrentActivity == this) {
             CurrentActivity = null;
         }
     }
 
-
     protected RelativeLayout getRootLayout() {
 
-        if ( RootLayout == null ) {
+        if (RootLayout == null) {
 
             RootLayout = new RelativeLayout(this);
             RootLayout.setId(ViewHelper.generateViewId());
@@ -98,20 +118,22 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     protected View Inflate(int resID, ViewGroup root) {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         return inflater == null ? null : inflater.inflate(resID, root);
     }
 
     private RelativeLayout getMenuBarLayout() {
 
-        if ( MenuBarLayout == null ) {
+        if (MenuBarLayout == null) {
 
-            MenuBarLayout = (RelativeLayout)Inflate(R.layout.menubar, null);
+            MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
             MenuBarLayout.setVisibility(View.GONE);
 
-            TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Quicksand-Regular.ttf");
-            title.setTypeface(type);
+            title = MenuBarLayout.findViewById(R.id.menubar_title);
+            title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+            detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
+            detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
 
@@ -122,73 +144,27 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton = findViewById(R.id.groupbutton);
             GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
-            GroupButton.setTag(Integer.valueOf(0));
+            GroupButton.setTag(0);
 
         }
 
         return MenuBarLayout;
     }
 
-    private RelativeLayout getMenuItemsLayout() {
+    private MenuItemsLayout getMenuItemsLayout() {
 
-        if ( MenuItemsLayout == null ) {
-            MenuItemsLayout = (RelativeLayout)Inflate(R.layout.menuitems, null);
-            MenuItemsLayout.setVisibility(View.GONE);
-
-            MiSettings = MenuItemsLayout.findViewById(R.id.menuitem_settings);
-            MiAbout = MenuItemsLayout.findViewById(R.id.menuitem_about);
-            MiDonate = MenuItemsLayout.findViewById(R.id.menuitem_donate);
-            MiHelp = MenuItemsLayout.findViewById(R.id.menuitem_help);
-            MiAddDevice = MenuItemsLayout.findViewById(R.id.menuitem_add);
-
-            MiSettings.setOnClickListener(this);
-            MiAbout.setOnClickListener(this);
-            MiDonate.setOnClickListener(this);
-            MiHelp.setOnClickListener(this);
-            MiAddDevice.setOnClickListener(this);
-
-            SettingsButton = MenuItemsLayout.findViewById(R.id.btn_settings);
-            AboutButton = MenuItemsLayout.findViewById(R.id.btn_about);
-            DonateButton = MenuItemsLayout.findViewById(R.id.btn_donate);
-            HelpButton = MenuItemsLayout.findViewById(R.id.btn_help);
-            HomepageButton = MenuItemsLayout.findViewById(R.id.btn_homepage);
-            AddDeviceButton = MenuItemsLayout.findViewById(R.id.btn_add);
-            EmptySpaceButton = MenuItemsLayout.findViewById(R.id.btn_empty_space);
-
-            SettingsButton.setOnClickListener(this);
-            AboutButton.setOnClickListener(this);
-            DonateButton.setOnClickListener(this);
-            HelpButton.setOnClickListener(this);
-            HomepageButton.setOnClickListener(this);
-            AddDeviceButton.setOnClickListener(this);
-            EmptySpaceButton.setOnClickListener(this);
-
-            Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Regular.ttf");
-            SettingsButton.setTypeface(type);
-            AboutButton.setTypeface(type);
-            DonateButton.setTypeface(type);
-            HelpButton.setTypeface(type);
-            AddDeviceButton.setTypeface(type);
-
-            type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Bold.ttf");
-            HomepageButton.setTypeface(type);
-
-            SettingsButton.setTransformationMethod(null);
-            AboutButton.setTransformationMethod(null);
-            DonateButton.setTransformationMethod(null);
-            HelpButton.setTransformationMethod(null);
-            HomepageButton.setTransformationMethod(null);
-            AddDeviceButton.setTransformationMethod(null);
-
-            getRootLayout().addView(MenuItemsLayout);
+        if (mMenuItemsLayout == null) {
+            mMenuItemsLayout = new MenuItemsLayout(this);
+            mMenuItemsLayout.setOnClickListener(this);
+            getRootLayout().addView(mMenuItemsLayout);
         }
 
-        return MenuItemsLayout;
+        return mMenuItemsLayout;
     }
 
     protected RelativeLayout getContentLayout() {
 
-        if ( ContentLayout == null ) {
+        if (ContentLayout == null) {
 
             ContentLayout = new RelativeLayout(this);
             ContentLayout.setId(ViewHelper.generateViewId());
@@ -211,19 +187,31 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     @Override
     public void setContentView(int layoutResID) {
 
-        if ( Content != null ) {
+        if (Content != null) {
             getContentLayout().removeView(Content);
             Content = null;
         }
 
-        Content = (ViewGroup)Inflate(layoutResID, getContentLayout());
+        Content = (ViewGroup) Inflate(layoutResID, getContentLayout());
 
     }
 
     public void showMenuButton() {
         getMenuBarLayout();
+        setBtnBackground(MenuButton, R.drawable.menu);
         MenuButton.setVisibility(View.VISIBLE);
+        MenuButton.setTag(Integer.valueOf(0));
         GroupButton.setVisibility(View.VISIBLE);
+        title.setVisibility(View.VISIBLE);
+        detailTitle.setVisibility(View.INVISIBLE);
+    }
+
+    public void showBackButton() {
+        getMenuBarLayout();
+        setBtnBackground(MenuButton, R.drawable.back);
+        MenuButton.setVisibility(View.VISIBLE);
+        MenuButton.setTag(Integer.valueOf(1));
+        GroupButton.setVisibility(View.GONE);
     }
 
     public void hideMenuButton() {
@@ -232,7 +220,15 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         GroupButton.setVisibility(View.GONE);
     }
 
-    protected void onGroupButtonTouch(boolean On) {}
+    public void setMenubarDetailTitle(String txt) {
+        getMenuBarLayout();
+        detailTitle.setText(txt);
+        title.setVisibility(View.INVISIBLE);
+        detailTitle.setVisibility(View.VISIBLE);
+    }
+
+    protected void onGroupButtonTouch(boolean On) {
+    }
 
     public boolean menuIsVisible() {
         return getMenuItemsLayout().getVisibility() == View.VISIBLE;
@@ -240,19 +236,26 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     private void showHideMenu(boolean Show, boolean Animated) {
 
-        if ( Show && menuIsVisible() ) return;
-        if ( !Show && !menuIsVisible() ) return;
+        if (Show && menuIsVisible()) return;
+        if (!Show && !menuIsVisible()) return;
 
-        if ( Show ) {
+        if (Show) {
 
-            if ( Anim ) return;
+            if (Anim) return;
 
-            getMenuItemsLayout().setTop(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight() );
+            DbHelper DbH = new DbHelper(this);
+
+            int btns = DbH.isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
+                    : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
+
+            getMenuItemsLayout().setButtonsAvailable(btns);
+            getMenuItemsLayout().setY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                    + getMenuBarLayout().getHeight());
             getMenuItemsLayout().setVisibility(View.VISIBLE);
             getMenuItemsLayout().bringToFront();
             getMenuBarLayout().bringToFront();
 
-            if ( Animated ) {
+            if (Animated) {
 
                 Anim = true;
 
@@ -273,14 +276,15 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         } else {
 
-            if ( Animated ) {
+            if (Animated) {
 
-                if ( Anim ) return;
+                if (Anim) return;
                 Anim = true;
 
                 getMenuItemsLayout()
                         .animate()
-                        .translationY(getMenuItemsLayout().getHeight() * -1 + getMenuBarLayout().getHeight())
+                        .translationY(getMenuItemsLayout().getBtnAreaHeight() * -1
+                                + getMenuBarLayout().getHeight())
                         .setDuration(200)
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
@@ -305,7 +309,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         lp.addRule(RelativeLayout.BELOW, getMenuBarLayout().getId());
         getContentLayout().setLayoutParams(lp);
 
-        if ( MenuBarLayout != null )
+        if (MenuBarLayout != null)
             MenuBarLayout.setVisibility(View.VISIBLE);
     }
 
@@ -315,7 +319,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         getContentLayout().setLayoutParams(lp);
 
-        if ( MenuBarLayout != null )
+        if (MenuBarLayout != null)
             MenuBarLayout.setVisibility(View.GONE);
     }
 
@@ -343,47 +347,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
-    public void addDevice() {
-
-        showAddWizard();
-    }
-
-
-    private static void showActivity(Activity sender,  Class<?> cls, int flags) {
-
-        Intent i = new Intent(sender.getBaseContext(), cls);
-        i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
-        i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
-        sender.startActivity(i);
-
-        sender.overridePendingTransition( R.anim.fade_in, R.anim.fade_out);
-    }
-
-    public static void showMain(Activity sender) {
-
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-        if ( client != null
-                && client.Registered() ) {
-
-            showActivity(sender, MainActivity.class, 0);
-
-        } else {
-            showStatus(sender);
-        }
-
-
-
-    }
-
-    public static void showStatus(Activity sender) {
-        showActivity(sender, StatusActivity.class, 0);
-    }
-
-    public static void showCfg(Activity sender) {
-        showActivity(sender, CfgActivity.class, 0);
-    }
-
     public void showAbout() {
         showActivity(this, AboutActivity.class, 0);
     }
@@ -393,7 +356,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showAddWizard() {
-        showActivity(this, AddWizardActivity.class, 0);
+        showActivity(this, AddDeviceWizardActivity.class, 0);
+    }
+
+    public void showZWaveConfigurationWizard() {
+        showActivity(this, ZWaveConfigurationWizardActivity.class, 0);
     }
 
     public void gotoMain() {
@@ -402,82 +369,125 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(intent);
     }
 
+    private void setBtnBackground(Button btn, int imgResId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            btn.setBackground(getResources().getDrawable(imgResId));
+        } else {
+            btn.setBackgroundDrawable(getResources().getDrawable(imgResId));
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
-        if (  v != MenuButton
-              && menuIsVisible() ) {
+        if (v == MenuButton && MenuButton.getTag().equals(Integer.valueOf(1))) {
+            onBackPressed();
+            return;
+        }
+
+        if (v != MenuButton
+                && menuIsVisible()) {
 
             hideMenu(true);
         }
 
-        if ( v == MenuButton )  {
+        if (v == MenuButton) {
 
-            if ( menuIsVisible() )
+            if (menuIsVisible())
                 hideMenu(true);
             else
                 showMenu(true);
 
-        } else if ( v == GroupButton ) {
+        } else if (v == GroupButton) {
 
             int img;
 
             if (GroupButton.getTag() == Integer.valueOf(0)) {
-                GroupButton.setTag(Integer.valueOf(1));
+                GroupButton.setTag(1);
                 img = R.drawable.groupon;
             } else {
-                GroupButton.setTag(Integer.valueOf(0));
+                GroupButton.setTag(0);
                 img = R.drawable.groupoff;
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                GroupButton.setBackground(getResources().getDrawable(img));
-            } else {
-                GroupButton.setBackgroundDrawable(getResources().getDrawable(img));
-            }
-
+            setBtnBackground(GroupButton, img);
             onGroupButtonTouch(img == R.drawable.groupon);
-
-        } else if ( v == MiSettings || v == SettingsButton) {
-
-            showCfg(this);
-
-        } else if ( v == MiAbout || v == AboutButton ) {
-
-            showAbout();
-
-        } else if ( v == MiAddDevice || v == AddDeviceButton ) {
-
-            addDevice();
-
-        } else if ( v == MiDonate || v == DonateButton ) {
-
-            donate();
-
-        } else if ( v == MiHelp || v == HelpButton ) {
-
-            openForumpage();
-
-        } else if ( v == HomepageButton ) {
-
-            openHomepage();
-
+        } else {
+            switch (MenuItemsLayout.getButtonId(v)) {
+                case MenuItemsLayout.BTN_SETTINGS:
+                    showCfg(this);
+                    break;
+                case MenuItemsLayout.BTN_ABOUT:
+                    showAbout();
+                    break;
+                case MenuItemsLayout.BTN_ADD_DEVICE:
+                    showAddWizard();
+                    break;
+                case MenuItemsLayout.BTN_Z_WAVE:
+                    SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE);
+                    break;
+                case MenuItemsLayout.BTN_DONATE:
+                    donate();
+                    break;
+                case MenuItemsLayout.BTN_HELP:
+                    openForumpage();
+                    break;
+                case MenuItemsLayout.BTN_HOMEPAGE:
+                    openHomepage();
+                    break;
+            }
         }
 
     }
 
 
     @Override
-    protected void BeforeStatusMsg() {
-        super.BeforeStatusMsg();
+    protected void beforeStatusMsg() {
+        super.beforeStatusMsg();
 
-        if (  CurrentActivity != null
+        if (CurrentActivity != null
                 && !(CurrentActivity instanceof StatusActivity)
                 && !(CurrentActivity instanceof CfgActivity)
-                && !(CurrentActivity instanceof AddWizardActivity )
-                && !(CurrentActivity instanceof CreateAccountActivity )) {
+                && !(CurrentActivity instanceof AddDeviceWizardActivity)
+                && !(CurrentActivity instanceof CreateAccountActivity)) {
             showStatus(this);
         }
     }
 
+    public static NavigationActivity getCurrentNavigationActivity() {
+        if (CurrentActivity != null && CurrentActivity instanceof NavigationActivity) {
+            return (NavigationActivity)CurrentActivity;
+        }
+        return null;
+    }
+
+    public void SuperUserAuthorize(int sourceBtnId) {
+        if (mAuthDialog != null) {
+            mAuthDialog.close();
+            mAuthDialog = null;
+        }
+
+        mAuthDialog =
+                new SuperuserAuthorizationDialog(this);
+        mAuthDialog.setObject(sourceBtnId);
+        mAuthDialog.setOnAuthorizarionResultListener(this);
+        mAuthDialog.show();
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
+        if (Success
+                && dialog != null
+                && dialog == mAuthDialog
+                && dialog.getObject().equals(Integer.valueOf(MenuItemsLayout.BTN_Z_WAVE))) {
+            mAuthDialog.close();
+            mAuthDialog = null;
+            showZWaveConfigurationWizard();
+        }
+    }
+
+    @Override
+    public void authorizationCanceled() {
+    }
 }

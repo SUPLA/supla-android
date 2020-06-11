@@ -4,6 +4,8 @@
     <dimen name="channel_layout_height">180dp</dimen>
     <dimen name="channel_layout_button_width">150dp</dimen>
     <dimen name="channel_dot_size">15dp</dimen>
+    <dimen name="channel_state_image_size">40dp</dimen>
+    <dimen name="channel_warning_image_size">40dp</dimen>
     <dimen name="channel_btn_text_size">27sp</dimen>
     <dimen name="channel_caption_top_margin">25dp</dimen>
     <dimen name="channel_caption_text_size">17sp</dimen>
@@ -14,18 +16,18 @@
     <dimen name="channel_imgtext_thermometer_width">100dp</dimen>
     <dimen name="channel_imgtext_width">250dp</dimen>
     <dimen name="channel_imgtext_leftmargin">15dp</dimen>
-    <dimen name="rgb_wheel_width">60dp</dimen>
-    <dimen name="rgb_wheel_arrow_height">55dp</dimen>
     <dimen name="rgb_detail_tab_height">150dp</dimen>
-    <dimen name="rgb_detail_tab_btn_margin">30dp</dimen>
-    <dimen name="rgb_detail_tab_btn_height">40dp</dimen>
-    <dimen name="rgb_detail_tab_btn_text">12sp</dimen>
+    <dimen name="rgb_detail_tab_btn_text">14sp</dimen>
     <dimen name="rgb_detail_title_text">35sp</dimen>
     <dimen name="rgb_detail_info_text">20sp</dimen>
     <dimen name="rgb_detail_info_text_margin">5dp</dimen>
     <dimen name="rgb_detail_state_margin">5dp</dimen>
-
     <dimen name="wizard_btnnextl_width">25dp</dimen>
     <dimen name="wizard_btnnextr_width">70dp</dimen>
-
+    <dimen name="menuitem_height">80dp</dimen>
+    <dimen name="menuitem_iamge_margin">15dp</dimen>
+    <dimen name="menuitem_separator_height">0.25dp</dimen>
+    <dimen name="menuitem_text_size">30sp</dimen>
+    <dimen name="menuitem_homepage_text_size">20sp</dimen>
+    <dimen name="menuitem_padding">2dp</dimen>
 </resources>

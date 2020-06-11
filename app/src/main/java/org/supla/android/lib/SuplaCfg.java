@@ -27,6 +27,7 @@ public class SuplaCfg {
     int AccessID;
     String AccessIDpwd;
     String Email;
+    String Password;
     String SoftVer;
     String Host;
     int tcp_port;
@@ -34,12 +35,11 @@ public class SuplaCfg {
     boolean ssl_enabled;
     int protocol_version = 0;
 
-
     void setClientGUID(byte[] clientGUID) {
 
         int len = clientGUID.length > SuplaConst.SUPLA_GUID_SIZE ? SuplaConst.SUPLA_GUID_SIZE : clientGUID.length;
 
-        if ( len > 0 )
+        if (len > 0)
             System.arraycopy(clientGUID, 0, this.clientGUID, 0, len);
 
     }
@@ -48,25 +48,29 @@ public class SuplaCfg {
 
         int len = AuthKey.length > SuplaConst.SUPLA_AUTHKEY_SIZE ? SuplaConst.SUPLA_AUTHKEY_SIZE : AuthKey.length;
 
-        if ( len > 0 )
+        if (len > 0)
             System.arraycopy(AuthKey, 0, this.AuthKey, 0, len);
 
     }
 
     void setName(String Name) {
-        this.Name = Name.substring(0,SuplaConst.SUPLA_CLIENT_NAME_MAXSIZE-1);
+        this.Name = Name.substring(0, SuplaConst.SUPLA_CLIENT_NAME_MAXSIZE - 1);
     }
 
     void setAccessIDpwd(String AccessIDpwd) {
-        this.AccessIDpwd = AccessIDpwd.substring(0, SuplaConst.SUPLA_ACCESSID_PWD_MAXSIZE-1);
+        this.AccessIDpwd = AccessIDpwd.substring(0, SuplaConst.SUPLA_ACCESSID_PWD_MAXSIZE - 1);
     }
 
     void setEmail(String Email) {
-        this.Email = Email.substring(0, SuplaConst.SUPLA_EMAIL_MAXSIZE-1);
+        this.Email = Email.substring(0, SuplaConst.SUPLA_EMAIL_MAXSIZE - 1);
+    }
+
+    void setPassword(String Password) {
+        this.Password = Password.substring(0, SuplaConst.SUPLA_PASSWORD_MAXSIZE - 1);
     }
 
     void setSoftVer(String SoftVer) {
-        this.SoftVer = SoftVer.substring(0, SuplaConst.SUPLA_SOFTVER_MAXSIZE-1);
+        this.SoftVer = SoftVer.substring(0, SuplaConst.SUPLA_SOFTVER_MAXSIZE - 1);
     }
 
 

@@ -24,10 +24,15 @@ import org.supla.android.R;
 
 public class SuplaConnError {
 
+    // TODO: Make it private. Remember about JNI (NativeLib)
     public int Code;
 
     public SuplaConnError() {
 
+    }
+
+    public SuplaConnError(int Code) {
+        this.Code = Code;
     }
 
     public SuplaConnError(SuplaConnError error) {
@@ -38,21 +43,21 @@ public class SuplaConnError {
 
     public String codeToString(Context context) {
 
-     int resid = 0;
+        int resid = 0;
 
-     switch(Code) {
+        switch (Code) {
 
-      case SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND:
-       resid = R.string.err_hostnotfound;
-       break;
+            case SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND:
+                resid = R.string.err_hostnotfound;
+                break;
 
-      case SuplaConst.SUPLA_RESULTCODE_CANTCONNECTTOHOST:
-       resid = R.string.err_cantconnecttohost;
-       break;
+            case SuplaConst.SUPLA_RESULTCODE_CANTCONNECTTOHOST:
+                resid = R.string.err_cantconnecttohost;
+                break;
 
-     }
+        }
 
-     return resid != 0 ? context.getResources().getString(resid) : Integer.valueOf(Code).toString();
+        return resid != 0 ? context.getResources().getString(resid) : Integer.valueOf(Code).toString();
     }
 
 }

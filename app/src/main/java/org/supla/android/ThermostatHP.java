@@ -23,10 +23,8 @@ import android.database.Cursor;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaChannelThermostatValue;
-
-import java.lang.annotation.Target;
+import org.supla.android.lib.SuplaConst;
 
 public class ThermostatHP {
 
@@ -37,11 +35,6 @@ public class ThermostatHP {
 
     private final static int STATUS2_TURBO_ON = 0x1;
     private final static int STATUS2_ECOREDUCTION_ON = 0x2;
-
-    private int presetTemperatureMin;
-    private Double measuredTemperatureMin;
-    private Double waterMax;
-    private boolean online;
     Double ecoReductionTemperature;
     Double comfortTemp;
     Double ecoTemp;
@@ -49,8 +42,11 @@ public class ThermostatHP {
     Integer flags2;
     Integer turboTime;
     int errors;
-
     SuplaChannelThermostatValue.Schedule schedule;
+    private int presetTemperatureMin;
+    private Double measuredTemperatureMin;
+    private Double waterMax;
+    private boolean online;
 
     public ThermostatHP() {
     }
@@ -190,7 +186,7 @@ public class ThermostatHP {
                 break;
         }
 
-        if (msgId!=0) {
+        if (msgId != 0) {
             context.getResources().getString(msgId);
         }
 

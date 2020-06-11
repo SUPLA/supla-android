@@ -46,9 +46,9 @@ public class SuplaCurtains extends View {
     private float mElWidth, mLastTouchX, mLastTouchY, mPercent;
     private float tempP = 0;
     private double mThickness = 1, mLineSubtract;
-    private boolean mTouchLeft;
+    private boolean mTouchLeft, mTouched;
     private int mLineColor = 0x000000;
-    private int mFillColor1 = 0x05AA37;
+    private int mFillColor1 = 0x00D449;
     private int mFillColor2 = 0x049629;
     private OnPercentChangeListener mOnPercentChangeListener;
     private RectF workSpace = new RectF();
@@ -65,29 +65,37 @@ public class SuplaCurtains extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public interface OnPercentChangeListener {
-        void onPercentChangeing(SuplaCurtains rs, float percent);
+    public int getLineColor() {
+        return mLineColor;
     }
 
-    public int getLineColor() { return mLineColor; }
+    //Colors Getters and Setters
 
     public void setLineColor(int lineColor) {
         mLineColor = lineColor;
         invalidate();
     }
 
-    public int getFillColor1() { return mFillColor1; }
+    public int getFillColor1() {
+        return mFillColor1;
+    }
 
     public void setFillColor1(int fillColor1) {
         mFillColor1 = fillColor1;
         invalidate();
     }
 
-    public int getFillColor2() { return mFillColor2; }
+    public int getFillColor2() {
+        return mFillColor2;
+    }
 
     public void setFillColor2(int fillColor2) {
         mFillColor2 = fillColor2;
         invalidate();
+    }
+
+    public float getPercent() {
+        return mPercent;
     }
 
     public void setPercent(float percent) {
@@ -101,15 +109,21 @@ public class SuplaCurtains extends View {
         invalidate();
     }
 
-    public float getPercent() { return mPercent; }
+    public boolean isTouched() {
+        return mTouched;
+    }
+
+    public void setOnPercentChangeListener(OnPercentChangeListener percentChangeListener) {
+        mOnPercentChangeListener = percentChangeListener;
+    }
 
     private void drawRect(Canvas canvas, float leftPercent, float topPercent,
                           float rightPercent, float bottomPercent, Paint paint) {
         MainRect.set(
-                (int)(workSpace.width() * leftPercent + workSpace.left),
-                (int)(workSpace.height() * topPercent + workSpace.top),
-                (int)(workSpace.width() * rightPercent + workSpace.left),
-                (int)(workSpace.height() * bottomPercent + workSpace.top));
+                (int) (workSpace.width() * leftPercent + workSpace.left),
+                (int) (workSpace.height() * topPercent + workSpace.top),
+                (int) (workSpace.width() * rightPercent + workSpace.left),
+                (int) (workSpace.height() * bottomPercent + workSpace.top));
         canvas.drawRect(MainRect, paint);
     }
 
@@ -120,7 +134,7 @@ public class SuplaCurtains extends View {
                 workSpace.height() * topPercent + workSpace.top,
                 workSpace.width() * rightPercent + workSpace.left,
                 workSpace.height() * bottomPercent + workSpace.top);
-        canvas.drawRoundRect(MainRoundRect,rx,ry, paint);
+        canvas.drawRoundRect(MainRoundRect, rx, ry, paint);
     }
 
     private void drawCurtain(Canvas canvas, float left, float right,
@@ -139,7 +153,7 @@ public class SuplaCurtains extends View {
         int elCount;
         float l, r;
 
-        elCount = (int)(width / mElWidth);
+        elCount = (int) (width / mElWidth);
 
         if (right) {
             width = workSpace.width() - width - mCurtainMargin;
@@ -147,24 +161,24 @@ public class SuplaCurtains extends View {
         for (int i = 0; i < elCount; i++) {
             if (right) {
                 l = width + (mElWidth * i);
-                r = width + (mElWidth *( i + 1 ));
+                r = width + (mElWidth * (i + 1));
             } else {
                 l = mCurtainMargin + width - (mElWidth * (i + 1));
                 r = mCurtainMargin + width - (mElWidth * i);
             }
 
-            if(i%2 == 0) {
-                drawCurtain(canvas,  l, r, (float) (1 - mLineSubtract), greenPaint);
+            if (i % 2 == 0) {
+                drawCurtain(canvas, l, r, (float) (1 - mLineSubtract), greenPaint);
             } else {
                 drawCurtain(canvas, l, r, 0.97f, darkgreenPaint);
             }
         }
 
         if (right) {
-            drawCurtain(canvas,workSpace.width()-mCurtainMargin - mElWidth,
-                    workSpace.width()-mCurtainMargin,(float) (1 - mLineSubtract), greenPaint);
+            drawCurtain(canvas, workSpace.width() - mCurtainMargin - mElWidth,
+                    workSpace.width() - mCurtainMargin, (float) (1 - mLineSubtract), greenPaint);
         } else {
-            drawCurtain(canvas, mCurtainMargin,mCurtainMargin + mElWidth,
+            drawCurtain(canvas, mCurtainMargin, mCurtainMargin + mElWidth,
                     (float) (1 - mLineSubtract), greenPaint);
         }
     }
@@ -178,21 +192,23 @@ public class SuplaCurtains extends View {
                 mLastTouchY = event.getY();
                 mTouchLeft = mLastTouchX < workSpace.width() / 2 + workSpace.left;
                 tempP = getPercent();
+                mTouched = true;
+                return true;
             case MotionEvent.ACTION_MOVE:
                 float X = event.getX();
                 float Y = event.getY();
                 float dX = X - mLastTouchX;
                 float dY = Y - mLastTouchY;
 
-                if (((workSpace.height() * 1) + ((getHeight()-workSpace.height())/2) > mFirstClick)
+                if (((workSpace.height() * 1) + ((getHeight() - workSpace.height()) / 2) > mFirstClick)
                         && ((workSpace.height() * 0.08 +
-                        ((getHeight()-workSpace.height())/2) < mFirstClick))) {
+                        ((getHeight() - workSpace.height()) / 2) < mFirstClick))) {
                     if (Math.abs(dX) > Math.abs(dY)) {
                         if (mTouchLeft) {
-                            dX *= -1;
+                            dX *= -1f;
                         }
-                        float p = dX * 100.f / workSpace.width() * 2f;
-                        setPercent(getPercent() - p);
+                        float p = dX * 100.f / (workSpace.width() - mCurtainMargin * 2 - mElWidth);
+                        setPercent(getPercent() - p * 2f);
                     }
                 }
                 mLastTouchX = X;
@@ -202,6 +218,8 @@ public class SuplaCurtains extends View {
                 }
                 return true;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mTouched = false;
                 setPercent(tempP);
                 return true;
         }
@@ -220,9 +238,9 @@ public class SuplaCurtains extends View {
     private void calculateConstants() {
         if (getWidth() > getHeight()) {
             workSpace = new RectF(
-                    (float)(getWidth()-getHeight())/2,
+                    (float) (getWidth() - getHeight()) / 2,
                     0,
-                    getHeight()+ (float) ((getWidth()-getHeight())/2),
+                    getHeight() + (float) ((getWidth() - getHeight()) / 2),
                     getHeight());
             mThickness = workSpace.height() * 0.003;
             if (mThickness < 0.5) mThickness = 0.5;
@@ -230,13 +248,13 @@ public class SuplaCurtains extends View {
         } else if (getWidth() < getHeight()) {
             workSpace = new RectF(
                     0,
-                    (float) (getHeight()-getWidth())/2,getWidth(),
-                    getWidth() + (float) ((getHeight()-getWidth())/2));
+                    (float) (getHeight() - getWidth()) / 2, getWidth(),
+                    getWidth() + (float) ((getHeight() - getWidth()) / 2));
             mThickness = workSpace.width() * 0.003;
             if (mThickness < 0.5) mThickness = 0.5;
             mLineSubtract = mThickness * 2 / workSpace.width();
         } else {
-            workSpace = new RectF(0,0,getWidth(), getHeight());
+            workSpace = new RectF(0, 0, getWidth(), getHeight());
             mThickness = workSpace.height() * 0.003;
             if (mThickness < 0.5) mThickness = 0.5;
             mLineSubtract = mThickness * 2 / workSpace.height();
@@ -296,7 +314,7 @@ public class SuplaCurtains extends View {
         drawRect(canvas, 0.16f, 0.88f, 0.84f, 0.95f, paint);
 
         //Windowsill L
-        drawRoundRect(canvas, 0.145f,0.87f, 0.16f, 0.96f,
+        drawRoundRect(canvas, 0.145f, 0.87f, 0.16f, 0.96f,
                 3, 3, paint);
 
         //Windowsill R
@@ -364,7 +382,7 @@ public class SuplaCurtains extends View {
         MainPath.quadTo(
                 workSpace.width() * 0.585f + workSpace.left,
                 workSpace.height() * 0.72f + workSpace.top,
-                workSpace.width() * 0.565f  + workSpace.left,
+                workSpace.width() * 0.565f + workSpace.left,
                 workSpace.height() * 0.7f + workSpace.top);
         MainPath.quadTo(
                 workSpace.width() * 0.615f + workSpace.left,
@@ -447,7 +465,6 @@ public class SuplaCurtains extends View {
         //Square pattern B R
         drawRect(canvas, 0.665f, 0.828f, 0.685f, 0.858f, greenPaint);
         drawRect(canvas, 0.665f, 0.828f, 0.685f, 0.858f, paint);
-
         //Curtain L Creator
         drawCurtains(canvas, false);
 
@@ -455,7 +472,7 @@ public class SuplaCurtains extends View {
         drawCurtains(canvas, true);
     }
 
-    public void setOnPercentChangeListener(OnPercentChangeListener percentChangeListener) {
-       mOnPercentChangeListener = percentChangeListener;
+    public interface OnPercentChangeListener {
+        void onPercentChangeing(SuplaCurtains rs, float percent);
     }
 }

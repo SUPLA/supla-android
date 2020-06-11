@@ -51,7 +51,7 @@ public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
 
-        TempHumidityMeasurementItem thi  = new TempHumidityMeasurementItem();
+        TempHumidityMeasurementItem thi = new TempHumidityMeasurementItem();
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
 

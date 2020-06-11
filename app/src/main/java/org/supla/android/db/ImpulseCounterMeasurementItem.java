@@ -23,7 +23,6 @@ import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.supla.android.Trace;
 
 public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
@@ -46,12 +45,12 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         return counter;
     }
 
-    public double getCalculatedValue() {
-        return calculatedValue;
-    }
-
     public void setCounter(long counter) {
         this.counter = counter;
+    }
+
+    public double getCalculatedValue() {
+        return calculatedValue;
     }
 
     public void setCalculatedValue(double calculatedValue) {
@@ -104,17 +103,17 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
     }
 
     public void Calculate(IncrementalMeasurementItem item) {
-        ImpulseCounterMeasurementItem ic = (ImpulseCounterMeasurementItem)item;
+        ImpulseCounterMeasurementItem ic = (ImpulseCounterMeasurementItem) item;
 
-        setCalculatedValue(getCalculatedValue()-ic.getCalculatedValue());
-        setCounter(getCounter()-ic.getCounter());
+        setCalculatedValue(getCalculatedValue() - ic.getCalculatedValue());
+        setCounter(getCounter() - ic.getCounter());
 
         Calculated = true;
     }
 
     public void DivideBy(long div) {
-        setCalculatedValue(getCalculatedValue()/div);
-        setCounter(getCounter()/div);
+        setCalculatedValue(getCalculatedValue() / div);
+        setCounter(getCounter() / div);
 
         Divided = true;
     }

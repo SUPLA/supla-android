@@ -31,11 +31,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.CombinedChart;
+
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaClient;
@@ -46,6 +47,7 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -54,107 +56,12 @@ import java.util.TimerTask;
 public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
         SuplaRestApiClientTask.IAsyncResults, SuplaThermostatCalendar.OnCalendarTouchListener {
 
-    private class CfgItem {
-
-        public final static int ID_TURBO_TIME = 1;
-        public final static int ID_WATER_MAX = 2;
-        public final static int ID_ECO_REDUCTION = 3;
-        public final static int ID_TEMP_COMFORT = 4;
-        public final static int ID_TEMP_ECO = 5;
-
-        private int Id;
-        private Button BtnPlus;
-        private Button BtnMinus;
-        private TextView TvValue;
-        int value;
-        private int Min;
-        private int Max;
-
-        CfgItem(int id, int btnMinus, int btnPlus, int tvValue, int min, int max
-                , int defaultValue) {
-            BtnMinus = findViewById(btnMinus);
-            BtnPlus = findViewById(btnPlus);
-            TvValue = findViewById(tvValue);
-
-            Id = id;
-            Min = min;
-            Max = max;
-            value = defaultValue;
-
-            if (BtnMinus!=null) {
-                BtnMinus.setOnClickListener(ChannelDetailThermostatHP.this);
-            }
-
-            if (BtnPlus!=null) {
-                BtnPlus.setOnClickListener(ChannelDetailThermostatHP.this);
-            }
-
-            displayValue();
-        }
-
-        public void displayValue() {
-            if (TvValue != null) {
-                if (Id == ID_TURBO_TIME) {
-                    TvValue.setText(Integer.toString(value)+" godz.");
-                } else {
-                    TvValue.setText(Integer.toString(value)+(char) 0x00B0);
-                }
-
-            }
-        }
-
-        public boolean onClick(View view) {
-
-            if (view == null) {
-                return false;
-            }
-
-            if (view == BtnMinus) {
-                value--;
-                setValue(value);
-            } else if (view == BtnPlus) {
-                value++;
-                setValue(value);
-            } else {
-                return false;
-            }
-
-            displayValue();
-            return true;
-        }
-
-        public int getId() {
-            return Id;
-        }
-
-        public boolean idEqualsTo(int id) {
-            return id == Id;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            if (value < Min) {
-                value = Min;
-            } else if (value > Max) {
-                value = Max;
-            }
-
-            this.value = value;
-            displayValue();
-        }
-    }
-    private final static int PROG_ECO = 1;
-    private final static int PROG_COMFORT = 2;
-
     public final static int BTN_SET_OFF_UNKNOWN = -1;
     public final static int BTN_SET_OFF = 0;
     public final static int BTN_SET_ON = 1;
     public final static int BTN_SET_TOGGLE = 2;
-
-    private TextView tvChannelTitle;
+    private final static int PROG_ECO = 1;
+    private final static int PROG_COMFORT = 2;
     private Button btnSettings;
     private Button btnSchedule;
     private Button btnOnOff;
@@ -179,7 +86,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private ProgressBar progressBar;
     private List<CfgItem> cfgItems;
     private Timer delayTimer1;
-    private Timer reloadTimer1;
+    private Timer refreshTimer1;
     private LinearLayout llChart;
     private ListView lvChannelList;
     private TextView tvErrorMessage;
@@ -204,9 +111,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     protected void init() {
         super.init();
 
-
-        tvChannelTitle = findViewById(R.id.hptv_ChannelTitle);
-
         rlMain = findViewById(R.id.hpMain);
         rlMain.setVisibility(VISIBLE);
 
@@ -225,11 +129,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvTemperature = findViewById(R.id.hpTvTemperature);
 
-        Typeface tfOpenSansRegular = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/OpenSans-Regular.ttf");
-
-        Typeface tfQuicksandRegular = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/Quicksand-Regular.ttf");
+        Typeface tfOpenSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
 
         tvTemperature.setTypeface(tfOpenSansRegular);
 
@@ -275,16 +175,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         lvChannelList = findViewById(R.id.hpChannelList);
 
-        ((TextView)findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvTurbo)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvCaptionWaterMax)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvWaterMax)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvEcoReductionCaption)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvEcoReduction)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvAutoCaption)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvAuto)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvEco)).setTypeface(tfOpenSansRegular);
-        ((TextView)findViewById(R.id.hpTvEcoCaption)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvTurbo)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvCaptionWaterMax)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvWaterMax)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvEcoReductionCaption)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvEcoReduction)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvAutoCaption)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvAuto)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvEco)).setTypeface(tfOpenSansRegular);
+        ((TextView) findViewById(R.id.hpTvEcoCaption)).setTypeface(tfOpenSansRegular);
 
         cfgItems = Arrays.asList(
                 new CfgItem(CfgItem.ID_TURBO_TIME,
@@ -312,7 +212,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     @Override
-    public View getContentView() {
+    public View inflateContentView() {
         return inflateLayout(R.layout.detail_homeplus);
     }
 
@@ -358,14 +258,14 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     private boolean btnIsOn(Button btn) {
-        return ((Integer)btn.getTag()).intValue() == 1;
+        return ((Integer) btn.getTag()).intValue() == 1;
     }
 
     private void displayTemperature() {
         CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
                 measuredTemperatureMin, measuredTemperatureMax,
                 Double.valueOf(presetTemperatureMin),
-               presetTemperatureMax,
+                presetTemperatureMax,
                 isGroup() ? 0.6f : 1f,
                 isGroup() ? 0.3f : 0.7f);
 
@@ -411,21 +311,30 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         return null;
     }
 
+    private void updateCalendarComfortLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+                + " "
+                + Integer.toString(item.value) + "\u00B0");
+    }
+
+    private void updateCalendarECOLabel(CfgItem item) {
+        Resources res = getResources();
+        mCalendar.setProgram0Label("ECO " + Integer.toString(item.value) + "\u00B0");
+    }
+
     public void setCfgValue(int id, int value) {
         for (CfgItem item : cfgItems) {
             if (item.idEqualsTo(id)) {
                 item.setValue(value);
+
+                if (id == CfgItem.ID_TEMP_ECO) {
+                    updateCalendarECOLabel(item);
+                } else if (id == CfgItem.ID_TEMP_COMFORT) {
+                    updateCalendarComfortLabel(item);
+                }
+                break;
             }
-        }
-
-        Resources res = getResources();
-
-        if (id == CfgItem.ID_TEMP_ECO) {
-            mCalendar.setProgram0Label("ECO "+Integer.toString(value)+"\u00B0");
-        } else if (id == CfgItem.ID_TEMP_COMFORT) {
-            mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
-                    +" "
-                    +Integer.toString(value)+"\u00B0");
         }
     }
 
@@ -439,7 +348,6 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void OnChannelGroupDataChanged() {
         ChannelGroup channelGroup = DBH.getChannelGroup(getRemoteId());
-        tvChannelTitle.setText(channelGroup.getNotEmptyCaption(this.getContext()));
 
         Double t = channelGroup.getMinimumPresetTemperature();
         presetTemperatureMin = t == null ? 0 : t.intValue();
@@ -453,25 +361,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void OnChannelDataChanged() {
 
-        reloadTimer1 = new Timer();
-
-        reloadTimer1.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                if (getContext() instanceof Activity) {
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            loadChannelList();
-                        }
-                    });
-                }
-
-            }
-
-        }, 10, 1000);
+        if (isGroup()) {
+            loadChannelList();
+        }
 
         if (refreshLock > System.currentTimeMillis()) {
             return;
@@ -485,9 +377,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
             return;
         }
 
-       Channel channel = DBH.getChannel(getRemoteId());
-
-        tvChannelTitle.setText(channel.getNotEmptyCaption(this.getContext()));
+        Channel channel = DBH.getChannel(getRemoteId());
 
         tvErrorMessage.setVisibility(GONE);
         tvErrorMessage.setText("");
@@ -539,13 +429,13 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         if (!mCalendar.isTouched()) {
             mCalendar.clear();
 
-            if (thermostat.getSchedule()!=null && thermostat.getSchedule().getType() ==
+            if (thermostat.getSchedule() != null && thermostat.getSchedule().getType() ==
                     SuplaChannelThermostatValue.Schedule.TYPE_PROGRAM) {
-                for(short d=0;d<7;d++) {
-                    for(short h=0;h<24;h++) {
-                        mCalendar.setHourProgramTo1((short)(d+1), h,
-                                thermostat.getSchedule().getValue((byte)d,
-                                        (byte)h) == PROG_COMFORT);
+                for (short d = 0; d < 7; d++) {
+                    for (short h = 0; h < 24; h++) {
+                        mCalendar.setHourProgramTo1((short) (d + 1), h,
+                                thermostat.getSchedule().getValue((byte) d,
+                                        (byte) h) == PROG_COMFORT);
                     }
                 }
             }
@@ -577,8 +467,27 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
         tvErrorMessage.setVisibility(GONE);
 
-        cancelDelayTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
+
+        // Because of this refreshLock, the refresh timer is running
+        refreshTimer1 = new Timer();
+        refreshTimer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            OnChannelDataChanged();
+                        }
+                    });
+                }
+
+            }
+
+        }, 100, 1000);
 
         setButtonsOff(null, true);
         setMainViewVisible();
@@ -598,7 +507,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         super.onDetailHide();
 
         cancelDelayTimer1();
-        cancelReloadTimer1();
+        cancelRefreshTimer();
     }
 
     private void setButtonsOff(Button skip, boolean all) {
@@ -626,10 +535,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-
     @Override
     public void onClick(View view) {
-        refreshLock = System.currentTimeMillis()+(isGroup() ? 4000 : 2000);
+        refreshLock = System.currentTimeMillis() + (isGroup() ? 4000 : 3000);
 
         for (CfgItem item : cfgItems) {
             if (item.onClick(view)) {
@@ -637,14 +545,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 int idx = 0;
                 Preferences prefs = new Preferences(getContext());
 
-                switch(item.getId()) {
+                switch (item.getId()) {
                     case CfgItem.ID_WATER_MAX:
                         idx = 2;
                         break;
                     case CfgItem.ID_TEMP_COMFORT:
+                        updateCalendarComfortLabel(item);
                         idx = 3;
                         break;
                     case CfgItem.ID_TEMP_ECO:
+                        updateCalendarECOLabel(item);
                         idx = 4;
                         break;
                     case CfgItem.ID_ECO_REDUCTION:
@@ -652,7 +562,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                         break;
                     case CfgItem.ID_TURBO_TIME:
                         deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_TIME,
-                                (byte)item.getValue());
+                                (byte) item.getValue());
 
                         break;
                 }
@@ -668,7 +578,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         byte on = 0;
 
         if (view == btnPlus || view == btnMinus) {
-            if (view == btnMinus ) {
+            if (view == btnMinus) {
                 if (presetTemperatureMax != null) {
                     presetTemperatureMin = presetTemperatureMax.intValue();
                 }
@@ -707,12 +617,11 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
                 || view == btnNormal
                 || view == btnEco
                 || view == btnAuto
-                || view == btnTurbo)
-        {
+                || view == btnTurbo) {
             if (view == btnOnOff) {
-                on = setBtnAppearance(btnOnOff, BTN_SET_TOGGLE,  R.string.hp_on,  R.string.hp_off);
+                on = setBtnAppearance(btnOnOff, BTN_SET_TOGGLE, R.string.hp_on, R.string.hp_off);
                 if (on == 0) {
-                    setButtonsOff(null , false);
+                    setButtonsOff(null, false);
                 }
 
                 deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_TURNON, on);
@@ -739,21 +648,21 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     public void setTemperature(int idx, Double temperature) {
 
-        if (idx < 0 || idx > 10) {
+        if (idx < 0 || idx >= 10) {
             return;
         }
 
         short index = 1;
-        index<<=idx;
+        index <<= idx;
 
         byte[] data = new byte[22];
-        data[0] = (byte)(index & 0x00FF);
-        data[1] = (byte)((index & 0xFF00) >> 8);
+        data[0] = (byte) (index & 0x00FF);
+        data[1] = (byte) ((index & 0xFF00) >> 8);
 
-        short t = (short)(temperature * 100);
+        short t = (short) (temperature * 100);
 
-        data[2+idx*2] = (byte)(t & 0x00FF);
-        data[3+idx*2] = (byte)((t & 0xFF00) >> 8);
+        data[2 + idx * 2] = (byte) (t & 0x00FF);
+        data[3 + idx * 2] = (byte) ((t & 0xFF00) >> 8);
 
         deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_TEMPERATURE, 0, data);
     }
@@ -784,10 +693,10 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
     }
 
-    private void cancelReloadTimer1() {
-        if (reloadTimer1 != null) {
-            reloadTimer1.cancel();
-            reloadTimer1 = null;
+    private void cancelRefreshTimer() {
+        if (refreshTimer1 != null) {
+            refreshTimer1.cancel();
+            refreshTimer1 = null;
         }
     }
 
@@ -795,17 +704,17 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         cancelDelayTimer1();
 
         SuplaClient client = getClient();
-        if (client!=null) {
+        if (client != null) {
 
-            SuplaThermostatScheduleCfg cfg =  new SuplaThermostatScheduleCfg();
-            for(short d=1;d<=7;d++) {
-                for(short h=0;h<24;h++) {
+            SuplaThermostatScheduleCfg cfg = new SuplaThermostatScheduleCfg();
+            for (short d = 1; d <= 7; d++) {
+                for (short h = 0; h < 24; h++) {
                     cfg.setProgram(cfg.getWeekdayByDayIndex(d), h,
-                            (byte)(mCalendar.isHourProgramIsSetTo1(d, h) ? PROG_COMFORT : PROG_ECO));
+                            (byte) (mCalendar.isHourProgramIsSetTo1(d, h) ? PROG_COMFORT : PROG_ECO));
                 }
             }
 
-            client.ThermostatScheduleCfgRequest(getRemoteId(), false, cfg);
+            client.thermostatScheduleCfgRequest(getRemoteId(), false, cfg);
         }
 
     }
@@ -813,7 +722,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Override
     public void onHourValueChanged(SuplaThermostatCalendar calendar, short day, short hour, boolean program1) {
         cancelDelayTimer1();
-        refreshLock = System.currentTimeMillis()+4000;
+        refreshLock = System.currentTimeMillis() + 4000;
 
         delayTimer1 = new Timer();
 
@@ -836,10 +745,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }, 2000, 1000);
     }
 
-
     private void loadChannelList() {
         if (!isGroup()) {
-            cancelReloadTimer1();
             return;
         }
 
@@ -906,7 +813,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         cursor.moveToFirst();
 
         if (lvChannelList.getAdapter() != null) {
-            ((ThermostatHPListViewCursorAdapter)lvChannelList.getAdapter()).swapCursor(cursor);
+            ((ThermostatHPListViewCursorAdapter) lvChannelList.getAdapter()).swapCursor(cursor);
         } else {
             ThermostatHPListViewCursorAdapter adapter = new ThermostatHPListViewCursorAdapter(
                     this.getContext(), R.layout.homeplus_channel_row, cursor, 0);
@@ -915,6 +822,99 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
 
+    }
+
+    private class CfgItem {
+
+        public final static int ID_TURBO_TIME = 1;
+        public final static int ID_WATER_MAX = 2;
+        public final static int ID_ECO_REDUCTION = 3;
+        public final static int ID_TEMP_COMFORT = 4;
+        public final static int ID_TEMP_ECO = 5;
+        int value;
+        private int Id;
+        private Button BtnPlus;
+        private Button BtnMinus;
+        private TextView TvValue;
+        private int Min;
+        private int Max;
+
+        CfgItem(int id, int btnMinus, int btnPlus, int tvValue, int min, int max
+                , int defaultValue) {
+            BtnMinus = findViewById(btnMinus);
+            BtnPlus = findViewById(btnPlus);
+            TvValue = findViewById(tvValue);
+
+            Id = id;
+            Min = min;
+            Max = max;
+            value = defaultValue;
+
+            if (BtnMinus != null) {
+                BtnMinus.setOnClickListener(ChannelDetailThermostatHP.this);
+            }
+
+            if (BtnPlus != null) {
+                BtnPlus.setOnClickListener(ChannelDetailThermostatHP.this);
+            }
+
+            displayValue();
+        }
+
+        public void displayValue() {
+            if (TvValue != null) {
+                if (Id == ID_TURBO_TIME) {
+                    TvValue.setText(R.string.hp_hour);
+                    TvValue.setText(Integer.toString(value) + " " + TvValue.getText());
+                } else {
+                    TvValue.setText(Integer.toString(value) + (char) 0x00B0);
+                }
+
+            }
+        }
+
+        public boolean onClick(View view) {
+
+            if (view == null) {
+                return false;
+            }
+
+            if (view == BtnMinus) {
+                value--;
+                setValue(value);
+            } else if (view == BtnPlus) {
+                value++;
+                setValue(value);
+            } else {
+                return false;
+            }
+
+            displayValue();
+            return true;
+        }
+
+        public int getId() {
+            return Id;
+        }
+
+        public boolean idEqualsTo(int id) {
+            return id == Id;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            if (value < Min) {
+                value = Min;
+            } else if (value > Max) {
+                value = Max;
+            }
+
+            this.value = value;
+            displayValue();
+        }
     }
 }
 

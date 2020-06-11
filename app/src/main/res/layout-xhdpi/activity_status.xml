@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/activity_status_bg_err">
 
     <ProgressBar
+        android:id="@+id/status_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:id="@+id/status_progress"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:progress="50"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:nestedScrollingEnabled="false"
         android:mirrorForRtl="false"
+        android:nestedScrollingEnabled="false"
+        android:progress="50"
         android:secondaryProgressTint="@color/activity_bg" />
 
     <ImageView
+        android:id="@+id/status_img"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:id="@+id/status_img"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/error"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/error"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -45,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/status_text"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
