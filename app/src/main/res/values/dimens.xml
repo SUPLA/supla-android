@@ -43,4 +43,11 @@
     <dimen name="menuitem_text_size">15sp</dimen>
     <dimen name="menuitem_homepage_text_size">12sp</dimen>
     <dimen name="menuitem_padding">2dp</dimen>
+    <dimen name="em_detail_bar_textsize">10sp</dimen>
+    <dimen name="em_detail_TotalActiveEnergy_textsize">24sp</dimen>
+    <dimen name="em_detail_CurrentConsumptionProduction_textsize">18sp</dimen>
+    <dimen name="em_detail_CurrentCost_textsize">18sp</dimen>
+    <dimen name="em_detail_TotalCost_textsize">14sp</dimen>
+    <dimen name="em_detail_btn_Phase_textsize">12sp</dimen>
+    <dimen name="em_detail_textsize">14sp</dimen>
 </resources>
