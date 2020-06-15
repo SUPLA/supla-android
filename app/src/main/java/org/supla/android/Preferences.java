@@ -252,7 +252,7 @@ public class Preferences {
         editor.apply();
     }
 
-    public void setBrightnessPickerTypeSlider(boolean slider) {
+    public void setBrightnessPickerTypeToSlider(boolean slider) {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putBoolean(pref_brightness_picker_type_slider, slider);
         editor.apply();

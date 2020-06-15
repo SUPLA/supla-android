@@ -509,7 +509,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             cbPicker.setSliderVisible(v == tabSlider);
 
             Preferences prefs = new Preferences(getContext());
-            prefs.setBrightnessPickerTypeSlider(cbPicker.isSliderVisible());
+            prefs.setBrightnessPickerTypeToSlider(cbPicker.isSliderVisible());
         }
 
     }
