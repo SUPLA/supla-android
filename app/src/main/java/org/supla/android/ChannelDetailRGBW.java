@@ -258,7 +258,6 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         int id = 0;
         cbPicker.setColorMarkers(null);
         cbPicker.setBrightnessMarkers(null);
-        status.setPercent(0);
 
         if (isGroup()) {
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
@@ -355,13 +354,26 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         setBtnBackground(btnPowerOnOff, on ? R.drawable.rgbwpoweron : R.drawable.rgbwpoweroff);
     }
 
+    private boolean isAnyOn() {
+        ArrayList<Double>markers = cbPicker.getBrightnessMarkers();
+        if (markers != null) {
+            for(Double marker : markers) {
+                if (marker > 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @SuppressLint("SetTextI18n")
     private void pickerToUI() {
 
         lastColor = cbPicker.getColor();
         int brightness = (int) cbPicker.getBrightnessValue();
 
-        setPowerBtnOn(brightness > 0 || status.getPercent() > 0);
+        setPowerBtnOn(brightness > 0 || isAnyOn());
 
         if (cbPicker.isColorWheelVisible())
             lastColorBrightness = brightness;
