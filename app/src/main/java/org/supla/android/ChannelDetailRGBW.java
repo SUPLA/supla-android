@@ -258,6 +258,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         int id = 0;
         cbPicker.setColorMarkers(null);
         cbPicker.setBrightnessMarkers(null);
+        status.setPercent(0);
 
         if (isGroup()) {
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
@@ -359,7 +360,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         lastColor = cbPicker.getColor();
         int brightness = (int) cbPicker.getBrightnessValue();
-        setPowerBtnOn(brightness > 0);
+
+        setPowerBtnOn(brightness > 0 || status.getPercent() > 0);
 
         if (cbPicker.isColorWheelVisible())
             lastColorBrightness = brightness;
