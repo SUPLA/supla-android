@@ -585,12 +585,11 @@ public class SuplaColorBrightnessPicker extends View {
 
                     if (mOnChangeListener != null)
                         mOnChangeListener.onPowerButtonClick(this);
-                }
 
-                if (mOnChangeListener != null)
+                    powerButtonTouched = false;
+                } else if (mOnChangeListener != null) {
                     mOnChangeListener.onChangeFinished(this);
-
-                powerButtonTouched = false;
+                }
                 break;
 
             case MotionEvent.ACTION_DOWN:

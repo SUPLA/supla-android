@@ -545,6 +545,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         scbPicker.setBrightnessValue(scbPicker.isPowerButtonOn() ? 100 : 0);
         pickerToUI();
         sendNewValues(true, true);
+        changeFinishedTime = 0;
     }
 
     private void updateDelayed() {
