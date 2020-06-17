@@ -401,11 +401,12 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         if (client == null || (!isDetailVisible() && !force))
             return;
 
-        if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
+        if ((turnOnOff
+                || System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD)
                 && client.setRGBW(getRemoteId(), isGroup(), lastColor,
                 lastColorBrightness, lastBrightness, turnOnOff)) {
             remoteUpdateTime = System.currentTimeMillis();
-
+            refreshViewsWithDelay(MIN_UPDATE_DELAY);
         } else {
 
             long delayTime = 1;
@@ -545,10 +546,9 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         scbPicker.setBrightnessValue(scbPicker.isPowerButtonOn() ? 100 : 0);
         pickerToUI();
         sendNewValues(true, true);
-        changeFinishedTime = 0;
     }
 
-    private void updateDelayed() {
+    private void refreshViewsWithDelay(long delayTime) {
 
         if (delayTimer2 != null) {
             delayTimer2.cancel();
@@ -559,19 +559,21 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
                 || cbPicker.isMoving())
             return;
 
-        if (System.currentTimeMillis() - changeFinishedTime >= MIN_UPDATE_DELAY) {
+        if (delayTime == 0 && System.currentTimeMillis() - changeFinishedTime >= MIN_UPDATE_DELAY) {
 
             channelDataToViews();
 
         } else {
 
-            long delayTime = 1;
+            if (delayTime == 0) {
+                delayTime = 1;
 
-            if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY)
-                delayTime = MIN_UPDATE_DELAY - (System.currentTimeMillis() - changeFinishedTime) + 1;
+                if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY)
+                    delayTime = MIN_UPDATE_DELAY
+                            - (System.currentTimeMillis() - changeFinishedTime) + 1;
+            }
 
             delayTimer2 = new Timer();
-
             delayTimer2.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -581,7 +583,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
                             @Override
                             public void run() {
-                                updateDelayed();
+                                refreshViewsWithDelay();
                             }
                         });
                     }
@@ -591,19 +593,21 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             }, delayTime, 1000);
 
         }
+    }
 
-
+    private void refreshViewsWithDelay() {
+        refreshViewsWithDelay(0);
     }
 
     @Override
     public void onChangeFinished(SuplaColorBrightnessPicker scbPicker) {
         changeFinishedTime = System.currentTimeMillis();
-        updateDelayed();
+        refreshViewsWithDelay();
     }
 
     @Override
     public void OnChannelDataChanged() {
-        updateDelayed();
+        refreshViewsWithDelay();
 
         if (vlCalibrationTool != null) {
             vlCalibrationTool.Hide();
