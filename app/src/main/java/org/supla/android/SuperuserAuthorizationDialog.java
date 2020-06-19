@@ -87,7 +87,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
-                    cancelTimeoutTimer();
 
                     if (onAuthorizarionResultListener != null) {
                         onAuthorizarionResultListener
@@ -96,7 +95,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                     }
 
                     if (!_msg.isSuccess()) {
-
                         switch (_msg.getCode()) {
                             case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
                                 ShowError(R.string.status_bad_credentials);
@@ -118,6 +116,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     public void ShowError(String msg) {
+        cancelTimeoutTimer();
         tvErrorMessage.setText(msg);
         tvErrorMessage.setVisibility(View.VISIBLE);
         edPassword.setEnabled(true);
@@ -150,13 +149,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                         @Override
                         public void run() {
-                            cancelTimeoutTimer();
                             ShowError(R.string.time_exceeded);
                         }
                     });
                 }
 
-            }, 6000, 1000);
+            }, 8000, 1000);
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
