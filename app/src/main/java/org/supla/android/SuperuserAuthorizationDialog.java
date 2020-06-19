@@ -87,6 +87,8 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
+                    cancelTimeoutTimer();
+
                     if (onAuthorizarionResultListener != null) {
                         onAuthorizarionResultListener
                                 .onSuperuserOnAuthorizarionResult(dialog,
