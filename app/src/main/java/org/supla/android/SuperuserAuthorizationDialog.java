@@ -154,7 +154,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                     });
                 }
 
-            }, 8000, 1000);
+            }, 10000, 1000);
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
