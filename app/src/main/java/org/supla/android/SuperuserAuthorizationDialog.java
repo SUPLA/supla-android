@@ -1,5 +1,6 @@
 package org.supla.android;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,9 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener {
     private Context context;
     private AlertDialog dialog;
@@ -28,6 +32,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private Handler _sc_msg_handler = null;
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
+    private Timer timeoutTimer;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -56,8 +61,16 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         dialog.setOnCancelListener(this);
     }
 
+    void cancelTimeoutTimer() {
+        if (timeoutTimer != null) {
+            timeoutTimer.cancel();
+            timeoutTimer = null;
+        }
+    }
+
     void show() {
         if (dialog != null) {
+            cancelTimeoutTimer();
             dialog.show();
         }
     }
@@ -94,9 +107,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                                 break;
                         }
 
-                        edPassword.setEnabled(true);
-                        progressBar.setVisibility(View.GONE);
-                        btnOK.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -108,6 +118,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     public void ShowError(String msg) {
         tvErrorMessage.setText(msg);
         tvErrorMessage.setVisibility(View.VISIBLE);
+        edPassword.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+        btnOK.setVisibility(View.VISIBLE);
     }
 
     public void ShowError(int resid) {
@@ -124,6 +137,24 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             progressBar.setVisibility(View.VISIBLE);
             tvErrorMessage.setVisibility(View.INVISIBLE);
             registerMessageHandler();
+
+            cancelTimeoutTimer();
+            timeoutTimer = new Timer();
+
+            timeoutTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    ((Activity) context).runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            cancelTimeoutTimer();
+                            ShowError(R.string.time_exceeded);
+                        }
+                    });
+                }
+
+            }, 6000, 1000);
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {

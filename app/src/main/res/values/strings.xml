@@ -359,5 +359,7 @@
     <string name="vl_dimmer_cfg_info_txt7" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
     <string name="vl_dimmer_cfg_info_txt8" translatable="false">More information on can be found at</string>
     <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
+    
+    <string name="time_exceeded" translatable="false">Time exceeded. Try again.</string>
 
 </resources>
