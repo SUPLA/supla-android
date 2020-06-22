@@ -261,9 +261,8 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_3)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isModeDisabled(mode)) {
-            setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
-        }
+
+        setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
     }
 
     private void setMode() {
@@ -283,13 +282,11 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isBoostDisabled(boost)) {
-            setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
+        setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
 
-            if (boost == VLCfgParameters.BOOST_YES) {
-                btnBoost.setVisibility(View.VISIBLE);
-                return;
-            }
+        if (boost == VLCfgParameters.BOOST_YES) {
+            btnBoost.setVisibility(View.VISIBLE);
+            return;
         }
 
         btnBoost.setVisibility(View.INVISIBLE);
