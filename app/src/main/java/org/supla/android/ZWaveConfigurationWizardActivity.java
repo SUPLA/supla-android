@@ -450,7 +450,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                         }
                     });
                 }
-            }, 4000, 1000);
+            }, timeoutSec > 10 ? 10000 : (timeoutSec-1)*1000, 1000);
         }
 
         mWatchdogTimeoutMsgId = msgResId;
