@@ -55,7 +55,7 @@ import java.util.Date;
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
-        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults {
+        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults, ChannelListView.OnChannelButtonClickListener {
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
@@ -96,6 +96,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         channelLV = findViewById(R.id.channelsListView);
+        channelLV.setOnChannelButtonClickListener(this);
         channelLV.setOnChannelButtonTouchListener(this);
         channelLV.setOnDetailListener(this);
 
@@ -454,7 +455,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
+    public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc) {
 
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -466,12 +467,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
             DbHelper dbH = new DbHelper(this);
-            Channel channel = dbH.getChannel(channelId);
+            Channel channel = dbH.getChannel(remoteId);
             if (channel != null
                     && channel.getValue().isClosed()
                     && (channel.getValue().flooding()
                     || channel.getValue().isManuallyClosed())) {
-                ShowValveAlertDialog(channelId, this);
+                ShowValveAlertDialog(remoteId, this);
                 return;
             }
         }
@@ -486,7 +487,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (up) {
 
             if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.open(channelId, clv == cgroupLV, 0);
+                client.open(remoteId, clv == cgroupLV, 0);
 
         } else {
 
@@ -498,7 +499,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
             }
 
-            client.open(channelId, clv == cgroupLV, Open);
+            client.open(remoteId, clv == cgroupLV, Open);
 
         }
 
@@ -584,6 +585,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
+
+    }
+
+    @Override
+    public void onChannelStateButtonClick(ChannelListView clv, int remoteId) {
 
     }
 }

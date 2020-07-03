@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -49,7 +50,7 @@ import org.supla.android.lib.SuplaConst;
 public class ChannelLayout extends LinearLayout {
 
 
-    private int mID;
+    private int mRemoteId;
     private int mFunc;
     private boolean mGroup;
 
@@ -361,7 +362,7 @@ public class ChannelLayout extends LinearLayout {
 
         if (mParentListView != null
                 && mParentListView.getOnChannelButtonTouchListener() != null) {
-            mParentListView.getOnChannelButtonTouchListener().onChannelButtonTouch(mParentListView, v == left_btn, up, mID, mFunc);
+            mParentListView.getOnChannelButtonTouchListener().onChannelButtonTouch(mParentListView, v == left_btn, up, mRemoteId, mFunc);
         }
 
     }
@@ -582,7 +583,7 @@ public class ChannelLayout extends LinearLayout {
 
         int OldFunc = mFunc;
         mFunc = cbase.getFunc();
-        mID = cbase.getRemoteId();
+        mRemoteId = cbase.getRemoteId();
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
 
@@ -622,16 +623,27 @@ public class ChannelLayout extends LinearLayout {
             right_ActiveStatus.setVisibility(View.GONE);
             if (cbase.getOnLine() && cbase instanceof Channel) {
                 SuplaChannelState state = ((Channel) cbase).getChannelState();
-                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
-                    switch (state.getDefaultIconField()) {
-                        case SuplaChannelState.FIELD_BATTERYPOWERED:
-                            if (state.getBatteryPowered()) {
-                                channelStateIcon.setImageResource(R.drawable.battery);
-                                channelStateIcon.setVisibility(VISIBLE);
-                            }
-                            break;
+
+                if (state != null
+                        || (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                    if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                        switch (state.getDefaultIconField()) {
+                            case SuplaChannelState.FIELD_BATTERYPOWERED:
+                                if (state.getBatteryPowered()) {
+                                    channelStateIcon.setImageResource(R.drawable.battery);
+                                    channelStateIcon.setVisibility(VISIBLE);
+                                }
+                                break;
+                        }
+                    }
+
+                    if (channelStateIcon.getVisibility() == INVISIBLE) {
+                        channelStateIcon.setImageResource(R.drawable.channelstateinfo);
+                        channelStateIcon.setVisibility(VISIBLE);
                     }
                 }
+
+
 
                 int warningIcon = -1;
 
@@ -651,11 +663,6 @@ public class ChannelLayout extends LinearLayout {
 
             }
 
-            // Only when channelStateIcon is invisible !!
-            if (channelStateIcon.getVisibility() == INVISIBLE
-                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
-                // TODO: Show state icon/button
-            }
         }
 
         {
@@ -1042,6 +1049,28 @@ public class ChannelLayout extends LinearLayout {
         public void setText2(CharSequence text) {
             setText(text, Text2);
         }
+    }
 
+    public boolean stateIconTouched(int x, int y) {
+        if (channelStateIcon.getVisibility() == VISIBLE) {
+            Rect rect1 = new Rect();
+            Rect rect2 = new Rect();
+
+            getHitRect(rect1);
+            channelStateIcon.getHitRect(rect2);
+
+            rect2.left += rect1.left;
+            rect2.right += rect1.left;
+            rect2.top += rect1.top;
+            rect2.bottom += rect1.top;
+
+            return rect2.contains(x, y);
+        }
+
+        return false;
+    }
+
+    public int getRemoteId() {
+        return mRemoteId;
     }
 }
