@@ -37,6 +37,7 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BATTERYHEALTH = 0x0200;
     public static final int FIELD_BRIDGENODEONLINE = 0x0400;
     public static final int FIELD_LASTCONNECTIONRESETCAUSE = 0x0800;
+    public static final int FIELD_LIGHTSOURCEHEALTH = 0x1000;
 
     private int ChannelID;
     private int fields;
@@ -53,13 +54,16 @@ public class SuplaChannelState implements Serializable {
     private Long connectionUptime;
     private Byte batteryHealth;
     private Byte lastConnectionResetCause;
+    private Integer lightSourceHealthTotal;
+    private Float lightSourceHealthLeft;
 
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
                              byte bridgeNodeOnline, byte bridgeSignalStrength, int uptime,
                              int connectionUptime, byte batteryHealth,
-                             byte lastConnectionResetCause) {
+                             byte lastConnectionResetCause, int lightSourceHealthTotal,
+                             int lightSourceHealthLeft) {
 
         this.ChannelID = ChannelID;
         this.fields = fields;
@@ -120,13 +124,18 @@ public class SuplaChannelState implements Serializable {
         if ((fields & FIELD_LASTCONNECTIONRESETCAUSE) > 0) {
             this.lastConnectionResetCause = lastConnectionResetCause;
         }
+
+        if ((fields & FIELD_LIGHTSOURCEHEALTH) > 0) {
+            this.lightSourceHealthLeft = lightSourceHealthLeft / 100f;
+            this.lightSourceHealthTotal = lightSourceHealthTotal;
+        }
     }
 
     public int getChannelID() {
         return ChannelID;
     }
 
-    public int getIpv4() {
+    public Integer getIpv4() {
         return ipv4;
     }
 
@@ -206,5 +215,13 @@ public class SuplaChannelState implements Serializable {
 
     public Byte getLastConnectionResetCause() {
         return lastConnectionResetCause;
+    }
+
+    public Integer getLightSourceHealthTotal() {
+        return lightSourceHealthTotal;
+    }
+
+    public Float getLightSourceHealthLeft() {
+        return lightSourceHealthLeft;
     }
 }

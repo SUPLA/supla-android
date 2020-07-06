@@ -18,17 +18,22 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-public class SuplaChannelExtendedValue {
-    public int Type;
-    public SuplaChannelElectricityMeterValue ElectricityMeterValue;
-    public SuplaChannelImpulseCounterValue ImpulseCounterValue;
-    public SuplaChannelThermostatValue ThermostatValue;
-    public SuplaChannelState ChannelStateValue;
-    public SuplaTimerState TimerStateValue;
-    public byte[] Value;
+import java.io.Serializable;
 
-    public SuplaChannelExtendedValue() {
-        ElectricityMeterValue = null;
-        Value = null;
+public class SuplaChannelAndTimerState implements Serializable  {
+    private SuplaChannelState channel;
+    private SuplaTimerState timer;
+
+    public SuplaChannelAndTimerState(SuplaChannelState channel, SuplaTimerState timer) {
+        this.channel = channel;
+        this.timer = timer;
+    }
+
+    public SuplaChannelState getChannelState() {
+        return channel;
+    }
+
+    public SuplaTimerState getTimerState() {
+        return timer;
     }
 }

@@ -361,4 +361,18 @@
     <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
 
     <string name="time_exceeded" translatable="false">Przekroczono czas. Spróbuj ponownie.</string>
+
+    <string name="IP">IP</string>
+    <string name="MAC">MAC</string>
+    <string name="battery_level">Poziom barterii</string>
+    <string name="battery_powered">Zasilanie bateryjne</string>
+    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_signal_strength">Siła sygnału WiFi</string>
+    <string name="bridge_node_online">Węzeł mostu - online</string>
+    <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
+    <string name="uptime">Czas pracy</string>
+    <string name="connection_time">Czas połączenia</string>
+    <string name="battery_health">Żywotność baterii</string>
+    <string name="connection_reset_cause">Powód restartu połączenia</string>
+    <string name="light_source_health">Żywotność źródła światła</string>
 </resources>

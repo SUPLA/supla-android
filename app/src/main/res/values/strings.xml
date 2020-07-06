@@ -362,4 +362,18 @@
     
     <string name="time_exceeded" translatable="false">Time exceeded. Try again.</string>
 
+    <string name="IP" translatable="false">IP</string>
+    <string name="MAC" translatable="false">MAC</string>
+    <string name="battery_level" translatable="false">Battery level</string>
+    <string name="battery_powered" translatable="false">Battery powered</string>
+    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
+    <string name="wifi_signal_strength" translatable="false">Wifi signal strength</string>
+    <string name="bridge_node_online" translatable="false">Bridge node - online</string>
+    <string name="bridge_signal_strength" translatable="false">Bridge - signal strength</string>
+    <string name="uptime" translatable="false">Uptime</string>
+    <string name="connection_time" translatable="false">Connection time</string>
+    <string name="battery_health" translatable="false">Battery health</string>
+    <string name="connection_reset_cause" translatable="false">Connection reset cause</string>
+    <string name="light_source_health" translatable="false">Light source health</string>
+
 </resources>

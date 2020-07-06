@@ -20,12 +20,14 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.supla.android.lib.SuplaChannelAndTimerState;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaTimerState;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -115,6 +117,19 @@ public class ChannelExtendedValue extends DbItem {
                     ExtendedValue.ChannelStateValue = (SuplaChannelState) obj;
                 }
                 break;
+            case SuplaConst.EV_TYPE_TIMER_STATE_V1:
+                if (obj instanceof SuplaTimerState) {
+                    ExtendedValue.TimerStateValue = (SuplaTimerState) obj;
+                }
+                break;
+            case SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1:
+                if (obj instanceof SuplaChannelAndTimerState) {
+                    ExtendedValue.TimerStateValue =
+                            ((SuplaChannelAndTimerState) obj).getTimerState();
+                    ExtendedValue.ChannelStateValue =
+                            ((SuplaChannelAndTimerState) obj).getChannelState();
+                }
+                break;
             default:
                 ExtendedValue.Value = value;
                 break;
@@ -158,6 +173,14 @@ public class ChannelExtendedValue extends DbItem {
                 break;
             case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
                 value = ObjectToByteArray(ExtendedValue.ChannelStateValue);
+                break;
+            case SuplaConst.EV_TYPE_TIMER_STATE_V1:
+                value = ObjectToByteArray(ExtendedValue.TimerStateValue);
+                break;
+            case SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1:
+                value = ObjectToByteArray(
+                        new SuplaChannelAndTimerState(ExtendedValue.ChannelStateValue,
+                                ExtendedValue.TimerStateValue));
                 break;
             default:
                 if (ExtendedValue != null && ExtendedValue.Value != null) {

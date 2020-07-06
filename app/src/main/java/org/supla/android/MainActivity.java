@@ -40,6 +40,7 @@ import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
@@ -69,6 +70,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private Runnable notif_nrunnable;
     private ImageView notif_img;
     private TextView notif_text;
+    private ChannelStatePopup channelStatePopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +207,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void onDataChangedMsg(int ChannelId, int GroupId) {
+    protected void onDataChangedMsg(int ChannelId, int GroupId, boolean extendedValue) {
 
         ChannelListView LV = null;
         int Id = 0;
@@ -235,6 +237,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         }
 
+        if (channelStatePopup != null
+                && channelStatePopup.isVisible()
+                && channelStatePopup.getRemoteId() == ChannelId) {
+            channelStatePopup.update(ChannelId);
+        }
+
+    }
+
+    @Override
+    protected void onChannelState(SuplaChannelState state) {
+        if (state != null
+                && channelStatePopup != null
+                && channelStatePopup.isVisible()
+                && channelStatePopup.getRemoteId() == state.getChannelID()) {
+            Trace.d("aaa", "bbb");
+            channelStatePopup.update(state);
+        }
     }
 
     @Override
@@ -591,6 +610,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onChannelStateButtonClick(ChannelListView clv, int remoteId) {
 
+        if (channelStatePopup == null) {
+            channelStatePopup = new ChannelStatePopup(this);
+        }
+
+        channelStatePopup.show(remoteId);
     }
 }
 

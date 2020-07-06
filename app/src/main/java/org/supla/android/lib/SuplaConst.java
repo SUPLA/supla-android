@@ -216,6 +216,8 @@ public class SuplaConst {
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
     public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
     public final static int EV_TYPE_CHANNEL_STATE_V1 = 40;
+    public final static int EV_TYPE_TIMER_STATE_V1 = 50;
+    public final static int EV_TYPE_CHANNEL_AND_TIMER_STATE_V1 = 60;
 
     public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
     public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO = 2;
