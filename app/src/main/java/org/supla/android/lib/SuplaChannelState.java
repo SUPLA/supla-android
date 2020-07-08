@@ -42,7 +42,7 @@ public class SuplaChannelState implements Serializable {
     private int ChannelID;
     private int fields;
     private int defaultIconField;
-    private int ipv4;
+    private Integer ipv4;
     private byte[] macAddress;
     private Byte batteryLevel;
     private Boolean batteryPowered;
@@ -141,6 +141,7 @@ public class SuplaChannelState implements Serializable {
 
     @SuppressLint("DefaultLocale")
     public String getIpv4String() {
+        int ipv4 = this.ipv4.intValue();
         return String.format(
                 "%d.%d.%d.%d",
                 (ipv4 & 0xff),
