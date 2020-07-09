@@ -621,7 +621,12 @@ public class ChannelLayout extends LinearLayout {
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
-            if (cbase.getOnLine() && cbase instanceof Channel) {
+            if ((cbase.getOnLine()
+                    || (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
+                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
+                    && (cbase.getFlags()
+                          & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))
+                    && cbase instanceof Channel) {
                 SuplaChannelState state = ((Channel) cbase).getChannelState();
 
                 if (state != null
