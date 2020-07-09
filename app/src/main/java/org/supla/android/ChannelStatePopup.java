@@ -39,17 +39,18 @@ import java.util.TimerTask;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-public class ChannelStatePopup implements DialogInterface.OnCancelListener, View.OnClickListener {
+public class ChannelStatePopup implements DialogInterface.OnCancelListener, View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
     private final int REFRESH_INTERVAL_MS = 6000;
 
-    private boolean refreshPossible;
     private long lastRefreshTime;
     private Timer refreshTimer;
     private AlertDialog alertDialog;
     private int remoteId;
     private Context context;
     private int channelFunc;
+    private int channelFlags;
+    private SuplaChannelState lastState;
 
     private LinearLayout llIP;
     private LinearLayout llMAC;
@@ -136,7 +137,6 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     public void show(int remoteId) {
         update(remoteId);
         alertDialog.show();
-        startRefreshTimer();
     }
 
     public boolean isVisible() {
@@ -148,7 +148,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     }
 
     public void update(SuplaChannelState state) {
-
+        lastState = state;
         llIP.setVisibility(View.GONE);
         llMAC.setVisibility(View.GONE);
         llBatteryLevel.setVisibility(View.GONE);
@@ -165,12 +165,39 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         llProgress.setVisibility(View.VISIBLE);
         btnReset.setVisibility(View.GONE);
 
+        cancelRefreshTimer();
+
+        if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+            refreshTimer = new Timer();
+            refreshTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (context instanceof Activity) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if (System.currentTimeMillis() - lastRefreshTime >= REFRESH_INTERVAL_MS) {
+                                    cancelRefreshTimer();
+
+                                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+
+                                    if (client != null) {
+                                        client.getChannelState(remoteId);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }, 0, 500);
+        }
+
         if (state == null) {
             return;
         }
 
         lastRefreshTime = System.currentTimeMillis();
-        startRefreshTimer();
 
         if (state.getIpv4() != null) {
             llIP.setVisibility(View.VISIBLE);
@@ -252,65 +279,38 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             llLightSourceHealth.setVisibility(View.VISIBLE);
             llProgress.setVisibility(View.GONE);
             tvLightSourceHealth.setText(state.getLightSourceHealthString());
-            btnReset.setVisibility(View.VISIBLE);
-        }
 
+            if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCEHEALTH_SETTABLE) > 0) {
+                btnReset.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
 
     public void update(int remoteId) {
-        this.remoteId = remoteId;
+
+        if (this.remoteId != remoteId) {
+            onCancel(alertDialog);
+            this.remoteId = remoteId;
+        }
+        
         DbHelper dbHelper = new DbHelper(context);
         Channel channel = dbHelper.getChannel(remoteId);
-        refreshPossible = false;
+        channelFlags = 0;
 
         if (channel != null) {
 
             tvInfoTitle.setText(channel.getNotEmptyCaption(context));
             channelFunc = channel.getFunc();
+            channelFlags = channel.getFlags();
 
-            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0) {
-                refreshPossible = true;
-                update(null);
-                startRefreshTimer();
-            } else if (channel.getChannelState() != null) {
-
-                update(channel.getChannelState());
+            if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) == 0) {
+               lastState = channel.getChannelState();
             }
+
+            update(lastState);
+
         }
-    }
-
-    private void startRefreshTimer() {
-        cancelRefreshTimer();
-
-        if (!refreshPossible) {
-            return;
-        }
-
-        refreshTimer = new Timer();
-        refreshTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                if (context instanceof Activity) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (System.currentTimeMillis() - lastRefreshTime >= REFRESH_INTERVAL_MS) {
-                                cancelRefreshTimer();
-
-                                SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-                                if (client != null) {
-                                    client.getChannelState(remoteId);
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }, 0, 500);
     }
 
     private void cancelRefreshTimer() {
@@ -322,16 +322,32 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
 
     @Override
     public void onCancel(DialogInterface dialog) {
+        remoteId = 0;
+        lastState = null;
+        lastRefreshTime = 0;
         cancelRefreshTimer();
     }
 
     @Override
     public void onClick(View v) {
-        alertDialog.dismiss();
+        alertDialog.cancel();
 
         if (v == btnReset) {
-
+            SuperuserAuthorizationDialog authDialog =
+                    new SuperuserAuthorizationDialog(context);
+            authDialog.setOnAuthorizarionResultListener(this);
+            authDialog.show();
         }
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
+
+    }
+
+    @Override
+    public void authorizationCanceled() {
     }
 }
 ;
