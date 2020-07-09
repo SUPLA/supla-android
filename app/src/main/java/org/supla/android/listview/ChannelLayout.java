@@ -629,7 +629,7 @@ public class ChannelLayout extends LinearLayout {
                     if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
                         switch (state.getDefaultIconField()) {
                             case SuplaChannelState.FIELD_BATTERYPOWERED:
-                                if (state.getBatteryPowered()) {
+                                if (state.isBatteryPowered()) {
                                     channelStateIcon.setImageResource(R.drawable.battery);
                                     channelStateIcon.setVisibility(VISIBLE);
                                 }

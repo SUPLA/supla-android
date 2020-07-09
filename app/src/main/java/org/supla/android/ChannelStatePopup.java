@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ import java.util.TimerTask;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-public class ChannelStatePopup implements DialogInterface.OnCancelListener {
+public class ChannelStatePopup implements DialogInterface.OnCancelListener, View.OnClickListener {
 
     private final int REFRESH_INTERVAL_MS = 6000;
 
@@ -48,6 +49,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
     private AlertDialog alertDialog;
     private int remoteId;
     private Context context;
+    private int channelFunc;
 
     private LinearLayout llIP;
     private LinearLayout llMAC;
@@ -64,6 +66,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
     private LinearLayout llLightSourceHealth;
     private LinearLayout llProgress;
 
+    private TextView tvInfoTitle;
     private TextView tvIP;
     private TextView tvMAC;
     private TextView tvBatteryLevel;
@@ -77,6 +80,9 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
     private TextView tvBatteryHealth;
     private TextView tvLastConnectionResetCause;
     private TextView tvLightSourceHealth;
+
+    private Button btnClose;
+    private Button btnReset;
 
     public ChannelStatePopup(Context context) {
         this.context = context;
@@ -100,6 +106,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         llLightSourceHealth = view.findViewById(R.id.llLightSourceHealth);
         llProgress = view.findViewById(R.id.llProgress);
 
+        tvInfoTitle = view.findViewById(R.id.tvInfoTitle);
         tvIP = view.findViewById(R.id.tvIP);
         tvMAC = view.findViewById(R.id.tvMAC);
         tvBatteryLevel = view.findViewById(R.id.tvBatteryLevel);
@@ -114,6 +121,13 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         tvLastConnectionResetCause = view.findViewById(R.id.tvLastConnectionResetCause);
         tvLightSourceHealth = view.findViewById(R.id.tvLightSourceHealth);
 
+        tvInfoTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+        btnClose = view.findViewById(R.id.btnClose);
+        btnReset = view.findViewById(R.id.btnReset);
+
+        btnClose.setOnClickListener(this);
+        btnReset.setOnClickListener(this);
 
         alertDialog = builder.create();
         alertDialog.setOnCancelListener(this);
@@ -138,7 +152,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         llIP.setVisibility(View.GONE);
         llMAC.setVisibility(View.GONE);
         llBatteryLevel.setVisibility(View.GONE);
-        llBatteryPowered .setVisibility(View.GONE);
+        llBatteryPowered.setVisibility(View.GONE);
         llWiFiRSSI.setVisibility(View.GONE);
         llWiFiSignalStrength.setVisibility(View.GONE);
         llBridgeNodeOnline.setVisibility(View.GONE);
@@ -149,6 +163,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         llLastConnectionResetCause.setVisibility(View.GONE);
         llLightSourceHealth.setVisibility(View.GONE);
         llProgress.setVisibility(View.VISIBLE);
+        btnReset.setVisibility(View.GONE);
 
         if (state == null) {
             return;
@@ -160,9 +175,86 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         if (state.getIpv4() != null) {
             llIP.setVisibility(View.VISIBLE);
             llProgress.setVisibility(View.GONE);
-            tvIP.setText(state.getIpv4());
+            tvIP.setText(state.getIpv4String());
         }
-        Trace.d("AAA", state.getLightSourceHealthLeft().toString());
+
+        if (state.getMacAddress() != null) {
+            llMAC.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvMAC.setText(state.getMacAddressString());
+        }
+
+        if (state.getBatteryLevel() != null) {
+            llBatteryLevel.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvBatteryLevel.setText(state.getBatteryLevelString());
+        }
+
+        if (state.isBatteryPowered() != null) {
+            llBatteryPowered.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvBatteryPowered.setText(state.getBatteryPoweredString(context));
+        }
+
+        if (state.getWiFiRSSI() != null) {
+            llWiFiRSSI.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvWiFiRSSI.setText(state.getWiFiRSSIString());
+        }
+
+        if (state.getWiFiSignalStrength() != null) {
+            llWiFiSignalStrength.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvWiFiSignalStrength.setText(state.getWiFiSignalStrengthString());
+        }
+
+        if (state.isBridgeNodeOnline() != null) {
+            llBridgeNodeOnline.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvBridgeNodeOnline.setText(state.getBridgeNodeOnlineString(context));
+        }
+
+        if (state.getBridgeNodeSignalStrength() != null) {
+            llBridgeNodeSignalStrength.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvBridgeNodeSignalStrength.setText(state.getBridgeNodeSignalStrengthString(context));
+        }
+
+        if (state.getUptime() != null) {
+            llUptime.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+
+            tvUptime.setText(state.getUptimeString(context));
+        }
+
+        if (state.getConnectionUptime() != null) {
+            llConnectionUptime.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+
+            tvConnectionUptime.setText(state.getConnectionUptimeString(context));
+        }
+
+        if (state.getBatteryHealth() != null) {
+            llBatteryHealth.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvBatteryHealth.setText(state.getBatteryHealthString());
+        }
+
+        if (state.getLastConnectionResetCause() != null) {
+            llLastConnectionResetCause.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvLastConnectionResetCause.setText(state.getLastConnectionResetCauseString());
+        }
+
+        if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                && state.getLightSourceHealthTotal() != null
+                && state.getLightSourceHealthLeft() != null) {
+            llLightSourceHealth.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvLightSourceHealth.setText(state.getLightSourceHealthString());
+            btnReset.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -173,16 +265,17 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
         refreshPossible = false;
 
         if (channel != null) {
+
+            tvInfoTitle.setText(channel.getNotEmptyCaption(context));
+            channelFunc = channel.getFunc();
+
             if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0) {
                 refreshPossible = true;
-            }
+                update(null);
+                startRefreshTimer();
+            } else if (channel.getChannelState() != null) {
 
-            if (channel.getExtendedValue() != null
-                    && (channel.getExtendedValue().getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1
-                    || channel.getExtendedValue().getType()
-                    == SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1)) {
-
-                update(channel.getExtendedValue().getExtendedValue().ChannelStateValue);
+                update(channel.getChannelState());
             }
         }
     }
@@ -200,11 +293,11 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
             public void run() {
 
                 if (context instanceof Activity) {
-                    ((Activity)context).runOnUiThread(new Runnable() {
+                    ((Activity) context).runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            if (System.currentTimeMillis()- lastRefreshTime >= REFRESH_INTERVAL_MS) {
+                            if (System.currentTimeMillis() - lastRefreshTime >= REFRESH_INTERVAL_MS) {
                                 cancelRefreshTimer();
 
                                 SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -230,6 +323,15 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener {
     @Override
     public void onCancel(DialogInterface dialog) {
         cancelRefreshTimer();
+    }
+
+    @Override
+    public void onClick(View v) {
+        alertDialog.dismiss();
+
+        if (v == btnReset) {
+
+        }
     }
 }
 ;

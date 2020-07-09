@@ -311,7 +311,8 @@ public class Channel extends ChannelBase {
     public SuplaChannelState getChannelState() {
         ChannelExtendedValue ev = getExtendedValue();
 
-        if (ev != null && ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1) {
+        if (ev != null && (ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1
+                || ev.getType() == SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1)) {
             return ev.getExtendedValue().ChannelStateValue;
         }
 
@@ -323,7 +324,21 @@ public class Channel extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                SuplaChannelState state = getChannelState();
+                if (state != null
+                        && state.getLightSourceHealthTotal() != null
+                        && state.getLightSourceHealthTotal() > 0
+                        && state.getLightSourceHealthLeft() != null) {
+                    if (state.getLightSourceHealthLeft() <= 5) {
+                        return 2;
+                    } else if (state.getLightSourceHealthLeft() <= 20) {
+                        return 1;
+                    }
+                }
+                break;
         }
+
         return 0;
     }
 

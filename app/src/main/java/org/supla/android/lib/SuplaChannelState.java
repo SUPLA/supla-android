@@ -19,6 +19,10 @@ package org.supla.android.lib;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
+
+import org.supla.android.R;
 
 import java.io.Serializable;
 
@@ -31,7 +35,7 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BATTERYPOWERED = 0x0008;
     public static final int FIELD_WIFIRSSI = 0x0010;
     public static final int FIELD_WIFISIGNALSTRENGTH = 0x0020;
-    public static final int FIELD_BRIDGESIGNALSTRENGTH = 0x0040;
+    public static final int FIELD_BRIDGENODESIGNALSTRENGTH = 0x0040;
     public static final int FIELD_UPTIME = 0x0080;
     public static final int FIELD_CONNECTIONUPTIME = 0x0100;
     public static final int FIELD_BATTERYHEALTH = 0x0200;
@@ -49,7 +53,7 @@ public class SuplaChannelState implements Serializable {
     private Byte wiFiRSSI;
     private Byte wiFiSignalStrength;
     private Boolean bridgeNodeOnline;
-    private Byte bridgeSignalStrength;
+    private Byte bridgeNodeSignalStrength;
     private Long uptime;
     private Long connectionUptime;
     private Byte batteryHealth;
@@ -60,7 +64,7 @@ public class SuplaChannelState implements Serializable {
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
-                             byte bridgeNodeOnline, byte bridgeSignalStrength, int uptime,
+                             byte bridgeNodeOnline, byte bridgeNodeSignalStrength, int uptime,
                              int connectionUptime, byte batteryHealth,
                              byte lastConnectionResetCause, int lightSourceHealthTotal,
                              int lightSourceHealthLeft) {
@@ -101,10 +105,10 @@ public class SuplaChannelState implements Serializable {
             this.bridgeNodeOnline = bridgeNodeOnline > 0;
         }
 
-        if ((fields & FIELD_BRIDGESIGNALSTRENGTH) > 0
-                && bridgeSignalStrength >= 0
-                && bridgeSignalStrength <= 100) {
-            this.bridgeSignalStrength = bridgeSignalStrength;
+        if ((fields & FIELD_BRIDGENODESIGNALSTRENGTH) > 0
+                && bridgeNodeSignalStrength >= 0
+                && bridgeNodeSignalStrength <= 100) {
+            this.bridgeNodeSignalStrength = bridgeNodeSignalStrength;
         }
 
         if ((fields & FIELD_UPTIME) > 0) {
@@ -170,32 +174,68 @@ public class SuplaChannelState implements Serializable {
         return batteryLevel;
     }
 
+    public String getBatteryLevelString() {
+        return String.format("%d%%", getBatteryLevel());
+    }
+
     public Boolean isBatteryPowered() {
         return batteryPowered;
+    }
+
+    public String getBatteryPoweredString(Context context) {
+        Resources r = context.getResources();
+        return r.getString(isBatteryPowered() ? R.string.yes : R.string.no);
     }
 
     public Byte getWiFiSignalStrength() {
         return wiFiSignalStrength;
     }
 
+    public String getWiFiSignalStrengthString() {
+        return String.format("%d%%", getWiFiSignalStrength());
+    }
+
     public Byte getWiFiRSSI() {
         return wiFiRSSI;
     }
 
-    public Byte getBridgeSignalStrength() {
-        return bridgeSignalStrength;
+    public String getWiFiRSSIString() {
+        return String.format("%d", getWiFiRSSI());
+    }
+
+    public Byte getBridgeNodeSignalStrength() {
+        return bridgeNodeSignalStrength;
+    }
+
+    public String getBridgeNodeSignalStrengthString(Context context) {
+        return String.format("%d%%", getBridgeNodeSignalStrength());
+    }
+
+    private String getUptimeString(Long uptime, Context context) {
+        long secs = uptime == null ? 0 : uptime;
+
+        return String.format("%d %s %02d:%02d:%02d",
+                uptime / 86400,
+                context.getResources().getString(R.string.days).toLowerCase(),
+                uptime % 86400 / 3600,
+                uptime % 86400 % 3600 / 60,
+                uptime % 86400 % 3600 % 60);
     }
 
     public Long getUptime() {
         return uptime;
     }
 
+    public String getUptimeString(Context context) {
+        return getUptimeString(uptime, context);
+    }
+
     public Long getConnectionUptime() {
         return connectionUptime;
     }
 
-    public Boolean getBatteryPowered() {
-        return batteryPowered;
+    public String getConnectionUptimeString(Context context) {
+        return getUptimeString(connectionUptime, context);
     }
 
     public int getFields() {
@@ -206,16 +246,32 @@ public class SuplaChannelState implements Serializable {
         return defaultIconField;
     }
 
-    public Boolean getBridgeNodeOnline() {
+    public Boolean isBridgeNodeOnline() {
         return bridgeNodeOnline;
+    }
+
+    public String getBridgeNodeOnlineString(Context context) {
+        Resources r = context.getResources();
+        return r.getString(isBridgeNodeOnline() ? R.string.yes : R.string.no);
     }
 
     public Byte getBatteryHealth() {
         return batteryHealth;
     }
 
+    public String getBatteryHealthString() {
+        return String.format("%d%%", getBatteryHealth());
+    }
+
     public Byte getLastConnectionResetCause() {
         return lastConnectionResetCause;
+    }
+
+    public String getLastConnectionResetCauseString() {
+        switch (getLastConnectionResetCause()) {
+            default:
+                return String.format("%d", getLastConnectionResetCause());
+        }
     }
 
     public Integer getLightSourceHealthTotal() {
@@ -224,5 +280,11 @@ public class SuplaChannelState implements Serializable {
 
     public Float getLightSourceHealthLeft() {
         return lightSourceHealthLeft;
+    }
+
+    public String getLightSourceHealthString() {
+        return String.format("%dh (%.2f%%)",
+                getLightSourceHealthTotal(),
+                getLightSourceHealthLeft());
     }
 }
