@@ -135,6 +135,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     }
 
     public void show(int remoteId) {
+        this.remoteId = 0;
         update(remoteId);
         alertDialog.show();
     }
@@ -276,12 +277,16 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
                 && state.getLightSourceLifespan() != null
                 && state.getLightSourceLifespanLeft() != null) {
-            llLightSourceLifespan.setVisibility(View.VISIBLE);
-            llProgress.setVisibility(View.GONE);
-            tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
+
+            if (state.getLightSourceLifespan() > 0) {
+                llLightSourceLifespan.setVisibility(View.VISIBLE);
+                llProgress.setVisibility(View.GONE);
+                tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
+            }
 
             if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE) > 0) {
                 btnReset.setVisibility(View.VISIBLE);
+
             }
         }
     }
@@ -291,6 +296,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
 
         if (this.remoteId != remoteId) {
             onCancel(alertDialog);
+            lastState = null;
             this.remoteId = remoteId;
         }
 
@@ -322,8 +328,6 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
 
     @Override
     public void onCancel(DialogInterface dialog) {
-        remoteId = 0;
-        lastState = null;
         lastRefreshTime = 0;
         cancelRefreshTimer();
     }
@@ -343,7 +347,14 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     @Override
     public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
                                                  boolean Success, int Code) {
-
+        if (Success) {
+            LightsourceLifespanSettingsDialog lsdialog =
+                    new LightsourceLifespanSettingsDialog(context, remoteId,
+                            lastState.getLightSourceLifespan(),
+                            tvInfoTitle.getText().toString());
+            dialog.close();
+            lsdialog.show();
+        }
     }
 
     @Override

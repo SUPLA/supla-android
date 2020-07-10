@@ -156,6 +156,9 @@ public class SuplaClient extends Thread {
 
     private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, short NodeId);
 
+    private native boolean scSetLightsourceLifespan(long _supla_client, int ChannelID, boolean
+            resetCounter, boolean setTime, int lifeSpan);
+
     public void setMsgHandler(Handler msgHandler) {
 
         synchronized (msgh_lck) {
@@ -578,6 +581,18 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean setLightsourceLifespan(int ChannelID, boolean resetCounter,
+                                          boolean setTime, int lifeSpan) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetLightsourceLifespan(_supla_client_ptr, ChannelID,
+                    resetCounter, setTime, lifeSpan);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -873,6 +888,8 @@ public class SuplaClient extends Thread {
     private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onCalCfgResult);
+        Trace.d("Result", Integer.toString(Command));
+        Trace.d("Result", Integer.toString(Result));
         msg.setChannelId(ChannelId);
         msg.setCommand(Command);
         msg.setResult(Result);

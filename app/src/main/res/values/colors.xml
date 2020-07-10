@@ -58,4 +58,9 @@
     <color name="channelstate_infotext">#000000</color>
     <color name="channelstate_infoline">#B4B7BA</color>
 
+    <color name="lifespan_infotitle">#000000</color>
+    <color name="lifespan_infotext">#000000</color>
+    <color name="lifespan_infoline">#B4B7BA</color>
+    <color name="lifespan_warning">#FF0000</color>
+
 </resources>
