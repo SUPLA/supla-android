@@ -327,12 +327,12 @@ public class Channel extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 SuplaChannelState state = getChannelState();
                 if (state != null
-                        && state.getLightSourceHealthTotal() != null
-                        && state.getLightSourceHealthTotal() > 0
-                        && state.getLightSourceHealthLeft() != null) {
-                    if (state.getLightSourceHealthLeft() <= 5) {
+                        && state.getLightSourceLifespan() != null
+                        && state.getLightSourceLifespan() > 0
+                        && state.getLightSourceLifespanLeft() != null) {
+                    if (state.getLightSourceLifespanLeft() <= 5) {
                         return 2;
-                    } else if (state.getLightSourceHealthLeft() <= 20) {
+                    } else if (state.getLightSourceLifespanLeft() <= 20) {
                         return 1;
                     }
                 }

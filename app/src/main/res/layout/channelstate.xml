@@ -447,17 +447,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llLightSourceHealth"
+            android:id="@+id/llLightSourceLifespan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvLightSourceHealthTitle"
+                android:id="@+id/tvLightSourceLifespanTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/light_source_health"
+                android:text="@string/light_source_lifespan"
                 android:textColor="@color/channelstate_infotext"
                 android:textSize="14sp" />
 
@@ -468,7 +468,7 @@
                 android:background="@color/channelstate_infoline" />
 
             <TextView
-                android:id="@+id/tvLightSourceHealth"
+                android:id="@+id/tvLightSourceLifespan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -484,7 +484,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/chanel_lightsource_health_settings"
+            android:text="@string/chanel_lightsource_lifespan_settings"
             android:textColor="@color/channelstate_infotext"
             android:textSize="10dp" />
 
