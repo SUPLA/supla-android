@@ -374,6 +374,8 @@
     <string name="connection_time">Czas połączenia</string>
     <string name="battery_health">Żywotność baterii</string>
     <string name="connection_reset_cause">Powód restartu połączenia</string>
-    <string name="light_source_health">Żywotność źródła światła</string>
-    <string name="chanel_lightsource_health_settings">Zmień ustawienia żywotności źródła światła</string>
+    <string name="light_source_lifespan">Żywotność źródła światła</string>
+    <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
+    <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
+    <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
 </resources>

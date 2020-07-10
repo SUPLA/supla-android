@@ -374,7 +374,8 @@
     <string name="connection_time" translatable="false">Connection time</string>
     <string name="battery_health" translatable="false">Battery health</string>
     <string name="connection_reset_cause" translatable="false">Connection reset cause</string>
-    <string name="light_source_health" translatable="false">Light source health</string>
-    <string name="chanel_lightsource_health_settings" translatable="false">Change the light source health settings</string>
-
+    <string name="light_source_lifespan" translatable="false">Light source lifespan</string>
+    <string name="chanel_lightsource_lifespan_settings" translatable="false">Change the light source lifespan settings</string>
+    <string name="light_source_lifespan_hours" translatable="false">Light source lifespan (hours)</string>
+    <string name="reset_lightsource_usage_counter" translatable="false">Reset the light source usage counter</string>
 </resources>

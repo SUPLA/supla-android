@@ -41,7 +41,7 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BATTERYHEALTH = 0x0200;
     public static final int FIELD_BRIDGENODEONLINE = 0x0400;
     public static final int FIELD_LASTCONNECTIONRESETCAUSE = 0x0800;
-    public static final int FIELD_LIGHTSOURCEHEALTH = 0x1000;
+    public static final int FIELD_LIGHTSOURCELIFESPAN = 0x1000;
 
     private int ChannelID;
     private int fields;
@@ -58,16 +58,16 @@ public class SuplaChannelState implements Serializable {
     private Long connectionUptime;
     private Byte batteryHealth;
     private Byte lastConnectionResetCause;
-    private Integer lightSourceHealthTotal;
-    private Float lightSourceHealthLeft;
+    private Integer lightSourceLifespan;
+    private Float lightSourceLifespanLeft;
 
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
                              byte bridgeNodeOnline, byte bridgeNodeSignalStrength, int uptime,
                              int connectionUptime, byte batteryHealth,
-                             byte lastConnectionResetCause, int lightSourceHealthTotal,
-                             int lightSourceHealthLeft) {
+                             byte lastConnectionResetCause, int lightSourceLifespan,
+                             int lightSourceLifespanLeft) {
 
         this.ChannelID = ChannelID;
         this.fields = fields;
@@ -129,9 +129,9 @@ public class SuplaChannelState implements Serializable {
             this.lastConnectionResetCause = lastConnectionResetCause;
         }
 
-        if ((fields & FIELD_LIGHTSOURCEHEALTH) > 0) {
-            this.lightSourceHealthLeft = lightSourceHealthLeft / 100f;
-            this.lightSourceHealthTotal = lightSourceHealthTotal;
+        if ((fields & FIELD_LIGHTSOURCELIFESPAN) > 0) {
+            this.lightSourceLifespanLeft = lightSourceLifespanLeft / 100f;
+            this.lightSourceLifespan = lightSourceLifespan;
         }
     }
 
@@ -274,17 +274,17 @@ public class SuplaChannelState implements Serializable {
         }
     }
 
-    public Integer getLightSourceHealthTotal() {
-        return lightSourceHealthTotal;
+    public Integer getLightSourceLifespan() {
+        return lightSourceLifespan;
     }
 
-    public Float getLightSourceHealthLeft() {
-        return lightSourceHealthLeft;
+    public Float getLightSourceLifespanLeft() {
+        return lightSourceLifespanLeft;
     }
 
-    public String getLightSourceHealthString() {
+    public String getLightSourceLifespanString() {
         return String.format("%dh (%.2f%%)",
-                getLightSourceHealthTotal(),
-                getLightSourceHealthLeft());
+                getLightSourceLifespan(),
+                getLightSourceLifespanLeft());
     }
 }

@@ -64,7 +64,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     private LinearLayout llConnectionUptime;
     private LinearLayout llBatteryHealth;
     private LinearLayout llLastConnectionResetCause;
-    private LinearLayout llLightSourceHealth;
+    private LinearLayout llLightSourceLifespan;
     private LinearLayout llProgress;
 
     private TextView tvInfoTitle;
@@ -80,7 +80,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     private TextView tvConnectionUptime;
     private TextView tvBatteryHealth;
     private TextView tvLastConnectionResetCause;
-    private TextView tvLightSourceHealth;
+    private TextView tvLightSourceLifespan;
 
     private Button btnClose;
     private Button btnReset;
@@ -104,7 +104,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         llConnectionUptime = view.findViewById(R.id.llConnectionUptime);
         llBatteryHealth = view.findViewById(R.id.llBatteryHealth);
         llLastConnectionResetCause = view.findViewById(R.id.llLastConnectionResetCause);
-        llLightSourceHealth = view.findViewById(R.id.llLightSourceHealth);
+        llLightSourceLifespan = view.findViewById(R.id.llLightSourceLifespan);
         llProgress = view.findViewById(R.id.llProgress);
 
         tvInfoTitle = view.findViewById(R.id.tvInfoTitle);
@@ -120,7 +120,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         tvConnectionUptime = view.findViewById(R.id.tvConnectionUptime);
         tvBatteryHealth = view.findViewById(R.id.tvBatteryHealth);
         tvLastConnectionResetCause = view.findViewById(R.id.tvLastConnectionResetCause);
-        tvLightSourceHealth = view.findViewById(R.id.tvLightSourceHealth);
+        tvLightSourceLifespan = view.findViewById(R.id.tvLightSourceLifespan);
 
         tvInfoTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
@@ -161,7 +161,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         llConnectionUptime.setVisibility(View.GONE);
         llBatteryHealth.setVisibility(View.GONE);
         llLastConnectionResetCause.setVisibility(View.GONE);
-        llLightSourceHealth.setVisibility(View.GONE);
+        llLightSourceLifespan.setVisibility(View.GONE);
         llProgress.setVisibility(View.VISIBLE);
         btnReset.setVisibility(View.GONE);
 
@@ -274,13 +274,13 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         }
 
         if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-                && state.getLightSourceHealthTotal() != null
-                && state.getLightSourceHealthLeft() != null) {
-            llLightSourceHealth.setVisibility(View.VISIBLE);
+                && state.getLightSourceLifespan() != null
+                && state.getLightSourceLifespanLeft() != null) {
+            llLightSourceLifespan.setVisibility(View.VISIBLE);
             llProgress.setVisibility(View.GONE);
-            tvLightSourceHealth.setText(state.getLightSourceHealthString());
+            tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
 
-            if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCEHEALTH_SETTABLE) > 0) {
+            if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE) > 0) {
                 btnReset.setVisibility(View.VISIBLE);
             }
         }
@@ -293,7 +293,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             onCancel(alertDialog);
             this.remoteId = remoteId;
         }
-        
+
         DbHelper dbHelper = new DbHelper(context);
         Channel channel = dbHelper.getChannel(remoteId);
         channelFlags = 0;
