@@ -107,14 +107,21 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
 
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0001;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0002;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x0004;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK = 0x0008;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER = 0x0010;
-    public final static int SUPLA_BIT_FUNC_POWERSWITCH = 0x0020;
-    public final static int SUPLA_BIT_FUNC_LIGHTSWITCH = 0x0040;
-    public final static int SUPLA_BIT_FUNC_STAIRCASETIMER = 0x0080;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x000004;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK = 0x0000008;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER = 0x0000010;
+    public final static int SUPLA_BIT_FUNC_POWERSWITCH = 0x0000020;
+    public final static int SUPLA_BIT_FUNC_LIGHTSWITCH = 0x0000040;
+    public final static int SUPLA_BIT_FUNC_STAIRCASETIMER = 0x0000080;
+    public final static int SUPLA_BIT_FUNC_THERMOMETER = 0x00000100;
+    public final static int SUPLA_BIT_FUNC_HUMIDITYANDTEMPERATURE = 0x00000200;
+    public final static int SUPLA_BIT_FUNC_HUMIDITY = 0x00000400;
+    public final static int SUPLA_BIT_FUNC_WINDSENSOR = 0x00000800;
+    public final static int SUPLA_BIT_FUNC_PRESSURESENSOR = 0x00001000;
+    public final static int SUPLA_BIT_FUNC_RAINSENSOR = 0x00002000;
+    public final static int SUPLA_BIT_FUNC_WEIGHTSENSOR = 0x00004000;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
     public final static int SUPLA_CHANNELTYPE_BRIDGE = 8000;
@@ -137,6 +144,10 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
     public final static int SUPLA_CHANNEL_FLAG_RS_AUTOCALIBRATION = 0x00100000;
     public final static int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
+    public final static int SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION = 0x00400000;
+    public final static int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
+    public final static int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
+    public final static int SUPLA_CHANNEL_FLAG_LIGHTSOURCEHEALTH_SETTABLE = 0x02000000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
@@ -209,6 +220,8 @@ public class SuplaConst {
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
     public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
     public final static int EV_TYPE_CHANNEL_STATE_V1 = 40;
+    public final static int EV_TYPE_TIMER_STATE_V1 = 50;
+    public final static int EV_TYPE_CHANNEL_AND_TIMER_STATE_V1 = 60;
 
     public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
     public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO = 2;
@@ -522,9 +535,25 @@ public class SuplaConst {
                     return SUPLA_CHANNELFNC_LIGHTSWITCH;
                 case SUPLA_BIT_FUNC_STAIRCASETIMER:
                     return SUPLA_CHANNELFNC_STAIRCASETIMER;
+                case SUPLA_BIT_FUNC_THERMOMETER:
+                    return SUPLA_CHANNELFNC_THERMOMETER;
+                case SUPLA_BIT_FUNC_HUMIDITYANDTEMPERATURE:
+                    return SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+                case SUPLA_BIT_FUNC_HUMIDITY:
+                    return SUPLA_CHANNELFNC_HUMIDITY;
+                case SUPLA_BIT_FUNC_WINDSENSOR:
+                    return SUPLA_CHANNELFNC_WINDSENSOR;
+                case SUPLA_BIT_FUNC_PRESSURESENSOR:
+                    return SUPLA_CHANNELFNC_PRESSURESENSOR;
+                case SUPLA_BIT_FUNC_RAINSENSOR:
+                    return SUPLA_CHANNELFNC_RAINSENSOR;
+                case SUPLA_BIT_FUNC_WEIGHTSENSOR:
+                    return SUPLA_CHANNELFNC_WEIGHTSENSOR;
             }
         }
 
         return 0;
     }
 }
+
+

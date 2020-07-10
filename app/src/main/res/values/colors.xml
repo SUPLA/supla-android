@@ -54,5 +54,8 @@
     <color name="zwave_info_table_text">#000000</color>
     <color name="zwave_info_table_separator">#B4B7BA</color>
 
+    <color name="channelstate_infotitle">#000000</color>
+    <color name="channelstate_infotext">#000000</color>
+    <color name="channelstate_infoline">#B4B7BA</color>
 
 </resources>

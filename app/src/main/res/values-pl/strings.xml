@@ -101,7 +101,7 @@
     <string name="rs_percent_caption">Procent zamknięcia</string>
     <string name="calibration">[Kalibracja]</string>
 
-    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email!</string>
+    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email! (Wyłącz opcje zaawansowane w ustawieniach)</string>
     <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
@@ -352,11 +352,28 @@
     <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
     <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
     <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
-    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zbiczem opadającym (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zboczem opadającym (V-Pro)</string>
     <string name="vl_dimmer_cfg_info_txt4">Tryb 2: Ściemnianie zboczem narastającym</string>
-    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zbiczem opadającym (Alternatywne)</string>
+    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zboczem opadającym (Alternatywne)</string>
     <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
     <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
     <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
     <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
+
+    <string name="time_exceeded" translatable="false">Przekroczono czas. Spróbuj ponownie.</string>
+
+    <string name="IP">IP</string>
+    <string name="MAC">MAC</string>
+    <string name="battery_level">Poziom barterii</string>
+    <string name="battery_powered">Zasilanie bateryjne</string>
+    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_signal_strength">Siła sygnału WiFi</string>
+    <string name="bridge_node_online">Węzeł mostu - online</string>
+    <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
+    <string name="uptime">Czas pracy</string>
+    <string name="connection_time">Czas połączenia</string>
+    <string name="battery_health">Żywotność baterii</string>
+    <string name="connection_reset_cause">Powód restartu połączenia</string>
+    <string name="light_source_health">Żywotność źródła światła</string>
+    <string name="chanel_lightsource_health_settings">Zmień ustawienia żywotności źródła światła</string>
 </resources>

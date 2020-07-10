@@ -57,6 +57,7 @@ public class ChannelListView extends ListView {
     private ChannelLayout lastCL = null;
     private boolean buttonSliding = false;
     private Cursor _newCursor;
+    private OnChannelButtonClickListener onChannelButtonClickListener;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
     private OnDetailListener onDetailListener;
     private boolean requestLayout_Locked = false;
@@ -66,6 +67,7 @@ public class ChannelListView extends ListView {
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
+    private boolean mChannelStateIconTouched;
 
     public ChannelListView(Context context) {
         super(context);
@@ -283,10 +285,15 @@ public class ChannelListView extends ListView {
         float deltaY = Math.abs(Y - LastYtouch);
         float deltaX = Math.abs(X - LastXtouch);
 
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            mChannelStateIconTouched = false;
+        }
+
         if (ev.getAction() == MotionEvent.ACTION_DOWN
                 || channelLayout != null) {
 
             View view = null;
+
             if (isDetailVisible()) {
                 LastXtouch = ev.getX();
                 LastYtouch = ev.getY();
@@ -314,32 +321,40 @@ public class ChannelListView extends ListView {
                         lastCL = null;
                     }
 
-                    if (channelLayout != null
-                            && channelLayout.getDetailSliderEnabled()) {
+                    if (channelLayout != null) {
 
+                        if (channelLayout.getDetailSliderEnabled()) {
+                            Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
 
-                        Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
+                            if (obj instanceof Cursor) {
+                                ChannelBase cbase;
 
-                        if (obj instanceof Cursor) {
-                            ChannelBase cbase;
+                                if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
+                                    cbase = new ChannelGroup();
+                                } else {
+                                    cbase = new Channel();
+                                }
 
-                            if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
-                                cbase = new ChannelGroup();
-                            } else {
-                                cbase = new Channel();
+                                cbase.AssignCursorData((Cursor) obj);
+
+                                if (getDetailLayout(cbase) != null) {
+                                    detailTouchDown = true;
+                                    getDetailLayout(cbase).setData(cbase);
+                                }
                             }
+                        }
 
-                            cbase.AssignCursorData((Cursor) obj);
-
-                            if (getDetailLayout(cbase) != null) {
-                                detailTouchDown = true;
-                                getDetailLayout(cbase).setData(cbase);
-                            }
+                        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                            mChannelStateIconTouched =
+                                    channelLayout.stateIconTouched((int) ev.getX(), (int) ev.getY());
                         }
 
                     }
 
+
                 } else if (action == MotionEvent.ACTION_MOVE) {
+
+                    mChannelStateIconTouched = false;
 
                     if (channelLayout.getButtonsEnabled()
                             && !detailSliding) {
@@ -418,6 +433,14 @@ public class ChannelListView extends ListView {
             }
         }
 
+        if (mChannelStateIconTouched
+                && onChannelButtonClickListener != null
+                && action == MotionEvent.ACTION_UP
+                && channelLayout != null
+                && channelLayout.getRemoteId() > 0) {
+            onChannelButtonClickListener.onChannelStateButtonClick(this,
+                    channelLayout.getRemoteId());
+        }
 
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL) {
@@ -723,11 +746,21 @@ public class ChannelListView extends ListView {
         this.onDetailListener = onDetailListener;
     }
 
+    public OnChannelButtonClickListener getOnChannelButtonClickListener() {
+        return onChannelButtonClickListener;
+    }
+
+    public void setOnChannelButtonClickListener(OnChannelButtonClickListener
+                                                        onChannelButtonClickListener) {
+        this.onChannelButtonClickListener = onChannelButtonClickListener;
+    }
+
     public OnChannelButtonTouchListener getOnChannelButtonTouchListener() {
         return onChannelButtonTouchListener;
     }
 
-    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
+    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener
+                                                        onChannelButtonTouchListener) {
         this.onChannelButtonTouchListener = onChannelButtonTouchListener;
     }
 
@@ -787,9 +820,13 @@ public class ChannelListView extends ListView {
 
     }
 
+    public interface OnChannelButtonClickListener {
+        void onChannelStateButtonClick(ChannelListView clv, int remoteId);
+    }
+
     public interface OnChannelButtonTouchListener {
 
-        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
+        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc);
     }
 
     public interface OnDetailListener {

@@ -124,7 +124,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="left|center_vertical"
                 android:text="@string/vl_dimmer_cfg_info_txt9"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textColor="@color/menubar" />
 
         </LinearLayout>
     </ScrollView>

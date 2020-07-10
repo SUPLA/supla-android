@@ -840,7 +840,7 @@ public class SuplaClient extends Thread {
     private void channelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
         if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
                 channelExtendedValueUpdate.Id)) {
-            onDataChanged(channelExtendedValueUpdate.Id, 0);
+            onDataChanged(channelExtendedValueUpdate.Id, 0, true);
         }
     }
 
@@ -947,18 +947,23 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
-    private void onDataChanged(int ChannelId, int GroupId) {
+    private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue) {
 
         SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
         msg.setChannelId(ChannelId);
         msg.setChannelGroupId(GroupId);
+        msg.setExtendedValue(extendedValue);
 
         sendMessage(msg);
 
     }
 
+    private void onDataChanged(int ChannelId, int GroupId) {
+        onDataChanged(ChannelId, GroupId, false);
+    }
+
     private void onDataChanged() {
-        onDataChanged(0, 0);
+        onDataChanged(0, 0, false);
     }
 
     private void onZWaveResetAndClearResult(int result) {

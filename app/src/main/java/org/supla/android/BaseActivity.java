@@ -134,7 +134,8 @@ public class BaseActivity extends Activity {
 
                 switch (_msg.getType()) {
                     case SuplaClientMsg.onDataChanged:
-                        onDataChangedMsg(_msg.getChannelId(), _msg.getChannelGroupId());
+                        onDataChangedMsg(_msg.getChannelId(),
+                                _msg.getChannelGroupId(), _msg.isExtendedValue());
                         break;
                     case SuplaClientMsg.onConnecting:
                         onConnectingMsg();
@@ -240,7 +241,7 @@ public class BaseActivity extends Activity {
     protected void beforeStatusMsg() {
     }
 
-    protected void onDataChangedMsg(int ChannelId, int GroupId) {
+    protected void onDataChangedMsg(int ChannelId, int GroupId, boolean extendedValue) {
     }
 
     protected void onConnectingMsg() {

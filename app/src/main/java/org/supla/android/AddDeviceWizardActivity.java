@@ -570,12 +570,20 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private void unregisterReceivers() {
 
         if (stateChangedReceiver != null) {
-            unregisterReceiver(stateChangedReceiver);
+            try {
+                unregisterReceiver(stateChangedReceiver);
+            } catch(IllegalArgumentException e) {
+                e.printStackTrace();
+            }
             stateChangedReceiver = null;
         }
 
         if (scanResultReceiver != null) {
-            unregisterReceiver(scanResultReceiver);
+            try {
+                unregisterReceiver(scanResultReceiver);
+            } catch(IllegalArgumentException e) {
+                e.printStackTrace();
+            }
             scanResultReceiver = null;
         }
 
@@ -946,7 +954,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                         bindNetwork();
 
-                        unregisterReceiver(stateChangedReceiver);
+                        try {
+                            unregisterReceiver(stateChangedReceiver);
+                        } catch(IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
+
                         stateChangedReceiver = null;
 
                         setStep(STEP_CONFIGURE);
@@ -1024,7 +1037,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         WifiInfo wifiInfo = manager.getConnectionInfo();
                         if (wifiInfo != null && wifiInfo.getNetworkId() == NetworkID) {
 
-                            unregisterReceiver(stateChangedReceiver);
+                            try {
+                                unregisterReceiver(stateChangedReceiver);
+                            } catch(IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
+
                             stateChangedReceiver = null;
 
                             if (SuplaApp.getApp().getSuplaClient() != null) {

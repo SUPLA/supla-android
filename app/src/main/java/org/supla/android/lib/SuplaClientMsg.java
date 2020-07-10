@@ -71,6 +71,7 @@ public class SuplaClientMsg {
     private ZWaveNode Node;
     private String Text;
     private short Progress;
+    private boolean ExtendedValue;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -254,5 +255,13 @@ public class SuplaClientMsg {
 
     public void setProgress(short progress) {
         Progress = progress;
+    }
+
+    public boolean isExtendedValue() {
+        return ExtendedValue;
+    }
+
+    public void setExtendedValue(boolean extendedValue) {
+        ExtendedValue = extendedValue;
     }
 }

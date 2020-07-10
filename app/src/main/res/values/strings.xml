@@ -104,7 +104,7 @@
     <string name="rs_percent_caption">Percentage of closing</string>
     <string name="calibration">[Calibration]</string>
 
-    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings</string>
+    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings. (Disable advanced options in the settings)</string>
     <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
     <string name="wizard_step1_txt1">Welcome to the Device Add Wizard which will in an easy and simple way help you to add new device to the system.</string>
@@ -359,5 +359,22 @@
     <string name="vl_dimmer_cfg_info_txt7" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
     <string name="vl_dimmer_cfg_info_txt8" translatable="false">More information on can be found at</string>
     <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
+    
+    <string name="time_exceeded" translatable="false">Time exceeded. Try again.</string>
+
+    <string name="IP" translatable="false">IP</string>
+    <string name="MAC" translatable="false">MAC</string>
+    <string name="battery_level" translatable="false">Battery level</string>
+    <string name="battery_powered" translatable="false">Battery powered</string>
+    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
+    <string name="wifi_signal_strength" translatable="false">Wifi signal strength</string>
+    <string name="bridge_node_online" translatable="false">Bridge node - online</string>
+    <string name="bridge_signal_strength" translatable="false">Bridge - signal strength</string>
+    <string name="uptime" translatable="false">Uptime</string>
+    <string name="connection_time" translatable="false">Connection time</string>
+    <string name="battery_health" translatable="false">Battery health</string>
+    <string name="connection_reset_cause" translatable="false">Connection reset cause</string>
+    <string name="light_source_health" translatable="false">Light source health</string>
+    <string name="chanel_lightsource_health_settings" translatable="false">Change the light source health settings</string>
 
 </resources>

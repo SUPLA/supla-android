@@ -58,7 +58,6 @@ public class VLCalibrationTool implements View.OnClickListener,
     private SuplaRangeCalibrationWheel calibrationWheel;
     private RelativeLayout mainView;
     private SuperuserAuthorizationDialog authDialog;
-    private long uiRefreshLockTime = 0;
     private boolean configStarted = false;
     private VLCfgParameters cfgParameters;
     private int mColorDisabled;
@@ -262,9 +261,8 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_3)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isModeDisabled(mode)) {
-            setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
-        }
+
+        setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
     }
 
     private void setMode() {
@@ -284,13 +282,11 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isBoostDisabled(boost)) {
-            setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
+        setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
 
-            if (boost == VLCfgParameters.BOOST_YES) {
-                btnBoost.setVisibility(View.VISIBLE);
-                return;
-            }
+        if (boost == VLCfgParameters.BOOST_YES) {
+            btnBoost.setVisibility(View.VISIBLE);
+            return;
         }
 
         btnBoost.setVisibility(View.INVISIBLE);
@@ -357,16 +353,11 @@ public class VLCalibrationTool implements View.OnClickListener,
         }
     }
 
-    private void LockUIrefresh() {
-        uiRefreshLockTime = System.currentTimeMillis() + UI_REFRESH_LOCK_TIME;
-    }
-
     private void calCfgRequest(int cmd, Byte bdata, Short sdata) {
         if (detailRGB == null) {
             return;
         }
 
-        LockUIrefresh();
         lastCalCfgTime = System.currentTimeMillis();
 
         if (bdata != null) {
@@ -562,13 +553,11 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     @Override
     public void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum) {
-        LockUIrefresh();
         calCfgDelayed(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
     }
 
     @Override
     public void onBoostChanged(SuplaRangeCalibrationWheel calibrationWheel) {
-        LockUIrefresh();
         calCfgDelayed(VL_MSG_SET_BOOST_LEVEL);
     }
 
