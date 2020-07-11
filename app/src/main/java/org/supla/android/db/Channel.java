@@ -22,6 +22,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.supla.android.R;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelState;
@@ -337,6 +338,45 @@ public class Channel extends ChannelBase {
                     }
                 }
                 break;
+        }
+
+        return 0;
+    }
+
+    public int getChannelWarningIcon() {
+
+        switch (getChannelWarningLevel()) {
+            case 1:
+                return R.drawable.channel_warning_level1;
+            case 2:
+                return R.drawable.channel_warning_level2;
+        }
+
+        return 0;
+    }
+
+    public int getChannelStateIcon() {
+        if ((getOnLine()
+                || (getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
+                && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
+                && (getFlags()
+                & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))) {
+            SuplaChannelState state = getChannelState();
+
+            if (state != null
+                    || (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                    switch (state.getDefaultIconField()) {
+                        case SuplaChannelState.FIELD_BATTERYPOWERED:
+                            if (state.isBatteryPowered()) {
+                                return R.drawable.battery;
+                            }
+                            break;
+                    }
+                }
+
+                return R.drawable.channelstateinfo;
+            }
         }
 
         return 0;
