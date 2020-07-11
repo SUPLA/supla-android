@@ -184,6 +184,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
                                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
                                     if (client != null) {
+                                        lastRefreshTime = System.currentTimeMillis();
                                         client.getChannelState(remoteId);
                                     }
                                 }
