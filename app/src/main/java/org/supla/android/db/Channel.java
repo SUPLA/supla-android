@@ -320,20 +320,32 @@ public class Channel extends ChannelBase {
         return null;
     }
 
+    public Float getLightSourceLifespanLeft() {
+        SuplaChannelState state = getChannelState();
+        if (state != null
+                && state.getLightSourceLifespan() != null
+                && state.getLightSourceLifespan() > 0) {
+
+            if (state.getLightSourceLifespanLeft() != null) {
+                return state.getLightSourceLifespanLeft();
+            } else if (state.getLightSourceOperatingTimePercentLeft() != null) {
+                return state.getLightSourceOperatingTimePercentLeft();
+            }
+        }
+        return null;
+    }
+
     public int getChannelWarningLevel() {
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                SuplaChannelState state = getChannelState();
-                if (state != null
-                        && state.getLightSourceLifespan() != null
-                        && state.getLightSourceLifespan() > 0
-                        && state.getLightSourceLifespanLeft() != null) {
-                    if (state.getLightSourceLifespanLeft() <= 5) {
+                Float lightSourceLifespanLeft = getLightSourceLifespanLeft();
+                if (lightSourceLifespanLeft != null) {
+                    if (lightSourceLifespanLeft <= 5) {
                         return 2;
-                    } else if (state.getLightSourceLifespanLeft() <= 20) {
+                    } else if (lightSourceLifespanLeft <= 20) {
                         return 1;
                     }
                 }
