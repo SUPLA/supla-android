@@ -888,8 +888,6 @@ public class SuplaClient extends Thread {
     private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onCalCfgResult);
-        Trace.d("Result", Integer.toString(Command));
-        Trace.d("Result", Integer.toString(Result));
         msg.setChannelId(ChannelId);
         msg.setCommand(Command);
         msg.setResult(Result);

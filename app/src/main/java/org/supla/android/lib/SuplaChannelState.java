@@ -42,6 +42,7 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BRIDGENODEONLINE = 0x0400;
     public static final int FIELD_LASTCONNECTIONRESETCAUSE = 0x0800;
     public static final int FIELD_LIGHTSOURCELIFESPAN = 0x1000;
+    public static final int FIELD_LIGHTSOURCELIFEOPERATINGTIME = 0x2000;
 
     private int ChannelID;
     private int fields;
@@ -60,6 +61,7 @@ public class SuplaChannelState implements Serializable {
     private Byte lastConnectionResetCause;
     private Integer lightSourceLifespan;
     private Float lightSourceLifespanLeft;
+    private Integer lightSourceOperatingTime;
 
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
@@ -132,6 +134,11 @@ public class SuplaChannelState implements Serializable {
         if ((fields & FIELD_LIGHTSOURCELIFESPAN) > 0) {
             this.lightSourceLifespanLeft = lightSourceLifespanLeft / 100f;
             this.lightSourceLifespan = lightSourceLifespan;
+        }
+
+        if ((fields & FIELD_LIGHTSOURCELIFEOPERATINGTIME) > 0) {
+            this.lightSourceLifespanLeft = null;
+            this.lightSourceOperatingTime = lightSourceLifespanLeft;
         }
     }
 
@@ -283,8 +290,50 @@ public class SuplaChannelState implements Serializable {
     }
 
     public String getLightSourceLifespanString() {
-        return String.format("%dh (%.2f%%)",
-                getLightSourceLifespan(),
-                getLightSourceLifespanLeft());
+
+        Float percentLeft = null;
+
+        if (getLightSourceLifespanLeft() != null) {
+            percentLeft = getLightSourceLifespanLeft();
+        } else if (getLightSourceOperatingTimePercentLeft() != null) {
+            percentLeft = getLightSourceOperatingTimePercentLeft();
+        }
+
+        if (percentLeft != null) {
+            return String.format("%dh (%.2f%%)",
+                    getLightSourceLifespan(),
+                    percentLeft);
+        }
+
+        return String.format("%dh", getLightSourceLifespan());
+    }
+
+    public Integer getLightSourceOperatingTime() {
+        return lightSourceOperatingTime;
+    }
+
+    public Float getLightSourceOperatingTimePercent() {
+        if (getLightSourceLifespan() != null && getLightSourceLifespan().intValue() > 0) {
+            return getLightSourceOperatingTime() / 36f / getLightSourceLifespan();
+        }
+        return null;
+    }
+
+    public Float getLightSourceOperatingTimePercentLeft() {
+        Float percent = getLightSourceOperatingTimePercent();
+        if (percent != null) {
+            return 100 - percent;
+        }
+        return null;
+    }
+
+    public String getLightSourceOperatingTimeString() {
+        long timeSec = getLightSourceOperatingTime().longValue();
+
+        return String.format("%02dh %02d:%02d",
+                timeSec / 3600,
+                timeSec % 3600 / 60,
+                timeSec % 3600 % 60);
+
     }
 }

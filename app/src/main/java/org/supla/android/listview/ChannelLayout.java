@@ -621,51 +621,23 @@ public class ChannelLayout extends LinearLayout {
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
-            if ((cbase.getOnLine()
-                    || (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
-                    && (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
-                    && (cbase.getFlags()
-                          & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))
-                    && cbase instanceof Channel) {
-                SuplaChannelState state = ((Channel) cbase).getChannelState();
 
-                if (state != null
-                        || (cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
-                    if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
-                        switch (state.getDefaultIconField()) {
-                            case SuplaChannelState.FIELD_BATTERYPOWERED:
-                                if (state.isBatteryPowered()) {
-                                    channelStateIcon.setImageResource(R.drawable.battery);
-                                    channelStateIcon.setVisibility(VISIBLE);
-                                }
-                                break;
-                        }
-                    }
+            int stateIcon = 0;
+            int warningIcon = 0;
 
-                    if (channelStateIcon.getVisibility() == INVISIBLE) {
-                        channelStateIcon.setImageResource(R.drawable.channelstateinfo);
-                        channelStateIcon.setVisibility(VISIBLE);
-                    }
-                }
+            if (cbase instanceof Channel) {
+                stateIcon = ((Channel) cbase).getChannelStateIcon();
+                warningIcon = ((Channel) cbase).getChannelWarningIcon();
+            }
 
+            if (stateIcon != 0) {
+                channelStateIcon.setImageResource(stateIcon);
+                channelStateIcon.setVisibility(VISIBLE);
+            }
 
-
-                int warningIcon = -1;
-
-                switch (((Channel) cbase).getChannelWarningLevel()) {
-                    case 1:
-                        warningIcon = R.drawable.channel_warning_level1;
-                        break;
-                    case 2:
-                        warningIcon = R.drawable.channel_warning_level2;
-                        break;
-                }
-
-                if (warningIcon != -1) {
-                    channelWarningIcon.setImageResource(warningIcon);
-                    channelWarningIcon.setVisibility(VISIBLE);
-                }
-
+            if (warningIcon != 0) {
+                channelWarningIcon.setImageResource(warningIcon);
+                channelWarningIcon.setVisibility(VISIBLE);
             }
 
         }
