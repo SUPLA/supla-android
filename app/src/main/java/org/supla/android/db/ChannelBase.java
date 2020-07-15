@@ -361,6 +361,9 @@ public abstract class ChannelBase extends DbItem {
                     case 1:
                         img_idx = active == 1 ? R.drawable.xmastreeon : R.drawable.xmastreeoff;
                         break;
+                    case 2:
+                        img_idx = active == 1 ? R.drawable.uvon : R.drawable.uvoff;
+                        break;
                     default:
                         img_idx = active == 1 ? R.drawable.lighton : R.drawable.lightoff;
                 }
