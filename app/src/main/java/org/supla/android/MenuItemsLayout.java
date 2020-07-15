@@ -241,7 +241,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
         addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
         addButton(BTN_ABOUT, R.drawable.info, R.string.about);
-        addButton(BTN_DONATE, R.drawable.donate, R.string.donate_title);
+        // Google Play Policy
+        //addButton(BTN_DONATE, R.drawable.donate, R.string.donate_title);
         addButton(BTN_HELP, R.drawable.help, R.string.help);
 
         addFooter();
