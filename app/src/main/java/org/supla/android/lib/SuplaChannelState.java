@@ -313,7 +313,9 @@ public class SuplaChannelState implements Serializable {
     }
 
     public Float getLightSourceOperatingTimePercent() {
-        if (getLightSourceLifespan() != null && getLightSourceLifespan().intValue() > 0) {
+        if (getLightSourceOperatingTime() != null
+                && getLightSourceLifespan() != null
+                && getLightSourceLifespan().intValue() > 0) {
             return getLightSourceOperatingTime() / 36f / getLightSourceLifespan();
         }
         return null;
