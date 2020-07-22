@@ -44,7 +44,6 @@ import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout {
@@ -311,18 +310,17 @@ public class ChannelLayout extends LinearLayout {
         }
     }
 
+    public float percentOfSliding() {
+        if (content.getLeft() < 0)
+            return right_btn.getWidth() > 0 ?
+                    content.getLeft() * -100f / right_btn.getWidth() : 0;
+
+        return left_btn.getWidth() > 0 ?
+                content.getLeft() * 100f / left_btn.getWidth() : 0;
+    }
+
     public boolean Sliding() {
-
-        if (Anim)
-            return true;
-
-        if (content.getLeft() > 0
-                && content.getLeft() != left_btn.getWidth())
-            return true;
-
-        return content.getLeft() < 0
-                && Math.abs(content.getLeft()) != right_btn.getWidth();
-
+        return Anim ||  percentOfSliding() > 0;
     }
 
     public int Slided() {

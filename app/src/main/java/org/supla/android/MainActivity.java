@@ -251,7 +251,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 && channelStatePopup != null
                 && channelStatePopup.isVisible()
                 && channelStatePopup.getRemoteId() == state.getChannelID()) {
-            Trace.d("aaa", "bbb");
             channelStatePopup.update(state);
         }
     }
