@@ -353,12 +353,12 @@ public class ChannelListView extends ListView {
 
 
                 } else if (action == MotionEvent.ACTION_MOVE) {
-
-                    mChannelStateIconTouched = false;
-
                     if (channelLayout.getButtonsEnabled()
                             && !detailSliding) {
 
+                        if (Math.abs(Y-LastYtouch) > 10f) {
+                            mChannelStateIconTouched = false;
+                        }
 
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
@@ -368,6 +368,9 @@ public class ChannelListView extends ListView {
                         if (X != LastXtouch) {
                             channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
+                            if (channelLayout.percentOfSliding() > 3f) {
+                                mChannelStateIconTouched = false;
+                            }
                         }
 
                         LastXtouch = X;
