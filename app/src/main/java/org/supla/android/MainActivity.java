@@ -615,5 +615,29 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         channelStatePopup.show(remoteId);
     }
+
+    @Override
+    public void onChannelWarningButtonClick(ChannelListView clv, int remoteId) {
+        DbHelper dbH = new DbHelper(this);
+        Channel channel = dbH.getChannel(remoteId);
+        if (channel != null) {
+            String warning = channel.getChannelWarningMessage(this);
+            if (warning != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(android.R.string.dialog_alert_title);
+                builder.setMessage(warning);
+
+                builder.setNeutralButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
+    }
 }
 

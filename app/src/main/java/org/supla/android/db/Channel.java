@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import org.supla.android.R;
@@ -335,24 +336,51 @@ public class Channel extends ChannelBase {
         return null;
     }
 
-    public int getChannelWarningLevel() {
+    private int getChannelWarningLevel(Context context, StringBuilder message) {
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
-                return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
+                if (getValue().isManuallyClosed() || getValue().flooding()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.valve_warning));
+                    }
+                    return 2;
+                }
+                return 0;
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 Float lightSourceLifespanLeft = getLightSourceLifespanLeft();
-                if (lightSourceLifespanLeft != null) {
-                    if (lightSourceLifespanLeft <= 5) {
-                        return 2;
-                    } else if (lightSourceLifespanLeft <= 20) {
-                        return 1;
+                if (lightSourceLifespanLeft != null && lightSourceLifespanLeft <= 20) {
+
+                    if (message != null) {
+                        message.append(
+                                context.getResources().getString(
+                                        getAltIcon() == 2
+                                                ? (lightSourceLifespanLeft <= 5
+                                                ? R.string.uv_warning2: R.string.uv_warning1)
+                                                : R.string.lightsource_warning,
+                                        String.format("%.2f%%", lightSourceLifespanLeft)));
+
                     }
+
+                    return lightSourceLifespanLeft <= 5 ? 2 : 1;
                 }
                 break;
         }
 
         return 0;
+    }
+
+    public String getChannelWarningMessage(Context context) {
+        StringBuilder result = new StringBuilder();
+        getChannelWarningLevel(context, result);
+        if (result.length() > 0) {
+            return result.toString();
+        }
+        return null;
+    }
+
+    public int getChannelWarningLevel() {
+        return getChannelWarningLevel(null,null);
     }
 
     public int getChannelWarningIcon() {
