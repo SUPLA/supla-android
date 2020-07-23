@@ -1026,13 +1026,13 @@ public class ChannelLayout extends LinearLayout {
         }
     }
 
-    public boolean stateIconTouched(int x, int y) {
-        if (channelStateIcon.getVisibility() == VISIBLE) {
+    private boolean iconTouched(int x, int y, ImageView icon) {
+        if (icon.getVisibility() == VISIBLE) {
             Rect rect1 = new Rect();
             Rect rect2 = new Rect();
 
             getHitRect(rect1);
-            channelStateIcon.getHitRect(rect2);
+            icon.getHitRect(rect2);
 
             rect2.left += rect1.left;
             rect2.right += rect1.left;
@@ -1043,6 +1043,14 @@ public class ChannelLayout extends LinearLayout {
         }
 
         return false;
+    }
+
+    public boolean stateIconTouched(int x, int y) {
+        return iconTouched(x, y, channelStateIcon);
+    }
+
+    public boolean warningIconTouched(int x, int y) {
+        return iconTouched(x, y, channelWarningIcon);
     }
 
     public int getRemoteId() {

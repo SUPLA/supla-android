@@ -68,6 +68,7 @@ public class ChannelListView extends ListView {
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
     private boolean mChannelStateIconTouched;
+    private boolean mChannelWarningIconTouched;
 
     public ChannelListView(Context context) {
         super(context);
@@ -287,6 +288,7 @@ public class ChannelListView extends ListView {
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             mChannelStateIconTouched = false;
+            mChannelWarningIconTouched = false;
         }
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN
@@ -347,6 +349,8 @@ public class ChannelListView extends ListView {
                         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
                             mChannelStateIconTouched =
                                     channelLayout.stateIconTouched((int) ev.getX(), (int) ev.getY());
+                            mChannelWarningIconTouched =
+                                    channelLayout.warningIconTouched((int) ev.getX(), (int) ev.getY());
                         }
 
                     }
@@ -358,6 +362,7 @@ public class ChannelListView extends ListView {
 
                         if (Math.abs(Y-LastYtouch) > 10f) {
                             mChannelStateIconTouched = false;
+                            mChannelWarningIconTouched = false;
                         }
 
                         if (!channelLayout.Sliding()
@@ -370,6 +375,7 @@ public class ChannelListView extends ListView {
                             buttonSliding = true;
                             if (channelLayout.percentOfSliding() > 3f) {
                                 mChannelStateIconTouched = false;
+                                mChannelWarningIconTouched = false;
                             }
                         }
 
@@ -436,13 +442,17 @@ public class ChannelListView extends ListView {
             }
         }
 
-        if (mChannelStateIconTouched
-                && onChannelButtonClickListener != null
+        if (onChannelButtonClickListener != null
                 && action == MotionEvent.ACTION_UP
                 && channelLayout != null
                 && channelLayout.getRemoteId() > 0) {
-            onChannelButtonClickListener.onChannelStateButtonClick(this,
-                    channelLayout.getRemoteId());
+            if (mChannelStateIconTouched) {
+                onChannelButtonClickListener.onChannelStateButtonClick(this,
+                        channelLayout.getRemoteId());
+            } else if (mChannelWarningIconTouched) {
+                onChannelButtonClickListener.onChannelWarningButtonClick(this,
+                        channelLayout.getRemoteId());
+            }
         }
 
         if (action == MotionEvent.ACTION_UP
@@ -825,6 +835,7 @@ public class ChannelListView extends ListView {
 
     public interface OnChannelButtonClickListener {
         void onChannelStateButtonClick(ChannelListView clv, int remoteId);
+        void onChannelWarningButtonClick(ChannelListView clv, int remoteId);
     }
 
     public interface OnChannelButtonTouchListener {

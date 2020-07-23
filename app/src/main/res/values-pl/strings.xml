@@ -261,6 +261,7 @@
     <string name="channel_caption_valve">Zawór</string>
     <string name="channel_btn_close">Zamknij</string>
     <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
+    <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="exit">Wyjście</string>
@@ -379,4 +380,7 @@
     <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
     <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
     <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
+    <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
+    <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
+    <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
 </resources>
