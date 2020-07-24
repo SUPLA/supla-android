@@ -245,4 +245,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
+    <string name="wizard_step2_txt1_alt">Πληκτρολογήστε το όνομα και τον κωδικό πρόσβασης του οικιακού ή επιχειρηματικού σας δικτύου WiFi μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να συνδεθεί με τον διακομιστή.</string>
 </resources>

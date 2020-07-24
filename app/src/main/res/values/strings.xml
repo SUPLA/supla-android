@@ -383,4 +383,7 @@
     <string name="lightsource_warning" translatable="false">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1" translatable="false">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2" translatable="false">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
+    <string name="wizard_step2_txt1_alt" translatable="false">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
+    <string name="enabling_registration_timeout" translatable="false">Timeout for enabling registration has expired!</string>
+    <string name="wifi_throttling" translatable="false">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
 </resources>

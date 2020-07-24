@@ -252,5 +252,6 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Теплосчетчик</string>
+    <string name="wizard_step2_txt1_alt">Введите название и пароль домашней или бизнес-сети Wi-Fi, через которую устройство исполняющее может подключаться к серверу.</string>
 </resources>
 

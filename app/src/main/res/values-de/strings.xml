@@ -241,4 +241,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Wärmezähler</string>
+    <string name="wizard_step2_txt1_alt">Geben Sie den Namen und das Kennwort Ihres Heim- oder Unternehmens-Wi-Fi-Netzwerks ein, über das das Ausführungsgerät eine Verbindung zum Server herstellen kann.</string>
 </resources>
