@@ -247,4 +247,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Compteur de chaleur</string>
+    <string name="wizard_step2_txt1_alt">Entrez un nom et un mot de passe du Votre réseau WiFi domestique ou d\'entreprise ave laquelle d’appareil pourra se connecter avec le serveur.</string>
 </resources>

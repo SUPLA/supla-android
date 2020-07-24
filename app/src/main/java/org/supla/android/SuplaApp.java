@@ -21,6 +21,7 @@ package org.supla.android;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
@@ -46,6 +47,7 @@ public class SuplaApp extends Application {
     private Typeface mTypefaceOpenSansBold;
     private SuplaOAuthToken _OAuthToken;
     private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
+    private static long lastWifiScanTime;
 
     private Handler _sc_msg_handler = new Handler() {
         @Override
@@ -235,6 +237,21 @@ public class SuplaApp extends Application {
 
     public Typeface getTypefaceOpenSansBold() {
         return mTypefaceOpenSansBold;
+    }
+
+    public static boolean wifiStartScan(WifiManager manager) {
+        if (manager.startScan()) {
+            lastWifiScanTime = System.currentTimeMillis();
+            return true;
+        }
+
+        return false;
+    }
+
+    public static long getSecondsSinceLastWiFiScan() {
+        long result = System.currentTimeMillis() - lastWifiScanTime;
+        result/=1000;
+        return result;
     }
 
 }

@@ -245,4 +245,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Varmemåler</string>
+    <string name="wizard_step2_txt1_alt">Tast inn navnet og passordet til ditt hjemme- eller firmanettverk som enheten inngang/utgang kan bruke for å koble til serveren.</string>
 </resources>

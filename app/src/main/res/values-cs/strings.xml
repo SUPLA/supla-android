@@ -231,4 +231,5 @@
 
     <string name="channel_caption_heatmeter">Měřič tepla</string>
     <string name="event_openedclosedthevalve">otevřel / zavřel ventil</string>
+    <string name="wizard_step2_txt1_alt">Zadejte jméno a heslo vaší domácí nebo firemní sítě WiFi, pomocí kterého se bude možné připojit k serveru.</string>
 </resources>

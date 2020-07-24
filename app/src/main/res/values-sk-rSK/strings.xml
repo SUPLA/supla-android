@@ -258,4 +258,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Merač tepla</string>
+    <string name="wizard_step2_txt1_alt">Zadajte názov a heslo vašej domácej alebo obchodnej WiFi siete, prostredníctvom ktorej sa bude môcť výkonné zariadenie pripojiť k serveru.</string>
 </resources>

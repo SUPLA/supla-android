@@ -245,4 +245,5 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Merilnik toplote</string>
+    <string name="wizard_step2_txt1_alt">Vnesite ime in geslo vašega domačega ali poslovnega omrežja WiFi, prek katerega bo izvršilna naprava lahko vzpostavila povezavo s strežnikom.</string>
 </resources>

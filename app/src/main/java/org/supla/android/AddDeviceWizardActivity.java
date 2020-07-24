@@ -53,7 +53,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.supla.android.lib.SuplaRegisterError;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
 import java.util.ArrayList;
@@ -66,18 +66,24 @@ import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 public class AddDeviceWizardActivity extends WizardActivity implements
-        ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener {
+        ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener,
+        WifiThrottlingNotificationDialog.OnDialogResultListener {
 
     private final int WIZARD_PERMISSIONS_REQUEST = 1;
     private final int STEP_NONE = 0;
     private final int STEP_CHECK_WIFI = 1;
     private final int STEP_CHECK_REGISTRATION_ENABLED_TRY1 = 2;
     private final int STEP_CHECK_REGISTRATION_ENABLED_TRY2 = 3;
-    private final int STEP_SCAN = 4;
-    private final int STEP_CONNECT = 5;
-    private final int STEP_CONFIGURE = 6;
-    private final int STEP_RECONNECT = 7;
-    private final int STEP_DONE = 8;
+    private final int STEP_SUPERUSER_AUTHORIZATION = 4;
+    private final int STEP_ENABLING_REGISTRATION = 5;
+    private final int STEP_SCAN = 6;
+    private final int STEP_CONNECT = 7;
+    private final int STEP_CONFIGURE = 8;
+    private final int STEP_RECONNECT = 9;
+    private final int STEP_DONE = 10;
+
+    private final int STEP_CHECK_WIFI_THROTTLING = 11;
+    private final int STEP_SCAN_THROTTLING = 12;
 
     private final int PAGE_STEP_1 = 1;
     private final int PAGE_STEP_2 = 2;
@@ -85,7 +91,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private final int PAGE_ERROR = 4;
     private final int PAGE_DONE = 5;
 
-    private final int SCAN_RETRY = 4;
+    private final int SCAN_RETRY = 2; // Maximum 2 retry because of android wifi scan throttling
 
     private int scanRetry;
 
@@ -106,11 +112,14 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private String iodev_SSID = "";
 
     private Spinner spWifiList;
+    private EditText edWifiName;
     private EditText edPassword;
     private CheckBox cbSavePassword;
+    private Button btnEditWifiName;
     private Button btnViewPassword;
 
-    private TextView tvStep2Info;
+    private TextView tvStep2Info1;
+    private TextView tvStep2Info2;
 
     private ImageView ivDot;
 
@@ -120,6 +129,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private TextView tvIODevFirmware;
     private TextView tvIODevMAC;
     private TextView tvIODevLastState;
+    private String CurrrentSSID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,38 +149,33 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         addStepPage(R.layout.add_device_step2, PAGE_STEP_2);
 
-        tv = findViewById(R.id.wizard_step2_txt1);
-        tv.setTypeface(type);
+        tvStep2Info1 = findViewById(R.id.wizard_step2_txt1);
+        tvStep2Info1.setTypeface(type);
+        tvStep2Info1.setText(R.string.wizard_step2_txt1);
 
         spWifiList = findViewById(R.id.wizard_wifi_list);
         spWifiList.setOnItemSelectedListener(this);
 
-        tvStep2Info = findViewById(R.id.wizard_step2_txt3);
-        tvStep2Info.setTypeface(type);
+        edWifiName = findViewById(R.id.wizard_wifi_name);
+        edWifiName.setVisibility(View.GONE);
+
+        tvStep2Info2 = findViewById(R.id.wizard_step2_txt3);
+        tvStep2Info2.setTypeface(type);
 
         edPassword = findViewById(R.id.wizard_password);
         cbSavePassword = findViewById(R.id.wizard_cb_save_pwd);
         btnViewPassword = findViewById(R.id.wizard_look_button);
+        btnEditWifiName = findViewById(R.id.wizard_edit_button);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            edPassword.setBackground(
-                    getResources().getDrawable(R.drawable.rounded_edittext_yellow));
-        } else {
-            edPassword.setBackgroundDrawable(
-                    getResources().getDrawable(R.drawable.rounded_edittext_yellow));
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            spWifiList.setBackground(getResources().getDrawable(R.drawable.rounded_edittext));
-        } else {
-            spWifiList.setBackgroundDrawable(
-                    getResources().getDrawable(R.drawable.rounded_edittext));
-        }
+        setBackground(edPassword, R.drawable.rounded_edittext_yellow);
+        setBackground(edWifiName, R.drawable.rounded_edittext);
+        setBackground(spWifiList, R.drawable.rounded_edittext);
 
         cbSavePassword.setTypeface(type);
         cbSavePassword.setOnClickListener(this);
 
         btnViewPassword.setOnTouchListener(this);
+        btnEditWifiName.setOnClickListener(this);
 
         View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
             @Override
@@ -186,6 +191,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         };
 
         edPassword.setOnFocusChangeListener(fcl);
+        edWifiName.setOnFocusChangeListener(fcl);
 
         addStepPage(R.layout.add_device_step3, PAGE_STEP_3);
 
@@ -243,6 +249,15 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         RegisterMessageHandler();
     }
 
+    private void setBackground(View view, int bgRes) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(getResources().getDrawable(bgRes));
+        } else {
+            view.setBackgroundDrawable(
+                    getResources().getDrawable(bgRes));
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -270,6 +285,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         switch (pageId) {
 
             case PAGE_STEP_2:
+                setBackground(edWifiName, R.drawable.rounded_edittext);
+                setBackground(spWifiList, R.drawable.rounded_edittext);
                 edPassword.setInputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
@@ -394,6 +411,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
+                                timeout = 10;
+                                break;
+                            case STEP_ENABLING_REGISTRATION:
                                 timeout = 10;
                                 break;
                             case STEP_SCAN:
@@ -546,6 +566,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
                 showError(R.string.device_reg_request_timeout);
                 break;
+            case STEP_ENABLING_REGISTRATION:
+                showError(R.string.enabling_registration_timeout);
+                break;
             case STEP_SCAN:
                 showError(R.string.wizard_scan_timeout);
                 break;
@@ -600,26 +623,25 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     private boolean checkWiFi() {
 
-        String SSID = "";
+        CurrrentSSID = "";
         NetworkID = -1;
 
         if (manager.isWifiEnabled()) {
 
             WifiInfo wifiInfo = manager.getConnectionInfo();
             if (wifiInfo != null) {
-                SSID = wifiInfo.getSSID();
+                CurrrentSSID = wifiInfo.getSSID();
                 NetworkID = wifiInfo.getNetworkId();
 
-                if (SSID.startsWith("\"") && SSID.endsWith("\"")) {
-                    SSID = SSID.substring(1, SSID.length() - 1);
+                if (CurrrentSSID.startsWith("\"") && CurrrentSSID.endsWith("\"")) {
+                    CurrrentSSID = CurrrentSSID.substring(1, CurrrentSSID.length() - 1);
                 }
 
-                spinnerLoad(SSID);
-
+                spinnerLoad();
             }
         }
 
-        return !SSID.isEmpty() && manager.setWifiEnabled(true);
+        return !CurrrentSSID.isEmpty() && manager.setWifiEnabled(true);
 
     }
 
@@ -644,13 +666,15 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                     setBtnNextPreloaderVisible(false);
                     setBtnNextEnabled(true);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        edPassword.setBackground(
-                                getResources().getDrawable(R.drawable.rounded_edittext_err));
-                    } else {
-                        edPassword.setBackgroundDrawable(
-                                getResources().getDrawable(R.drawable.rounded_edittext_err));
-                    }
+                    setBackground(edPassword, R.drawable.rounded_edittext_err);
+
+                } else if (getSelectedSSID().isEmpty()) {
+
+                    setBtnNextPreloaderVisible(false);
+                    setBtnNextEnabled(true);
+
+                    setBackground(edWifiName, R.drawable.rounded_edittext_err);
+                    setBackground(spWifiList, R.drawable.rounded_edittext_err);
 
                 } else {
                     showPage(PAGE_STEP_3);
@@ -693,6 +717,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         if (v == cbSavePassword) {
             Preferences prefs = new Preferences(this);
             prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
+        }  else if (v == btnEditWifiName) {
+
+            setWifiNameEditingEnabled(spWifiList.getAdapter() == null
+                     || spWifiList.getAdapter().getCount() == 0 ? true
+                     : !isWifiNameEditingEnabled());
         }
 
     }
@@ -702,16 +731,44 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         super.onRegistrationEnabled(registrationEnabled);
 
         if (registrationEnabled.IsIODeviceRegistrationEnabled()) {
+            onSetRegistrationEnabledResult(SuplaConst.SUPLA_RESULTCODE_TRUE);
+        } else {
+            setStep(STEP_SUPERUSER_AUTHORIZATION);
 
+            SuperuserAuthorizationDialog authDialog =
+                    new SuperuserAuthorizationDialog(this);
+            authDialog.setOnAuthorizarionResultListener(this);
+            authDialog.show();
+        }
+    }
+
+    @Override
+    protected void onSetRegistrationEnabledResult(int code) {
+        if (code == SuplaConst.SUPLA_RESULTCODE_TRUE) {
             setStep(STEP_SCAN);
             scanRetry = SCAN_RETRY;
-            startScan();
-
-        } else {
-            showError(getResources().getString(R.string.device_registration_disabled, SuplaRegisterError.getHostname(this)));
+            startScan(true);
         }
+    }
 
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
+        if (Success) {
+            dialog.close();
+            if (SuplaApp.getApp().getSuplaClient() != null) {
+                SuplaApp.getApp().getSuplaClient().setRegistrationEnabled(3600,
+                        -1);
+            }
+            setStep(STEP_ENABLING_REGISTRATION);
+        }
+    }
 
+    @Override
+    public void authorizationCanceled() {
+        setBtnNextPreloaderVisible(false);
+        setBtnNextEnabled(true);
+        setBtnNextText(R.string.start);
     }
 
     private boolean espNetworkName(String SSID) {
@@ -729,17 +786,15 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                 && mPattern.matcher(SSID).find();
     }
 
-    private void startScan() {
+    private void startScan(boolean first) {
 
         unregisterReceivers();
 
         scanResultReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-
                 unregisterReceiver(scanResultReceiver);
                 scanResultReceiver = null;
-
 
                 List<ScanResult> scanned = manager.getScanResults();
                 boolean match = false;
@@ -757,17 +812,14 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                 }
 
                 if (!match) {
-
                     if (scanRetry > 0) {
                         scanRetry--;
-                        startScan();
+                        startScan(false);
                     } else {
                         showError(R.string.wizard_iodevice_notfound);
                     }
 
-
                 }
-
             }
         };
 
@@ -776,15 +828,73 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         registerReceiver(scanResultReceiver, i);
 
-        manager.startScan();
+        if ( !SuplaApp.getApp().wifiStartScan(manager) && first) {
+            showThrottlingDialog(STEP_SCAN_THROTTLING);
+        }
 
     }
 
-    private void spinnerLoad(final String SSID) {
+    private void showThrottlingDialog(int step) {
+        if (SuplaApp.getApp().getSecondsSinceLastWiFiScan() <= 120) {
+            setStep(step);
+            WifiThrottlingNotificationDialog dialog
+                    = new WifiThrottlingNotificationDialog(this);
+            dialog.setOnDialogResultListener(this);
+            dialog.show();
+        }
+    }
 
+    private void processScanResults() {
+        Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
+        List<ScanResult> scanned = manager.getScanResults();
+
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+
+        Preferences prefs = new Preferences(this);
+        String prefSelected = prefs.wizardGetSelectedWifi();
+
+        String Selected = CurrrentSSID;
+
+        if (!prefSelected.isEmpty()) {
+            for (ScanResult sr : scanned) {
+                if (prefSelected.equals(sr.SSID)) {
+                    Selected = sr.SSID;
+                    break;
+                }
+            }
+        }
+
+        spinnerArray.add(Selected);
+
+        if (!Selected.equals(CurrrentSSID)) {
+            spinnerArray.add(CurrrentSSID);
+        }
+
+        for (ScanResult sr : scanned) {
+
+            Set<String> set = new HashSet<>(spinnerArray);
+
+            if (!sr.SSID.equals(CurrrentSSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID))
+                spinnerArray.add(sr.SSID);
+        }
+
+        if (spinnerArray.isEmpty()) {
+            setWifiNameEditingEnabled(true);
+            edWifiName.setText(Selected);
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter
+                = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                spinnerArray);
+        spWifiList.setAdapter(spinnerArrayAdapter);
+        onWifiSelectionChange();
+
+        showPage(PAGE_STEP_2);
+    }
+
+    private void spinnerLoad() {
         unregisterReceivers();
-
-        final Context context = this;
 
         scanResultReceiver = new BroadcastReceiver() {
             @Override
@@ -792,48 +902,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                 unregisterReceiver(scanResultReceiver);
                 scanResultReceiver = null;
-
-                Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
-                List<ScanResult> scanned = manager.getScanResults();
-
-                ArrayList<String> spinnerArray = new ArrayList<String>();
-
-                Preferences prefs = new Preferences(context);
-                String prefSelected = prefs.wizardGetSelectedWifi();
-
-                String Selected = SSID;
-
-                if (!prefSelected.isEmpty()) {
-                    for (ScanResult sr : scanned) {
-                        if (prefSelected.equals(sr.SSID)) {
-                            Selected = sr.SSID;
-                            break;
-                        }
-                    }
-                }
-
-                spinnerArray.add(Selected);
-
-                if (!Selected.equals(SSID)) {
-                    spinnerArray.add(SSID);
-                }
-
-                for (ScanResult sr : scanned) {
-
-                    Set<String> set = new HashSet<>(spinnerArray);
-
-                    if (!sr.SSID.equals(SSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID))
-                        spinnerArray.add(sr.SSID);
-                }
-
-                ArrayAdapter<String> spinnerArrayAdapter
-                        = new ArrayAdapter<>(context,
-                        android.R.layout.simple_spinner_item,
-                        spinnerArray);
-                spWifiList.setAdapter(spinnerArrayAdapter);
-                onWifiSelectionChange();
-
-                showPage(PAGE_STEP_2);
+                processScanResults();
             }
         };
 
@@ -842,8 +911,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         registerReceiver(scanResultReceiver, i);
 
-        manager.startScan();
-
+        if ( !SuplaApp.wifiStartScan(manager)) {
+            showThrottlingDialog(STEP_CHECK_WIFI_THROTTLING);
+        }
     }
 
     private void unbindNetwork() {
@@ -1021,9 +1091,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             if (blinkTimer != null) {
                 blinkTimer.cancel();
                 blinkTimer = null;
-
-                ivDot.setVisibility(View.VISIBLE);
             }
+            ivDot.setVisibility(View.VISIBLE);
 
             stateChangedReceiver = new BroadcastReceiver() {
                 @Override
@@ -1086,6 +1155,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     private String getSelectedSSID() {
 
+        if (isWifiNameEditingEnabled()) {
+            return edWifiName.getText().toString();
+        };
+
         if (spWifiList.getSelectedItem() != null) {
             return spWifiList.getSelectedItem().toString();
         }
@@ -1093,11 +1166,38 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         return "";
     }
 
+    private boolean isWifiNameEditingEnabled() {
+        return edWifiName.getVisibility() == View.VISIBLE;
+    }
+
+    private void setWifiNameEditingEnabled(boolean enabled) {
+        if (enabled) {
+
+            if (spWifiList.getSelectedItem() != null
+                && !spWifiList.getSelectedItem().toString().isEmpty()) {
+                edWifiName.setText(spWifiList.getSelectedItem().toString());
+            }
+
+            edWifiName.setVisibility(View.VISIBLE);
+            spWifiList.setVisibility(View.GONE);
+            tvStep2Info2.setVisibility(View.GONE);
+            tvStep2Info1.setText(R.string.wizard_step2_txt1_alt);
+
+        } else {
+            edWifiName.setVisibility(View.GONE);
+            spWifiList.setVisibility(View.VISIBLE);
+            tvStep2Info2.setVisibility(View.VISIBLE);
+            tvStep2Info1.setText(R.string.wizard_step2_txt1);
+        }
+
+        setBackground(btnEditWifiName, enabled ? R.drawable.editingon : R.drawable.editingoff);
+    }
+
     private void onWifiSelectionChange() {
 
         Preferences prefs = new Preferences(this);
 
-        tvStep2Info.setText(getResources().getString(R.string.wizard_step2_txt3, getSelectedSSID()));
+        tvStep2Info2.setText(getResources().getString(R.string.wizard_step2_txt3, getSelectedSSID()));
 
         cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(getSelectedSSID()));
         edPassword.setText(
@@ -1137,4 +1237,25 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         return false;
     }
 
+    @Override
+    public void onWifiThrottlingDialogCancel(WifiThrottlingNotificationDialog dialog) {
+        showMain(this);
+        finish();
+    }
+
+    @Override
+    public void onWifiThrottlingDialogFinish(WifiThrottlingNotificationDialog dialog) {
+        switch (step) {
+            case STEP_CHECK_WIFI_THROTTLING:
+                setStep(STEP_CHECK_WIFI);
+                if (!SuplaApp.wifiStartScan(manager)) {
+                    processScanResults();
+                }
+                break;
+            case STEP_SCAN_THROTTLING:
+                setStep(STEP_SCAN);
+                SuplaApp.wifiStartScan(manager);
+                break;
+        }
+    }
 }
