@@ -56,10 +56,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         tvErrorMessage = v.findViewById(R.id.dialogError);
         tvErrorMessage.setVisibility(View.INVISIBLE);
 
-        if (prefs.getServerAddress().contains(".supla.org")) {
-            TextView tvInfo = v.findViewById(R.id.tvInfo);
-            tvInfo.setText(context.getResources().getString(R.string.enter_suplaorg_credentails));
-        }
+        TextView tvInfo = v.findViewById(R.id.tvInfo);
+        tvInfo.setText(context.getResources().
+                getString(prefs.getServerAddress().contains(".supla.org") ?
+                        R.string.enter_suplaorg_credentails
+                        : R.string.enter_superuser_credentials));
 
         builder.setView(v);
         dialog = builder.create();
