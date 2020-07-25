@@ -56,6 +56,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerHorizontal="false"
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/editingoff" />
     </LinearLayout>
@@ -86,6 +87,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerHorizontal="false"
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/look" />
 
