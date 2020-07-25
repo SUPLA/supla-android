@@ -386,4 +386,5 @@
     <string name="wizard_step2_txt1_alt" translatable="false">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
     <string name="enabling_registration_timeout" translatable="false">Timeout for enabling registration has expired!</string>
     <string name="wifi_throttling" translatable="false">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Enter your cloud.supla.org login credentials.</string>
 </resources>

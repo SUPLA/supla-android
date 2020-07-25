@@ -386,4 +386,5 @@
     <string name="wizard_step2_txt1_alt">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
     <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
     <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
+    <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
 </resources>
