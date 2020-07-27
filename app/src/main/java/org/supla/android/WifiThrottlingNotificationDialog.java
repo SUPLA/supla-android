@@ -77,13 +77,15 @@ public class WifiThrottlingNotificationDialog implements DialogInterface.OnCance
 
                         secondsLeft--;
                         if (secondsLeft < 0) {
-                            timer.cancel();
-                            timer = null;
+                            if (timer != null) {
+                                timer.cancel();
+                                timer = null;
 
-                            dialog.close();
+                                dialog.close();
 
-                            if (onDialogResultListener != null) {
-                                onDialogResultListener.onWifiThrottlingDialogFinish(dialog);
+                                if (onDialogResultListener != null) {
+                                    onDialogResultListener.onWifiThrottlingDialogFinish(dialog);
+                                }
                             }
                         }
                     }
