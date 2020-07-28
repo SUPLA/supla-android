@@ -91,17 +91,19 @@ public class BaseActivity extends Activity {
                 @Override
                 public void run() {
 
-                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (bgTimer != null) {
+                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-                    if (client == null
-                            || getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)) {
+                        if (client == null
+                                || getBackgroundTime() >= getResources().getInteger(R.integer.background_timeout)) {
 
-                        if (client != null) {
-                            client.cancel();
+                            if (client != null) {
+                                client.cancel();
+                            }
+
+                            bgTimer.cancel();
+                            bgTimer = null;
                         }
-
-                        bgTimer.cancel();
-                        bgTimer = null;
                     }
 
                 }
