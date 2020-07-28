@@ -626,6 +626,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         CurrrentSSID = "";
         NetworkID = -1;
 
+        manager.setWifiEnabled(true);
+
         if (manager.isWifiEnabled()) {
 
             WifiInfo wifiInfo = manager.getConnectionInfo();
@@ -641,7 +643,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             }
         }
 
-        return !CurrrentSSID.isEmpty() && manager.setWifiEnabled(true);
+        return !CurrrentSSID.isEmpty() && manager.isWifiEnabled();
 
     }
 
