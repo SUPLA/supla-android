@@ -407,7 +407,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                         switch (step) {
                             case STEP_CHECK_WIFI:
-                                timeout = 10;
+                                timeout = 20;
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
@@ -626,6 +626,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         CurrrentSSID = "";
         NetworkID = -1;
 
+        manager.setWifiEnabled(true);
+
         if (manager.isWifiEnabled()) {
 
             WifiInfo wifiInfo = manager.getConnectionInfo();
@@ -641,7 +643,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             }
         }
 
-        return !CurrrentSSID.isEmpty() && manager.setWifiEnabled(true);
+        return !CurrrentSSID.isEmpty() && manager.isWifiEnabled();
 
     }
 

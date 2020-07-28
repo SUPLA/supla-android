@@ -233,6 +233,10 @@ public class VLCalibrationTool implements View.OnClickListener,
     }
 
     private void setBtnApparance(Button btn, int resid, int textColor) {
+        if (btn == null) {
+            return;
+        }
+
         Drawable d = resid == 0 ? null : detailRGB.getResources().getDrawable(resid);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
