@@ -407,7 +407,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                         switch (step) {
                             case STEP_CHECK_WIFI:
-                                timeout = 10;
+                                timeout = 20;
                                 break;
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
                             case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
