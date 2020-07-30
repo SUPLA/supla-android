@@ -137,7 +137,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     @Override
     public void onClick(View view) {
         if (view == btnCancel) {
-            dialog.cancel();
+            if (dialog != null) {
+                dialog.cancel();
+            }
+
         } else if (view == btnOK) {
             edPassword.setEnabled(false);
             btnOK.setVisibility(View.GONE);
