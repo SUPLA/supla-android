@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,11 +22,12 @@ import org.supla.android.lib.SuplaConst;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener {
+public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
     private Context context;
     private AlertDialog dialog;
     private Button btnCancel;
     private Button btnOK;
+    private Button btnViewPassword;
     private ProgressBar progressBar;
     private EditText edEmail;
     private EditText edPassword;
@@ -45,6 +48,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
         btnOK = v.findViewById(R.id.btnDialogOK);
         btnOK.setOnClickListener(this);
+
+        btnViewPassword = v.findViewById(R.id.btnViewPassword);
+        btnViewPassword.setOnTouchListener(this);
 
         edEmail = v.findViewById(R.id.dialogEmail);
         progressBar = v.findViewById(R.id.dialogPBar);
@@ -207,6 +213,24 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v == btnViewPassword) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    break;
+            }
+        }
+
+        return false;
     }
 
     public interface OnAuthorizarionResultListener {
