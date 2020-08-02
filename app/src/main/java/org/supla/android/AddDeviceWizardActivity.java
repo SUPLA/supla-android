@@ -626,9 +626,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         CurrrentSSID = "";
         NetworkID = -1;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        // TODO: Uncomment after raising target api level to 29
+        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             manager.setWifiEnabled(true);
-        }
+        //}
 
         if (manager.isWifiEnabled()) {
 
