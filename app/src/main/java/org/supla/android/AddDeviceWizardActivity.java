@@ -626,7 +626,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         CurrrentSSID = "";
         NetworkID = -1;
 
-        manager.setWifiEnabled(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            manager.setWifiEnabled(true);
+        }
 
         if (manager.isWifiEnabled()) {
 
@@ -919,8 +921,6 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     }
 
     private void unbindNetwork() {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ConnectivityManager cm
                     = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -940,20 +940,17 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         if (cm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Network[] ns = cm.getAllNetworks();
             for (Network n : ns) {
-
                 NetworkCapabilities c = cm.getNetworkCapabilities(n);
 
                 if (c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         cm.bindProcessToNetwork(n);
-                    } else //noinspection ConstantConditions
+                    } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             ConnectivityManager.setProcessDefaultNetwork(n);
                         }
-
+                    }
                 }
-
             }
         }
 
@@ -978,7 +975,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + iodev_SSID + "\"";
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        conf.priority = getMaxConfigurationPriority();
+        conf.priority = getMaxConfigurationPriority() + 1;
 
         iodev_NetworkID = -1;
 
