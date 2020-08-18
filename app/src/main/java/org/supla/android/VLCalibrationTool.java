@@ -470,6 +470,7 @@ public class VLCalibrationTool implements View.OnClickListener,
 
             if (boost == VLCfgParameters.BOOST_YES) {
                 onBoostChanged(calibrationWheel);
+                displayOpRange(false);
             }
         }
 
