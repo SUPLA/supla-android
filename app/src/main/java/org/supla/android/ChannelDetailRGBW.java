@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -649,5 +650,12 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
+            return false;
+        }
+        return super.onTouchEvent(ev);
+    }
 
 }
