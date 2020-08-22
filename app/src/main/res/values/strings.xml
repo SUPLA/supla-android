@@ -387,4 +387,6 @@
     <string name="enabling_registration_timeout" translatable="false">Timeout for enabling registration has expired!</string>
     <string name="wifi_throttling" translatable="false">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
     <string name="enter_suplaorg_credentails" translatable="false">Enter your cloud.supla.org login credentials.</string>
+    <string name="save_without_saving" translatable="false">Do you want to quit without saving?</string>
+    <string name="do_you_want_to_save" translatable="false">Do you want to save the settings?</string>
 </resources>

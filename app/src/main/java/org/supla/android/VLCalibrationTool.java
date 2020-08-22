@@ -446,9 +446,38 @@ public class VLCalibrationTool implements View.OnClickListener,
     public void onClick(View v) {
 
         if (v == btnOK) {
-            configStarted = false;
-            calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte) 1, null);
-            Hide();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(detailRGB.getContext());
+            builder.setMessage(R.string.do_you_want_to_save);
+
+            builder.setPositiveButton(R.string.yes,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            configStarted = false;
+                            calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte) 1, null);
+                            Hide();
+                        }
+                    });
+
+            builder.setNegativeButton(R.string.no,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            configStarted = false;
+                            Hide();
+                            dialog.cancel();
+                        }
+                    });
+
+            builder.setNeutralButton(android.R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
             return;
         } else if (v == btnRestore) {
             showRestoreConfirmDialog();
@@ -567,7 +596,27 @@ public class VLCalibrationTool implements View.OnClickListener,
     }
 
     public boolean onBackPressed() {
-        Hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(detailRGB.getContext());
+        builder.setMessage(R.string.save_without_saving);
+
+        builder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        configStarted = false;
+                        Hide();
+                    }
+                });
+
+        builder.setNeutralButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
         return false;
     }
 

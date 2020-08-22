@@ -387,4 +387,6 @@
     <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
     <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
     <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
+    <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
+    <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
 </resources>
