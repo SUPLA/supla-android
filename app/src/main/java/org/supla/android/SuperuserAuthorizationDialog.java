@@ -36,6 +36,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
+    private boolean preAuthorization;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -85,6 +86,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             cancelTimeoutTimer();
             dialog.show();
         }
+        preAuthorization = true;
+        edPassword.setText("******");
+        onClick(btnOK);
     }
 
     private void registerMessageHandler() {
@@ -100,26 +104,35 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
 
-                    if (onAuthorizarionResultListener != null) {
+                    if ((!preAuthorization || _msg.isSuccess())
+                            && onAuthorizarionResultListener != null) {
                         onAuthorizarionResultListener
                                 .onSuperuserOnAuthorizarionResult(dialog,
                                         _msg.isSuccess(), _msg.getCode());
                     }
 
-                    if (!_msg.isSuccess()) {
-                        switch (_msg.getCode()) {
-                            case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                                ShowError(R.string.status_bad_credentials);
-                                break;
-                            case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-                                ShowError(R.string.status_temporarily_unavailable);
-                                break;
-                            default:
-                                ShowError(R.string.status_unknown_err);
-                                break;
-                        }
+                    if (preAuthorization) {
+                        ShowError("");
+                        edPassword.setText("");
+                        preAuthorization = false;
+                    } else {
+                        if (!_msg.isSuccess()) {
+                            switch (_msg.getCode()) {
+                                case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
+                                    ShowError(R.string.status_bad_credentials);
+                                    break;
+                                case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
+                                    ShowError(R.string.status_temporarily_unavailable);
+                                    break;
+                                default:
+                                    ShowError(R.string.status_unknown_err);
+                                    break;
+                            }
 
+                        }
                     }
+
+
                 }
             }
         };
@@ -164,7 +177,14 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                         @Override
                         public void run() {
-                            ShowError(R.string.time_exceeded);
+                            if (preAuthorization) {
+                                ShowError("");
+                                edPassword.setText("");
+                                preAuthorization = false;
+                            } else {
+                                ShowError(R.string.time_exceeded);
+                            }
+
                         }
                     });
                 }
@@ -173,8 +193,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
-                client.superUserAuthorizationRequest(edEmail.getText().toString(),
-                        edPassword.getText().toString());
+                if (preAuthorization) {
+                    client.getSuperUserAuthorizationResult();
+                } else {
+                    client.superUserAuthorizationRequest(edEmail.getText().toString(),
+                            edPassword.getText().toString());
+                }
             }
         }
     }

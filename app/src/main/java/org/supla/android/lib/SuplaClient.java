@@ -127,6 +127,8 @@ public class SuplaClient extends Thread {
     private native boolean scSuperUserAuthorizationRequest(long _supla_client,
                                                            String email, String password);
 
+    private native boolean scGetSuperUserAuthorizationResult(long _supla_client);
+
     private native boolean scGetChannelState(long _supla_client, int ChannelID);
 
     private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
@@ -376,6 +378,17 @@ public class SuplaClient extends Thread {
         try {
             if (_supla_client_ptr != 0) {
                 scSuperUserAuthorizationRequest(_supla_client_ptr, email, password);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public void getSuperUserAuthorizationResult() {
+        lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scGetSuperUserAuthorizationResult(_supla_client_ptr);
             }
         } finally {
             unlockClientPtr();
