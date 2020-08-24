@@ -196,6 +196,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             typeSlider = varilight;
         }
 
+        cbPicker.setMinBrightness(varilight ? 1f : 0f);
+
         onClick(typeSlider ? tabSlider : tabWheel);
         channelDataToViews();
     }

@@ -98,6 +98,7 @@ public class SuplaColorBrightnessPicker extends View {
     private float powerButtonRadius;
     private boolean powerButtonTouched;
     private boolean jumpToThePointOfTouchEnabled;
+    private float minBrightness = 1f;
 
     public SuplaColorBrightnessPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -597,8 +598,8 @@ public class SuplaColorBrightnessPicker extends View {
 
         if (brightness > 100) {
             brightness = 100;
-        } else if (brightness < 0) {
-            brightness = 0;
+        } else if (brightness < minBrightness) {
+            brightness = minBrightness;
         }
 
         if (selectedBrightness != brightness) {
@@ -635,7 +636,11 @@ public class SuplaColorBrightnessPicker extends View {
             d = 360;
         }
 
-        setBrightnessValue((d / 360) * 100);
+        double brightness = (d / 360) * 100;
+        if (brightness < minBrightness) {
+            brightness = minBrightness;
+        }
+        setBrightnessValue(brightness);
 
         if (mOnChangeListener != null)
             mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
@@ -701,12 +706,14 @@ public class SuplaColorBrightnessPicker extends View {
                         } else {
                             touchDiff = pointToRadians(brightnessPointerCenter) - touchAngle;
                         }
-                    } else if (powerButtonVisible
-                            && powerButtonEnabled
-                            && touchOverPointer(touchPoint, new PointF(0, 0),
-                            powerButtonRadius * 2.2)) {
-                        powerButtonTouched = true;
                     }
+                }
+
+                if (powerButtonVisible
+                        && powerButtonEnabled
+                        && touchOverPointer(touchPoint, new PointF(0, 0),
+                        powerButtonRadius * 2.2)) {
+                    powerButtonTouched = true;
                 }
 
                 if (!isMoving() && !powerButtonTouched) {
@@ -804,6 +811,14 @@ public class SuplaColorBrightnessPicker extends View {
         selectedBrightness = value;
         invalidate();
 
+    }
+
+    public float getMinBrightness() {
+        return minBrightness;
+    }
+
+    public void setMinBrightness(float minBrightness) {
+        this.minBrightness = minBrightness;
     }
 
     private double brightnessToAngle(double value) {
