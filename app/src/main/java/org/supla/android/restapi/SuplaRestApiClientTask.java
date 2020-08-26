@@ -40,6 +40,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -246,7 +247,14 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                             }
 
                             public void checkServerTrusted(
-                                    java.security.cert.X509Certificate[] certs, String authType) {
+                                    java.security.cert.X509Certificate[] certs, String authType) throws CertificateException {
+                                try {
+                                    // We accept all certificates outside of the .supla.org domain.
+                                    // This inactive exception was added due to
+                                    // https://developer.android.com/reference/javax/net/ssl/X509TrustManager
+                                } catch (Exception e) {
+                                    throw new CertificateException("");
+                                }
                             }
                         }
                 };
