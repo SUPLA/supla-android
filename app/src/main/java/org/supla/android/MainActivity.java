@@ -227,7 +227,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 ChannelBase cbase = LV.detail_getChannel();
 
                 if (cbase != null && !cbase.getOnLine())
-                    LV.hideDetail(false);
+                    LV.hideDetail(false, true);
                 else
                     LV.detail_OnChannelDataChanged();
             }

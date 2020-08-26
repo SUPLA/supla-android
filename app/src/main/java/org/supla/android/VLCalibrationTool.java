@@ -2,6 +2,7 @@ package org.supla.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -58,16 +59,23 @@ public class VLCalibrationTool implements View.OnClickListener,
     private SuplaRangeCalibrationWheel calibrationWheel;
     private RelativeLayout mainView;
     private SuperuserAuthorizationDialog authDialog;
-    private boolean configStarted = false;
+    private long configStartedAtTime = 0;
     private VLCfgParameters cfgParameters;
     private int mColorDisabled;
     private Timer delayTimer1 = null;
     private Timer delayTimer2 = null;
+    private boolean restoringDefaults;
+    private PreloaderPopup preloaderPopup;
+    private Timer startConfigurationRetryTimer;
 
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
 
     public VLCalibrationTool(ChannelDetailRGBW detailRGB) {
+
+        if (detailRGB == null || !(detailRGB.getContext() instanceof Activity)) {
+            throw new IllegalArgumentException("The detailRGB pattern is invalid");
+        }
 
         this.detailRGB = detailRGB;
         mainView = (RelativeLayout) detailRGB.inflateLayout(R.layout.vl_calibration);
@@ -129,11 +137,11 @@ public class VLCalibrationTool implements View.OnClickListener,
     @Override
     public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
                                                  boolean Success, int Code) {
+        unregisterMessageHandler();
+
         if (Success) {
             registerMessageHandler();
             calCfgRequest(VL_MSG_CONFIGURATION_MODE);
-        } else {
-            unregisterMessageHandler();
         }
     }
 
@@ -142,23 +150,80 @@ public class VLCalibrationTool implements View.OnClickListener,
         unregisterMessageHandler();
     }
 
+    private void showPreloaderWithText(int resId) {
+
+        if (preloaderPopup == null) {
+            preloaderPopup = new PreloaderPopup((Activity)detailRGB.getContext());
+        }
+
+        preloaderPopup.setText(detailRGB.getContext().getResources().getString(resId));
+        preloaderPopup.show();
+    }
+
+    private void stopConfigurationRetryTimer() {
+        if (startConfigurationRetryTimer != null) {
+            startConfigurationRetryTimer.cancel();
+            startConfigurationRetryTimer = null;
+        }
+    }
+
+    private void startConfigurationAgainWithRetry() {
+
+        stopConfigurationRetryTimer();
+
+        startConfigurationRetryTimer = new Timer();
+
+        startConfigurationRetryTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (startConfigurationRetryTimer != null) {
+                            Trace.d("VLTOOL", "VL_MSG_CONFIGURATION_MODE");
+                            calCfgRequest(VL_MSG_CONFIGURATION_MODE);
+                        }
+                    }
+                });
+
+            }
+        }, 5000, 5000);
+
+    }
+
+    private void closePreloaderPopup() {
+        if (preloaderPopup != null) {
+            preloaderPopup.close();
+            preloaderPopup = null;
+        }
+    }
+
     private void onCalCfgResult(int Command, int Result, byte[] Data) {
         switch (Command) {
             case VL_MSG_CONFIGURATION_ACK:
-                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && authDialog != null) {
-
+                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && !restoringDefaults) {
                     NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
                     if (activity!=null) {
                         activity.showBackButton();
                     }
 
-                    authDialog.close();
-                    authDialog = null;
+                    if (authDialog != null) {
+                        authDialog.close();
+                        authDialog = null;
+                    }
 
                     displayCfgParameters(true);
                     detailRGB.getContentView().setVisibility(View.GONE);
                     mainView.setVisibility(View.VISIBLE);
-                    configStarted = true;
+                    configStartedAtTime = System.currentTimeMillis();
+
+                    closePreloaderPopup();
+                    stopConfigurationRetryTimer();
+
+                } else if (restoringDefaults) {
+                    restoringDefaults = false;
+                    startConfigurationAgainWithRetry();
                 }
                 break;
             case VL_MSG_CONFIGURATION_REPORT:
@@ -342,16 +407,13 @@ public class VLCalibrationTool implements View.OnClickListener,
             delayTimer2.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
 
-                    if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
-                        ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                displayCfgParameters(false);
-                            }
-                        });
-                    }
+                        @Override
+                        public void run() {
+                            displayCfgParameters(false);
+                        }
+                    });
                 }
             }, delayTime, 1000);
         }
@@ -385,6 +447,10 @@ public class VLCalibrationTool implements View.OnClickListener,
         builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        showPreloaderWithText(R.string.restoring_default_settings);
+                        restoringDefaults = true;
+                        startConfigurationAgainWithRetry();
+
                         calCfgDelayed(VL_MSG_RESTORE_DEFAULTS);
                     }
                 });
@@ -453,7 +519,7 @@ public class VLCalibrationTool implements View.OnClickListener,
             builder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            configStarted = false;
+                            configStartedAtTime = 0;
                             calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte) 1, null);
                             Hide();
                         }
@@ -462,7 +528,6 @@ public class VLCalibrationTool implements View.OnClickListener,
             builder.setNegativeButton(R.string.no,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            configStarted = false;
                             Hide();
                             dialog.cancel();
                         }
@@ -490,6 +555,9 @@ public class VLCalibrationTool implements View.OnClickListener,
         if (mode != VLCfgParameters.MODE_UNKNOWN) {
             setMode(mode);
             calCfgRequest(VL_MSG_SET_MODE, (byte) (mode & 0xFF), null);
+
+            showPreloaderWithText(R.string.mode_change_in_progress);
+            startConfigurationAgainWithRetry();
         }
 
         int boost = viewToBoost(v);
@@ -524,14 +592,17 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     public void Hide() {
 
+        closePreloaderPopup();
+        stopConfigurationRetryTimer();
+
         unregisterMessageHandler();
 
         if (mainView.getVisibility() == View.VISIBLE) {
             mainView.setVisibility(View.GONE);
             detailRGB.getContentView().setVisibility(View.VISIBLE);
 
-            if (configStarted) {
-                configStarted = false;
+            if (configStartedAtTime > 0) {
+                configStartedAtTime = 0;
                 byte[] data = new byte[1];
                 detailRGB.deviceCalCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
             }
@@ -602,7 +673,6 @@ public class VLCalibrationTool implements View.OnClickListener,
         builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        configStarted = false;
                         Hide();
                     }
                 });
@@ -620,6 +690,12 @@ public class VLCalibrationTool implements View.OnClickListener,
         return false;
     }
 
+    public boolean isExitLocked() {
+        return preloaderPopup != null
+                || (configStartedAtTime != 0
+                && System.currentTimeMillis() - configStartedAtTime <= 15000);
+    }
+
     class DisplayDelayedTask extends TimerTask {
         private int msg;
 
@@ -629,14 +705,12 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         @Override
         public void run() {
-            if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
-                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        calCfgDelayed(msg);
-                    }
-                });
-            }
+            ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    calCfgDelayed(msg);
+                }
+            });
         }
     }
 }

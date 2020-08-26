@@ -210,4 +210,8 @@ public abstract class DetailLayout extends FrameLayout {
     public boolean onBackPressed() {
         return true;
     }
+
+    public boolean detailWillHide(boolean offlineReason) {
+        return true;
+    }
 }

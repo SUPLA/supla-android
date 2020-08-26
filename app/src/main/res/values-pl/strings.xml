@@ -389,4 +389,6 @@
     <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
     <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
     <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
+    <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
+    <string name="mode_change_in_progress">Trwa zmiana trybu</string>
 </resources>
