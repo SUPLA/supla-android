@@ -164,6 +164,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         ((TextView) findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_error_txt_common)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_done_txt)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_wake_up_txt)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
         ((TextView) findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);

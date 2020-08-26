@@ -392,5 +392,8 @@
     <string name="restoring_default_settings" translatable="false">Restoring default settings</string>
     <string name="mode_change_in_progress" translatable="false">Mode change in progress</string>
     <string name="wizard_step1_txt2" translatable="false">Please make sure mobile data is turned off when adding devices. Otherwise, the addition may fail.</string>
+    <string name="wake_up_frequency" translatable="false">Wake up frequency</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">You can also change the wake-up settings by pressing the icon below.</string>
+    <string name="wakeup_info" translatable="false">*) The entered settings will be applied the next time the node wakes up.</string>
 
 </resources>

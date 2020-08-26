@@ -392,4 +392,7 @@
     <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
     <string name="mode_change_in_progress">Trwa zmiana trybu</string>
     <string name="wizard_step1_txt2">Upewnij się, że dane mobilne są wyłączone podczas dodawania urządzeń. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
+    <string name="wake_up_frequency">Częstotliwość wybudzania</string>
+    <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
+    <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
 </resources>
