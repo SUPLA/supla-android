@@ -181,7 +181,6 @@ public class VLCalibrationTool implements View.OnClickListener,
                     @Override
                     public void run() {
                         if (startConfigurationRetryTimer != null) {
-                            Trace.d("VLTOOL", "VL_MSG_CONFIGURATION_MODE");
                             calCfgRequest(VL_MSG_CONFIGURATION_MODE);
                         }
                     }

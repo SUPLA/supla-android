@@ -399,11 +399,6 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
     public boolean detailWillHide(boolean offlineReason) {
         if (super.detailWillHide(offlineReason)) {
-
-            if (offlineReason) {
-                Trace.d("VLTOOL", "OFFLINE");
-            }
-
             return !offlineReason
                     || vlCalibrationTool == null
                     || !vlCalibrationTool.isVisible()
