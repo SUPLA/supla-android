@@ -92,7 +92,7 @@
     <string name="rate_no_thanks">Non, merci</string>
     <string name="rs_percent_caption">Pourcentage fermeture</string>
     <string name="calibration">[Calibration]</string>
-    <string name="wizard_step1_txt2">Pour continuer, appuyez sur <b>Continuer</b>.</string>
+    <string name="wizard_step1_txt3">Pour continuer, appuyez sur <b>Continuer</b>.</string>
     <string name="add_device">Ajoutez un dispositif</string>
     <string name="advanced_settings">Paramètres avancés</string>
     <string name="wizard_result_param_error">Paramètres d\'entrée erronés!</string>

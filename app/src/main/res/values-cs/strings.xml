@@ -75,7 +75,7 @@
     <string name="add_wizard_is_not_available">Průvodce přidáním je k dispozici pouze v případě, že bylo na základě e-mailové adresy zadané v nastavení vytvořeno připojení k serveru!</string>
     <string name="device_registration_disabled">Registrace I / O zařízení je momentálně zakázána. Chcete-li pokračovat, přejděte na stránku %1$s a na kartě Moje SUPLA povolte přidávání zařízení</string>
     <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
-    <string name="wizard_step1_txt2">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
+    <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
     <string name="next">Dále</string>
     <string name="start">START</string>
     <string name="wizard_step2_txt1">Zadejte heslo sítě WiFi, jejíž název je</string>

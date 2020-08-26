@@ -105,7 +105,7 @@
     <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-    <string name="wizard_step1_txt2">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+    <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
     <string name="start">START</string>>
 
@@ -391,4 +391,5 @@
     <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
     <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
     <string name="mode_change_in_progress">Trwa zmiana trybu</string>
+    <string name="wizard_step1_txt2">Upewnij się, że dane mobilne są wyłączone podczas dodawania urządzeń. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
 </resources>

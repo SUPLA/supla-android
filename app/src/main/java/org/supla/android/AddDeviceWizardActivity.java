@@ -145,7 +145,16 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         tv.setTypeface(type);
 
         tv = findViewById(R.id.wizard_step1_txt2);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tv.setTypeface(type);
+        } else {
+            tv.setVisibility(View.GONE);
+        }
+
+        tv = findViewById(R.id.wizard_step1_txt3);
         tv.setTypeface(type);
+
 
         addStepPage(R.layout.add_device_step2, PAGE_STEP_2);
 
