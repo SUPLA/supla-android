@@ -105,7 +105,7 @@
     <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-    <string name="wizard_step1_txt2">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+    <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
     <string name="start">START</string>>
 
@@ -387,4 +387,15 @@
     <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
     <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
     <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
+    <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
+    <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
+    <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
+    <string name="mode_change_in_progress">Trwa zmiana trybu</string>
+    <string name="wizard_step1_txt2">Upewnij się, że dane mobilne są wyłączone podczas dodawania urządzeń. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
+    <string name="wake_up_frequency">Częstotliwość wybudzania</string>
+    <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
+    <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Upłynął czas oczekiwania na odpowiedź mostu z-wave.</string>
+    <string name="zwave_unexpected_answer">Nieoczekiwana odpowiedź mostu. Kod:  %1$s</string>
+    <string name="seconds">Sekundy</string>
 </resources>

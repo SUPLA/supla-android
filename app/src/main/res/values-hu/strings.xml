@@ -91,7 +91,7 @@
     <string name="device_registration_disabled">Az I / O eszköz regisztrációja jelenleg le van tiltva. A folytatáshoz lépjen a %1$s oldalra, és a "Saját SUPLA" lapon engedélyezze az eszközök hozzáadását.</string>
 
     <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
-    <string name="wizard_step1_txt2">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
+    <string name="wizard_step1_txt3">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
     <string name="next">Tovább</string>
     <string name="start">START</string>>
 

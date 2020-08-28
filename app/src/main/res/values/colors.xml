@@ -63,4 +63,8 @@
     <color name="lifespan_infoline">#B4B7BA</color>
     <color name="lifespan_warning">#FF0000</color>
 
+    <color name="wake_up_settings_infotitle">#000000</color>
+    <color name="wake_up_settings_infotext">#000000</color>
+    <color name="wake_up_settings_infoline">#B4B7BA</color>
+
 </resources>

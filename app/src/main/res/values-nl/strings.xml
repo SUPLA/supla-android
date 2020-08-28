@@ -91,7 +91,7 @@
     <string name="device_registration_disabled">I / O-apparaatregistratie is momenteel uitgeschakeld. Ga door naar pagina %1$s en schakel op het tabblad "Mijn SUPLA" het toevoegen van apparaten in.</string>
 
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
-    <string name="wizard_step1_txt2">Druk op <b>Volgende</b> om door te gaan.</string>
+    <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
     <string name="next">Doorgaan</string>
     <string name="start">OPSTARTEN</string>>
 

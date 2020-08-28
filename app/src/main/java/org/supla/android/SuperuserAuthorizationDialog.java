@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,11 +22,12 @@ import org.supla.android.lib.SuplaConst;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener {
+public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
     private Context context;
     private AlertDialog dialog;
     private Button btnCancel;
     private Button btnOK;
+    private Button btnViewPassword;
     private ProgressBar progressBar;
     private EditText edEmail;
     private EditText edPassword;
@@ -33,6 +36,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
+    private boolean preAuthorization;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -45,6 +49,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
         btnOK = v.findViewById(R.id.btnDialogOK);
         btnOK.setOnClickListener(this);
+
+        btnViewPassword = v.findViewById(R.id.btnViewPassword);
+        btnViewPassword.setOnTouchListener(this);
 
         edEmail = v.findViewById(R.id.dialogEmail);
         progressBar = v.findViewById(R.id.dialogPBar);
@@ -79,6 +86,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             cancelTimeoutTimer();
             dialog.show();
         }
+        preAuthorization = true;
+        edPassword.setText("******");
+        onClick(btnOK);
     }
 
     private void registerMessageHandler() {
@@ -94,26 +104,35 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 if (_msg != null
                         && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
 
-                    if (onAuthorizarionResultListener != null) {
+                    if ((!preAuthorization || _msg.isSuccess())
+                            && onAuthorizarionResultListener != null) {
                         onAuthorizarionResultListener
                                 .onSuperuserOnAuthorizarionResult(dialog,
                                         _msg.isSuccess(), _msg.getCode());
                     }
 
-                    if (!_msg.isSuccess()) {
-                        switch (_msg.getCode()) {
-                            case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                                ShowError(R.string.status_bad_credentials);
-                                break;
-                            case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-                                ShowError(R.string.status_temporarily_unavailable);
-                                break;
-                            default:
-                                ShowError(R.string.status_unknown_err);
-                                break;
-                        }
+                    if (preAuthorization) {
+                        ShowError("");
+                        edPassword.setText("");
+                        preAuthorization = false;
+                    } else {
+                        if (!_msg.isSuccess()) {
+                            switch (_msg.getCode()) {
+                                case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
+                                    ShowError(R.string.status_bad_credentials);
+                                    break;
+                                case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
+                                    ShowError(R.string.status_temporarily_unavailable);
+                                    break;
+                                default:
+                                    ShowError(R.string.status_unknown_err);
+                                    break;
+                            }
 
+                        }
                     }
+
+
                 }
             }
         };
@@ -137,7 +156,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     @Override
     public void onClick(View view) {
         if (view == btnCancel) {
-            dialog.cancel();
+            if (dialog != null) {
+                dialog.cancel();
+            }
+
         } else if (view == btnOK) {
             edPassword.setEnabled(false);
             btnOK.setVisibility(View.GONE);
@@ -155,7 +177,14 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                         @Override
                         public void run() {
-                            ShowError(R.string.time_exceeded);
+                            if (preAuthorization) {
+                                ShowError("");
+                                edPassword.setText("");
+                                preAuthorization = false;
+                            } else {
+                                ShowError(R.string.time_exceeded);
+                            }
+
                         }
                     });
                 }
@@ -164,8 +193,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
-                client.superUserAuthorizationRequest(edEmail.getText().toString(),
-                        edPassword.getText().toString());
+                if (preAuthorization) {
+                    client.getSuperUserAuthorizationResult();
+                } else {
+                    client.superUserAuthorizationRequest(edEmail.getText().toString(),
+                            edPassword.getText().toString());
+                }
             }
         }
     }
@@ -204,6 +237,24 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v == btnViewPassword) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    break;
+            }
+        }
+
+        return false;
     }
 
     public interface OnAuthorizarionResultListener {

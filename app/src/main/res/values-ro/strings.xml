@@ -91,7 +91,7 @@
     <string name="device_registration_disabled">În prezent, înregistrarea dispozitivelor I/O este dezactivată. Pentru a continua, accesați pagina %1$s și în fila „SUPLA mea” activați adăugarea dispozitivelor.</string>
 
     <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
-    <string name="wizard_step1_txt2">Pentru a continua, apăsați<b>Mai departe</b>.</string>
+    <string name="wizard_step1_txt3">Pentru a continua, apăsați<b>Mai departe</b>.</string>
     <string name="next">Mai departe</string>
     <string name="start">START</string>>
 

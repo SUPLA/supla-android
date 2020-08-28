@@ -24,6 +24,7 @@ import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
+import org.supla.android.lib.ZWaveWakeUpSettings;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -88,6 +89,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private Timer mWaitMessagePreloaderTimer;
     private short mAssignedNodeId;
     private short mProgress;
+    private ZWaveWakeupSettingsDialog wakeupSettingsDialog;
+    private TextView mTvWakeUpInfo;
+    private Button mBtnWakeUpSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mNodeListSpinner = findViewById(R.id.zwave_node_list);
         mTvChannel = findViewById(R.id.tv_details_channel_text);
         mTvInfo = findViewById(R.id.tv_info);
+        mTvWakeUpInfo = findViewById(R.id.tv_wake_up_txt);
+        mBtnWakeUpSettings = findViewById(R.id.btnWakeUpSettings);
 
         mBtnResetAndClearLeft.setOnClickListener(this);
         mBtnResetAndClearRight.setOnClickListener(this);
@@ -143,6 +149,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         mBtnRemoveNodeLeft.setOnClickListener(this);
         mBtnRemoveNodeRight.setOnClickListener(this);
         mBtnGetNodeList.setOnClickListener(this);
+        mBtnWakeUpSettings.setOnClickListener(this);
 
         mDeviceListSpinner.setOnItemSelectedListener(this);
         mChannelListSpinner.setOnItemSelectedListener(this);
@@ -164,10 +171,13 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         ((TextView) findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_error_txt_common)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_done_txt)).setTypeface(openSansRegular);
+        ((TextView) findViewById(R.id.tv_wake_up_txt)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
         ((TextView) findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);
         ((TextView) findViewById(R.id.tv_details_device_title)).setTypeface(openSansRegular);
+
+        mTvWakeUpInfo.setTypeface(openSansRegular);
         mTvInfo.setTypeface(openSansRegular);
     }
 
@@ -511,6 +521,15 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 hideInfoMessage();
                 zwaveGetNodeList();
                 break;
+            case PAGE_ZWAVE_DONE:
+                boolean wakeUpSettingsAvailable =
+                        ( getSelectedNodeFlags()
+                                & SuplaConst.ZWAVE_NODE_FLAG_WAKEUP_TIME_SETTABLE ) > 0;
+                mTvWakeUpInfo.setVisibility(wakeUpSettingsAvailable
+                        ? View.VISIBLE : View.INVISIBLE);
+                mBtnWakeUpSettings.setVisibility(mTvWakeUpInfo.getVisibility());
+
+                break;
         }
     }
 
@@ -732,6 +751,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         } else if (v == mBtnGetNodeList) {
             mNodeList.clear();
             zwaveGetNodeList();
+        } else if (v == mBtnWakeUpSettings) {
+            wakeupSettingsDialog = new ZWaveWakeupSettingsDialog(this);
+            wakeupSettingsDialog.show(getChannelId());
         }
     }
 
@@ -897,6 +919,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private short getSelectedNodeId() {
         ZWaveNode node = getSelectedNode();
         return node == null ? 0 : node.getNodeId();
+    }
+
+    private int getSelectedNodeFlags() {
+        ZWaveNode node = getSelectedNode();
+        return node == null ? 0 : node.getFlags();
     }
 
     private void assignNodeIdIfChanged() {
@@ -1158,6 +1185,22 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         showPage(PAGE_ZWAVE_DONE);
     }
 
+    @Override
+    protected void onZWaveWakeUpSettingsReport(int result, ZWaveWakeUpSettings settings) {
+        if (wakeupSettingsDialog != null
+                && wakeupSettingsDialog.isVisible()) {
+            wakeupSettingsDialog.onWakeUpSettingsReport(result, settings);
+        }
+    }
+
+    @Override
+    protected void onZwaveSetWakeUpTimeResult(int result) {
+        if (wakeupSettingsDialog != null
+                && wakeupSettingsDialog.isVisible()) {
+            wakeupSettingsDialog.onZwaveSetWakeUpTimeResult(result);
+        }
+    }
+
     private boolean nodeIdNotExists(short nodeId) {
         for (ZWaveNode n : mNodeList) {
             if (n.getNodeId() == nodeId) {
@@ -1192,9 +1235,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         }
 
         if (node == null) {
-
             if (mAssignedNodeId > 0 && nodeIdNotExists(mAssignedNodeId)) {
                 node = new ZWaveNode(mAssignedNodeId,
+                        (short) 0,
                         (short) 0,
                         mSelectedCahnnel == null ? 0 : mSelectedCahnnel.getChannelId(),
                         getResources().getString(R.string.zwave_offline));

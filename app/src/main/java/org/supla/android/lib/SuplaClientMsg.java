@@ -48,6 +48,8 @@ public class SuplaClientMsg {
     public final static int onZWaveGetAssignedNodeIdResult = 25;
     public final static int onZWaveAssignNodeIdResult = 26;
     public final static int onCalCfgProgressReport = 27;
+    public final static int onZWaveWakeUpSettingsReport = 28;
+    public final static int onZWaveSetWakeUpTimeResult = 29;
     private SuplaClient Sender;
     private int Type;
     private SuplaVersionError VersionError;
@@ -72,6 +74,7 @@ public class SuplaClientMsg {
     private String Text;
     private short Progress;
     private boolean ExtendedValue;
+    private ZWaveWakeUpSettings WakeUpSettings;
 
     public SuplaClientMsg(SuplaClient sender, int type) {
         Type = type;
@@ -263,5 +266,13 @@ public class SuplaClientMsg {
 
     public void setExtendedValue(boolean extendedValue) {
         ExtendedValue = extendedValue;
+    }
+
+    public ZWaveWakeUpSettings getWakeUpSettings() {
+        return WakeUpSettings;
+    }
+
+    public void setWakeUpSettings(ZWaveWakeUpSettings wakeUpSettings) {
+        WakeUpSettings = wakeUpSettings;
     }
 }

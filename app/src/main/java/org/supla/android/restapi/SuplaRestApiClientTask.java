@@ -39,13 +39,17 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 
@@ -232,21 +236,51 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
             return null;
         }
         try {
-            TrustManager[] trustAllNonSuplaCerts = null;
+            TrustManager[] trustSelfSignedCerts = null;
 
             if (!url.getAuthority().contains(".supla.org")) {
-                trustAllNonSuplaCerts = new TrustManager[]{
+                trustSelfSignedCerts = new TrustManager[]{
                         new X509TrustManager() {
                             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                                 return null;
                             }
 
                             public void checkClientTrusted(
-                                    java.security.cert.X509Certificate[] certs, String authType) {
+                                    java.security.cert.X509Certificate[] certs, String authType)
+                                    throws CertificateException {
                             }
 
                             public void checkServerTrusted(
-                                    java.security.cert.X509Certificate[] certs, String authType) {
+                                    java.security.cert.X509Certificate[] certs, String authType)
+                                    throws CertificateException {
+                                if (certs == null) {
+                                    throw new IllegalArgumentException("Cert is null");
+                                }
+                                if (certs.length > 1) {
+                                    TrustManagerFactory tmf = null;
+                                    try {
+                                        tmf = TrustManagerFactory
+                                                .getInstance(TrustManagerFactory.
+                                                        getDefaultAlgorithm());
+                                    } catch (NoSuchAlgorithmException e) {
+                                        throw new CertificateException("Can't verify certificate. "
+                                                +e.getMessage());
+                                    }
+                                    try {
+                                        tmf.init((KeyStore) null);
+                                    } catch (KeyStoreException e) {
+                                        throw new CertificateException("Can't verify certificate. "
+                                                +e.getMessage());
+                                    }
+                                    TrustManager[] trustManagers = tmf.getTrustManagers();
+
+                                    for( TrustManager tm :  trustManagers ) {
+                                        if (tm instanceof X509TrustManager) {
+                                            ((X509TrustManager) tm)
+                                                    .checkServerTrusted(certs, authType);
+                                        }
+                                    }
+                                }
                             }
                         }
                 };
@@ -259,7 +293,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
                 });
             }
 
-            sc.init(null, trustAllNonSuplaCerts, new java.security.SecureRandom());
+            sc.init(null, trustSelfSignedCerts, new java.security.SecureRandom());
         } catch (KeyManagementException e) {
             e.printStackTrace();
             return null;

@@ -171,4 +171,12 @@ public class SuplaColorBrightnessPickerTest extends TestCase {
         Assert.assertEquals(Color.BLACK, d, 0);
         Assert.assertEquals(Color.BLACK, d.intValue(), 0);
     }
+
+    public void testJumpToThePointOfTouchSetterAndGetter() {
+        Assert.assertTrue(picker.isJumpToThePointOfTouchEnabled());
+        picker.setJumpToThePointOfTouchEnabled(false);
+        Assert.assertFalse(picker.isJumpToThePointOfTouchEnabled());
+        picker.setJumpToThePointOfTouchEnabled(true);
+        Assert.assertTrue(picker.isJumpToThePointOfTouchEnabled());
+    }
 }

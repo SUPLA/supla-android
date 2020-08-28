@@ -42,7 +42,7 @@
         android:layout_marginTop="19dp"
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
-        android:text="@string/wizard_step1_txt2"
+        android:text="@string/wizard_step1_txt3"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 </RelativeLayout>

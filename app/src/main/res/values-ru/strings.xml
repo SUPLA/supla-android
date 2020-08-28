@@ -97,7 +97,7 @@
 
     <string name="rs_percent_caption">Процент закрытия</string>
     <string name="calibration">[калибровка]</string>
-    <string name="wizard_step1_txt2">Для продолжения нажмите <b>Далее</b>.</string>
+    <string name="wizard_step1_txt3">Для продолжения нажмите <b>Далее</b>.</string>
     <string name="add_device">Добавить устройство</string>
     <string name="advanced_settings">Дополнительные параметры</string>
     <string name="wizard_result_param_error">Неверные входные параметры!</string>

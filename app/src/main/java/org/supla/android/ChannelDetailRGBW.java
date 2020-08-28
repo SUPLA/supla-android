@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -195,6 +196,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             typeSlider = varilight;
         }
 
+        cbPicker.setMinBrightness(varilight ? 1f : 0f);
+
         onClick(typeSlider ? tabSlider : tabWheel);
         channelDataToViews();
     }
@@ -215,6 +218,14 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         rlMain.setVisibility(VISIBLE);
     }
 
+    private void hideVlConfigurationToolIfNotLocked() {
+        if (vlCalibrationTool != null
+                && !vlCalibrationTool.isExitLocked()) {
+            vlCalibrationTool.Hide();
+            vlCalibrationTool = null;
+        }
+    }
+
     public void setData(ChannelBase channel) {
 
         super.setData(channel);
@@ -223,10 +234,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         varilight = false;
 
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
-            vlCalibrationTool = null;
-        }
+        hideVlConfigurationToolIfNotLocked();
 
         switch (channel.getFunc()) {
 
@@ -387,6 +395,17 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             return vlCalibrationTool.onBackPressed();
         }
         return true;
+    }
+
+    public boolean detailWillHide(boolean offlineReason) {
+        if (super.detailWillHide(offlineReason)) {
+            return !offlineReason
+                    || vlCalibrationTool == null
+                    || !vlCalibrationTool.isVisible()
+                    || !vlCalibrationTool.isExitLocked();
+
+        }
+        return false;
     }
 
     private void sendNewValues(boolean force, boolean turnOnOff) {
@@ -608,12 +627,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     @Override
     public void OnChannelDataChanged() {
         refreshViewsWithDelay();
-
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
-        }
+        hideVlConfigurationToolIfNotLocked();
     }
-
 
     @Override
     public void onColorTouched(SuplaColorListPicker sclPicker, int color, short percent) {
@@ -649,5 +664,12 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
+            return false;
+        }
+        return super.onTouchEvent(ev);
+    }
 
 }

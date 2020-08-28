@@ -97,6 +97,8 @@ public class SuplaColorBrightnessPicker extends View {
     private int powerButtonColorOff;
     private float powerButtonRadius;
     private boolean powerButtonTouched;
+    private boolean jumpToThePointOfTouchEnabled;
+    private float minBrightness = 1f;
 
     public SuplaColorBrightnessPicker(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -149,6 +151,8 @@ public class SuplaColorBrightnessPicker extends View {
 
         powerButtonVisible = true;
         powerButtonEnabled = true;
+
+        jumpToThePointOfTouchEnabled = true;
 
         setBrightnessValue(0);
         setColor(0xff00ff00);
@@ -317,7 +321,6 @@ public class SuplaColorBrightnessPicker extends View {
     }
 
     private void drawWheel(Canvas canvas) {
-
         if (colorWheelVisible) {
 
             cwPaint.setShader(cwShader);
@@ -561,8 +564,86 @@ public class SuplaColorBrightnessPicker extends View {
                 + Math.pow(pointerCenter.y - touchPoint.y, 2)) <= pointerHeight / 2;
     }
 
+    private boolean touchOverSlider(PointF touchPoint) {
+        return sliderRect.contains(touchPoint.x, touchPoint.y);
+    }
+
+    private boolean touchOverColorWheel(PointF touchPoint) {
+        if (colorWheelVisible) {
+            PointF center = new PointF(0,0);
+            return !touchOverPointer(touchPoint, center,
+                    colorWheelRadius * 2 - colorWheelWidth)
+                    && touchOverPointer(touchPoint, center,
+                    colorWheelRadius * 2 + colorWheelWidth);
+        }
+
+        return false;
+    }
+
+    private boolean touchOverBrightnssWheel(PointF touchPoint) {
+        PointF center = new PointF(0,0);
+        return !touchOverPointer(touchPoint, center,
+                brightnessWheelRadius * 2 - brightnessWheelWidth)
+                && touchOverPointer(touchPoint, center,
+                brightnessWheelRadius * 2 + brightnessWheelWidth);
+    }
+
     public double pointToRadians(PointF point) {
         return Math.atan2(point.y, point.x);
+    }
+
+    private void moveSliderPointerToY(float y) {
+        float h = sliderRect.height() - (float) pointerHeight;
+        float brightness = 100 - ((h / 2) + y) * 100 / h;
+
+        if (brightness > 100) {
+            brightness = 100;
+        } else if (brightness < minBrightness) {
+            brightness = minBrightness;
+        }
+
+        if (selectedBrightness != brightness) {
+            setBrightnessValue(brightness);
+
+            if (mOnChangeListener != null)
+                mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
+        }
+    }
+
+    private void moveColorPointerToAngle(double angle) {
+        colorWheelPointerAngle = angle;
+
+        int newColor = calculateColor((float) colorWheelPointerAngle, Colors);
+
+        if (newColor != selectedColor) {
+            selectedColor = newColor;
+            setBWcolor();
+            invalidate();
+
+            if (mOnChangeListener != null)
+                mOnChangeListener.onColorChanged(this, selectedColor);
+        }
+    }
+
+    private void moveBrightnessPointerToAngle(double angle) {
+        double d = Math.toDegrees(angle) + 90;
+
+        if (d < 0) {
+            d += 360;
+        }
+
+        if (d >= 359.99) {
+            d = 360;
+        }
+
+        double brightness = (d / 360) * 100;
+        if (brightness < minBrightness) {
+            brightness = minBrightness;
+        }
+        setBrightnessValue(brightness);
+
+        if (mOnChangeListener != null)
+            mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
     }
 
     @Override
@@ -598,19 +679,37 @@ public class SuplaColorBrightnessPicker extends View {
                 brightnessWheelPointerMoving = false;
                 powerButtonTouched = false;
 
-                if (!sliderVisible
-                        && colorWheelVisible
-                        && touchOverPointer(touchPoint, colorPointerCenter, pointerHeight)) {
-                    colorPointerMoving = true;
-                    touchDiff = pointToRadians(colorPointerCenter) - touchAngle;
-                } else if (touchOverPointer(touchPoint, brightnessPointerCenter, pointerHeight)) {
-                    brightnessWheelPointerMoving = true;
+                if (jumpToThePointOfTouchEnabled) {
                     if (sliderVisible) {
-                        touchDiff = brightnessPointerCenter.y - touchPoint.y;
-                    } else {
-                        touchDiff = pointToRadians(brightnessPointerCenter) - touchAngle;
+                       if (touchOverSlider(touchPoint)) {
+                           brightnessWheelPointerMoving = true;
+                           moveSliderPointerToY(touchPoint.y);
+                       }
+                    } else if (touchOverColorWheel(touchPoint)) {
+                        colorPointerMoving = true;
+                        moveColorPointerToAngle(touchAngle);
+                    } else if (touchOverBrightnssWheel(touchPoint)) {
+                        brightnessWheelPointerMoving = true;
+                        moveBrightnessPointerToAngle(touchAngle);
                     }
-                } else if (powerButtonVisible
+                    touchDiff = 0;
+                } else {
+                    if (!sliderVisible
+                            && colorWheelVisible
+                            && touchOverPointer(touchPoint, colorPointerCenter, pointerHeight)) {
+                        colorPointerMoving = true;
+                        touchDiff = pointToRadians(colorPointerCenter) - touchAngle;
+                    } else if (touchOverPointer(touchPoint, brightnessPointerCenter, pointerHeight)) {
+                        brightnessWheelPointerMoving = true;
+                        if (sliderVisible) {
+                            touchDiff = brightnessPointerCenter.y - touchPoint.y;
+                        } else {
+                            touchDiff = pointToRadians(brightnessPointerCenter) - touchAngle;
+                        }
+                    }
+                }
+
+                if (powerButtonVisible
                         && powerButtonEnabled
                         && touchOverPointer(touchPoint, new PointF(0, 0),
                         powerButtonRadius * 2.2)) {
@@ -626,39 +725,10 @@ public class SuplaColorBrightnessPicker extends View {
 
                 if (sliderVisible) {
                     if (brightnessWheelPointerMoving) {
-                        float h = sliderRect.height() - (float) pointerHeight;
-                        float brightness = 100 - ((h / 2) + (float) touchDiff + touchPoint.y) * 100 / h;
-
-                        if (brightness > 100) {
-                            brightness = 100;
-                        } else if (brightness < 0) {
-                            brightness = 0;
-                        }
-
-                        if (selectedBrightness != brightness) {
-                            setBrightnessValue(brightness);
-
-                            if (mOnChangeListener != null)
-                                mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
-                        }
-
+                        moveSliderPointerToY((float) touchDiff + touchPoint.y);
                     }
                 } else if (colorPointerMoving) {
-
-                    colorWheelPointerAngle = touchAngle + touchDiff;
-
-                    int newColor = calculateColor((float) colorWheelPointerAngle, Colors);
-
-                    if (newColor != selectedColor) {
-                        selectedColor = newColor;
-                        setBWcolor();
-                        invalidate();
-
-                        if (mOnChangeListener != null)
-                            mOnChangeListener.onColorChanged(this, selectedColor);
-
-                    }
-
+                    moveColorPointerToAngle(touchAngle + touchDiff);
                 } else if (brightnessWheelPointerMoving) {
 
                     double newAngle = touchAngle + touchDiff;
@@ -683,20 +753,7 @@ public class SuplaColorBrightnessPicker extends View {
                     }
 
                     if (brightnessWheelPointerAngle != newAngle) {
-                        double d = Math.toDegrees(newAngle) + 90;
-
-                        if (d < 0) {
-                            d += 360;
-                        }
-
-                        if (d >= 359.99) {
-                            d = 360;
-                        }
-
-                        setBrightnessValue((d / 360) * 100);
-
-                        if (mOnChangeListener != null)
-                            mOnChangeListener.onBrightnessChanged(this, selectedBrightness);
+                        moveBrightnessPointerToAngle(newAngle);
                     }
                 }
 
@@ -754,6 +811,14 @@ public class SuplaColorBrightnessPicker extends View {
         selectedBrightness = value;
         invalidate();
 
+    }
+
+    public float getMinBrightness() {
+        return minBrightness;
+    }
+
+    public void setMinBrightness(float minBrightness) {
+        this.minBrightness = minBrightness;
     }
 
     private double brightnessToAngle(double value) {
@@ -879,6 +944,14 @@ public class SuplaColorBrightnessPicker extends View {
     public void setPowerButtonColorOff(int powerButtonColorOff) {
         this.powerButtonColorOff = powerButtonColorOff;
         invalidate();
+    }
+
+    public boolean isJumpToThePointOfTouchEnabled() {
+        return jumpToThePointOfTouchEnabled;
+    }
+
+    public void setJumpToThePointOfTouchEnabled(boolean jumpToThePointOfTouch) {
+        this.jumpToThePointOfTouchEnabled = jumpToThePointOfTouch;
     }
 
     public interface OnColorBrightnessChangeListener {

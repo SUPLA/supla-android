@@ -127,6 +127,8 @@ public class SuplaClient extends Thread {
     private native boolean scSuperUserAuthorizationRequest(long _supla_client,
                                                            String email, String password);
 
+    private native boolean scGetSuperUserAuthorizationResult(long _supla_client);
+
     private native boolean scGetChannelState(long _supla_client, int ChannelID);
 
     private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
@@ -155,6 +157,10 @@ public class SuplaClient extends Thread {
     private native boolean scZWaveGetAssignedNodeId(long _supla_client, int ChannelID);
 
     private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, short NodeId);
+
+    private native boolean scZWaveGetWakeUpSettings(long _supla_client, int ChannelID);
+
+    private native boolean scZWaveSetWakeUpTime(long _supla_client, int ChannelID, int Time);
 
     private native boolean scSetLightsourceLifespan(long _supla_client, int ChannelID, boolean
             resetCounter, boolean setTime, int lifeSpan);
@@ -382,6 +388,17 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public void getSuperUserAuthorizationResult() {
+        lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scGetSuperUserAuthorizationResult(_supla_client_ptr);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
     public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
         lockClientPtr();
@@ -576,6 +593,26 @@ public class SuplaClient extends Thread {
         try {
             return _supla_client_ptr != 0
                     && scZWaveAssignNodeId(_supla_client_ptr, ChannelID, NodeId);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetWakeUpSettings(int ChannelID) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetWakeUpSettings(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveSetWakeUpTime(int ChannelID, int Time) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveSetWakeUpTime(_supla_client_ptr, ChannelID, Time);
         } finally {
             unlockClientPtr();
         }
@@ -1025,6 +1062,21 @@ public class SuplaClient extends Thread {
                 SuplaClientMsg.onZWaveAssignNodeIdResult);
         msg.setResult(result);
         msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveWakeUpSettingsReport(int result, ZWaveWakeUpSettings settings) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveWakeUpSettingsReport);
+        msg.setResult(result);
+        msg.setWakeUpSettings(settings);
+        sendMessage(msg);
+    }
+
+    private void onZWaveSetWakeUpTimeResult(int result) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveSetWakeUpTimeResult);
+        msg.setResult(result);
         sendMessage(msg);
     }
 

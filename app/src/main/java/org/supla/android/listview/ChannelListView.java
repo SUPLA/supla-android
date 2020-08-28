@@ -787,8 +787,9 @@ public class ChannelListView extends ListView {
         }
     }
 
-    public void hideDetail(boolean animated) {
-        if (isDetailVisible())
+    public void hideDetail(boolean animated, boolean offlineReason) {
+        if (isDetailVisible()
+                && mDetailLayout.detailWillHide(offlineReason))
 
             if (animated) {
                 AnimateDetailSliding(true);
@@ -802,8 +803,10 @@ public class ChannelListView extends ListView {
 
                 onDetailHide();
             }
+    }
 
-
+    public void hideDetail(boolean animated) {
+        hideDetail(animated, false);
     }
 
     public ChannelBase detail_getChannel() {
