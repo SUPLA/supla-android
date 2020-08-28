@@ -21,7 +21,7 @@
             android:singleLine="true"
             android:text="@string/wake_up_frequency"
             android:textColor="@color/wake_up_settings_infotitle"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btnClose"
@@ -40,19 +40,10 @@
         android:background="@color/wake_up_settings_infoline" />
 
     <LinearLayout
+        android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Error"
-            android:textColor="#ffcc0000"
-            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -60,10 +51,28 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"></NumberPicker>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:text="@string/hours"
+                    android:textSize="10sp" />
+
+                <NumberPicker
+                    android:id="@+id/npHours"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"></NumberPicker>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView3"
@@ -76,11 +85,29 @@
                 android:text=":"
                 android:textSize="18sp" />
 
-            <NumberPicker
-                android:id="@+id/numberPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"></NumberPicker>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:text="@string/minutes"
+                    android:textSize="10sp" />
+
+                <NumberPicker
+                    android:id="@+id/npMinutes"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"></NumberPicker>
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/textView8"
@@ -93,11 +120,29 @@
                 android:text=":"
                 android:textSize="18sp" />
 
-            <NumberPicker
-                android:id="@+id/numberPicker2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"></NumberPicker>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:text="@string/seconds"
+                    android:textSize="10sp" />
+
+                <NumberPicker
+                    android:id="@+id/npSeconds"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"></NumberPicker>
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
@@ -119,14 +164,14 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnDialogCancel"
+                android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@android:string/cancel" />
 
             <Button
-                android:id="@+id/btnDialogOK"
+                android:id="@+id/btnOK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -134,7 +179,7 @@
                 android:visibility="visible" />
 
             <ProgressBar
-                android:id="@+id/dialogPBar"
+                android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -144,11 +189,22 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Error"
+        android:textColor="#ffcc0000"
+        android:visibility="invisible" />
+
     <ProgressBar
         android:id="@+id/progressBar2"
         style="?android:attr/progressBarStyle"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
+        android:layout_width="70dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1" />
 

@@ -44,9 +44,9 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/btnWakeUp"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/btnWakeUpSettings"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/tv_wake_up_txt"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="false"

@@ -35,6 +35,7 @@ import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
 import org.supla.android.lib.ZWaveNode;
+import org.supla.android.lib.ZWaveWakeUpSettings;
 
 import java.util.Date;
 import java.util.Timer;
@@ -217,6 +218,12 @@ public class BaseActivity extends Activity {
                     case SuplaClientMsg.onZWaveAssignNodeIdResult:
                         onZWaveAssignNodeIdResult(_msg.getResult(), _msg.getNodeId());
                         break;
+                    case SuplaClientMsg.onZWaveWakeUpSettingsReport:
+                        onZWaveWakeUpSettingsReport(_msg.getResult(), _msg.getWakeUpSettings());
+                        break;
+                    case SuplaClientMsg.onZWaveSetWakeUpTimeResult:
+                        onZwaveSetWakeUpTimeResult(_msg.getResult());
+                        break;
                     case SuplaClientMsg.onCalCfgProgressReport:
                         onCalCfgProgressReport(_msg.getChannelId(),
                                 _msg.getCommand(), _msg.getProgress());
@@ -270,89 +277,77 @@ public class BaseActivity extends Activity {
     protected void onEventMsg(SuplaEvent event) {
     }
 
+
     protected void onConnErrorMsg(SuplaConnError error) {
     }
+
 
     protected void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
     }
 
+
     protected void onOAuthTokenRequestResult(SuplaOAuthToken token) {
     }
 
-    ;
 
     protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {
     }
 
-    ;
 
     protected void onCalCfgProgressReport(int channelId, int command, short progress) {
     }
 
-    ;
 
     protected void onSuperuserAuthorizationResult(boolean success, int code) {
     }
 
-    ;
 
     protected void onChannelState(SuplaChannelState state) {
     }
 
-    ;
 
     protected void onChannelBasicCfg(SuplaChannelBasicCfg basicCfg) {
     }
 
-    ;
 
     protected void onChannelFunctionSetResult(int channelId, int func, int code) {
     }
 
-    ;
 
     protected void onChannelCaptionSetResult(int channelId, String caption, int code) {
     }
 
-    ;
 
     protected void onClientsReconnectResult(int code) {
     }
 
-    ;
 
     protected void onSetRegistrationEnabledResult(int code) {
     }
 
-    ;
 
     protected void onZWaveResetAndClearResult(int result) {
     }
 
-    ;
 
     protected void onZWaveAddNodeResult(int result, ZWaveNode node) {
     }
 
-    ;
-
     protected void onZWaveRemoveNodeResult(int result, short nodeId) {
     }
-
-    ;
 
     protected void onZWaveGetNodeListResult(int result, ZWaveNode node) {
     }
 
-    ;
-
     protected void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
     }
-
-    ;
 
     protected void onZWaveAssignNodeIdResult(int result, short nodeId) {
     }
 
-    ;
+    protected void onZWaveWakeUpSettingsReport(int result, ZWaveWakeUpSettings settings) {
+    }
+
+    protected void onZwaveSetWakeUpTimeResult(int result) {
+    }
 }

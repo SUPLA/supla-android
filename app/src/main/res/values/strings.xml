@@ -395,5 +395,7 @@
     <string name="wake_up_frequency" translatable="false">Wake up frequency</string>
     <string name="zwave_change_wake_up_settings" translatable="false">You can also change the wake-up settings by pressing the icon below.</string>
     <string name="wakeup_info" translatable="false">*) The entered settings will be applied the next time the node wakes up.</string>
-
+    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Timeout waiting for z-wave bridge response.</string>
+    <string name="zwave_unexpected_answer" translatable="false">Unexpected bridge response. Code: %1$s</string>
+    <string name="seconds" translatable="false">Seconds</string>
 </resources>

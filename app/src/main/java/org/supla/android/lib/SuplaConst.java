@@ -252,6 +252,9 @@ public class SuplaConst {
 
     public final static int SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST = 2030;
 
+    public final static int ZWAVE_NODE_FLAG_CHANNEL_ASSIGNED = 0x1;
+    public final static int ZWAVE_NODE_FLAG_WAKEUP_TIME_SETTABLE = 0x2;
+
     public final static int SUPLA_CALCFG_RESULT_FALSE = 0;
     public final static int SUPLA_CALCFG_RESULT_TRUE = 1;
     public final static int SUPLA_CALCFG_RESULT_DONE = 2;

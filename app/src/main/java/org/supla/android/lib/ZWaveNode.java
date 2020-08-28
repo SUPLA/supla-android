@@ -21,12 +21,14 @@ package org.supla.android.lib;
 public class ZWaveNode {
     private short NodeId;
     private short SceneType;
+    private int Flags;
     private Integer ChannelId;
     private String Name;
 
-    public ZWaveNode(short nodeId, short sceneType, Integer channelId, String name) {
+    public ZWaveNode(short nodeId, short sceneType, int flags, Integer channelId, String name) {
         NodeId = nodeId;
         SceneType = sceneType;
+        Flags = flags;
         ChannelId = channelId;
         Name = name;
     }
@@ -45,6 +47,10 @@ public class ZWaveNode {
 
     public void setSceneType(short sceneType) {
         SceneType = sceneType;
+    }
+
+    public int getFlags() {
+        return Flags;
     }
 
     public Integer getChannelId() {

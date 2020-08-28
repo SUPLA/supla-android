@@ -395,4 +395,7 @@
     <string name="wake_up_frequency">Częstotliwość wybudzania</string>
     <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
     <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Upłynął czas oczekiwania na odpowiedź mostu z-wave.</string>
+    <string name="zwave_unexpected_answer">Nieoczekiwana odpowiedź mostu. Kod:  %1$s</string>
+    <string name="seconds">Sekundy</string>
 </resources>
