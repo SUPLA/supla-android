@@ -155,7 +155,6 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         tv = findViewById(R.id.wizard_step1_txt3);
         tv.setTypeface(type);
 
-
         addStepPage(R.layout.add_device_step2, PAGE_STEP_2);
 
         tvStep2Info1 = findViewById(R.id.wizard_step2_txt1);
