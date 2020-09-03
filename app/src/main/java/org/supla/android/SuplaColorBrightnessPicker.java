@@ -709,7 +709,8 @@ public class SuplaColorBrightnessPicker extends View {
                     }
                 }
 
-                if (powerButtonVisible
+                if (!sliderVisible
+                        && powerButtonVisible
                         && powerButtonEnabled
                         && touchOverPointer(touchPoint, new PointF(0, 0),
                         powerButtonRadius * 2.2)) {

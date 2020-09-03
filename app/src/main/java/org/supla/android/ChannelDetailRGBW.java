@@ -208,6 +208,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         if (vlCalibrationTool != null) {
             vlCalibrationTool.Hide();
+            vlCalibrationTool = null;
         }
     }
 
@@ -222,7 +223,6 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         if (vlCalibrationTool != null
                 && !vlCalibrationTool.isExitLocked()) {
             vlCalibrationTool.Hide();
-            vlCalibrationTool = null;
         }
     }
 
@@ -419,7 +419,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         if (client == null || (!isDetailVisible() && !force))
             return;
-
+        
         if ((turnOnOff
                 || System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD)
                 && client.setRGBW(getRemoteId(), isGroup(), lastColor,
@@ -524,6 +524,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             tabSlider.setTextColor(Color.WHITE);
             btnPowerOnOff.setVisibility(VISIBLE);
         } else if (v == btnSettings
+                && varilight
                 && vlCalibrationTool != null) {
             vlCalibrationTool.Show();
         } else if (v == btnPowerOnOff) {
