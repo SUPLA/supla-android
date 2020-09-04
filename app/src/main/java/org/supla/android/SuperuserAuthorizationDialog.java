@@ -257,10 +257,15 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         return false;
     }
 
+    public boolean isShowing() {
+        return dialog != null && dialog.isShowing();
+    }
+
     public interface OnAuthorizarionResultListener {
         void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
                                               boolean Success, int Code);
 
         void authorizationCanceled();
     }
+
 }
