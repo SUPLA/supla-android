@@ -2,7 +2,6 @@ package org.supla.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -70,6 +69,7 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
+    private boolean mSuperuserAuthorizationStarted;
 
     public VLCalibrationTool(ChannelDetailRGBW detailRGB) {
 
@@ -138,6 +138,7 @@ public class VLCalibrationTool implements View.OnClickListener,
     public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
                                                  boolean Success, int Code) {
         unregisterMessageHandler();
+        mSuperuserAuthorizationStarted = false;
 
         if (Success) {
             registerMessageHandler();
@@ -147,6 +148,7 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     @Override
     public void authorizationCanceled() {
+        mSuperuserAuthorizationStarted = false;
         unregisterMessageHandler();
     }
 
@@ -582,7 +584,7 @@ public class VLCalibrationTool implements View.OnClickListener,
             authDialog.close();
             authDialog = null;
         }
-
+        mSuperuserAuthorizationStarted = true;
         authDialog =
                 new SuperuserAuthorizationDialog(detailRGB.getContext());
         authDialog.setOnAuthorizarionResultListener(this);
@@ -691,6 +693,7 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     public boolean isExitLocked() {
         return preloaderPopup != null
+                || (mSuperuserAuthorizationStarted && authDialog != null && authDialog.isShowing())
                 || (configStartedAtTime != 0
                 && System.currentTimeMillis() - configStartedAtTime <= 15000);
     }
