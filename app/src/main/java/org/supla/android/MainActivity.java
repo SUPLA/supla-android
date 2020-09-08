@@ -528,6 +528,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (channelLV.isDetailVisible()) {
             channelLV.onBackPressed();
+        } else if (cgroupLV.isDetailVisible()) {
+            cgroupLV.onBackPressed();
         } else {
             gotoMain();
         }
