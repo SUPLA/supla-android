@@ -1181,6 +1181,19 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
         wathdogDeactivate();
         setBtnNextPreloaderVisible(false);
+
+        if (mSelectedCahnnel != null) {
+            int _nodeId = nodeId == 0 ? mAssignedNodeId : nodeId;
+            if (_nodeId > 0) {
+                for (ZWaveNode n : mNodeList) {
+                    if (n.getNodeId() == _nodeId) {
+                        n.setChannelId(nodeId > 0 ? mSelectedCahnnel.getChannelId() : null);
+                        break;
+                    }
+                }
+            }
+        }
+
         mAssignedNodeId = nodeId;
         showPage(PAGE_ZWAVE_DONE);
     }
