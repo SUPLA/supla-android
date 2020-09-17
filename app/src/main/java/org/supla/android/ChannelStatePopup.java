@@ -282,11 +282,16 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
 
         if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH) {
 
-            if (state.getLightSourceLifespan() != null
-                    && state.getLightSourceLifespan() > 0) {
-                llLightSourceLifespan.setVisibility(View.VISIBLE);
-                llProgress.setVisibility(View.GONE);
-                tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
+            if (state.getLightSourceLifespan() != null) {
+                if (state.getLightSourceLifespan() > 0) {
+                    llLightSourceLifespan.setVisibility(View.VISIBLE);
+                    llProgress.setVisibility(View.GONE);
+                    tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
+                }
+
+                if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE) > 0) {
+                    btnReset.setVisibility(View.VISIBLE);
+                }
             }
 
             if (state.getLightSourceOperatingTime() != null) {
@@ -295,10 +300,6 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
                 tvLightSourceOperatingTime.setText(state.getLightSourceOperatingTimeString());
             }
 
-            if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE) > 0) {
-                btnReset.setVisibility(View.VISIBLE);
-
-            }
         }
     }
 
