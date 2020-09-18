@@ -311,7 +311,6 @@
     <string name="zwave_error_common_message">Naciśnij wstecz aby wrócić do poprzedniego kroku lub \"Wyjście\" aby zakończyć.</string>
     <string name="zwave_error_slave_mode">Ta funkcja nie jest dostępna gdy most pracuje w trybie podrzędnym.</string>
     <string name="zwave_done">Gotowe! Teraz możesz zakończyć proces konfiguracji naciskając przycisk \"ok\" lub możesz nacisnąć wstecz aby skonfigurować kolejny kanał lub zmienić dotychczasowe ustawienia.</string>
-
     <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
     <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
     <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
@@ -331,7 +330,6 @@
     <string name="vector_balance_years">Bilans wektorowy - Lata</string>
     <string name="wheel">Koło</string>
     <string name="slider">Suwak</string>
-
     <string name="vl_cfg_mode">Tryb ściemniania</string>
     <string name="vl_cfg_auto">AUTO</string>
     <string name="vl_cfg_mode1">TRYB 1</string>
@@ -341,7 +339,6 @@
     <string name="vl_cfg_no">NIE</string>
     <string name="vl_cfg_op_range">Zakres pracy</string>
     <string name="vl_cfg_boost">Wzmocnienie</string>
-
     <string name="information">Informacje</string>
     <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
     <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
@@ -357,9 +354,7 @@
     <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
     <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
     <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
-
-    <string name="time_exceeded" translatable="false">Przekroczono czas. Spróbuj ponownie.</string>
-
+    <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
     <string name="IP">IP</string>
     <string name="MAC">MAC</string>
     <string name="battery_level">Poziom baterii</string>
