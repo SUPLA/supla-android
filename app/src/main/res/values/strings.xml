@@ -306,7 +306,7 @@
     <string name="zwave_waiting_for_add" translatable="false">Waiting for the device to be added to the z-wave network.</string>
     <string name="zwave_waiting_for_add_timeout" translatable="false">The waiting time for adding the device to the z-wave network has expired.</string>
     <string name="zwave_reset_confirm_question" translatable="false">Are you sure you want to reset the settings and z-wave network?</string>
-    <string name="zwave_offline" translatable="false">Offline?</string>
+    <string name="zwave_offline" translatable="false">Offline ?</string>
     <string name="zwave_used" translatable="false">Assigned to:</string>
     <string name="zwave_node_assign_confirm_question" translatable="false">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
     <string name="zwave_error_common_message" translatable="false">Press back to return to the previous step or \"Exit\" to finish.</string>
@@ -318,7 +318,6 @@
     <string name="has_schedule_error" translatable="false">You cannot change the function of a channel that has a schedule.</string>
     <string name="associeted_with_scene_error" translatable="false">You cannot change the function of a channel that is associated with a scene.</string>
     <string name="event_openedclosedthevalve" translatable="false">opened / closed the valve</string>
-    <string name="zwave_device_communication_error" translatable="false">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
     <string name="bridge" translatable="false">Bridge</string>
     <string name="em_phase_to_phase_balance" translatable="false">Vector phase-to-phase balancing</string>
 
@@ -398,4 +397,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Timeout waiting for z-wave bridge response.</string>
     <string name="zwave_unexpected_answer" translatable="false">Unexpected bridge response. Code: %1$s</string>
     <string name="seconds" translatable="false">Seconds</string>
+    <string name="zwave_device_communication_error" translatable="false">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
 </resources>
