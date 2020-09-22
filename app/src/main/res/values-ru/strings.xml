@@ -252,6 +252,136 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Теплосчетчик</string>
-    <string name="wizard_step2_txt1_alt">Введите название и пароль домашней или бизнес-сети Wi-Fi, через которую устройство исполняющее может подключаться к серверу.</string>
+    <string name="wizard_step2_txt1_alt">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
+    <string name="aritmetic_balance_days" translatable="false">Арифметический баланс - Дни</string>
+    <string name="aritmetic_balance_hours" translatable="false">Арифметический баланс - Часы</string>
+    <string name="aritmetic_balance_minutes" translatable="false">Арифметический баланс - Минуты</string>
+    <string name="aritmetic_balance_months" translatable="false">Арифметический баланс - Месяцы</string>
+    <string name="aritmetic_balance_years" translatable="false">Арифметический баланс - Годы</string>
+    <string name="associeted_with_scene_error" translatable="false">Нельзя изменить функцию канала, который связан со сценой.</string>
+    <string name="battery_health" translatable="false">Срок службы батареи</string>
+    <string name="battery_level" translatable="false">Уровень заряда батареи</string>
+    <string name="battery_powered" translatable="false">Питание через батарею</string>
+    <string name="belongs_to_group_error" translatable="false">Нельзя изменить функцию канала, который входит в группу.</string>
+    <string name="bridge" translatable="false">Мост</string>
+    <string name="bridge_node_online" translatable="false">Узел моста - онлайн</string>
+    <string name="bridge_signal_strength" translatable="false">Узел моста - сила сигнала</string>
+    <string name="caption" translatable="false">Подпись</string>
+    <string name="chanel_lightsource_lifespan_settings" translatable="false">Изменить настройки срока службы источника света</string>
+    <string name="channel_btn_close" translatable="false">Закрыть</string>
+    <string name="channel_caption_valve" translatable="false">Клапан</string>
+    <string name="channel_id" translatable="false">ID канала</string>
+    <string name="channel_number" translatable="false">Номер канала</string>
+    <string name="connection_reset_cause" translatable="false">Причина перезапуска соединения</string>
+    <string name="connection_time" translatable="false">Время подключения</string>
+    <string name="device" translatable="false">Устройство</string>
+    <string name="device_id" translatable="false">ID устройства</string>
+    <string name="device_name" translatable="false">Имя устройства</string>
+    <string name="do_you_want_to_save" translatable="false">Вы хотите сохранить настройки?</string>
+    <string name="em_phase_to_phase_balance" translatable="false">Межфазный векторный баланс</string>
+    <string name="enabling_registration_timeout" translatable="false">Время ожидания регистрации истекло!</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Введите данные для входа в систему cloud.supla.org.</string>
+    <string name="event_openedclosedthevalve" translatable="false">Открытие/закрытие клапана</string>
+    <string name="exit" translatable="false">Выход</string>
+    <string name="function" translatable="false">Функция</string>
+    <string name="has_schedule_error" translatable="false">Нельзя изменить функцию канала, который имеет расписание.</string>
+    <string name="information" translatable="false">Информация</string>
+    <string name="light_source_lifespan" translatable="false">Срок службы источника света</string>
+    <string name="light_source_lifespan_hours" translatable="false">Срок службы источника света (часы)</string>
+    <string name="light_source_operatingtime" translatable="false">Время работы источника света</string>
+    <string name="lightsource_warning" translatable="false">Срок службы источника света составляет %1$s</string>
+    <string name="mode_change_in_progress" translatable="false">Идет изменение режима</string>
+    <string name="no" translatable="false">Нет</string>
+    <string name="reset_lightsource_usage_counter" translatable="false">Сброс счетчика потребления источника света</string>
+    <string name="restore_question" translatable="false">Вы уверены, что хотите восстановить настройки по умолчанию?</string>
+    <string name="restoring_default_settings" translatable="false">Идет восстановление настроек по умолчанию</string>
+    <string name="save_without_saving" translatable="false">Вы уверены, что хотите выйти без сохранения?</string>
+    <string name="seconds" translatable="false">Секунды</string>
+    <string name="slider" translatable="false">Ползунок</string>
+    <string name="soft_ver" translatable="false">Версия ПО</string>
+    <string name="time_exceeded" translatable="false">Превышено время. Повторите попытку.</string>
+    <string name="uptime" translatable="false">Время работы</string>
+    <string name="uv_warning1" translatable="false">Срок службы УФ-излучателя составляет %1$s. Запланировать замену.</string>
+    <string name="uv_warning2" translatable="false">Срок службы УФ-излучателя составляет %1$s. Заменить излучатель.</string>
+    <string name="valve_open_warning" translatable="false">Клапан был закрыт в ручном или радио режиме. Перед его открытием убедитесь, что он не был закрыт по причине затопления. Чтобы отключить предупреждение, откройте клапан вручную. Вы уверены, что хотите открыть клапан из приложения?!</string>
+    <string name="valve_warning" translatable="false">Клапан был закрыт в ручном или радио режиме. Перед его открытием убедитесь, что он не был закрыт по причине затопления. Чтобы отключить предупреждение, откройте клапан вручную.</string>
+    <string name="vector_balance_days" translatable="false">Векторный баланс - Дни</string>
+    <string name="vector_balance_hours" translatable="false">Векторный баланс - Часы</string>
+    <string name="vector_balance_minutes" translatable="false">Векторный баланс - Минуты</string>
+    <string name="vector_balance_months" translatable="false">Векторный баланс - Месяцы</string>
+    <string name="vector_balance_years" translatable="false">Векторный баланс - Годы</string>
+    <string name="vl_cfg_auto" translatable="false">АВТО</string>
+    <string name="vl_cfg_boost" translatable="false">Усиление</string>
+    <string name="vl_cfg_mode" translatable="false">Режим затемнения</string>
+    <string name="vl_cfg_mode1" translatable="false">РЕЖИМ 1</string>
+    <string name="vl_cfg_mode2" translatable="false">РЕЖИМ 2</string>
+    <string name="vl_cfg_mode3" translatable="false">РЕЖИМ 3</string>
+    <string name="vl_cfg_no" translatable="false">НЕТ</string>
+    <string name="vl_cfg_op_range" translatable="false">Рабочий диапазон</string>
+    <string name="vl_cfg_yes" translatable="false">ДА</string>
+    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Режим затемнения / Рабочий диапазон</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Отрегулируйте затемнение светодиодного освещения, выбрав соответствующий режим. Также отрегулируйте рабочий диапазон диммера, установив минимальный и максимальный уровень яркости. Минимальное и максимальное значения можно установить, перемещая ползунки, расположенные по обе стороны круга.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Режим 1: Затемнение по ниспадающей (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Режим 2: Затемнение по возрастающей</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Режим 3: Затемнение по ниспадающей (Альтернативное)</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Усиление</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Эта функция помогает включать светодиодное освещение при сохранившемся в памяти низком уровне яркости, обеспечивая стартовое увеличение (усиление) уровня яркости. Перемещая темно-серый ползунок вокруг круга, можно увеличить или уменьшить уровень усиления, который отмечен зеленой линией. При включении освещения уровень яркости будет увеличен (усилен) до заданного значения, а затем вернется к уровню, который сохранился в памяти до выключения освещения.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Более подробную информацию о диммере вы найдете на</string>
+    <string name="vl_dimmer_info_txt1" translatable="false">Управление диммером</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">Чтобы изменить уровень яркости, проведите пальцем по указателю на ползунке или круге яркости.</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">С помощью кнопки вкл./выкл. можно полностью выключить или включить освещение.</string>
+    <string name="vl_dimmer_info_txt4" translatable="false">Диммер сохранит в памяти уровень яркости до выключения освещения.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Чтобы настроить параметры диммера, нажмите кнопку \"Настройки\".</string>
+    <string name="wake_up_frequency" translatable="false">Частота пробуждения</string>
+    <string name="wakeup_info" translatable="false">*) Введенные настройки будут применены при ближайшем пробуждении узла.</string>
+    <string name="wheel" translatable="false">Круг</string>
+    <string name="wifi_rssi" translatable="false">Wi-fi RSSI</string>
+    <string name="wifi_signal_strength" translatable="false">Сила сигнала WiFi</string>
+    <string name="wifi_throttling" translatable="false">В связи с ограничениями сканирования Wi-Fi, установленными системой Android, следует подождать время, указанное выше.</string>
+    <string name="wizard_step1_txt2" translatable="false">Убедитесь, что при добавлении устройств мобильные данные отключены. В противном случае добавление может завершиться неудачей.</string>
+    <string name="yes" translatable="false">Да</string>
+    <string name="z_wave" translatable="false">Мост z-wave</string>
+    <string name="zwave_add_device" translatable="false">Добавить устройство</string>
+    <string name="zwave_before_search_message" translatable="false">Прежде чем продолжить, убедитесь, что все ваши устройства z-wave находятся в сети. Нажатие \"Далее\" приведет к поиску вашей сети z-wave, что может занять от нескольких секунд до нескольких минут.</string>
+    <string name="zwave_before_search_title" translatable="false">Это займет всего минуту</string>
+    <string name="zwave_bridge_offline" translatable="false">Мост z-wave не отвечает. Проверьте подключение моста к серверу.</string>
+    <string name="zwave_button_press_timeout" translatable="false">Время ожидания нажатия кнопки истекло.</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">Вы также можете изменить настройки пробуждения, нажав на значок ниже.</string>
+    <string name="zwave_device" translatable="false">Устройство z-wave</string>
+    <string name="zwave_device_communication_error" translatable="false">Возникла проблема связи с устройством z-wave. Убедитесь, что устройство z-wave находится в пределах досягаемости ворот.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">Ниже приведены подробные данные выбранного канала. Определите его назначение, выбрав соответствующую функцию.</string>
+    <string name="zwave_done" translatable="false">Готово! Теперь вы можете завершить процесс настройки, нажав кнопку \"ОК\", или можете нажать \"Назад\", чтобы настроить другой канал или изменить существующие настройки.</string>
+    <string name="zwave_error_assign_node_id_timeout" translatable="false">Время ожидания назначения устройства z-wave каналу истекло.</string>
+    <string name="zwave_error_caption_change_error" translatable="false">Изменение подписи канала не удалось. Код %1$s</string>
+    <string name="zwave_error_common_message" translatable="false">Нажмите \"Назад\", чтобы вернуться к предыдущему шагу, или \"Выход\" для завершения.</string>
+    <string name="zwave_error_function_change_error" translatable="false">Изменение функции канала не удалось. Код %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Время ожидания идентификатора назначенного устройства z-wave истекло.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Время ожидания данных базовой конфигурации канала истекло</string>
+    <string name="zwave_error_get_node_list_timeout" translatable="false">Время ожидания списка устройств z-wave истекло.</string>
+    <string name="zwave_error_set_caption_timeout" translatable="false">Время ожидания изменения подписи канала истекло.</string>
+    <string name="zwave_error_set_function_timeout" translatable="false">Время ожидания изменения функции канала истекло.</string>
+    <string name="zwave_error_slave_mode" translatable="false">Эта функция недоступна, когда мост работает в подчиненном режиме.</string>
+    <string name="zwave_error_unexpected_response" translatable="false">Ответ устройства не соответствует ожидаемому. Метод:%1$s Код:%2$s</string>
+    <string name="zwave_network" translatable="false">Сеть z-wave</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">Выбранное устройство z-wave уже связано с другим каналом. Вы уверены, что хотите перенести это устройство на этот канал?</string>
+    <string name="zwave_node_searching" translatable="false">Поиск по сети z-wave для создания списка устройств.</string>
+    <string name="zwave_offline" translatable="false">Offline?</string>
+    <string name="zwave_remove_device" translatable="false">Удалить устройство</string>
+    <string name="zwave_remove_device_timeout" translatable="false">Время ожидания удаления устройства истекло.</string>
+    <string name="zwave_reset_and_clear" translatable="false">Сброс сети и настроек</string>
+    <string name="zwave_reset_confirm_question" translatable="false">Вы уверены, что хотите сбросить настройки и сеть z-wave?</string>
+    <string name="zwave_select_channel" translatable="false">Выберите мост z-wave, а затем канал, который хотите настроить.</string>
+    <string name="zwave_select_node" translatable="false">Выберите устройство z-wave, которое будет связано с каналом со стороны Supla.</string>
+    <string name="zwave_supla_channel" translatable="false">Канал</string>
+    <string name="zwave_unexpected_answer" translatable="false">Неожиданный ответ моста. Код: %1$s</string>
+    <string name="zwave_used" translatable="false">Назначено для:</string>
+    <string name="zwave_waiting_for_add" translatable="false">Ожидание добавления устройства в сеть z-wave.</string>
+    <string name="zwave_waiting_for_add_timeout" translatable="false">Время ожидания добавления устройства в сеть z-wave истекло.</string>
+    <string name="zwave_waiting_for_button_press" translatable="false">Ожидание нажатия кнопки на устройстве z-wave.</string>
+    <string name="zwave_waiting_for_reset" translatable="false">Ожидание подтверждения сброса сети z-wave с удалением настроек.</string>
+    <string name="zwave_waiting_for_reset_timeout" translatable="false">Время ожидания сброса сети z-wave истекло.</string>
+    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Время ожидания ответа моста z-wave истекло.</string>
+    <string name="zwave_welcome_message" translatable="false">Добро пожаловать в мастер настройки моста z-wave. Он позволит подключить имеющиеся у вас устройства z-wave к Supla. Нажмите \"Далее\" для продолжения.</string>
+    <string name="zwave_welcome_title" translatable="false">Мастер z-wave</string>
 </resources>
 

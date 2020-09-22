@@ -353,10 +353,7 @@
     <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
     <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
     <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
-    <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
     <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
-    <string name="IP">IP</string>
-    <string name="MAC">MAC</string>
     <string name="battery_level">Poziom baterii</string>
     <string name="battery_powered">Zasilanie bateryjne</string>
     <string name="wifi_rssi">Wifi RSSI</string>
