@@ -345,7 +345,7 @@
     <string name="zwave_select_channel" translatable="false">Pasirinkite z-wave tiltą, o tada kanalą, kurį norite sukonfigūruoti.</string>
     <string name="zwave_select_node" translatable="false">Pasirinkite z-wave įrenginį, kuris bus susietas su kanalu Supla pusėje.</string>
     <string name="zwave_supla_channel" translatable="false">Kanalas</string>
-    <string name="zwave_unexpected_answer" translatable="false">Netikėtas tilto atsakymas.</string>
+    <string name="zwave_unexpected_answer" translatable="false">Netikėtas tilto atsakymas. Kodas: %1$s</string>
     <string name="zwave_used" translatable="false">Priskirta:</string>
     <string name="zwave_waiting_for_add" translatable="false">Laukiama, kol įrenginys bus pridėtas prie z-wave tinklo.</string>
     <string name="zwave_waiting_for_add_timeout" translatable="false">Baigėsi įrenginio pridėjimo prie z-wave tinklo laukimo laikas.</string>

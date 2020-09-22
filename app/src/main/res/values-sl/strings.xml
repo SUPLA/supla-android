@@ -294,8 +294,8 @@
     <string name="soft_ver" translatable="false">Različica</string>
     <string name="time_exceeded" translatable="false">Časovna prekoračitev. Poskusite ponovno.</string>
     <string name="uptime" translatable="false">Čas delovanja</string>
-    <string name="uv_warning1" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$ s. Načrtujte njeno menjavo.</string>
-    <string name="uv_warning2" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$ s. Menjajte žarnico.</string>
+    <string name="uv_warning1" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Načrtujte njeno menjavo.</string>
+    <string name="uv_warning2" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Menjajte žarnico.</string>
     <string name="valve_open_warning" translatable="false">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
     <string name="valve_warning" translatable="false">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
     <string name="vector_balance_days" translatable="false">Vektorsko ravnotežje - Dnevi</string>

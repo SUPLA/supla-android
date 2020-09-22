@@ -252,7 +252,7 @@
     <string name="connection_time" translatable="false">Dobra připojení</string>
     <string name="device" translatable="false">Zařízení</string>
     <string name="device_id" translatable="false">Id zařízení</string>
-    <string name="device_name" translatable="false">Název přístroje</string>
+    <string name="device_name">Název přístroje</string>
     <string name="do_you_want_to_save" translatable="false">Chcete uložit nastavení?</string>
     <string name="em_phase_to_phase_balance" translatable="false">Vektorová mezifázová rovnováha</string>
     <string name="enabling_registration_timeout" translatable="false">Vypršel časový limit při čekání na zapnutí registrace!</string>
