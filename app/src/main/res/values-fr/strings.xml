@@ -247,5 +247,135 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Compteur de chaleur</string>
-    <string name="wizard_step2_txt1_alt">Entrez un nom et un mot de passe du Votre réseau WiFi domestique ou d\'entreprise ave laquelle d’appareil pourra se connecter avec le serveur.</string>
+    <string name="wizard_step2_txt1_alt">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
+    <string name="aritmetic_balance_days" translatable="false">Bilan arithmétique - Jours</string>
+    <string name="aritmetic_balance_hours" translatable="false">Bilan arithmétique - Heures</string>
+    <string name="aritmetic_balance_minutes" translatable="false">Bilan arithmétique - Minutes</string>
+    <string name="aritmetic_balance_months" translatable="false">Bilan arithmétique - Mois</string>
+    <string name="aritmetic_balance_years" translatable="false">Bilan arithmétique - Années</string>
+    <string name="associeted_with_scene_error" translatable="false">Vous ne pouvez pas changer la fonction d\'une chaîne associée à une scène.</string>
+    <string name="battery_health" translatable="false">Vie de la batterie</string>
+    <string name="battery_level" translatable="false">Niveau de batterie</string>
+    <string name="battery_powered" translatable="false">Alimenté par pile</string>
+    <string name="belongs_to_group_error" translatable="false">Vous ne pouvez pas modifier les fonctions d’une chaîne qui fait partie d\'un groupe.</string>
+    <string name="bridge" translatable="false">Pont</string>
+    <string name="bridge_node_online" translatable="false">Nœud de pont - en ligne</string>
+    <string name="bridge_signal_strength" translatable="false">Nœud de pont - force du signal</string>
+    <string name="caption" translatable="false">Signature</string>
+    <string name="chanel_lightsource_lifespan_settings" translatable="false">Modifier les paramètres de durée de vie de la source lumineuse</string>
+    <string name="channel_btn_close" translatable="false">Fermer</string>
+    <string name="channel_caption_valve" translatable="false">Valve</string>
+    <string name="channel_id" translatable="false">Identifiant de la chaîne</string>
+    <string name="channel_number" translatable="false">Numéro de la chaîne</string>
+    <string name="connection_reset_cause" translatable="false">Raison du redémarrage de la connexion</string>
+    <string name="connection_time" translatable="false">Temps de connexion</string>
+    <string name="device" translatable="false">Appareil</string>
+    <string name="device_id" translatable="false">Référence de l\'appareil</string>
+    <string name="device_name" translatable="false">Nom de l\'appareil</string>
+    <string name="do_you_want_to_save" translatable="false">Voulez-vous sauvegarder les paramètres?</string>
+    <string name="em_phase_to_phase_balance" translatable="false">Bilan interphase vectorielle</string>
+    <string name="enabling_registration_timeout" translatable="false">Le temps d’attente pour activer l\'enregistrement a expiré !</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Entrez vos informations de connexion cloud.supla.org.</string>
+    <string name="event_openedclosedthevalve" translatable="false">Ouverture / fermeture de la valve</string>
+    <string name="exit" translatable="false">Sortie</string>
+    <string name="function" translatable="false">Fonction</string>
+    <string name="has_schedule_error" translatable="false">Vous ne pouvez pas changer la fonction d\'une chaîne qui a un calendrier.</string>
+    <string name="information" translatable="false">Informations</string>
+    <string name="light_source_lifespan" translatable="false">Durée de vie de la source lumineuse</string>
+    <string name="light_source_lifespan_hours" translatable="false">Durée de vie de la source lumineuse (heures)</string>
+    <string name="light_source_operatingtime" translatable="false">Temps de travail de la source lumineuse</string>
+    <string name="lightsource_warning" translatable="false">La durée de vie de la source lumineuse est de %1$s</string>
+    <string name="mode_change_in_progress" translatable="false">Changement de mode en cours</string>
+    <string name="no" translatable="false">Non</string>
+    <string name="reset_lightsource_usage_counter" translatable="false">Réinitialiser le compteur d\'utilisation de la source lumineuse</string>
+    <string name="restore_question" translatable="false">Voulez-vous vraiment rétablir les paramètres par défaut ?</string>
+    <string name="restoring_default_settings" translatable="false">Les paramètres par défaut sont en cours de restauration</string>
+    <string name="save_without_saving" translatable="false">Voulez-vous vraiment quitter sans sauvegarder?</string>
+    <string name="seconds" translatable="false">Secondes</string>
+    <string name="slider" translatable="false">Fermeture éclair</string>
+    <string name="soft_ver" translatable="false">Version de logiciel</string>
+    <string name="time_exceeded" translatable="false">Temps expiré. Réessayer.</string>
+    <string name="uptime" translatable="false">Temps de travail</string>
+    <string name="uv_warning1" translatable="false">La durée de vie de la lampe UV est de %1$s. Planifiez son remplacement.</string>
+    <string name="uv_warning2" translatable="false">La durée de vie de la lampe UV est de %1$s. Remplacez le radiateur.</string>
+    <string name="valve_open_warning" translatable="false">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement. Voulez-vous vraiment ouvrir la valve depuis l’application ?!</string>
+    <string name="valve_warning" translatable="false">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement.</string>
+    <string name="vector_balance_days" translatable="false">Bilan vectorielle - Jours</string>
+    <string name="vector_balance_hours" translatable="false">Bilan vectorielle - Heures</string>
+    <string name="vector_balance_minutes" translatable="false">Bilan vectorielle - Minutes</string>
+    <string name="vector_balance_months" translatable="false">Bilan vectorielle - Mois</string>
+    <string name="vector_balance_years" translatable="false">Bilan vectorielle - Années</string>
+    <string name="vl_cfg_auto" translatable="false">AUTO</string>
+    <string name="vl_cfg_boost" translatable="false">Renforcement</string>
+    <string name="vl_cfg_mode" translatable="false">Mode de variation</string>
+    <string name="vl_cfg_mode1" translatable="false">MODE 1</string>
+    <string name="vl_cfg_mode2" translatable="false">MODE 2</string>
+    <string name="vl_cfg_mode3" translatable="false">MODE 3</string>
+    <string name="vl_cfg_no" translatable="false">NON</string>
+    <string name="vl_cfg_op_range" translatable="false">Plage de fonctionnement</string>
+    <string name="vl_cfg_yes" translatable="false">OUI</string>
+    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Mode de variation de la lumière / Plage de travail</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Ajustez les performances de variation de l\'éclairage LED en sélectionnant le mode approprié. Ajustez également la plage de fonctionnement du variateur en réglant le niveau de luminosité minimum et maximum. La valeur minimale et maximale peut être définie en déplaçant les curseurs des deux côtés du cercle.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Mode 1: Variation par un flanc descendant (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Mode 2: Variation par un flanc montant</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Mode 3: Variation par un flanc descendant (alternative)</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Renforcement</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Cette fonction permet d\'allumer l\'éclairage LED à un faible niveau de luminosité mémorisé, fournissant un démarrage pour augmenter (renforcer) le niveau de luminosité. En déplaçant le curseur gris foncé autour du cercle, vous pouvez augmenter ou diminuer le niveau de renforcement, qui est marqué par la ligne verte. Lors de l\'allumage de l\'éclairage, le niveau de luminosité sera augmenté (renforcé) jusqu\'à la valeur définie, puis il reviendra au niveau mémorisé avant d\'éteindre l\'éclairage.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Plus d\'informations sur le variateur sur</string>
+    <string name="vl_dimmer_info_txt1" translatable="false">Contrôle du variateur</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">Pour modifier le niveau de luminosité, faites glisser votre doigt sur l\'indicateur du curseur ou sur la molette de luminosité.</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">Avec le bouton marche / arrêt, vous pouvez éteindre ou allumer complètement l\'éclairage.</string>
+    <string name="vl_dimmer_info_txt4" translatable="false">Le variateur mémorise le niveau de luminosité avant d\'éteindre l\'éclairage.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Pour régler les paramètres du variateur, appuyez sur le bouton de réglage.</string>
+    <string name="wake_up_frequency" translatable="false">Fréquence de réveil</string>
+    <string name="wakeup_info" translatable="false">*) Les paramètres saisis seront appliqués la prochaine fois que le nœud se réveillera.</string>
+    <string name="wheel" translatable="false">Cercle</string>
+    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
+    <string name="wifi_signal_strength" translatable="false">Force du signal WiFi</string>
+    <string name="wifi_throttling" translatable="false">En raison des limites de l\'analyse du réseau WiFi imposées par le système Android, vous devez attendre le temps présenté ci-dessus.</string>
+    <string name="wizard_step1_txt2" translatable="false">Assurez-vous que les données mobiles sont désactivées lors de l\'ajout d\'appareils. Sinon, l\'ajout peut échouer.</string>
+    <string name="yes" translatable="false">Oui</string>
+    <string name="z_wave" translatable="false">Pont z-wave</string>
+    <string name="zwave_add_device" translatable="false">Ajouter un appareil</string>
+    <string name="zwave_before_search_message" translatable="false">Assurez-vous que tous vos appareils z-wave sont en ligne avant de continuer. Appuyez sur \"Suivant\" pour scanner votre réseau z-wave, ce qui peut prendre de quelques secondes à quelques minutes.</string>
+    <string name="zwave_before_search_title" translatable="false">Cela peut prendre un moment</string>
+    <string name="zwave_bridge_offline" translatable="false">Le pont z-wave ne répond pas. Vérifiez si le pont est connecté au serveur.</string>
+    <string name="zwave_button_press_timeout" translatable="false">Le temps d\'attente pour la pression d\'un bouton a expiré.</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">Vous pouvez également modifier les paramètres de réveil en appuyant sur l\'icône ci-dessous.</string>
+    <string name="zwave_device" translatable="false">Appareil z-wave</string>
+    <string name="zwave_device_communication_error" translatable="false">Un problème de communication avec le périphérique z-wave s\'est produit. Assurez-vous que le périphérique z-wave est à portée de la passerelle.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">Vous trouverez ci-dessous les détails de la chaîne sélectionnée. Définissez son objectif en sélectionnant la fonction appropriée.</string>
+    <string name="zwave_done" translatable="false">Fini! Vous pouvez maintenant terminer le processus de configuration en appuyant sur le bouton \"ok\" ou vous pouvez appuyer sur retour pour configurer une autre chaîne ou modifier les paramètres actuels.</string>
+    <string name="zwave_error_assign_node_id_timeout" translatable="false">Le temps d\'attente pour l\'attribution d\'un périphérique z-wave à la chaîne a expiré.</string>
+    <string name="zwave_error_caption_change_error" translatable="false">Échec de la modification de la signature de la chaîne. Code %1$s</string>
+    <string name="zwave_error_common_message" translatable="false">Appuyez sur retour pour revenir à l\'étape précédente ou sur «Quitter» pour terminer.</string>
+    <string name="zwave_error_function_change_error" translatable="false">Impossible de changer la fonction de la chaîne. Code %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Le temps d\'attente de l\'identifiant de périphérique z-wave attribué a expiré.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Le temps d\'attente des données de configuration de base de la chaîne a expiré</string>
+    <string name="zwave_error_get_node_list_timeout" translatable="false">Le temps d\'attente de la liste des périphériques z-wave a expiré.</string>
+    <string name="zwave_error_set_caption_timeout" translatable="false">Le temps d\'attente pour la modification de la signature de la chaîne a expiré.</string>
+    <string name="zwave_error_set_function_timeout" translatable="false">Le temps d\'attente pour changer la fonction de la chaîne a expiré.</string>
+    <string name="zwave_error_slave_mode" translatable="false">Cette fonction n\'est pas disponible lorsque le pont est en mode subalterne.</string>
+    <string name="zwave_error_unexpected_response" translatable="false">La réponse de l\'appareil n\'est pas celle attendue. Méthode : %1$s Code : %2$s</string>
+    <string name="zwave_network" translatable="false">Réseau z-wave</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">Le périphérique z-wave sélectionné est déjà associé à une autre chaîne. Voulez-vous vraiment déplacer cet appareil vers cette chaîne?</string>
+    <string name="zwave_node_searching" translatable="false">Recherche de réseaux z-wave pour créer une liste de périphériques.</string>
+    <string name="zwave_offline" translatable="false">Hors ligne ?</string>
+    <string name="zwave_remove_device" translatable="false">Supprimer l\'appareil</string>
+    <string name="zwave_remove_device_timeout" translatable="false">Le temps d\'attente de suppression de l\'appareil a expiré.</string>
+    <string name="zwave_reset_and_clear" translatable="false">Réinitialiser le réseau et les paramètres</string>
+    <string name="zwave_reset_confirm_question" translatable="false">Voulez-vous vraiment réinitialiser les paramètres et le réseau z-wave?</string>
+    <string name="zwave_select_channel" translatable="false">Sélectionnez le pont z-wave, puis la chaîne que vous souhaitez configurer.</string>
+    <string name="zwave_select_node" translatable="false">Sélectionnez le périphérique z-wave qui sera lié à la chaîne du côté de Supla.</string>
+    <string name="zwave_supla_channel" translatable="false">Chaîne</string>
+    <string name="zwave_unexpected_answer" translatable="false">Réponse de pont inattendue. Code : %1$s</string>
+    <string name="zwave_used" translatable="false">Assigné à:</string>
+    <string name="zwave_waiting_for_button_press" translatable="false">En attente de la pression sur un bouton de l’appareil z-wave.</string>
+    <string name="zwave_waiting_for_reset" translatable="false">En attente de confirmation de la réinitialisation du réseau z-wave et de la suppression des paramètres.</string>
+    <string name="zwave_waiting_for_reset_timeout" translatable="false">Le temps d\'attente pour la réinitialisation du réseau z-wave a expiré.</string>
+    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Le temps d\'attente de la réponse du pont z-wave a expiré.</string>
+    <string name="zwave_welcome_message" translatable="false">Bienvenue dans l\'assistant de configuration du pont z-wave. Il vous permettra de connecter vos appareils z-wave à Supla. Cliquer sur « Suivant » pour continuer.</string>
+    <string name="zwave_welcome_title" translatable="false">Assistant z-wave</string>
+    <string name="zwave_waiting_for_add" translatable="false">En attente d\'ajout de l\'appareil au réseau z-wave.</string>
+   <string name="zwave_waiting_for_add_timeout" translatable="false">Le temps d\'attente pour l\'ajout de l\'appareil au réseau z-wave a expiré.</string>
 </resources>

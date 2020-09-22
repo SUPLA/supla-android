@@ -245,5 +245,135 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Varmemåler</string>
-    <string name="wizard_step2_txt1_alt">Tast inn navnet og passordet til ditt hjemme- eller firmanettverk som enheten inngang/utgang kan bruke for å koble til serveren.</string>
+    <string name="wizard_step2_txt1_alt">Skriv inn navnet og passordet til hjemme- eller firma WiFi-nettverket, der den utøvende enheten vil kunne opprette en tilkobling til serveren.</string>
+    <string name="aritmetic_balance_days" translatable="false">Aritmetisk balanse - Dager</string>
+    <string name="aritmetic_balance_hours" translatable="false">Aritmetisk balanse - Timer</string>
+    <string name="aritmetic_balance_minutes" translatable="false">Aritmetisk balanse - Minutter</string>
+    <string name="aritmetic_balance_months" translatable="false">Aritmetisk balanse - Måneder</string>
+    <string name="aritmetic_balance_years" translatable="false">Aritmetisk balanse - År</string>
+    <string name="associeted_with_scene_error" translatable="false">Du kan ikke endre funksjonen til en kanal som er tilknyttet en scene.</string>
+    <string name="battery_health" translatable="false">Batteritid</string>
+    <string name="battery_level" translatable="false">Batterinivå</string>
+    <string name="battery_powered" translatable="false">Batteriforsyning</string>
+    <string name="belongs_to_group_error" translatable="false">Du kan ikke endre funksjonen til en kanal som tilhører en gruppe.</string>
+    <string name="bridge" translatable="false">Bro</string>
+    <string name="bridge_node_online" translatable="false">Bridge node (bronode) - online</string>
+    <string name="bridge_signal_strength" translatable="false">Bridge node (bronode) - signalstyrke</string>
+    <string name="caption" translatable="false">Signatur</string>
+    <string name="chanel_lightsource_lifespan_settings" translatable="false">Endre innstillingene for lyskildens levetid</string>
+    <string name="channel_btn_close" translatable="false">Steng</string>
+    <string name="channel_caption_valve" translatable="false">Ventil</string>
+    <string name="channel_id" translatable="false">Kanalens ID</string>
+    <string name="channel_number" translatable="false">Kanalnummer</string>
+    <string name="connection_reset_cause" translatable="false">Årsak til fornyelse av tilkoblingen</string>
+    <string name="connection_time" translatable="false">Tilkoblingstid</string>
+    <string name="device" translatable="false">Enhet</string>
+    <string name="device_id" translatable="false">Enhetens ID</string>
+    <string name="device_name" translatable="false">Enhetens navn</string>
+    <string name="do_you_want_to_save" translatable="false">Vil du lagre innstillingene?</string>
+    <string name="em_phase_to_phase_balance" translatable="false">Fase-til-fase vektorbalanse</string>
+    <string name="enabling_registration_timeout" translatable="false">Ventetiden for å slå på registrering er utløpt!</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Skriv inn påloggingsinformasjonen for cloud.supla.org.</string>
+    <string name="event_openedclosedthevalve" translatable="false">Åpne/stenge ventil</string>
+    <string name="exit" translatable="false">Avslutt</string>
+    <string name="function" translatable="false">Funksjon</string>
+    <string name="has_schedule_error" translatable="false">Du kan ikke endre funksjonen til en kanal som har en tidsplan.</string>
+    <string name="information" translatable="false">Opplysninger</string>
+    <string name="light_source_lifespan" translatable="false">Lyskildens levetid</string>
+    <string name="light_source_lifespan_hours" translatable="false">Lyskildens levetid (timer)</string>
+    <string name="light_source_operatingtime" translatable="false">Lyskildens arbeidstid</string>
+    <string name="lightsource_warning" translatable="false">Lyskildens levetid er på %1$s</string>
+    <string name="mode_change_in_progress" translatable="false">Endring av modus pågår</string>
+    <string name="no" translatable="false">Nei</string>
+    <string name="reset_lightsource_usage_counter" translatable="false">Tilbakestill telleren for lyskildens forbruk</string>
+    <string name="restore_question" translatable="false">Er du sikker på at du vil tilbakestille innstillinger?</string>
+    <string name="restoring_default_settings" translatable="false">Standardinnstillingene tilbakestilles</string>
+    <string name="save_without_saving" translatable="false">Er du sikker på at du vil avbryte uten å lagre?</string>
+    <string name="seconds" translatable="false">Sekunder</string>
+    <string name="slider" translatable="false">Skyver</string>
+    <string name="soft_ver" translatable="false">Programvareversjon</string>
+    <string name="time_exceeded" translatable="false">Tiden er utløpt. Prøv igjen.</string>
+    <string name="uptime" translatable="false">Arbeidstid</string>
+    <string name="uv_warning1" translatable="false">UV-lampens levetid er %1$s. Planlegg utskifting.</string>
+    <string name="uv_warning2" translatable="false">UV-lampens levetid er %1$s. Skifte ut lampen.</string>
+    <string name="valve_open_warning" translatable="false">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt. Er du sikker på at du vil åpne ventilen via appen?!</string>
+    <string name="valve_warning" translatable="false">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt.</string>
+    <string name="vector_balance_days" translatable="false">Vektorbalanse - Dager</string>
+    <string name="vector_balance_hours" translatable="false">Vektorbalanse - Timer</string>
+    <string name="vector_balance_minutes" translatable="false">Vektorbalanse - Minutter</string>
+    <string name="vector_balance_months" translatable="false">Vektorbalanse - Måneder</string>
+    <string name="vector_balance_years" translatable="false">Vektorbalanse - År</string>
+    <string name="vl_cfg_auto" translatable="false">AUTO</string>
+    <string name="vl_cfg_boost" translatable="false">Forsterkning</string>
+    <string name="vl_cfg_mode" translatable="false">Dimmemodus</string>
+    <string name="vl_cfg_mode1" translatable="false">MODUS 1</string>
+    <string name="vl_cfg_mode2" translatable="false">MODUS 2</string>
+    <string name="vl_cfg_mode3" translatable="false">MODUS 3</string>
+    <string name="vl_cfg_no" translatable="false">NEI</string>
+    <string name="vl_cfg_op_range" translatable="false">Arbeidsrekkevidde</string>
+    <string name="vl_cfg_yes" translatable="false">JA</string>
+    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Dimmemodus/arbeidsrekkevidde</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Juster dimmestyrken for LED-belysning ved å velge en riktig modus. Juster også dimmerens arbeidsområde ved å sette minimum og maksimum lysstyrkenivå. Minimums- og maksimumsverdien kan stilles inn ved å bevege skyvere på begge sider av hjulet.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Modus 1: Dimming med bakkanten (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Modus 2: Dimming med forkanten</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Modus 3: Dimming med bakkanten (Alternativ)</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Forsterkning</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Denne funksjonen hjelper til med å slå på LED-belysningen med det lagrede lave lysnivået, noe som gir en innledende økning (forsterkning) av lysstyrken. Ved å bevege den mørkegrå skyveren rundt hjulet, kan du øke eller redusere forsterkningsnivået, som selv er merket med den grønne linjen. Når du slår på belysningen, vil lysstyrkenivået økes (forsterkes) til den angitte verdien, og deretter vil den gå tilbake til det nivået som er blitt lagret før belysningen ble slått av.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Mer informasjon om dimmeren finner du på</string>
+    <string name="vl_dimmer_info_txt1" translatable="false">Dimmerkontroll</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">For å endre lysstyrken, skyv fingeren over indikatoren på skyveren eller lysstyrkehjulet.</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">Med av/på-knappen kan du slå belysningen av eller på.</string>
+    <string name="vl_dimmer_info_txt4" translatable="false">Dimmeren vil lagre lysstyrken før belysningen slås av.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Trykk på innstillinger for å justere dimmerparametrene.</string>
+    <string name="wake_up_frequency" translatable="false">Vekkefrekvensen</string>
+    <string name="wakeup_info" translatable="false">*) De angitte innstillingene blir brukt neste gang noden vekkes.</string>
+    <string name="wheel" translatable="false">Hjul</string>
+    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
+    <string name="wifi_signal_strength" translatable="false">WiFi signalstyrke</string>
+    <string name="wifi_throttling" translatable="false">På grunn av begrensningene for skanning av WiFi-nettverk pålagt av Android-systemet, må du vente den tiden som er presentert ovenfor.</string>
+    <string name="wizard_step1_txt2" translatable="false">Forsikre deg om at mobildata er slått av når du legger til enheter. Ellers kan tillegging mislykkes.</string>
+    <string name="yes" translatable="false">Ja</string>
+    <string name="z_wave" translatable="false">Z-wave bro</string>
+    <string name="zwave_add_device" translatable="false">Legg til enhet</string>
+    <string name="zwave_before_search_message" translatable="false">Forsikre deg om at alle z-wave enhetene dine er online før du fortsetter. Hvis du trykker på \"Neste\", vil appen skanne z-wave nettverket ditt, som kan ta fra noen sekunder til flere minutter.</string>
+    <string name="zwave_before_search_title" translatable="false">Dette kan ta litt tid</string>
+    <string name="zwave_bridge_offline" translatable="false">Z-wave bro svarer ikke. Kontroller om broen er tilkoblet serveren.</string>
+    <string name="zwave_button_press_timeout" translatable="false">Ventetiden for knappetrykket er utløpt.</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">Du kan også endre vekkeinnstillingene ved å trykke på ikonet nedenfor.</string>
+    <string name="zwave_device" translatable="false">Z-wave enhet</string>
+    <string name="zwave_device_communication_error" translatable="false">Det har oppstått et kommunikasjonsproblem med z-wave-enheten. Forsikre deg om at z-wave-enheten er innenfor portens rekkevidde.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">Nedenfor finner du detaljene for den valgte kanalen. Definer formålet ved å velge en riktig funksjon.</string>
+    <string name="zwave_done" translatable="false">Ferdig! Nå kan du fullføre konfigurasjonsprosessen ved å trykke på «ok»-knappen, eller du kan trykke tilbake for å konfigurere en annen kanal eller endre gjeldende innstillinger.</string>
+    <string name="zwave_error_assign_node_id_timeout" translatable="false">Ventetiden for tilknytting av z-wave enheten til kanalen er utløpt.</string>
+    <string name="zwave_error_caption_change_error" translatable="false">Kunne ikke endre kanalens signatur. Kode %1$s</string>
+    <string name="zwave_error_common_message" translatable="false">Trykk tilbake for å gå tilbake til forrige trinn eller «Avslutt» for å avslutte.</string>
+    <string name="zwave_error_function_change_error" translatable="false">Kunne ikke endre kanalens funksjon. Kode %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Ventetiden for identifikatoren til den tilknyttede z-wave enheten er utløpt.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Ventetiden for grunnleggende kanalkonfigurasjonsdata er utløpt</string>
+    <string name="zwave_error_get_node_list_timeout" translatable="false">Ventetiden for listen av z-wave enheter er utløpt.</string>
+    <string name="zwave_error_set_caption_timeout" translatable="false">Ventetiden for endringen av kanalens signatur er utløpt.</string>
+    <string name="zwave_error_set_function_timeout" translatable="false">Ventetiden for endringen av kanalens funksjon er utløpt.</string>
+    <string name="zwave_error_slave_mode" translatable="false">Denne funksjonen er ikke tilgjengelig når broen er i slave-modus.</string>
+    <string name="zwave_error_unexpected_response" translatable="false">Enhetsrespons er ikke som forventet. Metode:%1$s Kode:%2$s</string>
+    <string name="zwave_network" translatable="false">Z-wave nettverk</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">Den valgte z-wave enheten er allerede tilknyttet en annen kanal. Er du sikker på at du vil overføre enheten til denne kanalen?</string>
+    <string name="zwave_node_searching" translatable="false">Skanner z-wave nettverket for å lage en enhetsliste.</string>
+    <string name="zwave_offline" translatable="false">Offline?</string>
+    <string name="zwave_remove_device" translatable="false">Fjern enhet</string>
+    <string name="zwave_remove_device_timeout" translatable="false">Ventetiden for fjerning av enheten er utløpt.</string>
+    <string name="zwave_reset_and_clear" translatable="false">Tilbakestill nettverk og innstillinger</string>
+    <string name="zwave_reset_confirm_question" translatable="false">Er du sikker på at du vil tilbakestille innstillinger og z-wave nettverket?</string>
+    <string name="zwave_select_channel" translatable="false">Velg en z-wave bro og deretter en kanal som du vil konfigurere.</string>
+    <string name="zwave_select_node" translatable="false">Velg z-wave enhet som vil tilknyttes kanalen på Supla-siden.</string>
+    <string name="zwave_supla_channel" translatable="false">Kanal</string>
+    <string name="zwave_unexpected_answer" translatable="false">Respons fra broen er ikke som forventet. Kode: %1$s</string>
+    <string name="zwave_used" translatable="false">Tilknyttet til:</string>
+    <string name="zwave_waiting_for_add" translatable="false">Venter på tillegging av enheten til z-wave nettverket.</string>
+    <string name="zwave_waiting_for_add_timeout" translatable="false">Ventetiden for tillegging av enheten til z-wave nettverket er utløpt.</string>
+    <string name="zwave_waiting_for_button_press" translatable="false">Venter på et knappetrykk på en z-wave enhet.</string>
+    <string name="zwave_waiting_for_reset" translatable="false">Venter på bekreftelse på tilbakestilling av z-wave nettverket sammen med tilbakestilling av innstillingene.</string>
+    <string name="zwave_waiting_for_reset_timeout" translatable="false">Ventetiden for tilbakestilling av z-wave nettverket er utløpt.</string>
+    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Ventetiden for respons fra z-wave broen er utløpt.</string>
+    <string name="zwave_welcome_message" translatable="false">Velkommen til konfigurasjonsveiviseren for z-wave bro. Den vil tillate deg å koble z-wave enhetene dine til Supla. Klikk \"Neste\" for å fortsette.</string>
+    <string name="zwave_welcome_title" translatable="false">Z-wave konfigurasjonsveiviser</string>
 </resources>

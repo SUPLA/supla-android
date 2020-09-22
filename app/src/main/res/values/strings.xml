@@ -19,7 +19,7 @@
     <string name="about">About</string>
     <string name="settings">Settings</string>
     <string name="add_device">Add I/O device</string>
-    <string name="z_wave" translatable="false">Z-WAVE BRIDGE</string>
+    <string name="z_wave">Z-WAVE BRIDGE</string>
     <string name="help">Help</string>
 
     <string name="status_connecting">Connecting...</string>
@@ -254,148 +254,148 @@
     <string name="channel_func_valve_openclose">Valve</string>
     <string name="channel_func_valve_percentage">Valve</string>
 
-    <string name="channel_caption_valve" translatable="false">Valve</string>
-    <string name="channel_btn_close" translatable="false">Close</string>
-    <string name="valve_open_warning" translatable="false">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
-    <string name="valve_warning" translatable="false">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually.</string>
-    <string name="yes" translatable="false">Yes</string>
-    <string name="no" translatable="false">No</string>
+    <string name="channel_caption_valve">Valve</string>
+    <string name="channel_btn_close">Close</string>
+    <string name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
+    <string name="valve_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="ok" translatable="false">OK</string>
     <string name="dots" translatable="false">....</string>
-    <string name="exit" translatable="false">Exit</string>
+    <string name="exit">Exit</string>
 
     <string name="channel_caption_heatmeter">Heat Meter</string>
-    <string name="zwave_select_channel" translatable="false">Select the z-wave bridge and then the channel you want to configure.</string>
-    <string name="device_name" translatable="false">Device name</string>
-    <string name="channel_number" translatable="false">Channel number</string>
-    <string name="device_id" translatable="false">Device id</string>
-    <string name="channel_id" translatable="false">Channel id</string>
-    <string name="soft_ver" translatable="false">Software version</string>
+    <string name="zwave_select_channel">Select the z-wave bridge and then the channel you want to configure.</string>
+    <string name="device_name">Device name</string>
+    <string name="channel_number">Channel number</string>
+    <string name="device_id">Device id</string>
+    <string name="channel_id">Channel id</string>
+    <string name="soft_ver">Software version</string>
 
-    <string name="function" translatable="false">Function</string>
-    <string name="caption" translatable="false">Caption</string>
-    <string name="device" translatable="false">Device</string>
-    <string name="zwave_welcome_title" translatable="false">Z-Wave wizard</string>
-    <string name="zwave_welcome_message" translatable="false">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
-    <string name="zwave_before_search_title" translatable="false">It will take a while</string>
-    <string name="zwave_before_search_message" translatable="false">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Device response not as expected. Method:%1$s Code:%2$s</string>
-    <string name="zwave_error_function_change_error" translatable="false">The channel function change failed. Code %1$s</string>
-    <string name="zwave_error_caption_change_error" translatable="false">The channel caption change failed. Code %1$s</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">The waiting time for basic channel configuration data has expired.</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">The waiting time for changing the channel function has expired.</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">The waiting time for changing the channel caption has expired.</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">The waiting time for the ID of the assigned z-wave device has expired.</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">The waiting time for the list of z-wave devices has expired.</string>
-    <string name="zwave_reset_and_clear" translatable="false">Reset network and settings</string>
-    <string name="zwave_add_device" translatable="false">Add device</string>
-    <string name="zwave_remove_device" translatable="false">Delete device</string>
-    <string name="zwave_network" translatable="false">Z-wave network</string>
-    <string name="zwave_select_node" translatable="false">Select the z-wave device that will be associated with the Supla channel.</string>
-    <string name="zwave_supla_channel" translatable="false">Channel</string>
-    <string name="zwave_device" translatable="false">Z-Wave device</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Waiting for button press on the z-wave device.</string>
-    <string name="zwave_button_press_timeout" translatable="false">The waiting time for pressing the button has elapsed.</string>
-    <string name="zwave_node_searching" translatable="false">Searching the z-wave network to build a list of devices.</string>
-    <string name="zwave_remove_device_timeout" translatable="false">The waiting time to remove the device has expired.</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">The waiting time for the z-wave network reset has expired.</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
-    <string name="zwave_bridge_offline" translatable="false">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
-    <string name="zwave_waiting_for_add" translatable="false">Waiting for the device to be added to the z-wave network.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">The waiting time for adding the device to the z-wave network has expired.</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Are you sure you want to reset the settings and z-wave network?</string>
-    <string name="zwave_offline" translatable="false">Offline?</string>
-    <string name="zwave_used" translatable="false">Assigned to:</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
-    <string name="zwave_error_common_message" translatable="false">Press back to return to the previous step or \"Exit\" to finish.</string>
-    <string name="zwave_error_slave_mode" translatable="false">This function is not available when the bridge is in slave mode.</string>
-    <string name="zwave_done" translatable="false">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
+    <string name="function">Function</string>
+    <string name="caption">Caption</string>
+    <string name="device">Device</string>
+    <string name="zwave_welcome_title">Z-Wave wizard</string>
+    <string name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
+    <string name="zwave_before_search_title">It will take a while</string>
+    <string name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
+    <string name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
+    <string name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
+    <string name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
+    <string name="zwave_error_caption_change_error">The channel caption change failed. Code %1$s</string>
+    <string name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
+    <string name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
+    <string name="zwave_error_set_caption_timeout">The waiting time for changing the channel caption has expired.</string>
+    <string name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
+    <string name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
+    <string name="zwave_reset_and_clear">Reset network and settings</string>
+    <string name="zwave_add_device">Add device</string>
+    <string name="zwave_remove_device">Delete device</string>
+    <string name="zwave_network">Z-wave network</string>
+    <string name="zwave_select_node">Select the z-wave device that will be associated with the Supla channel.</string>
+    <string name="zwave_supla_channel">Channel</string>
+    <string name="zwave_device">Z-Wave device</string>
+    <string name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
+    <string name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
+    <string name="zwave_node_searching">Searching the z-wave network to build a list of devices.</string>
+    <string name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
+    <string name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
+    <string name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
+    <string name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
+    <string name="zwave_bridge_offline">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
+    <string name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
+    <string name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
+    <string name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
+    <string name="zwave_offline">Offline ?</string>
+    <string name="zwave_used">Assigned to:</string>
+    <string name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
+    <string name="zwave_error_common_message">Press back to return to the previous step or \"Exit\" to finish.</string>
+    <string name="zwave_error_slave_mode">This function is not available when the bridge is in slave mode.</string>
+    <string name="zwave_done">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
 
-    <string name="restore_question" translatable="false">Are you sure you want to restore the default settings?</string>
-    <string name="belongs_to_group_error" translatable="false">You cannot change the function of a channel that belongs to a group.</string>
-    <string name="has_schedule_error" translatable="false">You cannot change the function of a channel that has a schedule.</string>
-    <string name="associeted_with_scene_error" translatable="false">You cannot change the function of a channel that is associated with a scene.</string>
-    <string name="event_openedclosedthevalve" translatable="false">opened / closed the valve</string>
-    <string name="zwave_device_communication_error" translatable="false">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
-    <string name="bridge" translatable="false">Bridge</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Vector phase-to-phase balancing</string>
+    <string name="restore_question">Are you sure you want to restore the default settings?</string>
+    <string name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
+    <string name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
+    <string name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
+    <string name="event_openedclosedthevalve">opened / closed the valve</string>
+    <string name="bridge">Bridge</string>
+    <string name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
 
-    <string name="aritmetic_balance_minutes" translatable="false">Arithmetic balance - Minutes</string>
-    <string name="aritmetic_balance_hours" translatable="false">Arithmetic balance - Hours</string>
-    <string name="aritmetic_balance_days" translatable="false">Arithmetic balance - Days</string>
-    <string name="aritmetic_balance_months" translatable="false">Arithmetic balance - Months</string>
-    <string name="aritmetic_balance_years" translatable="false">Arithmetic balance - Years</string>
-    <string name="vector_balance_minutes" translatable="false">Vector balance - Minutes</string>
-    <string name="vector_balance_hours" translatable="false">Vector balance - Hours</string>
-    <string name="vector_balance_days" translatable="false">Vector balance - Days</string>
-    <string name="vector_balance_months" translatable="false">Vector balance - Months</string>
-    <string name="vector_balance_years" translatable="false">Vector balance - Years</string>
-    <string name="wheel" translatable="false">Wheel</string>
-    <string name="slider" translatable="false">Slider</string>
+    <string name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
+    <string name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
+    <string name="aritmetic_balance_days">Arithmetic balance - Days</string>
+    <string name="aritmetic_balance_months">Arithmetic balance - Months</string>
+    <string name="aritmetic_balance_years">Arithmetic balance - Years</string>
+    <string name="vector_balance_minutes">Vector balance - Minutes</string>
+    <string name="vector_balance_hours">Vector balance - Hours</string>
+    <string name="vector_balance_days">Vector balance - Days</string>
+    <string name="vector_balance_months">Vector balance - Months</string>
+    <string name="vector_balance_years">Vector balance - Years</string>
+    <string name="wheel">Wheel</string>
+    <string name="slider">Slider</string>
 
-    <string name="vl_cfg_mode" translatable="false">Dimming mode</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_mode1" translatable="false">MODE 1</string>
-    <string name="vl_cfg_mode2" translatable="false">MODE 2</string>
-    <string name="vl_cfg_mode3" translatable="false">MODE 3</string>
-    <string name="vl_cfg_yes" translatable="false">YES</string>
-    <string name="vl_cfg_no" translatable="false">NO</string>
-    <string name="vl_cfg_op_range" translatable="false">Operating range</string>
-    <string name="vl_cfg_boost" translatable="false">Boost</string>
+    <string name="vl_cfg_mode">Dimming mode</string>
+    <string name="vl_cfg_auto">AUTO</string>
+    <string name="vl_cfg_mode1">MODE 1</string>
+    <string name="vl_cfg_mode2">MODE 2</string>
+    <string name="vl_cfg_mode3">MODE 3</string>
+    <string name="vl_cfg_yes">YES</string>
+    <string name="vl_cfg_no">NO</string>
+    <string name="vl_cfg_op_range">Operating range</string>
+    <string name="vl_cfg_boost">Boost</string>
 
-    <string name="information" translatable="false">Information</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Dimmer control</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Switch on and off by tapping the on/off button.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">The dimmer will remember the previous brightness setting.</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Tap the config icon to adjust dimming settings.</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Dimming Mode / Operating Range</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Mode 1: V-Pro Trailing-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Mode 2: Leading-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Mode 3: Alternative Trailing-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Boost</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">More information on can be found at</string>
+    <string name="information">Information</string>
+    <string name="vl_dimmer_info_txt1">Dimmer control</string>
+    <string name="vl_dimmer_info_txt2">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
+    <string name="vl_dimmer_info_txt3">Switch on and off by tapping the on/off button.</string>
+    <string name="vl_dimmer_info_txt4">The dimmer will remember the previous brightness setting.</string>
+    <string name="vl_dimmer_info_txt5">Tap the config icon to adjust dimming settings.</string>
+    <string name="vl_dimmer_cfg_info_txt1">Dimming Mode / Operating Range</string>
+    <string name="vl_dimmer_cfg_info_txt2">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string name="vl_dimmer_cfg_info_txt3">Mode 1: V-Pro Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt4">Mode 2: Leading-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt5">Mode 3: Alternative Trailing-Edge Dimming</string>
+    <string name="vl_dimmer_cfg_info_txt6">Boost</string>
+    <string name="vl_dimmer_cfg_info_txt7">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
+    <string name="vl_dimmer_cfg_info_txt8">More information on can be found at</string>
     <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
     
-    <string name="time_exceeded" translatable="false">Time exceeded. Try again.</string>
+    <string name="time_exceeded">Time exceeded. Try again.</string>
 
     <string name="IP" translatable="false">IP</string>
     <string name="MAC" translatable="false">MAC</string>
-    <string name="battery_level" translatable="false">Battery level</string>
-    <string name="battery_powered" translatable="false">Battery powered</string>
-    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">Wifi signal strength</string>
-    <string name="bridge_node_online" translatable="false">Bridge node - online</string>
-    <string name="bridge_signal_strength" translatable="false">Bridge - signal strength</string>
-    <string name="uptime" translatable="false">Uptime</string>
-    <string name="connection_time" translatable="false">Connection time</string>
-    <string name="battery_health" translatable="false">Battery health</string>
-    <string name="connection_reset_cause" translatable="false">Connection reset cause</string>
-    <string name="light_source_lifespan" translatable="false">Light source lifespan</string>
-    <string name="light_source_operatingtime" translatable="false">Light source operating time</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Change the light source lifespan settings</string>
-    <string name="light_source_lifespan_hours" translatable="false">Light source lifespan (hours)</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">Reset the light source usage counter</string>
-    <string name="lightsource_warning" translatable="false">The lifespan of the light source is %1$s</string>
-    <string name="uv_warning1" translatable="false">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
-    <string name="uv_warning2" translatable="false">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1_alt" translatable="false">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
-    <string name="enabling_registration_timeout" translatable="false">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling" translatable="false">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Enter your cloud.supla.org login credentials.</string>
-    <string name="save_without_saving" translatable="false">Do you want to quit without saving?</string>
-    <string name="do_you_want_to_save" translatable="false">Do you want to save the settings?</string>
-    <string name="restoring_default_settings" translatable="false">Restoring default settings</string>
-    <string name="mode_change_in_progress" translatable="false">Mode change in progress</string>
-    <string name="wizard_step1_txt2" translatable="false">Please make sure mobile data is turned off when adding devices. Otherwise, the addition may fail.</string>
-    <string name="wake_up_frequency" translatable="false">Wake up frequency</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">You can also change the wake-up settings by pressing the icon below.</string>
-    <string name="wakeup_info" translatable="false">*) The entered settings will be applied the next time the node wakes up.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Timeout waiting for z-wave bridge response.</string>
-    <string name="zwave_unexpected_answer" translatable="false">Unexpected bridge response. Code: %1$s</string>
-    <string name="seconds" translatable="false">Seconds</string>
+    <string name="battery_level">Battery level</string>
+    <string name="battery_powered">Battery powered</string>
+    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_signal_strength">Wifi signal strength</string>
+    <string name="bridge_node_online">Bridge node - online</string>
+    <string name="bridge_signal_strength">Bridge - signal strength</string>
+    <string name="uptime">Uptime</string>
+    <string name="connection_time">Connection time</string>
+    <string name="battery_health">Battery health</string>
+    <string name="connection_reset_cause">Connection reset cause</string>
+    <string name="light_source_lifespan">Light source lifespan</string>
+    <string name="light_source_operatingtime">Light source operating time</string>
+    <string name="chanel_lightsource_lifespan_settings">Change the light source lifespan settings</string>
+    <string name="light_source_lifespan_hours">Light source lifespan (hours)</string>
+    <string name="reset_lightsource_usage_counter">Reset the light source usage counter</string>
+    <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
+    <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
+    <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
+    <string name="wizard_step2_txt1_alt">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
+    <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
+    <string name="wifi_throttling">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
+    <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>
+    <string name="save_without_saving">Do you want to quit without saving?</string>
+    <string name="do_you_want_to_save">Do you want to save the settings?</string>
+    <string name="restoring_default_settings">Restoring default settings</string>
+    <string name="mode_change_in_progress">Mode change in progress</string>
+    <string name="wizard_step1_txt2">Please make sure mobile data is turned off when adding devices. Otherwise, the addition may fail.</string>
+    <string name="wake_up_frequency">Wake up frequency</string>
+    <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
+    <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Timeout waiting for z-wave bridge response.</string>
+    <string name="zwave_unexpected_answer">Unexpected bridge response. Code: %1$s</string>
+    <string name="seconds">Seconds</string>
+    <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
 </resources>
