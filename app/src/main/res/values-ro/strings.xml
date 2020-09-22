@@ -354,7 +354,7 @@
     <string name="zwave_error_set_caption_timeout" translatable="false">Timpul de aşteptare pentru schimbarea semnăturii canalului a fost depăşit.</string>
     <string name="zwave_error_set_function_timeout" translatable="false">Timpul de aşteptare pentru schimbarea funcţiei de canal a fost depăşit.</string>
     <string name="zwave_error_slave_mode" translatable="false">Această funcţie nu este disponibilă când podul lucrează într-un submod.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Răspunsul dispozitivului nu este cel aşteptat. Metodă:%1$ s Cod:%2$s</string>
+    <string name="zwave_error_unexpected_response" translatable="false">Răspunsul dispozitivului nu este cel aşteptat. Metodă:%1$s Cod:%2$s</string>
     <string name="zwave_network" translatable="false">Reţea Z-Wave</string>
     <string name="zwave_node_assign_confirm_question" translatable="false">Dispozitivul Z-Wave selectat este deja atribuit cu alt canal. Sigur doriți să mutați acest dispozitiv pe acest canal?</string>
     <string name="zwave_node_searching" translatable="false">Căutarea reţelei Z-Wave pentru a crea o listă de dispozitive.</string>
