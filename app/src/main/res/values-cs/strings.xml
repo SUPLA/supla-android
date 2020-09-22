@@ -224,12 +224,135 @@
 
     <string name="channel_btn_close">Zavřít</string>
     <string name="channel_caption_valve">Ventil</string>
-    <string name="valve_open_warning">POZOR! Ventil byl uzavřen dálkovým ovladačem (klíčenkou nebo záplavovým čidlem). Než ventil znovu otevřete, ujistěte se, že nebyl uzavřen kvůli úniku vody. Pokud je záplavové čidlo ve vodě,  NEvyšle ventilu  opakovaně signál pro uzavření. Chcete-li varování vypnout, otevřte ventil pomocí ovládacího tlačítka na ventilu. Opravdu chcete ventil otevřít pomocí aplikace?!</string>
-    <string name="valve_warning">POZOR! Ventil byl uzavřen dálkovým ovladačem (klíčenkou nebo záplavovým čidlem). Než ventil znovu otevřete, ujistěte se, že nebyl uzavřen kvůli úniku vody. Pokud je záplavové čidlo ve vodě,  NEvyšle ventilu  opakovaně signál pro uzavření. Chcete-li varování vypnout, otevřte ventil pomocí ovládacího tlačítka na ventilu.</string>
+    <string name="valve_open_warning">Ventil byl uzavřen v manuálním nebo rádiovém ovládacím režimu. Před otevřením zkontrolujte, zdali nebyl uzavřen z důvodu zalití. Pro vypnutí upozornění uzavřete ventil manuálně. Opravdu chcete ventil otevřít pomocí aplikace?!</string>
+    <string name="valve_warning">Ventil byl uzavřen v manuálním nebo rádiovém ovládacím režimu. Před otevřením zkontrolujte, zdali nebyl uzavřen z důvodu zalití. Pro vypnutí upozornění uzavřete ventil manuálně.  Pro vypnutí upozornění uzavřete ventil manuálně.</string>
     <string name="yes">Ano</string>
-    <string name="no">Ne</string>
 
     <string name="channel_caption_heatmeter">Měřič tepla</string>
-    <string name="event_openedclosedthevalve">otevřel / zavřel ventil</string>
-    <string name="wizard_step2_txt1_alt">Zadejte jméno a heslo vaší domácí nebo firemní sítě WiFi, pomocí kterého se bude možné připojit k serveru.</string>
+    <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
+    <string name="wizard_step2_txt1_alt">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
+    <string name="aritmetic_balance_days" translatable="false">Aritmetická zová rovnováha - Dny</string>
+    <string name="aritmetic_balance_hours" translatable="false">Aritmetická rovnováha - Hodiny</string>
+    <string name="aritmetic_balance_minutes" translatable="false">Fázová rovnováha - Minuty</string>
+    <string name="aritmetic_balance_months" translatable="false">Aritmetická rovnováha - Měsíce</string>
+    <string name="aritmetic_balance_years" translatable="false">Aritmetická rovnováha - Roky</string>
+    <string name="associeted_with_scene_error" translatable="false">Není možné změnit funkci kanálu, který je připojený ke scéně.</string>
+    <string name="battery_health" translatable="false">Životnost baterie</string>
+    <string name="battery_level" translatable="false">Stav baterie</string>
+    <string name="battery_powered" translatable="false">Napájení baterie</string>
+    <string name="belongs_to_group_error" translatable="false">Není možné změnit funkci kanálu, který je součástí skupiny.</string>
+    <string name="bridge" translatable="false">Můstek</string>
+    <string name="bridge_node_online" translatable="false">Uzel můstku - online</string>
+    <string name="bridge_signal_strength" translatable="false">Uzel můstku - síla signálu</string>
+    <string name="caption" translatable="false">Podpis</string>
+    <string name="chanel_lightsource_lifespan_settings" translatable="false">Změnit nastavení životnosti světelného zdroje</string>
+    <string name="channel_id" translatable="false">Id kanálu</string>
+    <string name="channel_number" translatable="false">Číslo kanálu</string>
+    <string name="connection_reset_cause" translatable="false">Důvod restartování připojení</string>
+    <string name="connection_time" translatable="false">Dobra připojení</string>
+    <string name="device" translatable="false">Zařízení</string>
+    <string name="device_id" translatable="false">Id zařízení</string>
+    <string name="device_name" translatable="false">Název přístroje</string>
+    <string name="do_you_want_to_save" translatable="false">Chcete uložit nastavení?</string>
+    <string name="em_phase_to_phase_balance" translatable="false">Vektorová mezifázová rovnováha</string>
+    <string name="enabling_registration_timeout" translatable="false">Vypršel časový limit při čekání na zapnutí registrace!</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Zadejte své přihlašovací údaje cloud.supla.org.</string>
+    <string name="exit" translatable="false">Výstup</string>
+    <string name="function" translatable="false">Funkce</string>
+    <string name="has_schedule_error" translatable="false">Není možné změnit funkci kanálu, který obsahuje harmonogram.</string>
+    <string name="information" translatable="false">Informace</string>
+    <string name="light_source_lifespan" translatable="false">Životnost světelného zdroje</string>
+    <string name="light_source_lifespan_hours" translatable="false">Životnost světelného zdroje (hodiny)</string>
+    <string name="light_source_operatingtime" translatable="false">Provozní doba světelného zdroje</string>
+    <string name="lightsource_warning" translatable="false">Životnost světelného zdroje je %1$s</string>
+    <string name="mode_change_in_progress" translatable="false">Probíhá změna režimu</string>
+    <string name="no" translatable="false">Ne</string>
+    <string name="reset_lightsource_usage_counter" translatable="false">Restartovat čítač spotřeby světelného zdroje</string>
+    <string name="restore_question" translatable="false">Chcete opravdu obnovit výchozí nastavení?</string>
+    <string name="restoring_default_settings" translatable="false">Obnovuje se výchozí nastavení</string>
+    <string name="save_without_saving" translatable="false">Chcete opravdu bez uložení odejít?</string>
+    <string name="seconds" translatable="false">Sekundy</string>
+    <string name="slider" translatable="false">Posuvník</string>
+    <string name="soft_ver" translatable="false">Verze softwaru.</string>
+    <string name="time_exceeded" translatable="false">Časový limit překročen. Zkuste to znovu.</string>
+    <string name="uptime" translatable="false">"Provozní doba "</string>
+    <string name="uv_warning1" translatable="false">Životnost UV zářivky je %1$s. Naplánujte si její výměnu.</string>
+    <string name="uv_warning2" translatable="false">Životnost UV zářivky je %1$s. Vyměňte zářivku.</string>
+    <string name="vector_balance_days" translatable="false">Vektorová rovnováha - Dny</string>
+    <string name="vector_balance_hours" translatable="false">Vektorová rovnováha - Hodiny</string>
+    <string name="vector_balance_minutes" translatable="false">Vektorová rovnováha - Minuty</string>
+    <string name="vector_balance_months" translatable="false">Vektorová rovnováha - Měsíce</string>
+    <string name="vector_balance_years" translatable="false">Vektorová rovnováha - Roky</string>
+    <string name="vl_cfg_auto" translatable="false">AUTO</string>
+    <string name="vl_cfg_boost" translatable="false">Posílení</string>
+    <string name="vl_cfg_mode" translatable="false">Režim stmívání</string>
+    <string name="vl_cfg_mode1" translatable="false">REŽIM č. 1</string>
+    <string name="vl_cfg_mode2" translatable="false">REŽIM č. 2</string>
+    <string name="vl_cfg_mode3" translatable="false">REŽIM č. 3</string>
+    <string name="vl_cfg_no" translatable="false">NE</string>
+    <string name="vl_cfg_op_range" translatable="false">Provozní rozsah</string>
+    <string name="vl_cfg_yes" translatable="false">ANO</string>
+    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Režim stmívání / Pracovní rozsah</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Vybráním příslušného režimu si můžete upravit intenzitu stmívání LED osvětlení.  Výběrem minimální nebo maximální úrovně jasu, můžete rovněž upravit provozní rozsah stmívače. Minimální a maximální hodnotu můžete nastavit přesouváním posuvníku umístěného na obou stranách kolečka.</string>
+    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Režim č. 1: Stmívání na klesající hraně (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Režim č. 2: Stmívání na stoupající hraně</string>
+    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Režim č. 3: Stmívání na klesající hraně (alternativní)</string>
+    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Posílení</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Tato funkce pomáhá zapnout LED osvětlení při zapamatované nízké úrovni jasu, to umožňuje zvýšit (zesílit) úroveň jasu hned po spuštění. Přesunutím tmavě šedého posuvníku kolem kolečka můžete zesílit nebo snížit úroveň intenzity, která je označena zelenou čárkou. Během zapínání osvětlení zůstane úroveň jasu zvýšená (zesílená) na přednastavenou hodnotu a poté se vrátí na úroveň zapamatovanou před vypnutím osvětlení.</string>
+    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Více informací na téma stmívačů najdete na</string>
+    <string name="vl_dimmer_info_txt1" translatable="false">Ovládání stmívačem</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">Pro změnu úrovně jasu přesuňte prstem ukazatel nacházející se na posuvníku nebo kolečkem pro nastavení jasu.</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">Tlačítkem zapnout/vypnout můžete buď celkově vypnout nebo zapnout osvětlení.</string>
+    <string name="vl_dimmer_info_txt4" translatable="false">Stmívač si pamatuje úrovně jasu ještě před samotným vypnutím osvětlení.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Stisknutím tlačítka nastavení můžete upravit jednotlivé parametry stmívače.</string>
+    <string name="wake_up_frequency" translatable="false">Četnost probuzení uzlu</string>
+    <string name="wakeup_info" translatable="false">"*) Zadané nastavení bude použito při nejbližším probuzení uzlu. "</string>
+    <string name="wheel" translatable="false">Kolečko</string>
+    <string name="wifi_rssi" translatable="false">Wifi RSSl</string>
+    <string name="wifi_signal_strength" translatable="false">Síla signálu WiFi</string>
+    <string name="wifi_throttling" translatable="false">Vzhledem k časovým limitům skenování Wifi sítě, které stanovuje systém android je nutné počkat tak dlouho jak je výše znázorněno.</string>
+    <string name="wizard_step1_txt2" translatable="false">Ujistěte se, že mobilní data jsou během přidávání zařízení vypnuta. V opačném případě se nemusí podařit proces přidání zařízení.</string>
+    <string name="z_wave" translatable="false">Z-wave můstek</string>
+    <string name="zwave_add_device" translatable="false">Přidat zařízení</string>
+    <string name="zwave_before_search_message" translatable="false">Než budete dále pokračovat, ujistěte se, že všechny Vaše zařízení z-wave jsou online. Stisknutím \"Další“ dojde k prohledání Vaší sítě z-wave, které může trvat několik sekund až několik minut.</string>
+    <string name="zwave_before_search_title" translatable="false">Chvilku to bude trvat</string>
+    <string name="zwave_bridge_offline" translatable="false">Z-wave můstek neodpovídá. Zkontrolujte zda je můstek připojen k serveru.</string>
+    <string name="zwave_button_press_timeout" translatable="false">Vypršel časový limit při čekání na stisknutí tlačítka.</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">Můžete rovněž změnit nastavení probuzení uzlu, stačí kliknout na níže uvedenou ikonku.</string>
+    <string name="zwave_device" translatable="false">Zařízení z-wave</string>
+    <string name="zwave_device_communication_error" translatable="false">Došlo k problému při komunikaci se zařízením z-wave. Ujistěte se, že zařízení z-wave je v dosahu branky.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">Níže jsou uvedeny podrobné informace týkající se vybraného kanálu. Pomocí příslušné funkce vyberte, co má dělat.</string>
+    <string name="zwave_done" translatable="false">Hotovo! Nyní můžete ukončit proces konfigurace stisknutím tlačítka \"ok“ nebo můžete stisknutím tlačítka zpět konfigurovat další kanál, popřípadě změnit aktuální nastavení.</string>
+    <string name="zwave_error_assign_node_id_timeout" translatable="false">Vypršel časový limit při čekání na uložení zařízení z-wave do kanálu.</string>
+    <string name="zwave_error_caption_change_error" translatable="false">Podpis kanálu se nepodařilo změnit. Kód %1$s</string>
+    <string name="zwave_error_common_message" translatable="false">Pokud se chcete vrátit k předchozímu bodu stiskněte zpět nebo \"Odejít“ pro ukončení.</string>
+    <string name="zwave_error_function_change_error" translatable="false">Funkci kanálu se nepodařilo změnit. Kód %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Vypršel časový limit při čekání na identifikátor připsaného zařízení z-wave.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Vypršel časový limit při čekání na údaje základní konfigurace kanálu</string>
+    <string name="zwave_error_get_node_list_timeout" translatable="false">Vypršel časový limit při čekání na seznam zařízení z-wave.</string>
+    <string name="zwave_error_set_caption_timeout" translatable="false">Vypršel časový limit při čekání na změnu podpisu kanálu.</string>
+    <string name="zwave_error_set_function_timeout" translatable="false">Vypršel časový limit při čekání na změnu funkce kanálu.</string>
+    <string name="zwave_error_slave_mode" translatable="false">Pokud je můstek ve vedlejším režimu, tak tato funkce není dostupná.</string>
+    <string name="zwave_error_unexpected_response" translatable="false">Odezva zařízení se neshoduje s předpokladem. Metoda:%1$s Kód:%2$s</string>
+    <string name="zwave_network" translatable="false">Síť z-wave</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">Vybrané zařízení z-wave je už připojeno k jinému kanálu. Chcete opravdu přenést vybrané zařízení k jinému kanálu?</string>
+    <string name="zwave_node_searching" translatable="false">Prohledávání sítě z-wave pro vytvoření seznamu zařízení.</string>
+    <string name="zwave_remove_device" translatable="false">Odstranit zařízení</string>
+    <string name="zwave_remove_device_timeout" translatable="false">Vypršel časový limit při čekání na odstranění zařízení.</string>
+    <string name="zwave_reset_and_clear" translatable="false">Restartovat síť a nastavení</string>
+    <string name="zwave_reset_confirm_question" translatable="false">Chcete opravdu restartovat nastavení a celou síť z-wave?</string>
+    <string name="zwave_select_channel" translatable="false">Vyberte z-wave můstek a následně vyberte kanál, který chcete konfigurovat.</string>
+    <string name="zwave_select_node" translatable="false">Vyberte síť z-wave, kterou mát být propojena s kanálem na straně Supli.</string>
+    <string name="zwave_supla_channel" translatable="false">Kanál</string>
+    <string name="zwave_unexpected_answer" translatable="false">Neočekávaná odpověď můstku. Kód: %1$s</string>
+    <string name="zwave_used" translatable="false">Přiřazeno k:</string>
+    <string name="zwave_waiting_for_add" translatable="false">Čeká se na přidání zařízení k síti z-wave.</string>
+    <string name="zwave_waiting_for_add_timeout" translatable="false">Vypršel časový limit při čekání na přidání zařízení k síti z-wave.</string>
+    <string name="zwave_waiting_for_button_press" translatable="false">Čeká se na stisknutí tlačítka zařízení z-wave.</string>
+    <string name="zwave_waiting_for_reset" translatable="false">Čeká se na potvrzení restartování sítě z-wave spolu s odstraněním nastavení.</string>
+    <string name="zwave_offline" translatable="false">Off-line?</string>
+    <string name="zwave_waiting_for_reset_timeout" translatable="false">Vypršel časový limit při čekání na restart sítě z-wave.</string>
+    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Vypršel časový limit při čekání na odpověď můstku z-wave.</string>
+    <string name="zwave_welcome_message" translatable="false">"Vítejte v průvodci konfigurace můstku z-wave. Umožní Vám připojení zařízení z-wave se Suplou. Pro pokračování stiskněte \"Další\" "</string>
+    <string name="zwave_welcome_title" translatable="false">Průvodce konfigurace z-wave</string>
 </resources>
