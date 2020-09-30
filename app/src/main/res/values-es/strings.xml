@@ -17,9 +17,9 @@
     <string name="status_bad_credentials">Certificaciones incorrectas</string>
     <string name="status_climit_exceded">Se ha superado el límite de aplicaciones del cliente</string>
     <string name="status_version_error">Versión del servidor incompatible</string>
-    <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, ve a la pestaña \"Smartphones\" en la página %1$s.</string>
-    <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Ve a la página %1$s y asigna el identificador adecuado en la pestaña \"Smartphones\".</string>
-    <string name="status_device_disabled">El dispositivo está apagado</string>
+    <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, vaya a la pestaña \"Smartphones\" en la página %1$s.</string>
+    <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Vaya a la página %1$s y asigne el identificador adecuado en la pestaña \"Smartphones\".</string>
+    <string name="status_device_disabled">El dispositivo está deshabilitado</string>
     <string name="status_accessid_disabled">El identificador de acceso está deshabilitado</string>
 
     <string name="err_hostnotfound">No se ha encontrado la dirección del servidor</string>
@@ -46,7 +46,7 @@
     <string name="channel_caption_rsopeningsensor">Sensor de apertura de las persianas</string>
     <string name="channel_caption_depthsensor">Sensor de profundidad</string>
     <string name="channel_caption_distancesensor">Sensor de distancia</string>
-    <string name="channel_caption_windowopeningsensor">Dectector de apertura de ventanas</string>
+    <string name="channel_caption_windowopeningsensor">Sensor de apertura de ventanas</string>
     <string name="channel_caption_mailsensor">Sensor de correo</string>
 
     <string name="rgb_brightness">Brillo</string>
@@ -59,7 +59,7 @@
     <string name="channel_btn_off">Desactivar</string>
 
     <string name="event_openedthegateway">ha abierto el portillo</string>
-    <string name="event_openedclosedthegate">oha abierto / ha cerrado la puerta</string>
+    <string name="event_openedclosedthegate">ha abierto / ha cerrado la puerta</string>
     <string name="event_openedclosedthegatedoors">ha abierto / ha cerrado la puerta de garaje</string>
     <string name="event_openedthedoor">ha abierto la puerta</string>
     <string name="event_openedcloserollershutter">ha abierto / ha cerrado la persiana</string>
@@ -86,7 +86,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">Si te gusta esta aplicación, dedica un rato a evaluarla. ¡Gracias por tu apoyo!</string>
+    <string name="rate_msg">Si te gusta esta aplicación, por favor dedica un momento a evaluarla. ¡Gracias por tu apoyo!</string>
     <string name="rate_now">Evalúa ahora</string>
     <string name="rate_later">Más tarde</string>
     <string name="rate_no_thanks">No, gracias</string>
@@ -99,34 +99,34 @@
     <string name="wizard_iodev_data">Datos del dispositivo</string>
     <string name="email">DIRECCIÓN DE CORREO ELECTRÓNICO</string>
     <string name="wizard_step3_txt2">Si tras conectar la alimentación el dispositivo no funciona en el modo de configuración, mantén presionada la tecla <b>CONFIG</b> durante al menos 5 segundos.</string>
-    <string name="wizard_done">Configuración del dispositivo finalizada con éxito :)</string>
-    <string name="wizard_result_failed">¡Configuración no finalizada con éxito!</string>
-    <string name="add_wizard_is_not_available">¡El creador de adición está disponible solo cuando se ha establecido una conexión con el servidor conforme a la dirección de correo electrónico introducida en los ajustes!</string>
+    <string name="wizard_done">Configuración del dispositivo completada con éxito :)</string>
+    <string name="wizard_result_failed">¡Configuración no completada con éxito!</string>
+    <string name="add_wizard_is_not_available">¡El asistente está disponible solo cuando se ha establecido la conexión con el servidor mediante la dirección de correo electrónico en los ajustes (Desmarque la casilla ajustes avanzadas en ajustes)!</string>
     <string name="wizard_step3_txt3">Presiona la tecla <b>START</b> para iniciar la configuración.</string>
     <string name="wizard_iodev_name">Nombre</string>
     <string name="next">Siguiente</string>
     <string name="wizard_addnetwork_error">¡No se puede añadir la configuración de la red WiFi!</string>
     <string name="wizard_result_conn_error">¡No se puede establecer una conexión con el dispositivo!</string>
-    <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quieres configurar funciona en el modo de configuración y a continuación inténtalo de nuevo. IMPORTANTE – En algunas versiones de Android hay que activar el GPS  para permitir la búsqueda de redes WiFi a las aplicaciones, por lo tanto asegúrate también de tener el GPS activado.</string>
-    <string name="wizard_step3_txt1">Conecta tu dispositivo de entrada/salida a la alimentación. El dispositivo debería funcionar por defecto en el modo de configuración, señalizándolo mediante el parpadeo del diodo de estado de la siguiente forma</string>
+    <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quiere configurar esta en el modo de configuración y a continuación inténtelo de nuevo. IMPORTANTE – En algunas versiones de Android es necesario activar el GPS  para permitir la búsqueda de redes WiFi a las aplicaciones, por lo tanto asegúrese de tener el GPS activado.</string>
+    <string name="wizard_step3_txt1">Conecte su dispositivo de entrada/salida a la alimentación. El dispositivo debería funcionar por defecto en el modo de configuración, señalizándolo mediante el parpadeo del diodo de estado de la siguiente forma</string>
     <string name="wizard_iodev_laststate">Estado anterior</string>
-    <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera a los datos sobre la red WiFi actual!</string>
-    <string name="wizard_connect_timeout">¡Se ha superado el tiempo de espera al establecimiento de una conexión con el dispositivo de entrada/salida!</string>
-    <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera al retorno a la red WiFi fundamental!</string>
-    <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera a la finalización de la configuración del dispositivo!</string>
-    <string name="wizard_scan_timeout">¡Se ha superado el tiempo de espera a la finalización de la búsqueda de redes WiFi!</string>
-    <string name="device_registration_disabled">El registro de dispositivos de entrada/salida está actualmente deshabilitado. Para continuar ve a la página %1$s y en la pestaña Mi SUPLA activa la adición de dispositivos.</string>
+    <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera para los datos de la red WiFi actual!</string>
+    <string name="wizard_connect_timeout">¡Se ha superado el tiempo de espera para establecer la conexión con el dispositivo de entrada/salida!</string>
+    <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera para reconectar a la red WiFi Base!</string>
+    <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera para completar la configuración del dispositivo!</string>
+    <string name="wizard_scan_timeout">¡Se ha superado el tiempo de espera para completar la búsqueda de redes WiFi!</string>
+    <string name="device_registration_disabled">El registro de dispositivos de entrada/salida está actualmente deshabilitado. Para continuar vaya a la página %1$s y en la pestaña Mi SUPLA active la registro de dispositivos.</string>
     <string name="wizard_remember_passwd">Recordar la contraseña</string>
     <string name="wizard_wifi_error">¡La red WiFi está desactivada o no se puede leer su identificador o su nombre!</string>
     <string name="start">START</string>
-    <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este creador!</string>
-    <string name="wizard_step1_txt1">Bienvenido al creador de adición de dispositivos, que te ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
-    <string name="wizard_step2_txt1">Introduce la contraseña a tu red WiFi, llamada</string>
-    <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera a la información sobre la disponibilidad de registro de dispositivos!</string>
-    <string name="wizard_no_internetwifi">Antes de empezar, accede a internet conectándote a una red WiFi que también será la utilizada por el actuador para conectarse al servidor.</string>
-    <string name="wizard_server_compat_error">¡El servidor al que te has conectado no es compatible con esta característica!</string>
+    <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este asistente!</string>
+    <string name="wizard_step1_txt1">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
+    <string name="wizard_step2_txt1">introduzca la contraseña a tu red WiFi, llamada</string>
+    <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
+    <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red WiFi que será la utilizada por el actuador para conectarse al servidor.</string>
+    <string name="wizard_server_compat_error">¡El servidor al que ha conectado no es compatible con esta característica!</string>
     <string name="wizard_step2_txt3">*)El actuador usará la red %1$s para conectarse al servidor.</string>
-    <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pasa al administrador de aplicaciones en los ajustes del sistema. A continuación, busca la aplicación %1$s y activa todos los permisos que exija.</string>
+    <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pase al administrador de aplicaciones en los ajustes del sistema. A continuación, busque la aplicación %1$s y active todos los permisos que exija.</string>
     <string name="help">Ayuda</string>
     <string name="channel_caption_staircasetimer">Automático de escalera</string>
     <string name="channel_caption_electricitymeter">Contador de electricidad</string>
@@ -177,7 +177,7 @@
     <string name="ranking_of_hours">Ranking de horas</string>
     <string name="ranking_of_weekdays">Ranking de días de la semana</string>
     <string name="ranking_of_months">Ranking de meses</string>
-    <string name="consumption_acording_to_phases">Consumo según fases</string>
+    <string name="consumption_acording_to_phases">Consumo por fases</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Humedad</string>
     <string name="last24hours">Últimas 24 horas</string>
@@ -187,11 +187,11 @@
     <string name="all_available_history">Todo el historial disponible</string>
     <string name="retrieving_data_from_the_server">Descargando datos del servidor ...</string>
     <string name="no_chart_data_available">No hay datos para el gráfico.</string>
-    <string name="comparsion_minmin">Comparación minuto con minuto</string>
-    <string name="comparsion_hourhour">Comparación hora con hora</string>
-    <string name="comparsion_dayday">Comparación día con día</string>
-    <string name="comparsion_monthmonth">Comparación mes con mes</string>
-    <string name="comparsion_yearyear">Comparación año con año</string>
+    <string name="comparsion_minmin">Comparación minuto a minuto</string>
+    <string name="comparsion_hourhour">Comparación hora a hora</string>
+    <string name="comparsion_dayday">Comparación día a día</string>
+    <string name="comparsion_monthmonth">Comparación mes a mes</string>
+    <string name="comparsion_yearyear">Comparación año a año</string>
     <string name="hp_turn_on">Encender</string>
     <string name="hp_turn_off">Apagar</string>
     <string name="hp_error_1">No hay agua</string>
@@ -201,11 +201,11 @@
     <string name="hp_error_5">No hay interrupciones de red</string>
     <string name="channel_caption_pressuresensor">Sensor de presión</string>
     <string name="channel_caption_rainsensor">Sensor de precipitaciones</string>
-    <string name="channel_caption_weightsensor">Peso</string>
+    <string name="channel_caption_weightsensor">Sensor de Peso</string>
     <string name="channel_caption_windsensor">Velocidad del viento</string>
     <string name="current_production">Producción en el mes actual</string>
-    <string name="production_acording_to_phases">Producción según fases</string>
-    <string name="enter_superuser_credentials">Entrez les informations d\'identification du superutilisateur</string>
+    <string name="production_acording_to_phases">Producción por fases</string>
+    <string name="enter_superuser_credentials">Ingrese las credenciales de superusuario</string>
 
     <string name="channel_func_none">No hay función</string>
     <string name="channel_func_controllingthegatewaylock">Apertura del portillo</string>
@@ -233,8 +233,8 @@
     <string name="channel_func_mailsensor">Sensor de correo</string>
     <string name="channel_func_windsensor">Sensor de viento</string>
     <string name="channel_func_pressuresensor">Sensor de presión atmosférica</string>
-    <string name="channel_func_rainsensor">CSensor de lluvia</string>
-    <string name="channel_func_weightsensor">Peso</string>
+    <string name="channel_func_rainsensor">Sensor de lluvia</string>
+    <string name="channel_func_weightsensor">Sensor de Peso</string>
     <string name="channel_func_weather_station">Estación meteorológica</string>
     <string name="channel_func_staircasetimer">Automático de escalera</string>
     <string name="channel_func_electricity_meter">Contador de electricidad</string>
@@ -247,7 +247,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Medidor de calor</string>
-    <string name="wizard_step2_txt1_alt">Introduce el nombre y la contraseña de la red WiFi de tu casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
+    <string name="wizard_step2_txt1_alt">Introduzca el nombre y la contraseña de la red WiFi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
     <string name="aritmetic_balance_days" translatable="false">Balance aritmético – Días</string>
     <string name="aritmetic_balance_hours" translatable="false">Balance aritmético – Horas</string>
     <string name="aritmetic_balance_minutes" translatable="false">Balance aritmético – Minutos</string>
@@ -267,7 +267,7 @@
     <string name="channel_caption_valve" translatable="false">Válvula</string>
     <string name="channel_id" translatable="false">ID del canal</string>
     <string name="channel_number" translatable="false">Número del canal</string>
-    <string name="connection_reset_cause" translatable="false">Razón para reiniciar la conexión</string>
+    <string name="connection_reset_cause" translatable="false">Causa del reinicio de la conexión</string>
     <string name="connection_time" translatable="false">Tiempo de conección</string>
     <string name="device" translatable="false">Dispositivo</string>
     <string name="device_id" translatable="false">ID del dispositivo</string>
@@ -275,7 +275,7 @@
     <string name="do_you_want_to_save" translatable="false">¿Quieres guardar los ajustes?</string>
     <string name="em_phase_to_phase_balance" translatable="false">Balance de interfaz vectorial</string>
     <string name="enabling_registration_timeout" translatable="false">¡Se ha superado el tiempo de espera de inicialización del registro!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Ingresa tus datos de inicio de sesión en cloud.supla.org.</string>
+    <string name="enter_suplaorg_credentails" translatable="false">Ingrese sus datos de inicio de sesión en cloud.supla.org.</string>
     <string name="event_openedclosedthevalve" translatable="false">Abrir/cerrar válvula</string>
     <string name="exit" translatable="false">Salir</string>
     <string name="function" translatable="false">Función</string>
@@ -288,18 +288,18 @@
     <string name="mode_change_in_progress" translatable="false">Cambio de modo en curso</string>
     <string name="no" translatable="false">No</string>
     <string name="reset_lightsource_usage_counter" translatable="false">Resetear el contador de uso de la fuente de luz</string>
-    <string name="restore_question" translatable="false">¿Estás seguro de restaurar la cofiguración predeterminada?</string>
+    <string name="restore_question" translatable="false">¿Está seguro de restaurar la cofiguración predeterminada?</string>
     <string name="restoring_default_settings" translatable="false">Se están restaurando los ajustes predeterminados</string>
-    <string name="save_without_saving" translatable="false">¿Estás seguro que quieres salir sin guardar?</string>
+    <string name="save_without_saving" translatable="false">¿Está seguro de que quiere salir sin guardar?</string>
     <string name="seconds" translatable="false">Segundos</string>
     <string name="slider" translatable="false">" Barra"</string>
     <string name="soft_ver" translatable="false">Versión</string>
     <string name="time_exceeded" translatable="false">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
     <string name="uptime" translatable="false">Tiempo de trabajo</string>
-    <string name="uv_warning1" translatable="false">Duración de la lámpara ultravioleta es% 1 $ s. Planear su reemplazo.</string>
-    <string name="uv_warning2" translatable="false">Duración de la lámpara ultravioleta es% 1 $ s. Reemplázala.</string>
-    <string name="valve_open_warning" translatable="false">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrate de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abre la válvula manualmente. ¿Estás seguro de que quieres abrir la válvula desde la aplicación?</string>
-    <string name="valve_warning" translatable="false">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrete de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abre la válvula manualmente.</string>
+    <string name="uv_warning1" translatable="false">Duración de la lámpara ultravioleta es% 1 $ s. Plane su reemplazo.</string>
+    <string name="uv_warning2" translatable="false">Duración de la lámpara ultravioleta es% 1 $ s. Reemplácela.</string>
+    <string name="valve_open_warning" translatable="false">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
+    <string name="valve_warning" translatable="false">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
     <string name="vector_balance_days" translatable="false">Balance vectorial – Días</string>
     <string name="vector_balance_hours" translatable="false">Balance vectorial – Horas</string>
     <string name="vector_balance_minutes" translatable="false">Balance vectorial – Minutos</string>
@@ -315,40 +315,40 @@
     <string name="vl_cfg_op_range" translatable="false">Rango de operación</string>
     <string name="vl_cfg_yes" translatable="false">SÍ</string>
     <string name="vl_dimmer_cfg_info_txt1" translatable="false">Modo de atenuación / rango de trabajo</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Ajusta el rendimiento de atenuación de la iluminación LED seleccionando el modo apropiado. También ajusta el rango de trabajo del atenuador estableciendo el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo la barra a ambos lados del círculo.</string>
+    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Ajuste el rendimiento de atenuación de la iluminación LED seleccionando el modo apropiado. También ajuste el rango de trabajo del atenuador estableciendo el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo la barra a ambos lados del círculo.</string>
     <string name="vl_dimmer_cfg_info_txt3" translatable="false">Modo 1: atenuación de borde posterior (V-Pro)</string>
     <string name="vl_dimmer_cfg_info_txt4" translatable="false">Modo 2: atenuación de borde ascendente</string>
     <string name="vl_dimmer_cfg_info_txt5" translatable="false">Modo 3: atenuación de borde posterior (alternativa)</string>
     <string name="vl_dimmer_cfg_info_txt6" translatable="false">Intensificación</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Esta función ayuda a encender la iluminación LED a un nivel de brillo bajo memorizado, proporcionando un inicio para aumentar (intensificar) el nivel de brillo. Al mover la barra deslizante gris oscuro alrededor del círculo, puedes aumentar o disminuir la intensificación marcada con la línea verde. Al encender la iluminación, el nivel de brillo aumentará (intensificará) al valor preestablecido, y luego volverá al nivel memorizado antes de apagar la iluminación.</string>
+    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Esta función ayuda a encender la iluminación LED a un nivel de brillo bajo memorizado, proporcionando un inicio para aumentar (intensificar) el nivel de brillo. Al mover la barra deslizante gris oscuro alrededor del círculo, puede aumentar o disminuir la intensificación marcada con la línea verde. Al encender la iluminación, el nivel de brillo aumentará (intensificará) al valor preestablecido, y luego volverá al nivel memorizado antes de apagar la iluminación.</string>
     <string name="vl_dimmer_cfg_info_txt8" translatable="false">Más información sobre el atenuador en:</string>
     <string name="vl_dimmer_info_txt1" translatable="false">Control de atenuación</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Para cambiar el nivel de brillo desliza con un dedo en indicador en la barra o en el círculo de brillo</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Con la tecla Encender/Apagar pedes encender o apagar el alumbrado por completo.</string>
+    <string name="vl_dimmer_info_txt2" translatable="false">Para cambiar el nivel de brillo deslize con un dedo en indicador en la barra o en el círculo de brillo</string>
+    <string name="vl_dimmer_info_txt3" translatable="false">Con la tecla Encender/Apagar pede encender o apagar el alumbrado por completo.</string>
     <string name="vl_dimmer_info_txt4" translatable="false">El atenuador recordará el nivel de alumbrado</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Para ajustar los parámetros del atenuador, presiona la tecla de configuración.</string>
+    <string name="vl_dimmer_info_txt5" translatable="false">Para ajustar los parámetros del atenuador, presione la tecla de configuración.</string>
     <string name="wake_up_frequency" translatable="false">Frecuencia de activación</string>
     <string name="wakeup_info" translatable="false">*) La configuración ingresada se aplicará la próxima vez que el nodo se active.</string>
     <string name="wheel" translatable="false">Círculo</string>
     <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
     <string name="wifi_signal_strength" translatable="false">Intensidad de señal WiFi</string>
-    <string name="wifi_throttling" translatable="false">Debido a los límites de escaneo de redes WiFi impuestos por el sistema Android, espera el tiempo presentado anteriormente.</string>
-    <string name="wizard_step1_txt2" translatable="false">Al agregar dispositivos, asegúrate de que los datos móviles estén desactivados. De lo contrario, la acción puede fracasar.</string>
+    <string name="wifi_throttling" translatable="false">Debido a los límites de escaneo de redes WiFi impuestos por el sistema Android, espere el tiempo presentado anteriormente.</string>
+    <string name="wizard_step1_txt2" translatable="false">Al agregar dispositivos, asegúrese de que los datos móviles estén desactivados. De lo contrario, la acción puede fracasar.</string>
     <string name="yes" translatable="false">Sí</string>
     <string name="z_wave" translatable="false">Puente z-wave</string>
     <string name="zwave_add_device" translatable="false">Añadir dispositivo</string>
-    <string name="zwave_before_search_message" translatable="false">Antes de continuar asegúrate de que todos tus dispositivos z-wave están en línea. Al presionar Siguiente se escaneará tu red z-wave lo que puede tardar segundos o minutos.</string>
+    <string name="zwave_before_search_message" translatable="false">Antes de continuar asegúrese de que todos sus dispositivos z-wave están en línea. Al presionar Siguiente se escaneará su red z-wave lo que puede tardar segundos o minutos.</string>
     <string name="zwave_before_search_title" translatable="false">Va a tardar un rato</string>
-    <string name="zwave_bridge_offline" translatable="false">Puente z-wave no responde. Verifica si el puente está conectado con al servidor</string>
+    <string name="zwave_bridge_offline" translatable="false">Puente z-wave no responde. Verifice si el puente está conectado con al servidor</string>
     <string name="zwave_button_press_timeout" translatable="false">¡Se ha superado el tiempo de espera a presionar una tecla!</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">También puedes cambiar la configuración de activación presionando el icono de abajo.</string>
+    <string name="zwave_change_wake_up_settings" translatable="false">También puede cambiar la configuración de activación presionando el icono de abajo.</string>
     <string name="zwave_device" translatable="false">Dispositivio con z-wave</string>
-    <string name="zwave_device_communication_error" translatable="false">Se ha producido un problema con la comunicación con el dispositivo z-wave. Verifica si el dispositivo está al alcance del portillo.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">A continuación se muestran los detalles del canal seleccionado. Define su propósito seleccionando la función adecuada.</string>
+    <string name="zwave_device_communication_error" translatable="false">Se ha producido un problema con la comunicación con el dispositivo z-wave. Verifice si el dispositivo está al alcance del portillo.</string>
+    <string name="zwave_dialog_channel_detail_message" translatable="false">A continuación se muestran los detalles del canal seleccionado. Defina su propósito seleccionando la función adecuada.</string>
     <string name="zwave_done" translatable="false">¡Terminado! Ahora puedes finalizar el proceso de configuración presionando \"ok\" o puedes presionar „atrás” para configurar otro canal o cambiar los ajustes actuales.</string>
     <string name="zwave_error_assign_node_id_timeout" translatable="false">¡Se ha superado el tiempo de espera a asignar el dispositivo z-wave al. canal!</string>
     <string name="zwave_error_caption_change_error" translatable="false">No se ha podido cambiar la descripción del canal. Código %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Presiona atrás para regresar al paso anterior o „Salir” para finalizar.</string>
+    <string name="zwave_error_common_message" translatable="false">Presione atrás para regresar al paso anterior o „Salir” para finalizar.</string>
     <string name="zwave_error_function_change_error" translatable="false">No se ha podido cambiar la función del canal. Código %1$s</string>
     <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">¡Se ha superado el tiempo de espera al identificador del dispositivo z-wave  asignado!</string>
     <string name="zwave_error_get_basic_cfg_timeout" translatable="false">¡Se ha superado el tiempo de espera a los datos de configuración básica del canal!</string>
@@ -358,7 +358,7 @@
     <string name="zwave_error_slave_mode" translatable="false">Está función no está disponible cuando el puente esté en el submodo.</string>
     <string name="zwave_error_unexpected_response" translatable="false">La respuesta del dispositivo no es la esperada. Método: %1$s Código:%2$s</string>
     <string name="zwave_network" translatable="false">Red z-wave</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">El dispositivo elejido z-wave ya está asociado con otro canal. ¿Estás seguro de mover el dispositivo a este canal?</string>
+    <string name="zwave_node_assign_confirm_question" translatable="false">El dispositivo elejido z-wave ya está asociado con otro canal. ¿Está seguro de mover el dispositivo a este canal?</string>
     <string name="zwave_node_searching" translatable="false">Búsqueda de red z-wave para crear una lista de dispositivos</string>
     <string name="zwave_offline" translatable="false">¿Desconectado?</string>
     <string name="zwave_remove_device" translatable="false">Eliminar dispositivo</string>
@@ -366,7 +366,7 @@
     <string name="zwave_reset_and_clear" translatable="false">Resetear la red y los ajustes</string>
     <string name="zwave_reset_confirm_question" translatable="false">¿Seguro de resetear los ajustes y la red z-wave?</string>
     <string name="zwave_select_channel" translatable="false">Elige el puente z-wave y elcanal que quieres configurar.</string>
-    <string name="zwave_select_node" translatable="false">Elige un dispositivo z-wave que estará asociado con el canal en la parte de Supla.</string>
+    <string name="zwave_select_node" translatable="false">Eliga un dispositivo z-wave que estará asociado con el canal en la parte de Supla.</string>
     <string name="zwave_supla_channel" translatable="false">Canal</string>
     <string name="zwave_unexpected_answer" translatable="false">Respuesta de puente inesperada. Código: %1$s</string>
     <string name="zwave_used" translatable="false">Asignado a:</string>
@@ -376,6 +376,6 @@
     <string name="zwave_waiting_for_reset" translatable="false">Esperando la confirmación de resetear la red z-wave y eliminar los ajustes</string>
     <string name="zwave_waiting_for_reset_timeout" translatable="false">¡Se ha superado el tiempo de espera al reinicio de la red z-wave!</string>
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">¡Se ha superado el tiempo de espera a una respuesta del puente z-wave!</string>
-    <string name="zwave_welcome_message" translatable="false">Bienvenido al creador de configuración del puente z-wave. Te permitirá conectar tus dispositivos Z-Wave a Supla. Haz clic en „Siguiente” para continuar.</string>
-    <string name="zwave_welcome_title" translatable="false">Creador z-wave</string>
+    <string name="zwave_welcome_message" translatable="false">Bienvenido al asistente de configuración del puente z-wave. Le permitirá conectar sus dispositivos Z-Wave a Supla. Haga clic en „Siguiente” para continuar.</string>
+    <string name="zwave_welcome_title" translatable="false">asistente z-wave</string>
 </resources>
