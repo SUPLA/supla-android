@@ -245,136 +245,136 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Hőmérő</string>
-    <string name="aritmetic_balance_days" translatable="false">Számtani egyensúly - Napok</string>
-    <string name="aritmetic_balance_hours" translatable="false">Számtani egyensúly - Órák</string>
-    <string name="aritmetic_balance_minutes" translatable="false">Számtani egyensúly - Percek</string>
-    <string name="aritmetic_balance_months" translatable="false">Számtani egyensúly - Hónapok</string>
-    <string name="aritmetic_balance_years" translatable="false">Számtani egyensúly - Évek</string>
-    <string name="associeted_with_scene_error" translatable="false">Egy jelenettel társított csatorna funkciója nem módosítható.</string>
-    <string name="battery_health" translatable="false">Az akkumulátor élettartama</string>
-    <string name="battery_level" translatable="false">Az akkumulátor töltöttségi szintje</string>
-    <string name="battery_powered" translatable="false">Akkumulátoros üzemmód</string>
-    <string name="belongs_to_group_error" translatable="false">Nem változtathatja meg a csoport részét képező csatorna funkcióját.</string>
-    <string name="bridge" translatable="false">Híd</string>
-    <string name="bridge_node_online" translatable="false">Hídcsomópont - online</string>
-    <string name="bridge_signal_strength" translatable="false">Hídcsomópont - jelerősség</string>
-    <string name="caption" translatable="false">Aláírás</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Módosítsa a fényforrás élettartamát</string>
-    <string name="channel_btn_close" translatable="false">Bezárás</string>
-    <string name="channel_caption_valve" translatable="false">Szelep</string>
-    <string name="channel_id" translatable="false">Csatorna azonosító</string>
-    <string name="channel_number" translatable="false">Csatorna száma</string>
-    <string name="connection_reset_cause" translatable="false">A kapcsolat újraindításának oka</string>
-    <string name="connection_time" translatable="false">Csatlakozási idő</string>
-    <string name="device" translatable="false">Eszköz</string>
-    <string name="device_id" translatable="false">Eszköz azonosító</string>
-    <string name="device_name" translatable="false">Eszköz neve</string>
-    <string name="do_you_want_to_save" translatable="false">El akarja menteni a beállításokat?</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Fázisegyensúly</string>
-    <string name="enabling_registration_timeout" translatable="false">A regisztráció engedélyezésének várakozási ideje lejárt!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Írja be bejelentkezési adatait a cloud.supla.org webhelyen.</string>
-    <string name="event_openedclosedthevalve" translatable="false">A szelep nyitása/zárása</string>
-    <string name="exit" translatable="false">Kilépés</string>
-    <string name="function" translatable="false">Funkció</string>
-    <string name="has_schedule_error" translatable="false">Az ütemezéssel rendelkező csatorna funkcióját nem lehet megváltoztatni.</string>
-    <string name="information" translatable="false">Információ</string>
-    <string name="light_source_lifespan" translatable="false">A fényforrás élettartama</string>
-    <string name="light_source_lifespan_hours" translatable="false">A fényforrás élettartama (óra)</string>
-    <string name="light_source_operatingtime" translatable="false">A fényforrás munkaideje</string>
-    <string name="lightsource_warning" translatable="false">A fényforrás élettartama %1$s</string>
-    <string name="mode_change_in_progress" translatable="false">Az üzemmód váltás folyamatban van</string>
-    <string name="no" translatable="false">Nem</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">A fényforrás-használati számláló visszaállítása</string>
-    <string name="restore_question" translatable="false">Biztosan vissza szeretné állítani az alapértelmezett beállításokat?</string>
-    <string name="restoring_default_settings" translatable="false">Az alapértelmezett beállítások visszaállítása folyamatban van</string>
-    <string name="save_without_saving" translatable="false">Biztosan ki szeretne lépni mentés nélkül?</string>
-    <string name="seconds" translatable="false">Másodpercek</string>
-    <string name="slider" translatable="false">Csúszka</string>
-    <string name="soft_ver" translatable="false">Szoftver verzió</string>
-    <string name="time_exceeded" translatable="false">Időtúllépés. Próbálja újra.</string>
-    <string name="uptime" translatable="false">Munkaidő</string>
-    <string name="uv_warning1" translatable="false">Az uv fűtőtest élettartama %1$s. Ütemezze a cseréjét.</string>
-    <string name="uv_warning2" translatable="false">Az uv fűtőtest élettartama %1$s. Cserélje ki a fűtőtestet.</string>
-    <string name="valve_open_warning" translatable="false">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet. Biztosan meg szeretné nyitni a szelepet az alkalmazásból?!</string>
-    <string name="valve_warning" translatable="false">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet.</string>
-    <string name="vector_balance_days" translatable="false">Vektoregyensúly - Napok</string>
-    <string name="vector_balance_hours" translatable="false">Vektoregyensúly - Órák</string>
-    <string name="vector_balance_minutes" translatable="false">Vektoregyensúly - Percek</string>
-    <string name="vector_balance_months" translatable="false">Vektoregyensúly - Hónapok</string>
-    <string name="vector_balance_years" translatable="false">Vektoregyensúly - Évek</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_boost" translatable="false">Erősítés</string>
-    <string name="vl_cfg_mode" translatable="false">Tompítási mód</string>
-    <string name="vl_cfg_mode1" translatable="false">1. MÓD</string>
-    <string name="vl_cfg_mode2" translatable="false">2. MÓD</string>
-    <string name="vl_cfg_mode3" translatable="false">3. MÓD</string>
-    <string name="vl_cfg_no" translatable="false">NEM</string>
-    <string name="vl_cfg_op_range" translatable="false">Működési hatótáv</string>
-    <string name="vl_cfg_yes" translatable="false">IGEN</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Tompítási mód/Működési hatótáv</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">A megfelelő mód kiválasztásával állítsa be a LED-es világítás tompítási teljesítményét. Állítsa be a fényerő-szabályozó munkaterületét is a minimális és a maximális fényerő szintjének beállításával. A minimális és maximális érték a kerék mindkét oldalán található csúszkák mozgatásával állítható be.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">1. mód: Tompítás leeső éllel (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">2. mód: Tompítás emelkedő éllel</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">3. mód: Tompítás leeső éllel (Alternatív)</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Erősítés</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Ez a funkció elősegíti a LED-világítás bekapcsolását memorizált alacsony fényerő mellett, indítást biztosítva a fényerő növeléséhez (erősítéséhez). A sötétszürke csúszkát a kerék körül mozgatva növelheti vagy csökkentheti az erősítés szintjét, amelyet zöld vonallal jelölnek. A világítás bekapcsolásakor a fényerő szintje az előre beállított értékre növekszik (fokozódik), majd visszatér a memória szintjére, mielőtt a világítást kikapcsolná.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">A fényerő-szabályozóval kapcsolatban további információk találhatók a ... címen</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Fényerő-szabályozás</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">A fényerő megváltoztatásához csúsztassa az ujját a csúszka vagy a fényerő kerék mutatóján.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">A be/ki gombbal ki- vagy bekapcsolhatja a világítást.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">A fényerő-szabályozó emlékeztet a fényerőre, mielőtt kikapcsolná a világítást</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">A fényerő-szabályozó paramétereinek beállításához nyomja meg a beállítások gombot.</string>
-    <string name="wake_up_frequency" translatable="false">Ébresztési gyakoriság</string>
-    <string name="wakeup_info" translatable="false">*) A megadott beállításokat a csomópont következő ébredésekor alkalmazzák.</string>
-    <string name="wheel" translatable="false">Kerék</string>
-    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">WiFi jelerősség</string>
-    <string name="wifi_throttling" translatable="false">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
-    <string name="wizard_step1_txt2" translatable="false">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
-    <string name="wizard_step2_txt1_alt" translatable="false">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
-    <string name="yes" translatable="false">Igen</string>
-    <string name="z_wave" translatable="false">Z-wave híd</string>
-    <string name="zwave_add_device" translatable="false">Eszköz hozzáadása</string>
-    <string name="zwave_before_search_message" translatable="false">A folytatás előtt ellenőrizze, hogy minden z-wave-készüléke online-e. A \"Tovább\" megnyomásával átvizsgálja a z-wave hálózatát, amely néhány másodperctől néhány percig eltarthat.</string>
-    <string name="zwave_before_search_title" translatable="false">Ez eltart egy ideig</string>
-    <string name="zwave_bridge_offline" translatable="false">A z-wave híd nem reagál. Ellenőrizze, hogy a híd csatlakozik-e a szerverhez.</string>
-    <string name="zwave_button_press_timeout" translatable="false">A gombnyomásra vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">Az ébresztési beállításokat az alábbi ikon megnyomásával is megváltoztathatja.</string>
-    <string name="zwave_device" translatable="false">Z-wave eszköz</string>
-    <string name="zwave_device_communication_error" translatable="false">Kommunikációs probléma lépett fel a z-wave eszközzel. Győződjön meg arról, hogy a z-wave eszköz a kapu tartományán belül van.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Az alábbiakban a kiválasztott csatorna részleteit találja. Határozza meg a csatorna célját a megfelelő funkció kiválasztásával.</string>
-    <string name="zwave_done" translatable="false">Befejezett! Most befejezheti a konfigurációs folyamatot az \"ok\" gomb megnyomásával, vagy visszaléphet egy másik csatorna konfigurálásához vagy az aktuális beállítások módosításához.</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">A z-wave eszköz a csatornához való hozzárendelésére vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_error_caption_change_error" translatable="false">Nem sikerült megváltoztatni a csatorna aláírását. Kód %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Nyomja meg a \"Vissza\" gombot az előző lépéshez való visszatéréshez, vagy a \"Kilépés\" gombot a befejezéshez.</string>
-    <string name="zwave_error_function_change_error" translatable="false">Nem sikerült megváltoztatni a csatorna funkcióját. Kód %1$s</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">A hozzárendelt z-wave eszközazonosítóra vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Az alapvető csatornakonfigurációs adatokra vonatkozó várakozási idő lejárt</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">A z-wave eszközök listájára vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">A csatorna aláírásának megváltoztatására vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">A csatorna funkció megváltoztatására vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_error_slave_mode" translatable="false">Ez a funkció nem érhető el, ha a híd slave üzemmódban van.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Az eszköz válasza nem a vártnak felel meg. Módszer:%1$s Kód:%2$s</string>
-    <string name="zwave_network" translatable="false">Z-wave hálózat</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">A kiválasztott z-wave eszköz már társítva van egy másik csatornához. Biztosan áthelyezi ezt az eszközt erre a csatornára?</string>
-    <string name="zwave_node_searching" translatable="false">A z-wave hálózat keresése eszközlista összeállításához.</string>
-    <string name="zwave_offline" translatable="false">Offline?</string>
-    <string name="zwave_remove_device" translatable="false">Eszköz eltávolítása</string>
-    <string name="zwave_remove_device_timeout" translatable="false">Az eszköz eltávolítására vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_reset_and_clear" translatable="false">A hálózat és a beállítások visszaállítása</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Biztosan visszaállítja a beállításokat és a z-wave hálózatot?</string>
-    <string name="zwave_select_channel" translatable="false">Válassza ki a z-wave hidat, majd a konfigurálni kívánt csatornát.</string>
-    <string name="zwave_select_node" translatable="false">Válassza ki a z-wave eszközt, amely a Supla oldalon a csatornához lesz kötve.</string>
-    <string name="zwave_supla_channel" translatable="false">Csatorna</string>
-    <string name="zwave_unexpected_answer" translatable="false">Váratlan hídreakció. Kód: %1$s</string>
-    <string name="zwave_used" translatable="false">Hozzárendelve:</string>
-    <string name="zwave_waiting_for_add" translatable="false">Várakozás az eszköz hozzáadásához a z-wave hálózathoz.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">Az eszköz a z-wave hálózatba történő hozzáadására vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Várakozás egy gombnyomásra egy z-wave eszközön.</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Várakozás a z-wave hálózat visszaállításának megerősítésére, a beállítások törlésével együtt.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">A z-wave hálózat visszaállítására vonatkozó várakozási idő lejárt.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Időtúllépés várakozás a z-wave híd válaszára.</string>
-    <string name="zwave_welcome_message" translatable="false">Üdvözöljük a z-wave híd telepítővarázslójában, ami lehetővé teszi a z-wave eszközök csatlakoztatását a Supla-hoz. Kattintson a \"Tovább\" gombra a folytatáshoz.</string>
-    <string name="zwave_welcome_title" translatable="false">Z-wave varázsló</string>
+    <string name="aritmetic_balance_days">Számtani egyensúly - Napok</string>
+    <string name="aritmetic_balance_hours">Számtani egyensúly - Órák</string>
+    <string name="aritmetic_balance_minutes">Számtani egyensúly - Percek</string>
+    <string name="aritmetic_balance_months">Számtani egyensúly - Hónapok</string>
+    <string name="aritmetic_balance_years">Számtani egyensúly - Évek</string>
+    <string name="associeted_with_scene_error">Egy jelenettel társított csatorna funkciója nem módosítható.</string>
+    <string name="battery_health">Az akkumulátor élettartama</string>
+    <string name="battery_level">Az akkumulátor töltöttségi szintje</string>
+    <string name="battery_powered">Akkumulátoros üzemmód</string>
+    <string name="belongs_to_group_error">Nem változtathatja meg a csoport részét képező csatorna funkcióját.</string>
+    <string name="bridge">Híd</string>
+    <string name="bridge_node_online">Hídcsomópont - online</string>
+    <string name="bridge_signal_strength">Hídcsomópont - jelerősség</string>
+    <string name="caption">Aláírás</string>
+    <string name="chanel_lightsource_lifespan_settings">Módosítsa a fényforrás élettartamát</string>
+    <string name="channel_btn_close">Bezárás</string>
+    <string name="channel_caption_valve">Szelep</string>
+    <string name="channel_id">Csatorna azonosító</string>
+    <string name="channel_number">Csatorna száma</string>
+    <string name="connection_reset_cause">A kapcsolat újraindításának oka</string>
+    <string name="connection_time">Csatlakozási idő</string>
+    <string name="device">Eszköz</string>
+    <string name="device_id">Eszköz azonosító</string>
+    <string name="device_name">Eszköz neve</string>
+    <string name="do_you_want_to_save">El akarja menteni a beállításokat?</string>
+    <string name="em_phase_to_phase_balance">Fázisegyensúly</string>
+    <string name="enabling_registration_timeout">A regisztráció engedélyezésének várakozási ideje lejárt!</string>
+    <string name="enter_suplaorg_credentails">Írja be bejelentkezési adatait a cloud.supla.org webhelyen.</string>
+    <string name="event_openedclosedthevalve">A szelep nyitása/zárása</string>
+    <string name="exit">Kilépés</string>
+    <string name="function">Funkció</string>
+    <string name="has_schedule_error">Az ütemezéssel rendelkező csatorna funkcióját nem lehet megváltoztatni.</string>
+    <string name="information">Információ</string>
+    <string name="light_source_lifespan">A fényforrás élettartama</string>
+    <string name="light_source_lifespan_hours">A fényforrás élettartama (óra)</string>
+    <string name="light_source_operatingtime">A fényforrás munkaideje</string>
+    <string name="lightsource_warning">A fényforrás élettartama %1$s</string>
+    <string name="mode_change_in_progress">Az üzemmód váltás folyamatban van</string>
+    <string name="no">Nem</string>
+    <string name="reset_lightsource_usage_counter">A fényforrás-használati számláló visszaállítása</string>
+    <string name="restore_question">Biztosan vissza szeretné állítani az alapértelmezett beállításokat?</string>
+    <string name="restoring_default_settings">Az alapértelmezett beállítások visszaállítása folyamatban van</string>
+    <string name="save_without_saving">Biztosan ki szeretne lépni mentés nélkül?</string>
+    <string name="seconds">Másodpercek</string>
+    <string name="slider">Csúszka</string>
+    <string name="soft_ver">Szoftver verzió</string>
+    <string name="time_exceeded">Időtúllépés. Próbálja újra.</string>
+    <string name="uptime">Munkaidő</string>
+    <string name="uv_warning1">Az uv fűtőtest élettartama %1$s. Ütemezze a cseréjét.</string>
+    <string name="uv_warning2">Az uv fűtőtest élettartama %1$s. Cserélje ki a fűtőtestet.</string>
+    <string name="valve_open_warning">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet. Biztosan meg szeretné nyitni a szelepet az alkalmazásból?!</string>
+    <string name="valve_warning">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet.</string>
+    <string name="vector_balance_days">Vektoregyensúly - Napok</string>
+    <string name="vector_balance_hours">Vektoregyensúly - Órák</string>
+    <string name="vector_balance_minutes">Vektoregyensúly - Percek</string>
+    <string name="vector_balance_months">Vektoregyensúly - Hónapok</string>
+    <string name="vector_balance_years">Vektoregyensúly - Évek</string>
+    <string name="vl_cfg_auto">AUTO</string>
+    <string name="vl_cfg_boost">Erősítés</string>
+    <string name="vl_cfg_mode">Tompítási mód</string>
+    <string name="vl_cfg_mode1">1. MÓD</string>
+    <string name="vl_cfg_mode2">2. MÓD</string>
+    <string name="vl_cfg_mode3">3. MÓD</string>
+    <string name="vl_cfg_no">NEM</string>
+    <string name="vl_cfg_op_range">Működési hatótáv</string>
+    <string name="vl_cfg_yes">IGEN</string>
+    <string name="vl_dimmer_cfg_info_txt1">Tompítási mód/Működési hatótáv</string>
+    <string name="vl_dimmer_cfg_info_txt2">A megfelelő mód kiválasztásával állítsa be a LED-es világítás tompítási teljesítményét. Állítsa be a fényerő-szabályozó munkaterületét is a minimális és a maximális fényerő szintjének beállításával. A minimális és maximális érték a kerék mindkét oldalán található csúszkák mozgatásával állítható be.</string>
+    <string name="vl_dimmer_cfg_info_txt3">1. mód: Tompítás leeső éllel (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4">2. mód: Tompítás emelkedő éllel</string>
+    <string name="vl_dimmer_cfg_info_txt5">3. mód: Tompítás leeső éllel (Alternatív)</string>
+    <string name="vl_dimmer_cfg_info_txt6">Erősítés</string>
+    <string name="vl_dimmer_cfg_info_txt7">Ez a funkció elősegíti a LED-világítás bekapcsolását memorizált alacsony fényerő mellett, indítást biztosítva a fényerő növeléséhez (erősítéséhez). A sötétszürke csúszkát a kerék körül mozgatva növelheti vagy csökkentheti az erősítés szintjét, amelyet zöld vonallal jelölnek. A világítás bekapcsolásakor a fényerő szintje az előre beállított értékre növekszik (fokozódik), majd visszatér a memória szintjére, mielőtt a világítást kikapcsolná.</string>
+    <string name="vl_dimmer_cfg_info_txt8">A fényerő-szabályozóval kapcsolatban további információk találhatók a ... címen</string>
+    <string name="vl_dimmer_info_txt1">Fényerő-szabályozás</string>
+    <string name="vl_dimmer_info_txt2">A fényerő megváltoztatásához csúsztassa az ujját a csúszka vagy a fényerő kerék mutatóján.</string>
+    <string name="vl_dimmer_info_txt3">A be/ki gombbal ki- vagy bekapcsolhatja a világítást.</string>
+    <string name="vl_dimmer_info_txt4">A fényerő-szabályozó emlékeztet a fényerőre, mielőtt kikapcsolná a világítást</string>
+    <string name="vl_dimmer_info_txt5">A fényerő-szabályozó paramétereinek beállításához nyomja meg a beállítások gombot.</string>
+    <string name="wake_up_frequency">Ébresztési gyakoriság</string>
+    <string name="wakeup_info">*) A megadott beállításokat a csomópont következő ébredésekor alkalmazzák.</string>
+    <string name="wheel">Kerék</string>
+    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_signal_strength">WiFi jelerősség</string>
+    <string name="wifi_throttling">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
+    <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
+    <string name="wizard_step2_txt1_alt">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
+    <string name="yes">Igen</string>
+    <string name="z_wave">Z-wave híd</string>
+    <string name="zwave_add_device">Eszköz hozzáadása</string>
+    <string name="zwave_before_search_message">A folytatás előtt ellenőrizze, hogy minden z-wave-készüléke online-e. A \"Tovább\" megnyomásával átvizsgálja a z-wave hálózatát, amely néhány másodperctől néhány percig eltarthat.</string>
+    <string name="zwave_before_search_title">Ez eltart egy ideig</string>
+    <string name="zwave_bridge_offline">A z-wave híd nem reagál. Ellenőrizze, hogy a híd csatlakozik-e a szerverhez.</string>
+    <string name="zwave_button_press_timeout">A gombnyomásra vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_change_wake_up_settings">Az ébresztési beállításokat az alábbi ikon megnyomásával is megváltoztathatja.</string>
+    <string name="zwave_device">Z-wave eszköz</string>
+    <string name="zwave_device_communication_error">Kommunikációs probléma lépett fel a z-wave eszközzel. Győződjön meg arról, hogy a z-wave eszköz a kapu tartományán belül van.</string>
+    <string name="zwave_dialog_channel_detail_message">Az alábbiakban a kiválasztott csatorna részleteit találja. Határozza meg a csatorna célját a megfelelő funkció kiválasztásával.</string>
+    <string name="zwave_done">Befejezett! Most befejezheti a konfigurációs folyamatot az \"ok\" gomb megnyomásával, vagy visszaléphet egy másik csatorna konfigurálásához vagy az aktuális beállítások módosításához.</string>
+    <string name="zwave_error_assign_node_id_timeout">A z-wave eszköz a csatornához való hozzárendelésére vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_error_caption_change_error">Nem sikerült megváltoztatni a csatorna aláírását. Kód %1$s</string>
+    <string name="zwave_error_common_message">Nyomja meg a \"Vissza\" gombot az előző lépéshez való visszatéréshez, vagy a \"Kilépés\" gombot a befejezéshez.</string>
+    <string name="zwave_error_function_change_error">Nem sikerült megváltoztatni a csatorna funkcióját. Kód %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout">A hozzárendelt z-wave eszközazonosítóra vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_error_get_basic_cfg_timeout">Az alapvető csatornakonfigurációs adatokra vonatkozó várakozási idő lejárt</string>
+    <string name="zwave_error_get_node_list_timeout">A z-wave eszközök listájára vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_error_set_caption_timeout">A csatorna aláírásának megváltoztatására vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_error_set_function_timeout">A csatorna funkció megváltoztatására vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_error_slave_mode">Ez a funkció nem érhető el, ha a híd slave üzemmódban van.</string>
+    <string name="zwave_error_unexpected_response">Az eszköz válasza nem a vártnak felel meg. Módszer:%1$s Kód:%2$s</string>
+    <string name="zwave_network">Z-wave hálózat</string>
+    <string name="zwave_node_assign_confirm_question">A kiválasztott z-wave eszköz már társítva van egy másik csatornához. Biztosan áthelyezi ezt az eszközt erre a csatornára?</string>
+    <string name="zwave_node_searching">A z-wave hálózat keresése eszközlista összeállításához.</string>
+    <string name="zwave_offline">Offline?</string>
+    <string name="zwave_remove_device">Eszköz eltávolítása</string>
+    <string name="zwave_remove_device_timeout">Az eszköz eltávolítására vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_reset_and_clear">A hálózat és a beállítások visszaállítása</string>
+    <string name="zwave_reset_confirm_question">Biztosan visszaállítja a beállításokat és a z-wave hálózatot?</string>
+    <string name="zwave_select_channel">Válassza ki a z-wave hidat, majd a konfigurálni kívánt csatornát.</string>
+    <string name="zwave_select_node">Válassza ki a z-wave eszközt, amely a Supla oldalon a csatornához lesz kötve.</string>
+    <string name="zwave_supla_channel">Csatorna</string>
+    <string name="zwave_unexpected_answer">Váratlan hídreakció. Kód: %1$s</string>
+    <string name="zwave_used">Hozzárendelve:</string>
+    <string name="zwave_waiting_for_add">Várakozás az eszköz hozzáadásához a z-wave hálózathoz.</string>
+    <string name="zwave_waiting_for_add_timeout">Az eszköz a z-wave hálózatba történő hozzáadására vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_waiting_for_button_press">Várakozás egy gombnyomásra egy z-wave eszközön.</string>
+    <string name="zwave_waiting_for_reset">Várakozás a z-wave hálózat visszaállításának megerősítésére, a beállítások törlésével együtt.</string>
+    <string name="zwave_waiting_for_reset_timeout">A z-wave hálózat visszaállítására vonatkozó várakozási idő lejárt.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Időtúllépés várakozás a z-wave híd válaszára.</string>
+    <string name="zwave_welcome_message">Üdvözöljük a z-wave híd telepítővarázslójában, ami lehetővé teszi a z-wave eszközök csatlakoztatását a Supla-hoz. Kattintson a \"Tovább\" gombra a folytatáshoz.</string>
+    <string name="zwave_welcome_title">Z-wave varázsló</string>
     <string name="hp_calendar_eco">ECO</string>
 </resources>
