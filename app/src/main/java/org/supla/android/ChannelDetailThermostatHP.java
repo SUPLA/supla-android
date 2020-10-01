@@ -313,14 +313,16 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
 
     private void updateCalendarComfortLabel(CfgItem item) {
         Resources res = getResources();
-        mCalendar.setProgram1Label(res.getText(R.string.hp_temp_comfort)
+        mCalendar.setProgram1Label(res.getText(R.string.hp_calendar_comfort)
                 + " "
                 + Integer.toString(item.value) + "\u00B0");
     }
 
     private void updateCalendarECOLabel(CfgItem item) {
         Resources res = getResources();
-        mCalendar.setProgram0Label("ECO " + Integer.toString(item.value) + "\u00B0");
+        mCalendar.setProgram0Label(res.getText(R.string.hp_calendar_eco)
+                + " "
+                + Integer.toString(item.value) + "\u00B0");
     }
 
     public void setCfgValue(int id, int value) {

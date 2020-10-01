@@ -156,7 +156,7 @@
     <string name="hp_cfg_water_max">Maximale Wassertemperatur</string>
     <string name="hp_cfg_eco_reduction">Temperaturabsenkung im ECO-Modus</string>
     <string name="hp_cfg_temp_comfort_auto">Komforttemperatur im AUTO-Modus</string>
-    <string name="hp_temp_comfort">Komfort</string>
+    <string name="hp_calendar_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
     <string name="hp_hour">std</string>
     <string name="total_cost">Gesamtkosten</string>
@@ -241,135 +241,136 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Wärmezähler</string>
-    <string name="z_wave" translatable="false">Brücke z-Wave</string>
-    <string name="yes" translatable="false">Ja</string>
-    <string name="aritmetic_balance_days" translatable="false">arithmetisches Gleichgewicht - Tage</string>
-    <string name="aritmetic_balance_hours" translatable="false">arithmetisches Gleichgewicht - Stunden</string>
-    <string name="aritmetic_balance_minutes" translatable="false">arithmetisches Gleichgewicht - Minuten</string>
-    <string name="aritmetic_balance_months" translatable="false">arithmetisches Gleichgewicht - Monaten</string>
-    <string name="aritmetic_balance_years" translatable="false">arithmetisches Gleichgewicht - Jahre</string>
-    <string name="associeted_with_scene_error" translatable="false">Sie können die Funktion eines Kanals, der einer Szene zugewiesen ist, nicht ändern.</string>
-    <string name="battery_health" translatable="false">Batterielaufzeit</string>
-    <string name="battery_level" translatable="false">Batteriefüllstand</string>
-    <string name="battery_powered" translatable="false">Batteriebetrieb</string>
-    <string name="belongs_to_group_error" translatable="false">Sie können die Funktion eines Kanals, der einer Gruppe zugewiesen ist, nicht ändern.</string>
-    <string name="bridge" translatable="false">Brücke</string>
-    <string name="bridge_node_online" translatable="false">Brückenknoten - Online</string>
-    <string name="bridge_signal_strength" translatable="false">Brückenknoten - Signalstärke</string>
-    <string name="caption" translatable="false">Signatur</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Ändern Sie die Einstellungen für die Lebensdauer der Lichtquelle</string>
-    <string name="channel_btn_close" translatable="false">Schlieβen</string>
-    <string name="channel_caption_valve" translatable="false">Ventil</string>
-    <string name="channel_id" translatable="false">Kanal-ID</string>
-    <string name="channel_number" translatable="false">Kanalnummer</string>
-    <string name="connection_reset_cause" translatable="false">Grund für den Neustart der Verbindung</string>
-    <string name="connection_time" translatable="false">Verbindungszeit</string>
-    <string name="device" translatable="false">Gerät</string>
-    <string name="device_id" translatable="false">Gerät-ID</string>
-    <string name="device_name" translatable="false">Gerätename</string>
-    <string name="do_you_want_to_save" translatable="false">Möchten Sie die Einstellungen speichern?</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Vektor-Interphasengleichgewicht</string>
-    <string name="enabling_registration_timeout" translatable="false">Die Wartezeit auf das Aktivieren der Registrierung wurde überschritten!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Geben Sie Ihre Anmeldedaten für cloud.supla.org ein.</string>
-    <string name="event_openedclosedthevalve" translatable="false">Ventil öffnen/schließen</string>
-    <string name="exit" translatable="false">Beenden</string>
-    <string name="function" translatable="false">Funktion</string>
-    <string name="has_schedule_error" translatable="false">Sie können die Funktion eines Kanals mit einem Zeitplan nicht ändern.</string>
-    <string name="information" translatable="false">Informationen</string>
-    <string name="light_source_lifespan" translatable="false">Lebensdauer der Lichtquelle</string>
-    <string name="light_source_lifespan_hours" translatable="false">Lebensdauer der Lichtquelle (Stunden)</string>
-    <string name="light_source_operatingtime" translatable="false">Betriebszeit der Lichtquelle</string>
-    <string name="lightsource_warning" translatable="false">Lebensdauer der Lichtquelle beträgt %1$s</string>
-    <string name="mode_change_in_progress" translatable="false">"Modus wird geändert "</string>
-    <string name="no" translatable="false">Nein</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">Verbrauchszähler der Lichtquelle zurücksetzen</string>
-    <string name="restore_question" translatable="false">Sind Sie sicher, dass Sie die Voreinstellungen wiederherstellen möchten?</string>
-    <string name="restoring_default_settings" translatable="false">Voreinstellungen werden wiederhergestellt</string>
-    <string name="save_without_saving" translatable="false">Sind Sie sicher, dass Sie beenden möchten, ohne zu speichern?</string>
-    <string name="seconds" translatable="false">Sekunden</string>
-    <string name="slider" translatable="false">Schieberegler</string>
-    <string name="soft_ver" translatable="false">Softwareversion</string>
-    <string name="time_exceeded" translatable="false">Die Zeit wurde überschritten. Versuchen Sie es noch einmal.</string>
-    <string name="uptime" translatable="false">Betriebszeit</string>
-    <string name="uv_warning1" translatable="false">"Lebensdauer des UV-Strahlers beträgt %1$s  Planen Sie den Austausch. "</string>
-    <string name="uv_warning2" translatable="false">"Lebensdauer des UV-Strahlers beträgt %1$s. Den Strahler austauschen. "</string>
-    <string name="valve_open_warning" translatable="false">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren. Sind Sie sicher, dass Sie das Ventil über die App öffnen möchten ?!</string>
-    <string name="valve_warning" translatable="false">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren.</string>
-    <string name="vector_balance_days" translatable="false">Vektorgleichgewicht - Tage</string>
-    <string name="vector_balance_hours" translatable="false">Vektorgleichgewicht - Stunden</string>
-    <string name="vector_balance_minutes" translatable="false">Vektorgleichgewicht - Minuten</string>
-    <string name="vector_balance_months" translatable="false">Vektorgleichgewicht - Monaten</string>
-    <string name="vector_balance_years" translatable="false">Vektorgleichgewicht - Jahre</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_boost" translatable="false">Stärkung</string>
-    <string name="vl_cfg_mode" translatable="false">Dimmmodus</string>
-    <string name="vl_cfg_mode1" translatable="false">MODUS 1</string>
-    <string name="vl_cfg_mode2" translatable="false">MODUS 2</string>
-    <string name="vl_cfg_mode3" translatable="false">MODUS 3</string>
-    <string name="vl_cfg_no" translatable="false">NEIN</string>
-    <string name="vl_cfg_op_range" translatable="false">Arbeitsumfang</string>
-    <string name="vl_cfg_yes" translatable="false">JA</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Dimmmodus / Arbeitsumfang</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Passen Sie die Dimmleistung der LED-Beleuchtung an, indem Sie den entsprechenden Modus auswählen. Stellen Sie auch den Arbeitsumfang des Dimmers ein, indem Sie die minimale und maximale Helligkeit einstellen. Der minimale und maximale Wert kann durch Bewegen der Schieberegler auf beiden Seiten des Rads eingestellt werden.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Modus 1: mit fallender Flanke dimmen (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Modus 2: mit steigender Flanke dimmen</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Modus 3: mit fallender Flanke dimmen (alternativ)</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Stärkung</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Diese Funktion hilft dabei, die LED-Beleuchtung bei einer gespeicherten niedrigen Helligkeit einzuschalten und bietet einen Start an, um die Helligkeit zu erhöhen (zu stärken). Durch Bewegen des dunkelgrauen Schiebereglers um das Rad können Sie die Stärkung erhöhen oder verringern, die mit der grünen Linie gekennzeichnet ist. Beim Einschalten der Beleuchtung wird die Helligkeit auf den voreingestellten Wert erhöht (verbessert) und kehrt dann zu der vor dem Ausschalten der Beleuchtung gespeicherten Helligkeit zurück.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Weitere Informationen zum Dimmer finden Sie unter</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Steuerung mit Dimmer</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Um die Helligkeit zu ändern, schieben Sie mit Ihrem Finger auf die Anzeige am Schieberegler oder am Helligkeitsrad.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Mit der Ein/Aus-Schaltfläche können Sie die Beleuchtung ein- oder ausschalten.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">Der Dimmer speichert die Helligkeit, bevor er die Beleuchtung ausschaltet.</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Drücken Sie die Einstellungen, um die Dimmerparameter anzupassen.</string>
-    <string name="wake_up_frequency" translatable="false">Aufweckfrequenz</string>
-    <string name="wakeup_info" translatable="false">*) Die eingegebenen Einstellungen werden beim nächsten Aufwachen des Knotens angewendet.</string>
-    <string name="wheel" translatable="false">Rad</string>
-    <string name="wifi_rssi" translatable="false">WLAN RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">WLAN-Signalstärke</string>
-    <string name="wifi_throttling" translatable="false">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
-    <string name="wizard_step1_txt2" translatable="false">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
-    <string name="wizard_step2_txt1_alt" translatable="false">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
-    <string name="zwave_add_device" translatable="false">Gerät hinzufügen</string>
-    <string name="zwave_before_search_message" translatable="false">"Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann. "</string>
-    <string name="zwave_before_search_title" translatable="false">Es dauert eine Weile</string>
-    <string name="zwave_bridge_offline" translatable="false">Die Z-Wave-Brücke reagiert nicht.</string>
-    <string name="zwave_button_press_timeout" translatable="false">Die Wartezeit auf Drücken der Schaltfläche wurde überschritten.</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">Sie können die Aufweckeinstellungen auch ändern, indem Sie auf das Symbol unten klicken.</string>
-    <string name="zwave_device" translatable="false">Z-Wave-Gerät</string>
-    <string name="zwave_device_communication_error" translatable="false">Es ist ein Kommunikationsproblem mit dem Z-Wave-Gerät aufgetreten. Stellen Sie sicher, dass sich das Z-Wave-Gerät im Gateway-Bereich befindet.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Unten finden Sie die Details des ausgewählten Kanals. Bestimmen Sie den Zweck, indem Sie die entsprechende Funktion auswählen.</string>
-    <string name="zwave_done" translatable="false">"Fertig! Jetzt können Sie den Konfigurationsvorgang beenden, indem Sie auf die Schaltfläche \"OK\" klicken oder Sie können Zurück drücken, um einen anderen Kanal zu konfigurieren oder die aktuellen Einstellungen zu ändern. "</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">Die Wartezeit auf das Zuweisen des Z-Wave-Geräts dem Kanal wurde überschritten.</string>
-    <string name="zwave_error_caption_change_error" translatable="false">Kanalsignatur konnte nicht geändert werden. Code %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Drücken Sie Zurück, um zum vorherigen Schritt zurückzukehren oder \"Beenden\", um den Vorgang abzuschließen.</string>
-    <string name="zwave_error_function_change_error" translatable="false">Kanalfunktion konnte nicht geändert werden. Code %1$s</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Die Wartezeit auf die dem Z-Wave-Gerät zugewiesene ID wurde überschritten</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Die Wartezeit auf Daten der grundlegenden Kanalkonfiguration wurde überschritten</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">"Die Wartezeit auf Liste der Z-Wave-Geräte wurde überschritten "</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">Die Wartezeit auf Änderung der Kanalsignatur wurde überschritten</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">Die Wartezeit auf Änderung der Kanalfunktion wurde überschritten</string>
-    <string name="zwave_error_slave_mode" translatable="false">Diese Funktion ist nicht verfügbar, wenn die Brücke in einem untergeordneten Modus betrieben wird.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Geräteantwort nicht wie erwartet. Methode:% 1$s Code:%2$s</string>
-    <string name="zwave_network" translatable="false">Z-Wave-Netzwerk</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">Das ausgewählte Z-Wave-Gerät ist bereits einem anderen Kanal zugewiesen. Sind Sie sicher, dass Sie dieses Gerät auf diesen Kanal übertragen möchten?</string>
-    <string name="zwave_node_searching" translatable="false">Das Z-Wave-Netzwerk wird durchgesucht, um eine Geräteliste zu erstellen.</string>
-    <string name="zwave_remove_device" translatable="false">Gerät löschen</string>
-    <string name="zwave_remove_device_timeout" translatable="false">Die Wartezeit auf Löschen des Geräts wurde überschritten</string>
-    <string name="zwave_reset_and_clear" translatable="false">Netzwerk und Einstellungen zurücksetzen</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Sind Sie sicher, dass Sie die Einstellungen und das Z-Wave-Netzwerk zurücksetzen möchten?</string>
-    <string name="zwave_select_channel" translatable="false">Wählen Sie die Z-Wave-Brücke und dann den Kanal aus, den Sie konfigurieren möchten.</string>
-    <string name="zwave_select_node" translatable="false">Wählen Sie das Z-Wave-Gerät aus, das seitens Supla an den Kanal gebunden werden soll.</string>
-    <string name="zwave_supla_channel" translatable="false">Kanal</string>
-    <string name="zwave_unexpected_answer" translatable="false">"Unerwartete Brückenreaktion. Code: %1$s "</string>
-    <string name="zwave_used" translatable="false">"Zugewiesen: "</string>
-    <string name="zwave_waiting_for_add" translatable="false">Es wird auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk gewartet.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">Die Wartezeit auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk wurde überschritten.</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Es wird auf das Drücken der Schaltfläche auf einem Z-Wave-Gerät gewartet.</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Es wird auf die Bestätigung des Zurücksetzens des Z-Wave-Netzwerks sowie auf das Löschen der Einstellungen gewartet.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">Die Wartezeit auf das Zurücksetzen des Z-Wave-netzwerk wurde überschritten.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Die Wartezeit auf das Reagieren der Z-Wave-Brücke wurde überschritten.</string>
-    <string name="zwave_welcome_message" translatable="false">"Willkommen beim Setup-Assistenten für die Z-Wave-Brücke. Damit können Sie Ihre Z-Wave-Geräte an Supla anschließen. Klicken Sie „Weiter”, um fortzufahren. "</string>
-    <string name="zwave_welcome_title" translatable="false">Z-Wave-Assistent</string>
-    <string name="zwave_offline" translatable="false">Offline ?</string>
+    <string name="z_wave">Brücke z-Wave</string>
+    <string name="yes">Ja</string>
+    <string name="aritmetic_balance_days">arithmetisches Gleichgewicht - Tage</string>
+    <string name="aritmetic_balance_hours">arithmetisches Gleichgewicht - Stunden</string>
+    <string name="aritmetic_balance_minutes">arithmetisches Gleichgewicht - Minuten</string>
+    <string name="aritmetic_balance_months">arithmetisches Gleichgewicht - Monaten</string>
+    <string name="aritmetic_balance_years">arithmetisches Gleichgewicht - Jahre</string>
+    <string name="associeted_with_scene_error">Sie können die Funktion eines Kanals, der einer Szene zugewiesen ist, nicht ändern.</string>
+    <string name="battery_health">Batterielaufzeit</string>
+    <string name="battery_level">Batteriefüllstand</string>
+    <string name="battery_powered">Batteriebetrieb</string>
+    <string name="belongs_to_group_error">Sie können die Funktion eines Kanals, der einer Gruppe zugewiesen ist, nicht ändern.</string>
+    <string name="bridge">Brücke</string>
+    <string name="bridge_node_online">Brückenknoten - Online</string>
+    <string name="bridge_signal_strength">Brückenknoten - Signalstärke</string>
+    <string name="caption">Signatur</string>
+    <string name="chanel_lightsource_lifespan_settings">Ändern Sie die Einstellungen für die Lebensdauer der Lichtquelle</string>
+    <string name="channel_btn_close">Schlieβen</string>
+    <string name="channel_caption_valve">Ventil</string>
+    <string name="channel_id">Kanal-ID</string>
+    <string name="channel_number">Kanalnummer</string>
+    <string name="connection_reset_cause">Grund für den Neustart der Verbindung</string>
+    <string name="connection_time">Verbindungszeit</string>
+    <string name="device">Gerät</string>
+    <string name="device_id">Gerät-ID</string>
+    <string name="device_name">Gerätename</string>
+    <string name="do_you_want_to_save">Möchten Sie die Einstellungen speichern?</string>
+    <string name="em_phase_to_phase_balance">Vektor-Interphasengleichgewicht</string>
+    <string name="enabling_registration_timeout">Die Wartezeit auf das Aktivieren der Registrierung wurde überschritten!</string>
+    <string name="enter_suplaorg_credentails">Geben Sie Ihre Anmeldedaten für cloud.supla.org ein.</string>
+    <string name="event_openedclosedthevalve">Ventil öffnen/schließen</string>
+    <string name="exit">Beenden</string>
+    <string name="function">Funktion</string>
+    <string name="has_schedule_error">Sie können die Funktion eines Kanals mit einem Zeitplan nicht ändern.</string>
+    <string name="information">Informationen</string>
+    <string name="light_source_lifespan">Lebensdauer der Lichtquelle</string>
+    <string name="light_source_lifespan_hours">Lebensdauer der Lichtquelle (Stunden)</string>
+    <string name="light_source_operatingtime">Betriebszeit der Lichtquelle</string>
+    <string name="lightsource_warning">Lebensdauer der Lichtquelle beträgt %1$s</string>
+    <string name="mode_change_in_progress">"Modus wird geändert "</string>
+    <string name="no">Nein</string>
+    <string name="reset_lightsource_usage_counter">Verbrauchszähler der Lichtquelle zurücksetzen</string>
+    <string name="restore_question">Sind Sie sicher, dass Sie die Voreinstellungen wiederherstellen möchten?</string>
+    <string name="restoring_default_settings">Voreinstellungen werden wiederhergestellt</string>
+    <string name="save_without_saving">Sind Sie sicher, dass Sie beenden möchten, ohne zu speichern?</string>
+    <string name="seconds">Sekunden</string>
+    <string name="slider">Schieberegler</string>
+    <string name="soft_ver">Softwareversion</string>
+    <string name="time_exceeded">Die Zeit wurde überschritten. Versuchen Sie es noch einmal.</string>
+    <string name="uptime">Betriebszeit</string>
+    <string name="uv_warning1">"Lebensdauer des UV-Strahlers beträgt %1$s  Planen Sie den Austausch. "</string>
+    <string name="uv_warning2">"Lebensdauer des UV-Strahlers beträgt %1$s. Den Strahler austauschen. "</string>
+    <string name="valve_open_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren. Sind Sie sicher, dass Sie das Ventil über die App öffnen möchten ?!</string>
+    <string name="valve_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren.</string>
+    <string name="vector_balance_days">Vektorgleichgewicht - Tage</string>
+    <string name="vector_balance_hours">Vektorgleichgewicht - Stunden</string>
+    <string name="vector_balance_minutes">Vektorgleichgewicht - Minuten</string>
+    <string name="vector_balance_months">Vektorgleichgewicht - Monaten</string>
+    <string name="vector_balance_years">Vektorgleichgewicht - Jahre</string>
+    <string name="vl_cfg_auto">AUTO</string>
+    <string name="vl_cfg_boost">Stärkung</string>
+    <string name="vl_cfg_mode">Dimmmodus</string>
+    <string name="vl_cfg_mode1">MODUS 1</string>
+    <string name="vl_cfg_mode2">MODUS 2</string>
+    <string name="vl_cfg_mode3">MODUS 3</string>
+    <string name="vl_cfg_no">NEIN</string>
+    <string name="vl_cfg_op_range">Arbeitsumfang</string>
+    <string name="vl_cfg_yes">JA</string>
+    <string name="vl_dimmer_cfg_info_txt1">Dimmmodus / Arbeitsumfang</string>
+    <string name="vl_dimmer_cfg_info_txt2">Passen Sie die Dimmleistung der LED-Beleuchtung an, indem Sie den entsprechenden Modus auswählen. Stellen Sie auch den Arbeitsumfang des Dimmers ein, indem Sie die minimale und maximale Helligkeit einstellen. Der minimale und maximale Wert kann durch Bewegen der Schieberegler auf beiden Seiten des Rads eingestellt werden.</string>
+    <string name="vl_dimmer_cfg_info_txt3">Modus 1: mit fallender Flanke dimmen (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4">Modus 2: mit steigender Flanke dimmen</string>
+    <string name="vl_dimmer_cfg_info_txt5">Modus 3: mit fallender Flanke dimmen (alternativ)</string>
+    <string name="vl_dimmer_cfg_info_txt6">Stärkung</string>
+    <string name="vl_dimmer_cfg_info_txt7">Diese Funktion hilft dabei, die LED-Beleuchtung bei einer gespeicherten niedrigen Helligkeit einzuschalten und bietet einen Start an, um die Helligkeit zu erhöhen (zu stärken). Durch Bewegen des dunkelgrauen Schiebereglers um das Rad können Sie die Stärkung erhöhen oder verringern, die mit der grünen Linie gekennzeichnet ist. Beim Einschalten der Beleuchtung wird die Helligkeit auf den voreingestellten Wert erhöht (verbessert) und kehrt dann zu der vor dem Ausschalten der Beleuchtung gespeicherten Helligkeit zurück.</string>
+    <string name="vl_dimmer_cfg_info_txt8">Weitere Informationen zum Dimmer finden Sie unter</string>
+    <string name="vl_dimmer_info_txt1">Steuerung mit Dimmer</string>
+    <string name="vl_dimmer_info_txt2">Um die Helligkeit zu ändern, schieben Sie mit Ihrem Finger auf die Anzeige am Schieberegler oder am Helligkeitsrad.</string>
+    <string name="vl_dimmer_info_txt3">Mit der Ein/Aus-Schaltfläche können Sie die Beleuchtung ein- oder ausschalten.</string>
+    <string name="vl_dimmer_info_txt4">Der Dimmer speichert die Helligkeit, bevor er die Beleuchtung ausschaltet.</string>
+    <string name="vl_dimmer_info_txt5">Drücken Sie die Einstellungen, um die Dimmerparameter anzupassen.</string>
+    <string name="wake_up_frequency">Aufweckfrequenz</string>
+    <string name="wakeup_info">*) Die eingegebenen Einstellungen werden beim nächsten Aufwachen des Knotens angewendet.</string>
+    <string name="wheel">Rad</string>
+    <string name="wifi_rssi">WLAN RSSI</string>
+    <string name="wifi_signal_strength">WLAN-Signalstärke</string>
+    <string name="wifi_throttling">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
+    <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
+    <string name="wizard_step2_txt1_alt">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
+    <string name="zwave_add_device">Gerät hinzufügen</string>
+    <string name="zwave_before_search_message">"Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann. "</string>
+    <string name="zwave_before_search_title">Es dauert eine Weile</string>
+    <string name="zwave_bridge_offline">Die Z-Wave-Brücke reagiert nicht.</string>
+    <string name="zwave_button_press_timeout">Die Wartezeit auf Drücken der Schaltfläche wurde überschritten.</string>
+    <string name="zwave_change_wake_up_settings">Sie können die Aufweckeinstellungen auch ändern, indem Sie auf das Symbol unten klicken.</string>
+    <string name="zwave_device">Z-Wave-Gerät</string>
+    <string name="zwave_device_communication_error">Es ist ein Kommunikationsproblem mit dem Z-Wave-Gerät aufgetreten. Stellen Sie sicher, dass sich das Z-Wave-Gerät im Gateway-Bereich befindet.</string>
+    <string name="zwave_dialog_channel_detail_message">Unten finden Sie die Details des ausgewählten Kanals. Bestimmen Sie den Zweck, indem Sie die entsprechende Funktion auswählen.</string>
+    <string name="zwave_done">"Fertig! Jetzt können Sie den Konfigurationsvorgang beenden, indem Sie auf die Schaltfläche \"OK\" klicken oder Sie können Zurück drücken, um einen anderen Kanal zu konfigurieren oder die aktuellen Einstellungen zu ändern. "</string>
+    <string name="zwave_error_assign_node_id_timeout">Die Wartezeit auf das Zuweisen des Z-Wave-Geräts dem Kanal wurde überschritten.</string>
+    <string name="zwave_error_caption_change_error">Kanalsignatur konnte nicht geändert werden. Code %1$s</string>
+    <string name="zwave_error_common_message">Drücken Sie Zurück, um zum vorherigen Schritt zurückzukehren oder \"Beenden\", um den Vorgang abzuschließen.</string>
+    <string name="zwave_error_function_change_error">Kanalfunktion konnte nicht geändert werden. Code %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout">Die Wartezeit auf die dem Z-Wave-Gerät zugewiesene ID wurde überschritten</string>
+    <string name="zwave_error_get_basic_cfg_timeout">Die Wartezeit auf Daten der grundlegenden Kanalkonfiguration wurde überschritten</string>
+    <string name="zwave_error_get_node_list_timeout">"Die Wartezeit auf Liste der Z-Wave-Geräte wurde überschritten "</string>
+    <string name="zwave_error_set_caption_timeout">Die Wartezeit auf Änderung der Kanalsignatur wurde überschritten</string>
+    <string name="zwave_error_set_function_timeout">Die Wartezeit auf Änderung der Kanalfunktion wurde überschritten</string>
+    <string name="zwave_error_slave_mode">Diese Funktion ist nicht verfügbar, wenn die Brücke in einem untergeordneten Modus betrieben wird.</string>
+    <string name="zwave_error_unexpected_response">Geräteantwort nicht wie erwartet. Methode:% 1$s Code:%2$s</string>
+    <string name="zwave_network">Z-Wave-Netzwerk</string>
+    <string name="zwave_node_assign_confirm_question">Das ausgewählte Z-Wave-Gerät ist bereits einem anderen Kanal zugewiesen. Sind Sie sicher, dass Sie dieses Gerät auf diesen Kanal übertragen möchten?</string>
+    <string name="zwave_node_searching">Das Z-Wave-Netzwerk wird durchgesucht, um eine Geräteliste zu erstellen.</string>
+    <string name="zwave_remove_device">Gerät löschen</string>
+    <string name="zwave_remove_device_timeout">Die Wartezeit auf Löschen des Geräts wurde überschritten</string>
+    <string name="zwave_reset_and_clear">Netzwerk und Einstellungen zurücksetzen</string>
+    <string name="zwave_reset_confirm_question">Sind Sie sicher, dass Sie die Einstellungen und das Z-Wave-Netzwerk zurücksetzen möchten?</string>
+    <string name="zwave_select_channel">Wählen Sie die Z-Wave-Brücke und dann den Kanal aus, den Sie konfigurieren möchten.</string>
+    <string name="zwave_select_node">Wählen Sie das Z-Wave-Gerät aus, das seitens Supla an den Kanal gebunden werden soll.</string>
+    <string name="zwave_supla_channel">Kanal</string>
+    <string name="zwave_unexpected_answer">"Unerwartete Brückenreaktion. Code: %1$s "</string>
+    <string name="zwave_used">"Zugewiesen: "</string>
+    <string name="zwave_waiting_for_add">Es wird auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk gewartet.</string>
+    <string name="zwave_waiting_for_add_timeout">Die Wartezeit auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk wurde überschritten.</string>
+    <string name="zwave_waiting_for_button_press">Es wird auf das Drücken der Schaltfläche auf einem Z-Wave-Gerät gewartet.</string>
+    <string name="zwave_waiting_for_reset">Es wird auf die Bestätigung des Zurücksetzens des Z-Wave-Netzwerks sowie auf das Löschen der Einstellungen gewartet.</string>
+    <string name="zwave_waiting_for_reset_timeout">Die Wartezeit auf das Zurücksetzen des Z-Wave-netzwerk wurde überschritten.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Die Wartezeit auf das Reagieren der Z-Wave-Brücke wurde überschritten.</string>
+    <string name="zwave_welcome_message">"Willkommen beim Setup-Assistenten für die Z-Wave-Brücke. Damit können Sie Ihre Z-Wave-Geräte an Supla anschließen. Klicken Sie „Weiter”, um fortzufahren. "</string>
+    <string name="zwave_welcome_title">Z-Wave-Assistent</string>
+    <string name="zwave_offline">Offline ?</string>
+   <string name="hp_calendar_eco">ECO</string>
 </resources>

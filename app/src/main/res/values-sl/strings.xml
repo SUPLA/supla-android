@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Najvišja temperatura vode</string>
     <string name="hp_cfg_eco_reduction">Znižanje temperature v ECO načinu</string>
     <string name="hp_cfg_temp_comfort_auto">Udobna temperatura v načinu AUTO</string>
-    <string name="hp_temp_comfort">Udobje</string>
+    <string name="hp_calendar_comfort">Udobje</string>
     <string name="hp_cfg_temp_eco">ECO temperatura v načinu AUTO</string>
     <string name="hp_hour">ura</string>
     <string name="total_cost">Skupni stroški</string>
@@ -246,134 +246,135 @@
 
     <string name="channel_caption_heatmeter">Merilnik toplote</string>
     <string name="wizard_step2_txt1_alt">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
-    <string name="aritmetic_balance_days" translatable="false">Aritmetično ravnotežje - Dnevi</string>
-    <string name="aritmetic_balance_hours" translatable="false">Aritmetično ravnotežje - Ure</string>
-    <string name="aritmetic_balance_minutes" translatable="false">Aritmetično ravnotežje - Minute</string>
-    <string name="aritmetic_balance_months" translatable="false">Aritmetično ravnotežje - Meseci</string>
-    <string name="aritmetic_balance_years" translatable="false">Aritmetično ravnotežje - Leta</string>
-    <string name="associeted_with_scene_error" translatable="false">Funkcije kanala, ki je povezan s sceno, ne morete spremeniti.</string>
-    <string name="battery_health" translatable="false">Življenjska doba baterije</string>
-    <string name="battery_level" translatable="false">Raven baterije</string>
-    <string name="battery_powered" translatable="false">Baterija</string>
-    <string name="belongs_to_group_error" translatable="false">Funkcije kanala, ki je del skupine, ne morete spremeniti.</string>
-    <string name="bridge" translatable="false">Most</string>
-    <string name="bridge_node_online" translatable="false">Vozlišče mosta - online</string>
-    <string name="bridge_signal_strength" translatable="false">Vozlišče mosta - moč signala</string>
-    <string name="caption" translatable="false">Podpis</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Spremenite nastavitve življenjske dobe svetlobnega vira</string>
-    <string name="channel_btn_close" translatable="false">Zapri</string>
-    <string name="channel_caption_valve" translatable="false">Ventil</string>
-    <string name="channel_id" translatable="false">ID kanala</string>
-    <string name="channel_number" translatable="false">Številka kanala</string>
-    <string name="connection_reset_cause" translatable="false">Razlog za ponovni zagon povezave</string>
-    <string name="connection_time" translatable="false">Čas povezave</string>
-    <string name="device" translatable="false">Naprava</string>
-    <string name="device_id" translatable="false">ID naprave</string>
-    <string name="device_name" translatable="false">Naziv naprave</string>
-    <string name="do_you_want_to_save" translatable="false">Ali želite shraniti spremembe?</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Vektorsko medfazno ravnotežje</string>
-    <string name="enabling_registration_timeout" translatable="false">Časovna omejitev za registracijo je potekla!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Vnesite svoje prijavne podatke za cloud.supla.org.</string>
-    <string name="event_openedclosedthevalve" translatable="false">Odpiranje/zapiranje ventila</string>
-    <string name="exit" translatable="false">Izhod</string>
-    <string name="function" translatable="false">Funkcija</string>
-    <string name="has_schedule_error" translatable="false">Funkcije kanala, ki ima razpored, ne morete spremeniti.</string>
-    <string name="information" translatable="false">Informacije</string>
-    <string name="light_source_lifespan" translatable="false">Življenjska doba svetlobnega vira</string>
-    <string name="light_source_lifespan_hours" translatable="false">Življenjska doba svetlobnega vira (ure)</string>
-    <string name="light_source_operatingtime" translatable="false">Delovni čas svetlobnega vira</string>
-    <string name="lightsource_warning" translatable="false">Življenjska doba svetlobnega vira znaša %1$s</string>
-    <string name="mode_change_in_progress" translatable="false">Spreminjanje načina poteka</string>
-    <string name="no" translatable="false">Ne</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">Ponastavite števec porabe svetlobnega vira</string>
-    <string name="restore_question" translatable="false">Ali ste prepričani, da želite obnoviti na privzete nastavitve?</string>
-    <string name="restoring_default_settings" translatable="false">Privzete nastavitve se obnavljajo</string>
-    <string name="save_without_saving" translatable="false">Ali ste prepričani, da želite zapreti brez shranjevanja?</string>
-    <string name="seconds" translatable="false">Sekunde</string>
-    <string name="slider" translatable="false">Zadrga</string>
-    <string name="soft_ver" translatable="false">Različica</string>
-    <string name="time_exceeded" translatable="false">Časovna prekoračitev. Poskusite ponovno.</string>
-    <string name="uptime" translatable="false">Čas delovanja</string>
-    <string name="uv_warning1" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Načrtujte njeno menjavo.</string>
-    <string name="uv_warning2" translatable="false">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Menjajte žarnico.</string>
-    <string name="valve_open_warning" translatable="false">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
-    <string name="valve_warning" translatable="false">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
-    <string name="vector_balance_days" translatable="false">Vektorsko ravnotežje - Dnevi</string>
-    <string name="vector_balance_hours" translatable="false">Vektorsko ravnotežje - Ure</string>
-    <string name="vector_balance_minutes" translatable="false">Vektorsko ravnotežje - Minute</string>
-    <string name="vector_balance_months" translatable="false">Vektorsko ravnotežje - Meseci</string>
-    <string name="vector_balance_years" translatable="false">Vektorsko ravnotežje - Leta</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_boost" translatable="false">Okrepitev</string>
-    <string name="vl_cfg_mode" translatable="false">Način zatemnitve</string>
-    <string name="vl_cfg_mode1" translatable="false">NAČIN 1</string>
-    <string name="vl_cfg_mode2" translatable="false">NAČIN 2</string>
-    <string name="vl_cfg_mode3" translatable="false">NAČIN 3</string>
-    <string name="vl_cfg_no" translatable="false">NE</string>
-    <string name="vl_cfg_op_range" translatable="false">Območje delovanja</string>
-    <string name="vl_cfg_yes" translatable="false">DA</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Način zatemnitve/Delovno območje</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Z izbiro ustreznega načina prilagodite zatemnitev LED osvetlitve. Prilagodite tudi obseg zatemnitve z nastavitvijo najmanjše in največje ravni svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh koleščka.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Način 1: Zatemnitev s padajočim nagibom (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Način 2: Zatemnitev z naraščajočim nagibom</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Način 3: Zatemnitev s padajočim nagibom (Alternativna)</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Okrepitev</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Ta funkcija pomaga pri vklopu LED osvetlitve pri shranjeni nizki stopnji svetlobe, kar omogoča zagon večanja (jačanja) ravni svetlobe. S premikanjem temno sivega drsnika po krožcu lahko povečate ali zmanjšate stopnjo ojačanja, ki je označena z zeleno črto. Ko vklopite osvetlitev, se stopnja svetlosti poveča (ojača) na nastavljeno vrednost, nato pa se pred izklopom osvetlitve vrne na shranjeno raven.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Več informacij o zatemnilniku lahko najdete na</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Nadzor z zatemnilnikom</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Če želite spremeniti stopnjo svetlosti, s prstom potisnite indikator na drsniku ali koleščku za svetlost.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Z gumbom za vklop/izklop lahko v celoti izklopite ali vklopite osvetlitev.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">Zatemnilnik si bo zapomnil stopnjo svetlosti, preden izklopite osvetlitev.</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Če želite prilagoditi parametre zatemnilnika, pritisnite gumb za nastavitve.</string>
-    <string name="wake_up_frequency" translatable="false">Pogostost zbujanja</string>
-    <string name="wakeup_info" translatable="false">*) Vnesene nastavitve bodo uporabljene naslednjič, ko se najbližje vozlišče zbudi.</string>
-    <string name="wheel" translatable="false">Kolo</string>
-    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">Moč WiFi signala</string>
-    <string name="wifi_throttling" translatable="false">Zaradi omejitev skeniranja omrežja WiFi, ki jih nalaga sistem Android, počakajte na zgoraj navedeni čas.</string>
-    <string name="wizard_step1_txt2" translatable="false">Pri dodajanju naprav se prepričajte, da so mobilni podatki izklopljeni. V nasprotnem primeru dodajanje morda ne bo uspešno.</string>
-    <string name="yes" translatable="false">Da</string>
-    <string name="z_wave" translatable="false">Most z-wave</string>
-    <string name="zwave_add_device" translatable="false">Dodaj napravo</string>
-    <string name="zwave_before_search_message" translatable="false">Preden nadaljujete se prepričajte, da imajo vse vaše z-wave naprave povezavo z internetom. Če pritisnete »Naprej«, se bo skeniralo vaše omrežje z-wave, kar lahko traja od nekaj sekund do nekaj minut.</string>
-    <string name="zwave_before_search_title" translatable="false">To bo trajalo nekaj časa</string>
-    <string name="zwave_bridge_offline" translatable="false">Most z-wave se ne odziva. Preverite, če je most povezan s strežnikom.</string>
-    <string name="zwave_button_press_timeout" translatable="false">Potekel je čas čakanja na pristisk gumba.</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">Nastavitve zbujanja lahko spremenite tudi s pritiskom na spodnjo ikono.</string>
-    <string name="zwave_device" translatable="false">Z-wave naprava</string>
-    <string name="zwave_device_communication_error" translatable="false">Prišlo je do težave s komunikacijo z z-wave napravo. Prepričajte se, da je z-wave naprava v dosegu vrat.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Spodaj so podrobnosti o izbranem kanalu. Njegov namen določite z izbiro ustrezne funkcije.</string>
-    <string name="zwave_done" translatable="false">Urejeno! Zdaj lahko postopek konfiguracije končate s pritiskom na gumb \"ok\" ali pa s pritiskom nazaj, da konfigurirate naslednji kanal ali spremenite trenutne nastavitve.</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">Potekel je čas čakanja na dodajanje z-wave naprave na kanal.</string>
-    <string name="zwave_error_caption_change_error" translatable="false">Podpisa kanala ni bilo mogoče spremeniti. Koda %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Pritisnite nazaj, da se vrnite na prejšnji korak, ali »izhod\", da končate.</string>
-    <string name="zwave_error_function_change_error" translatable="false">Funkcije kanala ni bilo mogoče spremeniti. Koda %1$s</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Potekel je čas čakanja na identifikator pripisane z-wave naprave.</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Potekel je čas čakanja na podatke osnovne konfiguracije kanala.</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">Potekel je čas čakanja na seznam z-wave naprav.</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">Potekel je čas čakanja na spremembo podpisa kanala.</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">Potekel je čas čakanja na spremembo funkcij kanala.</string>
-    <string name="zwave_error_slave_mode" translatable="false">Ta funkcija ni na voljo, ko je most v pomožnem načinu.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Odziv naprave ni skladen s pričakovanji. Metoda:%1$s Koda:%2$s</string>
-    <string name="zwave_network" translatable="false">Mreža z-wave</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">Izbrana z-wave naprava je že povezana z drugim kanalom. Ali ste prepričani, da želite premakniti to napravo v ta kanal?</string>
-    <string name="zwave_node_searching" translatable="false">Preiskovanje omrežja z-wave za sestavo seznama naprav.</string>
-    <string name="zwave_offline" translatable="false">Brez povezave?</string>
-    <string name="zwave_remove_device" translatable="false">Izbriši napravo</string>
-    <string name="zwave_remove_device_timeout" translatable="false">Potekel je čas čakanja na odstranitev naprave.</string>
-    <string name="zwave_reset_and_clear" translatable="false">Ponastavite mrežo in nastavitve</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Ali ste prepričani, da želite ponastaviti nastavitve in omrežje z-wave?</string>
-    <string name="zwave_select_channel" translatable="false">Izberite most z-wave in nato kanal, ki ga želite konfigurirati.</string>
-    <string name="zwave_select_node" translatable="false">Izberite z-wave napravo, ki bo povezana s kanalom na strani Supli.</string>
-    <string name="zwave_supla_channel" translatable="false">Kanal</string>
-    <string name="zwave_unexpected_answer" translatable="false">Nepričakovan odziv mosta. Koda:  %1$s</string>
-    <string name="zwave_used" translatable="false">Dodeljeno:</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Čakanje na pritisk gumba na z-wave napravi.</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Čakanje na potrditev ponastavitve z-wave omrežja skupaj z brisanjem nastavitev.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">Potekel je čas čakanja na ponastavitev z-wave mreže.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Potekel je čas čakanja na odgovor mosta z-wave.</string>
-    <string name="zwave_welcome_message" translatable="false">Dobrodošli v čarovniku za konfiguracijo mosta z-wave. Čarovnik vam bo omogočil povezavo med vašimi z-wave napravami in Supli. Kliknite »Naprej« za nadaljevanje.</string>
-    <string name="zwave_welcome_title" translatable="false">Čarovnik z-wave</string>
-    <string name="zwave_waiting_for_add" translatable="false">Čakanje na dodajanje naprave v omrežje z-wave.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">Potekel je čas čakanja na dodajanje naprave v omrežje z-wave.</string>
+    <string name="aritmetic_balance_days" >Aritmetično ravnotežje - Dnevi</string>
+    <string name="aritmetic_balance_hours" >Aritmetično ravnotežje - Ure</string>
+    <string name="aritmetic_balance_minutes" >Aritmetično ravnotežje - Minute</string>
+    <string name="aritmetic_balance_months" >Aritmetično ravnotežje - Meseci</string>
+    <string name="aritmetic_balance_years" >Aritmetično ravnotežje - Leta</string>
+    <string name="associeted_with_scene_error" >Funkcije kanala, ki je povezan s sceno, ne morete spremeniti.</string>
+    <string name="battery_health" >Življenjska doba baterije</string>
+    <string name="battery_level" >Raven baterije</string>
+    <string name="battery_powered" >Baterija</string>
+    <string name="belongs_to_group_error" >Funkcije kanala, ki je del skupine, ne morete spremeniti.</string>
+    <string name="bridge" >Most</string>
+    <string name="bridge_node_online" >Vozlišče mosta - online</string>
+    <string name="bridge_signal_strength" >Vozlišče mosta - moč signala</string>
+    <string name="caption" >Podpis</string>
+    <string name="chanel_lightsource_lifespan_settings" >Spremenite nastavitve življenjske dobe svetlobnega vira</string>
+    <string name="channel_btn_close" >Zapri</string>
+    <string name="channel_caption_valve" >Ventil</string>
+    <string name="channel_id" >ID kanala</string>
+    <string name="channel_number" >Številka kanala</string>
+    <string name="connection_reset_cause" >Razlog za ponovni zagon povezave</string>
+    <string name="connection_time" >Čas povezave</string>
+    <string name="device" >Naprava</string>
+    <string name="device_id" >ID naprave</string>
+    <string name="device_name" >Naziv naprave</string>
+    <string name="do_you_want_to_save" >Ali želite shraniti spremembe?</string>
+    <string name="em_phase_to_phase_balance" >Vektorsko medfazno ravnotežje</string>
+    <string name="enabling_registration_timeout" >Časovna omejitev za registracijo je potekla!</string>
+    <string name="enter_suplaorg_credentails" >Vnesite svoje prijavne podatke za cloud.supla.org.</string>
+    <string name="event_openedclosedthevalve" >Odpiranje/zapiranje ventila</string>
+    <string name="exit" >Izhod</string>
+    <string name="function" >Funkcija</string>
+    <string name="has_schedule_error" >Funkcije kanala, ki ima razpored, ne morete spremeniti.</string>
+    <string name="information" >Informacije</string>
+    <string name="light_source_lifespan" >Življenjska doba svetlobnega vira</string>
+    <string name="light_source_lifespan_hours" >Življenjska doba svetlobnega vira (ure)</string>
+    <string name="light_source_operatingtime" >Delovni čas svetlobnega vira</string>
+    <string name="lightsource_warning" >Življenjska doba svetlobnega vira znaša %1$s</string>
+    <string name="mode_change_in_progress" >Spreminjanje načina poteka</string>
+    <string name="no" >Ne</string>
+    <string name="reset_lightsource_usage_counter" >Ponastavite števec porabe svetlobnega vira</string>
+    <string name="restore_question" >Ali ste prepričani, da želite obnoviti na privzete nastavitve?</string>
+    <string name="restoring_default_settings" >Privzete nastavitve se obnavljajo</string>
+    <string name="save_without_saving" >Ali ste prepričani, da želite zapreti brez shranjevanja?</string>
+    <string name="seconds" >Sekunde</string>
+    <string name="slider" >Zadrga</string>
+    <string name="soft_ver" >Različica</string>
+    <string name="time_exceeded" >Časovna prekoračitev. Poskusite ponovno.</string>
+    <string name="uptime" >Čas delovanja</string>
+    <string name="uv_warning1" >Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Načrtujte njeno menjavo.</string>
+    <string name="uv_warning2" >Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Menjajte žarnico.</string>
+    <string name="valve_open_warning" >Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
+    <string name="valve_warning" >Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
+    <string name="vector_balance_days" >Vektorsko ravnotežje - Dnevi</string>
+    <string name="vector_balance_hours" >Vektorsko ravnotežje - Ure</string>
+    <string name="vector_balance_minutes" >Vektorsko ravnotežje - Minute</string>
+    <string name="vector_balance_months" >Vektorsko ravnotežje - Meseci</string>
+    <string name="vector_balance_years" >Vektorsko ravnotežje - Leta</string>
+    <string name="vl_cfg_auto" >AUTO</string>
+    <string name="vl_cfg_boost" >Okrepitev</string>
+    <string name="vl_cfg_mode" >Način zatemnitve</string>
+    <string name="vl_cfg_mode1" >NAČIN 1</string>
+    <string name="vl_cfg_mode2" >NAČIN 2</string>
+    <string name="vl_cfg_mode3" >NAČIN 3</string>
+    <string name="vl_cfg_no" >NE</string>
+    <string name="vl_cfg_op_range" >Območje delovanja</string>
+    <string name="vl_cfg_yes" >DA</string>
+    <string name="vl_dimmer_cfg_info_txt1" >Način zatemnitve/Delovno območje</string>
+    <string name="vl_dimmer_cfg_info_txt2" >Z izbiro ustreznega načina prilagodite zatemnitev LED osvetlitve. Prilagodite tudi obseg zatemnitve z nastavitvijo najmanjše in največje ravni svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh koleščka.</string>
+    <string name="vl_dimmer_cfg_info_txt3" >Način 1: Zatemnitev s padajočim nagibom (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" >Način 2: Zatemnitev z naraščajočim nagibom</string>
+    <string name="vl_dimmer_cfg_info_txt5" >Način 3: Zatemnitev s padajočim nagibom (Alternativna)</string>
+    <string name="vl_dimmer_cfg_info_txt6" >Okrepitev</string>
+    <string name="vl_dimmer_cfg_info_txt7" >Ta funkcija pomaga pri vklopu LED osvetlitve pri shranjeni nizki stopnji svetlobe, kar omogoča zagon večanja (jačanja) ravni svetlobe. S premikanjem temno sivega drsnika po krožcu lahko povečate ali zmanjšate stopnjo ojačanja, ki je označena z zeleno črto. Ko vklopite osvetlitev, se stopnja svetlosti poveča (ojača) na nastavljeno vrednost, nato pa se pred izklopom osvetlitve vrne na shranjeno raven.</string>
+    <string name="vl_dimmer_cfg_info_txt8" >Več informacij o zatemnilniku lahko najdete na</string>
+    <string name="vl_dimmer_info_txt1" >Nadzor z zatemnilnikom</string>
+    <string name="vl_dimmer_info_txt2" >Če želite spremeniti stopnjo svetlosti, s prstom potisnite indikator na drsniku ali koleščku za svetlost.</string>
+    <string name="vl_dimmer_info_txt3" >Z gumbom za vklop/izklop lahko v celoti izklopite ali vklopite osvetlitev.</string>
+    <string name="vl_dimmer_info_txt4" >Zatemnilnik si bo zapomnil stopnjo svetlosti, preden izklopite osvetlitev.</string>
+    <string name="vl_dimmer_info_txt5" >Če želite prilagoditi parametre zatemnilnika, pritisnite gumb za nastavitve.</string>
+    <string name="wake_up_frequency" >Pogostost zbujanja</string>
+    <string name="wakeup_info" >*) Vnesene nastavitve bodo uporabljene naslednjič, ko se najbližje vozlišče zbudi.</string>
+    <string name="wheel" >Kolo</string>
+    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_signal_strength" >Moč WiFi signala</string>
+    <string name="wifi_throttling" >Zaradi omejitev skeniranja omrežja WiFi, ki jih nalaga sistem Android, počakajte na zgoraj navedeni čas.</string>
+    <string name="wizard_step1_txt2" >Pri dodajanju naprav se prepričajte, da so mobilni podatki izklopljeni. V nasprotnem primeru dodajanje morda ne bo uspešno.</string>
+    <string name="yes" >Da</string>
+    <string name="z_wave" >Most z-wave</string>
+    <string name="zwave_add_device" >Dodaj napravo</string>
+    <string name="zwave_before_search_message" >Preden nadaljujete se prepričajte, da imajo vse vaše z-wave naprave povezavo z internetom. Če pritisnete »Naprej«, se bo skeniralo vaše omrežje z-wave, kar lahko traja od nekaj sekund do nekaj minut.</string>
+    <string name="zwave_before_search_title" >To bo trajalo nekaj časa</string>
+    <string name="zwave_bridge_offline" >Most z-wave se ne odziva. Preverite, če je most povezan s strežnikom.</string>
+    <string name="zwave_button_press_timeout" >Potekel je čas čakanja na pristisk gumba.</string>
+    <string name="zwave_change_wake_up_settings" >Nastavitve zbujanja lahko spremenite tudi s pritiskom na spodnjo ikono.</string>
+    <string name="zwave_device" >Z-wave naprava</string>
+    <string name="zwave_device_communication_error" >Prišlo je do težave s komunikacijo z z-wave napravo. Prepričajte se, da je z-wave naprava v dosegu vrat.</string>
+    <string name="zwave_dialog_channel_detail_message" >Spodaj so podrobnosti o izbranem kanalu. Njegov namen določite z izbiro ustrezne funkcije.</string>
+    <string name="zwave_done" >Urejeno! Zdaj lahko postopek konfiguracije končate s pritiskom na gumb \"ok\" ali pa s pritiskom nazaj, da konfigurirate naslednji kanal ali spremenite trenutne nastavitve.</string>
+    <string name="zwave_error_assign_node_id_timeout" >Potekel je čas čakanja na dodajanje z-wave naprave na kanal.</string>
+    <string name="zwave_error_caption_change_error" >Podpisa kanala ni bilo mogoče spremeniti. Koda %1$s</string>
+    <string name="zwave_error_common_message" >Pritisnite nazaj, da se vrnite na prejšnji korak, ali »izhod\", da končate.</string>
+    <string name="zwave_error_function_change_error" >Funkcije kanala ni bilo mogoče spremeniti. Koda %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" >Potekel je čas čakanja na identifikator pripisane z-wave naprave.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" >Potekel je čas čakanja na podatke osnovne konfiguracije kanala.</string>
+    <string name="zwave_error_get_node_list_timeout" >Potekel je čas čakanja na seznam z-wave naprav.</string>
+    <string name="zwave_error_set_caption_timeout" >Potekel je čas čakanja na spremembo podpisa kanala.</string>
+    <string name="zwave_error_set_function_timeout" >Potekel je čas čakanja na spremembo funkcij kanala.</string>
+    <string name="zwave_error_slave_mode" >Ta funkcija ni na voljo, ko je most v pomožnem načinu.</string>
+    <string name="zwave_error_unexpected_response" >Odziv naprave ni skladen s pričakovanji. Metoda:%1$s Koda:%2$s</string>
+    <string name="zwave_network" >Mreža z-wave</string>
+    <string name="zwave_node_assign_confirm_question" >Izbrana z-wave naprava je že povezana z drugim kanalom. Ali ste prepričani, da želite premakniti to napravo v ta kanal?</string>
+    <string name="zwave_node_searching" >Preiskovanje omrežja z-wave za sestavo seznama naprav.</string>
+    <string name="zwave_offline" >Brez povezave?</string>
+    <string name="zwave_remove_device" >Izbriši napravo</string>
+    <string name="zwave_remove_device_timeout" >Potekel je čas čakanja na odstranitev naprave.</string>
+    <string name="zwave_reset_and_clear" >Ponastavite mrežo in nastavitve</string>
+    <string name="zwave_reset_confirm_question" >Ali ste prepričani, da želite ponastaviti nastavitve in omrežje z-wave?</string>
+    <string name="zwave_select_channel" >Izberite most z-wave in nato kanal, ki ga želite konfigurirati.</string>
+    <string name="zwave_select_node" >Izberite z-wave napravo, ki bo povezana s kanalom na strani Supli.</string>
+    <string name="zwave_supla_channel" >Kanal</string>
+    <string name="zwave_unexpected_answer" >Nepričakovan odziv mosta. Koda:  %1$s</string>
+    <string name="zwave_used" >Dodeljeno:</string>
+    <string name="zwave_waiting_for_button_press" >Čakanje na pritisk gumba na z-wave napravi.</string>
+    <string name="zwave_waiting_for_reset" >Čakanje na potrditev ponastavitve z-wave omrežja skupaj z brisanjem nastavitev.</string>
+    <string name="zwave_waiting_for_reset_timeout" >Potekel je čas čakanja na ponastavitev z-wave mreže.</string>
+    <string name="zwave_waiting_for_resposne_timeout" >Potekel je čas čakanja na odgovor mosta z-wave.</string>
+    <string name="zwave_welcome_message" >Dobrodošli v čarovniku za konfiguracijo mosta z-wave. Čarovnik vam bo omogočil povezavo med vašimi z-wave napravami in Supli. Kliknite »Naprej« za nadaljevanje.</string>
+    <string name="zwave_welcome_title" >Čarovnik z-wave</string>
+    <string name="zwave_waiting_for_add" >Čakanje na dodajanje naprave v omrežje z-wave.</string>
+    <string name="zwave_waiting_for_add_timeout" >Potekel je čas čakanja na dodajanje naprave v omrežje z-wave.</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

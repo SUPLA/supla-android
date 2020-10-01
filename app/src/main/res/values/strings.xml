@@ -173,9 +173,10 @@
     <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
     <string name="hp_cfg_water_max">Maximum water temperature</string>
     <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
-    <string name="hp_cfg_temp_comfort_auto">Comfort temperature in AUTO mode</string>
-    <string name="hp_temp_comfort">Comfort</string>
-    <string name="hp_cfg_temp_eco">ECO temperature in AUTO mode</string>
+    <string name="hp_cfg_temp_comfort_auto">Higher temperature in AUTO mode</string>
+    <string name="hp_calendar_comfort">Higher</string>
+    <string name="hp_calendar_eco">Lower</string>
+    <string name="hp_cfg_temp_eco">Lower temperature in AUTO mode</string>
     <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Impulse counter</string>
     <string name="meter_value">Meter value</string>

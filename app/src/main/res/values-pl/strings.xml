@@ -177,7 +177,7 @@
     <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
     <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Temperatura komfort w trybie AUTO</string>
-    <string name="hp_temp_comfort">Komfort</string>
+    <string name="hp_calendar_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
     <string name="hp_hour">godz.</string>
     <string name="total_cost">Łączny koszt</string>
@@ -389,4 +389,5 @@
     <string name="seconds">Sekundy</string>
     <string name="zwave_offline">Offline ?</string>
     <string name="zwave_device_communication_error" >Wystąpił problem komunikacji z urządzeniem z-wave. Upewnij się, że urządzenie z-wave jest w zasięgu bramki.</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Temperatura maximă a apei</string>
     <string name="hp_cfg_eco_reduction">Reducerea temperaturii în modul ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Temperatura de confort în modul AUTO</string>
-    <string name="hp_temp_comfort">Confort</string>
+    <string name="hp_calendar_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO în modul AUTO</string>
     <string name="hp_hour">godz.</string>
     <string name="total_cost">Costul total</string>
@@ -245,135 +245,136 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Contorul de căldură</string>
-    <string name="aritmetic_balance_days" translatable="false">Bilanţ aritmetic - Zile</string>
-    <string name="aritmetic_balance_hours" translatable="false">Bilanţ aritmetic - Ore</string>
-    <string name="aritmetic_balance_minutes" translatable="false">Bilanţ aritmetic - Minute</string>
-    <string name="aritmetic_balance_months" translatable="false">Bilanţ aritmetic - Luni</string>
-    <string name="aritmetic_balance_years" translatable="false">Bilanţ aritmetic - Ani</string>
-    <string name="associeted_with_scene_error" translatable="false">Nu se poate schimba funcţia unui canal care este asociat cu o scenă</string>
-    <string name="battery_health" translatable="false">Durata de viaţă a bateriei</string>
-    <string name="battery_level" translatable="false">Nivelul bateriei</string>
-    <string name="battery_powered" translatable="false">Alimentare cu baterie</string>
-    <string name="belongs_to_group_error" translatable="false">Nu se poate schimba funcţia unui canal care face parte dintr-un grup.</string>
-    <string name="bridge" translatable="false">Podul</string>
-    <string name="bridge_node_online" translatable="false">Nodul podului - online</string>
-    <string name="bridge_signal_strength" translatable="false">Nodul podului - puterea semnalului</string>
-    <string name="caption" translatable="false">Semnătură</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Modificaţi setările duratei de viaţă a sursei de lumină</string>
-    <string name="channel_btn_close" translatable="false">Închide</string>
-    <string name="channel_caption_valve" translatable="false">Robinet</string>
-    <string name="channel_id" translatable="false">Id-ul canalului</string>
-    <string name="channel_number" translatable="false">Numărul canalului</string>
-    <string name="connection_reset_cause" translatable="false">Motivul pentru repornirea conexiunii</string>
-    <string name="connection_time" translatable="false">Timp de conectare</string>
-    <string name="device" translatable="false">"Dispozitiv "</string>
-    <string name="device_id" translatable="false">Id-ul dispozitivului</string>
-    <string name="device_name" translatable="false">Denumire dispozitivului</string>
-    <string name="do_you_want_to_save" translatable="false">Doriţi să salvaţi setările?</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Bilanţ interfaz vectorial</string>
-    <string name="enabling_registration_timeout" translatable="false">Timpul de aşteptare pentru activarea înregistrării a fost depășit!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Introduceţi datele de conectare în cloud.supla.org.</string>
-    <string name="event_openedclosedthevalve" translatable="false">Deschiderea / închiderea robinetului</string>
-    <string name="exit" translatable="false">Ieşire</string>
-    <string name="function" translatable="false">Funcţie</string>
-    <string name="has_schedule_error" translatable="false">Nu se poate schimba funcţia unui canal care are un program.</string>
-    <string name="information" translatable="false">Informaţii</string>
-    <string name="light_source_lifespan" translatable="false">Durata de viaţă a sursei de lumină</string>
-    <string name="light_source_lifespan_hours" translatable="false">Durata de viaţă a sursei de lumină (ore)</string>
-    <string name="light_source_operatingtime" translatable="false">Timp de lucru al sursei de lumină</string>
-    <string name="lightsource_warning" translatable="false">Durata de viaţă a sursei de lumină este de %1$s</string>
-    <string name="mode_change_in_progress" translatable="false">Schimbarea modului este în desfăşurare</string>
-    <string name="no" translatable="false">Nu</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">Resetaţi contorul de utilizare a sursei de lumină</string>
-    <string name="restore_question" translatable="false">Sigur doriţi să reveniţi la setările implicite?</string>
-    <string name="restoring_default_settings" translatable="false">Sunt restaurate setările implicite</string>
-    <string name="save_without_saving" translatable="false">Sigur doriţi să ieşiţi fără a salva?</string>
-    <string name="seconds" translatable="false">Secunde</string>
-    <string name="slider" translatable="false">Riglă</string>
-    <string name="soft_ver" translatable="false">Versiunea de operare</string>
-    <string name="time_exceeded" translatable="false">Timpul a fost depăşit. Încercaţi din nou.</string>
-    <string name="uptime" translatable="false">Timp de lucru</string>
-    <string name="uv_warning1" translatable="false">Durata de viaţă a lămpii UV este de %1$s. Programaşi înlocuirea acestuia.</string>
-    <string name="uv_warning2" translatable="false">Durata de viaţă a lămpii UV este de  %1$s.  Înlocuiţi lampa.</string>
-    <string name="valve_open_warning" translatable="false">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
-    <string name="valve_warning" translatable="false">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
-    <string name="vector_balance_days" translatable="false">Bilanţ vectorial - Zile</string>
-    <string name="vector_balance_hours" translatable="false">Bilanţ vectorial - Ore</string>
-    <string name="vector_balance_minutes" translatable="false">Bilanţ vectorial - Minute</string>
-    <string name="vector_balance_months" translatable="false">Bilanţ vectorial - Luni</string>
-    <string name="vector_balance_years" translatable="false">Bilanţ vectorial - Ani</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_boost" translatable="false">Amplificare</string>
-    <string name="vl_cfg_mode" translatable="false">Mod de estompare</string>
-    <string name="vl_cfg_mode1" translatable="false">MODUL 1</string>
-    <string name="vl_cfg_mode2" translatable="false">MODUL 2</string>
-    <string name="vl_cfg_mode3" translatable="false">MODUL 3</string>
-    <string name="vl_cfg_no" translatable="false">NU</string>
-    <string name="vl_cfg_op_range" translatable="false">Domeniul de lucru</string>
-    <string name="vl_cfg_yes" translatable="false">DA</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Mod de estompare / Domeniu de lucru</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Reglaţi performanţa de estompare a iluminării cu LED prin selectarea modului corespunzător. Reglați de asemenea, domeniul de lucru a regulatorului lestompatorului prin setarea nivelului de luminozitate minimă și maximă. Valoarea minimă și maximă poate fi setată prin deplasarea de rigle amplasate de pe ambele părți ale cercului.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Modul 1: Estompare descendentă (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Modul 2: Estompare ascendentă</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Modul 3:  Estompare descendentă (Alternativă)</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Amplificare</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Această funcţie ajută la pornirea iluminării cu LED la nivelul scăzut de luminozitate memorat, asigurând oferind un impuls de pornire (amplificare) nivelului de luminozitate. Prin deplasarea potențiometrului gri închis în jurul cercului, puteți crește sau reduce nivelul de amplificare, marcat cu linia verde. La pornirea iluminatului, nivelul de luminozitate va fi mărit (amplificat) la valoarea setată iar apoi va reveni la nivelul memorat înainte de oprirea iluminatului.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Mai multe informaţii despre estompator de lumină  puteţi găsi la</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Controlul estompării</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Pentru a modifica nivelul de luminozitate, mutaţi cu degetul indicatorul de pe riglă sau de pe cercul de luminozitate.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Cu butonul de pornire / oprire, puteţi opri sau porni iluminatul complet.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">Estompatorul ţine minte nivelul de luminozitate de înainte de a opri iluminatul.</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Pentru a regla parametrii estompatorului, apăsaţi butonul de setări.</string>
-    <string name="wake_up_frequency" translatable="false">Frecvenţa  de trezire</string>
-    <string name="wakeup_info" translatable="false">*) Setările introduse vor fi aplicate data viitoare la trezirea nodului.</string>
-    <string name="wheel" translatable="false">Cerc</string>
-    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">Puterea semnalului WiFi</string>
-    <string name="wifi_throttling" translatable="false">Datorită limitelor de scanare a reţelei WiFi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
-    <string name="wizard_step1_txt2" translatable="false">Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>
-    <string name="wizard_step2_txt1_alt" translatable="false">Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
-    <string name="yes" translatable="false">Da</string>
-    <string name="z_wave" translatable="false">Podul   Z-Wave</string>
-    <string name="zwave_add_device" translatable="false">Adăugaţi un dispozitiv</string>
-    <string name="zwave_before_search_message" translatable="false">Înainte de a continua, asiguraţi-vă că toate dispozitivele dvs. Z-Wave sunt online. Apăsarea pe „Mai departe” duce la scanarea reţelei dvs. Z-Wave, care poate dura de la câteva secunde la câteva minute.</string>
-    <string name="zwave_before_search_title" translatable="false">Aceasta va dura ceva timp</string>
-    <string name="zwave_bridge_offline" translatable="false">Podul Z-Wave nu răspunde. Verificaţi dacă podul este conectat la server.</string>
-    <string name="zwave_button_press_timeout" translatable="false">Timpul de aşteptare pentru apăsarea butonului a fost depăşit.</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">De asemenea, puteţi modifica setările de trezire apăsând pictograma de mai jos.</string>
-    <string name="zwave_device" translatable="false">Dispozitiv Z-Wave</string>
-    <string name="zwave_device_communication_error" translatable="false">A apărut o problemă de comunicare cu dispozitivul Z-Wave. Asiguraţi-vă că dispozitivul Z-Wave se află în intervalul de gateway</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Mai jos sunt detaliile canalului selectat. Definiţi destinaţia lui, selectând funcția corespunzătoare.</string>
-    <string name="zwave_done" translatable="false">Gata! Acum puteţi finaliza procesul de configurare apăsând butonul „ok” sau puteţi apasă înapoi pentru a configura un alt canal sau pentru a modifica setările actuale.</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">Timpul de aşteptare pentru atribuirea dispozitivului Z-Wave la canal a fost depăşit.</string>
-    <string name="zwave_error_caption_change_error" translatable="false">Modificarea semnăturii a eșuat. Cod %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Apăsaţi înapoi pentru a reveni la pasul anterior sau „Ieşire” pentru a termina.</string>
-    <string name="zwave_error_function_change_error" translatable="false">Modificarea funcţiei canalului a eșuat. Cod %1$s</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">Timpul de aşteptare pentru identificatorul dispozitivului atribuit Z-Wave a fost depăşit.</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">Timpul de aşteptare pentru datele de configurare de bază ale canalului a fost depăşit.</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">Timpul de aşteptare pentru lista dispozitivelor  Z-Wave a fost depăşit.</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">Timpul de aşteptare pentru schimbarea semnăturii canalului a fost depăşit.</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">Timpul de aşteptare pentru schimbarea funcţiei de canal a fost depăşit.</string>
-    <string name="zwave_error_slave_mode" translatable="false">Această funcţie nu este disponibilă când podul lucrează într-un submod.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">Răspunsul dispozitivului nu este cel aşteptat. Metodă:%1$s Cod:%2$s</string>
-    <string name="zwave_network" translatable="false">Reţea Z-Wave</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">Dispozitivul Z-Wave selectat este deja atribuit cu alt canal. Sigur doriți să mutați acest dispozitiv pe acest canal?</string>
-    <string name="zwave_node_searching" translatable="false">Căutarea reţelei Z-Wave pentru a crea o listă de dispozitive.</string>
-    <string name="zwave_offline" translatable="false">Offline?</string>
-    <string name="zwave_remove_device" translatable="false">Eliminaţi dispozitivul</string>
-    <string name="zwave_remove_device_timeout" translatable="false">Timpul de aşteptare pentru eliminarea dispozitivului a fost depăşit.</string>
-    <string name="zwave_reset_and_clear" translatable="false">Resetaţi reţeaua şi setările</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Sigur doriţi să resetaţi setările şi reţeaua Z-Wave?</string>
-    <string name="zwave_select_channel" translatable="false">Selectaţi podul Z-Wave şi apoi canalul pe care doriți să-l configurați.</string>
-    <string name="zwave_select_node" translatable="false">Selectaţi dispozitivul Z-Wave care va fi asociat cu canalul din partea Supla.</string>
-    <string name="zwave_supla_channel" translatable="false">Canal</string>
-    <string name="zwave_unexpected_answer" translatable="false">Răspuns neaşteptat al podului. Cod: %1$s</string>
-    <string name="zwave_used" translatable="false">Atribuit la:</string>
-    <string name="zwave_waiting_for_add" translatable="false">Se aşteaptă adăugarea dispozitivului la rețeaua Z-Wave.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">Timpul de aşteptare pentru adăugarea dispozitivului la reţeaua Z-Wave a fost depăşit.</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Se aşteaptă apăsarea unui buton de pe dispozitiv Z-Wave.</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Se aşteaptă confirmarea resetării reţelei Z-Wave împreună cu ştergerea setărilor.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">Timpul de aşteptare pentru resetarea reţelei Z-Wave a fost depăşit.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">Timpul de aşteptare pentru răspunsului podului Z-Wave a fost depăşit.</string>
-    <string name="zwave_welcome_message" translatable="false">Bine aţi venit la creatorul de configurare a podului Z-Wave. Acesta vă va permite să conectați dispozitivele Z-Wave la Supla. Faceți clic pe „Mai departe” pentru a continua.</string>
-    <string name="zwave_welcome_title" translatable="false">Creator Z-Wave</string>
+    <string name="aritmetic_balance_days" >Bilanţ aritmetic - Zile</string>
+    <string name="aritmetic_balance_hours" >Bilanţ aritmetic - Ore</string>
+    <string name="aritmetic_balance_minutes" >Bilanţ aritmetic - Minute</string>
+    <string name="aritmetic_balance_months" >Bilanţ aritmetic - Luni</string>
+    <string name="aritmetic_balance_years" >Bilanţ aritmetic - Ani</string>
+    <string name="associeted_with_scene_error" >Nu se poate schimba funcţia unui canal care este asociat cu o scenă</string>
+    <string name="battery_health" >Durata de viaţă a bateriei</string>
+    <string name="battery_level" >Nivelul bateriei</string>
+    <string name="battery_powered" >Alimentare cu baterie</string>
+    <string name="belongs_to_group_error" >Nu se poate schimba funcţia unui canal care face parte dintr-un grup.</string>
+    <string name="bridge" >Podul</string>
+    <string name="bridge_node_online" >Nodul podului - online</string>
+    <string name="bridge_signal_strength" >Nodul podului - puterea semnalului</string>
+    <string name="caption" >Semnătură</string>
+    <string name="chanel_lightsource_lifespan_settings" >Modificaţi setările duratei de viaţă a sursei de lumină</string>
+    <string name="channel_btn_close" >Închide</string>
+    <string name="channel_caption_valve" >Robinet</string>
+    <string name="channel_id" >Id-ul canalului</string>
+    <string name="channel_number" >Numărul canalului</string>
+    <string name="connection_reset_cause" >Motivul pentru repornirea conexiunii</string>
+    <string name="connection_time" >Timp de conectare</string>
+    <string name="device" >"Dispozitiv "</string>
+    <string name="device_id" >Id-ul dispozitivului</string>
+    <string name="device_name" >Denumire dispozitivului</string>
+    <string name="do_you_want_to_save" >Doriţi să salvaţi setările?</string>
+    <string name="em_phase_to_phase_balance" >Bilanţ interfaz vectorial</string>
+    <string name="enabling_registration_timeout" >Timpul de aşteptare pentru activarea înregistrării a fost depășit!</string>
+    <string name="enter_suplaorg_credentails" >Introduceţi datele de conectare în cloud.supla.org.</string>
+    <string name="event_openedclosedthevalve" >Deschiderea / închiderea robinetului</string>
+    <string name="exit" >Ieşire</string>
+    <string name="function" >Funcţie</string>
+    <string name="has_schedule_error" >Nu se poate schimba funcţia unui canal care are un program.</string>
+    <string name="information" >Informaţii</string>
+    <string name="light_source_lifespan" >Durata de viaţă a sursei de lumină</string>
+    <string name="light_source_lifespan_hours" >Durata de viaţă a sursei de lumină (ore)</string>
+    <string name="light_source_operatingtime" >Timp de lucru al sursei de lumină</string>
+    <string name="lightsource_warning" >Durata de viaţă a sursei de lumină este de %1$s</string>
+    <string name="mode_change_in_progress" >Schimbarea modului este în desfăşurare</string>
+    <string name="no" >Nu</string>
+    <string name="reset_lightsource_usage_counter" >Resetaţi contorul de utilizare a sursei de lumină</string>
+    <string name="restore_question" >Sigur doriţi să reveniţi la setările implicite?</string>
+    <string name="restoring_default_settings" >Sunt restaurate setările implicite</string>
+    <string name="save_without_saving" >Sigur doriţi să ieşiţi fără a salva?</string>
+    <string name="seconds" >Secunde</string>
+    <string name="slider" >Riglă</string>
+    <string name="soft_ver" >Versiunea de operare</string>
+    <string name="time_exceeded" >Timpul a fost depăşit. Încercaţi din nou.</string>
+    <string name="uptime" >Timp de lucru</string>
+    <string name="uv_warning1" >Durata de viaţă a lămpii UV este de %1$s. Programaşi înlocuirea acestuia.</string>
+    <string name="uv_warning2" >Durata de viaţă a lămpii UV este de  %1$s.  Înlocuiţi lampa.</string>
+    <string name="valve_open_warning" >Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
+    <string name="valve_warning" >Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
+    <string name="vector_balance_days" >Bilanţ vectorial - Zile</string>
+    <string name="vector_balance_hours" >Bilanţ vectorial - Ore</string>
+    <string name="vector_balance_minutes" >Bilanţ vectorial - Minute</string>
+    <string name="vector_balance_months" >Bilanţ vectorial - Luni</string>
+    <string name="vector_balance_years" >Bilanţ vectorial - Ani</string>
+    <string name="vl_cfg_auto" >AUTO</string>
+    <string name="vl_cfg_boost" >Amplificare</string>
+    <string name="vl_cfg_mode" >Mod de estompare</string>
+    <string name="vl_cfg_mode1" >MODUL 1</string>
+    <string name="vl_cfg_mode2" >MODUL 2</string>
+    <string name="vl_cfg_mode3" >MODUL 3</string>
+    <string name="vl_cfg_no" >NU</string>
+    <string name="vl_cfg_op_range" >Domeniul de lucru</string>
+    <string name="vl_cfg_yes" >DA</string>
+    <string name="vl_dimmer_cfg_info_txt1" >Mod de estompare / Domeniu de lucru</string>
+    <string name="vl_dimmer_cfg_info_txt2" >Reglaţi performanţa de estompare a iluminării cu LED prin selectarea modului corespunzător. Reglați de asemenea, domeniul de lucru a regulatorului lestompatorului prin setarea nivelului de luminozitate minimă și maximă. Valoarea minimă și maximă poate fi setată prin deplasarea de rigle amplasate de pe ambele părți ale cercului.</string>
+    <string name="vl_dimmer_cfg_info_txt3" >Modul 1: Estompare descendentă (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" >Modul 2: Estompare ascendentă</string>
+    <string name="vl_dimmer_cfg_info_txt5" >Modul 3:  Estompare descendentă (Alternativă)</string>
+    <string name="vl_dimmer_cfg_info_txt6" >Amplificare</string>
+    <string name="vl_dimmer_cfg_info_txt7" >Această funcţie ajută la pornirea iluminării cu LED la nivelul scăzut de luminozitate memorat, asigurând oferind un impuls de pornire (amplificare) nivelului de luminozitate. Prin deplasarea potențiometrului gri închis în jurul cercului, puteți crește sau reduce nivelul de amplificare, marcat cu linia verde. La pornirea iluminatului, nivelul de luminozitate va fi mărit (amplificat) la valoarea setată iar apoi va reveni la nivelul memorat înainte de oprirea iluminatului.</string>
+    <string name="vl_dimmer_cfg_info_txt8" >Mai multe informaţii despre estompator de lumină  puteţi găsi la</string>
+    <string name="vl_dimmer_info_txt1" >Controlul estompării</string>
+    <string name="vl_dimmer_info_txt2" >Pentru a modifica nivelul de luminozitate, mutaţi cu degetul indicatorul de pe riglă sau de pe cercul de luminozitate.</string>
+    <string name="vl_dimmer_info_txt3" >Cu butonul de pornire / oprire, puteţi opri sau porni iluminatul complet.</string>
+    <string name="vl_dimmer_info_txt4" >Estompatorul ţine minte nivelul de luminozitate de înainte de a opri iluminatul.</string>
+    <string name="vl_dimmer_info_txt5" >Pentru a regla parametrii estompatorului, apăsaţi butonul de setări.</string>
+    <string name="wake_up_frequency" >Frecvenţa  de trezire</string>
+    <string name="wakeup_info" >*) Setările introduse vor fi aplicate data viitoare la trezirea nodului.</string>
+    <string name="wheel" >Cerc</string>
+    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_signal_strength" >Puterea semnalului WiFi</string>
+    <string name="wifi_throttling" >Datorită limitelor de scanare a reţelei WiFi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
+    <string name="wizard_step1_txt2" >Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>
+    <string name="wizard_step2_txt1_alt" >Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
+    <string name="yes" >Da</string>
+    <string name="z_wave" >Podul   Z-Wave</string>
+    <string name="zwave_add_device" >Adăugaţi un dispozitiv</string>
+    <string name="zwave_before_search_message" >Înainte de a continua, asiguraţi-vă că toate dispozitivele dvs. Z-Wave sunt online. Apăsarea pe „Mai departe” duce la scanarea reţelei dvs. Z-Wave, care poate dura de la câteva secunde la câteva minute.</string>
+    <string name="zwave_before_search_title" >Aceasta va dura ceva timp</string>
+    <string name="zwave_bridge_offline" >Podul Z-Wave nu răspunde. Verificaţi dacă podul este conectat la server.</string>
+    <string name="zwave_button_press_timeout" >Timpul de aşteptare pentru apăsarea butonului a fost depăşit.</string>
+    <string name="zwave_change_wake_up_settings" >De asemenea, puteţi modifica setările de trezire apăsând pictograma de mai jos.</string>
+    <string name="zwave_device" >Dispozitiv Z-Wave</string>
+    <string name="zwave_device_communication_error" >A apărut o problemă de comunicare cu dispozitivul Z-Wave. Asiguraţi-vă că dispozitivul Z-Wave se află în intervalul de gateway</string>
+    <string name="zwave_dialog_channel_detail_message" >Mai jos sunt detaliile canalului selectat. Definiţi destinaţia lui, selectând funcția corespunzătoare.</string>
+    <string name="zwave_done" >Gata! Acum puteţi finaliza procesul de configurare apăsând butonul „ok” sau puteţi apasă înapoi pentru a configura un alt canal sau pentru a modifica setările actuale.</string>
+    <string name="zwave_error_assign_node_id_timeout" >Timpul de aşteptare pentru atribuirea dispozitivului Z-Wave la canal a fost depăşit.</string>
+    <string name="zwave_error_caption_change_error" >Modificarea semnăturii a eșuat. Cod %1$s</string>
+    <string name="zwave_error_common_message" >Apăsaţi înapoi pentru a reveni la pasul anterior sau „Ieşire” pentru a termina.</string>
+    <string name="zwave_error_function_change_error" >Modificarea funcţiei canalului a eșuat. Cod %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" >Timpul de aşteptare pentru identificatorul dispozitivului atribuit Z-Wave a fost depăşit.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" >Timpul de aşteptare pentru datele de configurare de bază ale canalului a fost depăşit.</string>
+    <string name="zwave_error_get_node_list_timeout" >Timpul de aşteptare pentru lista dispozitivelor  Z-Wave a fost depăşit.</string>
+    <string name="zwave_error_set_caption_timeout" >Timpul de aşteptare pentru schimbarea semnăturii canalului a fost depăşit.</string>
+    <string name="zwave_error_set_function_timeout" >Timpul de aşteptare pentru schimbarea funcţiei de canal a fost depăşit.</string>
+    <string name="zwave_error_slave_mode" >Această funcţie nu este disponibilă când podul lucrează într-un submod.</string>
+    <string name="zwave_error_unexpected_response" >Răspunsul dispozitivului nu este cel aşteptat. Metodă:%1$s Cod:%2$s</string>
+    <string name="zwave_network" >Reţea Z-Wave</string>
+    <string name="zwave_node_assign_confirm_question" >Dispozitivul Z-Wave selectat este deja atribuit cu alt canal. Sigur doriți să mutați acest dispozitiv pe acest canal?</string>
+    <string name="zwave_node_searching" >Căutarea reţelei Z-Wave pentru a crea o listă de dispozitive.</string>
+    <string name="zwave_offline" >Offline?</string>
+    <string name="zwave_remove_device" >Eliminaţi dispozitivul</string>
+    <string name="zwave_remove_device_timeout" >Timpul de aşteptare pentru eliminarea dispozitivului a fost depăşit.</string>
+    <string name="zwave_reset_and_clear" >Resetaţi reţeaua şi setările</string>
+    <string name="zwave_reset_confirm_question" >Sigur doriţi să resetaţi setările şi reţeaua Z-Wave?</string>
+    <string name="zwave_select_channel" >Selectaţi podul Z-Wave şi apoi canalul pe care doriți să-l configurați.</string>
+    <string name="zwave_select_node" >Selectaţi dispozitivul Z-Wave care va fi asociat cu canalul din partea Supla.</string>
+    <string name="zwave_supla_channel" >Canal</string>
+    <string name="zwave_unexpected_answer" >Răspuns neaşteptat al podului. Cod: %1$s</string>
+    <string name="zwave_used" >Atribuit la:</string>
+    <string name="zwave_waiting_for_add" >Se aşteaptă adăugarea dispozitivului la rețeaua Z-Wave.</string>
+    <string name="zwave_waiting_for_add_timeout" >Timpul de aşteptare pentru adăugarea dispozitivului la reţeaua Z-Wave a fost depăşit.</string>
+    <string name="zwave_waiting_for_button_press" >Se aşteaptă apăsarea unui buton de pe dispozitiv Z-Wave.</string>
+    <string name="zwave_waiting_for_reset" >Se aşteaptă confirmarea resetării reţelei Z-Wave împreună cu ştergerea setărilor.</string>
+    <string name="zwave_waiting_for_reset_timeout" >Timpul de aşteptare pentru resetarea reţelei Z-Wave a fost depăşit.</string>
+    <string name="zwave_waiting_for_resposne_timeout" >Timpul de aşteptare pentru răspunsului podului Z-Wave a fost depăşit.</string>
+    <string name="zwave_welcome_message" >Bine aţi venit la creatorul de configurare a podului Z-Wave. Acesta vă va permite să conectați dispozitivele Z-Wave la Supla. Faceți clic pe „Mai departe” pentru a continua.</string>
+    <string name="zwave_welcome_title" >Creator Z-Wave</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

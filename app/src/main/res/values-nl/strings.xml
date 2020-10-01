@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Maximale watertemperatuur</string>
     <string name="hp_cfg_eco_reduction">Temperatuurverlaging in ECO-modus</string>
     <string name="hp_cfg_temp_comfort_auto">Comforttemperatuur in de AUTO-modus</string>
-    <string name="hp_temp_comfort">Comfort</string>
+    <string name="hp_calendar_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO-temperatuur in AUTO-modus</string>
     <string name="hp_hour">u</string>
     <string name="total_cost">Totale kosten</string>
@@ -245,135 +245,136 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Warmtemeter</string>
-    <string name="aritmetic_balance_days" translatable="false">Rekenkundig saldo - Dagen</string>
-    <string name="aritmetic_balance_hours" translatable="false">Rekenkundig saldo - Uren</string>
-    <string name="aritmetic_balance_minutes" translatable="false">Rekenkundig saldo - Minuten</string>
-    <string name="aritmetic_balance_months" translatable="false">Rekenkundig saldo - Maanden</string>
-    <string name="aritmetic_balance_years" translatable="false">Rekenkundig saldo - Jaren</string>
-    <string name="associeted_with_scene_error" translatable="false">U kunt de functie van het kanaal dat gerelateerd is aan de scène niet wijzigen.</string>
-    <string name="battery_health" translatable="false">Levensduur van de batterij</string>
-    <string name="battery_level" translatable="false">Batterijniveau</string>
-    <string name="battery_powered" translatable="false">Batterijstroomvoorziening</string>
-    <string name="belongs_to_group_error" translatable="false">U kunt de functie van een kanaal dat bij een groep hoort niet veranderen.</string>
-    <string name="bridge" translatable="false">Brug</string>
-    <string name="bridge_node_online" translatable="false">Brugknooppunt - online</string>
-    <string name="bridge_signal_strength" translatable="false">Brugknooppunt - signaalsterkte</string>
-    <string name="caption" translatable="false">Handtekening</string>
-    <string name="chanel_lightsource_lifespan_settings" translatable="false">Wijzig de instellingen voor de levensduur van de lichtbron</string>
-    <string name="channel_btn_close" translatable="false">Sluiten</string>
-    <string name="channel_caption_valve" translatable="false">Klep</string>
-    <string name="channel_id" translatable="false">Kanaal ID</string>
-    <string name="channel_number" translatable="false">Kanaalnummer</string>
-    <string name="connection_reset_cause" translatable="false">Reden voor het herstarten van de verbinding</string>
-    <string name="connection_time" translatable="false">Verbindingstijd</string>
-    <string name="device" translatable="false">Apparaat</string>
-    <string name="device_id" translatable="false">Apparaat ID</string>
-    <string name="device_name" translatable="false">Naam van het apparaat</string>
-    <string name="do_you_want_to_save" translatable="false">Wilt u de instellingen opslaan?</string>
-    <string name="em_phase_to_phase_balance" translatable="false">Vector interfase saldo</string>
-    <string name="enabling_registration_timeout" translatable="false">De wachttijd voor het activeren van de registratie is verstreken!</string>
-    <string name="enter_suplaorg_credentails" translatable="false">Voer uw inloggegevens voor cloud.supla.org in.</string>
-    <string name="event_openedclosedthevalve" translatable="false">Openen/sluiten van de klep</string>
-    <string name="exit" translatable="false">Uitgang</string>
-    <string name="function" translatable="false">Functie</string>
-    <string name="has_schedule_error" translatable="false">U kunt de functie van een kanaal met een schema niet wijzigen.</string>
-    <string name="information" translatable="false">Informatie</string>
-    <string name="light_source_lifespan" translatable="false">Levensduur van de lichtbron</string>
-    <string name="light_source_lifespan_hours" translatable="false">Levensduur lichtbron (uren)</string>
-    <string name="light_source_operatingtime" translatable="false">Lichtbron werktijd</string>
-    <string name="lightsource_warning" translatable="false">De levensduur van de lichtbron is %1$s</string>
-    <string name="mode_change_in_progress" translatable="false">De moduswijziging is aan de gang</string>
-    <string name="no" translatable="false">Nee</string>
-    <string name="reset_lightsource_usage_counter" translatable="false">Gebruiksteller lichtbron resetten</string>
-    <string name="restore_question" translatable="false">Weet u zeker dat u de standaardinstellingen wilt herstellen?</string>
-    <string name="restoring_default_settings" translatable="false">De standaardinstellingen worden hersteld</string>
-    <string name="save_without_saving" translatable="false">Weet u zeker dat u wilt stoppen zonder op te slaan?</string>
-    <string name="seconds" translatable="false">Seconden</string>
-    <string name="slider" translatable="false">Ritssluiting</string>
-    <string name="soft_ver" translatable="false">Software versie</string>
-    <string name="time_exceeded" translatable="false">De tijd is om. Probeer het nog eens.</string>
-    <string name="uptime" translatable="false">Werktijd</string>
-    <string name="uv_warning1" translatable="false">De levensduur van de uv-lamp is %1$s. Plan de vervanging ervan.</string>
-    <string name="uv_warning2" translatable="false">De levensduur van de uv-lamp is %1$s. Vervang de lamp.</string>
-    <string name="valve_open_warning" translatable="false">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
-    <string name="valve_warning" translatable="false">De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
-    <string name="vector_balance_days" translatable="false">Vector saldo - Dagen</string>
-    <string name="vector_balance_hours" translatable="false">Vector saldo - Uren</string>
-    <string name="vector_balance_minutes" translatable="false">Vector saldo - Minuten</string>
-    <string name="vector_balance_months" translatable="false">Vector saldo - Maanden</string>
-    <string name="vector_balance_years" translatable="false">Vector saldo - Jaren</string>
-    <string name="vl_cfg_auto" translatable="false">AUTO</string>
-    <string name="vl_cfg_boost" translatable="false">Versterking</string>
-    <string name="vl_cfg_mode" translatable="false">Dimmodus</string>
-    <string name="vl_cfg_mode1" translatable="false">MODUS 1</string>
-    <string name="vl_cfg_mode2" translatable="false">MODUS 2</string>
-    <string name="vl_cfg_mode3" translatable="false">MODUS 3</string>
-    <string name="vl_cfg_no" translatable="false">NEE</string>
-    <string name="vl_cfg_op_range" translatable="false">Werkingsgebied</string>
-    <string name="vl_cfg_yes" translatable="false">JA</string>
-    <string name="vl_dimmer_cfg_info_txt1" translatable="false">Verduisteringsmodus/werkingsbereik</string>
-    <string name="vl_dimmer_cfg_info_txt2" translatable="false">Pas het dimvermogen van de LED-verlichting aan door de juiste modus te kiezen. Pas ook het dimbereik aan door het instellen van het minimum- en maximum helderheidsniveau. De minimale en maximale waarde kan worden ingesteld door de schuifregelaars aan beide zijden van de cirkel te verschuiven.</string>
-    <string name="vl_dimmer_cfg_info_txt3" translatable="false">Modus 1: Dimmen met een aflopende helling (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" translatable="false">Modus 2: Dimmen van de stijgende helling</string>
-    <string name="vl_dimmer_cfg_info_txt5" translatable="false">Modus 3: Dimmen van de afdaling (Alternatief)</string>
-    <string name="vl_dimmer_cfg_info_txt6" translatable="false">Versterking</string>
-    <string name="vl_dimmer_cfg_info_txt7" translatable="false">Deze functie helpt bij het inschakelen van de LED-verlichting bij een opgeslagen laag helderheidsniveau, waardoor het helderheidsniveau wordt verhoogd (versterkt). Door de donkergrijze schuifregelaar rond de cirkel te bewegen, kunt u het versterkingsniveau verhogen of verlagen, wat wordt aangegeven door de groene lijn. Bij het inschakelen van de verlichting wordt het helderheidsniveau verhoogd (versterkt) tot een vooraf ingestelde waarde en vervolgens teruggebracht naar het niveau dat was opgeslagen voordat de verlichting werd uitgeschakeld.</string>
-    <string name="vl_dimmer_cfg_info_txt8" translatable="false">Meer informatie over de dimmer vindt u op</string>
-    <string name="vl_dimmer_info_txt1" translatable="false">Dimmerregeling</string>
-    <string name="vl_dimmer_info_txt2" translatable="false">Schuif met uw vinger over de indicator op de schuifregelaar of het helderheidscirkel om het helderheidsniveau te wijzigen.</string>
-    <string name="vl_dimmer_info_txt3" translatable="false">Met de aan/uit-knop kunt u de verlichting uit- of aanzetten.</string>
-    <string name="vl_dimmer_info_txt4" translatable="false">De dimmer onthoudt het helderheidsniveau voordat hij de verlichting uitschakelt.</string>
-    <string name="vl_dimmer_info_txt5" translatable="false">Om de dimmerparameters aan te passen, drukt u op de instelknop.</string>
-    <string name="wake_up_frequency" translatable="false">Frequentie ontwakingsproces</string>
-    <string name="wakeup_info" translatable="false">*) De ingevoerde instellingen worden toegepast de volgende keer dat het knooppunt ontwaakt.</string>
-    <string name="wheel" translatable="false">Cirkel</string>
-    <string name="wifi_rssi" translatable="false">Wifi RSSI</string>
-    <string name="wifi_signal_strength" translatable="false">WiFi-signaalsterkte</string>
-    <string name="wifi_throttling" translatable="false">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
-    <string name="wizard_step1_txt2" translatable="false">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
-    <string name="wizard_step2_txt1_alt" translatable="false">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
-    <string name="yes" translatable="false">Ja</string>
-    <string name="z_wave" translatable="false">Z-wave brug</string>
-    <string name="zwave_add_device" translatable="false">Voeg apparaat toe</string>
-    <string name="zwave_before_search_message" translatable="false">Zorg ervoor dat al uw Z-Wave-apparaten online zijn voordat u doorgaat. Als u op \"Volgende\" drukt, wordt uw Z-wave netwerk gescand, wat een paar seconden tot enkele minuten kan duren.</string>
-    <string name="zwave_before_search_title" translatable="false">Het zal een tijdje duren.</string>
-    <string name="zwave_bridge_offline" translatable="false">Z-wave brug reageert niet. Controleer of de brug met de server is verbonden.</string>
-    <string name="zwave_button_press_timeout" translatable="false">De wachttijd voor het indrukken van de knop is verstreken.</string>
-    <string name="zwave_change_wake_up_settings" translatable="false">U kunt de wekinstellingen ook wijzigen door op het onderstaande pictogram te drukken.</string>
-    <string name="zwave_device" translatable="false">Z-wave apparaat</string>
-    <string name="zwave_device_communication_error" translatable="false">Er is een communicatieprobleem opgetreden met het Z-wave apparaat. Zorg ervoor dat het Z-wave apparaat binnen het bereik van de poort is.</string>
-    <string name="zwave_dialog_channel_detail_message" translatable="false">Hieronder staan de details van het geselecteerde kanaal. Bepaal het doel door de juiste functie te selecteren.</string>
-    <string name="zwave_done" translatable="false">Klaar! Nu kunt u het configuratieproces afronden door op de \"ok\"-knop te drukken of u kunt op \"Terug\" drukken om een ander kanaal te configureren of uw vorige instellingen te wijzigen.</string>
-    <string name="zwave_error_assign_node_id_timeout" translatable="false">De wachttijd voor het toewijzen van het Z-wave apparaat aan het kanaal is verstreken.</string>
-    <string name="zwave_error_caption_change_error" translatable="false">Kan kanaalhandtekening niet wijzigen. Code %1$s</string>
-    <string name="zwave_error_common_message" translatable="false">Druk op \'Terug\' om naar de vorige stap terug te keren of op \"Afsluiten\" om te eindigen.</string>
-    <string name="zwave_error_function_change_error" translatable="false">Verandering van kanaalfunctie is mislukt. Code %1$s</string>
-    <string name="zwave_error_get_assigned_node_id_timeout" translatable="false">De wachttijd voor de identificatie van het toegewezen Z-wave apparaat is verstreken.</string>
-    <string name="zwave_error_get_basic_cfg_timeout" translatable="false">De wachttijd voor de basisgegevens van de kanaalconfiguratie is verstreken.</string>
-    <string name="zwave_error_get_node_list_timeout" translatable="false">De wachttijd voor de Z-wave apparatuurlijst is verstreken.</string>
-    <string name="zwave_error_set_caption_timeout" translatable="false">De wachttijd voor de verandering van de kanaalhandtekening is verstreken.</string>
-    <string name="zwave_error_set_function_timeout" translatable="false">De wachttijd voor het wijzigen van de kanaalfunctie is verstreken.</string>
-    <string name="zwave_error_slave_mode" translatable="false">Deze functie is niet beschikbaar als de brug zich in de submode bevindt.</string>
-    <string name="zwave_error_unexpected_response" translatable="false">De reactie van het apparaat is niet zoals verwacht. Methode: %1$s Code: %2$s</string>
-    <string name="zwave_network" translatable="false">Z-wave netwerk</string>
-    <string name="zwave_node_assign_confirm_question" translatable="false">Het geselecteerde Z-wave apparaat is al aan een ander kanaal gekoppeld. Weet u zeker dat u dit apparaat naar dit kanaal wilt verplaatsen?</string>
-    <string name="zwave_node_searching" translatable="false">Z-wave netwerk zoeken om een apparaatlijst op te bouwen.</string>
-    <string name="zwave_offline" translatable="false">Offline?</string>
-    <string name="zwave_remove_device" translatable="false">Het apparaat verwijderen</string>
-    <string name="zwave_remove_device_timeout" translatable="false">De wachttijd voor het verwijderen van het apparaat is verstreken.</string>
-    <string name="zwave_reset_and_clear" translatable="false">Reset netwerk en instellingen</string>
-    <string name="zwave_reset_confirm_question" translatable="false">Weet u zeker dat u de instellingen en het Z-wave netwerk wilt resetten?</string>
-    <string name="zwave_select_channel" translatable="false">Selecteer de Z-wave brug en vervolgens het kanaal dat u wilt configureren.</string>
-    <string name="zwave_select_node" translatable="false">Selecteer het Z-wave apparaat dat aan het kanaal van Supli wordt verbonden.</string>
-    <string name="zwave_supla_channel" translatable="false">Kanaal</string>
-    <string name="zwave_unexpected_answer" translatable="false">Onverwachte brugreactie. Code: %1$s</string>
-    <string name="zwave_used" translatable="false">Toegewezen aan:</string>
-    <string name="zwave_waiting_for_add" translatable="false">Wachten om het apparaat aan het Z-wave-netwerk toe te voegen.</string>
-    <string name="zwave_waiting_for_add_timeout" translatable="false">De wachttijd voor het toevoegen van het apparaat aan het Z-wave netwerk is verstreken.</string>
-    <string name="zwave_waiting_for_button_press" translatable="false">Wachten tot de knop op het Z-wave apparaat wordt ingedrukt</string>
-    <string name="zwave_waiting_for_reset" translatable="false">Wachten op bevestiging van het resetten van het Z-wave netwerk met het verwijderen van de instellingen.</string>
-    <string name="zwave_waiting_for_reset_timeout" translatable="false">De wachttijd voor het resetten van het Z-wave netwerk is voorbij.</string>
-    <string name="zwave_waiting_for_resposne_timeout" translatable="false">De tijd voor de Z-wave brug om te reageren is verstreken.</string>
-    <string name="zwave_welcome_message" translatable="false">Welkom bij de installatiewizard van de Z-wave brug. Hiermee kunt u uw Z-wave apparaten met Supla verbinden. Klik op \'volgende\' om door te gaan.</string>
-    <string name="zwave_welcome_title" translatable="false">Z-wave wizard</string>
+    <string name="aritmetic_balance_days" >Rekenkundig saldo - Dagen</string>
+    <string name="aritmetic_balance_hours" >Rekenkundig saldo - Uren</string>
+    <string name="aritmetic_balance_minutes" >Rekenkundig saldo - Minuten</string>
+    <string name="aritmetic_balance_months" >Rekenkundig saldo - Maanden</string>
+    <string name="aritmetic_balance_years" >Rekenkundig saldo - Jaren</string>
+    <string name="associeted_with_scene_error" >U kunt de functie van het kanaal dat gerelateerd is aan de scène niet wijzigen.</string>
+    <string name="battery_health" >Levensduur van de batterij</string>
+    <string name="battery_level" >Batterijniveau</string>
+    <string name="battery_powered" >Batterijstroomvoorziening</string>
+    <string name="belongs_to_group_error" >U kunt de functie van een kanaal dat bij een groep hoort niet veranderen.</string>
+    <string name="bridge" >Brug</string>
+    <string name="bridge_node_online" >Brugknooppunt - online</string>
+    <string name="bridge_signal_strength" >Brugknooppunt - signaalsterkte</string>
+    <string name="caption" >Handtekening</string>
+    <string name="chanel_lightsource_lifespan_settings" >Wijzig de instellingen voor de levensduur van de lichtbron</string>
+    <string name="channel_btn_close" >Sluiten</string>
+    <string name="channel_caption_valve" >Klep</string>
+    <string name="channel_id" >Kanaal ID</string>
+    <string name="channel_number" >Kanaalnummer</string>
+    <string name="connection_reset_cause" >Reden voor het herstarten van de verbinding</string>
+    <string name="connection_time" >Verbindingstijd</string>
+    <string name="device" >Apparaat</string>
+    <string name="device_id" >Apparaat ID</string>
+    <string name="device_name" >Naam van het apparaat</string>
+    <string name="do_you_want_to_save" >Wilt u de instellingen opslaan?</string>
+    <string name="em_phase_to_phase_balance" >Vector interfase saldo</string>
+    <string name="enabling_registration_timeout" >De wachttijd voor het activeren van de registratie is verstreken!</string>
+    <string name="enter_suplaorg_credentails" >Voer uw inloggegevens voor cloud.supla.org in.</string>
+    <string name="event_openedclosedthevalve" >Openen/sluiten van de klep</string>
+    <string name="exit" >Uitgang</string>
+    <string name="function" >Functie</string>
+    <string name="has_schedule_error" >U kunt de functie van een kanaal met een schema niet wijzigen.</string>
+    <string name="information" >Informatie</string>
+    <string name="light_source_lifespan" >Levensduur van de lichtbron</string>
+    <string name="light_source_lifespan_hours" >Levensduur lichtbron (uren)</string>
+    <string name="light_source_operatingtime" >Lichtbron werktijd</string>
+    <string name="lightsource_warning" >De levensduur van de lichtbron is %1$s</string>
+    <string name="mode_change_in_progress" >De moduswijziging is aan de gang</string>
+    <string name="no" >Nee</string>
+    <string name="reset_lightsource_usage_counter" >Gebruiksteller lichtbron resetten</string>
+    <string name="restore_question" >Weet u zeker dat u de standaardinstellingen wilt herstellen?</string>
+    <string name="restoring_default_settings" >De standaardinstellingen worden hersteld</string>
+    <string name="save_without_saving" >Weet u zeker dat u wilt stoppen zonder op te slaan?</string>
+    <string name="seconds" >Seconden</string>
+    <string name="slider" >Ritssluiting</string>
+    <string name="soft_ver" >Software versie</string>
+    <string name="time_exceeded" >De tijd is om. Probeer het nog eens.</string>
+    <string name="uptime" >Werktijd</string>
+    <string name="uv_warning1" >De levensduur van de uv-lamp is %1$s. Plan de vervanging ervan.</string>
+    <string name="uv_warning2" >De levensduur van de uv-lamp is %1$s. Vervang de lamp.</string>
+    <string name="valve_open_warning" >De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
+    <string name="valve_warning" >De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
+    <string name="vector_balance_days" >Vector saldo - Dagen</string>
+    <string name="vector_balance_hours" >Vector saldo - Uren</string>
+    <string name="vector_balance_minutes" >Vector saldo - Minuten</string>
+    <string name="vector_balance_months" >Vector saldo - Maanden</string>
+    <string name="vector_balance_years" >Vector saldo - Jaren</string>
+    <string name="vl_cfg_auto" >AUTO</string>
+    <string name="vl_cfg_boost" >Versterking</string>
+    <string name="vl_cfg_mode" >Dimmodus</string>
+    <string name="vl_cfg_mode1" >MODUS 1</string>
+    <string name="vl_cfg_mode2" >MODUS 2</string>
+    <string name="vl_cfg_mode3" >MODUS 3</string>
+    <string name="vl_cfg_no" >NEE</string>
+    <string name="vl_cfg_op_range" >Werkingsgebied</string>
+    <string name="vl_cfg_yes" >JA</string>
+    <string name="vl_dimmer_cfg_info_txt1" >Verduisteringsmodus/werkingsbereik</string>
+    <string name="vl_dimmer_cfg_info_txt2" >Pas het dimvermogen van de LED-verlichting aan door de juiste modus te kiezen. Pas ook het dimbereik aan door het instellen van het minimum- en maximum helderheidsniveau. De minimale en maximale waarde kan worden ingesteld door de schuifregelaars aan beide zijden van de cirkel te verschuiven.</string>
+    <string name="vl_dimmer_cfg_info_txt3" >Modus 1: Dimmen met een aflopende helling (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt4" >Modus 2: Dimmen van de stijgende helling</string>
+    <string name="vl_dimmer_cfg_info_txt5" >Modus 3: Dimmen van de afdaling (Alternatief)</string>
+    <string name="vl_dimmer_cfg_info_txt6" >Versterking</string>
+    <string name="vl_dimmer_cfg_info_txt7" >Deze functie helpt bij het inschakelen van de LED-verlichting bij een opgeslagen laag helderheidsniveau, waardoor het helderheidsniveau wordt verhoogd (versterkt). Door de donkergrijze schuifregelaar rond de cirkel te bewegen, kunt u het versterkingsniveau verhogen of verlagen, wat wordt aangegeven door de groene lijn. Bij het inschakelen van de verlichting wordt het helderheidsniveau verhoogd (versterkt) tot een vooraf ingestelde waarde en vervolgens teruggebracht naar het niveau dat was opgeslagen voordat de verlichting werd uitgeschakeld.</string>
+    <string name="vl_dimmer_cfg_info_txt8" >Meer informatie over de dimmer vindt u op</string>
+    <string name="vl_dimmer_info_txt1" >Dimmerregeling</string>
+    <string name="vl_dimmer_info_txt2" >Schuif met uw vinger over de indicator op de schuifregelaar of het helderheidscirkel om het helderheidsniveau te wijzigen.</string>
+    <string name="vl_dimmer_info_txt3" >Met de aan/uit-knop kunt u de verlichting uit- of aanzetten.</string>
+    <string name="vl_dimmer_info_txt4" >De dimmer onthoudt het helderheidsniveau voordat hij de verlichting uitschakelt.</string>
+    <string name="vl_dimmer_info_txt5" >Om de dimmerparameters aan te passen, drukt u op de instelknop.</string>
+    <string name="wake_up_frequency" >Frequentie ontwakingsproces</string>
+    <string name="wakeup_info" >*) De ingevoerde instellingen worden toegepast de volgende keer dat het knooppunt ontwaakt.</string>
+    <string name="wheel" >Cirkel</string>
+    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_signal_strength" >WiFi-signaalsterkte</string>
+    <string name="wifi_throttling" >Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
+    <string name="wizard_step1_txt2" >Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
+    <string name="wizard_step2_txt1_alt" >Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
+    <string name="yes" >Ja</string>
+    <string name="z_wave" >Z-wave brug</string>
+    <string name="zwave_add_device" >Voeg apparaat toe</string>
+    <string name="zwave_before_search_message" >Zorg ervoor dat al uw Z-Wave-apparaten online zijn voordat u doorgaat. Als u op \"Volgende\" drukt, wordt uw Z-wave netwerk gescand, wat een paar seconden tot enkele minuten kan duren.</string>
+    <string name="zwave_before_search_title" >Het zal een tijdje duren.</string>
+    <string name="zwave_bridge_offline" >Z-wave brug reageert niet. Controleer of de brug met de server is verbonden.</string>
+    <string name="zwave_button_press_timeout" >De wachttijd voor het indrukken van de knop is verstreken.</string>
+    <string name="zwave_change_wake_up_settings" >U kunt de wekinstellingen ook wijzigen door op het onderstaande pictogram te drukken.</string>
+    <string name="zwave_device" >Z-wave apparaat</string>
+    <string name="zwave_device_communication_error" >Er is een communicatieprobleem opgetreden met het Z-wave apparaat. Zorg ervoor dat het Z-wave apparaat binnen het bereik van de poort is.</string>
+    <string name="zwave_dialog_channel_detail_message" >Hieronder staan de details van het geselecteerde kanaal. Bepaal het doel door de juiste functie te selecteren.</string>
+    <string name="zwave_done" >Klaar! Nu kunt u het configuratieproces afronden door op de \"ok\"-knop te drukken of u kunt op \"Terug\" drukken om een ander kanaal te configureren of uw vorige instellingen te wijzigen.</string>
+    <string name="zwave_error_assign_node_id_timeout" >De wachttijd voor het toewijzen van het Z-wave apparaat aan het kanaal is verstreken.</string>
+    <string name="zwave_error_caption_change_error" >Kan kanaalhandtekening niet wijzigen. Code %1$s</string>
+    <string name="zwave_error_common_message" >Druk op \'Terug\' om naar de vorige stap terug te keren of op \"Afsluiten\" om te eindigen.</string>
+    <string name="zwave_error_function_change_error" >Verandering van kanaalfunctie is mislukt. Code %1$s</string>
+    <string name="zwave_error_get_assigned_node_id_timeout" >De wachttijd voor de identificatie van het toegewezen Z-wave apparaat is verstreken.</string>
+    <string name="zwave_error_get_basic_cfg_timeout" >De wachttijd voor de basisgegevens van de kanaalconfiguratie is verstreken.</string>
+    <string name="zwave_error_get_node_list_timeout" >De wachttijd voor de Z-wave apparatuurlijst is verstreken.</string>
+    <string name="zwave_error_set_caption_timeout" >De wachttijd voor de verandering van de kanaalhandtekening is verstreken.</string>
+    <string name="zwave_error_set_function_timeout" >De wachttijd voor het wijzigen van de kanaalfunctie is verstreken.</string>
+    <string name="zwave_error_slave_mode" >Deze functie is niet beschikbaar als de brug zich in de submode bevindt.</string>
+    <string name="zwave_error_unexpected_response" >De reactie van het apparaat is niet zoals verwacht. Methode: %1$s Code: %2$s</string>
+    <string name="zwave_network" >Z-wave netwerk</string>
+    <string name="zwave_node_assign_confirm_question" >Het geselecteerde Z-wave apparaat is al aan een ander kanaal gekoppeld. Weet u zeker dat u dit apparaat naar dit kanaal wilt verplaatsen?</string>
+    <string name="zwave_node_searching" >Z-wave netwerk zoeken om een apparaatlijst op te bouwen.</string>
+    <string name="zwave_offline" >Offline?</string>
+    <string name="zwave_remove_device" >Het apparaat verwijderen</string>
+    <string name="zwave_remove_device_timeout" >De wachttijd voor het verwijderen van het apparaat is verstreken.</string>
+    <string name="zwave_reset_and_clear" >Reset netwerk en instellingen</string>
+    <string name="zwave_reset_confirm_question" >Weet u zeker dat u de instellingen en het Z-wave netwerk wilt resetten?</string>
+    <string name="zwave_select_channel" >Selecteer de Z-wave brug en vervolgens het kanaal dat u wilt configureren.</string>
+    <string name="zwave_select_node" >Selecteer het Z-wave apparaat dat aan het kanaal van Supli wordt verbonden.</string>
+    <string name="zwave_supla_channel" >Kanaal</string>
+    <string name="zwave_unexpected_answer" >Onverwachte brugreactie. Code: %1$s</string>
+    <string name="zwave_used" >Toegewezen aan:</string>
+    <string name="zwave_waiting_for_add" >Wachten om het apparaat aan het Z-wave-netwerk toe te voegen.</string>
+    <string name="zwave_waiting_for_add_timeout" >De wachttijd voor het toevoegen van het apparaat aan het Z-wave netwerk is verstreken.</string>
+    <string name="zwave_waiting_for_button_press" >Wachten tot de knop op het Z-wave apparaat wordt ingedrukt</string>
+    <string name="zwave_waiting_for_reset" >Wachten op bevestiging van het resetten van het Z-wave netwerk met het verwijderen van de instellingen.</string>
+    <string name="zwave_waiting_for_reset_timeout" >De wachttijd voor het resetten van het Z-wave netwerk is voorbij.</string>
+    <string name="zwave_waiting_for_resposne_timeout" >De tijd voor de Z-wave brug om te reageren is verstreken.</string>
+    <string name="zwave_welcome_message" >Welkom bij de installatiewizard van de Z-wave brug. Hiermee kunt u uw Z-wave apparaten met Supla verbinden. Klik op \'volgende\' om door te gaan.</string>
+    <string name="zwave_welcome_title" >Z-wave wizard</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>
