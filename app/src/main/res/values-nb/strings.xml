@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Maksimal vanntemperatur</string>
     <string name="hp_cfg_eco_reduction">Temperaturreduksjon i ECO modus</string>
     <string name="hp_cfg_temp_comfort_auto">Komfort temperatur i AUTO modus</string>
-    <string name="hp_temp_comfort">Komfort</string>
+    <string name="hp_calendar_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO temperatur i AUTO modus</string>
     <string name="hp_hour">t</string>
     <string name="total_cost">Total kostnad</string>
@@ -376,4 +376,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Ventetiden for respons fra z-wave broen er utløpt.</string>
     <string name="zwave_welcome_message" translatable="false">Velkommen til konfigurasjonsveiviseren for z-wave bro. Den vil tillate deg å koble z-wave enhetene dine til Supla. Klikk \"Neste\" for å fortsette.</string>
     <string name="zwave_welcome_title" translatable="false">Z-wave konfigurasjonsveiviser</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

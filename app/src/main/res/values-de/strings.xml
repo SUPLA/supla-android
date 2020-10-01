@@ -156,7 +156,7 @@
     <string name="hp_cfg_water_max">Maximale Wassertemperatur</string>
     <string name="hp_cfg_eco_reduction">Temperaturabsenkung im ECO-Modus</string>
     <string name="hp_cfg_temp_comfort_auto">Komforttemperatur im AUTO-Modus</string>
-    <string name="hp_temp_comfort">Komfort</string>
+    <string name="hp_calendar_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
     <string name="hp_hour">std</string>
     <string name="total_cost">Gesamtkosten</string>
@@ -372,4 +372,5 @@
     <string name="zwave_welcome_message" translatable="false">"Willkommen beim Setup-Assistenten für die Z-Wave-Brücke. Damit können Sie Ihre Z-Wave-Geräte an Supla anschließen. Klicken Sie „Weiter”, um fortzufahren. "</string>
     <string name="zwave_welcome_title" translatable="false">Z-Wave-Assistent</string>
     <string name="zwave_offline" translatable="false">Offline ?</string>
+   <string name="hp_calendar_eco">ECO</string>
 </resources>

@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Najvišja temperatura vode</string>
     <string name="hp_cfg_eco_reduction">Znižanje temperature v ECO načinu</string>
     <string name="hp_cfg_temp_comfort_auto">Udobna temperatura v načinu AUTO</string>
-    <string name="hp_temp_comfort">Udobje</string>
+    <string name="hp_calendar_comfort">Udobje</string>
     <string name="hp_cfg_temp_eco">ECO temperatura v načinu AUTO</string>
     <string name="hp_hour">ura</string>
     <string name="total_cost">Skupni stroški</string>
@@ -376,4 +376,5 @@
     <string name="zwave_welcome_title" translatable="false">Čarovnik z-wave</string>
     <string name="zwave_waiting_for_add" translatable="false">Čakanje na dodajanje naprave v omrežje z-wave.</string>
     <string name="zwave_waiting_for_add_timeout" translatable="false">Potekel je čas čakanja na dodajanje naprave v omrežje z-wave.</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

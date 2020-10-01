@@ -160,7 +160,7 @@
     <string name="hp_cfg_water_max">Température maximale de l\'eau</string>
     <string name="hp_cfg_eco_reduction">Réduction de la température en mode ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Température de confort en mode AUTO</string>
-    <string name="hp_temp_comfort">Confort</string>
+    <string name="hp_calendar_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Température ECO en mode AUTO</string>
     <string name="hp_hour">h</string>
     <string name="total_cost">Coût total</string>
@@ -378,4 +378,5 @@
     <string name="zwave_welcome_title" translatable="false">Assistant z-wave</string>
     <string name="zwave_waiting_for_add" translatable="false">En attente d\'ajout de l\'appareil au réseau z-wave.</string>
    <string name="zwave_waiting_for_add_timeout" translatable="false">Le temps d\'attente pour l\'ajout de l\'appareil au réseau z-wave a expiré.</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

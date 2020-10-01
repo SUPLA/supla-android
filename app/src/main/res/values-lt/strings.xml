@@ -137,7 +137,7 @@
     <string name="hp_cfg_water_max">Maksimali vandens temperatūra</string>
     <string name="hp_cfg_eco_reduction">Temperatūros mažinimas ECO režime</string>
     <string name="hp_cfg_temp_comfort_auto">Comfort temperatūra AUTO režime</string>
-    <string name="hp_temp_comfort">Comfort</string>
+    <string name="hp_calendar_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO temperatūra AUTO režime</string>
     <string name="hp_hour">h</string>
     <string name="total_cost">Bendra kaina</string>
@@ -355,4 +355,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Baigėsi z-wave tilto atsakymo laukimo laikas.</string>
     <string name="zwave_welcome_message" translatable="false">Sveiki atvykę į z-wave tilto konfigūravimo vedlį. Jis leis Jums prijungti turimus z-wave įrenginius prie Supla. Norėdami tęsti, spustelėkite „Toliau“.</string>
     <string name="zwave_welcome_title" translatable="false">Z-wave vedlys</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

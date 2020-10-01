@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">A víz maximális hőmérséklete</string>
     <string name="hp_cfg_eco_reduction">Hőmérséklet csökkentése ECO módban</string>
     <string name="hp_cfg_temp_comfort_auto">Kényelmi hőmérséklet AUTO módban</string>
-    <string name="hp_temp_comfort">Kényelem</string>
+    <string name="hp_calendar_comfort">Kényelem</string>
     <string name="hp_cfg_temp_eco">ECO hőmérséklet AUTO módban</string>
     <string name="hp_hour">godz.</string>
     <string name="total_cost">Összköltség</string>
@@ -376,4 +376,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Időtúllépés várakozás a z-wave híd válaszára.</string>
     <string name="zwave_welcome_message" translatable="false">Üdvözöljük a z-wave híd telepítővarázslójában, ami lehetővé teszi a z-wave eszközök csatlakoztatását a Supla-hoz. Kattintson a \"Tovább\" gombra a folytatáshoz.</string>
     <string name="zwave_welcome_title" translatable="false">Z-wave varázsló</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

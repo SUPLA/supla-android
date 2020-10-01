@@ -175,7 +175,7 @@
     <string name="hp_cfg_water_max">Maximálna teplota vody</string>
     <string name="hp_cfg_eco_reduction">Zníženie teploty v režime EKO</string>
     <string name="hp_cfg_temp_comfort_auto">Komfortná teplota v režime AUTO</string>
-    <string name="hp_temp_comfort">Komfortná</string>
+    <string name="hp_calendar_comfort">Komfortná</string>
     <string name="hp_cfg_temp_eco">EKO teplota v režime AUTO</string>
     <string name="hp_hour">h</string>
     <string name="total_cost">Celkové náklady</string>
@@ -389,4 +389,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Bola prekročená lehota čakania na odpoveď z mosta z-wave.</string>
     <string name="zwave_welcome_message" translatable="false">"Vitaj v sprievodcovi konfiguráciou mostu z-wave. Umožní Ti pripojiť z-wave zariadenia, ktorými disponuješ, k Supli. Pre pokračovanie stlač „Ďalej“. "</string>
     <string name="zwave_welcome_title" translatable="false">Sprievodca z-wave</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

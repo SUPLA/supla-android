@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Μέγιστη θερμοκρασία νερού</string>
     <string name="hp_cfg_eco_reduction">Μείωση θερμοκρασίας με λειτουργία ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Θερμοκρασία κομφόρ με λειτουργία AUTO</string>
-    <string name="hp_temp_comfort">Κομφόρ</string>
+    <string name="hp_calendar_comfort">Κομφόρ</string>
     <string name="hp_cfg_temp_eco">Θερμοκρασία ECO με λειτουργία AUTO</string>
     <string name="hp_hour">ώρα</string>
     <string name="total_cost">Συνολικό κόστος</string>
@@ -376,4 +376,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Υπέρβαση χρόνου αναμονής για απόκριση γέφυρας του κύματος Ζ.</string>
     <string name="zwave_welcome_message" translatable="false">Καλώς ορίσατε στον οδηγό ρύθμισης γέφυρας κύματος Ζ. Θα σας επιτρέψει να συνδέσετε τις συσκευές του κύματος Ζ με τη Supla. Κάντε κλικ στο «Επόμενο» για να συνεχίσετε.</string>
     <string name="zwave_welcome_title" translatable="false">Οδηγός κύματος Ζ</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

@@ -163,7 +163,7 @@
     <string name="hp_cfg_water_max">Максимальная температура воды</string>
     <string name="hp_cfg_eco_reduction">Снижение температуры в режиме ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Комфортная температура в режиме АВТО</string>
-    <string name="hp_temp_comfort">Комфортная</string>
+    <string name="hp_calendar_comfort">Комфортная</string>
     <string name="hp_cfg_temp_eco">Температура ECO в режиме АВТО</string>
     <string name="hp_hour">h</string>
     <string name="total_cost">Общая стоимость</string>
@@ -383,5 +383,6 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Время ожидания ответа моста z-wave истекло.</string>
     <string name="zwave_welcome_message" translatable="false">Добро пожаловать в мастер настройки моста z-wave. Он позволит подключить имеющиеся у вас устройства z-wave к Supla. Нажмите \"Далее\" для продолжения.</string>
     <string name="zwave_welcome_title" translatable="false">Мастер z-wave</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>
 

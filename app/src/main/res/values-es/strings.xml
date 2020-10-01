@@ -160,7 +160,7 @@
     <string name="hp_cfg_water_max">Temperatura máxima del agua</string>
     <string name="hp_cfg_eco_reduction">Reducción de la temperatura en modo ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Temperatura confort en modo AUTO</string>
-    <string name="hp_temp_comfort">Confort</string>
+    <string name="hp_calendar_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO en modo AUTO</string>
     <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Contador de pulsos</string>
@@ -378,4 +378,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">¡Se ha superado el tiempo de espera a una respuesta del puente z-wave!</string>
     <string name="zwave_welcome_message" translatable="false">Bienvenido al asistente de configuración del puente z-wave. Le permitirá conectar sus dispositivos Z-Wave a Supla. Haga clic en „Siguiente” para continuar.</string>
     <string name="zwave_welcome_title" translatable="false">Asistente z-wave</string>
+   <string name="hp_calendar_eco">ECO</string>
 </resources>

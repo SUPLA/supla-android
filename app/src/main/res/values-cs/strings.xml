@@ -136,7 +136,7 @@
     <string name="hp_cfg_water_max">Maximální teplota vody</string>
     <string name="hp_cfg_eco_reduction">Snížení teploty v režimu ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Ideální teplota v režimu AUTO</string>
-    <string name="hp_temp_comfort">Ideální teplota</string>
+    <string name="hp_calendar_comfort">Ideální teplota</string>
     <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
     <string name="hp_hour">h</string>
     <string name="channel_func_impulsecounter">Počítadlo impulzů</string>
@@ -355,4 +355,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Vypršel časový limit při čekání na odpověď můstku z-wave.</string>
     <string name="zwave_welcome_message" translatable="false">"Vítejte v průvodci konfigurace můstku z-wave. Umožní Vám připojení zařízení z-wave se Suplou. Pro pokračování stiskněte \"Další\" "</string>
     <string name="zwave_welcome_title" translatable="false">Průvodce konfigurace z-wave</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

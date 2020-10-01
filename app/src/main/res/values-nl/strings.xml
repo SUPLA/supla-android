@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Maximale watertemperatuur</string>
     <string name="hp_cfg_eco_reduction">Temperatuurverlaging in ECO-modus</string>
     <string name="hp_cfg_temp_comfort_auto">Comforttemperatuur in de AUTO-modus</string>
-    <string name="hp_temp_comfort">Comfort</string>
+    <string name="hp_calendar_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">ECO-temperatuur in AUTO-modus</string>
     <string name="hp_hour">u</string>
     <string name="total_cost">Totale kosten</string>
@@ -376,4 +376,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">De tijd voor de Z-wave brug om te reageren is verstreken.</string>
     <string name="zwave_welcome_message" translatable="false">Welkom bij de installatiewizard van de Z-wave brug. Hiermee kunt u uw Z-wave apparaten met Supla verbinden. Klik op \'volgende\' om door te gaan.</string>
     <string name="zwave_welcome_title" translatable="false">Z-wave wizard</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>

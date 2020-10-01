@@ -164,7 +164,7 @@
     <string name="hp_cfg_water_max">Temperatura maximă a apei</string>
     <string name="hp_cfg_eco_reduction">Reducerea temperaturii în modul ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Temperatura de confort în modul AUTO</string>
-    <string name="hp_temp_comfort">Confort</string>
+    <string name="hp_calendar_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO în modul AUTO</string>
     <string name="hp_hour">godz.</string>
     <string name="total_cost">Costul total</string>
@@ -376,4 +376,5 @@
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">Timpul de aşteptare pentru răspunsului podului Z-Wave a fost depăşit.</string>
     <string name="zwave_welcome_message" translatable="false">Bine aţi venit la creatorul de configurare a podului Z-Wave. Acesta vă va permite să conectați dispozitivele Z-Wave la Supla. Faceți clic pe „Mai departe” pentru a continua.</string>
     <string name="zwave_welcome_title" translatable="false">Creator Z-Wave</string>
+    <string name="hp_calendar_eco">ECO</string>
 </resources>
