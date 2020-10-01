@@ -377,5 +377,5 @@
     <string name="zwave_waiting_for_reset_timeout" translatable="false">¡Se ha superado el tiempo de espera al reinicio de la red z-wave!</string>
     <string name="zwave_waiting_for_resposne_timeout" translatable="false">¡Se ha superado el tiempo de espera a una respuesta del puente z-wave!</string>
     <string name="zwave_welcome_message" translatable="false">Bienvenido al asistente de configuración del puente z-wave. Le permitirá conectar sus dispositivos Z-Wave a Supla. Haga clic en „Siguiente” para continuar.</string>
-    <string name="zwave_welcome_title" translatable="false">asistente z-wave</string>
+    <string name="zwave_welcome_title" translatable="false">Asistente z-wave</string>
 </resources>
