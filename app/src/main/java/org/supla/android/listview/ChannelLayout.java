@@ -702,6 +702,7 @@ public class ChannelLayout extends LinearLayout {
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
@@ -726,6 +727,7 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
                 case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
                 case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
                 case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
 

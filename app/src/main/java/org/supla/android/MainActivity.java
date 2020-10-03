@@ -496,7 +496,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         if (!up
-                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
 
             SuplaApp.Vibrate(this);
         }
@@ -504,17 +505,23 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (up) {
 
-            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
+            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+            || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
                 client.open(remoteId, clv == cgroupLV, 0);
+            }
 
         } else {
 
             int Open;
 
             if (left) {
-                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+                        ? 1 : 0;
             } else {
-                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+                        ? 2 : 1;
             }
 
             client.open(remoteId, clv == cgroupLV, Open);

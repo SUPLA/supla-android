@@ -238,7 +238,8 @@ public class Channel extends ChannelBase {
     protected int imgActive(ChannelValue value) {
 
         if (getOnLine()
-                && getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                && (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                   || getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW)
                 && getRollerShutterPosition() >= 100) {
             return 1;
         }
