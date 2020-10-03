@@ -403,4 +403,5 @@
     <string translatable="false" name="channel_caption_roofwindow">Roof window</string>
     <string translatable="false" name="channel_func_controllingtheroofwindow">Roof window operation</string>
     <string translatable="false" name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
+    <string translatable="false" name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
 </resources>

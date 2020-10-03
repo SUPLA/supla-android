@@ -394,4 +394,5 @@
     <string name="channel_caption_roofwindow">Okno dachowe</string>
     <string name="channel_func_controllingtheroofwindow">Otwieranie i zamykanie okna dachowego</string>
     <string name="channel_func_opensensor_roofwindow">Czujnik otwarcia okna dachowego</string>
+    <string name="event_openedclosedtheroofwindow">otworzył / zamknął okno dachowe</string>
 </resources>

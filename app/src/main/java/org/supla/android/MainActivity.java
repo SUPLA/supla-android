@@ -317,6 +317,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
                     msgId = R.string.event_openedcloserollershutter;
                     break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW:
+                    msgId = R.string.event_openedclosedtheroofwindow;
+                    break;
                 case SuplaConst.SUPLA_EVENT_POWERONOFF:
                     msgId = R.string.event_poweronoff;
                     break;

@@ -157,6 +157,7 @@ public class SuplaConst {
     public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
     public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK = 40;
     public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER = 50;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW = 55;
     public final static int SUPLA_EVENT_POWERONOFF = 60;
     public final static int SUPLA_EVENT_LIGHTONOFF = 70;
     public final static int SUPLA_EVENT_VALVEOPENCLOSE = 90;
