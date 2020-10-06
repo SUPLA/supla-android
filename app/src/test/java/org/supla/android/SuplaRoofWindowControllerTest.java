@@ -1,11 +1,11 @@
 package org.supla.android;
 
+import android.graphics.Color;
+
 import junit.framework.TestCase;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class SuplaRoofWindowControllerTest extends TestCase {
 
@@ -19,16 +19,23 @@ public class SuplaRoofWindowControllerTest extends TestCase {
 
     @Test
     public void testFrameSetterAndGetter() {
-        Assert.assertEquals(0xffb49a63, roofWindowController.getFrameColor());
+        Assert.assertEquals(Color.WHITE, roofWindowController.getFrameColor());
         roofWindowController.setFrameColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, roofWindowController.getFrameColor());
     }
 
     @Test
-    public void testFrontSetterAndGetter() {
-        Assert.assertEquals(0xFF61645c, roofWindowController.getFrontColor());
-        roofWindowController.setFrontColor(REFCOLOR);
-        Assert.assertEquals(REFCOLOR, roofWindowController.getFrontColor());
+    public void testLineColorSetterAndGetter() {
+        Assert.assertEquals(Color.BLACK, roofWindowController.getLineColor());
+        roofWindowController.setLineColor(REFCOLOR);
+        Assert.assertEquals(REFCOLOR, roofWindowController.getLineColor());
+    }
+
+    @Test
+    public void testGlassColorSetterAndGetter() {
+        Assert.assertEquals(0xFFbed9f1, roofWindowController.getGlassColor());
+        roofWindowController.setGlassColor(REFCOLOR);
+        Assert.assertEquals(REFCOLOR, roofWindowController.getGlassColor());
     }
 
     @Test

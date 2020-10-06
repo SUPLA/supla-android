@@ -1,8 +1,10 @@
 package org.supla.android;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -34,6 +37,7 @@ import android.view.View;
 public class SuplaRoofWindowController extends View {
 
     Paint paint;
+    Path path;
     Matrix matrix;
     private float lastTouchX;
     private float lastTouchY;
@@ -47,15 +51,32 @@ public class SuplaRoofWindowController extends View {
     private final float WINDOW_HEIGHT_RATIO = 0.9f;
     private final float WINDOW_WIDTH_RATIO = 1.79f;
 
-    private int frontColor;
+    private int lineColor;
     private int frameColor;
+    private int glassColor;
 
     private void init() {
-        paint = new Paint();
-        matrix = new Matrix();
+        float px = 1;
 
-        frontColor = 0xFF61645c;
-        frameColor = 0xffb49a63;
+        Resources r = getResources();
+        if (r!=null) {
+            px = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    2,
+                    r.getDisplayMetrics()
+            );
+        }
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(px);
+
+        matrix = new Matrix();
+        path = new Path();
+
+        lineColor = Color.BLACK;
+        frameColor = Color.WHITE;
+        glassColor = 0xFFbed9f1;
     }
 
     public SuplaRoofWindowController(Context context) {
@@ -79,111 +100,207 @@ public class SuplaRoofWindowController extends View {
         init();
     }
 
-    private float[] getBasicFramePoints(float frameWidth, float frameHeight,
-                                        float framePostWidth, float frameBarWidth,
-                                        boolean bottom) {
-        float[] result = new float[] {
+    private void getMatrix(float centerX, float centerY, float rotationXoffset) {
+        Camera camera = new Camera();
+        camera.setLocation(0,0,getWidth()*-1);
+        camera.translate(centerX, centerY*-1, 0);
+
+        camera.rotateZ(180);
+        camera.rotateY(WINDOW_ROTATION_Y);
+        camera.rotateX(WINDOW_ROTATION_X+rotationXoffset);
+        camera.getMatrix(matrix);
+    }
+
+    private void drawOuterFrameMainPart(Canvas canvas,
+                                        float centerX,
+                                        float centerY,
+                                        float frameWidth, float frameHeight,
+                                        float framePostWidth,
+                                        float bottomFramePostWidth,
+                                        float frameBarWidth,
+                                        float bottomFrameBarWidth,
+                                        boolean excludeInnerLines) {
+
+        float[] points = new float[] {
+                frameWidth/-2, 0,
                 frameWidth/-2, frameHeight/-2,
                 frameWidth/2, frameHeight/-2,
-                frameWidth/2, 0,
+                frameWidth/2, frameHeight/2,
+                frameWidth/-2, frameHeight/2,
+                frameWidth/-2+bottomFramePostWidth, frameHeight/2-bottomFrameBarWidth,
+                frameWidth/2-bottomFramePostWidth, frameHeight/2-bottomFrameBarWidth,
+                frameWidth/2-bottomFramePostWidth, 0,
                 frameWidth/2-framePostWidth, 0,
                 frameWidth/2-framePostWidth, frameHeight/-2+frameBarWidth,
                 frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
                 frameWidth/-2+framePostWidth, 0,
-                frameWidth/-2, 0
+                frameWidth/-2+bottomFramePostWidth, 0,
         };
 
-        if (bottom) {
-            for(int a=0;a<result.length;a++) {
-                result[a] *= -1;
-            }
-        }
+        path.reset();
+        path.setFillType(Path.FillType.EVEN_ODD);
 
-        return result;
-    }
+        paint.setColor(frameColor);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-    private void addFramePointsToPath(float points[], Path path) {
+        getMatrix(centerX, centerY, 0);
+        matrix.mapPoints(points);
+
         for(int a=0;a<points.length-1;a+=2) {
-            if (a == 0) {
+            if (a==0) {
                 path.moveTo(points[a], points[a+1]);
             } else {
                 path.lineTo(points[a], points[a+1]);
             }
         }
+
+        canvas.drawPath(path, paint);
+
+        paint.setColor(lineColor);
+        paint.setStyle(Paint.Style.STROKE);
+
+        path.reset();
+
+        for(int a=0;a<points.length-1;a+=2) {
+            if (a==0 || a==10
+                || (excludeInnerLines && ((a >= 12 && a <= 16) || a == 24))) {
+                path.moveTo(points[a], points[a+1]);
+            } else {
+                path.lineTo(points[a], points[a+1]);
+            }
+        }
+
+        canvas.drawPath(path, paint);
     }
 
-    private void addLateralPlanePointsToPath(float backPoints[], float frontPoints[], int offset, Path path) {
-        path.moveTo(backPoints[offset], backPoints[offset+1]);
-        path.lineTo(backPoints[(offset+2)%8], backPoints[(offset+3)%8]);
-        path.lineTo(frontPoints[(offset+2)%8], frontPoints[(offset+3)%8]);
-        path.lineTo(frontPoints[offset], frontPoints[offset+1]);
-        path.lineTo(backPoints[offset], backPoints[offset+1]);
-    }
+    private void drawOuterFrameRemainPart(Canvas canvas,
+                                        float centerX,
+                                        float centerY,
+                                        float frameWidth, float frameHeight,
+                                        float framePostWidth,
+                                        float bottomFramePostWidth,
+                                        float bottomFrameBarWidth, boolean excludeInnerLines) {
 
-    private void drawHalfFrame(Canvas canvas,
-                               float centerX,
-                               float centerY,
-                               float windowWidth, float windowHeight,
-                               float outerFramePostWidth, float outerFrameBarWidth,
-                               float frameThickness,
-                               float rotationXoffset,
-                               boolean bottom) {
+        float[] points = new float[] {
+                frameWidth/-2+bottomFramePostWidth, 0,
+                frameWidth/-2+bottomFramePostWidth, frameHeight/2-bottomFrameBarWidth,
+                frameWidth/-2, frameHeight/2,
+                frameWidth/-2, 0
+        };
 
-        Camera camera = new Camera();
-        camera.setLocation(0,0,getWidth()*-1);
-        camera.translate(centerX, centerY*-1, 0);
-
-        camera.save();
-        camera.rotateY(WINDOW_ROTATION_Y);
-        camera.rotateX(WINDOW_ROTATION_X +rotationXoffset);
-        camera.translate(0, 0, frameThickness);
-        camera.getMatrix(matrix);
-        camera.restore();
-
-        float frontPoints[] = getBasicFramePoints(windowWidth, windowHeight,
-                outerFramePostWidth, outerFrameBarWidth, bottom);
-        float backPoints[] = frontPoints.clone();
-
-        matrix.mapPoints(frontPoints);
-
-        camera.save();
-        camera.rotateY(WINDOW_ROTATION_Y);
-        camera.rotateX(WINDOW_ROTATION_X +rotationXoffset);
-        camera.getMatrix(matrix);
-        camera.restore();
-
-        matrix.mapPoints(backPoints);
-
+        path.reset();
+        path.setFillType(Path.FillType.EVEN_ODD);
         paint.setColor(frameColor);
-        paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setStrokeWidth(2);
 
-        Path path = new Path();
+        getMatrix(centerX, centerY, 0);
+        matrix.mapPoints(points);
+
+        for(int a=0;a<points.length-1;a+=2) {
+            if (a==0) {
+                path.moveTo(points[a], points[a+1]);
+            } else {
+                path.lineTo(points[a], points[a+1]);
+            }
+        }
+
+        canvas.drawPath(path, paint);
+
+        paint.setColor(lineColor);
+        paint.setStyle(Paint.Style.STROKE);
+
+        path.reset();
+
+        for(int a=0;a<points.length-1;a+=2) {
+            if (a==0 || a==4
+                || (excludeInnerLines && a == 2)) {
+                path.moveTo(points[a], points[a+1]);
+            } else {
+                path.lineTo(points[a], points[a+1]);
+            }
+        }
+
+        canvas.drawPath(path, paint);
+    }
+
+    private void drawInnerFrame(Canvas canvas,
+                                        float centerX,
+                                        float centerY,
+                                        float frameWidth, float frameHeight,
+                                        float framePostWidth,
+                                        float frameBarWidth, float rotationXoffset,
+                                boolean excludeOuterLines) {
+
+        float[] framePoints = new float[] {
+                frameWidth/-2, frameHeight/-2,
+                frameWidth/2, frameHeight/-2,
+                frameWidth/2, 0,
+                frameWidth/2, frameHeight/2,
+                frameWidth/-2, frameHeight/2,
+                frameWidth/-2, 0,
+                frameWidth/-2, frameHeight/-2,
+
+                frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+                frameWidth/2-framePostWidth, frameHeight/-2+frameBarWidth,
+                frameWidth/2-framePostWidth, frameHeight/2-frameBarWidth,
+                frameWidth/-2+framePostWidth, frameHeight/2-frameBarWidth,
+                frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+        };
+
+        path.reset();
         path.setFillType(Path.FillType.EVEN_ODD);
 
-        addFramePointsToPath(backPoints, path);
+        getMatrix(centerX, centerY, rotationXoffset);
+        matrix.mapPoints(framePoints);
+
+        paint.setColor(frameColor);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        for(int a=0;a<framePoints.length-1;a+=2) {
+            if (a==0 || a == 14) {
+                path.moveTo(framePoints[a], framePoints[a+1]);
+            } else {
+                path.lineTo(framePoints[a], framePoints[a+1]);
+            }
+        }
+
         canvas.drawPath(path, paint);
 
+        float[] mirrorPoints = new float[] {
+                frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+                frameWidth/2-framePostWidth, frameHeight/-2+frameBarWidth,
+                frameWidth/2-framePostWidth, frameHeight/2-frameBarWidth,
+                frameWidth/-2+framePostWidth, frameHeight/2-frameBarWidth,
+                frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+        };
+
+        matrix.mapPoints(mirrorPoints);
         path.reset();
-        addLateralPlanePointsToPath(backPoints, frontPoints, 0, path);
+
+        for(int a=0;a<mirrorPoints.length-1;a+=2) {
+            if (a==0) {
+                path.moveTo(mirrorPoints[a], mirrorPoints[a+1]);
+            } else {
+                path.lineTo(mirrorPoints[a], mirrorPoints[a+1]);
+            }
+        }
+
+        paint.setColor(glassColor);
+        paint.setStyle(Paint.Style.FILL);
         canvas.drawPath(path, paint);
 
-        path.reset();
-        addLateralPlanePointsToPath(backPoints, frontPoints, 2, path);
-        canvas.drawPath(path, paint);
+        paint.setColor(lineColor);
+        paint.setStyle(Paint.Style.STROKE);
 
         path.reset();
-        addLateralPlanePointsToPath(backPoints, frontPoints, 14, path);
-        canvas.drawPath(path, paint);
+        for(int a=0;a<framePoints.length-1;a+=2) {
+            if (a==0 || a == 14 || (excludeOuterLines && a>=6 && a<=10)) {
+                path.moveTo(framePoints[a], framePoints[a+1]);
+            } else {
+                path.lineTo(framePoints[a], framePoints[a+1]);
+            }
+        }
 
-        path.reset();
-        addLateralPlanePointsToPath(backPoints, frontPoints, 4, path);
-        canvas.drawPath(path, paint);
-
-        path.reset();
-        paint.setColor(frontColor);
-        addFramePointsToPath(frontPoints, path);
         canvas.drawPath(path, paint);
     }
 
@@ -203,34 +320,33 @@ public class SuplaRoofWindowController extends View {
                 * (openingPercentageWhileMoving == null
                 ? openingPercentage : openingPercentageWhileMoving.floatValue()) / 100f;
 
-        drawHalfFrame(canvas,
+        drawOuterFrameRemainPart(canvas,
                 centerX,
                 centerY,
                 windowWidth, windowHeight,
-                outerFramePostWidth, outerFrameBarWidth, outerFramePostWidth,
-                rotationXoffset, true);
+                outerFramePostWidth,
+                outerFramePostWidth / 2,
+                outerFrameBarWidth / 2,
+                openingPercentage == 0);
 
-        drawHalfFrame(canvas,
+        drawInnerFrame(canvas,
+                centerX,
+                centerY,
+                windowWidth-outerFramePostWidth, windowHeight-outerFrameBarWidth,
+                outerFramePostWidth/2,
+                outerFrameBarWidth/2,
+                rotationXoffset,
+                openingPercentage == 0);
+
+        drawOuterFrameMainPart(canvas,
                 centerX,
                 centerY,
                 windowWidth, windowHeight,
-                outerFramePostWidth, outerFrameBarWidth, outerFramePostWidth,
-                0, true);
-
-        drawHalfFrame(canvas,
-                centerX,
-                centerY,
-                windowWidth, windowHeight,
-                outerFramePostWidth, outerFrameBarWidth, outerFramePostWidth/5,
-                0, false);
-
-        drawHalfFrame(canvas,
-                centerX,
-                centerY,
-                windowWidth, windowHeight,
-                outerFramePostWidth, outerFrameBarWidth, outerFramePostWidth,
-                rotationXoffset, false);
-
+                outerFramePostWidth,
+                outerFramePostWidth / 2,
+                outerFrameBarWidth,
+                outerFrameBarWidth / 2,
+                openingPercentage == 0);
 
     }
 
@@ -309,13 +425,13 @@ public class SuplaRoofWindowController extends View {
         }
     }
 
-    public int getFrontColor() {
-        return frontColor;
+    public int getLineColor() {
+        return lineColor;
     }
 
-    public void setFrontColor(int frontColor) {
-        if (this.frontColor != frontColor) {
-            this.frontColor = frontColor;
+    public void setLineColor(int lineColor) {
+        if (this.lineColor != lineColor) {
+            this.lineColor = lineColor;
             invalidate();
         }
     }
@@ -327,6 +443,17 @@ public class SuplaRoofWindowController extends View {
     public void setFrameColor(int frameColor) {
         if (this.frameColor != frameColor) {
             this.frameColor = frameColor;
+            invalidate();
+        }
+    }
+
+    public int getGlassColor() {
+        return glassColor;
+    }
+
+    public void setGlassColor(int glassColor) {
+        if (this.glassColor != glassColor) {
+            this.glassColor = glassColor;
             invalidate();
         }
     }
