@@ -78,7 +78,9 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK = 90;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_DOOR = 100;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER = 110;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW = 115;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER = 120;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW = 125;
     public final static int SUPLA_CHANNELFNC_POWERSWITCH = 130;
     public final static int SUPLA_CHANNELFNC_LIGHTSWITCH = 140;
     public final static int SUPLA_CHANNELFNC_RING = 150;
@@ -122,6 +124,7 @@ public class SuplaConst {
     public final static int SUPLA_BIT_FUNC_PRESSURESENSOR = 0x00001000;
     public final static int SUPLA_BIT_FUNC_RAINSENSOR = 0x00002000;
     public final static int SUPLA_BIT_FUNC_WEIGHTSENSOR = 0x00004000;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROOFWINDOW = 0x00008000;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
     public final static int SUPLA_CHANNELTYPE_BRIDGE = 8000;
@@ -154,6 +157,7 @@ public class SuplaConst {
     public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
     public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK = 40;
     public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER = 50;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW = 55;
     public final static int SUPLA_EVENT_POWERONOFF = 60;
     public final static int SUPLA_EVENT_LIGHTONOFF = 70;
     public final static int SUPLA_EVENT_VALVEOPENCLOSE = 90;
@@ -300,8 +304,14 @@ public class SuplaConst {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
                 idx = R.string.channel_caption_rsopeningsensor;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+                idx = R.string.channel_caption_roofwindowopeningsensor;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 idx = R.string.channel_caption_rollershutter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                idx = R.string.channel_caption_roofwindow;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 idx = R.string.channel_caption_powerswith;
@@ -438,8 +448,14 @@ public class SuplaConst {
             case SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 resId = R.string.channel_func_controllingtherollershutter;
                 break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                resId = R.string.channel_func_controllingtheroofwindow;
+                break;
             case SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
                 resId = R.string.channel_func_opensensor_rollershutter;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+                resId = R.string.channel_func_opensensor_roofwindow;
                 break;
             case SUPLA_CHANNELFNC_POWERSWITCH:
                 resId = R.string.channel_func_powerswitch;
@@ -532,6 +548,8 @@ public class SuplaConst {
                     return SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK;
                 case SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER:
                     return SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEROOFWINDOW:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW;
                 case SUPLA_BIT_FUNC_POWERSWITCH:
                     return SUPLA_CHANNELFNC_POWERSWITCH;
                 case SUPLA_BIT_FUNC_LIGHTSWITCH:

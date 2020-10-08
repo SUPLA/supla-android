@@ -399,4 +399,9 @@
     <string name="zwave_unexpected_answer">Unexpected bridge response. Code: %1$s</string>
     <string name="seconds">Seconds</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
+    <string translatable="false" name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
+    <string translatable="false" name="channel_caption_roofwindow">Roof window</string>
+    <string translatable="false" name="channel_func_controllingtheroofwindow">Roof window operation</string>
+    <string translatable="false" name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
+    <string translatable="false" name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
 </resources>

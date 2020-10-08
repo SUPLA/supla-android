@@ -220,6 +220,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                 return value.getSubValueHi();
 
@@ -334,6 +335,10 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 img_idx = active == 1 ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                img_idx = active == 1 ? R.drawable.roofwindowclosed : R.drawable.roofwindowopen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
 

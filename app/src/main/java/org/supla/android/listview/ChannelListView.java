@@ -120,6 +120,7 @@ public class ChannelListView extends ListView {
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                     if (!(mDetailLayout instanceof ChannelDetailRS))
                         mDetailLayout = null;
@@ -182,6 +183,7 @@ public class ChannelListView extends ListView {
                     mDetailLayout = new ChannelDetailRGBW(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
