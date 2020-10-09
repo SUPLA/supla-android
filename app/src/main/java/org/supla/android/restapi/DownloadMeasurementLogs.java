@@ -78,7 +78,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 for (int a = 0; a < arr.length(); a++) {
                     try {
                         JSONObject obj = arr.getJSONObject(a);
-                        if (min == obj.getLong("date_timestamp")) {
+                        if (Math.abs(min-obj.getLong("date_timestamp")) < 1800) {
                             found = true;
                             break;
                         }
