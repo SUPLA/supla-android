@@ -177,7 +177,6 @@ public class SuplaRoofWindowController extends View {
                                         float centerX,
                                         float centerY,
                                         float frameWidth, float frameHeight,
-                                        float framePostWidth,
                                         float bottomFramePostWidth,
                                         float bottomFrameBarWidth, boolean excludeInnerLines) {
 
@@ -316,15 +315,15 @@ public class SuplaRoofWindowController extends View {
         float outerFramePostWidth = windowWidth * 0.1f;
         float outerFrameBarWidth = outerFramePostWidth * 0.8f;
 
-        float rotationXoffset = MAXIMUM_OPENING_ANGLE
-                * (openingPercentageWhileMoving == null
-                ? openingPercentage : openingPercentageWhileMoving.floatValue()) / 100f;
+        float openingPercentage = openingPercentageWhileMoving == null
+                ? this.openingPercentage : openingPercentageWhileMoving.floatValue();
+
+        float rotationXoffset = MAXIMUM_OPENING_ANGLE * openingPercentage / 100f;
 
         drawOuterFrameRemainPart(canvas,
                 centerX,
                 centerY,
                 windowWidth, windowHeight,
-                outerFramePostWidth,
                 outerFramePostWidth / 2,
                 outerFrameBarWidth / 2,
                 openingPercentage == 0);
