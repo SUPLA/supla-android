@@ -210,6 +210,8 @@ public class SuplaRoofWindowController extends View {
 
         path.reset();
 
+        // TODO: All loops of this type should be transferred to a method
+        //  with a parameter as an arrow function (after switching to Java 8)
         for(int a=0;a<points.length-1;a+=2) {
             if (a==0 || a==4
                 || (excludeInnerLines && a == 2)) {
