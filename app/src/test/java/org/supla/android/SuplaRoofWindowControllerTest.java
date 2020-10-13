@@ -18,7 +18,7 @@ public class SuplaRoofWindowControllerTest extends TestCase {
     }
 
     @Test
-    public void testFrameSetterAndGetter() {
+    public void testFrameColorSetterAndGetter() {
         Assert.assertEquals(Color.WHITE, roofWindowController.getFrameColor());
         roofWindowController.setFrameColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, roofWindowController.getFrameColor());
