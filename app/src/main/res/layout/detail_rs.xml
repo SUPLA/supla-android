@@ -56,14 +56,13 @@
 
                 <Button
                     android:id="@+id/rsBtnUp"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_width="85dp"
+                    android:layout_height="79dp"
                     android:background="@drawable/rs_up" />
 
                 <Button
                     android:id="@+id/rsBtnDown"
-                    android:layout_width="75dp"
+                    android:layout_width="85dp"
                     android:layout_height="75dp"
                     android:background="@drawable/rs_down" />
             </LinearLayout>
@@ -90,9 +89,8 @@
 
                 <Button
                     android:id="@+id/rsBtnOpen"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_width="85dp"
+                    android:layout_height="79dp"
                     android:background="@drawable/rs_open" />
 
                 <Button

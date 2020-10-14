@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="450dp"
         android:layout_alignParentTop="false"
-        android:layout_marginLeft="175dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginTop="80dp"
-        android:layout_marginRight="175dp">
+        android:layout_marginRight="100dp">
 
         <org.supla.android.SuplaRollerShutter
             android:id="@+id/rs1"
@@ -37,7 +37,7 @@
         android:layout_below="@+id/rlRS"
         android:layout_alignParentTop="false"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="5dp">
 
 
@@ -57,14 +57,13 @@
                 <Button
                     android:id="@+id/rsBtnUp"
                     android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_height="140dp"
                     android:background="@drawable/rs_up" />
 
                 <Button
                     android:id="@+id/rsBtnDown"
                     android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_height="140dp"
                     android:background="@drawable/rs_down" />
             </LinearLayout>
 
@@ -91,14 +90,13 @@
                 <Button
                     android:id="@+id/rsBtnOpen"
                     android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_height="140dp"
                     android:background="@drawable/rs_open" />
 
                 <Button
                     android:id="@+id/rsBtnClose"
                     android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_height="140dp"
                     android:background="@drawable/rs_close" />
             </LinearLayout>
 
