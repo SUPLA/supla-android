@@ -267,7 +267,7 @@ public class SuplaRollerShutter extends View {
 
         float percent = Moving ? virtPercent : Percent;
 
-        if (percent == 0 && Markers != null && !Markers.isEmpty()) {
+        if (!Moving && percent == 0 && Markers != null && !Markers.isEmpty()) {
 
             float markerHalfHeight = Spaceing + FrameLineWidth / 2;
             float markerArrowWidth = Spaceing * 2;
