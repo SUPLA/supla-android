@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
+public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener {
 
     private SuplaRollerShutter rs;
     private SuplaChannelStatus status;
@@ -100,7 +100,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        addOnLayoutChangeListener(this);
         delayTimer1 = null;
     }
 
@@ -272,21 +271,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         SuplaApp.Vibrate(getContext());
 
         return true;
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
-        RelativeLayout rlButtons = findViewById(R.id.rlButtons);
-
-        int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
-
-        if (margin < 0) {
-            RelativeLayout rlRS = findViewById(R.id.rlRS);
-            rlRS.getLayoutParams().height += margin;
-            rlRS.requestLayout();
-        }
-
     }
 
     private class DelayTask extends TimerTask {
