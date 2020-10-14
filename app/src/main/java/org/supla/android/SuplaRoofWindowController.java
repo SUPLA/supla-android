@@ -16,6 +16,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -44,6 +46,7 @@ public class SuplaRoofWindowController extends View {
     private float openingPercentage;
     private Float openingPercentageWhileMoving;
     private OnOpeningPercentageChangeListener onOpeningPercentageChangeListener;
+    private ArrayList<Float> markers = null;
 
     private final float MAXIMUM_OPENING_ANGLE = 40f;
     private final float WINDOW_ROTATION_X = 210;
@@ -54,6 +57,7 @@ public class SuplaRoofWindowController extends View {
     private int lineColor;
     private int frameColor;
     private int glassColor;
+    private int markerColor;
 
     private void init() {
         float px = 1;
@@ -77,6 +81,7 @@ public class SuplaRoofWindowController extends View {
         lineColor = Color.BLACK;
         frameColor = Color.WHITE;
         glassColor = 0xFFbed9f1;
+        markerColor = 0xFFbed9f1;
     }
 
     public SuplaRoofWindowController(Context context) {
@@ -267,7 +272,7 @@ public class SuplaRoofWindowController extends View {
 
         canvas.drawPath(path, paint);
 
-        float[] mirrorPoints = new float[] {
+        float[] glassPoints = new float[] {
                 frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
                 frameWidth/2-framePostWidth, frameHeight/-2+frameBarWidth,
                 frameWidth/2-framePostWidth, frameHeight/2-frameBarWidth,
@@ -275,14 +280,14 @@ public class SuplaRoofWindowController extends View {
                 frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
         };
 
-        matrix.mapPoints(mirrorPoints);
+        matrix.mapPoints(glassPoints);
         path.reset();
 
-        for(int a=0;a<mirrorPoints.length-1;a+=2) {
+        for(int a=0;a<glassPoints.length-1;a+=2) {
             if (a==0) {
-                path.moveTo(mirrorPoints[a], mirrorPoints[a+1]);
+                path.moveTo(glassPoints[a], glassPoints[a+1]);
             } else {
-                path.lineTo(mirrorPoints[a], mirrorPoints[a+1]);
+                path.lineTo(glassPoints[a], glassPoints[a+1]);
             }
         }
 
@@ -305,6 +310,50 @@ public class SuplaRoofWindowController extends View {
         canvas.drawPath(path, paint);
     }
 
+    private void drawMarkers(Canvas canvas,
+                                float centerX,
+                                float centerY,
+                                float frameWidth, float frameHeight,
+                                float framePostWidth,
+                                float frameBarWidth) {
+
+
+        if (markers == null || markers.size() == 0) {
+            return;
+        }
+
+        for(int m=0;m<markers.size();m++) {
+            path.reset();
+            getMatrix(centerX, centerY, openingPercentageToXoffset(markers.get(m)));
+
+            float[] glassPoints = new float[] {
+                    frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+                    frameWidth/2-framePostWidth, frameHeight/-2+frameBarWidth,
+                    frameWidth/2-framePostWidth, frameHeight/2-frameBarWidth,
+                    frameWidth/-2+framePostWidth, frameHeight/2-frameBarWidth,
+                    frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
+            };
+
+            matrix.mapPoints(glassPoints);
+
+            for(int a=0;a<glassPoints.length-1;a+=2) {
+                if (a==0) {
+                    path.moveTo(glassPoints[a], glassPoints[a+1]);
+                } else {
+                    path.lineTo(glassPoints[a], glassPoints[a+1]);
+                }
+            }
+
+            paint.setColor(markerColor);
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawPath(path, paint);
+        }
+    }
+
+    private float openingPercentageToXoffset(float openingPercentage) {
+        return MAXIMUM_OPENING_ANGLE * openingPercentage / 100f;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -320,7 +369,7 @@ public class SuplaRoofWindowController extends View {
         float openingPercentage = openingPercentageWhileMoving == null
                 ? this.openingPercentage : openingPercentageWhileMoving.floatValue();
 
-        float rotationXoffset = MAXIMUM_OPENING_ANGLE * openingPercentage / 100f;
+        float rotationXoffset = openingPercentageToXoffset(openingPercentage);
 
         drawOuterFrameRemainPart(canvas,
                 centerX,
@@ -330,14 +379,25 @@ public class SuplaRoofWindowController extends View {
                 outerFrameBarWidth / 2,
                 openingPercentage == 0);
 
-        drawInnerFrame(canvas,
-                centerX,
-                centerY,
-                windowWidth-outerFramePostWidth, windowHeight-outerFrameBarWidth,
-                outerFramePostWidth/2,
-                outerFrameBarWidth/2,
-                rotationXoffset,
-                openingPercentage == 0);
+        if (openingPercentageWhileMoving == null && openingPercentage == 0) {
+            drawMarkers(canvas,
+                    centerX,
+                    centerY,
+                    windowWidth-outerFramePostWidth,
+                    windowHeight-outerFrameBarWidth,
+                    outerFramePostWidth/2,
+                    outerFrameBarWidth/2);
+        } else {
+            drawInnerFrame(canvas,
+                    centerX,
+                    centerY,
+                    windowWidth-outerFramePostWidth,
+                    windowHeight-outerFrameBarWidth,
+                    outerFramePostWidth/2,
+                    outerFrameBarWidth/2,
+                    rotationXoffset,
+                    openingPercentage == 0);
+        }
 
         drawOuterFrameMainPart(canvas,
                 centerX,
@@ -457,6 +517,39 @@ public class SuplaRoofWindowController extends View {
             this.glassColor = glassColor;
             invalidate();
         }
+    }
+
+    public int getMarkerColor() {
+        return markerColor;
+    }
+
+    public void setMarkerColor(int markerColor) {
+        if (this.markerColor != markerColor) {
+            this.markerColor = markerColor;
+            invalidate();
+        }
+    }
+
+    public void setMarkers(ArrayList<Float> markers) {
+        if (markers == null) {
+            this.markers = null;
+        } else {
+            this.markers = new ArrayList<>();
+            for(int a=0;a<markers.size();a++) {
+                Float value = markers.get(a);
+                if (value < 0) {
+                    value = 0f;
+                } else if (value > 100) {
+                    value = 100f;
+                }
+                this.markers.add(value);
+            }
+        }
+        invalidate();
+    }
+
+    public ArrayList<Float>getMarkers() {
+        return markers;
     }
 
     public OnOpeningPercentageChangeListener getOnOpeningPercentageChangeListener() {
