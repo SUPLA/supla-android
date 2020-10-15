@@ -11,10 +11,11 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/llRS"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:orientation="horizontal"
             android:weightSum="100">
 
@@ -29,6 +30,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="70" />
         </LinearLayout>
+
+        <org.supla.android.SuplaRoofWindowController
+            android:id="@+id/rw1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight="0.8" />
 
         <RelativeLayout
             android:id="@+id/rlButtons"

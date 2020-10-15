@@ -6,13 +6,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.ArrayList;
 
 /*
@@ -58,7 +56,7 @@ public class SuplaRollerShutter extends View {
     private Paint paint = new Paint();
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
-    private ArrayList<Integer> Markers = null;
+    private ArrayList<Float> Markers = null;
 
     public SuplaRollerShutter(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -131,7 +129,7 @@ public class SuplaRollerShutter extends View {
         invalidate();
     }
 
-    void setMarkers(ArrayList<Integer> markers) {
+    void setMarkers(ArrayList<Float> markers) {
         if (markers == null) {
             Markers = null;
         } else {

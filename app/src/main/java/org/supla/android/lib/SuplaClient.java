@@ -787,7 +787,7 @@ public class SuplaClient extends Thread {
                 + " Flags: " + channel.Flags);
 
         // Update channel value before update the channel
-        if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
+        if (DbH.updateChannelValue(channel.Value, channel.Id, true /*channel.OnLine*/)) {
             _DataChanged = true;
         }
 

@@ -43,16 +43,16 @@ public class SuplaRoofWindowController extends View {
     Matrix matrix;
     private float lastTouchX;
     private float lastTouchY;
-    private float openingPercentage;
-    private Float openingPercentageWhileMoving;
-    private OnOpeningPercentageChangeListener onOpeningPercentageChangeListener;
+    private float closingPercentage;
+    private Float closingPercentageWhileMoving;
+    private OnClosingPercentageChangeListener onClosingPercentageChangeListener;
     private ArrayList<Float> markers = null;
 
     private final float MAXIMUM_OPENING_ANGLE = 40f;
     private final float WINDOW_ROTATION_X = 210;
     private final float WINDOW_ROTATION_Y = 210;
-    private final float WINDOW_HEIGHT_RATIO = 0.9f;
-    private final float WINDOW_WIDTH_RATIO = 1.79f;
+    private final float WINDOW_HEIGHT_RATIO = 1.0f;
+    private final float WINDOW_WIDTH_RATIO = 0.69f;
 
     private int lineColor;
     private int frameColor;
@@ -66,7 +66,7 @@ public class SuplaRoofWindowController extends View {
         if (r!=null) {
             px = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
-                    2,
+                    1.5f,
                     r.getDisplayMetrics()
             );
         }
@@ -324,7 +324,7 @@ public class SuplaRoofWindowController extends View {
 
         for(int m=0;m<markers.size();m++) {
             path.reset();
-            getMatrix(centerX, centerY, openingPercentageToXoffset(markers.get(m)));
+            getMatrix(centerX, centerY, closingPercentageToXoffset(markers.get(m)));
 
             float[] glassPoints = new float[] {
                     frameWidth/-2+framePostWidth, frameHeight/-2+frameBarWidth,
@@ -350,8 +350,8 @@ public class SuplaRoofWindowController extends View {
         }
     }
 
-    private float openingPercentageToXoffset(float openingPercentage) {
-        return MAXIMUM_OPENING_ANGLE * openingPercentage / 100f;
+    private float closingPercentageToXoffset(float closingPercentage) {
+        return MAXIMUM_OPENING_ANGLE * (100f - closingPercentage / 100f);
     }
 
     @Override
@@ -361,15 +361,20 @@ public class SuplaRoofWindowController extends View {
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
 
-        float windowHeight = getWidth() * WINDOW_HEIGHT_RATIO;
-        float windowWidth = windowHeight/ WINDOW_WIDTH_RATIO;
+        float windowHeight = getHeight() * WINDOW_HEIGHT_RATIO;
+        float windowWidth = windowHeight * WINDOW_WIDTH_RATIO;
+
+        if (windowWidth > getWidth()) {
+            windowWidth = getWidth();
+        }
+
         float outerFramePostWidth = windowWidth * 0.1f;
         float outerFrameBarWidth = outerFramePostWidth * 0.8f;
 
-        float openingPercentage = openingPercentageWhileMoving == null
-                ? this.openingPercentage : openingPercentageWhileMoving.floatValue();
+        float closingPercentage = closingPercentageWhileMoving == null
+                ? this.closingPercentage : closingPercentageWhileMoving.floatValue();
 
-        float rotationXoffset = openingPercentageToXoffset(openingPercentage);
+        float rotationXoffset = closingPercentageToXoffset(closingPercentage);
 
         drawOuterFrameRemainPart(canvas,
                 centerX,
@@ -377,9 +382,10 @@ public class SuplaRoofWindowController extends View {
                 windowWidth, windowHeight,
                 outerFramePostWidth / 2,
                 outerFrameBarWidth / 2,
-                openingPercentage == 0);
+                closingPercentage >= 100);
 
-        if (openingPercentageWhileMoving == null && openingPercentage == 0) {
+        if (markers != null && !markers.isEmpty()
+                && closingPercentageWhileMoving == null && closingPercentage == 0) {
             drawMarkers(canvas,
                     centerX,
                     centerY,
@@ -396,7 +402,7 @@ public class SuplaRoofWindowController extends View {
                     outerFramePostWidth/2,
                     outerFrameBarWidth/2,
                     rotationXoffset,
-                    openingPercentage == 0);
+                    closingPercentage >= 100);
         }
 
         drawOuterFrameMainPart(canvas,
@@ -407,7 +413,7 @@ public class SuplaRoofWindowController extends View {
                 outerFramePostWidth / 2,
                 outerFrameBarWidth,
                 outerFrameBarWidth / 2,
-                openingPercentage == 0);
+                closingPercentage >= 100);
 
     }
 
@@ -424,16 +430,16 @@ public class SuplaRoofWindowController extends View {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
 
-                if (onOpeningPercentageChangeListener != null) {
-                    onOpeningPercentageChangeListener.onOpeningPercentageChanged(this,
-                            openingPercentageWhileMoving);
+                if (onClosingPercentageChangeListener != null) {
+                    onClosingPercentageChangeListener.onClosingPercentageChanged(this,
+                            closingPercentageWhileMoving);
                 }
 
-                openingPercentageWhileMoving = null;
+                closingPercentageWhileMoving = null;
                 invalidate();
                 break;
             case MotionEvent.ACTION_DOWN:
-                openingPercentageWhileMoving = openingPercentage;
+                closingPercentageWhileMoving = closingPercentage;
                 result = true;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -442,18 +448,18 @@ public class SuplaRoofWindowController extends View {
 
                 if (Math.abs(x - lastTouchX) < Math.abs(delta)) {
 
-                    float p = Math.abs(delta) * 100 / (getWidth() * WINDOW_HEIGHT_RATIO / 2);
+                    float p = Math.abs(delta) * 100 / (getHeight() * WINDOW_HEIGHT_RATIO / 2);
 
-                    openingPercentageWhileMoving += p * (delta > 0 ? -1 : 1);
+                    closingPercentageWhileMoving += p * (delta > 0 ? 1 : -1);
 
-                    if (openingPercentageWhileMoving < 0)
-                        openingPercentageWhileMoving = 0f;
-                    else if (openingPercentageWhileMoving > 100)
-                        openingPercentageWhileMoving = 100f;
+                    if (closingPercentageWhileMoving < 0)
+                        closingPercentageWhileMoving = 0f;
+                    else if (closingPercentageWhileMoving > 100)
+                        closingPercentageWhileMoving = 100f;
 
-                    if (onOpeningPercentageChangeListener != null) {
-                        onOpeningPercentageChangeListener.onOpeningPercentageChangeing(
-                                this, openingPercentageWhileMoving);
+                    if (onClosingPercentageChangeListener != null) {
+                        onClosingPercentageChangeListener.onClosingPercentageChangeing(
+                                this, closingPercentageWhileMoving);
                     }
 
                     result = true;
@@ -469,19 +475,19 @@ public class SuplaRoofWindowController extends View {
         return result;
     }
 
-    public float getOpeningPercentage() {
-        return openingPercentage;
+    public float getClosingPercentage() {
+        return closingPercentage;
     }
 
-    public void setOpeningPercentage(float openingPercentage) {
-        if (openingPercentage < 0) {
-            openingPercentage = 0;
-        } else if (openingPercentage > 100) {
-            openingPercentage = 100;
+    public void setClosingPercentage(float closingPercentage) {
+        if (closingPercentage < 0) {
+            closingPercentage = 0;
+        } else if (closingPercentage > 100) {
+            closingPercentage = 100;
         }
 
-        if (this.openingPercentage != openingPercentage) {
-            this.openingPercentage = openingPercentage;
+        if (this.closingPercentage != closingPercentage) {
+            this.closingPercentage = closingPercentage;
             invalidate();
         }
     }
@@ -552,17 +558,17 @@ public class SuplaRoofWindowController extends View {
         return markers;
     }
 
-    public OnOpeningPercentageChangeListener getOnOpeningPercentageChangeListener() {
-        return onOpeningPercentageChangeListener;
+    public OnClosingPercentageChangeListener getOnClosingPercentageChangeListener() {
+        return onClosingPercentageChangeListener;
     }
 
-    public void setOnOpeningPercentageChangeListener(OnOpeningPercentageChangeListener
-                                                             onOpeningPercentageChangeListener) {
-        this.onOpeningPercentageChangeListener = onOpeningPercentageChangeListener;
+    public void setOnClosingPercentageChangeListener(OnClosingPercentageChangeListener
+                                                             onClosingPercentageChangeListener) {
+        this.onClosingPercentageChangeListener = onClosingPercentageChangeListener;
     }
 
-    public interface OnOpeningPercentageChangeListener {
-        void onOpeningPercentageChanged(SuplaRoofWindowController controller, float openingPercentage);
-        void onOpeningPercentageChangeing(SuplaRoofWindowController controller, float openingPercentage);
+    public interface OnClosingPercentageChangeListener {
+        void onClosingPercentageChanged(SuplaRoofWindowController controller, float closingPercentage);
+        void onClosingPercentageChangeing(SuplaRoofWindowController controller, float closingPercentage);
     }
 }

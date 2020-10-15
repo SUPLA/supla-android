@@ -49,13 +49,13 @@ public class SuplaRoofWindowControllerTest extends TestCase {
 
     @Test
     public void testOpeningPercentageSetterAndGetter() {
-        Assert.assertEquals(0, roofWindowController.getOpeningPercentage(), 0);
-        roofWindowController.setOpeningPercentage(55.55f);
-        Assert.assertEquals(55.55f, roofWindowController.getOpeningPercentage(), 0.001);
-        roofWindowController.setOpeningPercentage(-1f);
-        Assert.assertEquals(0, roofWindowController.getOpeningPercentage(), 0);
-        roofWindowController.setOpeningPercentage(110f);
-        Assert.assertEquals(100, roofWindowController.getOpeningPercentage(), 0);
+        Assert.assertEquals(0, roofWindowController.getClosingPercentage(), 0);
+        roofWindowController.setClosingPercentage(55.55f);
+        Assert.assertEquals(55.55f, roofWindowController.getClosingPercentage(), 0.001);
+        roofWindowController.setClosingPercentage(-1f);
+        Assert.assertEquals(0, roofWindowController.getClosingPercentage(), 0);
+        roofWindowController.setClosingPercentage(110f);
+        Assert.assertEquals(100, roofWindowController.getClosingPercentage(), 0);
     }
 
     @Test
