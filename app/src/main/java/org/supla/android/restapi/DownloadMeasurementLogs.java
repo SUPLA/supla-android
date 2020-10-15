@@ -52,7 +52,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     }
 
     protected int itemsLimitPerRequest() {
-        return 1000;
+        return 10000;
     }
 
     @Override
