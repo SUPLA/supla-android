@@ -51,7 +51,7 @@ public class SuplaRoofWindowController extends View {
     private final float MAXIMUM_OPENING_ANGLE = 40f;
     private final float WINDOW_ROTATION_X = 210;
     private final float WINDOW_ROTATION_Y = 210;
-    private final float WINDOW_HEIGHT_RATIO = 1.0f;
+    private final float WINDOW_HEIGHT_MULTIPLIER = 1.0f;
     private final float WINDOW_WIDTH_RATIO = 0.69f;
 
     private int lineColor;
@@ -361,11 +361,12 @@ public class SuplaRoofWindowController extends View {
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
 
-        float windowHeight = getHeight() * WINDOW_HEIGHT_RATIO;
+        float windowHeight = getHeight() * WINDOW_HEIGHT_MULTIPLIER;
         float windowWidth = windowHeight * WINDOW_WIDTH_RATIO;
 
-        if (windowWidth > getWidth()) {
-            windowWidth = getWidth();
+        if (windowWidth > getWidth() * 0.70f) {
+            windowWidth = getWidth() * 0.70f;
+            windowHeight = windowWidth / WINDOW_WIDTH_RATIO;
         }
 
         float outerFramePostWidth = windowWidth * 0.1f;
@@ -448,7 +449,7 @@ public class SuplaRoofWindowController extends View {
 
                 if (Math.abs(x - lastTouchX) < Math.abs(delta)) {
 
-                    float p = Math.abs(delta) * 100 / (getHeight() * WINDOW_HEIGHT_RATIO / 2);
+                    float p = Math.abs(delta) * 100 / (getHeight() * WINDOW_HEIGHT_MULTIPLIER / 2);
 
                     closingPercentageWhileMoving += p * (delta > 0 ? 1 : -1);
 
