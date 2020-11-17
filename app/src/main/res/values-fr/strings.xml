@@ -312,7 +312,7 @@
     <string name="vl_cfg_mode2">MODE 2</string>
     <string name="vl_cfg_mode3">MODE 3</string>
     <string name="vl_cfg_no">NON</string>
-    <string name="vl_cfg_op_range">Plage de fonctionnement</string>
+    <string name="cfg_op_range">Plage de fonctionnement</string>
     <string name="vl_cfg_yes">OUI</string>
     <string name="vl_dimmer_cfg_info_txt1">Mode de variation de la lumière / Plage de travail</string>
     <string name="vl_dimmer_cfg_info_txt2">Ajustez les performances de variation de l\'éclairage LED en sélectionnant le mode approprié. Ajustez également la plage de fonctionnement du variateur en réglant le niveau de luminosité minimum et maximum. La valeur minimale et maximale peut être définie en déplaçant les curseurs des deux côtés du cercle.</string>

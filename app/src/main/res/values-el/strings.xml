@@ -310,7 +310,7 @@
     <string name="vl_cfg_mode2">ΛΕΙΤΟΥΡΓΙΑ 2</string>
     <string name="vl_cfg_mode3">ΛΕΙΤΟΥΡΓΙΑ 3</string>
     <string name="vl_cfg_no">ΌΧΙ</string>
-    <string name="vl_cfg_op_range">Εύρος λειτουργίας</string>
+    <string name="cfg_op_range">Εύρος λειτουργίας</string>
     <string name="vl_cfg_yes">ΝΑΙ</string>
     <string name="vl_dimmer_cfg_info_txt1">Λειτουργία εξασθένισης / Εύρος εργασίας</string>
     <string name="vl_dimmer_cfg_info_txt2">Προσαρμόστε τη χαμηλότερη απόδοση του φωτισμού LED επιλέγοντας την κατάλληλη λειτουργία. Ρυθμίστε επίσης το εύρος εργασίας του ρεοστάτη ρυθμίζοντας το ελάχιστο και το μέγιστο επίπεδο φωτεινότητας. Η ελάχιστη και μέγιστη τιμή μπορεί να ρυθμιστεί με τη μετακίνηση των φερμουάρ και στις δύο πλευρές του τροχού.</string>

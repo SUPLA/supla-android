@@ -312,7 +312,7 @@
     <string name="vl_cfg_mode2">MODO 2</string>
     <string name="vl_cfg_mode3">MODO 3</string>
     <string name="vl_cfg_no">NO</string>
-    <string name="vl_cfg_op_range">Rango de operación</string>
+    <string name="cfg_op_range">Rango de operación</string>
     <string name="vl_cfg_yes">SÍ</string>
     <string name="vl_dimmer_cfg_info_txt1">Modo de atenuación / rango de trabajo</string>
     <string name="vl_dimmer_cfg_info_txt2">Ajuste el rendimiento de atenuación de la iluminación LED seleccionando el modo apropiado. También ajuste el rango de trabajo del atenuador estableciendo el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo la barra a ambos lados del círculo.</string>

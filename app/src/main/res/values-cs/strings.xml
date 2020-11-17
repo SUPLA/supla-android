@@ -290,7 +290,7 @@
     <string name="vl_cfg_mode2">REŽIM č. 2</string>
     <string name="vl_cfg_mode3">REŽIM č. 3</string>
     <string name="vl_cfg_no">NE</string>
-    <string name="vl_cfg_op_range">Provozní rozsah</string>
+    <string name="cfg_op_range">Provozní rozsah</string>
     <string name="vl_cfg_yes">ANO</string>
     <string name="vl_dimmer_cfg_info_txt1">Režim stmívání / Pracovní rozsah</string>
     <string name="vl_dimmer_cfg_info_txt2">Vybráním příslušného režimu si můžete upravit intenzitu stmívání LED osvětlení.  Výběrem minimální nebo maximální úrovně jasu, můžete rovněž upravit provozní rozsah stmívače. Minimální a maximální hodnotu můžete nastavit přesouváním posuvníku umístěného na obou stranách kolečka.</string>

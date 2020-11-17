@@ -309,7 +309,7 @@
     <string name="vl_cfg_mode2" >MODUL 2</string>
     <string name="vl_cfg_mode3" >MODUL 3</string>
     <string name="vl_cfg_no" >NU</string>
-    <string name="vl_cfg_op_range" >Domeniul de lucru</string>
+    <string name="cfg_op_range">Domeniul de lucru</string>
     <string name="vl_cfg_yes" >DA</string>
     <string name="vl_dimmer_cfg_info_txt1" >Mod de estompare / Domeniu de lucru</string>
     <string name="vl_dimmer_cfg_info_txt2" >Reglaţi performanţa de estompare a iluminării cu LED prin selectarea modului corespunzător. Reglați de asemenea, domeniul de lucru a regulatorului lestompatorului prin setarea nivelului de luminozitate minimă și maximă. Valoarea minimă și maximă poate fi setată prin deplasarea de rigle amplasate de pe ambele părți ale cercului.</string>

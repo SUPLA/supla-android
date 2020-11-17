@@ -309,7 +309,7 @@
     <string name="vl_cfg_mode2" >MODUS 2</string>
     <string name="vl_cfg_mode3" >MODUS 3</string>
     <string name="vl_cfg_no" >NEE</string>
-    <string name="vl_cfg_op_range" >Werkingsgebied</string>
+    <string name="cfg_op_range">Werkingsgebied</string>
     <string name="vl_cfg_yes" >JA</string>
     <string name="vl_dimmer_cfg_info_txt1" >Verduisteringsmodus/werkingsbereik</string>
     <string name="vl_dimmer_cfg_info_txt2" >Pas het dimvermogen van de LED-verlichting aan door de juiste modus te kiezen. Pas ook het dimbereik aan door het instellen van het minimum- en maximum helderheidsniveau. De minimale en maximale waarde kan worden ingesteld door de schuifregelaars aan beide zijden van de cirkel te verschuiven.</string>

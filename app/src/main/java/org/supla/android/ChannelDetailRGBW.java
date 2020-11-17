@@ -78,6 +78,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private int lastBrightness;
     private Button btnPowerOnOff;
     private Boolean varilight;
+    private Boolean zamel;
 
     public ChannelDetailRGBW(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -175,12 +176,15 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         pickerTypeTabs.setVisibility(VISIBLE);
 
         varilight = false;
+        zamel = false;
 
         if (getChannelBase() instanceof Channel) {
             Channel c = (Channel) getChannelBase();
             if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
                     && c.getProductID() == 1) {
                 varilight = true;
+            } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_ZAMEL) {
+                zamel = true;
             }
         }
 
@@ -196,7 +200,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             typeSlider = varilight;
         }
 
-        cbPicker.setMinBrightness(varilight ? 1f : 0f);
+        cbPicker.setMinBrightness(varilight || zamel ? 1f : 0f);
 
         onClick(typeSlider ? tabSlider : tabWheel);
         channelDataToViews();
