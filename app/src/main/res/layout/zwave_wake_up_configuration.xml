@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
     <LinearLayout
@@ -105,7 +106,8 @@
                     android:id="@+id/npMinutes"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"></NumberPicker>
+                    android:layout_weight="0"
+                    android:descendantFocusability="blocksDescendants"></NumberPicker>
             </LinearLayout>
 
 
@@ -140,7 +142,8 @@
                     android:id="@+id/npSeconds"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"></NumberPicker>
+                    android:layout_weight="0"
+                    android:descendantFocusability="blocksDescendants"></NumberPicker>
             </LinearLayout>
 
         </LinearLayout>
