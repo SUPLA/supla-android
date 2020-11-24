@@ -6,7 +6,7 @@
     <color name="channel_cell">#fafbfc</color>
     <color name="channel_section_cell">#edfbee</color>
     <color name="detail_rgb_gb">#ffededed</color>
-    <color name="detail_rs_bg">#fffafafa</color>
+    <color name="detail_rs_bg">#ffededed</color>
     <color name="detail_rs_marker">#12a71e</color>
     <color name="activity_bg">#fafbfc</color>
     <color name="activity_status_bg_err">#fee700</color>
@@ -44,6 +44,8 @@
     <color name="vl_infotitle">#000000</color>
     <color name="vl_infotext">#606060</color>
     <color name="vl_infoline">#B4B7BA</color>
+
+    <color name="diw_settings_bg">#ffededed</color>
 
     <color name="wizart_next_btn_text_enabled">#12a71e</color>
     <color name="wizart_next_btn_text_disabled">#B4B7BA</color>

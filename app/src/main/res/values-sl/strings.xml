@@ -310,7 +310,7 @@
     <string name="vl_cfg_mode2" >NAČIN 2</string>
     <string name="vl_cfg_mode3" >NAČIN 3</string>
     <string name="vl_cfg_no" >NE</string>
-    <string name="vl_cfg_op_range" >Območje delovanja</string>
+    <string name="cfg_op_range">Območje delovanja</string>
     <string name="vl_cfg_yes" >DA</string>
     <string name="vl_dimmer_cfg_info_txt1" >Način zatemnitve/Delovno območje</string>
     <string name="vl_dimmer_cfg_info_txt2" >Z izbiro ustreznega načina prilagodite zatemnitev LED osvetlitve. Prilagodite tudi obseg zatemnitve z nastavitvijo najmanjše in največje ravni svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh koleščka.</string>

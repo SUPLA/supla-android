@@ -309,7 +309,7 @@
     <string name="vl_cfg_mode2">2. MÓD</string>
     <string name="vl_cfg_mode3">3. MÓD</string>
     <string name="vl_cfg_no">NEM</string>
-    <string name="vl_cfg_op_range">Működési hatótáv</string>
+    <string name="cfg_op_range">Működési hatótáv</string>
     <string name="vl_cfg_yes">IGEN</string>
     <string name="vl_dimmer_cfg_info_txt1">Tompítási mód/Működési hatótáv</string>
     <string name="vl_dimmer_cfg_info_txt2">A megfelelő mód kiválasztásával állítsa be a LED-es világítás tompítási teljesítményét. Állítsa be a fényerő-szabályozó munkaterületét is a minimális és a maximális fényerő szintjének beállításával. A minimális és maximális érték a kerék mindkét oldalán található csúszkák mozgatásával állítható be.</string>

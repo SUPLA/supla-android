@@ -337,7 +337,7 @@
     <string name="vl_cfg_mode3">TRYB 3</string>
     <string name="vl_cfg_yes">TAK</string>
     <string name="vl_cfg_no">NIE</string>
-    <string name="vl_cfg_op_range">Zakres pracy</string>
+    <string name="cfg_op_range">Zakres pracy</string>
     <string name="vl_cfg_boost">Wzmocnienie</string>
     <string name="information">Informacje</string>
     <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
@@ -395,4 +395,11 @@
     <string name="channel_func_controllingtheroofwindow">Otwieranie i zamykanie okna dachowego</string>
     <string name="channel_func_opensensor_roofwindow">Czujnik otwarcia okna dachowego</string>
     <string name="event_openedclosedtheroofwindow">otworzył / zamknął okno dachowe</string>
+
+    <string name="led_status_connected">Status - połączony</string>
+    <string name="led_status_on">Dioda włączona</string>
+    <string name="led_status_off">Dioda wyłączona</string>
+    <string name="input">Wejście</string>
+    <string name="monostable">Monostabilne</string>
+    <string name="bistable">Bistabilne</string>
 </resources>

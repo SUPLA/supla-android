@@ -312,7 +312,7 @@
     <string name="vl_cfg_mode2" >MODO 2</string>
     <string name="vl_cfg_mode3" >MODO 3</string>
     <string name="vl_cfg_no" >NÃO</string>
-    <string name="vl_cfg_op_range" >Faixa de trabalho</string>
+    <string name="cfg_op_range">Faixa de trabalho</string>
     <string name="vl_cfg_yes" >SIM</string>
     <string name="vl_dimmer_cfg_info_txt1" >Modo de escurecimento / faixa de trabalho</string>
     <string name="vl_dimmer_cfg_info_txt2" >Ajuste o desempenho de escurecimento da iluminação LED selecionando o modo apropriado. Ajuste também a faixa de trabalho do dimmer definindo o nível de brilho mínimo e máximo. Os valores mínimo e máximo podem ser definidos movendo os controles deslizantes em ambos os lados do regulador rotativo.</string>

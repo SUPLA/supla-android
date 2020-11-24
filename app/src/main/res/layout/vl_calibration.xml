@@ -184,7 +184,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/vl_tab"
-                android:text="@string/vl_cfg_op_range"
+                android:text="@string/cfg_op_range"
                 android:textColor="@android:color/black" />
 
             <Button

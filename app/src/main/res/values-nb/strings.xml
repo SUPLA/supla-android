@@ -310,7 +310,7 @@
     <string name="vl_cfg_mode2">MODUS 2</string>
     <string name="vl_cfg_mode3">MODUS 3</string>
     <string name="vl_cfg_no">NEI</string>
-    <string name="vl_cfg_op_range">Arbeidsrekkevidde</string>
+    <string name="cfg_op_range">Arbeidsrekkevidde</string>
     <string name="vl_cfg_yes">JA</string>
     <string name="vl_dimmer_cfg_info_txt1">Dimmemodus/arbeidsrekkevidde</string>
     <string name="vl_dimmer_cfg_info_txt2">Juster dimmestyrken for LED-belysning ved å velge en riktig modus. Juster også dimmerens arbeidsområde ved å sette minimum og maksimum lysstyrkenivå. Minimums- og maksimumsverdien kan stilles inn ved å bevege skyvere på begge sider av hjulet.</string>

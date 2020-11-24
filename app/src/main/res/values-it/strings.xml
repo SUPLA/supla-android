@@ -312,7 +312,7 @@
     <string name="vl_cfg_mode2">MODALITÀ 2</string>
     <string name="vl_cfg_mode3">MODALITÀ 3</string>
     <string name="vl_cfg_no">NO</string>
-    <string name="vl_cfg_op_range">Portata di funzionamento</string>
+    <string name="cfg_op_range">Portata di funzionamento</string>
     <string name="vl_cfg_yes">SÌ</string>
     <string name="vl_dimmer_cfg_info_txt1">Modalità di oscuramento / Portata di funzionamento</string>
     <string name="vl_dimmer_cfg_info_txt2">Adatta l’efficienza di oscuramento dell’illuminazione a LED selezionando la modalità adeguata. Adatta anche la portata di funzionamento di varialuce impostando il livello minimo e massimo di luminosità. Il valore minimo e massimo può essere impostato facendo scorrere le barre di scorrimento poste su entrambi i lati del cerchio.</string>

@@ -26,13 +26,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
@@ -40,9 +41,12 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
+public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener,
+        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener {
 
-    private SuplaRollerShutter rs;
+    private LinearLayout llRollerShutter;
+    private SuplaRollerShutter rollerShutter;
+    private SuplaRoofWindowController roofWindow;
     private SuplaChannelStatus status;
     private TextView tvPercentCaption;
     private TextView tvPercent;
@@ -72,9 +76,15 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     protected void init() {
 
         super.init();
-        rs = findViewById(R.id.rs1);
-        rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
-        rs.setOnPercentTouchListener(this);
+
+        llRollerShutter = findViewById(R.id.llRS);
+
+        rollerShutter = findViewById(R.id.rs1);
+        rollerShutter.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
+        rollerShutter.setOnPercentTouchListener(this);
+
+        roofWindow = findViewById(R.id.rw1);
+        roofWindow.setOnClosingPercentageChangeListener(this);
 
         status = findViewById(R.id.rsstatus);
         status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
@@ -100,13 +110,22 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        addOnLayoutChangeListener(this);
         delayTimer1 = null;
     }
 
     @Override
     public View inflateContentView() {
         return inflateLayout(R.layout.detail_rs);
+    }
+
+    private void setRollerShutterVisible(ChannelBase channelBase) {
+        if (channelBase.getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
+            llRollerShutter.setVisibility(GONE);
+            roofWindow.setVisibility(VISIBLE);
+        } else {
+            roofWindow.setVisibility(GONE);
+            llRollerShutter.setVisibility(VISIBLE);
+        }
     }
 
     private void OnChannelDataChanged(boolean withoutDelay) {
@@ -116,14 +135,18 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             delayTimer1 = null;
         }
 
+
         if (!isGroup()) {
             status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
+            setRollerShutterVisible(channel);
 
-            byte p = channel.getRollerShutterPosition();
+            byte p = channel.getClosingPercentage();
 
-            rs.setMarkers(null);
-            rs.setPercent(p);
+            rollerShutter.setMarkers(null);
+            rollerShutter.setPercent(p);
+            roofWindow.setMarkers(null);
+            roofWindow.setClosingPercentage(p);
 
             if (p < 0) {
                 tvPercent.setText(R.string.calibration);
@@ -134,11 +157,13 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             status.setVisibility(View.VISIBLE);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
-            rs.setPercent(0);
+            setRollerShutterVisible(cgroup);
 
+            rollerShutter.setPercent(0);
+            roofWindow.setClosingPercentage(0);
             status.setPercent(cgroup.getOnLinePercent());
 
-            ArrayList<Integer> positions = cgroup.getRollerShutterPositions();
+            ArrayList<Float> positions = cgroup.getRollerShutterPositions();
 
             int percent = -1;
 
@@ -156,7 +181,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             if (percent >= 0) {
 
-                rs.setMarkers(positions);
+                rollerShutter.setMarkers(positions);
+                roofWindow.setMarkers(positions);
                 tvPercent.setText("---");
 
                 delayTimer1 = new Timer();
@@ -168,8 +194,10 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
                                 @Override
                                 public void run() {
-                                    rs.setMarkers(null);
-                                    rs.setPercent(percent);
+                                    rollerShutter.setMarkers(null);
+                                    rollerShutter.setPercent(percent);
+                                    roofWindow.setMarkers(null);
+                                    roofWindow.setClosingPercentage(percent);
                                     tvPercent.setText(Integer.toString(percent) + "%");
                                 }
                             });
@@ -180,12 +208,16 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             } else if (percent == -1) {
                 // All of RS wait for calibration
-                rs.setPercent(0);
-                rs.setMarkers(null);
+                rollerShutter.setPercent(0);
+                rollerShutter.setMarkers(null);
+                roofWindow.setClosingPercentage(0);
+                roofWindow.setMarkers(null);
                 tvPercent.setText(R.string.calibration);
             } else {
-                rs.setPercent(0);
-                rs.setMarkers(positions);
+                rollerShutter.setPercent(0);
+                rollerShutter.setMarkers(positions);
+                roofWindow.setClosingPercentage(0);
+                roofWindow.setMarkers(positions);
                 tvPercent.setText("---");
             }
 
@@ -203,9 +235,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         OnChannelDataChanged(true);
     }
 
-    @Override
-    public void onPercentChanged(SuplaRollerShutter rs, float percent) {
-
+    public void onPercentChanged(float percent) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if (client == null || !isDetailVisible())
@@ -215,10 +245,29 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         OnChannelDataChanged();
     }
 
+    @Override
+    public void onPercentChanged(SuplaRollerShutter rs, float percent) {
+        onPercentChanged(percent);
+    }
+
+    public void onPercentChangeing(float percent) {
+        tvPercent.setText(Integer.toString((int) percent) + "%");
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onPercentChangeing(SuplaRollerShutter rs, float percent) {
-        tvPercent.setText(Integer.toString((int) percent) + "%");
+        onPercentChangeing(percent);
+    }
+
+    @Override
+    public void onClosingPercentageChanged(SuplaRoofWindowController controller, float closingPercentage) {
+        onPercentChanged(closingPercentage);
+    }
+
+    @Override
+    public void onClosingPercentageChangeing(SuplaRoofWindowController controller, float closingPercentage) {
+        onPercentChangeing(closingPercentage);
     }
 
     @Override
@@ -272,21 +321,6 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         SuplaApp.Vibrate(getContext());
 
         return true;
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
-        RelativeLayout rlButtons = findViewById(R.id.rlButtons);
-
-        int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
-
-        if (margin < 0) {
-            RelativeLayout rlRS = findViewById(R.id.rlRS);
-            rlRS.getLayoutParams().height += margin;
-            rlRS.requestLayout();
-        }
-
     }
 
     private class DelayTask extends TimerTask {

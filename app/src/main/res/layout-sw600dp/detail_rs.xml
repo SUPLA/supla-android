@@ -5,161 +5,172 @@
     android:layout_height="match_parent"
     android:background="@color/detail_rs_bg">
 
-    <org.supla.android.SuplaChannelStatus
-        android:id="@+id/rsstatus"
-        android:layout_width="20dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp" />
-
-    <RelativeLayout
-        android:id="@+id/rlRS"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_alignParentTop="false"
-        android:layout_marginLeft="175dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginRight="175dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <org.supla.android.SuplaRollerShutter
-            android:id="@+id/rs1"
+        <LinearLayout
+            android:id="@+id/llRS"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rlButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/rlInfo"
-        android:layout_below="@+id/rlRS"
-        android:layout_alignParentTop="false"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginRight="5dp">
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal">
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/rsBtnUp"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rs_up" />
-
-                <Button
-                    android:id="@+id/rsBtnDown"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@drawable/rs_down" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/rsBtnStop"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:background="@drawable/rs_stop" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/rsBtnOpen"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rs_open" />
-
-                <Button
-                    android:id="@+id/rsBtnClose"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@drawable/rs_close" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rlInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:layout_marginTop="50dp"
+            android:layout_weight="0.8"
+            android:orientation="horizontal"
+            android:weightSum="100">
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:background="@android:color/black" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="15"></View>
+
+            <org.supla.android.SuplaRollerShutter
+                android:id="@+id/rs1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="70" />
+        </LinearLayout>
+
+        <org.supla.android.SuplaRoofWindowController
+            android:id="@+id/rw1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight="0.8" />
+
+        <RelativeLayout
+            android:id="@+id/rlButtons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/rsBtnUp"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        android:background="@drawable/rs_up" />
+
+                    <Button
+                        android:id="@+id/rsBtnDown"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        android:background="@drawable/rs_down" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/rsBtnStop"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/rs_stop" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/rsBtnOpen"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        android:background="@drawable/rs_open" />
+
+                    <Button
+                        android:id="@+id/rsBtnClose"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        android:background="@drawable/rs_close" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_alignParentStart="false"
+                android:layout_alignParentLeft="false"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/rsDetailPercentCaption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/rs_percent_caption"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textIsSelectable="true"
-                    android:textSize="35sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/black" />
 
-                <TextView
-                    android:id="@+id/rsDetailPercent"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="80%"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="35sp"
-                    tools:ignore="HardcodedText" />
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/rsDetailPercentCaption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rs_percent_caption"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/rs_detail_info_text" />
+
+                    <TextView
+                        android:id="@+id/rsDetailPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="80%"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="@dimen/rs_detail_info_text"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+
             </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
-
-        </LinearLayout>
-    </RelativeLayout>
+    <org.supla.android.SuplaChannelStatus
+        android:id="@+id/rsstatus"
+        android:layout_width="10dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

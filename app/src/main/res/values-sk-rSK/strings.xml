@@ -323,7 +323,7 @@
     <string name="vl_cfg_mode2" >REŽIM 2</string>
     <string name="vl_cfg_mode3" >REŽIM 3</string>
     <string name="vl_cfg_no" >NIE</string>
-    <string name="vl_cfg_op_range" >Rozsah činnosti</string>
+    <string name="cfg_op_range">Rozsah činnosti</string>
     <string name="vl_cfg_yes" >ÁNO</string>
     <string name="vl_dimmer_cfg_info_txt1" >Režim stmievania / Rozsah činnosti</string>
     <string name="vl_dimmer_cfg_info_txt2" >Prispôsob výkon stmievania LED osvetlenia výberom vhodného režimu. Prispôsob tiež rozsah činnosti stmievača nastavením minimálnej a maximálnej úrovne jasu. Minimálnu a maximálnu hodnotu môžeš nastaviť presunutím bežcov umiestnených na oboch stranách kolieska.</string>

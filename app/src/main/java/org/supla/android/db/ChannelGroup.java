@@ -201,22 +201,22 @@ public class ChannelGroup extends ChannelBase {
         return result;
     }
 
-    public ArrayList<Integer> getRollerShutterPositions() {
-        ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<Float> getRollerShutterPositions() {
+        ArrayList<Float> result = new ArrayList<>();
         String[] items = getTotalValue().split("\\|");
 
         for (int a = 0; a < items.length; a++) {
             String[] n = items[a].split(":");
             if (n.length == 2) {
                 try {
-                    int pos = Integer.valueOf(n[0]).intValue();
+                    float pos = Integer.valueOf(n[0]).intValue();
                     int sensor = Integer.valueOf(n[1]).intValue();
 
                     if (pos < 100 && sensor == 1) {
                         pos = 100;
                     }
 
-                    result.add(Integer.valueOf(pos));
+                    result.add(Float.valueOf(pos));
                 } catch (NumberFormatException e) {
                 }
             }

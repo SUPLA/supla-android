@@ -208,7 +208,7 @@ public class Channel extends ChannelBase {
         return Value != null ? Value.getDistance() : -1;
     }
 
-    public byte getRollerShutterPosition() {
+    public byte getClosingPercentage() {
 
         byte p = Value != null ? Value.getPercent() : 0;
 
@@ -240,7 +240,7 @@ public class Channel extends ChannelBase {
         if (getOnLine()
                 && (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
                    || getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW)
-                && getRollerShutterPosition() >= 100) {
+                && getClosingPercentage() >= 100) {
             return 1;
         }
 

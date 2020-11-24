@@ -289,7 +289,7 @@
     <string name="vl_cfg_mode2">2 REŽIMAS</string>
     <string name="vl_cfg_mode3">3 REŽIMAS</string>
     <string name="vl_cfg_no">NE</string>
-    <string name="vl_cfg_op_range">Veikimo apimtis</string>
+    <string name="cfg_op_range">Veikimo apimtis</string>
     <string name="vl_cfg_yes">TAIP</string>
     <string name="vl_dimmer_cfg_info_txt1">Šviesos srauto reguliavimo režimas / Veikimo diapazonas</string>
     <string name="vl_dimmer_cfg_info_txt2">Sureguliuokite LED apšvietimo šviesos srauto efektyvumą pasirinkdami atitinkamą režimą. Taip pat sureguliuokite šviesos srauto veikimo režimą nustatydami mažiausią ir didžiausią šviesos intensyvumo lygį. Mažiausią ir didžiausią vertes galima nustatyti judinant esančius abiejose rato pusėse slankiklius.</string>

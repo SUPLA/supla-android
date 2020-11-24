@@ -317,7 +317,7 @@
     <string name="vl_cfg_mode2" >РЕЖИМ 2</string>
     <string name="vl_cfg_mode3" >РЕЖИМ 3</string>
     <string name="vl_cfg_no" >НЕТ</string>
-    <string name="vl_cfg_op_range" >Рабочий диапазон</string>
+    <string name="cfg_op_range">Рабочий диапазон</string>
     <string name="vl_cfg_yes" >ДА</string>
     <string name="vl_dimmer_cfg_info_txt1" >Режим затемнения / Рабочий диапазон</string>
     <string name="vl_dimmer_cfg_info_txt2" >Отрегулируйте затемнение светодиодного освещения, выбрав соответствующий режим. Также отрегулируйте рабочий диапазон диммера, установив минимальный и максимальный уровень яркости. Минимальное и максимальное значения можно установить, перемещая ползунки, расположенные по обе стороны круга.</string>

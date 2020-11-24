@@ -307,7 +307,7 @@
     <string name="vl_cfg_mode2">MODUS 2</string>
     <string name="vl_cfg_mode3">MODUS 3</string>
     <string name="vl_cfg_no">NEIN</string>
-    <string name="vl_cfg_op_range">Arbeitsumfang</string>
+    <string name="cfg_op_range">Arbeitsumfang</string>
     <string name="vl_cfg_yes">JA</string>
     <string name="vl_dimmer_cfg_info_txt1">Dimmmodus / Arbeitsumfang</string>
     <string name="vl_dimmer_cfg_info_txt2">Passen Sie die Dimmleistung der LED-Beleuchtung an, indem Sie den entsprechenden Modus auswählen. Stellen Sie auch den Arbeitsumfang des Dimmers ein, indem Sie die minimale und maximale Helligkeit einstellen. Der minimale und maximale Wert kann durch Bewegen der Schieberegler auf beiden Seiten des Rads eingestellt werden.</string>
