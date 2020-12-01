@@ -110,7 +110,7 @@
                 android:textColor="@color/vl_infotext" />
 
             <TextView
-                android:id="@+id/tvInfoTxt"
+                android:id="@+id/tvInfoTxt9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -127,7 +127,7 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/imageView10"
                     android:layout_width="20dp"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/ledon" />
@@ -154,7 +154,7 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/imageView11"
                     android:layout_width="20dp"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/ledoff" />
@@ -181,7 +181,7 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/imageView12"
                     android:layout_width="20dp"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/ledalwaysoff" />

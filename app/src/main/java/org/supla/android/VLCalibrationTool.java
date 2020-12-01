@@ -582,7 +582,10 @@ public class VLCalibrationTool implements View.OnClickListener,
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt6)).setTypeface(opensansbold);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt7)).setTypeface(opensans);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt8)).setTypeface(opensans);
-
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt9)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt10)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt11)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt12)).setTypeface(opensans);
         alertDialog.show();
     }
 
@@ -655,7 +658,7 @@ public class VLCalibrationTool implements View.OnClickListener,
                 calCfgRequest(VL_CALCFG_MSG_SET_LED_CONFIG, (byte) (ledConfig & 0xFF), null);
             }
         }
-        
+
         if (v == btnOpRange) {
             displayOpRange(true);
         } else if (v == btnBoost) {
