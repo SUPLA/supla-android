@@ -648,12 +648,14 @@ public class VLCalibrationTool implements View.OnClickListener,
             }
         }
 
-        int ledConfig = viewToLedConfig(v);
-        if (ledConfig != VLCfgParameters.LED_UNKNOWN) {
-            setLedConfig(ledConfig);
-            calCfgRequest(VL_CALCFG_MSG_SET_LED_CONFIG, (byte) (ledConfig & 0xFF), null);
+        if (cfgParameters.getLedConfig() != null) {
+            int ledConfig = viewToLedConfig(v);
+            if (ledConfig != VLCfgParameters.LED_UNKNOWN) {
+                setLedConfig(ledConfig);
+                calCfgRequest(VL_CALCFG_MSG_SET_LED_CONFIG, (byte) (ledConfig & 0xFF), null);
+            }
         }
-
+        
         if (v == btnOpRange) {
             displayOpRange(true);
         } else if (v == btnBoost) {
