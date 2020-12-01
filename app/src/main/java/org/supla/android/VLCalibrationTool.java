@@ -11,10 +11,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ public class VLCalibrationTool implements View.OnClickListener,
     private final static int VL_MSG_SET_BOOST = 0x5B;
     private final static int VL_MSG_SET_BOOST_LEVEL = 0x5C;
     private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
+    private final static int VL_CALCFG_MSG_SET_LED_CONFIG = 0x01FF;
     private final static int UI_REFRESH_LOCK_TIME = 2000;
     private final static int MIN_SEND_DELAY_TIME = 500;
     private final static int DISPLAY_DELAY_TIME = 1000;
@@ -66,6 +69,10 @@ public class VLCalibrationTool implements View.OnClickListener,
     private boolean restoringDefaults;
     private PreloaderPopup preloaderPopup;
     private Timer startConfigurationRetryTimer;
+    private LinearLayout llLedConfig;
+    private AppCompatImageView imgLedOn;
+    private AppCompatImageView imgLedOff;
+    private AppCompatImageView imgLedAlwaysOff;
 
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
@@ -104,6 +111,20 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         btnDmAuto.setVisibility(View.GONE);
         btnBoostAuto.setVisibility(View.GONE);
+
+        llLedConfig = mainView.findViewById(R.id.vlcfgLL4);
+
+        imgLedOn = mainView.findViewById(R.id.vlCfgLedImgOn);
+        imgLedOn.setClickable(true);
+        imgLedOn.setOnClickListener(this);
+
+        imgLedOff = mainView.findViewById(R.id.vlCfgLedImgOff);
+        imgLedOff.setClickable(true);
+        imgLedOff.setOnClickListener(this);
+
+        imgLedAlwaysOff = mainView.findViewById(R.id.vlCfgLedImgAlwaysOff);
+        imgLedAlwaysOff.setClickable(true);
+        imgLedAlwaysOff.setOnClickListener(this);
     }
 
     private void registerMessageHandler() {
@@ -272,6 +293,20 @@ public class VLCalibrationTool implements View.OnClickListener,
                 VLCfgParameters.BOOST_UNKNOWN : boost;
     }
 
+    private int viewToLedConfig(View btn) {
+        int ledConfig = VLCfgParameters.LED_UNKNOWN;
+
+        if (btn == imgLedOn) {
+            ledConfig = VLCfgParameters.LED_ON_WHEN_CONNECTED;
+        } else if (btn == imgLedOff) {
+            ledConfig = VLCfgParameters.LED_OFF_WHEN_CONNECTED;
+        } else if (btn == imgLedAlwaysOff) {
+            ledConfig = VLCfgParameters.LED_ALWAYS_OFF;
+        }
+
+        return ledConfig;
+    }
+
     private Button modeToBtn(int mode) {
         switch (mode) {
             case VLCfgParameters.MODE_AUTO:
@@ -312,6 +347,27 @@ public class VLCalibrationTool implements View.OnClickListener,
         }
 
         btn.setTextColor(textColor);
+    }
+
+    private void setLedBtnApparance(AppCompatImageView img, boolean selected,
+                                    int resIdNormal, int resIdSelected) {
+        if (img == null) {
+            return;
+        }
+
+        Drawable bg =  detailRGB.getResources().getDrawable(selected ? R.drawable.rounded_led_sel_btn
+                : R.drawable.rounded_led_normal_btn);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            img.setBackground(bg);
+        } else {
+            img.setBackgroundDrawable(bg);
+        }
+
+       // float p = 5 * detailRGB.getResources().getSystem().getDisplayMetrics().density;
+
+        img.setImageResource(selected ? resIdSelected : resIdNormal);
+        //img.setPadding(0,(int)p,0,p);
     }
 
     private void setMode(int mode) {
@@ -367,6 +423,25 @@ public class VLCalibrationTool implements View.OnClickListener,
         setBoost(cfgParameters.getBoost());
     }
 
+    private void setLedConfig(int ledConfig) {
+        setLedBtnApparance(imgLedOn,
+                ledConfig == cfgParameters.LED_ON_WHEN_CONNECTED,
+                R.drawable.ledon, R.drawable.ledonwhite);
+
+        setLedBtnApparance(imgLedOff,
+                ledConfig == cfgParameters.LED_OFF_WHEN_CONNECTED,
+                R.drawable.ledoff, R.drawable.ledoffwhite);
+
+        setLedBtnApparance(imgLedAlwaysOff,
+                ledConfig == cfgParameters.LED_ALWAYS_OFF,
+                R.drawable.ledalwaysoff, R.drawable.ledalwaysoffwhite);
+    }
+
+    private void setLedConfig() {
+        setLedConfig(cfgParameters.getLedConfig() != null
+                ? cfgParameters.getLedConfig() : cfgParameters.LED_UNKNOWN);
+    }
+
     private void displayOpRange(boolean display) {
         if (display) {
             setBtnApparance(btnOpRange, R.drawable.vl_tab, Color.BLACK);
@@ -388,6 +463,7 @@ public class VLCalibrationTool implements View.OnClickListener,
         if (force || System.currentTimeMillis() - lastCalCfgTime >= DISPLAY_DELAY_TIME) {
             setMode();
             setBoost();
+            setLedConfig();
             calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
             calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
             calibrationWheel.setMinMax(cfgParameters.getMinimum(), cfgParameters.getMaximum());
@@ -570,6 +646,12 @@ public class VLCalibrationTool implements View.OnClickListener,
                 onBoostChanged(calibrationWheel);
                 displayOpRange(false);
             }
+        }
+
+        int ledConfig = viewToLedConfig(v);
+        if (ledConfig != VLCfgParameters.LED_UNKNOWN) {
+            setLedConfig(ledConfig);
+            calCfgRequest(VL_CALCFG_MSG_SET_LED_CONFIG, (byte) (ledConfig & 0xFF), null);
         }
 
         if (v == btnOpRange) {

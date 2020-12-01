@@ -22,6 +22,11 @@ public class VLCfgParameters {
     public final static int MASK_BOOST_YES_DISABLED = 0x2;
     public final static int MASK_BOOST_NO_DISABLED = 0x4;
 
+    public final static int LED_UNKNOWN = -1;
+    public final static int LED_ON_WHEN_CONNECTED = 0;
+    public final static int LED_OFF_WHEN_CONNECTED = 1;
+    public final static int LED_ALWAYS_OFF = 2;
+
     private short LeftEdge;
     private short RightEdge;
     private short Minimum;
@@ -31,6 +36,7 @@ public class VLCfgParameters {
     private byte Boost;
     private byte BoostMask = (byte) 0xFF;
     private short BoostLevel;
+    private Byte LedConfig = null;
 
     public short getLeftEdge() {
         return LeftEdge;
@@ -98,6 +104,10 @@ public class VLCfgParameters {
         return false;
     }
 
+    public Byte getLedConfig() {
+       return LedConfig;
+    }
+
     private short getShort(byte[] data, int offset) {
         int x = (int) data[offset + 1] & 0xFF;
         x <<= 8;
@@ -106,7 +116,7 @@ public class VLCfgParameters {
     }
 
     public boolean setParams(byte[] data) {
-        if (data == null || data.length != 15) {
+        if (data == null || data.length < 15 || data.length > 17) {
             return false;
         }
 
@@ -119,6 +129,12 @@ public class VLCfgParameters {
         BoostLevel = getShort(data, 10);
         ModeMask = data[13];
         BoostMask = data[14];
+
+        if (data.length >= 17 && data[15] == 2) {
+            LedConfig = Byte.valueOf(data[16]);
+        } else {
+            LedConfig = null;
+        }
 
         return true;
     }

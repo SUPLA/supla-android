@@ -405,9 +405,10 @@
     <string translatable="false" name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
     <string translatable="false" name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
 
-    <string translatable="false" name="led_status_connected">Status - connected</string>
-    <string translatable="false" name="led_status_on">LED ON</string>
-    <string translatable="false" name="led_status_off">LED OFF</string>
+    <string translatable="false" name="status_led">Status LED</string>
+    <string translatable="false" name="info_led_on">The LED is on if there is a connection to the server.</string>
+    <string translatable="false" name="info_led_off">The LED is off if there is a connection to the server.</string>
+    <string translatable="false" name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
     <string translatable="false" name="input">Input</string>
     <string translatable="false" name="monostable">Monostable</string>
     <string translatable="false" name="bistable">Bistable</string>
