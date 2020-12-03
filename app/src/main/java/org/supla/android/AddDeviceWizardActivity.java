@@ -555,6 +555,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         setBtnNextPreloaderVisible(false);
         cleanUp();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            connectToInternet_Q();
+        }
     }
 
     private void setStep(int step) {
@@ -1018,7 +1022,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private void connectToInternet_Q() {
         final NetworkRequest request =
                 new NetworkRequest.Builder()
-                       // .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                         .build();
 
