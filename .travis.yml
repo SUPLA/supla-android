@@ -9,5 +9,9 @@ notifications:
 android:
   components:
     - build-tools-29.0.3
-    - android-28
+    - android-29
     - extra
+  licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
