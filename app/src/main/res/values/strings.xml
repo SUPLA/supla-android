@@ -412,4 +412,5 @@
     <string translatable="false" name="input">Input</string>
     <string translatable="false" name="monostable">Monostable</string>
     <string translatable="false" name="bistable">Bistable</string>
+    <string translatable="false" name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
 </resources>

@@ -403,4 +403,5 @@
     <string name="input">Wejście</string>
     <string name="monostable">Monostabilne</string>
     <string name="bistable">Bistabilne</string>
+    <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
 </resources>
