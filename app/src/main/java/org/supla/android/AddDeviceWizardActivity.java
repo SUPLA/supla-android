@@ -31,13 +31,19 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
+import android.net.NetworkSpecifier;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
@@ -101,6 +107,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private int step;
     private Date step_time;
 
+    private ConnectivityManager.NetworkCallback espNetworkCallback;
+    private ConnectivityManager.NetworkCallback mainNetworkCallback;
+
     private BroadcastReceiver scanResultReceiver;
     private BroadcastReceiver stateChangedReceiver;
 
@@ -146,7 +155,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         tv = findViewById(R.id.wizard_step1_txt2);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             tv.setTypeface(type);
         } else {
             tv.setVisibility(View.GONE);
@@ -346,6 +356,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         removeConfigTask();
         unregisterReceivers();
+        unregisterCallbacks();
         removeIODeviceNetwork();
 
     }
@@ -372,13 +383,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (espConfigTask != null) {
-            // On Android 10, during WiFi configuration activity is paused and resumed
-            return;
-        }
+    protected void onStart() {
+        super.onStart();
 
         cleanUp();
 
@@ -429,7 +435,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                                 break;
                             case STEP_CONNECT:
                             case STEP_CONFIGURE:
-                                timeout = 40;
+                                timeout = 60;
                                 break;
                             case STEP_RECONNECT:
                                 timeout = 25;
@@ -482,8 +488,13 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                 Manifest.permission.CHANGE_WIFI_STATE)
                 != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CHANGE_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+
+
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -492,6 +503,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                     Manifest.permission.ACCESS_WIFI_STATE)
                     || ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CHANGE_WIFI_STATE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CHANGE_NETWORK_STATE)
                     || ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -524,13 +537,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (espConfigTask != null) {
-            // On Android 10, during WiFi configuration activity is paused and resumed
-            return;
-        }
+    protected void onStop() {
+        super.onStop();
 
         if (getVisiblePageId() >= PAGE_STEP_2) {
 
@@ -547,6 +555,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         setBtnNextPreloaderVisible(false);
         cleanUp();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            connectToInternet_Q();
+        }
     }
 
     private void setStep(int step) {
@@ -598,12 +610,29 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
+    private void unregisterCallbacks() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final ConnectivityManager connectivityManager = (ConnectivityManager)
+                    getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if (espNetworkCallback != null) {
+                connectivityManager.unregisterNetworkCallback(espNetworkCallback);
+                espNetworkCallback = null;
+            }
+
+            if (mainNetworkCallback != null) {
+                connectivityManager.unregisterNetworkCallback(mainNetworkCallback);
+                mainNetworkCallback = null;
+            }
+        }
+    }
+
     private void unregisterReceivers() {
 
         if (stateChangedReceiver != null) {
             try {
                 unregisterReceiver(stateChangedReceiver);
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
             stateChangedReceiver = null;
@@ -612,7 +641,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         if (scanResultReceiver != null) {
             try {
                 unregisterReceiver(scanResultReceiver);
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
             scanResultReceiver = null;
@@ -634,10 +663,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         CurrrentSSID = "";
         NetworkID = -1;
 
-        // TODO: Uncomment after raising target api level to 29
-        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             manager.setWifiEnabled(true);
-        //}
+        }
 
         if (manager.isWifiEnabled()) {
 
@@ -730,11 +758,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         if (v == cbSavePassword) {
             Preferences prefs = new Preferences(this);
             prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
-        }  else if (v == btnEditWifiName) {
+        } else if (v == btnEditWifiName) {
 
             setWifiNameEditingEnabled(spWifiList.getAdapter() == null
-                     || spWifiList.getAdapter().getCount() == 0 ? true
-                     : !isWifiNameEditingEnabled());
+                    || spWifiList.getAdapter().getCount() == 0 ? true
+                    : !isWifiNameEditingEnabled());
         }
 
     }
@@ -802,6 +830,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private void startScan(boolean first) {
 
         unregisterReceivers();
+        final AddDeviceWizardActivity wizard = this;
 
         scanResultReceiver = new BroadcastReceiver() {
             @Override
@@ -818,7 +847,17 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                     if (espNetworkName(iodev_SSID)) {
                         match = true;
-                        connect();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            connect_Q();
+                        } else {
+                            if (ContextCompat.checkSelfPermission(wizard,
+                                    Manifest.permission.ACCESS_FINE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED) {
+                                connect();
+                            }
+                        }
+
                         break;
                     }
 
@@ -966,6 +1005,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
+    @RequiresPermission(allOf = {"android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.ACCESS_WIFI_STATE"})
     private int getMaxConfigurationPriority() {
         final List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
         int maxPriority = 0;
@@ -977,6 +1018,100 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         return maxPriority;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void connectToInternet_Q() {
+        final NetworkRequest request =
+                new NetworkRequest.Builder()
+                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .build();
+
+        final ConnectivityManager connectivityManager = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        mainNetworkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                connectivityManager.bindProcessToNetwork(network);
+            }
+
+            @Override
+            public void onUnavailable() {
+                super.onUnavailable();
+                unregisterCallbacks();
+            }
+        };
+        connectivityManager.requestNetwork(request, mainNetworkCallback);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void connect_Q() {
+        setStep(STEP_CONNECT);
+
+        final Preferences prefs = new Preferences(this);
+        final AddDeviceWizardActivity wizard = this;
+
+        final NetworkSpecifier specifier =
+                new WifiNetworkSpecifier.Builder()
+                        .setSsid(iodev_SSID)
+                        .build();
+
+        final NetworkRequest request =
+                new NetworkRequest.Builder()
+                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .setNetworkSpecifier(specifier)
+                        .build();
+
+        final ConnectivityManager connectivityManager = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        espNetworkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+
+                connectivityManager.bindProcessToNetwork(network);
+
+                wizard.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterReceivers();
+                        removeConfigTask();
+
+                        espConfigTask = new ESPConfigureTask();
+                        espConfigTask.setDelegate(wizard);
+
+                        setStep(STEP_CONFIGURE);
+                        espConfigTask.execute(getSelectedSSID(),
+                                edPassword.getText().toString(),
+                                prefs.getServerAddress(),
+                                prefs.getEmail());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onUnavailable() {
+                super.onUnavailable();
+
+                wizard.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterCallbacks();
+                        showError(R.string.wizard_iodev_connect_failed);
+                    }
+                });
+
+            }
+        };
+        connectivityManager.requestNetwork(request, espNetworkCallback);
+    }
+
+    @RequiresPermission(allOf = {"android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.ACCESS_WIFI_STATE"})
     private void connect() {
 
         setStep(STEP_CONNECT);
@@ -1091,6 +1226,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     public void espConfigFinished(final ESPConfigureTask.ConfigResult result) {
 
         unregisterReceivers();
+        unregisterCallbacks();
 
         if (result.resultCode == ESPConfigureTask.RESULT_SUCCESS) {
 
@@ -1158,6 +1294,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         i.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(stateChangedReceiver, i);
         removeIODeviceNetwork();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            connectToInternet_Q();
+        }
 
     }
 

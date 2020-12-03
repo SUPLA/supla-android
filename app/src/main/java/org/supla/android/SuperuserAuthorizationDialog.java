@@ -226,7 +226,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     public void close() {
         unregisterMessageHandler();
-        dialog.hide();
+        dialog.dismiss();
         dialog = null;
         onAuthorizarionResultListener = null;
     }
