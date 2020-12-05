@@ -73,6 +73,7 @@ public class VLCalibrationTool implements View.OnClickListener,
     private AppCompatImageView imgLedOn;
     private AppCompatImageView imgLedOff;
     private AppCompatImageView imgLedAlwaysOff;
+    private TextView tvPicFirmwareVersion;
 
     private long lastCalCfgTime = 0;
     private Handler _sc_msg_handler = null;
@@ -125,6 +126,8 @@ public class VLCalibrationTool implements View.OnClickListener,
         imgLedAlwaysOff = mainView.findViewById(R.id.vlCfgLedImgAlwaysOff);
         imgLedAlwaysOff.setClickable(true);
         imgLedAlwaysOff.setOnClickListener(this);
+
+        tvPicFirmwareVersion = mainView.findViewById(R.id.vlCfgPicFirmwareVersion);
     }
 
     private void registerMessageHandler() {
@@ -468,6 +471,7 @@ public class VLCalibrationTool implements View.OnClickListener,
             calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
             calibrationWheel.setMinMax(cfgParameters.getMinimum(), cfgParameters.getMaximum());
             calibrationWheel.setBoostLevel(cfgParameters.getBoostLevel());
+            tvPicFirmwareVersion.setText(cfgParameters.getPicFirmwareVersion());
         } else {
 
             long delayTime = 1;

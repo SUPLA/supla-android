@@ -9,8 +9,8 @@ android {
         applicationId "org.supla.android"
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 117
-        versionName "2.3.61"
+        versionCode 118
+        versionName "2.3.62"
 
         sourceSets.main {
             jniLibs.srcDir 'src/main/libs'

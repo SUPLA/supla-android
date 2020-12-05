@@ -4,6 +4,7 @@
     <string name="donate_title">Wesprzyj projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+    <string name="forumpage_url">https://forum.supla.org</string>
 
     <string name="version">wersja</string>
 
