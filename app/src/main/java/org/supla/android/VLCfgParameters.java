@@ -37,6 +37,7 @@ public class VLCfgParameters {
     private byte BoostMask = (byte) 0xFF;
     private short BoostLevel;
     private Byte LedConfig = null;
+    private String PicFirmwareVersion;
 
     public short getLeftEdge() {
         return LeftEdge;
@@ -115,8 +116,12 @@ public class VLCfgParameters {
         return (short) x;
     }
 
+    public String getPicFirmwareVersion() {
+        return PicFirmwareVersion == null ? "" : PicFirmwareVersion;
+    }
+
     public boolean setParams(byte[] data) {
-        if (data == null || data.length < 15 || data.length > 17) {
+        if (data == null || data.length < 15 || data.length > 37) {
             return false;
         }
 
@@ -135,6 +140,20 @@ public class VLCfgParameters {
         } else {
             LedConfig = null;
         }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (data.length >= 27) {
+            for(int a=0;a<20;a++) {
+                if (data[17+a] == 0) {
+                    break;
+                } else {
+                    sb.append((char)data[17+a]);
+                }
+            }
+        }
+
+        PicFirmwareVersion = sb.toString();
 
         return true;
     }
