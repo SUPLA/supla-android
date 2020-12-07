@@ -39,6 +39,7 @@ public class Channel extends ChannelBase {
     private short ManufacturerID;
     private short ProductID;
     private int DeviceID;
+    private int position;
 
     public int getChannelId() {
         return getRemoteId();
@@ -82,6 +83,14 @@ public class Channel extends ChannelBase {
 
     public void setDeviceID(int deviceID) {
         DeviceID = deviceID;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     protected int _getOnLine() {
@@ -154,6 +163,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
 
         return values;
     }

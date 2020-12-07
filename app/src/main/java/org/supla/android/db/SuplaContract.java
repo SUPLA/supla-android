@@ -35,6 +35,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_CAPTION = "caption";
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_COLLAPSED = "collapsed";
+        public static final String COLUMN_NAME_SORTING = "sorting";
     }
 
     public static abstract class ChannelEntry implements BaseColumns {
@@ -55,6 +56,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PRODUCTID = "productid";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_PROTOCOLVERSION = "protocolversion";
+        public static final String COLUMN_NAME_POSITION = "position";
 
     }
 

@@ -28,8 +28,10 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,16 +49,24 @@ import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.listview.SectionLayout;
+import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.rx.SubscriptionHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.reactivex.rxjava3.disposables.Disposable;
+
+import static org.supla.android.rx.SubscriptionHelper.subscribe;
 
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
         SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults, ChannelListView.OnChannelButtonClickListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
@@ -71,6 +81,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private ImageView notif_img;
     private TextView notif_text;
     private ChannelStatePopup channelStatePopup;
+
+    // Used in reordering. The initial position of taken item is saved here.
+    private Integer dragInitialPosition;
+    private Disposable dragUpdateDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +129,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dragUpdateDisposable.dispose();
+    }
 
     private boolean SetListCursorAdapter() {
 
@@ -124,6 +143,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             channelLV.setAdapter(channelListViewCursorAdapter);
 
+            channelLV.setOnItemLongClickListener(this::onDragStarted);
+            channelLV.setOnDragListener(new ListViewDragListener(channelLV, this::onDragStopped, this::onDragPositionChanged));
+
             return true;
 
         } else if (channelListViewCursorAdapter.getCursor() == null) {
@@ -132,6 +154,49 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         return false;
+    }
+
+    private boolean onDragStarted(AdapterView<?> parent, View view, int position, long id) {
+        if (channelLV.isDetailSliding()) {
+            dragInitialPosition = null;
+            return false;
+        }
+        dragInitialPosition = position;
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+        view.startDrag(null, shadowBuilder, channelLV.getItemAtPosition(position), 0);
+        return true;
+    }
+
+    private void onDragStopped(int droppedPosition) {
+        channelListViewCursorAdapter.stopReorderingMode();
+        if (dragInitialPosition == null || droppedPosition == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            return;
+        }
+        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
+            // Moving outside of the section not allowed.
+            return;
+        }
+        ListViewCursorAdapter.Item initialPositionItem = channelListViewCursorAdapter.getItemForPosition(dragInitialPosition);
+        ListViewCursorAdapter.Item finalPositionItem = channelListViewCursorAdapter.getItemForPosition(droppedPosition);
+
+        dragUpdateDisposable = subscribe(DbH_ListView.reorderChannels(initialPositionItem, finalPositionItem),
+                () -> channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor()),
+                throwable -> Log.w(TAG, "Channels reordering failed", throwable));
+    }
+
+    private void onDragPositionChanged(int position) {
+        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            channelListViewCursorAdapter.stopReorderingMode();
+            return;
+        }
+        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, position)) {
+            // Moving outside of the section not allowed.
+            channelListViewCursorAdapter.stopReorderingMode();
+            return;
+        }
+        channelListViewCursorAdapter.updateReorderingMode(dragInitialPosition, position);
     }
 
     private boolean SetGroupListCursorAdapter() {
