@@ -28,7 +28,6 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -52,14 +51,9 @@ import org.supla.android.listview.SectionLayout;
 import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-import org.supla.android.rx.SubscriptionHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import io.reactivex.rxjava3.disposables.Disposable;
-
-import static org.supla.android.rx.SubscriptionHelper.subscribe;
 
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
@@ -84,7 +78,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     // Used in reordering. The initial position of taken item is saved here.
     private Integer dragInitialPosition;
-    private Disposable dragUpdateDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,12 +120,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuBar();
         showMenuButton();
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        dragUpdateDisposable.dispose();
     }
 
     private boolean SetListCursorAdapter() {
@@ -180,9 +167,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         ListViewCursorAdapter.Item initialPositionItem = channelListViewCursorAdapter.getItemForPosition(dragInitialPosition);
         ListViewCursorAdapter.Item finalPositionItem = channelListViewCursorAdapter.getItemForPosition(droppedPosition);
 
-        dragUpdateDisposable = subscribe(DbH_ListView.reorderChannels(initialPositionItem, finalPositionItem),
+        subscribe(DbH_ListView.reorderChannels(initialPositionItem, finalPositionItem),
                 () -> channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor()),
-                throwable -> Log.w(TAG, "Channels reordering failed", throwable));
+                throwable -> Trace.w(TAG, "Channels reordering failed", throwable));
     }
 
     private void onDragPositionChanged(int position) {

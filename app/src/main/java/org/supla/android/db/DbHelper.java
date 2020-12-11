@@ -1032,6 +1032,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3,
@@ -1512,6 +1513,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + " "
