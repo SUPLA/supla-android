@@ -177,6 +177,8 @@ public class ChannelLayout extends LinearLayout {
         left_btn.setOnTouchListener(tl);
         right_btn.setOnTouchListener(tl);
 
+        right_onlineStatus.setVisibility(INVISIBLE);
+        left_onlineStatus.setVisibility(INVISIBLE);
     }
 
 

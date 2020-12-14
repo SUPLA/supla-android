@@ -143,7 +143,7 @@ public class VLCfgParameters {
 
         StringBuilder sb = new StringBuilder();
 
-        if (data.length >= 27) {
+        if (data.length >= 37) {
             for(int a=0;a<20;a++) {
                 if (data[17+a] == 0) {
                     break;

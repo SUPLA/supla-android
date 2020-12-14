@@ -36,16 +36,24 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaLocation;
+import org.supla.android.listview.ListViewCursorAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+
+import static org.supla.android.db.ChannelDbHelper.getSortedChannelIds;
+import static org.supla.android.db.ChannelDbHelper.updateChannelsOrder;
 
 
 public class DbHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = DbHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "supla.db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static final String M_DATABASE_NAME = "supla_measurements.db";
     private Context context;
     private boolean measurements;
@@ -93,7 +101,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
-                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " INTEGER NOT NULL default 0)";
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " INTEGER NOT NULL default 0," +
+                SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " TEXT NOT NULL default 'DEFAULT')";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
@@ -117,7 +126,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID + " SMALLINT NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + " SMALLINT NOT NULL," +
                 SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
-                SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL)";
+                SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + " INTEGER NOT NULL," +
+                SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + " INTEGER NOT NULL default 0)";
 
         execSQL(db, SQL_CREATE_CHANNEL_TABLE);
         createIndex(db, SuplaContract.ChannelEntry.TABLE_NAME,
@@ -182,6 +192,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", " +
                 "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " " +
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + ", " +
                 "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " " +
@@ -724,6 +735,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " REAL NULL");
     }
 
+    private void upgradeToV15(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
+                + " INTEGER NOT NULL default 0");
+        addColumn(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_SORTING
+                + " TEXT NOT NULL default 'DEFAULT'");
+    }
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -794,6 +814,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     case 13:
                         upgradeToV14(db);
                         break;
+                    case 14:
+                        upgradeToV15(db);
+                        break;
                 }
             }
 
@@ -813,7 +836,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
-                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED,
+                SuplaContract.LocationEntry.COLUMN_NAME_SORTING
         };
 
         String selection = SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = ?";
@@ -857,6 +881,7 @@ public class DbHelper extends SQLiteOpenHelper {
             location = new Location();
             location.AssignSuplaLocation(suplaLocation);
             location.setVisible(1);
+            location.setSorting(Location.SortingType.DEFAULT);
 
             db = getWritableDatabase();
             db.insert(
@@ -1007,6 +1032,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3,
@@ -1111,6 +1137,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 channel = new Channel();
                 channel.Assign(suplaChannel);
                 channel.setVisible(1);
+                if (location.getSorting() == Location.SortingType.DEFAULT) {
+                    channel.setPosition(0);
+                } else {
+                    channel.setPosition(getChannelCountForLocation(location.getLocationId()) + 1);
+                }
 
                 db = getWritableDatabase();
                 db.insert(
@@ -1126,6 +1157,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
                 channel.Assign(suplaChannel);
                 channel.setVisible(1);
+                if (channel.getLocationId() != suplaChannel.LocationID) {
+                    // channel changed location - position update needed.
+                    if (location.getSorting() == Location.SortingType.DEFAULT) {
+                        channel.setPosition(0);
+                    } else {
+                        channel.setPosition(getChannelCountForLocation(location.getLocationId()) + 1);
+                    }
+                }
 
                 updateDbItem(db, channel, SuplaContract.ChannelEntry._ID,
                         SuplaContract.ChannelEntry.TABLE_NAME, channel.getId());
@@ -1393,9 +1432,17 @@ public class DbHelper extends SQLiteOpenHelper {
         return count > 0;
     }
 
-    public int getChannelCount() {
+    public int getChannelCountForLocation(int locationId) {
+        return getChannelCount(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+    }
 
-        String selection = "SELECT count(*) FROM " + SuplaContract.ChannelEntry.TABLE_NAME;
+    public int getChannelCount() {
+        return getChannelCount("1 = 1");
+    }
+
+    private int getChannelCount(String where) {
+
+        String selection = "SELECT count(*) FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " WHERE " + where;
 
         int count;
 
@@ -1466,6 +1513,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION + " "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1 + " "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
                 + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2 + " "
@@ -1481,17 +1530,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
                 + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
                 + WHERE
-                + " ORDER BY " + OrderBY;
+                + " ORDER BY " + OrderBY + " COLLATE LOCALIZED ASC"; // For proper ordering of language special characters like ą, ł, ü, ö
 
         return db.rawQuery(sql, null);
     }
 
     private Cursor getChannelListCursor(String WHERE) {
-        String OrderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
 
-        return getChannelListCursor(WHERE, OrderBY);
+        return getChannelListCursor(WHERE, orderBY);
     }
 
     public Cursor getChannelListCursor() {
@@ -1505,7 +1555,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + " IN ( SELECT " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
                 + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME
                 + " WHERE " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
-                + " = " + Integer.toString(groupId)
+                + " = " + groupId
                 + " AND " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
                 + " > 0 ) ";
 
@@ -2591,5 +2641,37 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return result;
+    }
+
+    public Completable reorderChannels(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
+        if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
+            return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
+        }
+        return Completable.fromRunnable(() -> doReorderChannels(firstItem, secondItem));
+    }
+
+    private void doReorderChannels(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
+        List<Long> orderedItems = getSortedChannelIds(getChannelListCursor("C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + firstItem.locationId));
+        // localize items to swipe in new list
+        int initialPosition = -1, finalPosition = -1;
+        for (int i = 0; i < orderedItems.size(); i++) {
+            Long id = orderedItems.get(i);
+            if (id == firstItem.id) {
+                initialPosition = i;
+            }
+            if (id == secondItem.id) {
+                finalPosition = i;
+            }
+        }
+        if (initialPosition < 0 || finalPosition < 0) {
+            throw new IllegalArgumentException("Swap items not found");
+        }
+        // Shift items in the table
+        Long removedId = orderedItems.remove(initialPosition );
+        orderedItems.add(finalPosition, removedId);
+
+        try (SQLiteDatabase db = getWritableDatabase()) {
+            updateChannelsOrder(db, orderedItems, firstItem.locationId);
+        }
     }
 }
