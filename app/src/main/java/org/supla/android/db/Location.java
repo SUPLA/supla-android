@@ -23,6 +23,8 @@ import android.database.Cursor;
 
 import org.supla.android.lib.SuplaLocation;
 
+import java.util.Arrays;
+
 public class Location extends DbItem {
 
     private int LocationId;
@@ -31,6 +33,7 @@ public class Location extends DbItem {
     private int collapsed; // 0 - channels visible
     // 0x1 - channels collapsed
     // 0x2 - channel groups collapsed
+    private SortingType sorting;
 
     public int getLocationId() {
         return LocationId;
@@ -64,6 +67,14 @@ public class Location extends DbItem {
         this.collapsed = collapsed;
     }
 
+    public SortingType getSorting() {
+        return sorting;
+    }
+
+    public void setSorting(SortingType sorting) {
+        this.sorting = sorting;
+    }
+
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
@@ -71,6 +82,7 @@ public class Location extends DbItem {
         setCaption(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE)));
         setCollapsed(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED)));
+        setSorting(SortingType.fromString(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORTING))));
     }
 
     public void AssignSuplaLocation(SuplaLocation location) {
@@ -94,7 +106,22 @@ public class Location extends DbItem {
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION, getCaption());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED, getCollapsed());
+        values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORTING, getSorting().name());
 
         return values;
+    }
+
+    public enum SortingType {
+        DEFAULT, USER_DEFINED;
+
+        public static SortingType fromString(String text) {
+            for (SortingType sortingType : values()) {
+                if (sortingType.name().equals(text)) {
+                    return sortingType;
+                }
+            }
+
+            return DEFAULT;
+        }
     }
 }

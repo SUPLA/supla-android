@@ -39,6 +39,7 @@ public class Channel extends ChannelBase {
     private short ManufacturerID;
     private short ProductID;
     private int DeviceID;
+    private int position;
 
     public int getChannelId() {
         return getRemoteId();
@@ -84,6 +85,14 @@ public class Channel extends ChannelBase {
         DeviceID = deviceID;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     protected int _getOnLine() {
         return Value != null && Value.getOnLine() ? 100 : 0;
     }
@@ -123,6 +132,7 @@ public class Channel extends ChannelBase {
         setProductID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
         setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
+        setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION)));
 
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
@@ -154,6 +164,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
 
         return values;
     }

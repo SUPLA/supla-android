@@ -27,6 +27,11 @@ public class Trace
         if ( LOGGING_LEVEL >=2) Log.w(tag, msg);
     }
 
+    public static void w(String tag, String msg, Throwable throwable)
+    {
+        if ( LOGGING_LEVEL >=2) Log.w(tag, msg, throwable);
+    }
+
     public static void i(String tag, String msg)
     {
         if ( LOGGING_LEVEL >=3) Log.i(tag,msg);

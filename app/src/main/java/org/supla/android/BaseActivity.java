@@ -42,8 +42,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 @SuppressLint("registered")
 public class BaseActivity extends Activity {
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     protected static Activity CurrentActivity = null;
     private static Date BackgroundTime = null;
@@ -110,6 +119,12 @@ public class BaseActivity extends Activity {
                 }
             }, 1000, 1000);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        disposables.clear();
     }
 
     protected void RegisterMessageHandler() {
@@ -349,5 +364,12 @@ public class BaseActivity extends Activity {
     }
 
     protected void onZwaveSetWakeUpTimeResult(int result) {
+    }
+
+    protected void subscribe(Completable completable, Action onComplete, Consumer<? super Throwable> onError) {
+        disposables.add(completable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onComplete, onError));
     }
 }
