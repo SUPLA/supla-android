@@ -16,13 +16,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
+public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener {
     private Context context;
     private AlertDialog dialog;
     private Button btnCancel;
@@ -32,7 +33,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private EditText edEmail;
     private EditText edPassword;
     private TextView tvErrorMessage;
-    private Handler _sc_msg_handler = null;
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
@@ -91,55 +91,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         onClick(btnOK);
     }
 
-    private void registerMessageHandler() {
-        if (_sc_msg_handler != null)
-            return;
-
-        final SuperuserAuthorizationDialog dialog = this;
-
-        _sc_msg_handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
-                if (_msg != null
-                        && _msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
-
-                    if ((!preAuthorization || _msg.isSuccess())
-                            && onAuthorizarionResultListener != null) {
-                        onAuthorizarionResultListener
-                                .onSuperuserOnAuthorizarionResult(dialog,
-                                        _msg.isSuccess(), _msg.getCode());
-                    }
-
-                    if (preAuthorization) {
-                        ShowError("");
-                        edPassword.setText("");
-                        preAuthorization = false;
-                    } else {
-                        if (!_msg.isSuccess()) {
-                            switch (_msg.getCode()) {
-                                case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                                    ShowError(R.string.status_bad_credentials);
-                                    break;
-                                case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-                                    ShowError(R.string.status_temporarily_unavailable);
-                                    break;
-                                default:
-                                    ShowError(R.string.status_unknown_err);
-                                    break;
-                            }
-
-                        }
-                    }
-
-
-                }
-            }
-        };
-
-        SuplaApp.getApp().addMsgReceiver(_sc_msg_handler);
-    }
-
     public void ShowError(String msg) {
         cancelTimeoutTimer();
         tvErrorMessage.setText(msg);
@@ -165,7 +116,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             btnOK.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             tvErrorMessage.setVisibility(View.INVISIBLE);
-            registerMessageHandler();
+            SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
 
             cancelTimeoutTimer();
             timeoutTimer = new Timer();
@@ -203,16 +154,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         }
     }
 
-    private void unregisterMessageHandler() {
-        if (_sc_msg_handler != null) {
-            SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
-            _sc_msg_handler = null;
-        }
-    }
-
     @Override
     public void onCancel(DialogInterface dialogInterface) {
-        unregisterMessageHandler();
+        SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
 
         if (onAuthorizarionResultListener != null) {
             onAuthorizarionResultListener.authorizationCanceled();
@@ -225,7 +169,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     public void close() {
-        unregisterMessageHandler();
+        SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
         dialog.dismiss();
         dialog = null;
         onAuthorizarionResultListener = null;
@@ -259,6 +203,43 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     public boolean isShowing() {
         return dialog != null && dialog.isShowing();
+    }
+
+    @Override
+    public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
+        if (msg != null
+                && msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
+
+            if ((!preAuthorization || msg.isSuccess())
+                    && onAuthorizarionResultListener != null) {
+                onAuthorizarionResultListener
+                        .onSuperuserOnAuthorizarionResult(this,
+                                msg.isSuccess(), msg.getCode());
+            }
+
+            if (preAuthorization) {
+                ShowError("");
+                edPassword.setText("");
+                preAuthorization = false;
+            } else {
+                if (!msg.isSuccess()) {
+                    switch (msg.getCode()) {
+                        case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
+                            ShowError(R.string.status_bad_credentials);
+                            break;
+                        case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
+                            ShowError(R.string.status_temporarily_unavailable);
+                            break;
+                        default:
+                            ShowError(R.string.status_unknown_err);
+                            break;
+                    }
+
+                }
+            }
+
+
+        }
     }
 
     public interface OnAuthorizarionResultListener {

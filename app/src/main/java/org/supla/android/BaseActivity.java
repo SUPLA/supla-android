@@ -27,6 +27,7 @@ import android.os.Message;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaEvent;
@@ -50,14 +51,13 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @SuppressLint("registered")
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     protected static Activity CurrentActivity = null;
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
-    private Handler _sc_msg_handler = null;
 
     public static long getBackgroundTime() {
 
@@ -127,139 +127,124 @@ public class BaseActivity extends Activity {
         disposables.clear();
     }
 
+    @Override
+    public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
+        switch (msg.getType()) {
+            case SuplaClientMsg.onConnecting:
+            case SuplaClientMsg.onRegistering:
+            case SuplaClientMsg.onRegistered:
+            case SuplaClientMsg.onRegisterError:
+            case SuplaClientMsg.onDisconnected:
+            case SuplaClientMsg.onConnected:
+            case SuplaClientMsg.onVersionError:
+                beforeStatusMsg();
+                break;
+        }
+
+        switch (msg.getType()) {
+            case SuplaClientMsg.onDataChanged:
+                onDataChangedMsg(msg.getChannelId(),
+                        msg.getChannelGroupId(), msg.isExtendedValue());
+                break;
+            case SuplaClientMsg.onConnecting:
+                onConnectingMsg();
+                break;
+            case SuplaClientMsg.onRegistering:
+                onRegisteringMsg();
+                break;
+            case SuplaClientMsg.onRegistered:
+                onRegisteredMsg();
+                break;
+            case SuplaClientMsg.onRegisterError:
+                onRegisterErrorMsg(msg.getRegisterError());
+                break;
+            case SuplaClientMsg.onDisconnected:
+                onDisconnectedMsg();
+                break;
+            case SuplaClientMsg.onConnected:
+                onConnectedMsg();
+                break;
+            case SuplaClientMsg.onVersionError:
+                onVersionErrorMsg(msg.getVersionError());
+                break;
+            case SuplaClientMsg.onEvent:
+                onEventMsg(msg.getEvent());
+                break;
+            case SuplaClientMsg.onConnError:
+                onConnErrorMsg(msg.getConnError());
+                break;
+            case SuplaClientMsg.onRegistrationEnabled:
+                onRegistrationEnabled(msg.getRegistrationEnabled());
+                break;
+            case SuplaClientMsg.onOAuthTokenRequestResult:
+                onOAuthTokenRequestResult(msg.getOAuthToken());
+                break;
+            case SuplaClientMsg.onCalCfgResult:
+                onCalCfgResult(msg.getChannelId(),
+                        msg.getCommand(),
+                        msg.getResult(),
+                        msg.getData());
+                break;
+            case SuplaClientMsg.onSuperuserAuthorizationResult:
+                onSuperuserAuthorizationResult(msg.isSuccess(), msg.getResult());
+                break;
+            case SuplaClientMsg.onChannelState:
+                onChannelState(msg.getChannelState());
+                break;
+            case SuplaClientMsg.onChannelBasicCfg:
+                onChannelBasicCfg(msg.getChannelBasicCfg());
+                break;
+            case SuplaClientMsg.onChannelFunctionSetResult:
+                onChannelFunctionSetResult(msg.getChannelId(), msg.getFunc(), msg.getCode());
+                break;
+            case SuplaClientMsg.onChannelCaptionSetResult:
+                onChannelCaptionSetResult(msg.getChannelId(), msg.getText(), msg.getCode());
+                break;
+            case SuplaClientMsg.onClientsReconnectResult:
+                onClientsReconnectResult(msg.getCode());
+                break;
+            case SuplaClientMsg.onSetRegistrationEnabledResult:
+                onSetRegistrationEnabledResult(msg.getCode());
+                break;
+            case SuplaClientMsg.onZWaveResetAndClearResult:
+                onZWaveResetAndClearResult(msg.getResult());
+                break;
+            case SuplaClientMsg.onZWaveAddNodeResult:
+                onZWaveAddNodeResult(msg.getResult(), msg.getNode());
+                break;
+            case SuplaClientMsg.onZWaveRemoveNodeResult:
+                onZWaveRemoveNodeResult(msg.getResult(), msg.getNodeId());
+                break;
+            case SuplaClientMsg.onZWaveGetNodeListResult:
+                onZWaveGetNodeListResult(msg.getResult(), msg.getNode());
+                break;
+            case SuplaClientMsg.onZWaveGetAssignedNodeIdResult:
+                onZWaveGetAssignedNodeIdResult(msg.getResult(), msg.getNodeId());
+                break;
+            case SuplaClientMsg.onZWaveAssignNodeIdResult:
+                onZWaveAssignNodeIdResult(msg.getResult(), msg.getNodeId());
+                break;
+            case SuplaClientMsg.onZWaveWakeUpSettingsReport:
+                onZWaveWakeUpSettingsReport(msg.getResult(), msg.getWakeUpSettings());
+                break;
+            case SuplaClientMsg.onZWaveSetWakeUpTimeResult:
+                onZwaveSetWakeUpTimeResult(msg.getResult());
+                break;
+            case SuplaClientMsg.onCalCfgProgressReport:
+                onCalCfgProgressReport(msg.getChannelId(),
+                        msg.getCommand(), msg.getProgress());
+                break;
+        }
+    }
+
     protected void RegisterMessageHandler() {
-
-        if (_sc_msg_handler != null)
-            return;
-
-        _sc_msg_handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-
-                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
-
-                switch (_msg.getType()) {
-                    case SuplaClientMsg.onConnecting:
-                    case SuplaClientMsg.onRegistering:
-                    case SuplaClientMsg.onRegistered:
-                    case SuplaClientMsg.onRegisterError:
-                    case SuplaClientMsg.onDisconnected:
-                    case SuplaClientMsg.onConnected:
-                    case SuplaClientMsg.onVersionError:
-                        beforeStatusMsg();
-                        break;
-                }
-
-                switch (_msg.getType()) {
-                    case SuplaClientMsg.onDataChanged:
-                        onDataChangedMsg(_msg.getChannelId(),
-                                _msg.getChannelGroupId(), _msg.isExtendedValue());
-                        break;
-                    case SuplaClientMsg.onConnecting:
-                        onConnectingMsg();
-                        break;
-                    case SuplaClientMsg.onRegistering:
-                        onRegisteringMsg();
-                        break;
-                    case SuplaClientMsg.onRegistered:
-                        onRegisteredMsg();
-                        break;
-                    case SuplaClientMsg.onRegisterError:
-                        onRegisterErrorMsg(_msg.getRegisterError());
-                        break;
-                    case SuplaClientMsg.onDisconnected:
-                        onDisconnectedMsg();
-                        break;
-                    case SuplaClientMsg.onConnected:
-                        onConnectedMsg();
-                        break;
-                    case SuplaClientMsg.onVersionError:
-                        onVersionErrorMsg(_msg.getVersionError());
-                        break;
-                    case SuplaClientMsg.onEvent:
-                        onEventMsg(_msg.getEvent());
-                        break;
-                    case SuplaClientMsg.onConnError:
-                        onConnErrorMsg(_msg.getConnError());
-                        break;
-                    case SuplaClientMsg.onRegistrationEnabled:
-                        onRegistrationEnabled(_msg.getRegistrationEnabled());
-                        break;
-                    case SuplaClientMsg.onOAuthTokenRequestResult:
-                        onOAuthTokenRequestResult(_msg.getOAuthToken());
-                        break;
-                    case SuplaClientMsg.onCalCfgResult:
-                        onCalCfgResult(_msg.getChannelId(),
-                                _msg.getCommand(),
-                                _msg.getResult(),
-                                _msg.getData());
-                        break;
-                    case SuplaClientMsg.onSuperuserAuthorizationResult:
-                        onSuperuserAuthorizationResult(_msg.isSuccess(), _msg.getResult());
-                        break;
-                    case SuplaClientMsg.onChannelState:
-                        onChannelState(_msg.getChannelState());
-                        break;
-                    case SuplaClientMsg.onChannelBasicCfg:
-                        onChannelBasicCfg(_msg.getChannelBasicCfg());
-                        break;
-                    case SuplaClientMsg.onChannelFunctionSetResult:
-                        onChannelFunctionSetResult(_msg.getChannelId(), _msg.getFunc(), _msg.getCode());
-                        break;
-                    case SuplaClientMsg.onChannelCaptionSetResult:
-                        onChannelCaptionSetResult(_msg.getChannelId(), _msg.getText(), _msg.getCode());
-                        break;
-                    case SuplaClientMsg.onClientsReconnectResult:
-                        onClientsReconnectResult(_msg.getCode());
-                        break;
-                    case SuplaClientMsg.onSetRegistrationEnabledResult:
-                        onSetRegistrationEnabledResult(_msg.getCode());
-                        break;
-                    case SuplaClientMsg.onZWaveResetAndClearResult:
-                        onZWaveResetAndClearResult(_msg.getResult());
-                        break;
-                    case SuplaClientMsg.onZWaveAddNodeResult:
-                        onZWaveAddNodeResult(_msg.getResult(), _msg.getNode());
-                        break;
-                    case SuplaClientMsg.onZWaveRemoveNodeResult:
-                        onZWaveRemoveNodeResult(_msg.getResult(), _msg.getNodeId());
-                        break;
-                    case SuplaClientMsg.onZWaveGetNodeListResult:
-                        onZWaveGetNodeListResult(_msg.getResult(), _msg.getNode());
-                        break;
-                    case SuplaClientMsg.onZWaveGetAssignedNodeIdResult:
-                        onZWaveGetAssignedNodeIdResult(_msg.getResult(), _msg.getNodeId());
-                        break;
-                    case SuplaClientMsg.onZWaveAssignNodeIdResult:
-                        onZWaveAssignNodeIdResult(_msg.getResult(), _msg.getNodeId());
-                        break;
-                    case SuplaClientMsg.onZWaveWakeUpSettingsReport:
-                        onZWaveWakeUpSettingsReport(_msg.getResult(), _msg.getWakeUpSettings());
-                        break;
-                    case SuplaClientMsg.onZWaveSetWakeUpTimeResult:
-                        onZwaveSetWakeUpTimeResult(_msg.getResult());
-                        break;
-                    case SuplaClientMsg.onCalCfgProgressReport:
-                        onCalCfgProgressReport(_msg.getChannelId(),
-                                _msg.getCommand(), _msg.getProgress());
-                        break;
-                }
-
-            }
-        };
-
-        SuplaApp.getApp().addMsgReceiver(_sc_msg_handler);
+        SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (_sc_msg_handler != null) {
-            SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
-            _sc_msg_handler = null;
-        }
-
+        SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
     }
 
     protected void beforeStatusMsg() {
@@ -372,4 +357,6 @@ public class BaseActivity extends Activity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onComplete, onError));
     }
+
+
 }
