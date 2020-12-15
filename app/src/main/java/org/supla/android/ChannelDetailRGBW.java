@@ -189,6 +189,11 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
                 }
             } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_ZAMEL) {
                 zamel = true;
+                if (c.getProductID() == SuplaConst.ZAM_PRODID_DIW_01
+                     && (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
+                    dimmerCalibrationTool = new DiwCalibrationTool(this);
+                }
             }
         }
 

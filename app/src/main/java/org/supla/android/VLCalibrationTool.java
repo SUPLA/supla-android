@@ -373,6 +373,11 @@ public class VLCalibrationTool extends DimmerCalibrationTool
     }
 
     @Override
+    protected int getLayoutResId() {
+        return R.layout.vl_calibration;
+    }
+
+    @Override
     protected void calCfgRequest(int cmd) {
         switch (cmd) {
             case VL_MSG_SET_MINIMUM:

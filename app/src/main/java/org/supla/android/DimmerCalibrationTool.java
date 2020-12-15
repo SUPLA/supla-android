@@ -24,8 +24,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +63,7 @@ public abstract class DimmerCalibrationTool
         }
 
         this.detailRGB = detailRGB;
-        mainView = (RelativeLayout) detailRGB.inflateLayout(R.layout.vl_calibration);
+        mainView = (RelativeLayout) detailRGB.inflateLayout(getLayoutResId());
         mainView.setVisibility(View.GONE);
         detailRGB.addView(mainView);
     }
@@ -455,6 +453,7 @@ public abstract class DimmerCalibrationTool
         }
     }
 
+    protected abstract int getLayoutResId();
     protected abstract void showInformationDialog();
     protected abstract void displayCfgParameters();
     protected abstract void doRestore();

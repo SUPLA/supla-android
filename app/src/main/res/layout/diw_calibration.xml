@@ -7,6 +7,18 @@
     android:background="@color/diw_settings_bg">
 
     <Button
+        android:id="@+id/diwBtnInfo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/vlinfo"
+        android:visibility="visible" />
+
+    <Button
         android:id="@+id/diwBtnOK"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -184,6 +196,15 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ledalwaysoff" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/diwCfgSTMFirmwareVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="right"
+                android:textSize="10sp" />
 
         </LinearLayout>
 
