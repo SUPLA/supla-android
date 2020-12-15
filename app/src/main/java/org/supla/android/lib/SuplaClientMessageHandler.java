@@ -49,10 +49,12 @@ public class SuplaClientMessageHandler {
     }
 
     private void onSuplaClientMessage(SuplaClientMsg msg) {
+        ArrayList<OnSuplaClientMessageListener>listeners;
         synchronized (this) {
-            for (OnSuplaClientMessageListener listener: listeners) {
-                listener.onSuplaClientMessageReceived(msg);
-            }
+            listeners = new ArrayList<>(this.listeners);
+        }
+        for (OnSuplaClientMessageListener listener: listeners) {
+            listener.onSuplaClientMessageReceived(msg);
         }
     }
 
