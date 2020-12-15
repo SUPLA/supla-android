@@ -20,7 +20,7 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
         implements SuplaRangeCalibrationWheel.OnChangeListener {
 
     public final static int DIW_CMD_ENTER_CFG_MODE = 0x1;
-    public final static int DIW_CMD_CONFIGURATION_REPORT = 0x1;
+    public final static int DIW_CMD_CONFIGURATION_REPORT = 0x2;
     public final static int DIW_CMD_EXIT_CFG_MODE = 0x3;
     public final static int DIW_CMD_SET_MINIMUM = 0x4;
     public final static int DIW_CMD_SET_MAXIMUM = 0x5;
