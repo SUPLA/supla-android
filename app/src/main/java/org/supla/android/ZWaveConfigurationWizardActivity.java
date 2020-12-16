@@ -27,6 +27,7 @@ import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -61,7 +62,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private Channel mSelectedCahnnel;
     private ArrayList<SuplaChannelBasicCfg> mChannelBasicCfgList;
     private ArrayList<Integer> mDeviceList;
-    private ArrayList<Channel> mChannelList;
+    private List<Channel> mChannelList;
     private Spinner mFunctionListSpinner;
     private ArrayList<Integer> mFuncList;
     private ArrayList<Integer> mDevicesToRestart;
