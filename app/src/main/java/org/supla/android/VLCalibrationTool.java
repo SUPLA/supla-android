@@ -115,16 +115,7 @@ public class VLCalibrationTool extends DimmerCalibrationTool
         switch (Command) {
             case VL_MSG_CONFIGURATION_ACK:
                 if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && !restoringDefaults) {
-                    NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
-                    if (activity!=null) {
-                        activity.showBackButton();
-                    }
 
-                    authDialogClose();
-
-                    displayCfgParameters(true);
-                    getDetailContentView().setVisibility(View.GONE);
-                    getMainView().setVisibility(View.VISIBLE);
                     setConfigStarted(true);
 
                     closePreloaderPopup();
@@ -328,9 +319,15 @@ public class VLCalibrationTool extends DimmerCalibrationTool
         calCfgDelayedRequest(VL_MSG_RESTORE_DEFAULTS);
     }
 
+    private void calCfgConfigComplete(boolean save) {
+        byte[] data = new byte[1];
+        data[0] = (byte)(save ? 1 : 0);
+        getDetailRGB().deviceCalCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
+    }
+
     @Override
     protected void saveChanges() {
-        calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte) 1, null);
+        calCfgConfigComplete(true);
     }
 
     @Override
@@ -413,8 +410,7 @@ public class VLCalibrationTool extends DimmerCalibrationTool
         stopConfigurationRetryTimer();
 
         if (isConfigStarted()) {
-            byte[] data = new byte[1];
-            getDetailRGB().deviceCalCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
+            calCfgConfigComplete(false);
         }
     }
 }

@@ -36,7 +36,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class DimmerCalibrationTool
-        implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener, SuplaClientMessageHandler.OnSuplaClientMessageListener {
+        implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
+        SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
     private final static int DISPLAY_DELAY_TIME = 1000;
     private final static int MIN_SEND_DELAY_TIME = 500;
@@ -143,6 +144,16 @@ public abstract class DimmerCalibrationTool
 
     protected void setConfigStarted(boolean started) {
         configStartedAtTime = started ? System.currentTimeMillis() : 0;
+        NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
+        if (activity!=null) {
+            activity.showBackButton();
+        }
+
+        authDialogClose();
+
+        displayCfgParameters(true);
+        getDetailContentView().setVisibility(View.GONE);
+        getMainView().setVisibility(View.VISIBLE);
     }
 
     protected void closePreloaderPopup() {
