@@ -405,4 +405,8 @@
     <string name="monostable">Monostabilne</string>
     <string name="bistable">Bistabilne</string>
     <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
+    <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
+    <string name="diw_cfg_info_in_options">Opcje wejścia</string>
+    <string translatable="false" name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maximum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
+    <string translatable="false" name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
 </resources>

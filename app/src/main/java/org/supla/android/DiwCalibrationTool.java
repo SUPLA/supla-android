@@ -1,10 +1,16 @@
 package org.supla.android;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.AppCompatImageView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -91,6 +97,32 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
 
     @Override
     protected void showInformationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        ViewGroup viewGroup = getDetailRGB().findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(
+                getContext()).inflate(R.layout.diw_config_info,
+                viewGroup, false);
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+
+        dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
+
+        Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
+        Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
+        Typeface opensans = SuplaApp.getApp().getTypefaceOpenSansRegular();
+
+        ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt6)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt7)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt8)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt9)).setTypeface(opensans);
+
+        alertDialog.show();
     }
 
     @Override

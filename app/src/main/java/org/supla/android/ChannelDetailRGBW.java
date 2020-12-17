@@ -475,7 +475,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private void showInformationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         ViewGroup viewGroup = findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.vl_dimmer_info,
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dimmer_info,
                 viewGroup, false);
         builder.setView(dialogView);
         final AlertDialog alertDialog = builder.create();
