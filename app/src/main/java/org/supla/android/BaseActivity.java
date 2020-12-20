@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
@@ -56,8 +57,10 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     protected static Activity CurrentActivity = null;
+
     private static Date BackgroundTime = null;
     private static Timer bgTimer = null;
+    private DbHelper dbHelper;
 
     public static long getBackgroundTime() {
 
@@ -72,6 +75,7 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = DbHelper.getInstance(this);
         SuplaApp.getApp().initTypefaceCollection(this);
     }
 
@@ -349,6 +353,10 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     }
 
     protected void onZwaveSetWakeUpTimeResult(int result) {
+    }
+
+    protected DbHelper getDbHelper() {
+        return dbHelper;
     }
 
     protected void subscribe(Completable completable, Action onComplete, Consumer<? super Throwable> onError) {

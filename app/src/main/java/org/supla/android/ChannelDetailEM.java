@@ -43,6 +43,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaConst;
@@ -404,7 +405,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             double currentProduction;
             double currentCost;
 
-            DbHelper mDBH = new DbHelper(getContext(), true);
+            MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
             if (mDBH.electricityMeterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = sum.getTotalForwardActiveEnergy();

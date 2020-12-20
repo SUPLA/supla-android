@@ -26,8 +26,8 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
                 true);
     }
 
-    protected void EraseMeasurements(SQLiteDatabase db) {
-        getMeasurementsDbH().deleteImpulseCounterMeasurements(db, getChannelId());
+    protected void eraseMeasurements() {
+        getMeasurementsDbH().deleteImpulseCounterMeasurements(getChannelId());
     }
 
     protected IncrementalMeasurementItem newObject() {
@@ -40,19 +40,19 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
 
     protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
-        return getMeasurementsDbH().getOlderUncalculatedImpulseCounterMeasurement(db,
+        return getMeasurementsDbH().getOlderUncalculatedImpulseCounterMeasurement(
                 channelId,
                 timestamp);
     }
 
     protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
                                                              int channelId) {
-        getMeasurementsDbH().deleteUncalculatedImpulseCounterMeasurements(db,
+        getMeasurementsDbH().deleteUncalculatedImpulseCounterMeasurements(
                 channelId);
     }
 
     protected void addIncrementalMeasurement(SQLiteDatabase db,
                                              IncrementalMeasurementItem item) {
-        getMeasurementsDbH().addImpulseCounterMeasurement(db, (ImpulseCounterMeasurementItem) item);
+        getMeasurementsDbH().addImpulseCounterMeasurement((ImpulseCounterMeasurementItem) item);
     }
 }

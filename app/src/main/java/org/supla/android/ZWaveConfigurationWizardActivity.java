@@ -237,10 +237,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     private void loadChannelList() {
         setBtnNextEnabled(false);
-        DbHelper dbHelper = new DbHelper(this);
 
         mDeviceList.clear();
-        mChannelList = dbHelper.getZWaveBridgeChannels();
+        mChannelList = getDbHelper().getZWaveBridgeChannels();
 
         for (Channel channel : mChannelList) {
             boolean exists = false;
@@ -491,8 +490,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     private void updateSelectedChannel() {
         if (mSelectedCahnnel != null) {
-            DbHelper dbHelper = new DbHelper(this);
-            mSelectedCahnnel = dbHelper.getChannel(mSelectedCahnnel.getChannelId());
+            mSelectedCahnnel = getDbHelper().getChannel(mSelectedCahnnel.getChannelId());
         }
     }
 

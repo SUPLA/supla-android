@@ -45,8 +45,8 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
                 true);
     }
 
-    protected void EraseMeasurements(SQLiteDatabase db) {
-        getMeasurementsDbH().deleteElectricityMeasurements(db, getChannelId());
+    protected void eraseMeasurements() {
+        getMeasurementsDbH().deleteElectricityMeasurements(getChannelId());
     }
 
     protected IncrementalMeasurementItem newObject() {
@@ -59,20 +59,20 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
 
     protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
             SQLiteDatabase db, int channelId, long timestamp) {
-        return getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(db,
+        return getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(
                 channelId,
                 timestamp);
     }
 
     protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
                                                              int channelId) {
-        getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(db,
+        getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(
                 channelId);
     }
 
     protected void addIncrementalMeasurement(SQLiteDatabase db,
                                              IncrementalMeasurementItem item) {
-        getMeasurementsDbH().addElectricityMeasurement(db, (ElectricityMeasurementItem) item);
+        getMeasurementsDbH().addElectricityMeasurement((ElectricityMeasurementItem) item);
     }
 
 }

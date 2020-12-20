@@ -241,9 +241,7 @@ public class CfgActivity extends NavigationActivity {
 
 
         if (changed) {
-
-            DbHelper DbH = new DbHelper(this);
-            DbH.deleteUserIcons();
+            getDbHelper().deleteUserIcons();
 
             prefs.setPreferedProtocolVersion();
 

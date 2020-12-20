@@ -449,23 +449,64 @@ public class ChannelDao extends BaseDao {
         });
     }
 
-    private int getChannelCount(@Nullable Key<?> key) {
-        final StringBuilder selection = new StringBuilder().append("SELECT count(*) FROM ")
-                .append(SuplaContract.ChannelEntry.TABLE_NAME);
-        if (key != null) {
-            selection.append(" WHERE ").append(key.asWhere());
+    public List<Integer> getChannelUserIconIds() {
+        String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE " + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        ArrayList<Integer> ids = new ArrayList<>();
+        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Integer id = cursor.getInt(
+                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                    if (!ids.contains(id)) {
+                        ids.add(id);
+                    }
+                } while (cursor.moveToNext());
+            }
         }
 
-        return read(sqLiteDatabase -> {
-            int count;
+        return ids;
+    }
 
-            Cursor c = sqLiteDatabase.rawQuery(selection.toString(), null);
-            c.moveToFirst();
-            count = c.getInt(0);
-            c.close();
+    public List<Integer> getChannelGroupUserIconIds() {
+        String sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
 
-            return count;
-        });
+        ArrayList<Integer> ids = new ArrayList<>();
+        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Integer id = cursor.getInt(
+                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                    if (!ids.contains(id)) {
+                        ids.add(id);
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return ids;
+    }
+
+    private int getChannelCount(@Nullable Key<?> key) {
+        return getCount(SuplaContract.ChannelEntry.TABLE_NAME, key);
     }
 
     private boolean setVisible(String table, int visible, Key<Integer> key) {

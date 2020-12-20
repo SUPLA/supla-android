@@ -39,6 +39,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelState;
@@ -66,7 +67,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private ChannelListView cgroupLV;
     private ListViewCursorAdapter channelListViewCursorAdapter;
     private ListViewCursorAdapter cgroupListViewCursorAdapter;
-    private DbHelper DbH_ListView;
     private DownloadUserIcons downloadUserIcons = null;
 
     private RelativeLayout NotificationView;
@@ -113,8 +113,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
 
-        DbH_ListView = new DbHelper(this);
-        new DbHelper(this, true); // For upgrade purposes
+        MeasurementsDbHelper.getInstance(this); // For upgrade purposes
 
         RegisterMessageHandler();
         showMenuBar();
@@ -126,7 +125,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (channelListViewCursorAdapter == null) {
 
-            channelListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
+            channelListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getChannelListCursor());
             channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             channelLV.setAdapter(channelListViewCursorAdapter);
 
@@ -137,7 +136,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         } else if (channelListViewCursorAdapter.getCursor() == null) {
 
-            channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor());
+            channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor());
         }
 
         return false;
@@ -167,8 +166,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         ListViewCursorAdapter.Item initialPositionItem = channelListViewCursorAdapter.getItemForPosition(dragInitialPosition);
         ListViewCursorAdapter.Item finalPositionItem = channelListViewCursorAdapter.getItemForPosition(droppedPosition);
 
-        subscribe(DbH_ListView.reorderChannels(initialPositionItem, finalPositionItem),
-                () -> channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor()),
+        subscribe(getDbHelper().reorderChannels(initialPositionItem, finalPositionItem),
+                () -> channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor()),
                 throwable -> Trace.w(TAG, "Channels reordering failed", throwable));
     }
 
@@ -190,7 +189,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (cgroupListViewCursorAdapter == null) {
 
-            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor(), true);
+            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
             cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
 
@@ -198,7 +197,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         } else if (cgroupListViewCursorAdapter.getCursor() == null) {
 
-            cgroupListViewCursorAdapter.changeCursor(DbH_ListView.getGroupListCursor());
+            cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor());
         }
 
         return false;
@@ -217,12 +216,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (!SetListCursorAdapter()) {
             channelLV.setSelection(0);
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         }
 
         if (!SetGroupListCursorAdapter()) {
             cgroupLV.setSelection(0);
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
         if (channelLV.getVisibility() == View.VISIBLE) {
@@ -284,8 +283,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     LV.detail_OnChannelDataChanged();
             }
 
-            LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
-                    DbH_ListView.getGroupListCursor(), true);
+            LV.Refresh(LV == channelLV ? getDbHelper().getChannelListCursor() :
+                    getDbHelper().getGroupListCursor(), true);
 
         }
 
@@ -334,9 +333,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 || (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED)
                 || event.ChannelID == 0) return;
 
-        DbHelper DbH = new DbHelper(this);
-
-        Channel channel = DbH.getChannel(event.ChannelID);
+        Channel channel = getDbHelper().getChannel(event.ChannelID);
         if (channel == null) return;
 
 
@@ -539,8 +536,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
-            DbHelper dbH = new DbHelper(this);
-            Channel channel = dbH.getChannel(remoteId);
+            Channel channel = getDbHelper().getChannel(remoteId);
             if (channel != null
                     && channel.getValue().isClosed()
                     && (channel.getValue().flooding()
@@ -614,8 +610,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
 
         int _collapsed;
-        DbHelper dbHelper = new DbHelper(this);
-
         if (sender == channelLV.getAdapter()) {
             _collapsed = 0x1;
         } else if (sender == cgroupLV.getAdapter()) {
@@ -624,7 +618,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             return;
         }
 
-        Location location = dbHelper.getLocation(locationId);
+        Location location = getDbHelper().getLocation(locationId);
         int collapsed = location.getCollapsed();
 
         if ((collapsed & _collapsed) > 0) {
@@ -634,12 +628,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         location.setCollapsed(collapsed);
-        dbHelper.updateLocation(location);
+        getDbHelper().updateLocation(location);
 
         if (sender == channelLV.getAdapter()) {
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         } else {
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
     }
@@ -654,11 +648,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (downloadUserIcons != null) {
             if (downloadUserIcons.downloadCount() > 0) {
                 if (channelLV != null) {
-                    channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+                    channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
                 }
 
                 if (cgroupLV != null) {
-                    cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+                    cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
                 }
             }
             downloadUserIcons = null;
@@ -682,8 +676,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onChannelWarningButtonClick(ChannelListView clv, int remoteId) {
-        DbHelper dbH = new DbHelper(this);
-        Channel channel = dbH.getChannel(remoteId);
+        Channel channel = getDbHelper().getChannel(remoteId);
         if (channel != null) {
             String warning = channel.getChannelWarningMessage(this);
             if (warning != null) {
@@ -691,12 +684,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 builder.setTitle(android.R.string.dialog_alert_title);
                 builder.setMessage(warning);
 
-                builder.setNeutralButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                builder.setNeutralButton(R.string.ok, (dialog, id) -> dialog.cancel());
 
                 AlertDialog alert = builder.create();
                 alert.show();

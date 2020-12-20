@@ -1150,7 +1150,7 @@ public class SuplaClient extends Thread {
 
     public void run() {
 
-        DbH = new DbHelper(_context);
+        DbH = DbHelper.getInstance(_context);
         DbH.loadUserIconsIntoCache();
 
         while (!canceled()) {

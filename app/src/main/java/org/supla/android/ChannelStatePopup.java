@@ -312,7 +312,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             this.remoteId = remoteId;
         }
 
-        DbHelper dbHelper = new DbHelper(context);
+        DbHelper dbHelper = DbHelper.getInstance(context);
         Channel channel = dbHelper.getChannel(remoteId);
         channelFlags = 0;
 

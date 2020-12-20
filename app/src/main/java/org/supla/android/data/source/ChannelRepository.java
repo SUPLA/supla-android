@@ -76,6 +76,8 @@ public interface ChannelRepository {
 
     List<Channel> getZWaveBridgeChannels();
 
+    List<Integer> getChannelUserIconIds();
+
     Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
 
     // Location looks rather as a channel location, that's why here

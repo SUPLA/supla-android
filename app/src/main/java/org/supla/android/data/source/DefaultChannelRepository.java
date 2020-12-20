@@ -19,7 +19,6 @@ package org.supla.android.data.source;
  */
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.supla.android.data.source.local.ChannelDao;
@@ -39,7 +38,9 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.rxjava3.core.Completable;
 
@@ -290,6 +291,14 @@ public class DefaultChannelRepository implements ChannelRepository {
     @Override
     public List<Channel> getZWaveBridgeChannels() {
         return channelDao.getZWaveBridgeChannels();
+    }
+
+    @Override
+    public List<Integer> getChannelUserIconIds() {
+        Set<Integer> result = new LinkedHashSet<>();
+        result.addAll(channelDao.getChannelUserIconIds());
+        result.addAll(channelDao.getChannelGroupUserIconIds());
+        return new ArrayList<>(result);
     }
 
     @Override
