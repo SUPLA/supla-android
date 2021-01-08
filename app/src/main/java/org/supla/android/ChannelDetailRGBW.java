@@ -67,7 +67,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private Button btnSettings;
     private Button btnInfo;
     private RelativeLayout rlMain;
-    private VLCalibrationTool vlCalibrationTool = null;
+    private DimmerCalibrationTool dimmerCalibrationTool = null;
     private long remoteUpdateTime;
     private long changeFinishedTime;
     private Timer delayTimer1;
@@ -183,15 +183,21 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
                     && c.getProductID() == 1) {
                 varilight = true;
+                if (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool)) {
+                    dimmerCalibrationTool = new VLCalibrationTool(this);
+                }
             } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_ZAMEL) {
                 zamel = true;
+                if (c.getProductID() == SuplaConst.ZAM_PRODID_DIW_01
+                     && (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
+                    dimmerCalibrationTool = new DiwCalibrationTool(this);
+                }
             }
         }
 
-        if (varilight) {
-            vlCalibrationTool = new VLCalibrationTool(this);
-            llExtraButtons.setVisibility(VISIBLE);
-        }
+        llExtraButtons.setVisibility(dimmerCalibrationTool == null ? GONE : VISIBLE);
 
         Preferences prefs = new Preferences(getContext());
 
@@ -210,23 +216,23 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     public void onDetailHide() {
         super.onDetailHide();
 
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
-            vlCalibrationTool = null;
+        if (dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Hide();
+            dimmerCalibrationTool = null;
         }
     }
 
     public void onDetailShow() {
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
+        if (dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Hide();
         }
         rlMain.setVisibility(VISIBLE);
     }
 
-    private void hideVlConfigurationToolIfNotLocked() {
-        if (vlCalibrationTool != null
-                && !vlCalibrationTool.isExitLocked()) {
-            vlCalibrationTool.Hide();
+    private void hideDimmerConfigurationToolIfNotLocked() {
+        if (dimmerCalibrationTool != null
+                && dimmerCalibrationTool.isExitUnlocked()) {
+            dimmerCalibrationTool.Hide();
         }
     }
 
@@ -237,8 +243,9 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         pickerTypeTabs.setVisibility(GONE);
 
         varilight = false;
+        zamel = false;
 
-        hideVlConfigurationToolIfNotLocked();
+        hideDimmerConfigurationToolIfNotLocked();
 
         switch (channel.getFunc()) {
 
@@ -395,8 +402,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
     @Override
     public boolean onBackPressed() {
-        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
-            return vlCalibrationTool.onBackPressed();
+        if (dimmerCalibrationTool != null && dimmerCalibrationTool.isVisible()) {
+            return dimmerCalibrationTool.onBackPressed();
         }
         return true;
     }
@@ -404,9 +411,9 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     public boolean detailWillHide(boolean offlineReason) {
         if (super.detailWillHide(offlineReason)) {
             return !offlineReason
-                    || vlCalibrationTool == null
-                    || !vlCalibrationTool.isVisible()
-                    || !vlCalibrationTool.isExitLocked();
+                    || dimmerCalibrationTool == null
+                    || !dimmerCalibrationTool.isVisible()
+                    || dimmerCalibrationTool.isExitUnlocked();
 
         }
         return false;
@@ -468,7 +475,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private void showInformationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         ViewGroup viewGroup = findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.vl_dimmer_info,
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dimmer_info,
                 viewGroup, false);
         builder.setView(dialogView);
         final AlertDialog alertDialog = builder.create();
@@ -528,14 +535,13 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             tabSlider.setTextColor(Color.WHITE);
             btnPowerOnOff.setVisibility(VISIBLE);
         } else if (v == btnSettings
-                && varilight
-                && vlCalibrationTool != null) {
-            vlCalibrationTool.Show();
+                && dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Show();
         } else if (v == btnPowerOnOff) {
             cbPicker.setPowerButtonOn(!cbPicker.isPowerButtonOn());
             onPowerButtonClick(cbPicker);
         } else if (v == btnInfo) {
-            if (varilight) {
+            if (dimmerCalibrationTool != null) {
                 showInformationDialog();
             }
         }
@@ -632,7 +638,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     @Override
     public void OnChannelDataChanged() {
         refreshViewsWithDelay();
-        hideVlConfigurationToolIfNotLocked();
+        hideDimmerConfigurationToolIfNotLocked();
     }
 
     @Override
@@ -671,10 +677,12 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
+        if (dimmerCalibrationTool != null && dimmerCalibrationTool.isVisible()) {
             return false;
         }
         return super.onTouchEvent(ev);
     }
+
+
 
 }

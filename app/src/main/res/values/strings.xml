@@ -413,4 +413,8 @@
     <string translatable="false" name="monostable">Monostable</string>
     <string translatable="false" name="bistable">Bistable</string>
     <string translatable="false" name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
+    <string translatable="false" name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string translatable="false" name="diw_cfg_info_in_options">Input options</string>
+    <string translatable="false" name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
+    <string translatable="false" name="diw_cfg_info_bi_option">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
 </resources>

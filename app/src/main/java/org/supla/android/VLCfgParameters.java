@@ -1,6 +1,6 @@
 package org.supla.android;
 
-public class VLCfgParameters {
+public class VLCfgParameters extends DeviceCfgParameters {
 
     public final static int MODE_UNKNOWN = -1;
     public final static int MODE_AUTO = 0;
@@ -22,11 +22,6 @@ public class VLCfgParameters {
     public final static int MASK_BOOST_YES_DISABLED = 0x2;
     public final static int MASK_BOOST_NO_DISABLED = 0x4;
 
-    public final static int LED_UNKNOWN = -1;
-    public final static int LED_ON_WHEN_CONNECTED = 0;
-    public final static int LED_OFF_WHEN_CONNECTED = 1;
-    public final static int LED_ALWAYS_OFF = 2;
-
     private short LeftEdge;
     private short RightEdge;
     private short Minimum;
@@ -36,7 +31,6 @@ public class VLCfgParameters {
     private byte Boost;
     private byte BoostMask = (byte) 0xFF;
     private short BoostLevel;
-    private Byte LedConfig = null;
     private String PicFirmwareVersion;
 
     public short getLeftEdge() {
@@ -104,18 +98,6 @@ public class VLCfgParameters {
 
         return false;
     }
-
-    public Byte getLedConfig() {
-       return LedConfig;
-    }
-
-    private short getShort(byte[] data, int offset) {
-        int x = (int) data[offset + 1] & 0xFF;
-        x <<= 8;
-        x |= (int) data[offset] & 0xFF;
-        return (short) x;
-    }
-
     public String getPicFirmwareVersion() {
         return PicFirmwareVersion == null ? "" : PicFirmwareVersion;
     }
@@ -136,9 +118,9 @@ public class VLCfgParameters {
         BoostMask = data[14];
 
         if (data.length >= 17 && data[15] == 2) {
-            LedConfig = Byte.valueOf(data[16]);
+            setLedConfig(Byte.valueOf(data[16]));
         } else {
-            LedConfig = null;
+            setLedConfig(null);
         }
 
         StringBuilder sb = new StringBuilder();

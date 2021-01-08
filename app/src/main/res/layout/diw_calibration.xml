@@ -7,6 +7,18 @@
     android:background="@color/diw_settings_bg">
 
     <Button
+        android:id="@+id/diwBtnInfo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/vlinfo"
+        android:visibility="visible" />
+
+    <Button
         android:id="@+id/diwBtnOK"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -45,32 +57,17 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textView13"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-1dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/diwCfgOpRange"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/diw_tab"
-                    android:text="@string/cfg_op_range"
-                    android:textColor="@android:color/black" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:visibility="invisible" />
-            </LinearLayout>
+                android:text="@string/cfg_op_range"
+                android:textColor="@android:color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
@@ -102,28 +99,61 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/rounded_tab_background"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="2dp">
+                android:visibility="visible">
 
-                <Button
-                    android:id="@+id/diwCfgInMonostable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_sel_btn"
-                    android:text="@string/monostable"
-                    android:textColor="@android:color/white" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
 
-                <Button
-                    android:id="@+id/diwCfgInBistable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_tab_background"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/diwCfgInMonostable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_sel_btn"
+                        android:text="@string/monostable"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/diwCfgInBistable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="@string/bistable"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/bistable" />
+                    android:background="@drawable/rounded_tab_background"
+                    android:padding="2dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/diwCfgInOption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="false"
+                        android:background="@drawable/rounded_option_normal_btn"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/infinity" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -149,7 +179,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/rounded_tab_background"
                 android:orientation="horizontal"
                 android:padding="2dp">
@@ -184,6 +214,15 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ledalwaysoff" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/diwCfgSTMFirmwareVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="right"
+                android:textSize="10sp" />
 
         </LinearLayout>
 

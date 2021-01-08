@@ -27,20 +27,19 @@ import android.os.Message;
 import android.os.Vibrator;
 
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
 
-public class SuplaApp extends Application {
+public class SuplaApp extends Application implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
     private static final Object _lck1 = new Object();
-    private static final Object _lck2 = new Object();
     private static final Object _lck3 = new Object();
     private static SuplaClient _SuplaClient = null;
     private static SuplaApp _SuplaApp = null;
-    private ArrayList<Handler> msgReceivers = new ArrayList<>();
     private Typeface mTypefaceQuicksandRegular;
     private Typeface mTypefaceQuicksandLight;
     private Typeface mTypefaceOpenSansRegular;
@@ -49,36 +48,9 @@ public class SuplaApp extends Application {
     private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
     private static long lastWifiScanTime;
 
-    private Handler _sc_msg_handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
-
-            if (_msg != null) {
-
-                if (_msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
-                    synchronized (_lck3) {
-                        _OAuthToken = _msg.getOAuthToken();
-                        for (int a = 0; a < _RestApiClientTasks.size(); a++) {
-                            _RestApiClientTasks.get(a).setToken(_OAuthToken);
-                        }
-                    }
-                }
-
-                synchronized (_lck2) {
-
-                    for (int a = 0; a < msgReceivers.size(); a++) {
-                        Handler msgReceiver = msgReceivers.get(a);
-                        msgReceiver.sendMessage(msgReceiver.obtainMessage(_msg.getType(), _msg));
-                    }
-
-                }
-
-
-            }
-        }
-    };
+    public SuplaApp() {
+        SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
+    }
 
     public static SuplaApp getApp() {
 
@@ -101,21 +73,6 @@ public class SuplaApp extends Application {
             v.vibrate(100);
     }
 
-    public void addMsgReceiver(Handler msgReceiver) {
-        synchronized (_lck2) {
-
-            if (msgReceivers.indexOf(msgReceiver) == -1)
-                msgReceivers.add(msgReceiver);
-
-        }
-    }
-
-    public void removeMsgReceiver(Handler msgReceiver) {
-        synchronized (_lck2) {
-            msgReceivers.remove(msgReceiver);
-        }
-    }
-
     public SuplaClient SuplaClientInitIfNeed(Context context) {
 
         SuplaClient result;
@@ -124,7 +81,6 @@ public class SuplaApp extends Application {
 
             if (_SuplaClient == null || _SuplaClient.canceled()) {
                 _SuplaClient = new SuplaClient(context);
-                _SuplaClient.setMsgHandler(_sc_msg_handler);
                 _SuplaClient.start();
             }
 
@@ -254,4 +210,15 @@ public class SuplaApp extends Application {
         return result;
     }
 
+    @Override
+    public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
+        if (msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
+            synchronized (_lck3) {
+                _OAuthToken = msg.getOAuthToken();
+                for (int a = 0; a < _RestApiClientTasks.size(); a++) {
+                    _RestApiClientTasks.get(a).setToken(_OAuthToken);
+                }
+            }
+        }
+    }
 }

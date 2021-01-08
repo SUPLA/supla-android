@@ -251,6 +251,8 @@ public class SuplaConst {
     public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
 
+    public final static int ZAM_PRODID_DIW_01 = 2000;
+
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 

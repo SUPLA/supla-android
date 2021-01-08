@@ -53,7 +53,6 @@ public class SuplaClient extends Thread {
         System.loadLibrary("suplaclient");
     }
 
-    private final Object msgh_lck = new Object();
     private final Object sc_lck = new Object();
     private int _client_id;
     private long _supla_client_ptr = 0;
@@ -61,7 +60,6 @@ public class SuplaClient extends Thread {
     private boolean _canceled = false;
     private Context _context;
     private DbHelper DbH = null;
-    private android.os.Handler _msgHandler;
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
     private long lastTokenRequest = 0;
 
@@ -165,21 +163,9 @@ public class SuplaClient extends Thread {
     private native boolean scSetLightsourceLifespan(long _supla_client, int ChannelID, boolean
             resetCounter, boolean setTime, int lifeSpan);
 
-    public void setMsgHandler(Handler msgHandler) {
-
-        synchronized (msgh_lck) {
-            _msgHandler = msgHandler;
-        }
-    }
-
     private void sendMessage(SuplaClientMsg msg) {
-
         if (canceled()) return;
-
-        synchronized (msgh_lck) {
-            if (_msgHandler != null)
-                _msgHandler.sendMessage(_msgHandler.obtainMessage(msg.getType(), msg));
-        }
+        SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
     }
 
     private void init(SuplaCfg cfg) {
