@@ -116,9 +116,7 @@ public class VLCalibrationTool extends DimmerCalibrationTool
             case VL_MSG_CONFIGURATION_ACK:
                 if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && !restoringDefaults) {
 
-                    setConfigStarted(true);
-
-                    closePreloaderPopup();
+                    setConfigStarted();
                     stopConfigurationRetryTimer();
 
                 } else if (restoringDefaults) {

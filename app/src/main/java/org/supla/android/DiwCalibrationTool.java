@@ -74,7 +74,7 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
 
         switch (Command) {
             case DIW_CMD_ENTER_CFG_MODE:
-                setConfigStarted(true);
+                setConfigStarted();
                 break;
             case DIW_CMD_CONFIGURATION_REPORT:
                 cfgParameters.setParams(Data);

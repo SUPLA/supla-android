@@ -142,7 +142,11 @@ public abstract class DimmerCalibrationTool
                 ? null : (Activity) detailRGB.getContext();
     }
 
-    protected void setConfigStarted(boolean started) {
+    private void setConfigStarted(boolean started) {
+        if (started) {
+            closePreloaderPopup();
+        }
+
         configStartedAtTime = started ? System.currentTimeMillis() : 0;
         NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
         if (activity!=null) {
@@ -154,6 +158,10 @@ public abstract class DimmerCalibrationTool
         displayCfgParameters(true);
         getDetailContentView().setVisibility(View.GONE);
         getMainView().setVisibility(View.VISIBLE);
+    }
+
+    protected void setConfigStarted() {
+        setConfigStarted(true);
     }
 
     protected void closePreloaderPopup() {
