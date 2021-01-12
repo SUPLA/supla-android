@@ -89,12 +89,13 @@ public class DefaultChannelRepository implements ChannelRepository {
                 || channel.getLocationId() != suplaChannel.LocationID
                 || channel.getVisible() != 1) {
 
-            channel.Assign(suplaChannel);
-            channel.setVisible(1);
             if (channel.getLocationId() != suplaChannel.LocationID) {
                 // channel changed location - position update needed.
                 updateChannelPosition(location, channel);
             }
+            channel.Assign(suplaChannel);
+            channel.setVisible(1);
+
             channelDao.update(channel);
             return true;
         }
