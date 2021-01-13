@@ -143,6 +143,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_USERICON = "usericon";
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_TOTALVALUE = "totalvalue";
+        public static final String COLUMN_NAME_POSITION = "position";
     }
 
     public static abstract class ChannelGroupRelationEntry implements BaseColumns {

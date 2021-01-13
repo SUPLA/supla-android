@@ -36,6 +36,7 @@ public class ChannelGroup extends ChannelBase {
     private int BufferOnLine;
     private int BufferCounter;
     private String BufferTotalValue;
+    private int position;
 
     protected int _getOnLine() {
         return OnLine;
@@ -49,6 +50,14 @@ public class ChannelGroup extends ChannelBase {
         return TotalValue == null ? "" : TotalValue;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+    
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
@@ -61,7 +70,7 @@ public class ChannelGroup extends ChannelBase {
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
         setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
-
+        setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION)));
     }
 
     public ContentValues getContentValues() {
@@ -78,6 +87,7 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON, getAltIcon());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIconId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION, position);
 
         return values;
 

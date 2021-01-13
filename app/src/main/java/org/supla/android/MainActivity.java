@@ -30,14 +30,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
@@ -129,8 +127,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             channelLV.setAdapter(channelListViewCursorAdapter);
 
-            channelLV.setOnItemLongClickListener(this::onDragStarted);
-            channelLV.setOnDragListener(new ListViewDragListener(channelLV, this::onDragStopped, this::onDragPositionChanged));
+            channelLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, channelLV));
+            channelLV.setOnDragListener(new ListViewDragListener(channelLV,
+                    droppedPosition -> onDragStopped(droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
+                    position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
 
             return true;
 
@@ -142,47 +142,57 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         return false;
     }
 
-    private boolean onDragStarted(AdapterView<?> parent, View view, int position, long id) {
-        if (channelLV.isDetailSliding()) {
+    private boolean onDragStarted(View view, int position, ChannelListView listView) {
+        if (listView.isDetailSliding()) {
             dragInitialPosition = null;
             return false;
         }
         dragInitialPosition = position;
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-        view.startDrag(null, shadowBuilder, channelLV.getItemAtPosition(position), 0);
+        view.startDrag(null, shadowBuilder, listView.getItemAtPosition(position), 0);
         return true;
     }
 
-    private void onDragStopped(int droppedPosition) {
-        channelListViewCursorAdapter.stopReorderingMode();
+    private void onDragStopped(int droppedPosition, ListViewCursorAdapter adapter, Reorder reorder) {
+        adapter.stopReorderingMode();
         if (dragInitialPosition == null || droppedPosition == ListViewDragListener.INVALID_POSITION) {
             // Moved somewhere outside the list view or Something wrong, initial position not initialized.
             return;
         }
-        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
+        if (!adapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
             // Moving outside of the section not allowed.
             return;
         }
-        ListViewCursorAdapter.Item initialPositionItem = channelListViewCursorAdapter.getItemForPosition(dragInitialPosition);
-        ListViewCursorAdapter.Item finalPositionItem = channelListViewCursorAdapter.getItemForPosition(droppedPosition);
+        ListViewCursorAdapter.Item initialPositionItem = adapter.getItemForPosition(dragInitialPosition);
+        ListViewCursorAdapter.Item finalPositionItem = adapter.getItemForPosition(droppedPosition);
 
+        reorder.doReorder(initialPositionItem, finalPositionItem);
+    }
+
+    private void onDragPositionChanged(int position, ListViewCursorAdapter adapter) {
+        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            adapter.stopReorderingMode();
+            return;
+        }
+        if (!adapter.isReorderPossible(dragInitialPosition, position)) {
+            // Moving outside of the section not allowed.
+            adapter.stopReorderingMode();
+            return;
+        }
+        adapter.updateReorderingMode(dragInitialPosition, position);
+    }
+
+    private void doChannelsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
         subscribe(getDbHelper().reorderChannels(initialPositionItem, finalPositionItem),
                 () -> channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor()),
                 throwable -> Trace.w(TAG, "Channels reordering failed", throwable));
     }
 
-    private void onDragPositionChanged(int position) {
-        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
-            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
-            channelListViewCursorAdapter.stopReorderingMode();
-            return;
-        }
-        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, position)) {
-            // Moving outside of the section not allowed.
-            channelListViewCursorAdapter.stopReorderingMode();
-            return;
-        }
-        channelListViewCursorAdapter.updateReorderingMode(dragInitialPosition, position);
+    private void doGroupsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
+        subscribe(getDbHelper().reorderGroups(initialPositionItem, finalPositionItem),
+                () -> cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor()),
+                throwable -> Trace.w(TAG, "Groups reordering failed", throwable));
     }
 
     private boolean SetGroupListCursorAdapter() {
@@ -192,6 +202,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
             cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
+
+            cgroupLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, cgroupLV));
+            cgroupLV.setOnDragListener(new ListViewDragListener(cgroupLV,
+                    droppedPosition -> onDragStopped(droppedPosition, cgroupListViewCursorAdapter, this::doGroupsReorder),
+                    position -> onDragPositionChanged(position, cgroupListViewCursorAdapter)));
 
             return true;
 
@@ -690,6 +705,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 alert.show();
             }
         }
+    }
+
+    private interface Reorder {
+        void doReorder(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem);
     }
 }
 

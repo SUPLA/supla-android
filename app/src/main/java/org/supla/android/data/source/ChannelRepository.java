@@ -80,6 +80,8 @@ public interface ChannelRepository {
 
     Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
 
+    Completable reorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId);
+
     // Location looks rather as a channel location, that's why here
 
     Location getLocation(int locationId);

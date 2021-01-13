@@ -16,10 +16,12 @@ import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelValue;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -101,6 +103,9 @@ public class DefaultChannelRepositoryTest {
 
         // then
         Assert.assertFalse(result);
+        verify(locationDao).getLocation(anyInt());
+        verifyNoMoreInteractions(locationDao);
+        verifyZeroInteractions(channelDao);
     }
 
     @Test
@@ -302,6 +307,214 @@ public class DefaultChannelRepositoryTest {
         Assert.assertEquals(14L, (long) newOrder.get(4));
     }
 
+    @Test
+    public void shouldNotUpdateChannelGroupWhenLocationNotFound() {
+        // given
+        SuplaChannelGroup suplaChannelGroup = mock(SuplaChannelGroup.class);
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertFalse(result);
+        verify(locationDao).getLocation(anyInt());
+        verifyNoMoreInteractions(locationDao);
+        verifyZeroInteractions(channelDao);
+    }
+
+    @Test
+    public void shouldInsertChannelGroupWhenChannelGroupNotFound() {
+        // given
+        int locationId = 123;
+        int channelGroupId = 234;
+
+        SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 1,
+                2, 3, 4);
+
+        Location location = mock(Location.class);
+        when(location.getLocationId()).thenReturn(locationId);
+        when(locationDao.getLocation(locationId)).thenReturn(location);
+
+        when(channelDao.getChannelGroupLastPositionInLocation(locationId)).thenThrow(new NoSuchElementException());
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertTrue(result);
+        ArgumentCaptor<ChannelGroup> channelArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
+        verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
+        verify(channelDao).insert(channelArgumentCaptor.capture());
+        verify(locationDao).getLocation(locationId);
+        verifyNoMoreInteractions(locationDao, channelDao);
+
+        assertChannelGroup(channelArgumentCaptor.getValue(), channelGroupId, locationId, "caption", 1,
+                2, 3, 4, 1, 0);
+    }
+
+    @Test
+    public void shouldInsertChannelGroupOnLastPositionWhenPositionsDefined() {
+        // given
+        int locationId = 123;
+        int channelGroupId = 234;
+        int channelGroupsCount = 12;
+
+        SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 1,
+                2, 3, 4);
+
+        Location location = mock(Location.class);
+        when(location.getLocationId()).thenReturn(locationId);
+        when(locationDao.getLocation(locationId)).thenReturn(location);
+
+        when(channelDao.getChannelGroupLastPositionInLocation(locationId)).thenReturn(channelGroupsCount);
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertTrue(result);
+        ArgumentCaptor<ChannelGroup> channelGroupArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
+        verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
+        verify(channelDao).insert(channelGroupArgumentCaptor.capture());
+        verify(locationDao).getLocation(locationId);
+        verifyNoMoreInteractions(locationDao, channelDao);
+
+        assertChannelGroup(channelGroupArgumentCaptor.getValue(), channelGroupId, locationId, "caption", 1,
+                2, 3, 4, 1, channelGroupsCount + 1);
+    }
+
+    @Test
+    public void shouldUpdateChannelGroupWhenFound() {
+        // given
+        int locationId = 123;
+        int channelGroupId = 234;
+        int channelGroupDbId = 345;
+
+        SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 1,
+                2, 3, 4);
+
+        Location location = mock(Location.class);
+        when(location.getLocationId()).thenReturn(locationId);
+        when(locationDao.getLocation(locationId)).thenReturn(location);
+
+        ChannelGroup channelGroup = new ChannelGroup();
+        channelGroup.setId(channelGroupDbId);
+        when(channelDao.getChannelGroup(channelGroupId)).thenReturn(channelGroup);
+
+        when(channelDao.getChannelGroupLastPositionInLocation(locationId)).thenThrow(new NoSuchElementException());
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertTrue(result);
+        verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
+        verify(channelDao).update(channelGroup);
+        verify(locationDao).getLocation(locationId);
+        verifyNoMoreInteractions(locationDao, channelDao);
+
+        Assert.assertEquals(channelGroupDbId, channelGroup.getId());
+        assertChannelGroup(channelGroup, channelGroupId, locationId, "caption", 1,
+                2, 3, 4, 1, 0);
+    }
+
+    @Test
+    public void shouldUpdateChannelGroupAndChangePositionWhenMovedToAnotherLocation() {
+        // given
+        int locationId = 123;
+        int channelGroupId = 234;
+        int channelGroupDbId = 345;
+
+        SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption1", 9,
+                8, 7, 6);
+
+        Location location = mock(Location.class);
+        when(location.getLocationId()).thenReturn(locationId);
+        when(locationDao.getLocation(locationId)).thenReturn(location);
+
+        ChannelGroup channelGroup = channelGroup(channelGroupId, locationId + 1, "caption1", 9, 8, 7, 6);
+        channelGroup.setId(channelGroupDbId);
+        channelGroup.setPosition(12);
+        when(channelDao.getChannelGroup(channelGroupId)).thenReturn(channelGroup);
+
+        when(channelDao.getChannelGroupLastPositionInLocation(locationId)).thenReturn(0);
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertTrue(result);
+        verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
+        verify(channelDao).update(channelGroup);
+        verify(locationDao).getLocation(locationId);
+        verifyNoMoreInteractions(locationDao, channelDao);
+
+        Assert.assertEquals(channelGroupDbId, channelGroup.getId());
+        assertChannelGroup(channelGroup, channelGroupId, locationId, "caption1", 9,
+                8, 7, 6, 1, 0);
+    }
+
+    @Test
+    public void shouldNotChangeChannelGroupWhenNothingChanged() {
+        // given
+        int locationId = 123;
+        int channelGroupId = 234;
+        int channelGroupDbId = 345;
+
+        SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 9,
+                8, 7, 6);
+
+        Location location = mock(Location.class);
+        when(locationDao.getLocation(locationId)).thenReturn(location);
+
+        ChannelGroup channelGroup = channelGroup(channelGroupId, locationId, "caption", 9,
+                8, 7, 6);
+        channelGroup.setId(channelGroupDbId);
+        channelGroup.setVisible(1);
+        when(channelDao.getChannelGroup(channelGroupId)).thenReturn(channelGroup);
+
+        // when
+        boolean result = defaultChannelRepository.updateChannelGroup(suplaChannelGroup);
+
+        // then
+        Assert.assertFalse(result);
+        verify(channelDao).getChannelGroup(channelGroupId);
+        verify(locationDao).getLocation(locationId);
+        verifyNoMoreInteractions(locationDao, channelDao);
+
+        Assert.assertEquals(channelGroupDbId, channelGroup.getId());
+    }
+
+    @Test
+    public void shouldReorderChannelGroups() {
+        // given
+        int locationId = 2;
+
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.moveToFirst()).thenReturn(true);
+        when(cursor.getLong(anyInt())).thenReturn(15L, 12L, 18L, 13L, 14L);
+        when(cursor.moveToNext()).thenReturn(true, true, true, true, false);
+        when(channelDao.getSortedChannelGroupIdsForLocationCursor(locationId)).thenReturn(cursor);
+
+        // when
+        defaultChannelRepository.reorderChannelGroups(15L, locationId, 13L).blockingAwait();
+
+        // then
+        ArgumentCaptor<List<Long>> orderArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        verify(channelDao).updateChannelGroupsOrder(orderArgumentCaptor.capture());
+
+        List<Long> newOrder = orderArgumentCaptor.getValue();
+        Assert.assertEquals(12L, (long) newOrder.get(0));
+        Assert.assertEquals(18L, (long) newOrder.get(1));
+        Assert.assertEquals(13L, (long) newOrder.get(2));
+        Assert.assertEquals(15L, (long) newOrder.get(3));
+        Assert.assertEquals(14L, (long) newOrder.get(4));
+    }
+
     private void assertChannel(Channel channel, int id, int locationId, String caption, int func, int flags,
                                int altIcon, int userIcon, int deviceId, int type, int protocolVersion,
                                short manufacturerId, short productId, int visible, int position, int valueAsLong) {
@@ -322,6 +535,20 @@ public class DefaultChannelRepositoryTest {
 
         ChannelValue channelValue = channel.getValue();
         Assert.assertEquals(valueAsLong, channelValue.getLong());
+    }
+
+    private void assertChannelGroup(ChannelGroup channelGroup, int id, int locationId, String caption, int func, int flags,
+                                    int altIcon, int userIcon, int visible, int position) {
+        Assert.assertEquals(id, channelGroup.getGroupId());
+        Assert.assertEquals(locationId, channelGroup.getLocationId());
+        Assert.assertEquals(caption, channelGroup.getCaption());
+        Assert.assertEquals(func, channelGroup.getFunc());
+        Assert.assertEquals(flags, channelGroup.getFlags());
+        Assert.assertEquals(altIcon, channelGroup.getAltIcon());
+        Assert.assertEquals(userIcon, channelGroup.getUserIconId());
+        Assert.assertEquals(0, channelGroup.getType());
+        Assert.assertEquals(visible, channelGroup.getVisible());
+        Assert.assertEquals(position, channelGroup.getPosition());
     }
 
     private SuplaChannel suplaChannel(int id, int locationId, String caption, int func, int flags,
@@ -346,6 +573,20 @@ public class DefaultChannelRepositoryTest {
         return suplaChannel;
     }
 
+    private SuplaChannelGroup suplaChannelGroup(int id, int locationId, String caption, int func, int flags,
+                                                int altIcon, int userIcon) {
+        SuplaChannelGroup suplaChannelGroup = new SuplaChannelGroup();
+        suplaChannelGroup.Id = id;
+        suplaChannelGroup.LocationID = locationId;
+        suplaChannelGroup.Caption = caption;
+        suplaChannelGroup.Func = func;
+        suplaChannelGroup.Flags = flags;
+        suplaChannelGroup.AltIcon = altIcon;
+        suplaChannelGroup.UserIcon = userIcon;
+
+        return suplaChannelGroup;
+    }
+
     private Channel channel(int id, int locationId, String caption, int func, int flags,
                             int altIcon, int userIcon, int deviceId, int type, int protocolVersion,
                             short manufacturerId, short productId, ChannelValue channelValue) {
@@ -366,6 +607,20 @@ public class DefaultChannelRepositoryTest {
         channel.setValue(channelValue);
 
         return channel;
+    }
+
+    private ChannelGroup channelGroup(int id, int locationId, String caption, int func, int flags,
+                                      int altIcon, int userIcon) {
+        ChannelGroup channelGroup = new ChannelGroup();
+        channelGroup.setRemoteId(id);
+        channelGroup.setLocationId(locationId);
+        channelGroup.setCaption(caption);
+        channelGroup.setFunc(func);
+        channelGroup.setFlags(flags);
+        channelGroup.setAltIcon(altIcon);
+        channelGroup.setUserIconId(userIcon);
+
+        return channelGroup;
     }
 
     private SuplaChannelValue suplaChannelValue(Long value) {

@@ -137,12 +137,10 @@ public abstract class BaseDao {
 
     int getCount(String tableName, @Nullable Key<?>... keys) {
         final StringBuilder selection = new StringBuilder().append("SELECT count(*) FROM ").append(tableName);
-        if (keys != null) {
-            if (keys.length > 0) {
-                selection.append(" WHERE ");
-            }
+        if (keys != null && keys.length > 0 && keys[0] != null) {
+            selection.append(" WHERE ");
             boolean and = false;
-            for (Key key : keys) {
+            for (Key<?> key : keys) {
                 if (and) {
                     selection.append(" AND ");
                 }

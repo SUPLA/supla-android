@@ -49,7 +49,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 16;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -248,7 +248,8 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " INTEGER NOT NULL," +
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " INTEGER NOT NULL," +
-                SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE + " TEXT)";
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE + " TEXT, " +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION + " INTEGER NOT NULL default 0)";
 
         execSQL(db, SQL_CREATE_CHANNELGROUP_TABLE);
         createIndex(db, SuplaContract.ChannelGroupEntry.TABLE_NAME,
@@ -458,6 +459,12 @@ public class DbHelper extends BaseDbHelper {
                 + " TEXT NOT NULL default 'DEFAULT'");
     }
 
+    private void upgradeToV16(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelGroupEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
+                + " INTEGER NOT NULL default 0");
+    }
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -501,6 +508,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 14:
                         upgradeToV15(db);
+                        break;
+                    case 15:
+                        upgradeToV16(db);
                         break;
                 }
             }
@@ -639,5 +649,12 @@ public class DbHelper extends BaseDbHelper {
             return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
         }
         return channelRepository.reorderChannels(firstItem.id, firstItem.locationId, secondItem.id);
+    }
+
+    public Completable reorderGroups(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
+        if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
+            return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
+        }
+        return channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id);
     }
 }

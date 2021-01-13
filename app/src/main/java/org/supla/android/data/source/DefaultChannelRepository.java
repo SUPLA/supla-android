@@ -40,6 +40,7 @@ import org.supla.android.lib.SuplaLocation;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -115,12 +116,19 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup = new ChannelGroup();
             channelGroup.Assign(suplaChannelGroup);
             channelGroup.setVisible(1);
+            updateChannelGroupPosition(location, channelGroup);
 
             channelDao.insert(channelGroup);
             return true;
         } else if (channelGroup.Diff(suplaChannelGroup)
                 || channelGroup.getLocationId() != suplaChannelGroup.LocationID
                 || channelGroup.getVisible() != 1) {
+
+            if (channelGroup.getLocationId() != suplaChannelGroup.LocationID) {
+                // channel changed location - position update needed.
+                updateChannelGroupPosition(location, channelGroup);
+            }
+
             channelGroup.Assign(suplaChannelGroup);
             channelGroup.setVisible(1);
 
@@ -175,7 +183,7 @@ public class DefaultChannelRepository implements ChannelRepository {
     @Override
     public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
         ChannelGroupRelation channelGroupRelation = channelDao.getChannelGroupRelation(
-                suplaChannelGroupRelation.ChannelGroupID, suplaChannelGroupRelation.ChannelID);
+                suplaChannelGroupRelation.ChannelID, suplaChannelGroupRelation.ChannelGroupID);
 
         if (channelGroupRelation == null) {
             channelGroupRelation = new ChannelGroupRelation();
@@ -308,6 +316,11 @@ public class DefaultChannelRepository implements ChannelRepository {
     }
 
     @Override
+    public Completable reorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId) {
+        return Completable.fromRunnable(() -> doReorderChannelGroups(firstItemId, firstItemLocationId, secondItemId));
+    }
+
+    @Override
     public Location getLocation(int locationId) {
         return locationDao.getLocation(locationId);
     }
@@ -345,23 +358,8 @@ public class DefaultChannelRepository implements ChannelRepository {
 
     private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {
         List<Long> orderedItems = getSortedChannelIdsForLocation(firstItemLocationId);
-        // localize items to swipe in new list
-        int initialPosition = -1, finalPosition = -1;
-        for (int i = 0; i < orderedItems.size(); i++) {
-            Long id = orderedItems.get(i);
-            if (id.equals(firstItemId)) {
-                initialPosition = i;
-            }
-            if (id.equals(secondItemId)) {
-                finalPosition = i;
-            }
-        }
-        if (initialPosition < 0 || finalPosition < 0) {
-            throw new IllegalArgumentException("Swap items not found");
-        }
-        // Shift items in the table
-        Long removedId = orderedItems.remove(initialPosition);
-        orderedItems.add(finalPosition, removedId);
+
+        reorderList(orderedItems, firstItemId, secondItemId);
 
         channelDao.updateChannelsOrder(orderedItems, firstItemLocationId);
     }
@@ -381,11 +379,68 @@ public class DefaultChannelRepository implements ChannelRepository {
         return orderedItems;
     }
 
+    private void doReorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId) {
+        List<Long> orderedItems = getSortedChannelGroupIdsForLocation(firstItemLocationId);
+
+        reorderList(orderedItems, firstItemId, secondItemId);
+
+        channelDao.updateChannelGroupsOrder(orderedItems);
+    }
+
+    private List<Long> getSortedChannelGroupIdsForLocation(int locationId) {
+        ArrayList<Long> orderedItems = new ArrayList<>();
+
+        try (Cursor channelListCursor = channelDao.getSortedChannelGroupIdsForLocationCursor(locationId)) {
+            if (channelListCursor.moveToFirst()) {
+                do {
+                    orderedItems.add(channelListCursor.getLong(
+                            channelListCursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
+                } while (channelListCursor.moveToNext());
+            }
+        }
+
+        return orderedItems;
+    }
+
+    private void reorderList(List<Long> orderedItems, Long firstItemId, Long secondItemId) {
+        // localize items to swipe in new list
+        int initialPosition = -1, finalPosition = -1;
+        for (int i = 0; i < orderedItems.size(); i++) {
+            Long id = orderedItems.get(i);
+            if (id.equals(firstItemId)) {
+                initialPosition = i;
+            }
+            if (id.equals(secondItemId)) {
+                finalPosition = i;
+            }
+        }
+        if (initialPosition < 0 || finalPosition < 0) {
+            throw new IllegalArgumentException("Swap items not found");
+        }
+        // Shift items in the table
+        Long removedId = orderedItems.remove(initialPosition);
+        orderedItems.add(finalPosition, removedId);
+    }
+
     private void updateChannelPosition(Location location, Channel channel) {
         if (location.getSorting() == Location.SortingType.DEFAULT) {
             channel.setPosition(0);
         } else {
             channel.setPosition(channelDao.getChannelCountForLocation(location.getLocationId()) + 1);
         }
+    }
+
+    private void updateChannelGroupPosition(Location location, ChannelGroup channelGroup) {
+        try {
+            int lastPosition = channelDao.getChannelGroupLastPositionInLocation(location.getLocationId());
+            if (lastPosition == 0) {
+                channelGroup.setPosition(0);
+            } else {
+                channelGroup.setPosition(lastPosition + 1);
+            }
+        } catch (NoSuchElementException ex) {
+            channelGroup.setPosition(0);
+        }
+
     }
 }

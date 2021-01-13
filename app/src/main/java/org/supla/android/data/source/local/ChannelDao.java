@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaConst;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ChannelDao extends BaseDao {
     public ChannelDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
@@ -100,6 +101,7 @@ public class ChannelDao extends BaseDao {
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS,
                 SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE,
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION,
         };
 
         return getItem(ChannelGroup::new, projection, SuplaContract.ChannelGroupEntry.TABLE_NAME,
@@ -233,7 +235,186 @@ public class ChannelDao extends BaseDao {
         }) > 0;
     }
 
-    public Cursor getChannelListCursor(@NonNull String orderBy, @Nullable String where) {
+    public Cursor getChannelListCursorWithDefaultOrder(String where) {
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
+
+        return getChannelListCursor(orderBY, where);
+    }
+
+    public Cursor getChannelGroupListCursor() {
+        return getChannelGroupListCursor(null);
+    }
+
+    public boolean isZWaveBridgeChannelAvailable() {
+        String[] projection = {
+                SuplaContract.ChannelViewEntry._ID
+        };
+
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                + " = ?"
+                + " AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
+                + " AND ("
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
+
+        String[] selectionArgs = {
+                String.valueOf(SuplaConst.SUPLA_CHANNELTYPE_BRIDGE),
+                String.valueOf(SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE)
+        };
+
+        return read(sqLiteDatabase -> {
+            try (Cursor cursor = sqLiteDatabase.query(SuplaContract.ChannelViewEntry.VIEW_NAME,
+                    projection, selection, selectionArgs, null, null, null, "1")) {
+                return cursor.getCount() > 0;
+            }
+        });
+    }
+
+    public List<Channel> getZWaveBridgeChannels() {
+        String conditions =
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                        + " = " + SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
+                        + " AND ("
+                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+                        + " & " + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
+                        + " ) > 0";
+
+        String orderBy = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + ", "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID;
+
+        ArrayList<Channel> result = new ArrayList<>();
+        try (Cursor cursor = getChannelListCursor(orderBy, conditions)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Channel channel = new Channel();
+                    channel.AssignCursorData(cursor);
+                    result.add(channel);
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return result;
+    }
+
+    public Cursor getSortedChannelIdsForLocationCursor(int locationId) {
+        return getChannelListCursorWithDefaultOrder("C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+    }
+
+    public Cursor getSortedChannelGroupIdsForLocationCursor(int locationId) {
+        return getChannelGroupListCursor("G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+    }
+
+    public void updateChannelsOrder(List<Long> reorderedIds, int locationId) {
+        write(sqLiteDatabase -> {
+            sqLiteDatabase.beginTransaction();
+            try {
+                sqLiteDatabase.execSQL("UPDATE " + SuplaContract.LocationEntry.TABLE_NAME +
+                        " SET " + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " = '" + Location.SortingType.USER_DEFINED.name() +
+                        "' WHERE " + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+
+                int position = 1;
+                for (Long id : reorderedIds) {
+                    sqLiteDatabase.execSQL("UPDATE " + SuplaContract.ChannelEntry.TABLE_NAME +
+                            " SET " + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + " = " + position +
+                            " WHERE " + SuplaContract.ChannelEntry._ID + " = " + id);
+                    position++;
+                }
+                sqLiteDatabase.setTransactionSuccessful();
+            } finally {
+                sqLiteDatabase.endTransaction();
+            }
+        });
+    }
+
+    public void updateChannelGroupsOrder(List<Long> reorderedIds) {
+        write(sqLiteDatabase -> {
+            sqLiteDatabase.beginTransaction();
+            try {
+                int position = 1;
+                for (Long id : reorderedIds) {
+                    sqLiteDatabase.execSQL("UPDATE " + SuplaContract.ChannelGroupEntry.TABLE_NAME +
+                            " SET " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION + " = " + position +
+                            " WHERE " + SuplaContract.ChannelGroupEntry._ID + " = " + id);
+                    position++;
+                }
+                sqLiteDatabase.setTransactionSuccessful();
+            } finally {
+                sqLiteDatabase.endTransaction();
+            }
+        });
+    }
+
+    public List<Integer> getChannelUserIconIds() {
+        String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+                + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE " + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        ArrayList<Integer> ids = new ArrayList<>();
+        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Integer id = cursor.getInt(
+                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                    if (!ids.contains(id)) {
+                        ids.add(id);
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return ids;
+    }
+
+    public List<Integer> getChannelGroupUserIconIds() {
+        String sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " WHERE " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
+                " > 0 AND " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
+                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " IS NULL";
+
+        ArrayList<Integer> ids = new ArrayList<>();
+        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Integer id = cursor.getInt(
+                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+                    if (!ids.contains(id)) {
+                        ids.add(id);
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return ids;
+    }
+
+    public int getChannelGroupLastPositionInLocation(int locationId) {
+        Cursor cursor = getChannelGroupListCursor("G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+        if (!cursor.moveToFirst()) {
+            throw new NoSuchElementException();
+        }
+        if (cursor.moveToLast()) {
+            return cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION));
+        }
+        return 0;
+    }
+
+    private Cursor getChannelListCursor(@NonNull String orderBy, @Nullable String where) {
         return read(sqLiteDatabase -> {
             String localWhere = "";
             if (where != null) {
@@ -309,17 +490,13 @@ public class ChannelDao extends BaseDao {
         });
     }
 
-    public Cursor getChannelListCursorWithDefaultOrder(String where) {
-        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
-                + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
-                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
-                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
-
-        return getChannelListCursor(orderBY, where);
-    }
-
-    public Cursor getChannelGroupListCursor() {
+    private Cursor getChannelGroupListCursor(@Nullable String where) {
         return read(sqLiteDatabase -> {
+            String localWhere = "";
+            if (where != null) {
+                localWhere = " AND (" + where + ")";
+            }
+
             String sql = "SELECT "
                     + "G." + SuplaContract.ChannelGroupEntry._ID + " "
                     + SuplaContract.ChannelGroupEntry._ID
@@ -346,6 +523,8 @@ public class ChannelDao extends BaseDao {
                     + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS + " "
                     + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " "
                     + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                    + ", G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION + " "
+                    + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
                     + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1 + " "
                     + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
                     + ", I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2 + " "
@@ -363,146 +542,15 @@ public class ChannelDao extends BaseDao {
                     + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
                     + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                     + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
+                    + localWhere
                     + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                    + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION + ", "
                     + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " DESC, "
                     + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION;
 
 
             return sqLiteDatabase.rawQuery(sql, null);
         });
-    }
-
-    public boolean isZWaveBridgeChannelAvailable() {
-        String[] projection = {
-                SuplaContract.ChannelViewEntry._ID
-        };
-
-        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
-                + " = ?"
-                + " AND "
-                + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
-                + " AND ("
-                + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
-
-        String[] selectionArgs = {
-                String.valueOf(SuplaConst.SUPLA_CHANNELTYPE_BRIDGE),
-                String.valueOf(SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE)
-        };
-
-        return read(sqLiteDatabase -> {
-            try (Cursor cursor = sqLiteDatabase.query(SuplaContract.ChannelViewEntry.VIEW_NAME,
-                    projection, selection, selectionArgs, null, null, null, "1")) {
-                return cursor.getCount() > 0;
-            }
-        });
-    }
-
-    public List<Channel> getZWaveBridgeChannels() {
-        String conditions =
-                SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
-                        + " = " + SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
-                        + " AND ("
-                        + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
-                        + " & " + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
-                        + " ) > 0";
-
-        String orderBy = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + ", "
-                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID;
-
-        ArrayList<Channel> result = new ArrayList<>();
-        try (Cursor cursor = getChannelListCursor(orderBy, conditions)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    Channel channel = new Channel();
-                    channel.AssignCursorData(cursor);
-                    result.add(channel);
-                } while (cursor.moveToNext());
-            }
-        }
-
-        return result;
-    }
-
-    public Cursor getSortedChannelIdsForLocationCursor(int locationId) {
-        return getChannelListCursorWithDefaultOrder("C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
-    }
-
-    public void updateChannelsOrder(List<Long> reorderedIds, int locationId) {
-        write(sqLiteDatabase -> {
-            sqLiteDatabase.beginTransaction();
-            try {
-                sqLiteDatabase.execSQL("UPDATE " + SuplaContract.LocationEntry.TABLE_NAME +
-                        " SET " + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " = '" + Location.SortingType.USER_DEFINED.name() +
-                        "' WHERE " + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
-
-                int position = 1;
-                for (Long id : reorderedIds) {
-                    sqLiteDatabase.execSQL("UPDATE " + SuplaContract.ChannelEntry.TABLE_NAME +
-                            " SET " + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + " = " + position +
-                            " WHERE " + SuplaContract.ChannelEntry._ID + " = " + id);
-                    position++;
-                }
-                sqLiteDatabase.setTransactionSuccessful();
-            } finally {
-                sqLiteDatabase.endTransaction();
-            }
-        });
-    }
-
-    public List<Integer> getChannelUserIconIds() {
-        String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
-                + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
-                + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
-                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
-                + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
-                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " WHERE " + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
-                " > 0 AND " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
-                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " IS NULL";
-
-        ArrayList<Integer> ids = new ArrayList<>();
-        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
-            if (cursor.moveToFirst()) {
-                do {
-                    Integer id = cursor.getInt(
-                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
-                    if (!ids.contains(id)) {
-                        ids.add(id);
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
-
-        return ids;
-    }
-
-    public List<Integer> getChannelGroupUserIconIds() {
-        String sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
-                + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
-                + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
-                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
-                + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
-                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " WHERE " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
-                " > 0 AND " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
-                " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-                + " IS NULL";
-
-        ArrayList<Integer> ids = new ArrayList<>();
-        try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
-            if (cursor.moveToFirst()) {
-                do {
-                    Integer id = cursor.getInt(
-                            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
-                    if (!ids.contains(id)) {
-                        ids.add(id);
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
-
-        return ids;
     }
 
     private int getChannelCount(@Nullable Key<?> key) {
