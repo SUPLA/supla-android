@@ -38,6 +38,7 @@ public class DigiglassController extends View {
     private static final int BTN_PICTOGRAM_MAX_WIDTH_PX = 150;
 
     Paint paint;
+    RectF rect;
     float pxPerDP;
     float lineWidth;
     int barColor;
@@ -58,6 +59,7 @@ public class DigiglassController extends View {
     private void init() {
       paint = new Paint();
       paint.setAntiAlias(true);
+      rect = new RectF();
 
       pxPerDP = 1;
       Resources r = getResources();
@@ -186,6 +188,16 @@ public class DigiglassController extends View {
         invalidate();
     }
 
+    public void setAllTransparent() {
+        this.transparentSections = 0xFFFF;
+        invalidate();
+    }
+
+    public void setAllOpaque() {
+        this.transparentSections = 0;
+        invalidate();
+    }
+
     public boolean isHorizontal() {
         return horizontal;
     }
@@ -256,7 +268,7 @@ public class DigiglassController extends View {
         paint.setColor(dotColor);
         paint.setStrokeWidth(1);
         paint.setStyle(Paint.Style.FILL);
-        float fieldRadius = pxPerDP * 1.5f;
+        float fieldRadius = pxPerDP * 1.0f;
         float pointRadius = pxPerDP * 0.5f;
 
         float diameter = fieldRadius * 2;
@@ -390,7 +402,6 @@ public class DigiglassController extends View {
         float lineHalfWidth = lineWidth/2;
         paint.setStrokeWidth(1);
 
-        RectF rect = new RectF();
         rect.left = lineWidth;
         rect.right = width - lineWidth;
         rect.top = barHeight;

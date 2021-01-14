@@ -34,6 +34,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.supla.android.ChannelDetailDigiglass;
 import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGBW;
@@ -169,6 +170,12 @@ public class ChannelListView extends ListView {
                         mDetailLayout = null;
 
                     break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                    if (!(mDetailLayout instanceof ChannelDetailDigiglass))
+                        mDetailLayout = null;
+                    break;
             }
 
         }
@@ -210,6 +217,10 @@ public class ChannelListView extends ListView {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                    mDetailLayout = new ChannelDetailDigiglass(getContext(), this);
                     break;
             }
 
