@@ -66,7 +66,7 @@ public interface ChannelRepository {
 
     boolean setChannelsOffline();
 
-    Cursor getChannelListCursorWithDefaultOrder(String where);
+    Cursor getChannelListCursorForGroup(int groupId);
 
     Cursor getChannelListCursorWithDefaultOrder();
 

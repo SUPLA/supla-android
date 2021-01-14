@@ -33,6 +33,7 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -67,7 +68,7 @@ public class DbHelper extends BaseDbHelper {
         this.colorListRepository = new DefaultColorListRepository(
                 new ColorListDao(this));
         this.userIconRepository = new DefaultUserIconRepository(
-                new UserIconDao(this));
+                new UserIconDao(this), new ImageCacheProvider());
     }
 
     /**
@@ -593,15 +594,7 @@ public class DbHelper extends BaseDbHelper {
     }
 
     public Cursor getChannelListCursorForGroup(int groupId) {
-        String where = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
-                + " IN ( SELECT " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
-                + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME
-                + " WHERE " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
-                + " = " + groupId
-                + " AND " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
-                + " > 0 ) ";
-
-        return channelRepository.getChannelListCursorWithDefaultOrder(where);
+        return channelRepository.getChannelListCursorForGroup(groupId);
     }
 
     public Cursor getGroupListCursor() {

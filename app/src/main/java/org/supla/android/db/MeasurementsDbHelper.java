@@ -23,7 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.supla.android.Trace;
-import org.supla.android.data.source.DefaultMeasureableItemsRepository;
+import org.supla.android.data.source.DefaultMeasurableItemsRepository;
 import org.supla.android.data.source.MeasurableItemsRepository;
 import org.supla.android.data.source.local.ElectricityMeterLogDao;
 import org.supla.android.data.source.local.ImpulseCounterLogDao;
@@ -47,7 +47,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
     private MeasurementsDbHelper(Context context) {
         super(context, M_DATABASE_NAME, null, DATABASE_VERSION);
-        this.measurableItemsRepository = new DefaultMeasureableItemsRepository(
+        this.measurableItemsRepository = new DefaultMeasurableItemsRepository(
                 new ImpulseCounterLogDao(this),
                 new ElectricityMeterLogDao(this),
                 new ThermostatLogDao(this),
@@ -435,8 +435,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     }
 
     public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
-        long minTS = getImpulseCounterMeasurementTimestamp(channelId, true);
-        return timestampStartsWithTheCurrentMonth(minTS);
+        return measurableItemsRepository.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
     }
 
     public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {

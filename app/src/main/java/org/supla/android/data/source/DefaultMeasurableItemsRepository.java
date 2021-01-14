@@ -33,7 +33,7 @@ import org.supla.android.db.ThermostatMeasurementItem;
 
 import java.util.Date;
 
-public class DefaultMeasureableItemsRepository implements MeasurableItemsRepository {
+public class DefaultMeasurableItemsRepository implements MeasurableItemsRepository {
 
     private final ImpulseCounterLogDao impulseCounterLogDao;
     private final ElectricityMeterLogDao electricityMeterLogDao;
@@ -41,11 +41,11 @@ public class DefaultMeasureableItemsRepository implements MeasurableItemsReposit
     private final TempHumidityLogDao tempHumidityLogDao;
     private final TemperatureLogDao temperatureLogDao;
 
-    public DefaultMeasureableItemsRepository(ImpulseCounterLogDao impulseCounterLogDao,
-                                             ElectricityMeterLogDao electricityMeterLogDao,
-                                             ThermostatLogDao thermostatLogDao,
-                                             TempHumidityLogDao tempHumidityLogDao,
-                                             TemperatureLogDao temperatureLogDao) {
+    public DefaultMeasurableItemsRepository(ImpulseCounterLogDao impulseCounterLogDao,
+                                            ElectricityMeterLogDao electricityMeterLogDao,
+                                            ThermostatLogDao thermostatLogDao,
+                                            TempHumidityLogDao tempHumidityLogDao,
+                                            TemperatureLogDao temperatureLogDao) {
         this.impulseCounterLogDao = impulseCounterLogDao;
         this.electricityMeterLogDao = electricityMeterLogDao;
         this.thermostatLogDao = thermostatLogDao;

@@ -34,6 +34,7 @@ public class DefaultColorListRepository implements ColorListRepository {
         return colorListDao.getColorListItem(id, group, idx);
     }
 
+    @Override
     public void updateColorListItemValue(ColorListItem item) {
         ColorListItem cli = colorListDao.getColorListItem(item.getRemoteId(), item.getGroup(), item.getIdx());
         if (cli == null) {

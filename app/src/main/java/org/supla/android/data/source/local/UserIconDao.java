@@ -31,7 +31,7 @@ public class UserIconDao extends BaseDao {
         super(databaseAccessProvider);
     }
 
-    public void insert(int Id, Image... images) {
+    public void insert(int Id, Image images[]) {
         if (images.length != 4) {
             throw new IllegalArgumentException("Expects allways 4 images");
         }
@@ -40,7 +40,9 @@ public class UserIconDao extends BaseDao {
         values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
 
         for (Image image : images) {
-            values.put(image.column, image.value);
+            if (image.value != null) {
+                values.put(image.column, image.value);
+            }
         }
 
         write(sqLiteDatabase -> {

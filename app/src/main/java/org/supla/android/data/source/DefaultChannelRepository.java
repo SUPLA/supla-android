@@ -150,7 +150,6 @@ public class DefaultChannelRepository implements ChannelRepository {
 
             channelDao.insert(value);
             return true;
-
         } else if (value.Diff(channelValue)
                 || value.getOnLine() != online) {
 
@@ -278,13 +277,21 @@ public class DefaultChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public Cursor getChannelListCursorWithDefaultOrder(String where) {
+    public Cursor getChannelListCursorForGroup(int groupId) {
+        String where = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+                + " IN ( SELECT " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
+                + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME
+                + " WHERE " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
+                + " = " + groupId
+                + " AND " + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
+                + " > 0 ) ";
+
         return channelDao.getChannelListCursorWithDefaultOrder(where);
     }
 
     @Override
     public Cursor getChannelListCursorWithDefaultOrder() {
-        return getChannelListCursorWithDefaultOrder(null);
+        return channelDao.getChannelListCursorWithDefaultOrder(null);
     }
 
     @Override

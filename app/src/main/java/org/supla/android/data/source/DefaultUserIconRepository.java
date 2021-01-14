@@ -23,14 +23,17 @@ import android.database.Cursor;
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.db.SuplaContract;
 import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.images.ImageId;
 
 public class DefaultUserIconRepository implements UserIconRepository {
 
     private final UserIconDao userIconDao;
+    private final ImageCacheProvider imageCacheProvider;
 
-    public DefaultUserIconRepository(UserIconDao userIconDao) {
+    public DefaultUserIconRepository(UserIconDao userIconDao, ImageCacheProvider imageCacheProvider) {
         this.userIconDao = userIconDao;
+        this.imageCacheProvider = imageCacheProvider;
     }
 
     @Override
@@ -48,7 +51,9 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
         userIconDao.insert(id, images);
         for (UserIconDao.Image image : images) {
-            ImageCache.addImage(new ImageId(id, image.subId), image.value);
+            if (image.value != null) {
+                imageCacheProvider.addImage(id, image);
+            }
         }
         return true;
     }
@@ -69,7 +74,7 @@ public class DefaultUserIconRepository implements UserIconRepository {
                             SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
 
                     if (image != null && image.length > 0) {
-                        ImageCache.addImage(new ImageId(remoteId, imageType.subId), image);
+                        imageCacheProvider.addImage(new ImageId(remoteId, imageType.subId), image);
                     }
                 }
             } while (cursor.moveToNext());
