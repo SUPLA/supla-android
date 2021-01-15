@@ -259,7 +259,7 @@ public abstract class ChannelBase extends DbItem {
                 return value.isClosed() ? 1 : 0;
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-                return 0;
+                return value.getDigiglassValue().isAnySectionTransparent() ? 1 : 0;
         }
 
         return 0;

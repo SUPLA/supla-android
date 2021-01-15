@@ -52,10 +52,6 @@ public class DigiglassController extends View {
     int transparentSections;
     OnSectionClickListener onSectionClickListener;
 
-    public DigiglassController(Context context) {
-        super(context);
-    }
-
     private void init() {
       paint = new Paint();
       paint.setAntiAlias(true);
@@ -77,6 +73,12 @@ public class DigiglassController extends View {
       btnDotColor = Color.BLACK;
       sectionCount = 7;
     }
+
+    public DigiglassController(Context context) {
+        super(context);
+        init();
+    }
+
 
     public DigiglassController(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -168,6 +170,7 @@ public class DigiglassController extends View {
             sectionCount = 7;
         }
         this.sectionCount = sectionCount;
+        this.transparentSections &= (short) (Math.pow(2, sectionCount) - 1);
         invalidate();
     }
 
@@ -184,12 +187,12 @@ public class DigiglassController extends View {
     }
 
     public void setTransparentSections(int transparentSections) {
-        this.transparentSections = transparentSections;
+        this.transparentSections = transparentSections & (short) (Math.pow(2, sectionCount) - 1);
         invalidate();
     }
 
     public void setAllTransparent() {
-        this.transparentSections = 0xFFFF;
+        this.transparentSections = (short) (Math.pow(2, sectionCount) - 1);
         invalidate();
     }
 
@@ -387,7 +390,7 @@ public class DigiglassController extends View {
         }
     }
 
-    private boolean isSectionTransparent(int num) {
+    public boolean isSectionTransparent(int num) {
         return (transparentSections & (1 << num)) > 0;
     }
 
