@@ -43,7 +43,7 @@ public class DigiglassControllerTest extends TestCase implements DigiglassContro
     @Test
     public void testGlassColorSetterAndGetter() {
         Assert.assertEquals(0xffbdd8f2, controller.getGlassColor());
-        controller.setDotColor(REFCOLOR);
+        controller.setGlassColor(REFCOLOR);
         Assert.assertEquals(REFCOLOR, controller.getGlassColor());
     }
 
@@ -75,6 +75,13 @@ public class DigiglassControllerTest extends TestCase implements DigiglassContro
         Assert.assertEquals(false, controller.isHorizontal());
         controller.setHorizontal(true);
         Assert.assertEquals(true, controller.isHorizontal());
+    }
+
+    @Test
+    public void testLineWidthSetterAndGetter() {
+        Assert.assertEquals(2, controller.getLineWidth(), 0);
+        controller.setLineWidth(1);
+        Assert.assertEquals(1, controller.getLineWidth(), 0);
     }
 
     @Test
