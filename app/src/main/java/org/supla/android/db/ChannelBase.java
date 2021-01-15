@@ -257,6 +257,9 @@ public abstract class ChannelBase extends DbItem {
             }
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 return value.isClosed() ? 1 : 0;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                return value.getDigiglassValue().isAnySectionTransparent() ? 1 : 0;
         }
 
         return 0;
@@ -509,6 +512,29 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
+                break;
+
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = active == 1 ? R.drawable.digiglasstransparent1
+                                : R.drawable.digiglass1;
+                        break;
+                    default:
+                        img_idx = active == 1 ? R.drawable.digiglasstransparent
+                                : R.drawable.digiglass;
+                }
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = active == 1 ? R.drawable.digiglasshtransparent1
+                                : R.drawable.digiglass1;
+                        break;
+                    default:
+                        img_idx = active == 1 ? R.drawable.digiglasshtransparent
+                                : R.drawable.digiglass;
+                }
                 break;
         }
 

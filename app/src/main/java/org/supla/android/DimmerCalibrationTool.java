@@ -57,6 +57,7 @@ public abstract class DimmerCalibrationTool
     private long lastCalCfgTime = 0;
     private Timer delayTimer1 = null;
     private Timer delayTimer2 = null;
+    private boolean settingsChanged;
 
     public DimmerCalibrationTool(ChannelDetailRGBW detailRGB) {
         if (detailRGB == null || !(detailRGB.getContext() instanceof Activity)) {
@@ -107,6 +108,16 @@ public abstract class DimmerCalibrationTool
         btnInfo = btnInfoResId == 0 ? null : findBtnViewById(btnInfoResId);
     }
 
+    protected void setSettingsChanged(boolean changed) {
+        settingsChanged = changed;
+        Drawable d = getResources().getDrawable(changed ? R.drawable.btnok : R.drawable.btnokdisabled);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            btnOK.setBackground(d);
+        } else {
+            btnOK.setBackgroundDrawable(d);
+        }
+    }
 
     protected RelativeLayout getMainView() {
         return mainView;
@@ -143,10 +154,6 @@ public abstract class DimmerCalibrationTool
     }
 
     private void setConfigStarted(boolean started) {
-        if (started) {
-            closePreloaderPopup();
-        }
-
         configStartedAtTime = started ? System.currentTimeMillis() : 0;
         NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
         if (activity!=null) {
@@ -158,6 +165,11 @@ public abstract class DimmerCalibrationTool
         displayCfgParameters(true);
         getDetailContentView().setVisibility(View.GONE);
         getMainView().setVisibility(View.VISIBLE);
+
+        if (started) {
+            closePreloaderPopup();
+            setSettingsChanged(false);
+        }
     }
 
     protected void setConfigStarted() {
@@ -252,6 +264,13 @@ public abstract class DimmerCalibrationTool
                 ? params.getLedConfig() : DeviceCfgParameters.LED_UNKNOWN);
     }
 
+    protected void calCfgRequest(int cmd, int dataType, byte[] data, boolean force) {
+        if (detailRGB != null) {
+            detailRGB.deviceCalCfgRequest(cmd, dataType, data, force);
+            setSettingsChanged(true);
+        }
+    }
+
     protected void calCfgRequest(int cmd, Byte bdata, Short sdata) {
         if (detailRGB == null) {
             return;
@@ -266,6 +285,8 @@ public abstract class DimmerCalibrationTool
         } else {
             detailRGB.deviceCalCfgRequest(cmd);
         }
+
+        setSettingsChanged(true);
     }
 
     protected void calCfgRequest(int cmd) {
@@ -385,6 +406,12 @@ public abstract class DimmerCalibrationTool
     }
 
     public boolean onBackPressed() {
+
+        if (!settingsChanged) {
+            Hide();
+            return false;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(R.string.save_without_saving);
 
@@ -409,6 +436,7 @@ public abstract class DimmerCalibrationTool
                 (dialog, id) -> {
                     showPreloaderWithText(R.string.restoring_default_settings);
                     doRestore();
+                    setSettingsChanged(false);
                 });
 
         builder.setNeutralButton(R.string.no,
@@ -420,6 +448,11 @@ public abstract class DimmerCalibrationTool
 
     public void onClick(View v) {
         if (v == btnOK) {
+
+            if (!settingsChanged) {
+                Hide();
+                return;
+            }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage(R.string.do_you_want_to_save);

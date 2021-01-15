@@ -25,6 +25,7 @@ import android.database.Cursor;
 
 import org.supla.android.R;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaConst;
@@ -377,6 +378,23 @@ public class Channel extends ChannelBase {
                     return lightSourceLifespanLeft <= 5 ? 2 : 1;
                 }
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                DigiglassValue dgfVal = getValue().getDigiglassValue();
+                if (dgfVal.isTooLongOperationWarningPresent()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_too_long_operation_warning));
+                    }
+                    return 2;
+                } else if (dgfVal.isPlannedRegenerationInProgress()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_planned_regeneration_in_progress));
+                    }
+                    return 1;
+                }
+                return 0;
         }
 
         return 0;

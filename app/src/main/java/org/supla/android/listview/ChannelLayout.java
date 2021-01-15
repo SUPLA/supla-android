@@ -752,6 +752,8 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);

@@ -163,6 +163,9 @@ public class SuplaClient extends Thread {
     private native boolean scSetLightsourceLifespan(long _supla_client, int ChannelID, boolean
             resetCounter, boolean setTime, int lifeSpan);
 
+    private native boolean scSetDfgTransparency(long _supla_client, int ChannelID, short mask,
+                                                short active_bits);
+
     private void sendMessage(SuplaClientMsg msg) {
         if (canceled()) return;
         SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
@@ -458,6 +461,16 @@ public class SuplaClient extends Thread {
         try {
             return _supla_client_ptr != 0
                     && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetDfgTransparency(_supla_client_ptr, ChannelID, mask, active_bits);
         } finally {
             unlockClientPtr();
         }

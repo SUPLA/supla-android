@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
+import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -383,5 +384,9 @@ public class ChannelValue extends DbItem {
 
         return value.length > 1
                 && (value[1] & SuplaConst.SUPLA_VALVE_FLAG_FLOODING) > 0;
+    }
+
+    public DigiglassValue getDigiglassValue() {
+        return new DigiglassValue(getChannelValue());
     }
 }

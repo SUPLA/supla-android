@@ -132,7 +132,7 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
     private void calCfgConfigComplete(boolean save) {
         byte[] data = new byte[1];
         data[0] = (byte)(save ? 1 : 0);
-        getDetailRGB().deviceCalCfgRequest(DIW_CMD_CONFIG_COMPLETE, 0, data, true);
+        calCfgRequest(DIW_CMD_CONFIG_COMPLETE, 0, data, true);
     }
 
     @Override
