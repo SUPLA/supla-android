@@ -421,4 +421,5 @@
     <string translatable="false" name="channel_func_digiglass">Digiglass</string>
     <string translatable="false" name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
     <string translatable="false" name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
+    <string translatable="false" name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
 </resources>

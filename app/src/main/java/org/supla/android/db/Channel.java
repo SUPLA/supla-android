@@ -393,6 +393,12 @@ public class Channel extends ChannelBase {
                                 getString(R.string.dgf_planned_regeneration_in_progress));
                     }
                     return 1;
+                } else if (dgfVal.regenerationAfter20hInProgress()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_regeneration_after20h));
+                    }
+                    return 1;
                 }
                 return 0;
         }

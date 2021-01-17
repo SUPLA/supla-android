@@ -4,6 +4,7 @@ public class DigiglassValue {
 
     public static final byte TOO_LONG_OPERATION_WARNING = 0x1;
     public static final byte PLANNED_REGENERATION_IN_PROGRESS = 0x2;
+    public static final byte REGENERATION_AFTER_20H_IN_PREGORESS = 0x4;
 
     private byte flags;
     private byte sectionCount;
@@ -39,6 +40,10 @@ public class DigiglassValue {
 
     public boolean isPlannedRegenerationInProgress() {
         return (flags & PLANNED_REGENERATION_IN_PROGRESS) > 0;
+    }
+
+    public boolean regenerationAfter20hInProgress() {
+        return (flags & REGENERATION_AFTER_20H_IN_PREGORESS) > 0;
     }
 
     public boolean isSectionTransparent(int sectionNumber) {
