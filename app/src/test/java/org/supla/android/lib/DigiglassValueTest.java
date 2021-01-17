@@ -5,8 +5,6 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class DigiglassValueTest extends TestCase {
     @Test
     public void testNull() {
@@ -72,7 +70,7 @@ public class DigiglassValueTest extends TestCase {
 
         v[0] = DigiglassValue.TOO_LONG_OPERATION_WARNING
                 | DigiglassValue.PLANNED_REGENERATION_IN_PROGRESS
-                | DigiglassValue.REGENERATION_AFTER_20H_IN_PREGORESS;
+                | DigiglassValue.REGENERATION_AFTER_20H_IN_PROGRESS;
 
 
         val = new DigiglassValue(v);
