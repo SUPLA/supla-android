@@ -101,6 +101,11 @@ public class DigiglassController extends View {
     }
 
     public void setLineWidth(float lineWidth) {
+        if (lineWidth <= 0.1) {
+            lineWidth = 0.1f;
+        } else if (lineWidth > 20) {
+            lineWidth = 20;
+        }
         this.lineWidth = lineWidth;
         invalidate();
     }

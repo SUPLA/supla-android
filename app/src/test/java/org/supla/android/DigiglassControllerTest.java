@@ -82,6 +82,10 @@ public class DigiglassControllerTest extends TestCase implements DigiglassContro
         Assert.assertEquals(2, controller.getLineWidth(), 0);
         controller.setLineWidth(1);
         Assert.assertEquals(1, controller.getLineWidth(), 0);
+        controller.setLineWidth(0);
+        Assert.assertEquals(0.1, controller.getLineWidth(), 0.1);
+        controller.setLineWidth(21);
+        Assert.assertEquals(20, controller.getLineWidth(), 0);
     }
 
     @Test
