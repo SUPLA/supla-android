@@ -381,19 +381,26 @@ public class Channel extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
                 DigiglassValue dgfVal = getValue().getDigiglassValue();
-                if (dgfVal.isTooLongOperationWarningPresent()) {
-                    if (message != null) {
-                        message.append(context.getResources().
-                                getString(R.string.dgf_too_long_operation_warning));
-                    }
-                    return 2;
-                } else if (dgfVal.isPlannedRegenerationInProgress()) {
+
+                if (dgfVal.isPlannedRegenerationInProgress()) {
                     if (message != null) {
                         message.append(context.getResources().
                                 getString(R.string.dgf_planned_regeneration_in_progress));
                     }
                     return 1;
-                }
+                } else if (dgfVal.regenerationAfter20hInProgress()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_regeneration_after20h));
+                    }
+                    return 1;
+                } else if (dgfVal.isTooLongOperationWarningPresent()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_too_long_operation_warning));
+                    }
+                    return 2;
+                } else
                 return 0;
         }
 

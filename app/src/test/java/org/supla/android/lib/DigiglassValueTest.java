@@ -5,8 +5,6 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class DigiglassValueTest extends TestCase {
     @Test
     public void testNull() {
@@ -66,6 +64,23 @@ public class DigiglassValueTest extends TestCase {
         Assert.assertEquals(false, val.isAnySectionTransparent());
         Assert.assertEquals(true, val.isPlannedRegenerationInProgress());
         Assert.assertEquals(true, val.isTooLongOperationWarningPresent());
+        Assert.assertEquals(false, val.regenerationAfter20hInProgress());
         Assert.assertEquals(false, val.isSectionTransparent(0));
+
+
+        v[0] = DigiglassValue.TOO_LONG_OPERATION_WARNING
+                | DigiglassValue.PLANNED_REGENERATION_IN_PROGRESS
+                | DigiglassValue.REGENERATION_AFTER_20H_IN_PROGRESS;
+
+
+        val = new DigiglassValue(v);
+
+        Assert.assertEquals(false, val.isAnySectionTransparent());
+        Assert.assertEquals(true, val.isPlannedRegenerationInProgress());
+        Assert.assertEquals(true, val.isTooLongOperationWarningPresent());
+        Assert.assertEquals(true, val.regenerationAfter20hInProgress());
+        Assert.assertEquals(false, val.isSectionTransparent(0));
+
+
     }
 }
