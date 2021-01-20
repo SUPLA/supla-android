@@ -75,6 +75,8 @@ public class DigiglassControllerTest extends TestCase implements DigiglassContro
         Assert.assertEquals(false, controller.isHorizontal());
         controller.setHorizontal(true);
         Assert.assertEquals(true, controller.isHorizontal());
+        controller.setHorizontal(false);
+        Assert.assertEquals(false, controller.isHorizontal());
     }
 
     @Test
