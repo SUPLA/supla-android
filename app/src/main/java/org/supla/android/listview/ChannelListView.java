@@ -171,8 +171,8 @@ public class ChannelListView extends ListView {
 
                     break;
 
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                     if (!(mDetailLayout instanceof ChannelDetailDigiglass))
                         mDetailLayout = null;
                     break;
@@ -218,8 +218,8 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                     mDetailLayout = new ChannelDetailDigiglass(getContext(), this);
                     break;
             }

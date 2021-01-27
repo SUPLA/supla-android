@@ -7,8 +7,6 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class DigiglassControllerTest extends TestCase implements DigiglassController.OnSectionClickListener {
 
     private DigiglassController controller;
@@ -72,11 +70,11 @@ public class DigiglassControllerTest extends TestCase implements DigiglassContro
 
     @Test
     public void testHorizontalSetterAndGetter() {
-        Assert.assertEquals(false, controller.isHorizontal());
-        controller.setHorizontal(true);
-        Assert.assertEquals(true, controller.isHorizontal());
-        controller.setHorizontal(false);
-        Assert.assertEquals(false, controller.isHorizontal());
+        Assert.assertEquals(false, controller.isVertical());
+        controller.setVertical(true);
+        Assert.assertEquals(true, controller.isVertical());
+        controller.setVertical(false);
+        Assert.assertEquals(false, controller.isVertical());
     }
 
     @Test

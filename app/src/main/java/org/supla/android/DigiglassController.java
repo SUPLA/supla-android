@@ -48,7 +48,7 @@ public class DigiglassController extends View {
     int sectionCount;
     int btnBackgroundColor;
     int btnDotColor;
-    boolean horizontal;
+    boolean vertical;
     int transparentSections;
     OnSectionClickListener onSectionClickListener;
 
@@ -206,12 +206,12 @@ public class DigiglassController extends View {
         invalidate();
     }
 
-    public boolean isHorizontal() {
-        return horizontal;
+    public boolean isVertical() {
+        return vertical;
     }
 
-    public void setHorizontal(boolean horizontal) {
-        this.horizontal = horizontal;
+    public void setVertical(boolean vertical) {
+        this.vertical = vertical;
         invalidate();
     }
 
@@ -224,9 +224,9 @@ public class DigiglassController extends View {
         float height = getHeight();
         float width = getWidth();
 
-        float sectionSize = (horizontal ? width : (height - 2 * barHeight))
+        float sectionSize = (vertical ? width : (height - 2 * barHeight))
                 / sectionCount;
-        if (horizontal) {
+        if (vertical) {
             rect.left = sectionSize * sectionNumber;
             rect.right = rect.left + sectionSize + 1;
             rect.top = barHeight;
@@ -251,7 +251,7 @@ public class DigiglassController extends View {
         if (width > SECTION_BUTTON_MAX_SIZE_PX) {
             width = SECTION_BUTTON_MAX_SIZE_PX;
         }
-        if (horizontal) {
+        if (vertical) {
             left = sectionRect.left+sectionRect.width()/2-width/2;
             right = left+width;
             bottom = sectionRect.bottom - sectionRect.height() * 0.05f;

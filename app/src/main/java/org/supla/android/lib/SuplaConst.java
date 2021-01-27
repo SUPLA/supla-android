@@ -108,8 +108,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
-    public final static int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 800;
-    public final static int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 810;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
 
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;
@@ -393,8 +393,8 @@ public class SuplaConst {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 idx = R.string.channel_caption_valve;
                 break;
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 idx = R.string.channel_caption_digiglass;
                 break;
         }
@@ -535,8 +535,8 @@ public class SuplaConst {
             case SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 resId = R.string.channel_func_valve_percentage;
                 break;
-            case SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 resId = R.string.channel_func_digiglass;
                 break;
 

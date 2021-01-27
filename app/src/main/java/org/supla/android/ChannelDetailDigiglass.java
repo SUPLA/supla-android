@@ -107,8 +107,8 @@ public class ChannelDetailDigiglass extends DetailLayout implements View.OnClick
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
-        controller.setHorizontal(channel.getFunc() ==
-                SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL);
+        controller.setVertical(channel.getFunc() ==
+                SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL);
         if (channel instanceof Channel) {
             channelToViews((Channel)channel);
         }
