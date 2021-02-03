@@ -291,7 +291,8 @@ public class DefaultChannelRepository implements ChannelRepository {
 
     @Override
     public Cursor getChannelListCursorWithDefaultOrder() {
-        return channelDao.getChannelListCursorWithDefaultOrder(null);
+        return channelDao.getChannelListCursorWithDefaultOrder(SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                + " <> 0 ");
     }
 
     @Override
