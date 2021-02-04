@@ -44,8 +44,8 @@ public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getTempHumidityMeasurementTotalCount(getChannelId());
     }
 
-    protected void EraseMeasurements(SQLiteDatabase db) {
-        getMeasurementsDbH().deleteTempHumidityMeasurements(db, getChannelId());
+    protected void eraseMeasurements() {
+        getMeasurementsDbH().deleteTempHumidityMeasurements(getChannelId());
     }
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
@@ -55,7 +55,7 @@ public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
 
-        getMeasurementsDbH().addTempHumidityMeasurement(db, thi);
+        getMeasurementsDbH().addTempHumidityMeasurement(thi);
     }
 
 }

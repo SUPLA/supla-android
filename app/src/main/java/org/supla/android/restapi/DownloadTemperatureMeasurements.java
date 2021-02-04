@@ -44,8 +44,8 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getTemperatureMeasurementTotalCount(getChannelId());
     }
 
-    protected void EraseMeasurements(SQLiteDatabase db) {
-        getMeasurementsDbH().deleteTemperatureMeasurements(db, getChannelId());
+    protected void eraseMeasurements() {
+        getMeasurementsDbH().deleteTemperatureMeasurements(getChannelId());
     }
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
@@ -55,7 +55,7 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         ti.AssignJSONObject(obj);
         ti.setChannelId(getChannelId());
 
-        getMeasurementsDbH().addTemperatureMeasurement(db, ti);
+        getMeasurementsDbH().addTemperatureMeasurement(ti);
     }
 
 }

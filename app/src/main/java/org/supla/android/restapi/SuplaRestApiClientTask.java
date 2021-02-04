@@ -27,6 +27,7 @@ import org.json.JSONTokener;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaOAuthToken;
 
@@ -60,7 +61,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     private int ChannelId = 0;
     private long ActivityTime = 0;
     private SuplaOAuthToken mToken;
-    private DbHelper MDbH = null;
+    private MeasurementsDbHelper MDbH = null;
     private DbHelper DbH = null;
     private IAsyncResults delegate;
 
@@ -170,15 +171,15 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
     protected DbHelper getDbH() {
         if (DbH == null) {
-            DbH = new DbHelper(_context);
+            DbH = DbHelper.getInstance(_context);
         }
 
         return DbH;
     }
 
-    protected DbHelper getMeasurementsDbH() {
+    protected MeasurementsDbHelper getMeasurementsDbH() {
         if (MDbH == null) {
-            MDbH = new DbHelper(_context, true);
+            MDbH = MeasurementsDbHelper.getInstance(_context);
         }
 
         return MDbH;

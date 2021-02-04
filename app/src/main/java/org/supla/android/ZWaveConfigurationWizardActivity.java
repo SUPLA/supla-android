@@ -27,6 +27,7 @@ import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -61,7 +62,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
     private Channel mSelectedCahnnel;
     private ArrayList<SuplaChannelBasicCfg> mChannelBasicCfgList;
     private ArrayList<Integer> mDeviceList;
-    private ArrayList<Channel> mChannelList;
+    private List<Channel> mChannelList;
     private Spinner mFunctionListSpinner;
     private ArrayList<Integer> mFuncList;
     private ArrayList<Integer> mDevicesToRestart;
@@ -236,10 +237,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     private void loadChannelList() {
         setBtnNextEnabled(false);
-        DbHelper dbHelper = new DbHelper(this);
 
         mDeviceList.clear();
-        mChannelList = dbHelper.getZWaveBridgeChannels();
+        mChannelList = getDbHelper().getZWaveBridgeChannels();
 
         for (Channel channel : mChannelList) {
             boolean exists = false;
@@ -490,8 +490,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
 
     private void updateSelectedChannel() {
         if (mSelectedCahnnel != null) {
-            DbHelper dbHelper = new DbHelper(this);
-            mSelectedCahnnel = dbHelper.getChannel(mSelectedCahnnel.getChannelId());
+            mSelectedCahnnel = getDbHelper().getChannel(mSelectedCahnnel.getChannelId());
         }
     }
 

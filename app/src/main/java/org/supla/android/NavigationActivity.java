@@ -243,9 +243,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if (Anim) return;
 
-            DbHelper DbH = new DbHelper(this);
-
-            int btns = DbH.isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
+            int btns = getDbHelper().isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
                     : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
 
             getMenuItemsLayout().setButtonsAvailable(btns);

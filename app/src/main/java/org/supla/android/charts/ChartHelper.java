@@ -47,7 +47,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.supla.android.R;
-import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,8 +182,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return spf.format(new java.util.Date((minTimestamp + (long) (value * 600f)) * 1000));
     }
 
-    abstract protected Cursor getCursor(DbHelper DBH,
-                                        SQLiteDatabase db, int channelId, String dateFormat);
+    abstract protected Cursor getCursor(MeasurementsDbHelper DBH, int channelId, String dateFormat);
 
     abstract protected void addBarEntries(int n, float time, Cursor c,
                                           ArrayList<BarEntry> entries);
@@ -313,31 +312,25 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         newLineEntries();
 
-        DbHelper DBH = new DbHelper(context, true);
-        SQLiteDatabase db = DBH.getReadableDatabase();
-        try {
-            Cursor c = getCursor(DBH, db, channelId, DateFormat);
+        MeasurementsDbHelper DBH = MeasurementsDbHelper.getInstance(context);
+        Cursor c = getCursor(DBH, channelId, DateFormat);
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int n = 0;
+                minTimestamp = getTimestamp(c);
+                do {
+                    n++;
+                    addBarEntries(n, (getTimestamp(c) - minTimestamp) / 600f, c,
+                            barEntries);
+                    addLineEntries(n, c, (getTimestamp(c) - minTimestamp) / 600f,
+                            lineEntries);
+                    addFormattedValue(c, spf);
 
-            if (c != null) {
-                if (c.moveToFirst()) {
-                    int n = 0;
-                    minTimestamp = getTimestamp(c);
-                    do {
-                        n++;
-                        addBarEntries(n, (getTimestamp(c) - minTimestamp) / 600f, c,
-                                barEntries);
-                        addLineEntries(n, c, (getTimestamp(c) - minTimestamp) / 600f,
-                                lineEntries);
-                        addFormattedValue(c, spf);
+                } while (c.moveToNext());
 
-                    } while (c.moveToNext());
-
-                }
-
-                c.close();
             }
-        } finally {
-            db.close();
+
+            c.close();
         }
 
         if (barEntries.size() > 0 && isComparsionChartType(ctype)) {
@@ -416,30 +409,24 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        DbHelper DBH = new DbHelper(context, true);
-        SQLiteDatabase db = DBH.getReadableDatabase();
-        try {
-            Cursor c = getCursor(DBH, db, channelId, DateFormat);
+        MeasurementsDbHelper DBH = MeasurementsDbHelper.getInstance(context);
+        Cursor c = getCursor(DBH, channelId, DateFormat);
+        if (c != null) {
 
-            if (c != null) {
+            if (c.moveToFirst()) {
 
-                if (c.moveToFirst()) {
-
-                    if (ctype.equals(ChartType.Pie_PhaseRank)) {
+                if (ctype.equals(ChartType.Pie_PhaseRank)) {
+                    addPieEntries(spf, c, entries);
+                } else {
+                    do {
                         addPieEntries(spf, c, entries);
-                    } else {
-                        do {
-                            addPieEntries(spf, c, entries);
-                        } while (c.moveToNext());
-                    }
-
-
+                    } while (c.moveToNext());
                 }
 
-                c.close();
+
             }
-        } finally {
-            db.close();
+
+            c.close();
         }
 
         updateDescription();

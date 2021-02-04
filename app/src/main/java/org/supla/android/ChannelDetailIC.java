@@ -38,6 +38,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.listview.ChannelListView;
@@ -134,7 +135,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
         }
 
-        DbHelper mDBH = new DbHelper(getContext(), true);
+        MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
         tvMeterValue.setText("---");
         tvCurrentConsumption.setText("---");

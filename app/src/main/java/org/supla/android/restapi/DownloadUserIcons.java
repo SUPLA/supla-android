@@ -19,14 +19,13 @@ package org.supla.android.restapi;
  */
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadUserIcons extends SuplaRestApiClientTask {
 
@@ -46,9 +45,7 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
             e.printStackTrace();
         }
 
-        SQLiteDatabase db = getDbH().getReadableDatabase();
-        ArrayList<Integer> ids = getDbH().iconsToDownload(db);
-        db.close();
+        List<Integer> ids = getDbH().iconsToDownload();
 
         String package_ids = "";
         for (int a = 0; a < ids.size(); a++) {
@@ -92,10 +89,8 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
                                         Base64.decode(images.getString(3), Base64.DEFAULT)
                                         : null;
 
-                                db = getDbH().getWritableDatabase();
-                                boolean added = getDbH().addUserIcons(db,
+                                boolean added = getDbH().addUserIcons(
                                         imgId, img1, img2, img3, img4);
-                                db.close();
                                 if (added) {
                                     DownloadCount++;
                                 }

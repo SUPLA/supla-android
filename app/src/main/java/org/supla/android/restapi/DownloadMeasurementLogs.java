@@ -40,7 +40,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     abstract protected int getLocalTotalCount();
 
-    abstract protected void EraseMeasurements(SQLiteDatabase db);
+    abstract protected void eraseMeasurements();
 
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
@@ -90,9 +90,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             }
 
             if (doErase) {
-                SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
-                EraseMeasurements(db);
-                db.close();
+                eraseMeasurements();
             }
         }
 
@@ -182,7 +180,6 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
-                db.close();
             }
 
             Trace.d(log_tag, "TIME: " + Long.toString(System.currentTimeMillis() - t));

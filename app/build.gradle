@@ -43,7 +43,12 @@ android {
     }
 
     lintOptions { checkReleaseBuilds false }
-    testOptions { unitTests.returnDefaultValues = true }
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
 
     buildToolsVersion '29.0.3'
 }
