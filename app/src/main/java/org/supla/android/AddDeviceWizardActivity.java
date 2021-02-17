@@ -823,7 +823,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         return (SSID.startsWith("SUPLA-")
                 || SSID.startsWith("ZAMEL-")
                 || SSID.startsWith("NICE-")
-                || SSID.startsWith("HEATPOL-"))
+                || SSID.startsWith("HEATPOL-")
+                || SSID.startsWith("COMELIT-"))
                 && mPattern.matcher(SSID).find();
     }
 

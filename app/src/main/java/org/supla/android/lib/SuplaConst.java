@@ -252,8 +252,15 @@ public class SuplaConst {
     public final static int SUPLA_MFR_ITEAD = 6;
     public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
+    public final static int SUPLA_MFR_FAKRO = 9;
+    public final static int SUPLA_MFR_PEVEKO = 10;
+    public final static int SUPLA_MFR_WEKTA = 11;
+    public final static int SUPLA_MFR_STA_SYSTEM = 12;
+    public final static int SUPLA_MFR_DGF = 13;
+    public final static int SUPLA_MFR_COMELIT = 14;
 
     public final static int ZAM_PRODID_DIW_01 = 2000;
+    public final static int COM_PRODID_WDIM100 = 2000;
 
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
