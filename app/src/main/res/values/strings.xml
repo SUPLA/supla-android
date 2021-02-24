@@ -33,7 +33,7 @@
     <string name="status_device_disabled">Device is disabled</string>
     <string name="status_accessid_disabled">Access Identifier is disabled</string>
 
-    <string name="err_hostnotfound">Host not found</string>
+    <string name="err_hostnotfound">Host not found. Make sure the account with the entered email address has been created.</string>
     <string name="err_cantconnecttohost">Can\'t connect to host</string>
 
     <string name="channel_caption_gateway">Gateway</string>

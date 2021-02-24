@@ -24,7 +24,7 @@
     <string name="status_device_disabled">Urządzenie jest wyłączone</string>
     <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
-    <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
+    <string name="err_hostnotfound">Adres serwera nie został znaleziony. Upewnij się, że konto o wprowadzonym adresie email zostało utworzone.</string>
     <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
 
     <string name="channel_caption_gateway">Furtka</string>
