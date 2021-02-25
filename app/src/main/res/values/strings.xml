@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name" translatable="false">SUPLA</string>
+    <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>
     <string name="homepage" translatable="false">www.supla.org</string>

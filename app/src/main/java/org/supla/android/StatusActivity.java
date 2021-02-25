@@ -18,7 +18,9 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -38,18 +40,19 @@ public class StatusActivity extends NavigationActivity {
 
     private int mode;
     private Button btnSettings;
+    private Button btnCloud;
     private Button btnRetry;
     private TextView msg;
     private ImageView img;
-    private RelativeLayout layout;
     private ProgressBar progress;
-
+    private RelativeLayout rlStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_status);
+        rlStatus = findViewById(R.id.rlStatus);
 
         mode = 0;
 
@@ -66,10 +69,13 @@ public class StatusActivity extends NavigationActivity {
         btnSettings.setText(getResources().getText(R.string.settings));
         btnSettings.setOnClickListener(this);
 
+        btnCloud = findViewById(R.id.cloud_btn);
+        btnCloud.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
+        btnCloud.setTransformationMethod(null);
+        btnCloud.setOnClickListener(this);
+
         btnRetry = findViewById(R.id.retry_btn);
         btnRetry.setOnClickListener(this);
-
-        layout = (RelativeLayout) msg.getParent();
 
         setStatusConnectingProgress(0);
         RegisterMessageHandler();
@@ -99,7 +105,8 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 1) {
             mode = 1;
 
-            layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            btnCloud.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_black_btn));
@@ -124,7 +131,8 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 2) {
             mode = 2;
 
-            layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
+            rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
+            btnCloud.setVisibility(View.INVISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_white_btn));
@@ -162,6 +170,10 @@ public class StatusActivity extends NavigationActivity {
             NavigationActivity.showCfg(this);
         } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
+        } else if (v == btnCloud) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://cloud.supla.org"));
+            startActivity(browserIntent);
         }
     }
 
