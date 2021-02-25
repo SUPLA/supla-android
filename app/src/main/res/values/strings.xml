@@ -7,6 +7,7 @@
     <string name="homepage" translatable="false">www.supla.org</string>
     <string name="homepage_url" translatable="false">https://www.supla.org</string>
     <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
+    <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
     <string name="feedback_email" translatable="false">feedback@supla.org</string>
     <string name="feedback_subject" translatable="false">SUPLA for Android feedback</string>
     <string name="feedback_title">Send email</string>

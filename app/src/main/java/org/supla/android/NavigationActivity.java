@@ -340,6 +340,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void openCloud() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.cloud_url)));
+        startActivity(browserIntent);
+    }
+
     public void donate() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
         startActivity(browserIntent);
@@ -429,6 +434,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
                 case MenuItemsLayout.BTN_HELP:
                     openForumpage();
+                    break;
+                case MenuItemsLayout.BTN_CLOUD:
+                    openCloud();
                     break;
                 case MenuItemsLayout.BTN_HOMEPAGE:
                     openHomepage();

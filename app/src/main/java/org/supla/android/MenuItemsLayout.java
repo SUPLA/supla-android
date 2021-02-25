@@ -27,6 +27,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     public static final int BTN_HOMEPAGE = 0x20;
     public static final int BTN_FREE_SPACE = 0x40;
     public static final int BTN_Z_WAVE = 0x80;
+    public static final int BTN_CLOUD = 0x90;
     public static final int BTN_ALL = 0xFFFF;
     ArrayList<Button> buttons = new ArrayList<>();
     private LinearLayout mMainButtonsAreaLayout = null;
@@ -244,7 +245,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         // Google Play Policy
         //addButton(BTN_DONATE, R.drawable.donate, R.string.donate_title);
         addButton(BTN_HELP, R.drawable.help, R.string.help);
-
+        addButton(BTN_CLOUD, R.drawable.menu_cloud, R.string.supla_cloud);
         addFooter();
 
     }

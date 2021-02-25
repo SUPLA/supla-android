@@ -172,7 +172,7 @@ public class StatusActivity extends NavigationActivity {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         } else if (v == btnCloud) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://cloud.supla.org"));
+                    Uri.parse(getResources().getString(R.string.cloud_url)));
             startActivity(browserIntent);
         }
     }
