@@ -18,7 +18,7 @@
     <string name="status_bad_credentials">Helytelen hitelesítési adatok</string>
     <string name="status_climit_exceded">Az ügyfélalkalmazás mennyiség korlátja túllépett</string>
     <string name="status_version_error">Nem kompatibilis szerver verzió</string>
-    <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) %1$s oldalon</string>
+    <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) \"Supla Cloud\" oldalon</string>
     <string name="status_access_id_not_assigned">Ehhez az eszközhöz nincs hozzárendelve hozzáférési azonosító. Lépjen az %1$s webhelyre, és  az "Okostelefonok \" fülben rendelje hozzá a megfelelő azonosítót.</string>
     <string name="status_device_disabled">Az eszköz ki van kapcsolva</string>
     <string name="status_accessid_disabled">A hozzáférési azonosító le van tiltva</string>

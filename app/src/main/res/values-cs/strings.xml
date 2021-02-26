@@ -18,7 +18,7 @@
     <string name="status_bad_credentials">Chybné pověření</string>
     <string name="status_climit_exceded">Limit klientské aplikace překročen</string>
     <string name="status_version_error">Nekompatibilní verze serveru</string>
-    <string name="status_reg_disabled">Registrace je momentálně zakázána. Chcete-li ji povolit, přejděte na kartu Smartphone na stránce %1$s</string>
+    <string name="status_reg_disabled">Registrace je momentálně zakázána. Chcete-li ji povolit, přejděte na kartu Smartphone na stránce \"Supla Cloud\".</string>
     <string name="status_access_id_not_assigned">Toto zařízení nemá přiřazené ID přístupu. Přejděte na Smartphone na %1$s a vyberte příslušné ID na kartě</string>
     <string name="status_device_disabled">Zařízení je vypnuté</string>
     <string name="status_accessid_disabled">Identifikátor přístupu je vypnutý</string>

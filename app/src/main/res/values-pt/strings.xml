@@ -17,7 +17,7 @@
     <string name="status_bad_credentials">Dados de identificação errados</string>
     <string name="status_climit_exceded">Excedeu o limite de aplicações de clientes</string>
     <string name="status_version_error">Versão do servidor incompátivel</string>
-    <string name="status_reg_disabled">Atualmente o registro está desativado. Para activá-lo, vá para a guia \"Smartphones\" na página %1$s.</string>
+    <string name="status_reg_disabled">Atualmente o registro está desativado. Para activá-lo, vá para a guia \"Smartphones\" na página \"Supla Cloud\".</string>
     <string name="status_access_id_not_assigned">Este dispositivo não possui um ID de acesso atribuído. Vá para a página %1$s e atribua o ID apropriado na guia \"Smartphones\".</string>
     <string name="status_device_disabled">O dispositivo está desligado</string>
     <string name="status_accessid_disabled">O ID de acesso está desativado</string>

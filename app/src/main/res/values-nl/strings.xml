@@ -18,7 +18,7 @@
     <string name="status_bad_credentials">Onjuiste inloggegevens</string>
     <string name="status_climit_exceded">Limiet clienttoepassing overschreden</string>
     <string name="status_version_error">Incompatibele serverversie</string>
-    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina %1$s</string>
+    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina \"Supla Cloud\".</string>
     <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina %1$s en wijs de juiste ID toe op het tabblad \"Smartphones\".</string>
     <string name="status_device_disabled">Het apparaat is uitgeschakeld</string>
     <string name="status_accessid_disabled">Toegangs-ID is uitgeschakeld</string>

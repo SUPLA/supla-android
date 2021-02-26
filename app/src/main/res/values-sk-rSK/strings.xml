@@ -18,7 +18,7 @@
     <string name="status_bad_credentials">Nesprávne autentifikačné údaje</string>
     <string name="status_climit_exceded">Prekročený limit klientskych aplikácií</string>
     <string name="status_version_error">Nekompatibilná verzia servera</string>
-    <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  %1$s</string>
+    <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  \"Supla Cloud\".</string>
     <string name="status_access_id_not_assigned">Toto zariadenie nemá priradený identifikátor prístupu. Prejdite na stránku %1$s a v záložke \"Smartfóny\" priraďte príslušný identifikátor.</string>
     <string name="status_device_disabled">Zariadenie je vypnuté</string>
     <string name="status_accessid_disabled">Identifikátor prístupu je vypnutý</string>

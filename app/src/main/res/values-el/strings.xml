@@ -18,7 +18,7 @@
     <string name="status_bad_credentials">Λανθασμένα διαπιστευτήρια</string>
     <string name="status_climit_exceded">Υπέρβαση ορίου των εφαρμογών πελάτη</string>
     <string name="status_version_error">Μη συμβατή έκδοση διακομιστή</string>
-    <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones\" στη σελίδα %1$s</string>
+    <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones\" στη σελίδα \"Supla Cloud\".</string>
     <string name="status_access_id_not_assigned">Αυτή η συσκευή δεν έχει παραχωρημένο αναγνωριστικό πρόσβασης. Μεταβείτε στη σελίδα %1$s  στην καρτέλα \"Smartphones\" και παραχωρήστε το κατάλληλο αναγνωριστικό.</string>
     <string name="status_device_disabled">Η συσκευή είναι απενεργοποιημένη</string>
     <string name="status_accessid_disabled">Το αναγνωριστικό πρόσβασης είναι απενεργοποιημένο</string>
