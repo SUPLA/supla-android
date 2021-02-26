@@ -1373,12 +1373,13 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         if (v == btnViewPassword) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_UP:
-                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT
-                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    if ((edPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) > 0) {
+                        edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                    } else {
+                        edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                                | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    }
+
                     break;
             }
         }
