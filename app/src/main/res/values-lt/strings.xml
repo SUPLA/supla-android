@@ -79,7 +79,6 @@
     <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>
     <string name="next">Toliau</string>
     <string name="start">STARTAS</string>
-    <string name="wizard_step2_txt1">Įveskite savo WiFi tinklo slaptažodį, kurio pavadinimas tai</string>
     <string name="wizard_step2_txt3">*) %1$s tinklą naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
     <string name="wizard_remember_passwd">Išsaugoti slaptažodį</string>
     <string name="wizard_step3_txt1">Savo vykdomąjį įrenginį prijunkite prie maitinimo šaltinio. Įrenginys standartiškai turi veikti konfigūracijos režime, signalizuojant tai statuso diodo mirksėjimu šiuo būdu</string>

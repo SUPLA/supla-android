@@ -121,7 +121,6 @@
     <string name="start">DÉMARRER</string>
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
-    <string name="wizard_step2_txt1">Entrez le mot de passe de votre réseau Wi-Fi, dont le nom est</string>
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Le serveur auquel vous êtes connecté ne prend pas en charge cette fonctionnalité!</string>
     <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>

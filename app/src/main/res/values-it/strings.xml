@@ -121,7 +121,6 @@
     <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>
     <string name="wizard_result_compat_error">Il dispositivo con il quale è stata stabilita la connessione non è compatibile con questa procedura guidata!</string>
     <string name="wizard_step1_txt1">Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema.</string>
-    <string name="wizard_step2_txt1">Inserisci la password alla Tua rete WiFi denominata</string>
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Il server, con il quale è stata stabilita la connessione, non supporta questa funzione!</string>
     <string name="wizard_no_internetwifi">Prima di iniziare, collegati all’Internet tramite la rete WiFi che verrà utilizzata anche dal dispositivo di I/O per la connessione con il server.</string>

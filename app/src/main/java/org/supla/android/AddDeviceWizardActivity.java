@@ -126,9 +126,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private CheckBox cbSavePassword;
     private Button btnEditWifiName;
     private Button btnViewPassword;
-
     private TextView tvStep2Info1;
-    private TextView tvStep2Info2;
 
     private ImageView ivDot;
 
@@ -169,16 +167,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         tvStep2Info1 = findViewById(R.id.wizard_step2_txt1);
         tvStep2Info1.setTypeface(type);
-        tvStep2Info1.setText(R.string.wizard_step2_txt1);
 
         spWifiList = findViewById(R.id.wizard_wifi_list);
         spWifiList.setOnItemSelectedListener(this);
 
         edWifiName = findViewById(R.id.wizard_wifi_name);
         edWifiName.setVisibility(View.GONE);
-
-        tvStep2Info2 = findViewById(R.id.wizard_step2_txt3);
-        tvStep2Info2.setTypeface(type);
 
         edPassword = findViewById(R.id.wizard_password);
         cbSavePassword = findViewById(R.id.wizard_cb_save_pwd);
@@ -1329,24 +1323,17 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
             edWifiName.setVisibility(View.VISIBLE);
             spWifiList.setVisibility(View.GONE);
-            tvStep2Info2.setVisibility(View.GONE);
-            tvStep2Info1.setText(R.string.wizard_step2_txt1_alt);
 
         } else {
             edWifiName.setVisibility(View.GONE);
             spWifiList.setVisibility(View.VISIBLE);
-            tvStep2Info2.setVisibility(View.VISIBLE);
-            tvStep2Info1.setText(R.string.wizard_step2_txt1);
         }
 
         setBackground(btnEditWifiName, enabled ? R.drawable.editingon : R.drawable.editingoff);
     }
 
     private void onWifiSelectionChange() {
-
         Preferences prefs = new Preferences(this);
-
-        tvStep2Info2.setText(getResources().getString(R.string.wizard_step2_txt3, getSelectedSSID()));
 
         cbSavePassword.setChecked(prefs.wizardSavePasswordEnabled(getSelectedSSID()));
         edPassword.setText(

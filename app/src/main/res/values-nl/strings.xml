@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
     <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
     <string name="next">Doorgaan</string>
-    <string name="start">OPSTARTEN</string>>
+    <string name="start">OPSTARTEN</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Voer het wachtwoord in voor uw WiFi-netwerk waarvan de naam is</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Het %1$s-netwerk wordt door het uitvoerend apparaat gebruikt om verbinding te maken met de server.</string>
     <string name="wizard_remember_passwd">Wachtwoord onthouden</string>
 

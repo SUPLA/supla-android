@@ -106,9 +106,9 @@
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
     <string name="wizard_step1_txt3">Pokračujte stlačením <b>Ďalej</b>.</string>
     <string name="next">Ďalej</string>
-    <string name="start">ŠTART</string>>
+    <string name="start">ŠTART</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Zadajte heslo vašej WiFi siete, ktorej názov je</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Sieť %1$s bude používať vykonávacie zariadenie na pripojenie k serveru.</string>
     <string name="wizard_remember_passwd">Zapamätať si heslo</string>
 

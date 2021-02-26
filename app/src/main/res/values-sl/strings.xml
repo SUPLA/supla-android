@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
     <string name="wizard_step1_txt3">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
     <string name="next">Naprej</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Vnesite geslo v svoje omrežje WiFi, katerega ime je</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Izvršilna naprava bo za povezovanje s strežnikom uporabila omrežje %1$s.</string>
     <string name="wizard_remember_passwd">Shranite geslo</string>
 

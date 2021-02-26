@@ -121,7 +121,6 @@
     <string name="start">START</string>
     <string name="wizard_result_compat_error">O dispositivo que conectou não é compatível com este assistente!</string>
     <string name="wizard_step1_txt1">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
-    <string name="wizard_step2_txt1">Introduza a senha da sua rede WiFi cujo nome é o seguinte</string>
     <string name="device_reg_request_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
     <string name="wizard_server_compat_error">O servidor com o qual se conectou não suporta esta função!</string>
     <string name="wizard_no_internetwifi">Antes de iniciar, conecte-se à Internet através da rede WiFi que também será utilizada por um atuador para se conectar ao servidor.</string>

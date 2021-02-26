@@ -80,7 +80,6 @@
     <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
     <string name="next">Dále</string>
     <string name="start">START</string>
-    <string name="wizard_step2_txt1">Zadejte heslo sítě WiFi, jejíž název je</string>
     <string name="wizard_step2_txt3">*) Síť %1$s bude použita zařízením pro připojení k serveru.</string>
     <string name="wizard_remember_passwd">Zapamatujte si heslo</string>
     <string name="wizard_step3_txt1">Připojte výkonné zařízení k napájení. Přístroj by měl ve výchozím nastavení fungovat v konfiguračním režimu a signalizovat tak, že bliká stavová LED dioda následujícím způsobem</string>

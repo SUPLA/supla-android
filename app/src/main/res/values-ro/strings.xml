@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
     <string name="wizard_step1_txt3">Pentru a continua, apăsați<b>Mai departe</b>.</string>
     <string name="next">Mai departe</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Introduceți parola pentru rețeaua WiFi a cărei nume este</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Rețeaua %1$s va fi utilizată de dispozitivul de acționare pentru conectarea la server.</string>
     <string name="wizard_remember_passwd">Salvează parola</string>
 

@@ -112,9 +112,9 @@
     <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Enter password to your WiFi Network named</string>
+    ]]>
     <string name="wizard_step2_txt3">*) %1$s network will be used by I/O devices to connect with server.</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
@@ -385,7 +385,7 @@
     <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1_alt">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
+    <string name="wizard_step2_txt1_alt">Enter Wi-Fi Network name and password to use with this I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
     <string name="wifi_throttling">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
     <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>

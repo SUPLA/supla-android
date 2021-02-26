@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
     <string name="wizard_step1_txt3">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
     <string name="next">Επόμενο</string>
-    <string name="start">ΕΝΑΡΞΗ</string>>
+    <string name="start">ΕΝΑΡΞΗ</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Πληκτρολογήστε τον κωδικό πρόσβασης για το δίκτυό σας WiFi, το όνομα του οποίου είναι</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Το δίκτυο %1$s θα χρησιμοποιηθεί από την εκτελεστική συσκευή για να συνδεθεί με τον διακομιστή.</string>
     <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 

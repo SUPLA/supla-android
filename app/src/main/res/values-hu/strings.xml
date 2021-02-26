@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
     <string name="wizard_step1_txt3">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
     <string name="next">Tovább</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Írja be annak a WiFi hálózatnak a jelszavát, amelynek a neve</string>
+    ]]>
     <string name="wizard_step2_txt3">*) A(z) %1$s hálózatot a végrehajtó eszköz fogja használni a kiszolgálóhoz való csatlakozáshoz.</string>
     <string name="wizard_remember_passwd">Emlékezzen a jelszavamra</string>
 
