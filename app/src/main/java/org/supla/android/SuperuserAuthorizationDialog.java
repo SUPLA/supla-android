@@ -225,7 +225,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 if (!msg.isSuccess()) {
                     switch (msg.getCode()) {
                         case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                            ShowError(R.string.status_bad_credentials);
+                            ShowError(R.string.incorrect_email_or_password);
                             break;
                         case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
                             ShowError(R.string.status_temporarily_unavailable);
