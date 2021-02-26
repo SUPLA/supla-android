@@ -387,7 +387,7 @@
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
     <string name="wizard_step2_txt1_alt">Enter Wi-Fi Network name and password to use with this I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
+    <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
     <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>
     <string name="save_without_saving">Do you want to quit without saving?</string>
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
