@@ -388,7 +388,7 @@
     <string name="wizard_step2_txt1">Enter Wi-Fi Network name and password to use with new I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
     <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
-    <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>
+    <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
     <string name="save_without_saving">Do you want to quit without saving?</string>
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
     <string name="restoring_default_settings">Restoring default settings</string>
