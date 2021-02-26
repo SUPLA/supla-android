@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Klient-Grenze überschritten</string>
     <string name="status_version_error">Nicht kompatible Server-Version</string>
     <string name="status_reg_disabled">Die Client-Registrierung ist deaktiviert. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" um es zu aktivieren.</string>
-    <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf %1$s und holen Sie sich eine gültige ID.</string>
+    <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" und holen Sie sich eine gültige ID.</string>
     <string name="status_device_disabled">Gerät ist deaktiviert</string>
     <string name="status_accessid_disabled">Die Zugriffskennung ist deaktiviert</string>
 

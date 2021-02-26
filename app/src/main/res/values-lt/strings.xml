@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Viršutinė klientų programų riba viršyta</string>
     <string name="status_version_error">Nesuderinama serverio versija</string>
     <string name="status_reg_disabled">Šiuo metu registracija išjungta. Norėdami ją įjungti eikite prie žymės Išmanieji telefonai puslapyje \"Supla Cloud\"</string>
-    <string name="status_access_id_not_assigned">Šis įrenginys neturi priskirto prieigos identifikatoriaus. Eikite į puslapį %1$s ir žymėje Išmanieji telefonai priskirkite tinkamą identifikatorių.</string>
+    <string name="status_access_id_not_assigned">Šis įrenginys neturi priskirto prieigos identifikatoriaus. Eikite į puslapį \"Supla Cloud\" ir žymėje Išmanieji telefonai priskirkite tinkamą identifikatorių.</string>
     <string name="status_device_disabled">Įrenginys išjungtas</string>
     <string name="status_accessid_disabled">Prieigos identifikatorius išjungtas</string>
     <string name="err_hostnotfound">Serverio adresas nerastas</string>

@@ -18,7 +18,7 @@
     <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
     <string name="status_version_error">Incompatibilité de la version du serveur</string>
     <string name="status_reg_disabled">L\'inscription est actuellement désactivée. Pour l\'activer, allez vers l\'onglet \"Smartphones\" à la page \"Supla Cloud\".</string>
-    <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page %1$s et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
+    <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page \"Supla Cloud\" et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
     <string name="status_device_disabled">Le dispositif est éteint</string>
     <string name="status_accessid_disabled">L\'identifiant d\'accès est désactivé</string>
 

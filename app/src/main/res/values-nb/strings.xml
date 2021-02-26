@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Grensen på antall kundeapplikasjoner er overskredet</string>
     <string name="status_version_error">Inkompatibel serverversjon</string>
     <string name="status_reg_disabled">Registering er for tiden ikke på. For å skru den på gå til fanen \"Smarttelefoner\" på nettsiden \"Supla Cloud\".</string>
-    <string name="status_access_id_not_assigned">Denne enheten har ikke tilknyttet tilgang identifikator. Gå til nettsiden %1$s tilpass riktig identifikator i fanen \"Smarttelefoner\".</string>
+    <string name="status_access_id_not_assigned">Denne enheten har ikke tilknyttet tilgang identifikator. Gå til nettsiden \"Supla Cloud\" tilpass riktig identifikator i fanen \"Smarttelefoner\".</string>
     <string name="status_device_disabled">Enheten er skrudd av</string>
     <string name="status_accessid_disabled">Tilgang identifikator er av</string>
 

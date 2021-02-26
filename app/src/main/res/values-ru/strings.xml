@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Ограничение количества пользователей</string>
     <string name="status_version_error">Несовместимая версия сервера</string>
     <string name="status_reg_disabled">Регистрация в настоящее время отключена. Для ее включения перейдите на вкладку Смартфоны на странице \"Supla Cloud\".</string>
-    <string name="status_access_id_not_assigned">Это устройство не имеет назначенного ключа доступа. Перейдите на страницу %1$s и  на вкладке Смартфоны назначьте соответствующий ключ.</string>
+    <string name="status_access_id_not_assigned">Это устройство не имеет назначенного ключа доступа. Перейдите на страницу \"Supla Cloud\" и  на вкладке Смартфоны назначьте соответствующий ключ.</string>
     <string name="status_device_disabled">Устройство выключено</string>
     <string name="status_accessid_disabled">Ключ доступа отключен</string>
 

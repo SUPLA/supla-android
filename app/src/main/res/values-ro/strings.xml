@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Limita de aplicații de client a fost depășită</string>
     <string name="status_version_error">Versiunea serverului este incompatibilă</string>
     <string name="status_reg_disabled">În prezent, înregistrarea este dezactivată. Pentru a o activa, accesați fila \"Smartphones\" de pe pagina \"Supla Cloud\".</string>
-    <string name="status_access_id_not_assigned">Acest Dispozitiv nu a realocat un identificator de acces. Accesați pagina %1$s și atribuiți indetificatorul corespunzător în fila \"Smartphones\".</string>
+    <string name="status_access_id_not_assigned">Acest Dispozitiv nu a realocat un identificator de acces. Accesați pagina \"Supla Cloud\" și atribuiți indetificatorul corespunzător în fila \"Smartphones\".</string>
     <string name="status_device_disabled">Dispozitivul este oprit</string>
     <string name="status_accessid_disabled">Identificatorul de acces este dezactivat</string>
 

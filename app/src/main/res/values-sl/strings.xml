@@ -19,7 +19,7 @@
     <string name="status_climit_exceded">Omejitev odjemalskih aplikacij je presežena</string>
     <string name="status_version_error">Nezdružljiva različica strežnika</string>
     <string name="status_reg_disabled">Registracija je trenutno izklopljena. Če jo želite omogočiti, pojdite na zavihek \"Pametni telefoni\" na strani \"Supla Cloud\".</string>
-    <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran %1$s in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
+    <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran \"Supla Cloud\" in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
     <string name="status_device_disabled">Naprava je izklopljena</string>
     <string name="status_accessid_disabled">Identifikator dostopa je izklopljen</string>
 
