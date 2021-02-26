@@ -133,7 +133,7 @@
     <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
     <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
-    <string name="wizard_iodevice_notfound">No devices has been found! Check, if the device you want to configure is working in the configuration mode and try again. NOTE! – Some of the Android based devices must have the GPS on, when searching for the WiFi. Therefore, make sure GPS is on.</string>
+    <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode. Please note that some Android devices may need Location services enabled for the Wi-Fi scanning feature to work correctly.</string>
 
     <string name="wizard_done">The settings have been transferred to the I/O device.</string>
     <string name="wizard_iodev_data">Device parameters</string>
