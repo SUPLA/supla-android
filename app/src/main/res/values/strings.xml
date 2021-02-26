@@ -118,8 +118,8 @@
     <string name="wizard_step2_txt3">*) %1$s network will be used by I/O devices to connect with server.</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
-    <string name="wizard_step3_txt1">Power up your executive device. Configuration mode should be the default mode for the device, confirmed by a status diode flashing as</string>
-    <string name="wizard_step3_txt2">If the device when switched on does not work in the configuration mode, press and hold <b>CONFIG</b> button for at least 5 seconds.</string>
+    <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
+    <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
     <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
     <string name="wizard_server_compat_error">The connected Server does not support this function!</string>
