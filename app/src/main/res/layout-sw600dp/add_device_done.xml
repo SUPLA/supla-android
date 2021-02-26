@@ -130,6 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:background="#FFEB3B"
                 android:gravity="left"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />

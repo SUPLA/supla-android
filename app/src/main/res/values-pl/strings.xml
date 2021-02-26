@@ -131,7 +131,7 @@
     <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
-    <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
+    <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
     <string name="wizard_iodev_data">Dane urządzenia</string>
     <string name="wizard_iodev_name">Nazwa</string>
     <string name="wizard_iodev_laststate">Poprzedni status</string>
