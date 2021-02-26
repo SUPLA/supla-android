@@ -109,7 +109,7 @@
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings. (Disable advanced options in the settings)</string>
     <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
-    <string name="wizard_step1_txt1">Welcome to the Device Add Wizard which will in an easy and simple way help you to add new device to the system.</string>
+    <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
     <string name="start">START</string>>
