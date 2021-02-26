@@ -246,7 +246,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Contatore di calore</string>
-    <string name="wizard_step2_txt1_alt">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
+    <string name="wizard_step2_txt1">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
     <string name="aritmetic_balance_days">Equilibrio aritmetico – Giorni</string>
     <string name="aritmetic_balance_hours">Equilibrio aritmetico - Ore</string>
     <string name="aritmetic_balance_minutes">Equilibrio aritmetico – Minuti</string>

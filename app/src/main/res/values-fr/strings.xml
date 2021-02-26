@@ -246,7 +246,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Compteur de chaleur</string>
-    <string name="wizard_step2_txt1_alt">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
+    <string name="wizard_step2_txt1">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
     <string name="aritmetic_balance_days">Bilan arithmétique - Jours</string>
     <string name="aritmetic_balance_hours">Bilan arithmétique - Heures</string>
     <string name="aritmetic_balance_minutes">Bilan arithmétique - Minutes</string>

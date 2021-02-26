@@ -331,7 +331,7 @@
     <string name="wifi_signal_strength" >Puterea semnalului WiFi</string>
     <string name="wifi_throttling" >Datorită limitelor de scanare a reţelei WiFi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
     <string name="wizard_step1_txt2" >Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>
-    <string name="wizard_step2_txt1_alt" >Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
+    <string name="wizard_step2_txt1" >Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
     <string name="yes" >Da</string>
     <string name="z_wave" >Podul   Z-Wave</string>
     <string name="zwave_add_device" >Adăugaţi un dispozitiv</string>

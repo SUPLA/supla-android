@@ -373,7 +373,7 @@
     <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
     <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
     <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
-    <string name="wizard_step2_txt1_alt">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+    <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
     <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
     <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
     <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
@@ -412,4 +412,5 @@
     <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
     <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
     <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
+    <string translatable="false" name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2.4Ghz nie została odnaleziona lub siec ta jest poza zasięgiem.</string>
 </resources>

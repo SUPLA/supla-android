@@ -231,7 +231,7 @@
 
     <string name="channel_caption_heatmeter">Měřič tepla</string>
     <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
-    <string name="wizard_step2_txt1_alt">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
+    <string name="wizard_step2_txt1">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
     <string name="aritmetic_balance_days">Aritmetická zová rovnováha - Dny</string>
     <string name="aritmetic_balance_hours">Aritmetická rovnováha - Hodiny</string>
     <string name="aritmetic_balance_minutes">Fázová rovnováha - Minuty</string>

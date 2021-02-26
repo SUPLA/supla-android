@@ -103,7 +103,7 @@
         android:layout_marginTop="100dp"
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
-        android:text="@string/wizard_step2_txt1_alt"
+        android:text="@string/wizard_step2_txt1"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 

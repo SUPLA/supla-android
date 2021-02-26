@@ -331,7 +331,7 @@
     <string name="wifi_signal_strength" >WiFi-signaalsterkte</string>
     <string name="wifi_throttling" >Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
     <string name="wizard_step1_txt2" >Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
-    <string name="wizard_step2_txt1_alt" >Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
+    <string name="wizard_step2_txt1" >Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
     <string name="yes" >Ja</string>
     <string name="z_wave" >Z-wave brug</string>
     <string name="zwave_add_device" >Voeg apparaat toe</string>

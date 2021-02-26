@@ -329,7 +329,7 @@
     <string name="wifi_signal_strength">WLAN-Signalstärke</string>
     <string name="wifi_throttling">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
     <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
-    <string name="wizard_step2_txt1_alt">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
+    <string name="wizard_step2_txt1">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
     <string name="zwave_add_device">Gerät hinzufügen</string>
     <string name="zwave_before_search_message">"Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann. "</string>
     <string name="zwave_before_search_title">Es dauert eine Weile</string>

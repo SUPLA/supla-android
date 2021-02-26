@@ -223,7 +223,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
-    <string name="wizard_step2_txt1_alt">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
+    <string name="wizard_step2_txt1">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
     <string name="aritmetic_balance_days">Asimetrinis balansas – Dienos</string>
     <string name="aritmetic_balance_hours">Asimetrinis balansas – Valandos</string>
     <string name="aritmetic_balance_minutes">Asimetrinis balansas – Minutės</string>

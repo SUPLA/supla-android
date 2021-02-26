@@ -133,7 +133,7 @@
     <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
     <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
-    <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode. Please note that some Android devices may need Location services enabled for the Wi-Fi scanning feature to work correctly.</string>
+    <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode.</string>
 
     <string name="wizard_done">The settings have been transferred to the I/O device.</string>
     <string name="wizard_iodev_data">Device parameters</string>
@@ -385,7 +385,7 @@
     <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1_alt">Enter Wi-Fi Network name and password to use with this I/O Device</string>
+    <string name="wizard_step2_txt1">Enter Wi-Fi Network name and password to use with new I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
     <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
     <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>
@@ -393,7 +393,7 @@
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
     <string name="restoring_default_settings">Restoring default settings</string>
     <string name="mode_change_in_progress">Mode change in progress</string>
-    <string name="wizard_step1_txt2">Please make sure mobile data is turned off when adding devices. Otherwise, the addition may fail.</string>
+    <string name="wizard_step1_txt2">It is recommended to temporary disable mobile data connection on your device as it may interfere with the configuration process.</string>
     <string name="wake_up_frequency">Wake up frequency</string>
     <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
     <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
@@ -424,4 +424,5 @@
     <string translatable="false" name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
     <string translatable="false" name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
     <string translatable="false" name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
+    <string translatable="false" name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4Ghz network is ether not in range or its name was incorrect.</string>
 </resources>

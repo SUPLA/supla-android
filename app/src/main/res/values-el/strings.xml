@@ -245,7 +245,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
-    <string name="wizard_step2_txt1_alt">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
+    <string name="wizard_step2_txt1">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
     <string name="aritmetic_balance_days">Αριθμητικός ισολογισμός - Ημέρες</string>
     <string name="aritmetic_balance_hours">Αριθμητικός ισολογισμός - Ώρες</string>
     <string name="aritmetic_balance_minutes">Αριθμητικός ισολογισμός - Λεπτά</string>

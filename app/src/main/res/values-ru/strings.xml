@@ -252,7 +252,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Теплосчетчик</string>
-    <string name="wizard_step2_txt1_alt">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
+    <string name="wizard_step2_txt1">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
     <string name="aritmetic_balance_days" >Арифметический баланс - Дни</string>
     <string name="aritmetic_balance_hours" >Арифметический баланс - Часы</string>
     <string name="aritmetic_balance_minutes" >Арифметический баланс - Минуты</string>
