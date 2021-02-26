@@ -27,7 +27,7 @@
     <string name="status_connecting">Connecting...</string>
     <string name="status_unknown_err">Unknown error</string>
     <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
-    <string name="status_bad_credentials">Bad credentials</string>
+    <string name="status_bad_credentials">Incorrect Email Address or Password</string>
     <string name="status_climit_exceded">Client limit exceeded</string>
     <string name="status_version_error">Incompatible server version</string>
     <string name="status_reg_disabled">New client registration disabled. Please log in to \"Supla Cloud\" and enable “New client registration” in “Smartphone” section of the website.</string>

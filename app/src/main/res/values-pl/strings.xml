@@ -16,7 +16,7 @@
     <string name="status_connecting">Łączenie...</string>
     <string name="status_unknown_err">Nieznany błąd</string>
     <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
-    <string name="status_bad_credentials">Błędne poświadczenia</string>
+    <string name="status_bad_credentials">Błędny login lub hasło</string>
     <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
     <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
