@@ -36,7 +36,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
-    private boolean preAuthorization;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -81,14 +80,22 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         }
     }
 
-    void show() {
+    void showIfNeeded() {
+
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        if (client != null && client.isSuperUserAuthorized()) {
+            if (onAuthorizarionResultListener != null) {
+                onAuthorizarionResultListener
+                        .onSuperuserOnAuthorizarionResult(this,
+                                true, SuplaConst.SUPLA_RESULTCODE_AUTHORIZED);
+            }
+            return;
+        }
+
         if (dialog != null) {
             cancelTimeoutTimer();
             dialog.show();
         }
-        preAuthorization = true;
-        edPassword.setText("******");
-        onClick(btnOK);
     }
 
     public void ShowError(String msg) {
@@ -128,14 +135,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                         @Override
                         public void run() {
-                            if (preAuthorization) {
-                                ShowError("");
-                                edPassword.setText("");
-                                preAuthorization = false;
-                            } else {
-                                ShowError(R.string.time_exceeded);
-                            }
-
+                            ShowError(R.string.time_exceeded);
                         }
                     });
                 }
@@ -144,12 +144,8 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
             SuplaClient client = SuplaApp.getApp().getSuplaClient();
             if (client != null) {
-                if (preAuthorization) {
-                    client.getSuperUserAuthorizationResult();
-                } else {
-                    client.superUserAuthorizationRequest(edEmail.getText().toString(),
-                            edPassword.getText().toString());
-                }
+                client.superUserAuthorizationRequest(edEmail.getText().toString(),
+                        edPassword.getText().toString());
             }
         }
     }
@@ -210,35 +206,26 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         if (msg != null
                 && msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
 
-            if ((!preAuthorization || msg.isSuccess())
+            if (msg.isSuccess()
                     && onAuthorizarionResultListener != null) {
                 onAuthorizarionResultListener
                         .onSuperuserOnAuthorizarionResult(this,
                                 msg.isSuccess(), msg.getCode());
             }
 
-            if (preAuthorization) {
-                ShowError("");
-                edPassword.setText("");
-                preAuthorization = false;
-            } else {
-                if (!msg.isSuccess()) {
-                    switch (msg.getCode()) {
-                        case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                            ShowError(R.string.incorrect_email_or_password);
-                            break;
-                        case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-                            ShowError(R.string.status_temporarily_unavailable);
-                            break;
-                        default:
-                            ShowError(R.string.status_unknown_err);
-                            break;
-                    }
-
+            if (!msg.isSuccess()) {
+                switch (msg.getCode()) {
+                    case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
+                        ShowError(R.string.incorrect_email_or_password);
+                        break;
+                    case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
+                        ShowError(R.string.status_temporarily_unavailable);
+                        break;
+                    default:
+                        ShowError(R.string.status_unknown_err);
+                        break;
                 }
             }
-
-
         }
     }
 

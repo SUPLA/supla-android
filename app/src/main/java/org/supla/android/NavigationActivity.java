@@ -27,14 +27,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 @SuppressLint("registered")
@@ -477,7 +475,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 new SuperuserAuthorizationDialog(this);
         mAuthDialog.setObject(sourceBtnId);
         mAuthDialog.setOnAuthorizarionResultListener(this);
-        mAuthDialog.show();
+        mAuthDialog.showIfNeeded();
     }
 
     @Override

@@ -363,7 +363,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             SuperuserAuthorizationDialog authDialog =
                     new SuperuserAuthorizationDialog(context);
             authDialog.setOnAuthorizarionResultListener(this);
-            authDialog.show();
+            authDialog.showIfNeeded();
         }
     }
 

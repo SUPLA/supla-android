@@ -362,7 +362,7 @@ public abstract class DimmerCalibrationTool
         authDialog =
                 new SuperuserAuthorizationDialog(getContext());
         authDialog.setOnAuthorizarionResultListener(this);
-        authDialog.show();
+        authDialog.showIfNeeded();
     }
 
     public void Hide() {

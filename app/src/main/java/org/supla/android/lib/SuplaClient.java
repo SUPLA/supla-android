@@ -63,6 +63,7 @@ public class SuplaClient extends Thread {
     private DbHelper DbH = null;
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
     private long lastTokenRequest = 0;
+    private boolean superUserAuthorized = false;
 
     public SuplaClient(Context context) {
 
@@ -187,7 +188,6 @@ public class SuplaClient extends Thread {
                 _supla_client_ptr_counter++;
             }
         }
-
     }
 
     private void unlockClientPtr() {
@@ -992,6 +992,10 @@ public class SuplaClient extends Thread {
     }
 
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
+        synchronized (sc_lck) {
+            superUserAuthorized = authorized;
+        }
+
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onSuperuserAuthorizationResult);
         msg.setSuccess(authorized);
@@ -1170,6 +1174,7 @@ public class SuplaClient extends Thread {
 
             synchronized (st_lck) {
                 lastRegisterError = null;
+                superUserAuthorized = false;
             }
 
             onConnecting();
@@ -1250,5 +1255,13 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
+    }
+
+    public boolean isSuperUserAuthorized() {
+        boolean result = false;
+        synchronized (sc_lck) {
+            result = superUserAuthorized;
+        }
+        return result;
     }
 }

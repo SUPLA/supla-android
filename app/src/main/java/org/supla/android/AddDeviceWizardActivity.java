@@ -773,7 +773,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             SuperuserAuthorizationDialog authDialog =
                     new SuperuserAuthorizationDialog(this);
             authDialog.setOnAuthorizarionResultListener(this);
-            authDialog.show();
+            authDialog.showIfNeeded();
         }
     }
 
