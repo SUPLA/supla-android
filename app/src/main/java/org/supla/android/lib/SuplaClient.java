@@ -389,6 +389,14 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean isSuperUserAuthorized() {
+        boolean result = false;
+        synchronized (sc_lck) {
+            result = superUserAuthorized;
+        }
+        return result;
+    }
+
     public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
         lockClientPtr();
@@ -993,7 +1001,7 @@ public class SuplaClient extends Thread {
 
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
         synchronized (sc_lck) {
-            superUserAuthorized = authorized;
+            superUserAuthorized = authorized && code == SuplaConst.SUPLA_RESULTCODE_AUTHORIZED;
         }
 
         SuplaClientMsg msg = new SuplaClientMsg(this,
@@ -1255,13 +1263,5 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
-    }
-
-    public boolean isSuperUserAuthorized() {
-        boolean result = false;
-        synchronized (sc_lck) {
-            result = superUserAuthorized;
-        }
-        return result;
     }
 }
