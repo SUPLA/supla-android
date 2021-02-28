@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +25,7 @@ import org.supla.android.lib.SuplaConst;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener {
+public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener, TextWatcher {
     private Context context;
     private AlertDialog dialog;
     private Button btnCancel;
@@ -55,6 +57,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edEmail = v.findViewById(R.id.dialogEmail);
         progressBar = v.findViewById(R.id.dialogPBar);
         edPassword = v.findViewById(R.id.dialogPwd);
+        edPassword.addTextChangedListener(this);
 
         Preferences prefs = new Preferences(context);
         edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
@@ -73,6 +76,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         dialog.setOnCancelListener(this);
     }
 
+    boolean isClientRegistered() {
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        return client != null && client.registered();
+    }
+
     void cancelTimeoutTimer() {
         if (timeoutTimer != null) {
             timeoutTimer.cancel();
@@ -80,16 +88,25 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         }
     }
 
-    void showIfNeeded() {
+    public void showIfNeeded() {
+        tvErrorMessage.setText("");
+        tvErrorMessage.setVisibility(View.INVISIBLE);
+        edPassword.setText("");
+        btnOK.setEnabled(false);
 
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        if (client != null && client.isSuperUserAuthorized()) {
-            if (onAuthorizarionResultListener != null) {
-                onAuthorizarionResultListener
-                        .onSuperuserOnAuthorizarionResult(this,
-                                true, SuplaConst.SUPLA_RESULTCODE_AUTHORIZED);
+        if (isClientRegistered()) {
+            edEmail.setEnabled(true);
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
+            if (client != null && client.isSuperUserAuthorized()) {
+                if (onAuthorizarionResultListener != null) {
+                    onAuthorizarionResultListener
+                            .onSuperuserOnAuthorizarionResult(this,
+                                    true, SuplaConst.SUPLA_RESULTCODE_AUTHORIZED);
+                }
+                return;
             }
-            return;
+        } else {
+            edEmail.setEnabled(false);
         }
 
         if (dialog != null) {
@@ -142,10 +159,16 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
             }, 10000, 1000);
 
-            SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client != null) {
-                client.superUserAuthorizationRequest(edEmail.getText().toString(),
-                        edPassword.getText().toString());
+            SuplaClient client = null;
+
+            if (!isClientRegistered()) {
+                SuplaApp.getApp().SuplaClientInitIfNeed(context, edPassword.getText().toString());
+            } else {
+                client = SuplaApp.getApp().getSuplaClient();
+                if (client != null) {
+                    client.superUserAuthorizationRequest(edEmail.getText().toString(),
+                            edPassword.getText().toString());
+                }
             }
         }
     }
@@ -203,8 +226,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     @Override
     public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
-        if (msg != null
-                && msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
+        if (msg == null) {
+            return;
+        }
+
+        if ( msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
 
             if (msg.isSuccess()
                     && onAuthorizarionResultListener != null) {
@@ -226,7 +252,26 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                         break;
                 }
             }
+        } else if (msg.getType() == SuplaClientMsg.onRegisterError) {
+            ShowError(msg.getRegisterError().codeToString(context, true));
+        } else if (msg.getType() == SuplaClientMsg.onRegistered) {
+            close();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        btnOK.setEnabled(edPassword.getText().toString().trim().length() > 0);
     }
 
     public interface OnAuthorizarionResultListener {

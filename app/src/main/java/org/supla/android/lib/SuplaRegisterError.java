@@ -49,14 +49,16 @@ public class SuplaRegisterError {
 
     }
 
-    public String codeToString(Context context) {
+    public String codeToString(Context context, boolean authDialog) {
 
         switch (ResultCode) {
 
             case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
                 return context.getResources().getString(R.string.status_temporarily_unavailable);
             case SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS:
-                return context.getResources().getString(R.string.status_bad_credentials);
+                return context.getResources().getString(
+                        authDialog ? R.string.incorrect_email_or_password
+                                : R.string.status_bad_credentials);
             case SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED:
                 return context.getResources().getString(R.string.status_climit_exceded);
             case SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED:
@@ -71,6 +73,10 @@ public class SuplaRegisterError {
                 return context.getResources().getString(R.string.status_unknown_err) + " (" + Integer.toString(ResultCode) + ")";
         }
 
+    }
+
+    public String codeToString(Context context) {
+        return codeToString(context, false);
     }
 
 }

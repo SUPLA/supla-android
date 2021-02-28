@@ -46,6 +46,7 @@ public class StatusActivity extends NavigationActivity {
     private ImageView img;
     private ProgressBar progress;
     private RelativeLayout rlStatus;
+    private SuperuserAuthorizationDialog authorizationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +210,22 @@ public class StatusActivity extends NavigationActivity {
 
     private void _OnRegisterErrorMsg(SuplaRegisterError error) {
         setStatusError(error.codeToString(this));
+
+        if (error != null
+                && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
+                    || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
+
+            Preferences prefs = new Preferences(this);
+            if (!prefs.isAdvancedCfg()) {
+                if (authorizationDialog == null) {
+                    authorizationDialog = new SuperuserAuthorizationDialog(this);
+                }
+
+                if (!authorizationDialog.isShowing()) {
+                    authorizationDialog.showIfNeeded();
+                }
+            }
+        }
     }
 
     @Override

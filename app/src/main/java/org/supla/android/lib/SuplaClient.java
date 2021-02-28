@@ -64,11 +64,13 @@ public class SuplaClient extends Thread {
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
     private long lastTokenRequest = 0;
     private boolean superUserAuthorized = false;
+    private String oneTimePassword;
 
-    public SuplaClient(Context context) {
+    public SuplaClient(Context context, String oneTimePassword) {
 
         super();
         _context = context;
+        this.oneTimePassword = oneTimePassword;
 
     }
 
@@ -1225,12 +1227,12 @@ public class SuplaClient extends Thread {
                             }
                         }
 
+                        cfg.setPassword(oneTimePassword);
                     }
 
+                    oneTimePassword = "";
                     cfg.protocol_version = prefs.getPreferedProtocolVersion();
                     init(cfg);
-
-
                 }
 
                 if (connect()) {
