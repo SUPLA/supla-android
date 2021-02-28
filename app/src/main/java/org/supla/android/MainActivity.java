@@ -24,7 +24,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -354,7 +353,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         int imgResId = 0;
         ImageId imgId = null;
-        String msg = "";
+        String msg;
 
         if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
             if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE) > 0) {
@@ -364,7 +363,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 return;
             }
         } else {
-            int msgId = 0;
+            int msgId;
             switch (event.Event) {
                 case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
                     msgId = R.string.event_openedthegateway;
@@ -470,15 +469,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         notif_handler = new Handler();
-        notif_nrunnable = new Runnable() {
-            @Override
-            public void run() {
+        notif_nrunnable = () -> {
 
-                HideNotificationMessage();
+            HideNotificationMessage();
 
-                notif_handler = null;
-                notif_nrunnable = null;
-            }
+            notif_handler = null;
+            notif_nrunnable = null;
         };
 
         notif_handler.postDelayed(notif_nrunnable, 5000);
@@ -517,23 +513,17 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         builder.setMessage(R.string.valve_open_warning);
 
         builder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-                        if (client != null) {
-                            SuplaApp.Vibrate(context);
-                            client.open(channelId, false, 1);
-                        }
-                        dialog.cancel();
+                (dialog, id) -> {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        SuplaApp.Vibrate(context);
+                        client.open(channelId, false, 1);
                     }
+                    dialog.cancel();
                 });
 
         builder.setNeutralButton(R.string.no,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         AlertDialog alert = builder.create();
         alert.show();
