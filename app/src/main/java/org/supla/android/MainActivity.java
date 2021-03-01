@@ -120,6 +120,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (channelListViewCursorAdapter != null && channelListViewCursorAdapter.isInReorderingMode()) {
+            channelListViewCursorAdapter.stopReorderingMode();
+        }
+        if (cgroupListViewCursorAdapter != null && cgroupListViewCursorAdapter.isInReorderingMode()) {
+            cgroupListViewCursorAdapter.stopReorderingMode();
+        }
+    }
+
     private boolean SetListCursorAdapter() {
 
         if (channelListViewCursorAdapter == null) {
