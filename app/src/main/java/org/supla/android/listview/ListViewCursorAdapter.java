@@ -452,6 +452,10 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         notifyDataSetChanged();
     }
 
+    public boolean isInReorderingMode() {
+        return this.selectedItem > REORDERING_MODE_NOT_ACTIVE || this.emptyPosition > REORDERING_MODE_NOT_ACTIVE;
+    }
+
     public boolean isReorderPossible(int initialPosition, int finalPosition) {
         Item initialPositionItem = positionToItemMapping.get(initialPosition);
         Item finalPositionItem = positionToItemMapping.get(finalPosition);
