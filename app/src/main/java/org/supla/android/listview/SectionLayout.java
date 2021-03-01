@@ -21,7 +21,6 @@ package org.supla.android.listview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -30,16 +29,22 @@ import android.widget.TextView;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 
-public class SectionLayout extends LinearLayout {
+public class SectionLayout extends LinearLayout implements View.OnLongClickListener, View.OnClickListener {
 
     private int locationId;
     private TextView Caption;
     private FrameLayout frmCollapsed;
-    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
+    private ChannelListView parentListView;
 
     public SectionLayout(Context context) {
         super(context);
         Init(context);
+    }
+
+    public SectionLayout(Context context, ChannelListView parentListView) {
+        super(context);
+        Init(context);
+        this.parentListView = parentListView;
     }
 
     public SectionLayout(Context context, AttributeSet attrs) {
@@ -60,8 +65,11 @@ public class SectionLayout extends LinearLayout {
 
             Caption = lv.findViewById(R.id.tvSectionCaption);
             Caption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+            Caption.setOnLongClickListener(this);
+            Caption.setOnClickListener(this);
 
             frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
+            frmCollapsed.setOnClickListener(this);
 
             addView(lv);
         }
@@ -76,27 +84,21 @@ public class SectionLayout extends LinearLayout {
         this.locationId = locationId;
     }
 
-    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener listener) {
-        onSectionLayoutTouchListener = listener;
+    public void setCollapsed(boolean collapsed) {
+        frmCollapsed.setVisibility(collapsed ? VISIBLE : GONE);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(this, Caption.getText().toString(), locationId);
-        }
-
-        //return super.onTouchEvent(event);
+    public boolean onLongClick(View v) {
         return true;
     }
 
-    public void setCollapsed(boolean collapsed) {
-        frmCollapsed.setVisibility(collapsed ? VISIBLE : INVISIBLE);
-    }
-
-    public interface OnSectionLayoutTouchListener {
-        void onSectionLayoutTouch(Object sender, String caption, int locationId);
+    @Override
+    public void onClick(View v) {
+        if (parentListView != null && parentListView.getOnSectionLayoutTouchListener() != null)
+            parentListView
+                    .getOnSectionLayoutTouchListener()
+                    .onSectionClick(parentListView, Caption.getText().toString(), locationId);
     }
 }
 

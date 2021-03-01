@@ -56,7 +56,9 @@ import java.util.Date;
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
-        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults, ChannelListView.OnChannelButtonClickListener {
+        ChannelListView.OnSectionLayoutTouchListener,
+        SuplaRestApiClientTask.IAsyncResults,
+        ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -123,13 +125,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (channelListViewCursorAdapter == null) {
 
             channelListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getChannelListCursor());
-            channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             channelLV.setAdapter(channelListViewCursorAdapter);
 
             channelLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, channelLV));
             channelLV.setOnDragListener(new ListViewDragListener(channelLV,
                     droppedPosition -> onDragStopped(droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
                     position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
+            channelLV.setOnSectionLayoutTouchListener(this);
+            cgroupLV.setOnCaptionLongClickListener(this);
 
             return true;
 
@@ -199,13 +202,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (cgroupListViewCursorAdapter == null) {
 
             cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
-            cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
 
             cgroupLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, cgroupLV));
             cgroupLV.setOnDragListener(new ListViewDragListener(cgroupLV,
                     droppedPosition -> onDragStopped(droppedPosition, cgroupListViewCursorAdapter, this::doGroupsReorder),
                     position -> onDragPositionChanged(position, cgroupListViewCursorAdapter)));
+            cgroupLV.setOnSectionLayoutTouchListener(this);
 
             return true;
 
@@ -611,13 +614,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuButton();
     }
 
-    @Override
-    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
+    public void onSectionClick(ChannelListView clv, String caption, int locationId) {
 
         int _collapsed;
-        if (sender == channelLV.getAdapter()) {
+        if (clv == channelLV) {
             _collapsed = 0x1;
-        } else if (sender == cgroupLV.getAdapter()) {
+        } else if (clv == cgroupLV) {
             _collapsed = 0x2;
         } else {
             return;
@@ -635,7 +637,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         location.setCollapsed(collapsed);
         getDbHelper().updateLocation(location);
 
-        if (sender == channelLV.getAdapter()) {
+        if (clv == channelLV) {
             channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         } else {
             cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
@@ -695,6 +697,16 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 alert.show();
             }
         }
+    }
+
+    @Override
+    public void onChannelCaptionLongClick(ChannelListView clv, int remoteId) {
+        LocationCaptionEditor editor = new LocationCaptionEditor(this);
+        editor.edit(remoteId);
+    }
+
+    @Override
+    public void onLocationCaptionLongClick(ChannelListView clv, int locationId) {
     }
 
     private interface Reorder {

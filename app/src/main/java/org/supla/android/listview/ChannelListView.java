@@ -61,10 +61,11 @@ public class ChannelListView extends ListView {
     private OnChannelButtonClickListener onChannelButtonClickListener;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
     private OnDetailListener onDetailListener;
+    private OnCaptionLongClickListener onCaptionLongClickListener;
+    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
     private boolean requestLayout_Locked = false;
     private boolean detailSliding;
     private boolean detailTouchDown;
-    private SectionLayout Header;
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
@@ -87,8 +88,6 @@ public class ChannelListView extends ListView {
     }
 
     private void init(Context context) {
-
-
         setHeaderDividersEnabled(false);
         setFooterDividersEnabled(false);
 
@@ -96,15 +95,11 @@ public class ChannelListView extends ListView {
 
         //setFastScrollEnabled(true);
         setVerticalScrollBarEnabled(false);
-
-        Header = new SectionLayout(context);
-        Header.setCaption("ABC");
         detailSliding = false;
         detailTouchDown = false;
         detailAnim = false;
         mDetailLayout = null;
         mDetailVisible = false;
-
     }
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
@@ -790,6 +785,22 @@ public class ChannelListView extends ListView {
         this.onChannelButtonTouchListener = onChannelButtonTouchListener;
     }
 
+    public OnCaptionLongClickListener getOnCaptionLongClickListener() {
+        return onCaptionLongClickListener;
+    }
+
+    public void setOnCaptionLongClickListener(OnCaptionLongClickListener onCaptionLongClickListener) {
+        this.onCaptionLongClickListener = onCaptionLongClickListener;
+    }
+
+    public OnSectionLayoutTouchListener getOnSectionLayoutTouchListener() {
+        return onSectionLayoutTouchListener;
+    }
+
+    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener onSectionLayoutTouchListener) {
+        this.onSectionLayoutTouchListener = onSectionLayoutTouchListener;
+    }
+
     public boolean isDetailVisible() {
         return mDetailVisible && mDetailLayout != null;
     }
@@ -843,10 +854,8 @@ public class ChannelListView extends ListView {
     }
 
     public void detail_OnChannelDataChanged() {
-
         if (isDetailVisible())
             mDetailLayout.OnChannelDataChanged();
-
     }
 
     public interface OnChannelButtonClickListener {
@@ -855,14 +864,20 @@ public class ChannelListView extends ListView {
     }
 
     public interface OnChannelButtonTouchListener {
-
         void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc);
     }
 
+    public interface OnCaptionLongClickListener {
+        void onChannelCaptionLongClick(ChannelListView clv, int remoteId);
+        void onLocationCaptionLongClick(ChannelListView clv, int locationId);
+    }
+
     public interface OnDetailListener {
-
         void onChannelDetailShow(ChannelBase channel);
-
         void onChannelDetailHide();
+    }
+
+    public interface OnSectionLayoutTouchListener {
+        void onSectionClick(ChannelListView clv, String caption, int locationId);
     }
 }
