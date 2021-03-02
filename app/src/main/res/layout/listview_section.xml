@@ -10,29 +10,36 @@
         android:background="@color/channel_section_cell"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvSectionCaption"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/channel_separator_text_margin"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textColor="@color/channel_section_text"
-            android:textSize="@dimen/channel_section_text" />
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvSectionCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/channel_separator_text_margin"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:minWidth="100dp"
+                android:text="TextView"
+                android:textColor="@color/channel_section_text"
+                android:textSize="@dimen/channel_section_text" />
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/frmSectionCollapsed"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:visibility="visible">
 
             <ImageView
                 android:id="@+id/ivSectionCollapsed"
                 android:layout_width="25dp"
                 android:layout_height="15dp"
-                android:layout_gravity="left|center_vertical"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/collapsed"
                 android:cropToPadding="false"

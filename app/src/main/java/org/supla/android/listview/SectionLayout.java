@@ -19,8 +19,11 @@ package org.supla.android.listview;
  */
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -28,13 +31,19 @@ import android.widget.TextView;
 
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
+import org.supla.android.Trace;
 
-public class SectionLayout extends LinearLayout implements View.OnLongClickListener, View.OnClickListener {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class SectionLayout extends LinearLayout  {
 
     private int locationId;
     private TextView Caption;
     private FrameLayout frmCollapsed;
     private ChannelListView parentListView;
+    private Timer timer;
+    private boolean longClick;
 
     public SectionLayout(Context context) {
         super(context);
@@ -65,11 +74,12 @@ public class SectionLayout extends LinearLayout implements View.OnLongClickListe
 
             Caption = lv.findViewById(R.id.tvSectionCaption);
             Caption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-            Caption.setOnLongClickListener(this);
-            Caption.setOnClickListener(this);
-
             frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
-            frmCollapsed.setOnClickListener(this);
+
+            // Unfortunately, LongClickListener and ClickListener
+            // stop working after moving the list.
+            //Caption.setOnLongClickListener(this);
+            //Caption.setOnClickListener(this);
 
             addView(lv);
         }
@@ -88,21 +98,71 @@ public class SectionLayout extends LinearLayout implements View.OnLongClickListe
         frmCollapsed.setVisibility(collapsed ? VISIBLE : GONE);
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        if (parentListView.getOnCaptionLongClickListener() != null) {
-            parentListView.getOnCaptionLongClickListener().
-                    onLocationCaptionLongClick(parentListView, locationId);
-        }
-        return true;
-    }
 
     @Override
-    public void onClick(View v) {
-        if (parentListView != null && parentListView.getOnSectionLayoutTouchListener() != null)
-            parentListView
-                    .getOnSectionLayoutTouchListener()
-                    .onSectionClick(parentListView, Caption.getText().toString(), locationId);
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            longClick = false;
+
+            if (timer != null) {
+                timer.cancel();
+            }
+
+            final int x = (int)event.getX();
+            final int y = (int)event.getY();
+
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Handler handler = new Handler(getContext().getMainLooper());
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            longClick = true;
+
+                            if (timer != null) {
+                                timer.cancel();
+                                timer = null;
+                            }
+
+                            if (parentListView != null
+                                    && parentListView.getOnCaptionLongClickListener() != null) {
+
+                                Rect bounds = new Rect();
+                                Caption.getDrawingRect(bounds);
+
+                                if (bounds.contains(x, y)) {
+                                    parentListView.getOnCaptionLongClickListener().
+                                            onLocationCaptionLongClick(parentListView, locationId);
+                                } else {
+                                    // .... OnSectionLongClick
+                                }
+                            }
+
+
+                        }
+                    };
+                    handler.post(r);
+                }
+            }, 800, 1000);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            if (!longClick) {
+                if (parentListView != null
+                        && parentListView.getOnSectionLayoutTouchListener() != null) {
+                    parentListView
+                            .getOnSectionLayoutTouchListener()
+                            .onSectionClick(parentListView, Caption.getText().toString(), locationId);
+                }
+            }
+
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
+        }
+
+        return true;
     }
 }
 
