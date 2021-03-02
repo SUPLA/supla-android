@@ -90,6 +90,10 @@ public class SectionLayout extends LinearLayout implements View.OnLongClickListe
 
     @Override
     public boolean onLongClick(View v) {
+        if (parentListView.getOnCaptionLongClickListener() != null) {
+            parentListView.getOnCaptionLongClickListener().
+                    onLocationCaptionLongClick(parentListView, locationId);
+        }
         return true;
     }
 

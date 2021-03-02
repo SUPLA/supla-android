@@ -426,4 +426,7 @@
     <string translatable="false" name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
     <string translatable="false" name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4Ghz network is ether not in range or its name was incorrect.</string>
     <string translatable="false" name="incorrect_email_or_password">Incorrect Email Address or Password</string>
+    <string translatable="false" name="channel_name">Channel name</string>
+    <string translatable="false" name="location_name">Location name</string>
+    <string translatable="false" name="str_default">Default</string>
 </resources>

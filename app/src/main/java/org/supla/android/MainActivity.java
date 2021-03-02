@@ -106,6 +106,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonClickListener(this);
         channelLV.setOnChannelButtonTouchListener(this);
+        channelLV.setOnCaptionLongClickListener(this);
         channelLV.setOnDetailListener(this);
 
         cgroupLV = findViewById(R.id.channelGroupListView);
@@ -144,7 +145,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     droppedPosition -> onDragStopped(droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
                     position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
             channelLV.setOnSectionLayoutTouchListener(this);
-            cgroupLV.setOnCaptionLongClickListener(this);
 
             return true;
 
@@ -713,12 +713,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onChannelCaptionLongClick(ChannelListView clv, int remoteId) {
-        LocationCaptionEditor editor = new LocationCaptionEditor(this);
+        SuplaApp.Vibrate(this);
+
+        ChannelCaptionEditor editor = new ChannelCaptionEditor(this);
         editor.edit(remoteId);
     }
 
     @Override
     public void onLocationCaptionLongClick(ChannelListView clv, int locationId) {
+        SuplaApp.Vibrate(this);
+
+        LocationCaptionEditor editor = new LocationCaptionEditor(this);
+        editor.edit(locationId);
     }
 
     private interface Reorder {
