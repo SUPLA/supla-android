@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public abstract class CaptionEditor implements View.OnClickListener, TextWatcher {
+public abstract class CaptionEditor implements View.OnClickListener, TextWatcher, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
     private Context context;
     private Button btnCancel;
     private Button btnOK;
@@ -19,6 +19,7 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
     private TextView tvTitle;
     private int id;
     private String originalCaption;
+    SuperuserAuthorizationDialog superuserAuthorizationDialog;
 
     public CaptionEditor(Context context) {
         this.context = context;
@@ -44,21 +45,12 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
     public void edit(int id) {
         this.id = id;
 
-        originalCaption = getCaption();
-        edCaption.setText(originalCaption);
-
-        if (getHint() != 0) {
-            edCaption.setHint(getHint());
-        } else {
-            edCaption.setHint("");
+        if (superuserAuthorizationDialog == null) {
+            superuserAuthorizationDialog = new SuperuserAuthorizationDialog(getContext());
+            superuserAuthorizationDialog.setOnAuthorizarionResultListener(this);
         }
-        tvTitle.setText(getTitle());
 
-        afterTextChanged(edCaption.getText());
-
-        if (dialog != null) {
-            dialog.show();
-        }
+        superuserAuthorizationDialog.showIfNeeded();
     }
 
     @Override
@@ -117,4 +109,33 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
     protected abstract int getTitle();
     protected abstract String getCaption();
     protected abstract void applyChanged(String newCaption);
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
+                                                 boolean Success, int Code) {
+        if (!Success) {
+            return;
+        }
+
+        originalCaption = getCaption();
+        edCaption.setText(originalCaption);
+
+        if (getHint() != 0) {
+            edCaption.setHint(getHint());
+        } else {
+            edCaption.setHint("");
+        }
+        tvTitle.setText(getTitle());
+
+        afterTextChanged(edCaption.getText());
+
+        if (this.dialog != null) {
+            this.dialog.show();
+        }
+    }
+
+    @Override
+    public void authorizationCanceled() {
+
+    }
 }
