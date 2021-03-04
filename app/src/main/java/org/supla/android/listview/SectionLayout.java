@@ -160,6 +160,11 @@ public class SectionLayout extends LinearLayout  {
                 timer.cancel();
                 timer = null;
             }
+        } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
         }
 
         return true;
