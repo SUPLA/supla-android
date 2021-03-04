@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -1060,12 +1061,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         return false;
     }
 
-    public boolean stateIconTouched(int x, int y) {
-        return iconTouched(x, y, channelStateIcon);
+    public Point stateIconTouched(int x, int y) {
+        return iconTouched(x, y, channelStateIcon) ? new Point(x,y) : null;
     }
 
-    public boolean warningIconTouched(int x, int y) {
-        return iconTouched(x, y, channelWarningIcon);
+    public Point warningIconTouched(int x, int y) {
+        return iconTouched(x, y, channelWarningIcon) ? new Point(x,y) : null;
     }
 
     public int getRemoteId() {
