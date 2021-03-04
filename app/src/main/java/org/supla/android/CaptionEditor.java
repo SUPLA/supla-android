@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.supla.android.lib.SuplaClientMessageHandler;
+import org.supla.android.lib.SuplaClientMsg;
+
 public abstract class CaptionEditor implements View.OnClickListener, TextWatcher, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
     private Context context;
     private Button btnCancel;
@@ -62,9 +65,12 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
         if (v == btnCancel) {
             dialog.cancel();
         } else if (v == btnOK) {
-            if (originalCaption == null && edCaption.getText() != null
+            if ((originalCaption == null && edCaption.getText() != null)
                     || !originalCaption.equals(edCaption.getText().toString())) {
                 applyChanged(edCaption.getText().toString());
+
+                SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
+                SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
             }
             dialog.dismiss();
         }
@@ -116,6 +122,8 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
         if (!Success) {
             return;
         }
+
+        dialog.close();
 
         originalCaption = getCaption();
         edCaption.setText(originalCaption);

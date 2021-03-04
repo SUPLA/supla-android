@@ -46,6 +46,8 @@ public interface ChannelRepository {
 
     boolean updateChannel(SuplaChannel suplaChannel);
 
+    void updateChannel(Channel channel);
+
     boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
 
     boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);

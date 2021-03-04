@@ -547,6 +547,10 @@ public class DbHelper extends BaseDbHelper {
         return channelRepository.updateChannel(suplaChannel);
     }
 
+    public void updateChannel(Channel channel) {
+        channelRepository.updateChannel(channel);
+    }
+
     public boolean updateChannelValue(SuplaChannelValue suplaChannelValue, int channelId,
                                       boolean onLine) {
         return channelRepository.updateChannelValue(suplaChannelValue, channelId, onLine);

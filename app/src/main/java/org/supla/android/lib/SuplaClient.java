@@ -139,6 +139,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
+    private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
+
     private native boolean scReconnectAllClients(long _supla_client);
 
     private native boolean scSetRegistrationEnabled(long _supla_client,
@@ -477,6 +479,16 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean setLocationCaption(int LocationID, String Caption) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
     public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
         lockClientPtr();
         try {
@@ -772,6 +784,8 @@ public class SuplaClient extends Thread {
     }
 
     private void locationUpdate(SuplaLocation location) {
+        Trace.d(log_tag, "Location "+Integer.toString(location.Id)+" "+location.Caption);
+
         if (DbH.updateLocation(location)) {
             Trace.d(log_tag, "Location updated");
             onDataChanged();
@@ -984,6 +998,15 @@ public class SuplaClient extends Thread {
         msg.setCode(ResultCode);
         msg.setText(Caption);
         msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onLocationCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setLocationId(LocationID);
         sendMessage(msg);
     }
 

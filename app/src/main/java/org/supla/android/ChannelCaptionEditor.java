@@ -5,6 +5,7 @@ import android.content.Context;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
+import org.supla.android.lib.SuplaClient;
 
 public class ChannelCaptionEditor extends CaptionEditor {
     public ChannelCaptionEditor(Context context) {
@@ -19,18 +20,26 @@ public class ChannelCaptionEditor extends CaptionEditor {
     @Override
     protected String getCaption() {
         DbHelper dbH = DbHelper.getInstance(getContext());
-        if (dbH!=null) {
-            Channel channel = dbH.getChannel(getId());
-            if (channel != null && channel.getCaption() != null) {
-                return channel.getCaption();
-            }
+        Channel channel = dbH.getChannel(getId());
+        if (channel != null && channel.getCaption() != null) {
+            return channel.getCaption();
         }
         return "";
     }
 
     @Override
     protected void applyChanged(String newCaption) {
+        DbHelper dbH = DbHelper.getInstance(getContext());
+        Channel channel = dbH.getChannel(getId());
+        if (channel != null) {
+            channel.setCaption(newCaption);
+            dbH.updateChannel(channel);
 
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
+            if (client != null) {
+                client.setChannelCaption(getId(), newCaption);
+            }
+        }
     }
 
     @Override

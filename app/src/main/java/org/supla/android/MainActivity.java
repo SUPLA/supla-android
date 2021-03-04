@@ -289,13 +289,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     protected void onDataChangedMsg(int ChannelId, int GroupId, boolean extendedValue) {
 
-        ChannelListView LV = null;
-        int Id = 0;
+        ChannelListView LV = channelLV;
+        int Id = ChannelId;
 
-        if (ChannelId > 0) {
-            Id = ChannelId;
-            LV = channelLV;
-        } else if (GroupId > 0) {
+        if (GroupId > 0) {
             Id = GroupId;
             LV = cgroupLV;
         }
