@@ -369,6 +369,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     }
 
     private void onActionBtnTouchDown(View v) {
+        if (Slided() == 0) {
+            return;
+        }
 
         if (v == left_btn || v == right_btn) {
             v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
@@ -379,6 +382,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     }
 
     private void onActionBtnTouchUp(View v) {
+        if (Slided() == 0) {
+            return;
+        }
 
         if (v == left_btn || v == right_btn) {
 
