@@ -17,8 +17,8 @@
     <string name="status_bad_credentials">Informations d\u0027identification invalides</string>
     <string name="status_climit_exceded">Vous avez dépassé la limite des applications client-side</string>
     <string name="status_version_error">Incompatibilité de la version du serveur</string>
-    <string name="status_reg_disabled">L\'inscription est actuellement désactivée. Pour l\'activer, allez vers l\'onglet \"Smartphones\" à la page %1$s.</string>
-    <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page %1$s et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
+    <string name="status_reg_disabled">L\'inscription est actuellement désactivée. Pour l\'activer, allez vers l\'onglet \"Smartphones\" à la page \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Ce dispositif n\'a pas d\'identifiant d\'accès attribué. Allez à la page \"Supla Cloud\" et dans l\'onglet \"Smartphones\"  attribuez l\'identifiant approprié.</string>
     <string name="status_device_disabled">Le dispositif est éteint</string>
     <string name="status_accessid_disabled">L\'identifiant d\'accès est désactivé</string>
 
@@ -121,7 +121,6 @@
     <string name="start">DÉMARRER</string>
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
-    <string name="wizard_step2_txt1">Entrez le mot de passe de votre réseau Wi-Fi, dont le nom est</string>
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Le serveur auquel vous êtes connecté ne prend pas en charge cette fonctionnalité!</string>
     <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
@@ -247,7 +246,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Compteur de chaleur</string>
-    <string name="wizard_step2_txt1_alt">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
+    <string name="wizard_step2_txt1">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
     <string name="aritmetic_balance_days">Bilan arithmétique - Jours</string>
     <string name="aritmetic_balance_hours">Bilan arithmétique - Heures</string>
     <string name="aritmetic_balance_minutes">Bilan arithmétique - Minutes</string>

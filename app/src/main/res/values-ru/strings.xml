@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Неправильные логин/пароль</string>
     <string name="status_climit_exceded">Ограничение количества пользователей</string>
     <string name="status_version_error">Несовместимая версия сервера</string>
-    <string name="status_reg_disabled">Регистрация в настоящее время отключена. Для ее включения перейдите на вкладку Смартфоны на странице %1$s</string>
-    <string name="status_access_id_not_assigned">Это устройство не имеет назначенного ключа доступа. Перейдите на страницу %1$s и  на вкладке Смартфоны назначьте соответствующий ключ.</string>
+    <string name="status_reg_disabled">Регистрация в настоящее время отключена. Для ее включения перейдите на вкладку Смартфоны на странице \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Это устройство не имеет назначенного ключа доступа. Перейдите на страницу \"Supla Cloud\" и  на вкладке Смартфоны назначьте соответствующий ключ.</string>
     <string name="status_device_disabled">Устройство выключено</string>
     <string name="status_accessid_disabled">Ключ доступа отключен</string>
 
@@ -127,7 +127,6 @@
     <string name="start">START</string>
     <string name="wizard_result_compat_error">Устройство, с которым установлено соединение, не совместимо с данным мастером!</string>
     <string name="wizard_step1_txt1">Добро пожаловать в мастер добавления устройств, который поможет вам легко и быстро добавить новое устройство в систему.</string>
-    <string name="wizard_step2_txt1">Введите пароль для вашей сети wi-fi, название которой</string>
     <string name="device_reg_request_timeout">Превышено время ожидания информации о доступности регистрации устройств!</string>
     <string name="wizard_server_compat_error">Сервер, к которому вы подключены, не поддерживает эту функцию!</string>
     <string name="wizard_no_internetwifi">Прежде, чем начать, установите соединение с Интернетом через сеть WiFi, которая также будет использоваться через устройство ввода/вывода для подключения к серверу.</string>
@@ -253,7 +252,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Теплосчетчик</string>
-    <string name="wizard_step2_txt1_alt">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
+    <string name="wizard_step2_txt1">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
     <string name="aritmetic_balance_days" >Арифметический баланс - Дни</string>
     <string name="aritmetic_balance_hours" >Арифметический баланс - Часы</string>
     <string name="aritmetic_balance_minutes" >Арифметический баланс - Минуты</string>

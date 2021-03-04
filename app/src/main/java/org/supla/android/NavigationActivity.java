@@ -27,14 +27,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 @SuppressLint("registered")
@@ -243,9 +241,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if (Anim) return;
 
-            DbHelper DbH = new DbHelper(this);
-
-            int btns = DbH.isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
+            int btns = getDbHelper().isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
                     : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
 
             getMenuItemsLayout().setButtonsAvailable(btns);
@@ -342,6 +338,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void openCloud() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.cloud_url)));
+        startActivity(browserIntent);
+    }
+
     public void donate() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
         startActivity(browserIntent);
@@ -432,6 +433,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 case MenuItemsLayout.BTN_HELP:
                     openForumpage();
                     break;
+                case MenuItemsLayout.BTN_CLOUD:
+                    openCloud();
+                    break;
                 case MenuItemsLayout.BTN_HOMEPAGE:
                     openHomepage();
                     break;
@@ -471,7 +475,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 new SuperuserAuthorizationDialog(this);
         mAuthDialog.setObject(sourceBtnId);
         mAuthDialog.setOnAuthorizarionResultListener(this);
-        mAuthDialog.show();
+        mAuthDialog.showIfNeeded();
     }
 
     @Override

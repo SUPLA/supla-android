@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Λανθασμένα διαπιστευτήρια</string>
     <string name="status_climit_exceded">Υπέρβαση ορίου των εφαρμογών πελάτη</string>
     <string name="status_version_error">Μη συμβατή έκδοση διακομιστή</string>
-    <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones\" στη σελίδα %1$s</string>
-    <string name="status_access_id_not_assigned">Αυτή η συσκευή δεν έχει παραχωρημένο αναγνωριστικό πρόσβασης. Μεταβείτε στη σελίδα %1$s  στην καρτέλα \"Smartphones\" και παραχωρήστε το κατάλληλο αναγνωριστικό.</string>
+    <string name="status_reg_disabled">Η εγγραφή είναι αυτή τη στιγμή απενεργοποιημένη. Για να την ενεργοποιήσετε, μεταβείτε στην καρτέλα \"Smartphones\" στη σελίδα \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Αυτή η συσκευή δεν έχει παραχωρημένο αναγνωριστικό πρόσβασης. Μεταβείτε στη σελίδα \"Supla Cloud\" στην καρτέλα \"Smartphones\" και παραχωρήστε το κατάλληλο αναγνωριστικό.</string>
     <string name="status_device_disabled">Η συσκευή είναι απενεργοποιημένη</string>
     <string name="status_accessid_disabled">Το αναγνωριστικό πρόσβασης είναι απενεργοποιημένο</string>
 
@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
     <string name="wizard_step1_txt3">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
     <string name="next">Επόμενο</string>
-    <string name="start">ΕΝΑΡΞΗ</string>>
+    <string name="start">ΕΝΑΡΞΗ</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Πληκτρολογήστε τον κωδικό πρόσβασης για το δίκτυό σας WiFi, το όνομα του οποίου είναι</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Το δίκτυο %1$s θα χρησιμοποιηθεί από την εκτελεστική συσκευή για να συνδεθεί με τον διακομιστή.</string>
     <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 
@@ -245,7 +245,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
-    <string name="wizard_step2_txt1_alt">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
+    <string name="wizard_step2_txt1">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
     <string name="aritmetic_balance_days">Αριθμητικός ισολογισμός - Ημέρες</string>
     <string name="aritmetic_balance_hours">Αριθμητικός ισολογισμός - Ώρες</string>
     <string name="aritmetic_balance_minutes">Αριθμητικός ισολογισμός - Λεπτά</string>

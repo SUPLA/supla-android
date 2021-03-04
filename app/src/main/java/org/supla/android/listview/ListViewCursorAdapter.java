@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.OnSectionLayoutTouchListener {
+public class ListViewCursorAdapter extends BaseAdapter {
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
@@ -43,7 +43,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     private ArrayList<SectionItem> Sections;
     private int currentSectionIndex;
     private boolean Group;
-    private SectionLayout.OnSectionLayoutTouchListener onSectionLayoutTouchListener;
 
     private Map<Integer, Item> positionToItemMapping;
     private int emptyPosition = REORDERING_MODE_NOT_ACTIVE;
@@ -253,10 +252,10 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         if (obj instanceof SectionItem) {
 
             if (((SectionItem) obj).view == null) {
-                ((SectionItem) obj).view = new SectionLayout(context);
+                ((SectionItem) obj).view = new SectionLayout(context, parent instanceof ChannelListView ?
+                        (ChannelListView) parent : null);
                 ((SectionItem) obj).view.setCaption(((SectionItem) obj).getCaption());
                 ((SectionItem) obj).view.setLocationId(((SectionItem) obj).getLocationId());
-                ((SectionItem) obj).view.setOnSectionLayoutTouchListener(this);
                 ((SectionItem) obj).view.
                         setCollapsed((((SectionItem) obj).getCollapsed() & _collapsed) > 0);
             }
@@ -384,17 +383,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         return Group;
     }
 
-    @Override
-    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
-        if (onSectionLayoutTouchListener != null) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(this, caption, locationId);
-        }
-    }
-
-    public void setOnSectionLayoutTouchListener(SectionLayout.OnSectionLayoutTouchListener listener) {
-        onSectionLayoutTouchListener = listener;
-    }
-
     public class SectionItem {
         private int locationId;
         private int collapsed;
@@ -450,6 +438,10 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         this.emptyPosition = REORDERING_MODE_NOT_ACTIVE;
 
         notifyDataSetChanged();
+    }
+
+    public boolean isInReorderingMode() {
+        return this.selectedItem > REORDERING_MODE_NOT_ACTIVE || this.emptyPosition > REORDERING_MODE_NOT_ACTIVE;
     }
 
     public boolean isReorderPossible(int initialPosition, int finalPosition) {

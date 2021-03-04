@@ -25,6 +25,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -61,15 +62,16 @@ public class ChannelListView extends ListView {
     private OnChannelButtonClickListener onChannelButtonClickListener;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
     private OnDetailListener onDetailListener;
+    private OnCaptionLongClickListener onCaptionLongClickListener;
+    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
     private boolean requestLayout_Locked = false;
     private boolean detailSliding;
     private boolean detailTouchDown;
-    private SectionLayout Header;
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
-    private boolean mChannelStateIconTouched;
-    private boolean mChannelWarningIconTouched;
+    private Point mChannelStateIconTouchPoint;
+    private Point mChannelWarningIconTouchPoint;
 
     public ChannelListView(Context context) {
         super(context);
@@ -87,8 +89,6 @@ public class ChannelListView extends ListView {
     }
 
     private void init(Context context) {
-
-
         setHeaderDividersEnabled(false);
         setFooterDividersEnabled(false);
 
@@ -96,15 +96,11 @@ public class ChannelListView extends ListView {
 
         //setFastScrollEnabled(true);
         setVerticalScrollBarEnabled(false);
-
-        Header = new SectionLayout(context);
-        Header.setCaption("ABC");
         detailSliding = false;
         detailTouchDown = false;
         detailAnim = false;
         mDetailLayout = null;
         mDetailVisible = false;
-
     }
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
@@ -171,8 +167,8 @@ public class ChannelListView extends ListView {
 
                     break;
 
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                     if (!(mDetailLayout instanceof ChannelDetailDigiglass))
                         mDetailLayout = null;
                     break;
@@ -218,8 +214,8 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                     mDetailLayout = new ChannelDetailDigiglass(getContext(), this);
                     break;
             }
@@ -300,8 +296,8 @@ public class ChannelListView extends ListView {
         float deltaX = Math.abs(X - LastXtouch);
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            mChannelStateIconTouched = false;
-            mChannelWarningIconTouched = false;
+            mChannelStateIconTouchPoint = null;
+            mChannelWarningIconTouchPoint = null;
         }
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN
@@ -360,9 +356,9 @@ public class ChannelListView extends ListView {
                         }
 
                         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                            mChannelStateIconTouched =
+                            mChannelStateIconTouchPoint =
                                     channelLayout.stateIconTouched((int) ev.getX(), (int) ev.getY());
-                            mChannelWarningIconTouched =
+                            mChannelWarningIconTouchPoint =
                                     channelLayout.warningIconTouched((int) ev.getX(), (int) ev.getY());
                         }
 
@@ -373,11 +369,6 @@ public class ChannelListView extends ListView {
                     if (channelLayout.getButtonsEnabled()
                             && !detailSliding) {
 
-                        if (Math.abs(Y-LastYtouch) > 10f) {
-                            mChannelStateIconTouched = false;
-                            mChannelWarningIconTouched = false;
-                        }
-
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
                             return super.onTouchEvent(ev);
@@ -387,8 +378,8 @@ public class ChannelListView extends ListView {
                             channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
                             if (channelLayout.percentOfSliding() > 3f) {
-                                mChannelStateIconTouched = false;
-                                mChannelWarningIconTouched = false;
+                                mChannelStateIconTouchPoint = null;
+                                mChannelWarningIconTouchPoint = null;
                             }
                         }
 
@@ -459,10 +450,15 @@ public class ChannelListView extends ListView {
                 && action == MotionEvent.ACTION_UP
                 && channelLayout != null
                 && channelLayout.getRemoteId() > 0) {
-            if (mChannelStateIconTouched) {
+
+            if (mChannelStateIconTouchPoint != null
+                    && Math.abs(mChannelStateIconTouchPoint.y-Y) < 30f
+                    && Math.abs(mChannelStateIconTouchPoint.x-X) < 30f ) {
                 onChannelButtonClickListener.onChannelStateButtonClick(this,
                         channelLayout.getRemoteId());
-            } else if (mChannelWarningIconTouched) {
+            } else if (mChannelWarningIconTouchPoint != null
+                    && Math.abs(mChannelWarningIconTouchPoint.y-Y) < 30f
+                    && Math.abs(mChannelWarningIconTouchPoint.x-X) < 30f ) {
                 onChannelButtonClickListener.onChannelWarningButtonClick(this,
                         channelLayout.getRemoteId());
             }
@@ -790,6 +786,22 @@ public class ChannelListView extends ListView {
         this.onChannelButtonTouchListener = onChannelButtonTouchListener;
     }
 
+    public OnCaptionLongClickListener getOnCaptionLongClickListener() {
+        return onCaptionLongClickListener;
+    }
+
+    public void setOnCaptionLongClickListener(OnCaptionLongClickListener onCaptionLongClickListener) {
+        this.onCaptionLongClickListener = onCaptionLongClickListener;
+    }
+
+    public OnSectionLayoutTouchListener getOnSectionLayoutTouchListener() {
+        return onSectionLayoutTouchListener;
+    }
+
+    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener onSectionLayoutTouchListener) {
+        this.onSectionLayoutTouchListener = onSectionLayoutTouchListener;
+    }
+
     public boolean isDetailVisible() {
         return mDetailVisible && mDetailLayout != null;
     }
@@ -843,10 +855,8 @@ public class ChannelListView extends ListView {
     }
 
     public void detail_OnChannelDataChanged() {
-
         if (isDetailVisible())
             mDetailLayout.OnChannelDataChanged();
-
     }
 
     public interface OnChannelButtonClickListener {
@@ -855,14 +865,20 @@ public class ChannelListView extends ListView {
     }
 
     public interface OnChannelButtonTouchListener {
-
         void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc);
     }
 
+    public interface OnCaptionLongClickListener {
+        void onChannelCaptionLongClick(ChannelListView clv, int remoteId);
+        void onLocationCaptionLongClick(ChannelListView clv, int locationId);
+    }
+
     public interface OnDetailListener {
-
         void onChannelDetailShow(ChannelBase channel);
-
         void onChannelDetailHide();
+    }
+
+    public interface OnSectionLayoutTouchListener {
+        void onSectionClick(ChannelListView clv, String caption, int locationId);
     }
 }

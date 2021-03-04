@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Napačne poverilnice</string>
     <string name="status_climit_exceded">Omejitev odjemalskih aplikacij je presežena</string>
     <string name="status_version_error">Nezdružljiva različica strežnika</string>
-    <string name="status_reg_disabled">Registracija je trenutno izklopljena. Če jo želite omogočiti, pojdite na zavihek \"Pametni telefoni\" na strani %1$s</string>
-    <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran %1$s in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
+    <string name="status_reg_disabled">Registracija je trenutno izklopljena. Če jo želite omogočiti, pojdite na zavihek \"Pametni telefoni\" na strani \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Ta naprava nima dodeljenega identifikatorja dostopa. Pojdite na stran \"Supla Cloud\" in na zavihku \"Pametni telefoni\" dodelite ustrezen identifikator.</string>
     <string name="status_device_disabled">Naprava je izklopljena</string>
     <string name="status_accessid_disabled">Identifikator dostopa je izklopljen</string>
 
@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
     <string name="wizard_step1_txt3">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
     <string name="next">Naprej</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Vnesite geslo v svoje omrežje WiFi, katerega ime je</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Izvršilna naprava bo za povezovanje s strežnikom uporabila omrežje %1$s.</string>
     <string name="wizard_remember_passwd">Shranite geslo</string>
 
@@ -245,7 +245,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Merilnik toplote</string>
-    <string name="wizard_step2_txt1_alt">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
+    <string name="wizard_step2_txt1">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
     <string name="aritmetic_balance_days" >Aritmetično ravnotežje - Dnevi</string>
     <string name="aritmetic_balance_hours" >Aritmetično ravnotežje - Ure</string>
     <string name="aritmetic_balance_minutes" >Aritmetično ravnotežje - Minute</string>

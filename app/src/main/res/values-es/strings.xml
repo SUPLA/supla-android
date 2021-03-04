@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Certificaciones incorrectas</string>
     <string name="status_climit_exceded">Se ha superado el límite de aplicaciones del cliente</string>
     <string name="status_version_error">Versión del servidor incompatible</string>
-    <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, vaya a la pestaña \"Smartphones\" en la página %1$s.</string>
-    <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Vaya a la página %1$s y asigne el identificador adecuado en la pestaña \"Smartphones\".</string>
+    <string name="status_reg_disabled">El registro está actualmente desactivado. Para activarlo, vaya a la pestaña \"Smartphones\" en la página \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Este dispositivo no tiene un identificador de acceso asignado. Vaya a la página \"Supla Cloud\" y asigne el identificador adecuado en la pestaña \"Smartphones\".</string>
     <string name="status_device_disabled">El dispositivo está deshabilitado</string>
     <string name="status_accessid_disabled">El identificador de acceso está deshabilitado</string>
 
@@ -122,7 +122,6 @@
     <string name="start">START</string>
     <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este asistente!</string>
     <string name="wizard_step1_txt1">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
-    <string name="wizard_step2_txt1">introduzca la contraseña a tu red WiFi, llamada</string>
     <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
     <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red WiFi que será la utilizada por el actuador para conectarse al servidor.</string>
     <string name="wizard_server_compat_error">¡El servidor al que ha conectado no es compatible con esta característica!</string>
@@ -248,7 +247,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Medidor de calor</string>
-    <string name="wizard_step2_txt1_alt">Introduzca el nombre y la contraseña de la red WiFi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
+    <string name="wizard_step2_txt1">Introduzca el nombre y la contraseña de la red WiFi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
     <string name="aritmetic_balance_days">Balance aritmético – Días</string>
     <string name="aritmetic_balance_hours">Balance aritmético – Horas</string>
     <string name="aritmetic_balance_minutes">Balance aritmético – Minutos</string>

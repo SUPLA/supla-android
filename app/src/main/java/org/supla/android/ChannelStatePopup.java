@@ -52,6 +52,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     private int channelFlags;
     private SuplaChannelState lastState;
 
+    private LinearLayout llChannelID;
     private LinearLayout llIP;
     private LinearLayout llMAC;
     private LinearLayout llBatteryLevel;
@@ -69,6 +70,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
     private LinearLayout llProgress;
 
     private TextView tvInfoTitle;
+    private TextView tvChannelID;
     private TextView tvIP;
     private TextView tvMAC;
     private TextView tvBatteryLevel;
@@ -94,6 +96,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         View view = inflater.inflate(R.layout.channelstate, null);
         builder.setView(view);
 
+        llChannelID = view.findViewById(R.id.llChannelID);
         llIP = view.findViewById(R.id.llIP);
         llMAC = view.findViewById(R.id.llMAC);
         llBatteryLevel = view.findViewById(R.id.llBatteryLevel);
@@ -111,6 +114,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         llProgress = view.findViewById(R.id.llProgress);
 
         tvInfoTitle = view.findViewById(R.id.tvInfoTitle);
+        tvChannelID = view.findViewById(R.id.tvChannelID);
         tvIP = view.findViewById(R.id.tvIP);
         tvMAC = view.findViewById(R.id.tvMAC);
         tvBatteryLevel = view.findViewById(R.id.tvBatteryLevel);
@@ -154,6 +158,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
 
     public void update(SuplaChannelState state) {
         lastState = state;
+        llChannelID.setVisibility(View.GONE);
         llIP.setVisibility(View.GONE);
         llMAC.setVisibility(View.GONE);
         llBatteryLevel.setVisibility(View.GONE);
@@ -205,6 +210,12 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         }
 
         lastRefreshTime = System.currentTimeMillis();
+
+        if (state.getChannelID() != 0) {
+            llChannelID.setVisibility(View.VISIBLE);
+            llProgress.setVisibility(View.GONE);
+            tvChannelID.setText(Integer.toString(state.getChannelID()));
+        }
 
         if (state.getIpv4() != null) {
             llIP.setVisibility(View.VISIBLE);
@@ -312,7 +323,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             this.remoteId = remoteId;
         }
 
-        DbHelper dbHelper = new DbHelper(context);
+        DbHelper dbHelper = DbHelper.getInstance(context);
         Channel channel = dbHelper.getChannel(remoteId);
         channelFlags = 0;
 
@@ -352,7 +363,7 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
             SuperuserAuthorizationDialog authDialog =
                     new SuperuserAuthorizationDialog(context);
             authDialog.setOnAuthorizarionResultListener(this);
-            authDialog.show();
+            authDialog.showIfNeeded();
         }
     }
 

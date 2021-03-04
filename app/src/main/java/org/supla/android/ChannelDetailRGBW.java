@@ -79,6 +79,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private Button btnPowerOnOff;
     private Boolean varilight;
     private Boolean zamel;
+    private Boolean comelit;
 
     public ChannelDetailRGBW(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -177,6 +178,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         varilight = false;
         zamel = false;
+        comelit = false;
 
         if (getChannelBase() instanceof Channel) {
             Channel c = (Channel) getChannelBase();
@@ -189,8 +191,15 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
                 }
             } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_ZAMEL) {
                 zamel = true;
-                if (c.getProductID() == SuplaConst.ZAM_PRODID_DIW_01
+                if ((c.getProductID() == SuplaConst.ZAM_PRODID_DIW_01)
                      && (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
+                    dimmerCalibrationTool = new DiwCalibrationTool(this);
+                }
+            } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_COMELIT) {
+                comelit = true;
+                if ((c.getProductID() == SuplaConst.COM_PRODID_WDIM100)
+                        && (dimmerCalibrationTool == null
                         || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
                     dimmerCalibrationTool = new DiwCalibrationTool(this);
                 }
@@ -206,7 +215,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             typeSlider = varilight;
         }
 
-        cbPicker.setMinBrightness(varilight || zamel ? 1f : 0f);
+        cbPicker.setMinBrightness(varilight || zamel || comelit ? 1f : 0f);
 
         onClick(typeSlider ? tabSlider : tabWheel);
         channelDataToViews();
@@ -244,6 +253,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         varilight = false;
         zamel = false;
+        comelit = false;
 
         hideDimmerConfigurationToolIfNotLocked();
 

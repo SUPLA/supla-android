@@ -108,8 +108,8 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
-    public final static int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 800;
-    public final static int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 810;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
 
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
     public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;
@@ -252,8 +252,15 @@ public class SuplaConst {
     public final static int SUPLA_MFR_ITEAD = 6;
     public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
+    public final static int SUPLA_MFR_FAKRO = 9;
+    public final static int SUPLA_MFR_PEVEKO = 10;
+    public final static int SUPLA_MFR_WEKTA = 11;
+    public final static int SUPLA_MFR_STA_SYSTEM = 12;
+    public final static int SUPLA_MFR_DGF = 13;
+    public final static int SUPLA_MFR_COMELIT = 14;
 
     public final static int ZAM_PRODID_DIW_01 = 2000;
+    public final static int COM_PRODID_WDIM100 = 2000;
 
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
@@ -393,8 +400,8 @@ public class SuplaConst {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 idx = R.string.channel_caption_valve;
                 break;
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 idx = R.string.channel_caption_digiglass;
                 break;
         }
@@ -535,8 +542,8 @@ public class SuplaConst {
             case SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 resId = R.string.channel_func_valve_percentage;
                 break;
-            case SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 resId = R.string.channel_func_digiglass;
                 break;
 

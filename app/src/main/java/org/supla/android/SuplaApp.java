@@ -73,14 +73,14 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
             v.vibrate(100);
     }
 
-    public SuplaClient SuplaClientInitIfNeed(Context context) {
+    public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
 
         SuplaClient result;
 
         synchronized (_lck1) {
 
             if (_SuplaClient == null || _SuplaClient.canceled()) {
-                _SuplaClient = new SuplaClient(context);
+                _SuplaClient = new SuplaClient(context, oneTimePassword);
                 _SuplaClient.start();
             }
 
@@ -88,6 +88,10 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
         }
 
         return result;
+    }
+
+    public SuplaClient SuplaClientInitIfNeed(Context context) {
+        return SuplaClientInitIfNeed(context, null);
     }
 
     public void SuplaClientTerminate() {

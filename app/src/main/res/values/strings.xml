@@ -1,11 +1,13 @@
 <resources>
 
     <string name="app_name" translatable="false">SUPLA</string>
+    <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>
     <string name="homepage" translatable="false">www.supla.org</string>
     <string name="homepage_url" translatable="false">https://www.supla.org</string>
     <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
+    <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
     <string name="feedback_email" translatable="false">feedback@supla.org</string>
     <string name="feedback_subject" translatable="false">SUPLA for Android feedback</string>
     <string name="feedback_title">Send email</string>
@@ -28,12 +30,12 @@
     <string name="status_bad_credentials">Bad credentials</string>
     <string name="status_climit_exceded">Client limit exceeded</string>
     <string name="status_version_error">Incompatible server version</string>
-    <string name="status_reg_disabled">Client Registration is off. Please go to \"Smartphone\" at %1$s to activate it.</string>
-    <string name="status_access_id_not_assigned">This client does not have access identifier assigned. Please go to \"Smartphone\" at %1$s and get a valid identifier.</string>
-    <string name="status_device_disabled">Device is disabled</string>
+    <string name="status_reg_disabled">New client registration disabled. Please log in to \"Supla Cloud\" and enable “New client registration” in “Smartphone” section of the website.</string>
+    <string name="status_access_id_not_assigned">Client activation required. Please log in to \"Supla Cloud\" and assign an “Access ID” for this device in “Smartphone” section of the website.</string>
+    <string name="status_device_disabled">Device disabled. Please log in to \"Supla Cloud\" and enable this device in “Smartphone” section of the website.</string>
     <string name="status_accessid_disabled">Access Identifier is disabled</string>
 
-    <string name="err_hostnotfound">Host not found</string>
+    <string name="err_hostnotfound">Host not found. Make sure you are connected to the internet and that an account with the entered email address has been created.</string>
     <string name="err_cantconnecttohost">Can\'t connect to host</string>
 
     <string name="channel_caption_gateway">Gateway</string>
@@ -107,17 +109,17 @@
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings. (Disable advanced options in the settings)</string>
     <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
-    <string name="wizard_step1_txt1">Welcome to the Device Add Wizard which will in an easy and simple way help you to add new device to the system.</string>
+    <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Enter password to your WiFi Network named</string>
+    ]]>
     <string name="wizard_step2_txt3">*) %1$s network will be used by I/O devices to connect with server.</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
-    <string name="wizard_step3_txt1">Power up your executive device. Configuration mode should be the default mode for the device, confirmed by a status diode flashing as</string>
-    <string name="wizard_step3_txt2">If the device when switched on does not work in the configuration mode, press and hold <b>CONFIG</b> button for at least 5 seconds.</string>
+    <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
+    <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
     <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
     <string name="wizard_server_compat_error">The connected Server does not support this function!</string>
@@ -131,9 +133,9 @@
     <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
     <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
-    <string name="wizard_iodevice_notfound">No devices has been found! Check, if the device you want to configure is working in the configuration mode and try again. NOTE! – Some of the Android based devices must have the GPS on, when searching for the WiFi. Therefore, make sure GPS is on.</string>
+    <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode.</string>
 
-    <string name="wizard_done">Device configuration completed successfully :)</string>
+    <string name="wizard_done">The settings have been transferred to the I/O device.</string>
     <string name="wizard_iodev_data">Device parameters</string>
     <string name="wizard_iodev_name">Name</string>
     <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
@@ -383,15 +385,15 @@
     <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1_alt">Enter User Name and Password of your domestic or business WiFi network used to have the i/o device connected to server.</string>
+    <string name="wizard_step2_txt1">Enter Wi-Fi Network name and password to use with new I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling">Due to the limits of WiFi network scanning imposed by the Android system, wait the time presented above.</string>
-    <string name="enter_suplaorg_credentails">Enter your cloud.supla.org login credentials.</string>
+    <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
+    <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
     <string name="save_without_saving">Do you want to quit without saving?</string>
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
     <string name="restoring_default_settings">Restoring default settings</string>
     <string name="mode_change_in_progress">Mode change in progress</string>
-    <string name="wizard_step1_txt2">Please make sure mobile data is turned off when adding devices. Otherwise, the addition may fail.</string>
+    <string name="wizard_step1_txt2">It is recommended to temporary disable mobile data connection on your device as it may interfere with the configuration process.</string>
     <string name="wake_up_frequency">Wake up frequency</string>
     <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
     <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
@@ -422,4 +424,9 @@
     <string translatable="false" name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
     <string translatable="false" name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
     <string translatable="false" name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
+    <string translatable="false" name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4Ghz network is ether not in range or its name was incorrect.</string>
+    <string translatable="false" name="incorrect_email_or_password">Incorrect Email Address or Password</string>
+    <string translatable="false" name="channel_name">Channel name</string>
+    <string translatable="false" name="location_name">Location name</string>
+    <string translatable="false" name="str_default">Default</string>
 </resources>

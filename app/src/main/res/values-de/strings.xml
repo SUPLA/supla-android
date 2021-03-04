@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Schlechte Referenzen</string>
     <string name="status_climit_exceded">Klient-Grenze überschritten</string>
     <string name="status_version_error">Nicht kompatible Server-Version</string>
-    <string name="status_reg_disabled">Die Client-Registrierung ist deaktiviert. Bitte gehen Sie zu \"Smartphones\" auf %1$s, um es zu aktivieren.</string>
-    <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf %1$s und holen Sie sich eine gültige ID.</string>
+    <string name="status_reg_disabled">Die Client-Registrierung ist deaktiviert. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" um es zu aktivieren.</string>
+    <string name="status_access_id_not_assigned">Diesem Client wurde keine Zugriffskennung zugewiesen. Bitte gehen Sie zu \"Smartphones\" auf \"Supla Cloud\" und holen Sie sich eine gültige ID.</string>
     <string name="status_device_disabled">Gerät ist deaktiviert</string>
     <string name="status_accessid_disabled">Die Zugriffskennung ist deaktiviert</string>
 
@@ -116,7 +116,6 @@
     <string name="start">START</string>
     <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
     <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
-    <string name="wizard_step2_txt1">Geben Sie Ihr WiFi-Netzwerk-Passwort ein, dessen Name</string>
     <string name="device_reg_request_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
     <string name="wizard_server_compat_error">Der Server, mit dem eine Verbindung herstellen wurde, unterstützt diese Funktion nicht!</string>
     <string name="wizard_no_internetwifi">Bevor Sie beginnen, stellen Sie eine Verbindung zum Internet über ein WiFi-Netzwerk her, das auch vom Ausführungsgerät verwendet wird, um eine Verbindung zum Server herzustellen.</string>
@@ -330,7 +329,7 @@
     <string name="wifi_signal_strength">WLAN-Signalstärke</string>
     <string name="wifi_throttling">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
     <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
-    <string name="wizard_step2_txt1_alt">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
+    <string name="wizard_step2_txt1">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
     <string name="zwave_add_device">Gerät hinzufügen</string>
     <string name="zwave_before_search_message">"Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann. "</string>
     <string name="zwave_before_search_title">Es dauert eine Weile</string>

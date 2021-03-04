@@ -378,8 +378,8 @@ public class Channel extends ChannelBase {
                     return lightSourceLifespanLeft <= 5 ? 2 : 1;
                 }
                 break;
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 DigiglassValue dgfVal = getValue().getDigiglassValue();
 
                 if (dgfVal.isPlannedRegenerationInProgress()) {

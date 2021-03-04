@@ -9,8 +9,8 @@ android {
         applicationId "org.supla.android"
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 122
-        versionName "2.3.66"
+        versionCode 123
+        versionName "2.3.67"
 
         sourceSets.main {
             jniLibs.srcDir 'src/main/libs'
@@ -43,7 +43,12 @@ android {
     }
 
     lintOptions { checkReleaseBuilds false }
-    testOptions { unitTests.returnDefaultValues = true }
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
 
     buildToolsVersion '29.0.3'
 }

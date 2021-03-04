@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +25,7 @@ import org.supla.android.lib.SuplaConst;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener {
+public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener, TextWatcher {
     private Context context;
     private AlertDialog dialog;
     private Button btnCancel;
@@ -36,7 +38,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
-    private boolean preAuthorization;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -56,6 +57,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edEmail = v.findViewById(R.id.dialogEmail);
         progressBar = v.findViewById(R.id.dialogPBar);
         edPassword = v.findViewById(R.id.dialogPwd);
+        edPassword.addTextChangedListener(this);
 
         Preferences prefs = new Preferences(context);
         edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
@@ -74,6 +76,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         dialog.setOnCancelListener(this);
     }
 
+    boolean isClientRegistered() {
+        SuplaClient client = SuplaApp.getApp().getSuplaClient();
+        return client != null && client.registered();
+    }
+
     void cancelTimeoutTimer() {
         if (timeoutTimer != null) {
             timeoutTimer.cancel();
@@ -81,14 +88,31 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         }
     }
 
-    void show() {
+    public void showIfNeeded() {
+        tvErrorMessage.setText("");
+        tvErrorMessage.setVisibility(View.INVISIBLE);
+        edPassword.setText("");
+        btnOK.setEnabled(false);
+
+        if (isClientRegistered()) {
+            edEmail.setEnabled(true);
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
+            if (client != null && client.isSuperUserAuthorized()) {
+                if (onAuthorizarionResultListener != null) {
+                    onAuthorizarionResultListener
+                            .onSuperuserOnAuthorizarionResult(this,
+                                    true, SuplaConst.SUPLA_RESULTCODE_AUTHORIZED);
+                }
+                return;
+            }
+        } else {
+            edEmail.setEnabled(false);
+        }
+
         if (dialog != null) {
             cancelTimeoutTimer();
             dialog.show();
         }
-        preAuthorization = true;
-        edPassword.setText("******");
-        onClick(btnOK);
     }
 
     public void ShowError(String msg) {
@@ -128,25 +152,20 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
                         @Override
                         public void run() {
-                            if (preAuthorization) {
-                                ShowError("");
-                                edPassword.setText("");
-                                preAuthorization = false;
-                            } else {
-                                ShowError(R.string.time_exceeded);
-                            }
-
+                            ShowError(R.string.time_exceeded);
                         }
                     });
                 }
 
             }, 10000, 1000);
 
-            SuplaClient client = SuplaApp.getApp().getSuplaClient();
-            if (client != null) {
-                if (preAuthorization) {
-                    client.getSuperUserAuthorizationResult();
-                } else {
+            SuplaClient client = null;
+
+            if (!isClientRegistered()) {
+                SuplaApp.getApp().SuplaClientInitIfNeed(context, edPassword.getText().toString());
+            } else {
+                client = SuplaApp.getApp().getSuplaClient();
+                if (client != null) {
                     client.superUserAuthorizationRequest(edEmail.getText().toString(),
                             edPassword.getText().toString());
                 }
@@ -188,12 +207,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         if (v == btnViewPassword) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_UP:
-                    edPassword.setInputType(InputType.TYPE_CLASS_TEXT
-                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    if ((edPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) > 0) {
+                        edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                    } else {
+                        edPassword.setInputType(InputType.TYPE_CLASS_TEXT
+                                | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    }
                     break;
             }
         }
@@ -207,39 +226,52 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     @Override
     public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
-        if (msg != null
-                && msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
+        if (msg == null) {
+            return;
+        }
 
-            if ((!preAuthorization || msg.isSuccess())
+        if ( msg.getType() == SuplaClientMsg.onSuperuserAuthorizationResult) {
+
+            if (msg.isSuccess()
                     && onAuthorizarionResultListener != null) {
                 onAuthorizarionResultListener
                         .onSuperuserOnAuthorizarionResult(this,
                                 msg.isSuccess(), msg.getCode());
             }
 
-            if (preAuthorization) {
-                ShowError("");
-                edPassword.setText("");
-                preAuthorization = false;
-            } else {
-                if (!msg.isSuccess()) {
-                    switch (msg.getCode()) {
-                        case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
-                            ShowError(R.string.status_bad_credentials);
-                            break;
-                        case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
-                            ShowError(R.string.status_temporarily_unavailable);
-                            break;
-                        default:
-                            ShowError(R.string.status_unknown_err);
-                            break;
-                    }
-
+            if (!msg.isSuccess()) {
+                switch (msg.getCode()) {
+                    case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
+                        ShowError(R.string.incorrect_email_or_password);
+                        break;
+                    case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
+                        ShowError(R.string.status_temporarily_unavailable);
+                        break;
+                    default:
+                        ShowError(R.string.status_unknown_err);
+                        break;
                 }
             }
-
-
+        } else if (msg.getType() == SuplaClientMsg.onRegisterError) {
+            ShowError(msg.getRegisterError().codeToString(context, true));
+        } else if (msg.getType() == SuplaClientMsg.onRegistered) {
+            close();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        btnOK.setEnabled(edPassword.getText().toString().trim().length() > 0);
     }
 
     public interface OnAuthorizarionResultListener {

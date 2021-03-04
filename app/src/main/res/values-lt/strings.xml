@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Klaidingas autentifikavimas</string>
     <string name="status_climit_exceded">Viršutinė klientų programų riba viršyta</string>
     <string name="status_version_error">Nesuderinama serverio versija</string>
-    <string name="status_reg_disabled">Šiuo metu registracija išjungta. Norėdami ją įjungti eikite prie žymės Išmanieji telefonai puslapyje %1$s</string>
-    <string name="status_access_id_not_assigned">Šis įrenginys neturi priskirto prieigos identifikatoriaus. Eikite į puslapį %1$s ir žymėje Išmanieji telefonai priskirkite tinkamą identifikatorių.</string>
+    <string name="status_reg_disabled">Šiuo metu registracija išjungta. Norėdami ją įjungti eikite prie žymės Išmanieji telefonai puslapyje \"Supla Cloud\"</string>
+    <string name="status_access_id_not_assigned">Šis įrenginys neturi priskirto prieigos identifikatoriaus. Eikite į puslapį \"Supla Cloud\" ir žymėje Išmanieji telefonai priskirkite tinkamą identifikatorių.</string>
     <string name="status_device_disabled">Įrenginys išjungtas</string>
     <string name="status_accessid_disabled">Prieigos identifikatorius išjungtas</string>
     <string name="err_hostnotfound">Serverio adresas nerastas</string>
@@ -79,7 +79,6 @@
     <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>
     <string name="next">Toliau</string>
     <string name="start">STARTAS</string>
-    <string name="wizard_step2_txt1">Įveskite savo WiFi tinklo slaptažodį, kurio pavadinimas tai</string>
     <string name="wizard_step2_txt3">*) %1$s tinklą naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
     <string name="wizard_remember_passwd">Išsaugoti slaptažodį</string>
     <string name="wizard_step3_txt1">Savo vykdomąjį įrenginį prijunkite prie maitinimo šaltinio. Įrenginys standartiškai turi veikti konfigūracijos režime, signalizuojant tai statuso diodo mirksėjimu šiuo būdu</string>
@@ -224,7 +223,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
-    <string name="wizard_step2_txt1_alt">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
+    <string name="wizard_step2_txt1">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
     <string name="aritmetic_balance_days">Asimetrinis balansas – Dienos</string>
     <string name="aritmetic_balance_hours">Asimetrinis balansas – Valandos</string>
     <string name="aritmetic_balance_minutes">Asimetrinis balansas – Minutės</string>

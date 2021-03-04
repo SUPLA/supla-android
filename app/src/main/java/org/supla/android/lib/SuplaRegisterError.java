@@ -49,14 +49,16 @@ public class SuplaRegisterError {
 
     }
 
-    public String codeToString(Context context) {
+    public String codeToString(Context context, boolean authDialog) {
 
         switch (ResultCode) {
 
             case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
                 return context.getResources().getString(R.string.status_temporarily_unavailable);
             case SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS:
-                return context.getResources().getString(R.string.status_bad_credentials);
+                return context.getResources().getString(
+                        authDialog ? R.string.incorrect_email_or_password
+                                : R.string.status_bad_credentials);
             case SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED:
                 return context.getResources().getString(R.string.status_climit_exceded);
             case SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED:
@@ -64,13 +66,17 @@ public class SuplaRegisterError {
             case SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED:
                 return context.getResources().getString(R.string.status_accessid_disabled);
             case SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED:
-                return context.getResources().getString(R.string.status_reg_disabled, getHostname(context));
+                return context.getResources().getString(R.string.status_reg_disabled);
             case SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED:
-                return context.getResources().getString(R.string.status_access_id_not_assigned, getHostname(context));
+                return context.getResources().getString(R.string.status_access_id_not_assigned);
             default:
                 return context.getResources().getString(R.string.status_unknown_err) + " (" + Integer.toString(ResultCode) + ")";
         }
 
+    }
+
+    public String codeToString(Context context) {
+        return codeToString(context, false);
     }
 
 }

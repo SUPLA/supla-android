@@ -24,21 +24,19 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelState;
@@ -58,7 +56,9 @@ import java.util.Date;
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
-        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults, ChannelListView.OnChannelButtonClickListener {
+        ChannelListView.OnSectionLayoutTouchListener,
+        SuplaRestApiClientTask.IAsyncResults,
+        ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -66,7 +66,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private ChannelListView cgroupLV;
     private ListViewCursorAdapter channelListViewCursorAdapter;
     private ListViewCursorAdapter cgroupListViewCursorAdapter;
-    private DbHelper DbH_ListView;
     private DownloadUserIcons downloadUserIcons = null;
 
     private RelativeLayout NotificationView;
@@ -107,14 +106,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         channelLV = findViewById(R.id.channelsListView);
         channelLV.setOnChannelButtonClickListener(this);
         channelLV.setOnChannelButtonTouchListener(this);
+        channelLV.setOnCaptionLongClickListener(this);
         channelLV.setOnDetailListener(this);
 
         cgroupLV = findViewById(R.id.channelGroupListView);
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
 
-        DbH_ListView = new DbHelper(this);
-        new DbHelper(this, true); // For upgrade purposes
+        MeasurementsDbHelper.getInstance(this); // For upgrade purposes
 
         RegisterMessageHandler();
         showMenuBar();
@@ -122,83 +121,112 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (channelListViewCursorAdapter != null && channelListViewCursorAdapter.isInReorderingMode()) {
+            channelListViewCursorAdapter.stopReorderingMode();
+        }
+        if (cgroupListViewCursorAdapter != null && cgroupListViewCursorAdapter.isInReorderingMode()) {
+            cgroupListViewCursorAdapter.stopReorderingMode();
+        }
+    }
+
     private boolean SetListCursorAdapter() {
 
         if (channelListViewCursorAdapter == null) {
 
-            channelListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
-            channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
+            channelListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getChannelListCursor());
             channelLV.setAdapter(channelListViewCursorAdapter);
 
-            channelLV.setOnItemLongClickListener(this::onDragStarted);
-            channelLV.setOnDragListener(new ListViewDragListener(channelLV, this::onDragStopped, this::onDragPositionChanged));
+            channelLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, channelLV));
+            channelLV.setOnDragListener(new ListViewDragListener(channelLV,
+                    droppedPosition -> onDragStopped(droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
+                    position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
+            channelLV.setOnSectionLayoutTouchListener(this);
 
             return true;
 
         } else if (channelListViewCursorAdapter.getCursor() == null) {
 
-            channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor());
+            channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor());
         }
 
         return false;
     }
 
-    private boolean onDragStarted(AdapterView<?> parent, View view, int position, long id) {
-        if (channelLV.isDetailSliding()) {
+    private boolean onDragStarted(View view, int position, ChannelListView listView) {
+        if (listView.isDetailSliding()) {
             dragInitialPosition = null;
             return false;
         }
         dragInitialPosition = position;
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-        view.startDrag(null, shadowBuilder, channelLV.getItemAtPosition(position), 0);
+        view.startDrag(null, shadowBuilder, listView.getItemAtPosition(position), 0);
         return true;
     }
 
-    private void onDragStopped(int droppedPosition) {
-        channelListViewCursorAdapter.stopReorderingMode();
+    private void onDragStopped(int droppedPosition, ListViewCursorAdapter adapter, Reorder reorder) {
+        adapter.stopReorderingMode();
         if (dragInitialPosition == null || droppedPosition == ListViewDragListener.INVALID_POSITION) {
             // Moved somewhere outside the list view or Something wrong, initial position not initialized.
             return;
         }
-        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
+        if (!adapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
             // Moving outside of the section not allowed.
             return;
         }
-        ListViewCursorAdapter.Item initialPositionItem = channelListViewCursorAdapter.getItemForPosition(dragInitialPosition);
-        ListViewCursorAdapter.Item finalPositionItem = channelListViewCursorAdapter.getItemForPosition(droppedPosition);
+        ListViewCursorAdapter.Item initialPositionItem = adapter.getItemForPosition(dragInitialPosition);
+        ListViewCursorAdapter.Item finalPositionItem = adapter.getItemForPosition(droppedPosition);
 
-        subscribe(DbH_ListView.reorderChannels(initialPositionItem, finalPositionItem),
-                () -> channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor()),
+        reorder.doReorder(initialPositionItem, finalPositionItem);
+    }
+
+    private void onDragPositionChanged(int position, ListViewCursorAdapter adapter) {
+        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            adapter.stopReorderingMode();
+            return;
+        }
+        if (!adapter.isReorderPossible(dragInitialPosition, position)) {
+            // Moving outside of the section not allowed.
+            adapter.stopReorderingMode();
+            return;
+        }
+        adapter.updateReorderingMode(dragInitialPosition, position);
+    }
+
+    private void doChannelsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
+        subscribe(getDbHelper().reorderChannels(initialPositionItem, finalPositionItem),
+                () -> channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor()),
                 throwable -> Trace.w(TAG, "Channels reordering failed", throwable));
     }
 
-    private void onDragPositionChanged(int position) {
-        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
-            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
-            channelListViewCursorAdapter.stopReorderingMode();
-            return;
-        }
-        if (!channelListViewCursorAdapter.isReorderPossible(dragInitialPosition, position)) {
-            // Moving outside of the section not allowed.
-            channelListViewCursorAdapter.stopReorderingMode();
-            return;
-        }
-        channelListViewCursorAdapter.updateReorderingMode(dragInitialPosition, position);
+    private void doGroupsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
+        subscribe(getDbHelper().reorderGroups(initialPositionItem, finalPositionItem),
+                () -> cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor()),
+                throwable -> Trace.w(TAG, "Groups reordering failed", throwable));
     }
 
     private boolean SetGroupListCursorAdapter() {
 
         if (cgroupListViewCursorAdapter == null) {
 
-            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor(), true);
-            cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
+            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
+
+            cgroupLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, cgroupLV));
+            cgroupLV.setOnDragListener(new ListViewDragListener(cgroupLV,
+                    droppedPosition -> onDragStopped(droppedPosition, cgroupListViewCursorAdapter, this::doGroupsReorder),
+                    position -> onDragPositionChanged(position, cgroupListViewCursorAdapter)));
+            cgroupLV.setOnSectionLayoutTouchListener(this);
 
             return true;
 
         } else if (cgroupListViewCursorAdapter.getCursor() == null) {
 
-            cgroupListViewCursorAdapter.changeCursor(DbH_ListView.getGroupListCursor());
+            cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor());
         }
 
         return false;
@@ -217,12 +245,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (!SetListCursorAdapter()) {
             channelLV.setSelection(0);
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         }
 
         if (!SetGroupListCursorAdapter()) {
             cgroupLV.setSelection(0);
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
         if (channelLV.getVisibility() == View.VISIBLE) {
@@ -261,13 +289,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     protected void onDataChangedMsg(int ChannelId, int GroupId, boolean extendedValue) {
 
-        ChannelListView LV = null;
-        int Id = 0;
+        ChannelListView LV = channelLV;
+        int Id = ChannelId;
 
-        if (ChannelId > 0) {
-            Id = ChannelId;
-            LV = channelLV;
-        } else if (GroupId > 0) {
+        if (GroupId > 0) {
             Id = GroupId;
             LV = cgroupLV;
         }
@@ -284,8 +309,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     LV.detail_OnChannelDataChanged();
             }
 
-            LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
-                    DbH_ListView.getGroupListCursor(), true);
+            LV.Refresh(LV == channelLV ? getDbHelper().getChannelListCursor() :
+                    getDbHelper().getGroupListCursor(), true);
 
         }
 
@@ -334,15 +359,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 || (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED)
                 || event.ChannelID == 0) return;
 
-        DbHelper DbH = new DbHelper(this);
-
-        Channel channel = DbH.getChannel(event.ChannelID);
+        Channel channel = getDbHelper().getChannel(event.ChannelID);
         if (channel == null) return;
 
 
         int imgResId = 0;
         ImageId imgId = null;
-        String msg = "";
+        String msg;
 
         if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
             if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE) > 0) {
@@ -352,7 +375,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 return;
             }
         } else {
-            int msgId = 0;
+            int msgId;
             switch (event.Event) {
                 case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
                     msgId = R.string.event_openedthegateway;
@@ -458,15 +481,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         notif_handler = new Handler();
-        notif_nrunnable = new Runnable() {
-            @Override
-            public void run() {
+        notif_nrunnable = () -> {
 
-                HideNotificationMessage();
+            HideNotificationMessage();
 
-                notif_handler = null;
-                notif_nrunnable = null;
-            }
+            notif_handler = null;
+            notif_nrunnable = null;
         };
 
         notif_handler.postDelayed(notif_nrunnable, 5000);
@@ -505,23 +525,17 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         builder.setMessage(R.string.valve_open_warning);
 
         builder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-                        if (client != null) {
-                            SuplaApp.Vibrate(context);
-                            client.open(channelId, false, 1);
-                        }
-                        dialog.cancel();
+                (dialog, id) -> {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        SuplaApp.Vibrate(context);
+                        client.open(channelId, false, 1);
                     }
+                    dialog.cancel();
                 });
 
         builder.setNeutralButton(R.string.no,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         AlertDialog alert = builder.create();
         alert.show();
@@ -539,8 +553,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
-            DbHelper dbH = new DbHelper(this);
-            Channel channel = dbH.getChannel(remoteId);
+            Channel channel = getDbHelper().getChannel(remoteId);
             if (channel != null
                     && channel.getValue().isClosed()
                     && (channel.getValue().flooding()
@@ -610,21 +623,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuButton();
     }
 
-    @Override
-    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
+    public void onSectionClick(ChannelListView clv, String caption, int locationId) {
 
         int _collapsed;
-        DbHelper dbHelper = new DbHelper(this);
-
-        if (sender == channelLV.getAdapter()) {
+        if (clv == channelLV) {
             _collapsed = 0x1;
-        } else if (sender == cgroupLV.getAdapter()) {
+        } else if (clv == cgroupLV) {
             _collapsed = 0x2;
         } else {
             return;
         }
 
-        Location location = dbHelper.getLocation(locationId);
+        Location location = getDbHelper().getLocation(locationId);
         int collapsed = location.getCollapsed();
 
         if ((collapsed & _collapsed) > 0) {
@@ -634,12 +644,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         location.setCollapsed(collapsed);
-        dbHelper.updateLocation(location);
+        getDbHelper().updateLocation(location);
 
-        if (sender == channelLV.getAdapter()) {
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+        if (clv == channelLV) {
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         } else {
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
     }
@@ -654,11 +664,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (downloadUserIcons != null) {
             if (downloadUserIcons.downloadCount() > 0) {
                 if (channelLV != null) {
-                    channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+                    channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
                 }
 
                 if (cgroupLV != null) {
-                    cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+                    cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
                 }
             }
             downloadUserIcons = null;
@@ -682,8 +692,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     public void onChannelWarningButtonClick(ChannelListView clv, int remoteId) {
-        DbHelper dbH = new DbHelper(this);
-        Channel channel = dbH.getChannel(remoteId);
+        Channel channel = getDbHelper().getChannel(remoteId);
         if (channel != null) {
             String warning = channel.getChannelWarningMessage(this);
             if (warning != null) {
@@ -691,17 +700,32 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 builder.setTitle(android.R.string.dialog_alert_title);
                 builder.setMessage(warning);
 
-                builder.setNeutralButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                builder.setNeutralButton(R.string.ok, (dialog, id) -> dialog.cancel());
 
                 AlertDialog alert = builder.create();
                 alert.show();
             }
         }
+    }
+
+    @Override
+    public void onChannelCaptionLongClick(ChannelListView clv, int remoteId) {
+        SuplaApp.Vibrate(this);
+
+        ChannelCaptionEditor editor = new ChannelCaptionEditor(this);
+        editor.edit(remoteId);
+    }
+
+    @Override
+    public void onLocationCaptionLongClick(ChannelListView clv, int locationId) {
+        SuplaApp.Vibrate(this);
+
+        LocationCaptionEditor editor = new LocationCaptionEditor(this);
+        editor.edit(locationId);
+    }
+
+    private interface Reorder {
+        void doReorder(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem);
     }
 }
 

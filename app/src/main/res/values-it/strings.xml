@@ -17,8 +17,8 @@
     <string name="status_bad_credentials">Credenziali non valide</string>
     <string name="status_climit_exceded">Limite delle applicazioni dei clienti superato</string>
     <string name="status_version_error">Versione del server non compatibile</string>
-    <string name="status_reg_disabled">La registrazione è attualmente disabilitata. Per abilitarlo, vai alla scheda \"Smartphone\" a pagina %1$s.</string>
-    <string name="status_access_id_not_assigned">A questo dispositivo non è stato assegnato un ID di accesso. Vai a pagina %1$s e assegna l\'identificatore appropriato nella scheda \"Smartphone \".</string>
+    <string name="status_reg_disabled">La registrazione è attualmente disabilitata. Per abilitarlo, vai alla scheda \"Smartphone\" a pagina \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">A questo dispositivo non è stato assegnato un ID di accesso. Vai a pagina \"Supla Cloud\" e assegna l\'identificatore appropriato nella scheda \"Smartphone \".</string>
     <string name="status_device_disabled">Il dispositivo è  disabilitato</string>
     <string name="status_accessid_disabled">L\'ID di accesso è disabilitato</string>
 
@@ -121,7 +121,6 @@
     <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>
     <string name="wizard_result_compat_error">Il dispositivo con il quale è stata stabilita la connessione non è compatibile con questa procedura guidata!</string>
     <string name="wizard_step1_txt1">Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema.</string>
-    <string name="wizard_step2_txt1">Inserisci la password alla Tua rete WiFi denominata</string>
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Il server, con il quale è stata stabilita la connessione, non supporta questa funzione!</string>
     <string name="wizard_no_internetwifi">Prima di iniziare, collegati all’Internet tramite la rete WiFi che verrà utilizzata anche dal dispositivo di I/O per la connessione con il server.</string>
@@ -247,7 +246,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Contatore di calore</string>
-    <string name="wizard_step2_txt1_alt">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
+    <string name="wizard_step2_txt1">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
     <string name="aritmetic_balance_days">Equilibrio aritmetico – Giorni</string>
     <string name="aritmetic_balance_hours">Equilibrio aritmetico - Ore</string>
     <string name="aritmetic_balance_minutes">Equilibrio aritmetico – Minuti</string>

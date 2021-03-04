@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -62,11 +63,14 @@ public class SuplaClient extends Thread {
     private DbHelper DbH = null;
     private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
     private long lastTokenRequest = 0;
+    private boolean superUserAuthorized = false;
+    private String oneTimePassword;
 
-    public SuplaClient(Context context) {
+    public SuplaClient(Context context, String oneTimePassword) {
 
         super();
         _context = context;
+        this.oneTimePassword = oneTimePassword;
 
     }
 
@@ -135,6 +139,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
+    private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
+
     private native boolean scReconnectAllClients(long _supla_client);
 
     private native boolean scSetRegistrationEnabled(long _supla_client,
@@ -186,7 +192,6 @@ public class SuplaClient extends Thread {
                 _supla_client_ptr_counter++;
             }
         }
-
     }
 
     private void unlockClientPtr() {
@@ -388,6 +393,14 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean isSuperUserAuthorized() {
+        boolean result = false;
+        synchronized (sc_lck) {
+            result = superUserAuthorized;
+        }
+        return result;
+    }
+
     public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
         lockClientPtr();
@@ -461,6 +474,16 @@ public class SuplaClient extends Thread {
         try {
             return _supla_client_ptr != 0
                     && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setLocationCaption(int LocationID, String Caption) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
         } finally {
             unlockClientPtr();
         }
@@ -761,6 +784,8 @@ public class SuplaClient extends Thread {
     }
 
     private void locationUpdate(SuplaLocation location) {
+        Trace.d(log_tag, "Location "+Integer.toString(location.Id)+" "+location.Caption);
+
         if (DbH.updateLocation(location)) {
             Trace.d(log_tag, "Location updated");
             onDataChanged();
@@ -808,7 +833,7 @@ public class SuplaClient extends Thread {
     }
 
     private void onChannelGroupValueChanged() {
-        Integer[] groupIds = DbH.updateChannelGroups();
+        List<Integer> groupIds = DbH.updateChannelGroups();
         for (int groupId : groupIds) {
             onDataChanged(0, groupId);
         }
@@ -976,6 +1001,15 @@ public class SuplaClient extends Thread {
         sendMessage(msg);
     }
 
+    private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onLocationCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setLocationId(LocationID);
+        sendMessage(msg);
+    }
+
     private void onClientsReconnectResult(int ResultCode) {
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onClientsReconnectResult);
@@ -991,6 +1025,10 @@ public class SuplaClient extends Thread {
     }
 
     private void onSuperUserAuthorizationResult(boolean authorized, int code) {
+        synchronized (sc_lck) {
+            superUserAuthorized = authorized && code == SuplaConst.SUPLA_RESULTCODE_AUTHORIZED;
+        }
+
         SuplaClientMsg msg = new SuplaClientMsg(this,
                 SuplaClientMsg.onSuperuserAuthorizationResult);
         msg.setSuccess(authorized);
@@ -1162,13 +1200,14 @@ public class SuplaClient extends Thread {
 
     public void run() {
 
-        DbH = new DbHelper(_context);
+        DbH = DbHelper.getInstance(_context);
         DbH.loadUserIconsIntoCache();
 
         while (!canceled()) {
 
             synchronized (st_lck) {
                 lastRegisterError = null;
+                superUserAuthorized = false;
             }
 
             onConnecting();
@@ -1211,12 +1250,12 @@ public class SuplaClient extends Thread {
                             }
                         }
 
+                        cfg.setPassword(oneTimePassword);
                     }
 
+                    oneTimePassword = "";
                     cfg.protocol_version = prefs.getPreferedProtocolVersion();
                     init(cfg);
-
-
                 }
 
                 if (connect()) {

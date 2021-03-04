@@ -113,31 +113,20 @@ public class RateApp {
 
         } else if (now.getTime() >= rt) {
 
-            DbHelper DbH = new DbHelper(context);
+            DbHelper DbH = DbHelper.getInstance(context);
             if (DbH.getChannelCount() > 0) {
 
                 moreTime(1);
 
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-
-                        ShowAlertDialog();
-
-                    }
-                }, delay);
+                handler.postDelayed(this::ShowAlertDialog, delay);
 
                 result = true;
 
             }
-
-
         }
 
-
         return result;
-
-
     }
 
 

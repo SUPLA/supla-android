@@ -19,12 +19,12 @@
     <string name="status_bad_credentials">Błędne poświadczenia</string>
     <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
-    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Aby ją włączyć przejdź do zakładki \"Smartfony\" na  stronie %1$s</string>
-    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę %1$s i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
-    <string name="status_device_disabled">Urządzenie jest wyłączone</string>
+    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
+    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę \"Supla Cloud\" i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
+    <string name="status_device_disabled">Urządzenie jest wyłączone. Zaloguj się do \"Supla Cloud\" i włącz ten smrtfon w zakładce \"Smartfony\".</string>
     <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
-    <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
+    <string name="err_hostnotfound">Adres serwera nie został znaleziony. Upewnij się, że posiadasz połączenie z internetem oraz, że konto o wprowadzonym adresie email zostało utworzone.</string>
     <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
 
     <string name="channel_caption_gateway">Furtka</string>
@@ -107,9 +107,9 @@
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
     <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Wprowadź hasło do Twojej sieci WiFi, której nazwa to</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Sieć %1$s będzie wykorzystywana przez urządzenie wykonawcze do łączena się z serwerem.</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
@@ -131,7 +131,7 @@
     <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
-    <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
+    <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
     <string name="wizard_iodev_data">Dane urządzenia</string>
     <string name="wizard_iodev_name">Nazwa</string>
     <string name="wizard_iodev_laststate">Poprzedni status</string>
@@ -373,10 +373,10 @@
     <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
     <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
     <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
-    <string name="wizard_step2_txt1_alt">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+    <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
     <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
     <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
-    <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do cloud.supla.org.</string>
+    <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
     <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
     <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
     <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
@@ -412,4 +412,9 @@
     <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
     <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
     <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
+    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2.4Ghz nie została odnaleziona lub siec ta jest poza zasięgiem.</string>
+    <string name="incorrect_email_or_password">Błędy adres email lub hasło</string>
+    <string name="channel_name">Nazwa kanału</string>
+    <string name="location_name">Nazwa lokalizacji</string>
+    <string name="str_default">Domyślnie</string>
 </resources>

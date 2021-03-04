@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Nesprávne autentifikačné údaje</string>
     <string name="status_climit_exceded">Prekročený limit klientskych aplikácií</string>
     <string name="status_version_error">Nekompatibilná verzia servera</string>
-    <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  %1$s</string>
-    <string name="status_access_id_not_assigned">Toto zariadenie nemá priradený identifikátor prístupu. Prejdite na stránku %1$s a v záložke \"Smartfóny\" priraďte príslušný identifikátor.</string>
+    <string name="status_reg_disabled">Registrácia je momentálne vypnutá. Ak ju chcete zapnúť, prejdite do záložky \"Smartfóny\" na  stránke  \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Toto zariadenie nemá priradený identifikátor prístupu. Prejdite na stránku \"Supla Cloud\" a v záložke \"Smartfóny\" priraďte príslušný identifikátor.</string>
     <string name="status_device_disabled">Zariadenie je vypnuté</string>
     <string name="status_accessid_disabled">Identifikátor prístupu je vypnutý</string>
 
@@ -106,9 +106,9 @@
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
     <string name="wizard_step1_txt3">Pokračujte stlačením <b>Ďalej</b>.</string>
     <string name="next">Ďalej</string>
-    <string name="start">ŠTART</string>>
+    <string name="start">ŠTART</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Zadajte heslo vašej WiFi siete, ktorej názov je</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Sieť %1$s bude používať vykonávacie zariadenie na pripojenie k serveru.</string>
     <string name="wizard_remember_passwd">Zapamätať si heslo</string>
 
@@ -258,7 +258,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Merač tepla</string>
-    <string name="wizard_step2_txt1_alt">Zadaj názov a heslo svojej domácej alebo firemnej WiFi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
+    <string name="wizard_step2_txt1">Zadaj názov a heslo svojej domácej alebo firemnej WiFi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
     <string name="aritmetic_balance_days" >Aritmetická bilancia – dni</string>
     <string name="aritmetic_balance_hours" >Aritmetická bilancia – hodiny</string>
     <string name="aritmetic_balance_minutes" >Aritmetická bilancia – minúty</string>

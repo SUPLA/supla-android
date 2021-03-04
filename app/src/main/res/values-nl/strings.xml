@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Onjuiste inloggegevens</string>
     <string name="status_climit_exceded">Limiet clienttoepassing overschreden</string>
     <string name="status_version_error">Incompatibele serverversie</string>
-    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina %1$s</string>
-    <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina %1$s en wijs de juiste ID toe op het tabblad \"Smartphones\".</string>
+    <string name="status_reg_disabled">Registratie is momenteel uitgeschakeld. Om dit in te schakelen, gaat u naar het tabblad \"Smartphones\" op pagina \"Supla Cloud\".</string>
+    <string name="status_access_id_not_assigned">Aan dit apparaat is geen toegangs-ID toegewezen. Ga naar de pagina \"Supla Cloud\" en wijs de juiste ID toe op het tabblad \"Smartphones\".</string>
     <string name="status_device_disabled">Het apparaat is uitgeschakeld</string>
     <string name="status_accessid_disabled">Toegangs-ID is uitgeschakeld</string>
 
@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
     <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
     <string name="next">Doorgaan</string>
-    <string name="start">OPSTARTEN</string>>
+    <string name="start">OPSTARTEN</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Voer het wachtwoord in voor uw WiFi-netwerk waarvan de naam is</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Het %1$s-netwerk wordt door het uitvoerend apparaat gebruikt om verbinding te maken met de server.</string>
     <string name="wizard_remember_passwd">Wachtwoord onthouden</string>
 
@@ -331,7 +331,7 @@
     <string name="wifi_signal_strength" >WiFi-signaalsterkte</string>
     <string name="wifi_throttling" >Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
     <string name="wizard_step1_txt2" >Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
-    <string name="wizard_step2_txt1_alt" >Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
+    <string name="wizard_step2_txt1" >Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
     <string name="yes" >Ja</string>
     <string name="z_wave" >Z-wave brug</string>
     <string name="zwave_add_device" >Voeg apparaat toe</string>

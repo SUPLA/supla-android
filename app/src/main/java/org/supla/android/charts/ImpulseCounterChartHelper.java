@@ -21,14 +21,13 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.supla.android.R;
-import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
 import java.text.SimpleDateFormat;
@@ -42,9 +41,8 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
-    protected Cursor getCursor(DbHelper DBH,
-                               SQLiteDatabase db, int channelId, String dateFormat) {
-        return DBH.getImpulseCounterMeasurements(db, channelId, dateFormat, dateFrom, dateTo);
+    protected Cursor getCursor(MeasurementsDbHelper DBH, int channelId, String dateFormat) {
+        return DBH.getImpulseCounterMeasurements(channelId, dateFormat, dateFrom, dateTo);
     }
 
     @Override

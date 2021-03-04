@@ -18,8 +18,8 @@
     <string name="status_bad_credentials">Helytelen hitelesítési adatok</string>
     <string name="status_climit_exceded">Az ügyfélalkalmazás mennyiség korlátja túllépett</string>
     <string name="status_version_error">Nem kompatibilis szerver verzió</string>
-    <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) %1$s oldalon</string>
-    <string name="status_access_id_not_assigned">Ehhez az eszközhöz nincs hozzárendelve hozzáférési azonosító. Lépjen az %1$s webhelyre, és  az "Okostelefonok \" fülben rendelje hozzá a megfelelő azonosítót.</string>
+    <string name="status_reg_disabled">A regisztráció jelenleg ki van kapcsolva. Bakapcsoláshoz ugorjon az \ "Okostelefonok \" fülre a(z) \"Supla Cloud\" oldalon</string>
+    <string name="status_access_id_not_assigned">Ehhez az eszközhöz nincs hozzárendelve hozzáférési azonosító. Lépjen az \"Supla Cloud\" webhelyre, és  az "Okostelefonok \" fülben rendelje hozzá a megfelelő azonosítót.</string>
     <string name="status_device_disabled">Az eszköz ki van kapcsolva</string>
     <string name="status_accessid_disabled">A hozzáférési azonosító le van tiltva</string>
 
@@ -93,9 +93,9 @@
     <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
     <string name="wizard_step1_txt3">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
     <string name="next">Tovább</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Írja be annak a WiFi hálózatnak a jelszavát, amelynek a neve</string>
+    ]]>
     <string name="wizard_step2_txt3">*) A(z) %1$s hálózatot a végrehajtó eszköz fogja használni a kiszolgálóhoz való csatlakozáshoz.</string>
     <string name="wizard_remember_passwd">Emlékezzen a jelszavamra</string>
 
@@ -331,7 +331,7 @@
     <string name="wifi_signal_strength">WiFi jelerősség</string>
     <string name="wifi_throttling">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
     <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
-    <string name="wizard_step2_txt1_alt">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
+    <string name="wizard_step2_txt1">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
     <string name="yes">Igen</string>
     <string name="z_wave">Z-wave híd</string>
     <string name="zwave_add_device">Eszköz hozzáadása</string>

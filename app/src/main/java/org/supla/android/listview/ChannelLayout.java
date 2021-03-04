@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
+import org.supla.android.Trace;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -46,7 +48,7 @@ import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
 
-public class ChannelLayout extends LinearLayout {
+public class ChannelLayout extends LinearLayout implements View.OnLongClickListener {
 
 
     private int mRemoteId;
@@ -158,17 +160,17 @@ public class ChannelLayout extends LinearLayout {
         content.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId());
+        caption_text.setOnLongClickListener(this);
         content.addView(caption_text);
 
         OnTouchListener tl = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-
                 int action = event.getAction();
 
                 if (action == MotionEvent.ACTION_DOWN)
-                    onTouchDown(v);
+                    onActionBtnTouchDown(v);
                 else if (action == MotionEvent.ACTION_UP)
-                    onTouchUp(v);
+                    onActionBtnTouchUp(v);
 
                 return true;
             }
@@ -358,8 +360,7 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-    private void onTouchUpDown(boolean up, View v) {
-
+    private void onActionBtnTouchUpDown(boolean up, View v) {
         if (mParentListView != null
                 && mParentListView.getOnChannelButtonTouchListener() != null) {
             mParentListView.getOnChannelButtonTouchListener().onChannelButtonTouch(mParentListView, v == left_btn, up, mRemoteId, mFunc);
@@ -367,17 +368,23 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
-    private void onTouchDown(View v) {
+    private void onActionBtnTouchDown(View v) {
+        if (Slided() == 0) {
+            return;
+        }
 
         if (v == left_btn || v == right_btn) {
             v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
         }
 
 
-        onTouchUpDown(false, v);
+        onActionBtnTouchUpDown(false, v);
     }
 
-    private void onTouchUp(View v) {
+    private void onActionBtnTouchUp(View v) {
+        if (Slided() == 0) {
+            return;
+        }
 
         if (v == left_btn || v == right_btn) {
 
@@ -394,7 +401,7 @@ public class ChannelLayout extends LinearLayout {
         }
 
 
-        onTouchUpDown(true, v);
+        onActionBtnTouchUpDown(true, v);
     }
 
     private void UpdateRightBtn() {
@@ -752,8 +759,8 @@ public class ChannelLayout extends LinearLayout {
                 case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
@@ -783,6 +790,15 @@ public class ChannelLayout extends LinearLayout {
 
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if (mParentListView.getOnCaptionLongClickListener() != null) {
+            mParentListView.getOnCaptionLongClickListener().
+                    onChannelCaptionLongClick(mParentListView, mRemoteId);
+        }
+        return true;
+    }
+
     private class AnimParams {
         public int content_left;
         public int content_right;
@@ -801,9 +817,9 @@ public class ChannelLayout extends LinearLayout {
             setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.channel_caption_text_size));
             setTextColor(getResources().getColor(R.color.channel_caption_text));
-            setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
@@ -1051,12 +1067,12 @@ public class ChannelLayout extends LinearLayout {
         return false;
     }
 
-    public boolean stateIconTouched(int x, int y) {
-        return iconTouched(x, y, channelStateIcon);
+    public Point stateIconTouched(int x, int y) {
+        return iconTouched(x, y, channelStateIcon) ? new Point(x,y) : null;
     }
 
-    public boolean warningIconTouched(int x, int y) {
-        return iconTouched(x, y, channelWarningIcon);
+    public Point warningIconTouched(int x, int y) {
+        return iconTouched(x, y, channelWarningIcon) ? new Point(x,y) : null;
     }
 
     public int getRemoteId() {

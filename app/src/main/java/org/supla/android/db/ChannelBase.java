@@ -257,8 +257,8 @@ public abstract class ChannelBase extends DbItem {
             }
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 return value.isClosed() ? 1 : 0;
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
             case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 return value.getDigiglassValue().isAnySectionTransparent() ? 1 : 0;
         }
 
@@ -513,8 +513,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
                 break;
-
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
                 switch (getAltIcon()) {
                     case 1:
                         img_idx = active == 1 ? R.drawable.digiglasstransparent1
@@ -525,14 +524,14 @@ public abstract class ChannelBase extends DbItem {
                                 : R.drawable.digiglass;
                 }
                 break;
-            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
                 switch (getAltIcon()) {
                     case 1:
-                        img_idx = active == 1 ? R.drawable.digiglasshtransparent1
+                        img_idx = active == 1 ? R.drawable.digiglassvtransparent1
                                 : R.drawable.digiglass1;
                         break;
                     default:
-                        img_idx = active == 1 ? R.drawable.digiglasshtransparent
+                        img_idx = active == 1 ? R.drawable.digiglassvtransparent
                                 : R.drawable.digiglass;
                 }
                 break;
