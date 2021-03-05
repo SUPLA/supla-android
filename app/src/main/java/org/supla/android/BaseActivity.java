@@ -115,8 +115,10 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
                                 client.cancel();
                             }
 
-                            bgTimer.cancel();
-                            bgTimer = null;
+                            if (bgTimer != null) {
+                                bgTimer.cancel();
+                                bgTimer = null;
+                            }
                         }
                     }
 
