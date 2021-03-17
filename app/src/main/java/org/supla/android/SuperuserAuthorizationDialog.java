@@ -38,6 +38,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private OnAuthorizarionResultListener onAuthorizarionResultListener;
     private Object object;
     private Timer timeoutTimer;
+    private static SuperuserAuthorizationDialog lastVisibleInstance;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
@@ -110,6 +111,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         }
 
         if (dialog != null) {
+            lastVisibleInstance = this;
             cancelTimeoutTimer();
             dialog.show();
         }
@@ -175,6 +177,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
 
     @Override
     public void onCancel(DialogInterface dialogInterface) {
+        if (lastVisibleInstance == this) {
+            lastVisibleInstance = null;
+        }
+
         SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
 
         if (onAuthorizarionResultListener != null) {
@@ -188,6 +194,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     public void close() {
+        if (lastVisibleInstance == this) {
+            lastVisibleInstance = null;
+        }
         SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
         dialog.dismiss();
         dialog = null;
@@ -279,6 +288,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                                               boolean Success, int Code);
 
         void authorizationCanceled();
+    }
+
+    public static boolean lastOneIsStillShowing() {
+        return lastVisibleInstance != null && lastVisibleInstance.isShowing();
     }
 
 }
