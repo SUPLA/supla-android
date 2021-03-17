@@ -232,16 +232,29 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         return false;
     }
 
+    protected void hideDetail() {
+        if (channelLV.getVisibility() == View.VISIBLE) {
+            channelLV.hideDetail(false);
+        } else {
+            cgroupLV.hideDetail(false);
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        channelLV.hideDetail(false);
+        if (!SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
+            hideDetail();
+        }
     }
 
     @Override
     protected void onResume() {
-
         super.onResume();
+
+        if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
+            return;
+        }
 
         if (!SetListCursorAdapter()) {
             channelLV.setSelection(0);
@@ -253,17 +266,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
-        if (channelLV.getVisibility() == View.VISIBLE) {
-            channelLV.hideDetail(false);
-        } else {
-            cgroupLV.hideDetail(false);
-        }
-
+        hideDetail();
         runDownloadTask();
 
         RateApp ra = new RateApp(this);
         ra.showDialog(1000);
-
     }
 
     @Override

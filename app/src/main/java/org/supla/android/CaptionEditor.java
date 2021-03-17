@@ -66,7 +66,10 @@ public abstract class CaptionEditor implements View.OnClickListener, TextWatcher
             dialog.cancel();
         } else if (v == btnOK) {
             if ((originalCaption == null && edCaption.getText() != null)
-                    || !originalCaption.equals(edCaption.getText().toString())) {
+                    || (originalCaption != null && edCaption.getText() == null)
+                    || (originalCaption != null
+                        && edCaption.getText() != null
+                        && !originalCaption.equals(edCaption.getText().toString()))) {
                 applyChanged(edCaption.getText().toString());
 
                 SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
