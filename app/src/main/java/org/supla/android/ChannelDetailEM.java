@@ -42,7 +42,6 @@ import org.supla.android.charts.ElectricityChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
@@ -273,10 +272,13 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             }, 50);
 
         } else {
+            int flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
+            boolean singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
+                    && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
             llDetails.setVisibility(VISIBLE);
             chartHelper.setVisibility(GONE);
             chartHelper.clearData();
-            rlButtons1.setVisibility(VISIBLE);
+            rlButtons1.setVisibility(singlePhase ? GONE : VISIBLE);
             rlButtons2.setVisibility(INVISIBLE);
             setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
@@ -439,6 +441,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvTotalCost.setText(String.format("%.2f " + em.getCurrency(), em.getTotalCost()));
             tvCurrentCost.setText(String.format("%.2f " + em.getCurrency(),
                     currentCost));
+            ivDirection.setVisibility((em.getMeasuredValues()
+                    & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0 ? VISIBLE : INVISIBLE);
 
             Button btn = null;
             switch (phase) {
@@ -530,6 +534,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
+        showChart(ivGraph.getTag() != null);
         channelExtendedDataToViews(true);
     }
 
@@ -607,6 +612,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
+        ivDirection.setVisibility(INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
 
