@@ -42,7 +42,6 @@ import org.supla.android.charts.ElectricityChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
@@ -273,10 +272,13 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             }, 50);
 
         } else {
+            int flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
+            boolean singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
+                    && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
             llDetails.setVisibility(VISIBLE);
             chartHelper.setVisibility(GONE);
             chartHelper.clearData();
-            rlButtons1.setVisibility(VISIBLE);
+            rlButtons1.setVisibility(singlePhase ? GONE : VISIBLE);
             rlButtons2.setVisibility(INVISIBLE);
             setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
@@ -530,6 +532,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
+        showChart(ivGraph.getTag() != null);
         channelExtendedDataToViews(true);
     }
 
