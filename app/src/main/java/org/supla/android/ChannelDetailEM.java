@@ -441,6 +441,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvTotalCost.setText(String.format("%.2f " + em.getCurrency(), em.getTotalCost()));
             tvCurrentCost.setText(String.format("%.2f " + em.getCurrency(),
                     currentCost));
+            ivDirection.setVisibility((em.getMeasuredValues()
+                    & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0 ? VISIBLE : INVISIBLE);
 
             Button btn = null;
             switch (phase) {
@@ -610,6 +612,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
+        ivDirection.setVisibility(INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
 
