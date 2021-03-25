@@ -282,6 +282,7 @@ public abstract class ChannelBase extends DbItem {
                     Id = new ImageId(getUserIconId(), 1);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
                     Id = new ImageId(getUserIconId(), (active & 0x1) > 0 ? 2
                             : ((active & 0x2) > 0 ? 3 : 1));
                     break;
@@ -296,6 +297,7 @@ public abstract class ChannelBase extends DbItem {
         }
 
         int img_idx = -1;
+        boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
 
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
@@ -304,7 +306,6 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
                 switch (getAltIcon()) {
                     case 1:
 
@@ -329,7 +330,11 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                img_idx = active == 1 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
+                if (_50percent) {
+                    img_idx = R.drawable.garagedoorclosed50percent;
+                } else {
+                    img_idx = active > 0 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
+                }
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
