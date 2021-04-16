@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
+import org.supla.android.Trace;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
@@ -35,6 +36,7 @@ public class ChannelValue extends DbItem {
     private boolean OnLine;
     private byte[] Value;
     private byte[] SubValue;
+    private short SubValueType;
 
     private boolean ValueDiff(byte[] v1, byte[] v2) {
 
@@ -91,6 +93,14 @@ public class ChannelValue extends DbItem {
         setChannelSubValue(Base64.decode(value, Base64.DEFAULT));
     }
 
+    public short getSubValueType() {
+        return SubValueType;
+    }
+
+    public void setSubValueType(short subValueType) {
+        SubValueType = subValueType;
+    }
+
     public ContentValues getContentValues() {
 
         ContentValues values = new ContentValues();
@@ -99,6 +109,7 @@ public class ChannelValue extends DbItem {
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE, getOnLine());
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE, getChannelStringValue());
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE, getChannelStringSubValue());
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE, getSubValueType());
 
         return values;
     }
@@ -110,7 +121,7 @@ public class ChannelValue extends DbItem {
         setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE)) != 0);
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE)));
-
+        setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE)));
     }
 
     public void AssignCursorDataFromGroupView(Cursor cursor) {
@@ -120,20 +131,25 @@ public class ChannelValue extends DbItem {
         setOnLine(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE)) != 0);
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE)));
-
+        setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE)));
     }
 
     public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
         setChannelValue(channelValue.Value);
         setChannelSubValue(channelValue.SubValue);
+        setSubValueType(channelValue.SubValueType);
     }
 
     public boolean Diff(SuplaChannelValue channelValue) {
-        return ValueDiff(channelValue.Value, Value) || ValueDiff(channelValue.SubValue, SubValue);
+        return ValueDiff(channelValue.Value, Value)
+                || ValueDiff(channelValue.SubValue, SubValue)
+                || channelValue.SubValueType != SubValueType;
     }
 
     public boolean Diff(ChannelValue channelValue) {
-        return ValueDiff(channelValue.Value, Value) || ValueDiff(channelValue.SubValue, SubValue);
+        return ValueDiff(channelValue.Value, Value)
+                || ValueDiff(channelValue.SubValue, SubValue)
+                || channelValue.SubValueType != SubValueType;
     }
 
     public boolean getOnLine() {

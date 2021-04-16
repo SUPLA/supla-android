@@ -53,6 +53,7 @@ public class ChannelDao extends BaseDao {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE,
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE,
@@ -80,6 +81,7 @@ public class ChannelDao extends BaseDao {
                 SuplaContract.ChannelValueEntry._ID,
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID,
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE,
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE,
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE,
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE,
         };
@@ -141,6 +143,7 @@ public class ChannelDao extends BaseDao {
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID,
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID,
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE,
+                    SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE,
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE,
             };
@@ -445,6 +448,8 @@ public class ChannelDao extends BaseDao {
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE + " "
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
+                    + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE + " "
+                    + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE + " "
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE + " "

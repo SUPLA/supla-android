@@ -903,6 +903,7 @@ public class SuplaClient extends Thread {
         if (DbH.updateChannelValue(channelValueUpdate)) {
 
             Trace.d(log_tag, "Channel id" + channelValueUpdate.Id
+                    + " sub_value type: " +  channelValueUpdate.Value.SubValueType
                     + " value updated" + " OnLine: " + channelValueUpdate.OnLine
                     + " value[0]: " + channelValueUpdate.Value.Value[0]);
             onDataChanged(channelValueUpdate.Id, 0);
