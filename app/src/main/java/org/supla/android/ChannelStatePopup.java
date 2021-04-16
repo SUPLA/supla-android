@@ -41,7 +41,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class ChannelStatePopup implements DialogInterface.OnCancelListener, View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
-    private final int REFRESH_INTERVAL_MS = 6000;
+    private final int REFRESH_INTERVAL_MS = 4000;
 
     private long lastRefreshTime;
     private Timer refreshTimer;
