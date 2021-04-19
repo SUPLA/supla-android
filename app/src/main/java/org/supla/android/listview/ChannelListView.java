@@ -404,7 +404,7 @@ public class ChannelListView extends ListView {
 
                 } else if (action == MotionEvent.ACTION_MOVE) {
 
-                    if (detailTouchDown) {
+                    if (detailTouchDown && channelLayout.getButtonsEnabled()) {
                         if (!rightButtonSlided100p || X > LastXtouch) {
                             detailTouchDown = false;
                         }
