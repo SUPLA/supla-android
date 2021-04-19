@@ -48,6 +48,7 @@ import org.supla.android.R;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -105,8 +106,8 @@ public class ChannelListView extends ListView {
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
 
+        
         if (mDetailLayout != null) {
-
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -670,6 +671,10 @@ public class ChannelListView extends ListView {
 
     public boolean isDetailSliding() {
         return detailSliding || detailAnim;
+    }
+
+    public boolean isChannelLayoutSlided() {
+        return channelLayout.Slided() != 0;
     }
 
     public boolean Slided() {
