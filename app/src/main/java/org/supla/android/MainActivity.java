@@ -45,7 +45,6 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
-import org.supla.android.listview.SectionLayout;
 import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;

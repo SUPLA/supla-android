@@ -45,6 +45,7 @@ import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
@@ -100,6 +101,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Button btnPhase2;
     private Button btnPhase3;
     private Button btnPhase123;
+    private Button btnPowerOnOff;
     private ImageView ivGraph;
     private ImageView ivDirection;
     private LinearLayout llDetails;
@@ -185,16 +187,19 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         btnPhase2 = findViewById(R.id.embtn_Phase2);
         btnPhase3 = findViewById(R.id.embtn_Phase3);
         btnPhase123 = findViewById(R.id.embtn_Phase123);
+        btnPowerOnOff = findViewById(R.id.embtn_PowerOnOff);
 
         btnPhase1.setOnClickListener(this);
         btnPhase2.setOnClickListener(this);
         btnPhase3.setOnClickListener(this);
         btnPhase123.setOnClickListener(this);
+        btnPowerOnOff.setOnClickListener(this);
 
         btnPhase1.setTag(1);
         btnPhase2.setTag(2);
         btnPhase3.setTag(3);
         btnPhase123.setTag(0);
+        btnPowerOnOff.setTag(0);
 
         llDetails = findViewById(R.id.emllDetails);
         rlButtons1 = findViewById(R.id.emrlButtons1);
@@ -354,9 +359,23 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     }
 
-    public void channelExtendedDataToViews() {
+    public void channelDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
+
+        btnPowerOnOff.setVisibility(channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ? VISIBLE : GONE);
+
+        if (btnPowerOnOff.getVisibility() == VISIBLE) {
+            if (channel.getValue().hiValue()) {
+                btnPowerOnOff.setTag(1);
+                setBtnBackground(btnPowerOnOff, R.drawable.poweron );
+            } else {
+                btnPowerOnOff.setTag(0);
+                setBtnBackground(btnPowerOnOff,  R.drawable.poweroff);
+            }
+
+        }
 
         if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
             emImgIcon.setBackgroundColor(Color.TRANSPARENT);
@@ -537,7 +556,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         super.setData(channel);
         emImgIcon.setTag(-1);
         showChart(ivGraph.getTag() != null);
-        channelExtendedDataToViews();
+        channelDataToViews();
     }
 
     @Override
@@ -547,7 +566,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void OnChannelDataChanged() {
-        channelExtendedDataToViews();
+        channelDataToViews();
     }
 
     private void setBtnBackground(Button btn, int i) {
@@ -563,13 +582,19 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == ivGraph) {
+        if (v == btnPowerOnOff) {
+            SuplaClient client = SuplaApp.getApp().getSuplaClient();
+            if (client != null) {
+                SuplaApp.Vibrate(getContext());
+                client.open(getRemoteId(), false, btnPowerOnOff.getTag().equals(1) ? 0 : 1);
+            }
+        } else if (v == ivGraph) {
             showChart(v.getTag() == null);
         } else if (v == ivDirection) {
             setProductionDataSource(!chartHelper.isProductionDataSource(), true);
         } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer) v.getTag();
-            channelExtendedDataToViews();
+            channelDataToViews();
         }
     }
 
