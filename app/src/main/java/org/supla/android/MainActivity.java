@@ -156,7 +156,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     private boolean onDragStarted(View view, int position, ChannelListView listView) {
-        if (listView.isDetailSliding() || listView.isChannelLayoutSlided()) {
+        if (listView.isDetailVisible()
+                || listView.isDetailSliding()
+                || listView.isChannelLayoutSlided()) {
             dragInitialPosition = null;
             return false;
         }

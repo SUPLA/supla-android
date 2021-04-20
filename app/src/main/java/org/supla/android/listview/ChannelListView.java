@@ -718,7 +718,7 @@ public class ChannelListView extends ListView {
     }
 
     public boolean isChannelLayoutSlided() {
-        return channelLayout.Slided() != 0;
+        return channelLayout != null && channelLayout.Slided() != 0;
     }
 
     public boolean Slided() {
