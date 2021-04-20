@@ -349,9 +349,9 @@ public class ChannelValue extends DbItem {
         return result;
     }
 
-    public double getTotalForwardActiveEnergy() {
+    public double getTotalForwardActiveEnergy(boolean subValue) {
 
-        byte[] t = getChannelValue();
+        byte[] t = subValue ? getChannelSubValue() : getChannelValue();
 
         if (t.length >= 5) {
 
@@ -367,8 +367,12 @@ public class ChannelValue extends DbItem {
         return 0.00;
     }
 
-    public long getLong() {
-        byte[] t = getChannelValue();
+    public double getTotalForwardActiveEnergy() {
+        return getTotalForwardActiveEnergy(false);
+    }
+
+    public long getLong(boolean subValue) {
+        byte[] t = subValue ? getChannelSubValue() : getChannelValue();
 
         if (t.length == 8) {
 
@@ -384,8 +388,16 @@ public class ChannelValue extends DbItem {
         return 0;
     }
 
+    public long getLong() {
+        return getLong(false);
+    }
+
+    public double getImpulseCounterCalculatedValue(boolean subValue) {
+        return getLong(subValue) / 1000.0;
+    }
+
     public double getImpulseCounterCalculatedValue() {
-        return getLong() / 1000.0;
+        return getImpulseCounterCalculatedValue(false);
     }
 
     public boolean isManuallyClosed() {

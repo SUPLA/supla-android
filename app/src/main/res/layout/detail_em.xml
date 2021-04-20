@@ -269,7 +269,6 @@
 
         <LinearLayout
             android:id="@+id/emllDetails"
-            android:layout_above="@+id/embtn_PowerOnOff"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -538,15 +537,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/embtn_PowerOnOff"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_width="60dp"
-            android:layout_height="24dp"
-            android:layout_gravity="right"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/poweron" />
     </RelativeLayout>
 
 </RelativeLayout>

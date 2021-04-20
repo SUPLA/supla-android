@@ -42,6 +42,7 @@ import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.db.ChannelValue;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelValue;
@@ -52,6 +53,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     private int mRemoteId;
     private int mFunc;
+    private boolean mMeasurementSubChannel;
     private boolean mGroup;
 
     private ChannelListView mParentListView;
@@ -593,7 +595,15 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         channelStateIcon.setVisibility(INVISIBLE);
         channelWarningIcon.setVisibility(INVISIBLE);
 
-        if (OldFunc != mFunc) {
+        boolean _mMeasurementSubChannel = !mGroup
+                && (((Channel)cbase).getValue().getSubValueType()
+                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+                || ((Channel)cbase).getValue().getSubValueType()
+                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+
+
+        if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
+            mMeasurementSubChannel = _mMeasurementSubChannel;
             imgl.SetDimensions();
         }
 
@@ -941,7 +951,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
+                    || mMeasurementSubChannel) {
 
                 width *= 2.8;
 

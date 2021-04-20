@@ -28,6 +28,7 @@ import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelState;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -264,10 +265,8 @@ public class Channel extends ChannelBase {
         return super.getImageIdx(whichImage, Value);
     }
 
-    public String getUnit(String defaultUnit) {
-        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
-                && getExtendedValue() != null
+    public String getUnit() {
+        if (getExtendedValue() != null
                 && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
                 && getExtendedValue().getExtendedValue() != null
                 && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
@@ -277,34 +276,24 @@ public class Channel extends ChannelBase {
                 return unit;
             }
         }
-        return defaultUnit;
-    }
-
-    public String getUnit() {
-        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-
-            String dUnit = "";
-            switch (getFunc()) {
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                    dUnit = "kWh";
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                    dUnit = "m\u00B3";
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-                    dUnit = "GJ";
-                    break;
-            }
-            return getUnit(dUnit);
-        }
-
         return "";
     }
 
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                    return String.format("%.1f " + getUnit(),
+                            value.getImpulseCounterCalculatedValue(true));
+                } else if (value.getSubValueType()
+                        == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                    return String.format("%.2f kWh", value.getTotalForwardActiveEnergy(true));
+                }
+                break;
+        }
+
         // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
             return getOnLine() ?
