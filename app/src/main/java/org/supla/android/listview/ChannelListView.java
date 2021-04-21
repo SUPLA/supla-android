@@ -45,9 +45,11 @@ import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
+import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -58,6 +60,7 @@ public class ChannelListView extends ListView {
     private ChannelLayout channelLayout = null;
     private ChannelLayout lastCL = null;
     private boolean buttonSliding = false;
+    private boolean rightButtonSlided100p = false;
     private Cursor _newCursor;
     private OnChannelButtonClickListener onChannelButtonClickListener;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
@@ -104,9 +107,12 @@ public class ChannelListView extends ListView {
     }
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
+        Channel channel = null;
+        if (cbase instanceof Channel) {
+            channel = (Channel)cbase;
+        }
 
         if (mDetailLayout != null) {
-
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -122,6 +128,26 @@ public class ChannelListView extends ListView {
                     if (!(mDetailLayout instanceof ChannelDetailRS))
                         mDetailLayout = null;
 
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                    if (channel != null && channel.getValue() != null) {
+
+                        if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                            if (!(mDetailLayout instanceof ChannelDetailIC)) {
+                                mDetailLayout = null;
+                            }
+                        } else if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                            if (!(mDetailLayout instanceof ChannelDetailEM)) {
+                                mDetailLayout = null;
+                            }
+                        } else {
+                            mDetailLayout = null;
+                        }
+                    }
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
@@ -177,8 +203,6 @@ public class ChannelListView extends ListView {
         }
 
         if (mDetailLayout == null) {
-
-
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -188,6 +212,18 @@ public class ChannelListView extends ListView {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                    if (channel != null && channel.getValue() != null) {
+                        if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                            mDetailLayout = new ChannelDetailIC(getContext(), this);
+                        } else if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                            mDetailLayout = new ChannelDetailEM(getContext(), this);
+                        }
+                    }
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
@@ -326,6 +362,7 @@ public class ChannelListView extends ListView {
                     buttonSliding = false;
                     detailSliding = false;
                     detailTouchDown = false;
+                    rightButtonSlided100p = false;
 
                     if (lastCL != null && lastCL != channelLayout) {
                         lastCL.AnimateToRestingPosition(true);
@@ -333,7 +370,6 @@ public class ChannelListView extends ListView {
                     }
 
                     if (channelLayout != null) {
-
                         if (channelLayout.getDetailSliderEnabled()) {
                             Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
 
@@ -350,6 +386,7 @@ public class ChannelListView extends ListView {
 
                                 if (getDetailLayout(cbase) != null) {
                                     detailTouchDown = true;
+                                    rightButtonSlided100p = channelLayout.Slided() == 200;
                                     getDetailLayout(cbase).setData(cbase);
                                 }
                             }
@@ -366,8 +403,16 @@ public class ChannelListView extends ListView {
 
 
                 } else if (action == MotionEvent.ACTION_MOVE) {
+
+                    if (detailTouchDown && channelLayout.getButtonsEnabled()) {
+                        if (!rightButtonSlided100p || X > LastXtouch) {
+                            detailTouchDown = false;
+                        }
+                    }
+
                     if (channelLayout.getButtonsEnabled()
-                            && !detailSliding) {
+                            && !detailSliding
+                            && !detailTouchDown) {
 
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
@@ -670,6 +715,10 @@ public class ChannelListView extends ListView {
 
     public boolean isDetailSliding() {
         return detailSliding || detailAnim;
+    }
+
+    public boolean isChannelLayoutSlided() {
+        return channelLayout != null && channelLayout.Slided() != 0;
     }
 
     public boolean Slided() {

@@ -35,17 +35,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
-import org.supla.android.Trace;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.db.ChannelValue;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelLayout extends LinearLayout implements View.OnLongClickListener {
@@ -53,6 +53,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     private int mRemoteId;
     private int mFunc;
+    private boolean mMeasurementSubChannel;
     private boolean mGroup;
 
     private ChannelListView mParentListView;
@@ -333,10 +334,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             return 10;
 
         if (content.getLeft() > 0)
-            return 1;
+            return content.getLeft() == right_btn.getWidth() ? 100 : 1;
 
         if (content.getLeft() < 0)
-            return 2;
+            return content.getLeft() == left_btn.getWidth()* -1 ? 200 : 2;
 
         return 0;
     }
@@ -561,13 +562,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     }
 
     private void setDetailSliderEnabled(boolean detailSliderEnabled) {
-
-        if (detailSliderEnabled) {
-            setRightButtonEnabled(false);
-        }
-
         DetailSliderEnabled = detailSliderEnabled;
-
     }
 
     public boolean getButtonsEnabled() {
@@ -600,7 +595,15 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         channelStateIcon.setVisibility(INVISIBLE);
         channelWarningIcon.setVisibility(INVISIBLE);
 
-        if (OldFunc != mFunc) {
+        boolean _mMeasurementSubChannel = !mGroup
+                && (((Channel)cbase).getValue().getSubValueType()
+                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+                || ((Channel)cbase).getValue().getSubValueType()
+                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+
+
+        if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
+            mMeasurementSubChannel = _mMeasurementSubChannel;
             imgl.SetDimensions();
         }
 
@@ -666,14 +669,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     ridx = R.string.channel_btn_openclose;
                     break;
 
-                /*
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-
-                    ridx = R.string.channel_btn_reveal;
-                    lidx = R.string.channel_btn_shut;
-                    break;
-                */
-
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
@@ -710,16 +705,25 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     renabled = true;
 
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-
-                    left_onlineStatus.setVisibility(View.INVISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
-
-                    break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+
+                    left_onlineStatus.setVisibility(View.VISIBLE);
+                    right_onlineStatus.setVisibility(View.VISIBLE);
+
+                    lenabled = true;
+                    renabled = true;
+
+                    if (cbase instanceof Channel && ((Channel)cbase).getValue() != null) {
+                        if (((Channel)cbase).getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+                                || ((Channel)cbase).getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS ) {
+                            dslider = true;
+                        }
+                    }
+
+                    break;
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
@@ -761,19 +765,17 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
                     dslider = true;
-
                     break;
 
                 default:
-
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.INVISIBLE);
-
-
                     break;
             }
 
@@ -949,7 +951,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
                     || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER) {
+                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
+                    || mMeasurementSubChannel) {
 
                 width *= 2.8;
 

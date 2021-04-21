@@ -50,7 +50,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 16;
+    public static final int DATABASE_VERSION = 17;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -145,6 +145,7 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.ChannelValueEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + " INTEGER NOT NULL," +
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + " TEXT," +
                 SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + " TEXT)";
 
@@ -180,6 +181,7 @@ public class DbHelper extends BaseDbHelper {
                 "CV." + SuplaContract.ChannelValueEntry._ID + ", " +
                 "CEV." + SuplaContract.ChannelExtendedValueEntry._ID + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
+                "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
                 "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + ", " +
@@ -290,6 +292,9 @@ public class DbHelper extends BaseDbHelper {
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE + ", "
                         + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE + " "
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE + ", "
+                        + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE
+                        + " "
+                        + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE + ", "
                         + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE + " "
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE + " "
                         + " FROM " + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME + " R "
@@ -466,6 +471,12 @@ public class DbHelper extends BaseDbHelper {
                 + " INTEGER NOT NULL default 0");
     }
 
+    private void upgradeToV17(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.ChannelValueEntry.TABLE_NAME
+                + " ADD COLUMN " + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE
+                + " INTEGER NOT NULL default 0");
+    }
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -512,6 +523,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 15:
                         upgradeToV16(db);
+                        break;
+                    case 16:
+                        upgradeToV17(db);
                         break;
                 }
             }

@@ -20,8 +20,12 @@ package org.supla.android.lib;
 
 
 public class SuplaChannelValue {
+    public static final int SUBV_TYPE_NOT_SET_OR_OFFLINE = 0;
+    public static final int SUBV_TYPE_SENSOR = 1;
+    public static final int SUBV_TYPE_ELECTRICITY_MEASUREMENTS = 2;
+    public static final int SUBV_TYPE_IC_MEASUREMENTS = 3;
 
     public byte[] Value;
     public byte[] SubValue;
-
+    public short SubValueType;
 }

@@ -68,6 +68,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_ONLINE = "online";
         public static final String COLUMN_NAME_SUBVALUE = "subvalue";
+        public static final String COLUMN_NAME_SUBVALUE_TYPE = "subvaluetype";
         public static final String COLUMN_NAME_VALUE = "value";
     }
 
@@ -93,6 +94,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_EXTENDEDVALUEID = ChannelExtendedValueEntry._ID;
         public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
         public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
+        public static final String COLUMN_NAME_SUBVALUE_TYPE = ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE;
         public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
         public static final String COLUMN_NAME_EXTENDEDVALUETYPE =
                 ChannelExtendedValueEntry.COLUMN_NAME_TYPE;
@@ -168,6 +170,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_CHANNELID = ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID;
         public static final String COLUMN_NAME_ONLINE = ChannelValueEntry.COLUMN_NAME_ONLINE;
         public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
+        public static final String COLUMN_NAME_SUBVALUE_TYPE = ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE;
         public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
 
     }

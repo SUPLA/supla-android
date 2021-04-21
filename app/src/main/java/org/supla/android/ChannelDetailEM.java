@@ -45,6 +45,7 @@ import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
@@ -177,6 +178,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 findViewById(R.id.emtv_lPhaseReverseActiveEnergyBalanced);
 
         emImgIcon = findViewById(R.id.emimgIcon);
+        emImgIcon.setClickable(true);
+        emImgIcon.setOnClickListener(this);
 
         llBalance = findViewById(R.id.emtv_llBalance);
         tvlBalance = findViewById(R.id.emtv_lBalance);
@@ -354,13 +357,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     }
 
-    public void channelExtendedDataToViews(boolean setIcon) {
+    public void channelDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
 
-        if (setIcon) {
+        if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
             emImgIcon.setBackgroundColor(Color.TRANSPARENT);
             emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
+            emImgIcon.setTag(channel.getImageIdx());
         }
 
         ChannelExtendedValue cev = channel.getExtendedValue();
@@ -534,8 +538,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
+        emImgIcon.setTag(-1);
         showChart(ivGraph.getTag() != null);
-        channelExtendedDataToViews(true);
+        channelDataToViews();
     }
 
     @Override
@@ -545,7 +550,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void OnChannelDataChanged() {
-        channelExtendedDataToViews(false);
+        channelDataToViews();
     }
 
     private void setBtnBackground(Button btn, int i) {
@@ -561,13 +566,25 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == ivGraph) {
+        if (v == emImgIcon) {
+            Channel channel = (Channel) getChannelFromDatabase();
+            if (channel != null) {
+                if (channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ) {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        SuplaApp.Vibrate(getContext());
+                        client.open(getRemoteId(), false, channel.getValue().hiValue() ? 0 : 1);
+                    }
+                }
+            }
+        } else if (v == ivGraph) {
             showChart(v.getTag() == null);
         } else if (v == ivDirection) {
             setProductionDataSource(!chartHelper.isProductionDataSource(), true);
         } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer) v.getTag();
-            channelExtendedDataToViews(false);
+            channelDataToViews();
         }
     }
 
