@@ -98,7 +98,9 @@ public class ListViewCursorAdapter extends BaseAdapter {
     public Object getItem(int position) {
 
         if (Sections.size() == 0) {
-            cursor.moveToPosition(position);
+            if (cursor != null) {
+                cursor.moveToPosition(position);
+            }
             return cursor;
         }
 
