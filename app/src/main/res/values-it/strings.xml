@@ -378,4 +378,31 @@
     <string name="zwave_welcome_message">Benvenuto nella configurazione guidata del ponte z-wave che ti permetterà di collegare altri dispositivi z-wave alla Supla. Premi \"Avanti\" per continuare.</string>
     <string name="zwave_welcome_title">Configurazione guidata z-wave</string>
    <string name="hp_calendar_eco">ECO</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Roof window opening sensor</string>
+    <string name="channel_caption_roofwindow" translatable="false">Roof window</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Roof window operation</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Roof window opening sensor</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">opened / closed the roof window</string>
+    <string name="status_led" translatable="false">Status LED</string>
+    <string name="info_led_on" translatable="false">The LED is on if there is a connection to the server.</string>
+    <string name="info_led_off" translatable="false">The LED is off if there is a connection to the server.</string>
+    <string name="info_led_alwaysoff" translatable="false">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
+    <string name="input" translatable="false">Input</string>
+    <string name="monostable" translatable="false">Monostable</string>
+    <string name="bistable" translatable="false">Bistable</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">The attempt to establish a WiFi connection with the i/o device has failed.</string>
+    <string name="diw_cfg_info_oprange" translatable="false">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string name="diw_cfg_info_in_options" translatable="false">Input options</string>
+    <string name="diw_cfg_info_mono_option" translatable="false">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
+    <string name="channel_caption_digiglass" translatable="false">Digiglass</string>
+    <string name="channel_func_digiglass" translatable="false">Digiglass</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Planned regeneration is in progress.</string>
+    <string name="dgf_regeneration_after20h" translatable="false">Regeneration initiated after 20 hours of operation is in progress.</string>
+    <string name="wizard_done_explentations" translatable="false">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4Ghz network is ether not in range or its name was incorrect.</string>
+    <string name="incorrect_email_or_password" translatable="false">Incorrect Email Address or Password</string>
+    <string name="channel_name" translatable="false">Channel name</string>
+    <string name="location_name" translatable="false">Location name</string>
+    <string name="str_default" translatable="false">Default</string>
 </resources>

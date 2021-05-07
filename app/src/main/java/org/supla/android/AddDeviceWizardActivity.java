@@ -812,14 +812,15 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             SSID = SSID.substring(1, SSID.length() - 1);
         }
 
-        Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
+        Pattern mFullPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
+        Pattern mShortPattern = Pattern.compile("\\-[A-Fa-f0-9]{4}$");
 
         return (SSID.startsWith("SUPLA-")
                 || SSID.startsWith("ZAMEL-")
                 || SSID.startsWith("NICE-")
                 || SSID.startsWith("HEATPOL-")
                 || SSID.startsWith("COMELIT-"))
-                && mPattern.matcher(SSID).find();
+                && (mFullPattern.matcher(SSID).find() || mShortPattern.matcher(SSID).find());
     }
 
     private void startScan(boolean first) {
