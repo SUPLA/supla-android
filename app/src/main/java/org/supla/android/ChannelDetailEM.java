@@ -361,7 +361,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public String doubleToString(double dbl, String unit) {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(20);
-        df.setMinimumFractionDigits(0);
+        df.setMinimumFractionDigits(2);
         String sdbl = df.format(dbl);
 
         if (unit == null) {
