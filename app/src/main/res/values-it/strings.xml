@@ -397,4 +397,12 @@
     <string name="channel_name" translatable="false">Nome Canale</string>
     <string name="location_name" translatable="false">Nome Ambiente</string>
     <string name="str_default" translatable="false">Default</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Sensore apertura Lucernario</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Sensore apertura Lucernario</string>
+    <string name="channel_caption_roofwindow" translatable="false">Lucernario</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Funzionamento Lucernario</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">apri/chiudi lucernario</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">"Le sezioni di vetro sono esposte per più di 20 ore, questo può influire negativamente sulla loro durata. Si consiglia di coprire tutte le sezioni per un minimo di 4 ore per rigenerarle. "</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Rigenerazione pianificata in corso.</string>
+    <string name="dgf_regeneration_after20h" translatable="false">Rigenerazione avviata dopo 20 ore di funzionamento in corso.</string>
 </resources>
