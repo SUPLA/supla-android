@@ -290,8 +290,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
                         || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ) {
                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
                     if (client != null) {
-                        SuplaApp.Vibrate(getContext());
-                        client.open(getRemoteId(), false, channel.getValue().hiValue() ? 0 : 1);
+                        client.turnOnOff(getContext(), !channel.getValue().hiValue(),
+                                channel.getRemoteId(), false, channel.getFunc(),
+                                true);
                     }
                 }
             }

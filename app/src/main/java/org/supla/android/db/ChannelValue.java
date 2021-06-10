@@ -417,4 +417,11 @@ public class ChannelValue extends DbItem {
     public DigiglassValue getDigiglassValue() {
         return new DigiglassValue(getChannelValue());
     }
+
+    public boolean overcurrentCut() {
+        byte[] value = getChannelValue();
+
+        return value.length > 1
+                && (value[1] & SuplaConst.RELAYCHANNEL_VALUE_FLAG_OVERCURRENT_CUT) > 0;
+    }
 }

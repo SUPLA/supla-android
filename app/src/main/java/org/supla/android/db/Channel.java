@@ -339,6 +339,19 @@ public class Channel extends ChannelBase {
     }
 
     private int getChannelWarningLevel(Context context, StringBuilder message) {
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                if (getValue().overcurrentCut()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.overcurrent_warning));
+                    }
+                    return 2;
+                }
+                break;
+        }
+
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:

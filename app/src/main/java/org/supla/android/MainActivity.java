@@ -559,6 +559,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (client == null)
             return;
 
+        if (!up && client.turnOnOff(this, !left, remoteId, clv == cgroupLV,
+                channelFunc, true)) {
+            return;
+        }
+
         if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
             Channel channel = getDbHelper().getChannel(remoteId);

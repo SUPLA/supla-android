@@ -417,4 +417,6 @@
     <string name="channel_name">Nazwa kanału</string>
     <string name="location_name">Nazwa lokalizacji</string>
     <string name="str_default">Domyślnie</string>
+    <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
+    <string translatable="false" name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
 </resources>
