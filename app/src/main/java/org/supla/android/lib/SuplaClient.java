@@ -20,12 +20,10 @@ package org.supla.android.lib;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -388,7 +386,7 @@ public class SuplaClient extends Thread {
                     return false;
                 }
                 if (!channel.getValue().hiValue()
-                        && channel.getValue().overcurrentCut()) {
+                        && channel.getValue().overcurrentRelayOff()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(android.R.string.dialog_alert_title);
                     builder.setMessage(R.string.overcurrent_question);

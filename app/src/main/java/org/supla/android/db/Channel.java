@@ -343,7 +343,7 @@ public class Channel extends ChannelBase {
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                if (getValue().overcurrentCut()) {
+                if (getValue().overcurrentRelayOff()) {
                     if (message != null) {
                         message.append(context.getResources().getString(R.string.overcurrent_warning));
                     }
