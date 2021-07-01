@@ -19,7 +19,7 @@ package org.supla.android.data.source.local;
  */
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Date;
