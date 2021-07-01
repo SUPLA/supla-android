@@ -3,10 +3,10 @@ package org.supla.android;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StringRes;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -177,6 +177,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
         btn.setText(getResources().getString(textResId).toUpperCase());
+	btn.setBackground(null);
         btn.setTag(id);
         buttons.add(btn);
         ll.addView(btn);
@@ -202,6 +203,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
+	    btn.setBackground(null);
             btn.setOnClickListener(this);
             btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);

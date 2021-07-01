@@ -469,7 +469,7 @@ public class ChannelGroup extends ChannelBase {
 
     public CharSequence getHumanReadableValue() {
         if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-            return ChannelBase.getHumanReadableThermostatTemperature(
+            return getHumanReadableThermostatTemperature(
                     getMinimumMeasuredTemperature(),
                     getMaximumMeasuredTemperature(),
                     getMinimumPresetTemperature(),

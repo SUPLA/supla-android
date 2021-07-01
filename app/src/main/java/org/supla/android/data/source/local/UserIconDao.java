@@ -21,7 +21,7 @@ package org.supla.android.data.source.local;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.supla.android.db.SuplaContract;
 
