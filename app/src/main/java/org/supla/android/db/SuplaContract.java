@@ -213,7 +213,6 @@ public class SuplaContract {
         public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
         public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
 
-        public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
 
@@ -249,7 +248,6 @@ public class SuplaContract {
         public static final String COLUMN_NAME_TIMESTAMP = "date";
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
-        public static final String COLUMN_NAME_INCREASE_CALCULATED = "inc_calculated";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
     }
 

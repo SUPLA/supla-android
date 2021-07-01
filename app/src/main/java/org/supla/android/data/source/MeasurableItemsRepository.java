@@ -38,15 +38,11 @@ public interface MeasurableItemsRepository {
 
     int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement);
 
-    ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(int channelId, long timestamp);
-
     void addElectricityMeasurement(ElectricityMeasurementItem emi);
 
     Cursor getElectricityMeasurementsCursor(int channelId, String groupByDateFormat, Date dateFrom, Date dateTo);
 
     void deleteElectricityMeasurements(int channelId);
-
-    void deleteUncalculatedElectricityMeasurements(int channelId);
 
     int getThermostatMeasurementTimestamp(int channelId, boolean min);
 
@@ -86,11 +82,7 @@ public interface MeasurableItemsRepository {
 
     int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement);
 
-    ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(int channelId, long timestamp);
-
     Cursor getImpulseCounterMeasurements(int channelId, String groupByDateFormat, Date dateFrom, Date dateTo);
 
     void deleteImpulseCounterMeasurements(int channelId);
-
-    void deleteUncalculatedImpulseCounterMeasurements(int channelId);
 }

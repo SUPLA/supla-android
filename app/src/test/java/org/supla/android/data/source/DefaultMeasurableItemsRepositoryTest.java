@@ -124,25 +124,6 @@ public class DefaultMeasurableItemsRepositoryTest {
     }
 
     @Test
-    public void shouldGetOlderUncalculatedElectricityMeasurement() {
-        // given
-        int channelId = 2;
-        long timestamp = 3L;
-        ElectricityMeasurementItem expected = mock(ElectricityMeasurementItem.class);
-        when(electricityMeterLogDao.getOlderUncalculatedElectricityMeasurement(channelId, timestamp)).thenReturn(expected);
-
-        // when
-        ElectricityMeasurementItem result = measurableItemsRepository.getOlderUncalculatedElectricityMeasurement(channelId, timestamp);
-
-        // then
-        assertSame(expected, result);
-
-        verify(electricityMeterLogDao).getOlderUncalculatedElectricityMeasurement(channelId, timestamp);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
     public void shouldAddElectricityMeasurement() {
         // given
         ElectricityMeasurementItem item = mock(ElectricityMeasurementItem.class);
@@ -187,20 +168,6 @@ public class DefaultMeasurableItemsRepositoryTest {
 
         // then
         verify(electricityMeterLogDao).deleteElectricityMeasurements(channelId);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteUncalculatedElectricityMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteUncalculatedElectricityMeasurements(channelId);
-
-        // then
-        verify(electricityMeterLogDao).deleteUncalculatedElectricityMeasurements(channelId);
         verifyNoMoreInteractions(electricityMeterLogDao);
         verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
     }
@@ -529,25 +496,6 @@ public class DefaultMeasurableItemsRepositoryTest {
     }
 
     @Test
-    public void shouldGetOlderUncalculatedImpulseCounterMeasurement() {
-        // given
-        int channelId = 2;
-        long timestamp = 3L;
-        ImpulseCounterMeasurementItem expected = mock(ImpulseCounterMeasurementItem.class);
-        when(impulseCounterLogDao.getOlderUncalculatedImpulseCounterMeasurement(channelId, timestamp)).thenReturn(expected);
-
-        // when
-        ImpulseCounterMeasurementItem result = measurableItemsRepository.getOlderUncalculatedImpulseCounterMeasurement(channelId, timestamp);
-
-        // then
-        assertSame(expected, result);
-
-        verify(impulseCounterLogDao).getOlderUncalculatedImpulseCounterMeasurement(channelId, timestamp);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
     public void shouldGetImpulseCounterMeasurementsCursor() {
         // given
         int channelId = 2;
@@ -578,20 +526,6 @@ public class DefaultMeasurableItemsRepositoryTest {
 
         // then
         verify(impulseCounterLogDao).deleteImpulseCounterMeasurements(channelId);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteUncalculatedImpulseCounterMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteUncalculatedImpulseCounterMeasurements(channelId);
-
-        // then
-        verify(impulseCounterLogDao).deleteUncalculatedImpulseCounterMeasurements(channelId);
         verifyNoMoreInteractions(impulseCounterLogDao);
         verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
     }
