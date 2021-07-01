@@ -67,4 +67,5 @@ dependencies {
     implementation files('src/main/libs/jsoup-1.13.1.jar')
     implementation "io.reactivex.rxjava3:rxjava:3.0.8"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    compile group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
 }
