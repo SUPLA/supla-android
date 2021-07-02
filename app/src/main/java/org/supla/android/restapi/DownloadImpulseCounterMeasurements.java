@@ -38,19 +38,6 @@ public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasu
         return new ImpulseCounterMeasurementItem((ImpulseCounterMeasurementItem) src);
     }
 
-    protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
-            SQLiteDatabase db, int channelId, long timestamp) {
-        return getMeasurementsDbH().getOlderUncalculatedImpulseCounterMeasurement(
-                channelId,
-                timestamp);
-    }
-
-    protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
-                                                             int channelId) {
-        getMeasurementsDbH().deleteUncalculatedImpulseCounterMeasurements(
-                channelId);
-    }
-
     protected void addIncrementalMeasurement(SQLiteDatabase db,
                                              IncrementalMeasurementItem item) {
         getMeasurementsDbH().addImpulseCounterMeasurement((ImpulseCounterMeasurementItem) item);

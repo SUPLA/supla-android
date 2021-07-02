@@ -52,6 +52,7 @@ import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -357,6 +358,19 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     }
 
+    public String doubleToString(double dbl, String unit) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(20);
+        df.setMinimumFractionDigits(2);
+        String sdbl = df.format(dbl);
+
+        if (unit == null) {
+            return sdbl;
+        }
+
+        return sdbl + " " + unit;
+    }
+
     public void channelDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
@@ -510,24 +524,23 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             }
 
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
-            tvFreq.setText(format("%.2f Hz", freq));
-            tvVoltage.setText(format("%.2f V", voltage));
-            tvCurrent.setText(format("%."
-                    + Integer.toString(em.currentIsOver65A() ? 2 : 3) + "f A", current));
-            tvPowerActive.setText(format("%.5f W", powerActive));
-            tvPowerReactive.setText(format("%.5f var", powerReactive));
-            tvPowerApparent.setText(format("%.5f VA", powerApparent));
-            tvPowerFactor.setText(format("%.3f", powerFactor));
-            tvPhaseAngle.setText(format("%.2f\u00B0", phaseAngle));
-            tvPhaseForwardActiveEnergy.setText(format("%.5f kWh", totalFAE));
-            tvPhaseReverseActiveEnergy.setText(format("%.5f kWh", totalRAE));
-            tvPhaseForwardReactiveEnergy.setText(format("%.5f kvarh", totalFRE));
-            tvPhaseReverseReactiveEnergy.setText(format("%.5f kvarh", totalRRE));
+            tvFreq.setText(doubleToString(freq, "Hz"));
+            tvVoltage.setText(doubleToString(voltage, "V"));
+            tvCurrent.setText(doubleToString(current, "A"));
+            tvPowerActive.setText(doubleToString(powerActive, "W"));
+            tvPowerReactive.setText(doubleToString(powerReactive, "var"));
+            tvPowerApparent.setText(doubleToString(powerApparent, "VA"));
+            tvPowerFactor.setText(doubleToString(powerFactor, null));
+            tvPhaseAngle.setText(doubleToString(phaseAngle, "\u00B0"));
+            tvPhaseForwardActiveEnergy.setText(doubleToString(totalFAE, "kWh"));
+            tvPhaseReverseActiveEnergy.setText(doubleToString(totalRAE, "kWh"));
+            tvPhaseForwardReactiveEnergy.setText(doubleToString(totalFRE, "kvarh"));
+            tvPhaseReverseReactiveEnergy.setText(doubleToString(totalRRE, "kvarh"));
 
-            tvPhaseForwardActiveEnergyBalanced.setText(format("%.5f kWh",
-                    em.getTotalForwardActiveEnergyBalanced()));
-            tvPhaseReverseActiveEnergyBalanced.setText(format("%.5f kWh",
-                    em.getTotalReverseActiveEnergyBalanced()));
+            tvPhaseForwardActiveEnergyBalanced.setText(
+                    doubleToString(em.getTotalForwardActiveEnergyBalanced(), "kWh"));
+            tvPhaseReverseActiveEnergyBalanced.setText(
+                    doubleToString(em.getTotalReverseActiveEnergyBalanced(), "kWh"));
 
             chartHelper.setTotalActiveEnergy(
                     em.getTotalActiveEnergyForAllPhases(chartHelper.isProductionDataSource()));
@@ -573,8 +586,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                         || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ) {
                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
                     if (client != null) {
-                        SuplaApp.Vibrate(getContext());
-                        client.open(getRemoteId(), false, channel.getValue().hiValue() ? 0 : 1);
+                        client.turnOnOff(getContext(), !channel.getValue().hiValue(),
+                                channel.getRemoteId(), false, channel.getFunc(),
+                                true);
                     }
                 }
             }

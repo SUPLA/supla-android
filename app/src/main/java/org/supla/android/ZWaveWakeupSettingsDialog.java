@@ -95,7 +95,7 @@ public class ZWaveWakeupSettingsDialog implements DialogInterface.OnDismissListe
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
                         if (timeoutTimer != null) {
-                            startTimeoutTimer();
+                            stopTimeoutTimer();
                             showError(activity.getResources().
                                     getString(R.string.zwave_waiting_for_resposne_timeout));
                         }

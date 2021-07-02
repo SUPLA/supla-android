@@ -459,7 +459,13 @@ public abstract class ChannelBase extends DbItem {
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
             case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                img_idx = R.drawable.electricitymeter;
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.powerstation;
+                    break;
+                    default:
+                        img_idx = R.drawable.electricitymeter;
+                }
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:

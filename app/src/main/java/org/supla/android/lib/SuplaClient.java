@@ -18,20 +18,22 @@ package org.supla.android.lib;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
 import org.supla.android.Preferences;
+import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 
 import java.io.BufferedReader;
@@ -370,6 +372,52 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean turnOnOff(Context context, boolean turnOn,
+                             int remoteId, boolean group, int channelFunc, boolean vibrate) {
+        if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH)) {
+            if (turnOn) {
+                DbHelper helper = DbHelper.getInstance(context);
+                if (helper == null) {
+                    return false;
+                }
+                Channel channel = helper.getChannel(remoteId);
+                if (channel == null) {
+                    return false;
+                }
+                if (!channel.getValue().hiValue()
+                        && channel.getValue().overcurrentRelayOff()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(android.R.string.dialog_alert_title);
+                    builder.setMessage(R.string.overcurrent_question);
+
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        dialog.dismiss();
+
+                        if (vibrate) {
+                            SuplaApp.Vibrate(context);
+                        }
+                        open(remoteId, group, 1);
+                    });
+
+                    builder.setNeutralButton(R.string.no,
+                            (dialog, id) -> dialog.cancel());
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    return true;
+                }
+            }
+
+            if (vibrate) {
+                SuplaApp.Vibrate(context);
+            }
+            open(remoteId, group, turnOn ? 1 : 0);
+            return true;
+        }
+
+        return false;
+    }
 
     public void superUserAuthorizationRequest(String email, String password) {
         lockClientPtr();

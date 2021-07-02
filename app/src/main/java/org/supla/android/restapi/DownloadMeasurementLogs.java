@@ -45,6 +45,10 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
 
+    protected long getMaxTimestampInitialOffset() {
+        return 1;
+    }
+
     protected void onFirstItem(SQLiteDatabase db) throws JSONException {
     }
 
@@ -94,7 +98,11 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             }
         }
 
-        AfterTimestamp = getMaxTimestamp() + 1;
+        AfterTimestamp = getMaxTimestamp() + getMaxTimestampInitialOffset();
+        if (AfterTimestamp <= 0) {
+            AfterTimestamp = 1;
+        }
+
         int LocalTotalCount = getLocalTotalCount();
         Double percent = 0d;
 

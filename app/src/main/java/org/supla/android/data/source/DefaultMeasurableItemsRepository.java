@@ -74,11 +74,6 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
     }
 
     @Override
-    public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(int channelId, long timestamp) {
-        return electricityMeterLogDao.getOlderUncalculatedElectricityMeasurement(channelId, timestamp);
-    }
-
-    @Override
     public void addElectricityMeasurement(ElectricityMeasurementItem emi) {
         electricityMeterLogDao.addElectricityMeasurement(emi);
     }
@@ -91,11 +86,6 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
     @Override
     public void deleteElectricityMeasurements(int channelId) {
         electricityMeterLogDao.deleteElectricityMeasurements(channelId);
-    }
-
-    @Override
-    public void deleteUncalculatedElectricityMeasurements(int channelId) {
-        electricityMeterLogDao.deleteUncalculatedElectricityMeasurements(channelId);
     }
 
     @Override
@@ -194,11 +184,6 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
     }
 
     @Override
-    public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(int channelId, long timestamp) {
-        return impulseCounterLogDao.getOlderUncalculatedImpulseCounterMeasurement(channelId, timestamp);
-    }
-
-    @Override
     public Cursor getImpulseCounterMeasurements(int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
         return impulseCounterLogDao.getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
     }
@@ -206,10 +191,5 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
     @Override
     public void deleteImpulseCounterMeasurements(int channelId) {
         impulseCounterLogDao.deleteImpulseCounterMeasurements(channelId);
-    }
-
-    @Override
-    public void deleteUncalculatedImpulseCounterMeasurements(int channelId) {
-        impulseCounterLogDao.deleteUncalculatedImpulseCounterMeasurements(channelId);
     }
 }

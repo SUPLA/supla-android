@@ -84,35 +84,6 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
         }
     }
 
-    public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(int channelId, long timestamp) {
-        String[] projection = {
-                SuplaContract.ElectricityMeterLogEntry._ID,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT
-        };
-
-        return getItem(ElectricityMeasurementItem::new, projection, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP, timestamp),
-                key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED, 0));
-    }
-
     public Cursor getElectricityMeasurementsCursor(int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
         return read(sqLiteDatabase -> {
             String sql = "SELECT SUM(" + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PHASE1_FAE + ")" +
@@ -166,9 +137,4 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
         delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId));
     }
 
-    public void deleteUncalculatedElectricityMeasurements(int channelId) {
-        delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED, 0),
-                key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId));
-    }
 }

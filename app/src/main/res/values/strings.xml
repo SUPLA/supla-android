@@ -429,4 +429,6 @@
     <string translatable="false" name="channel_name">Channel name</string>
     <string translatable="false" name="location_name">Location name</string>
     <string translatable="false" name="str_default">Default</string>
+    <string translatable="false" name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
+    <string translatable="false" name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
 </resources>
