@@ -358,19 +358,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     }
 
-    public String doubleToString(double dbl, String unit) {
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(20);
-        df.setMinimumFractionDigits(2);
-        String sdbl = df.format(dbl);
-
-        if (unit == null) {
-            return sdbl;
-        }
-
-        return sdbl + " " + unit;
-    }
-
     public void channelDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
@@ -523,24 +510,40 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 }
             }
 
+            SuplaFormatter formatter = new SuplaFormatter();
+
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
-            tvFreq.setText(doubleToString(freq, "Hz"));
-            tvVoltage.setText(doubleToString(voltage, "V"));
-            tvCurrent.setText(doubleToString(current, "A"));
-            tvPowerActive.setText(doubleToString(powerActive, "W"));
-            tvPowerReactive.setText(doubleToString(powerReactive, "var"));
-            tvPowerApparent.setText(doubleToString(powerApparent, "VA"));
-            tvPowerFactor.setText(doubleToString(powerFactor, null));
-            tvPhaseAngle.setText(doubleToString(phaseAngle, "\u00B0"));
-            tvPhaseForwardActiveEnergy.setText(doubleToString(totalFAE, "kWh"));
-            tvPhaseReverseActiveEnergy.setText(doubleToString(totalRAE, "kWh"));
-            tvPhaseForwardReactiveEnergy.setText(doubleToString(totalFRE, "kvarh"));
-            tvPhaseReverseReactiveEnergy.setText(doubleToString(totalRRE, "kvarh"));
+            tvFreq.setText(formatter.doubleToStringWithUnit(freq,
+                    "Hz", 2));
+            tvVoltage.setText(formatter.doubleToStringWithUnit(voltage,
+                    "V", 2));
+            tvCurrent.setText(formatter.doubleToStringWithUnit(current,
+                    "A", 3));
+            tvPowerActive.setText(formatter.doubleToStringWithUnit(powerActive,
+                    "W", 5));
+            tvPowerReactive.setText(formatter.doubleToStringWithUnit(powerReactive,
+                    "var", 5));
+            tvPowerApparent.setText(formatter.doubleToStringWithUnit(powerApparent,
+                    "VA", 5));
+            tvPowerFactor.setText(formatter.doubleToStringWithUnit(powerFactor,
+                    null, 3));
+            tvPhaseAngle.setText(formatter.doubleToStringWithUnit(phaseAngle,
+                    "\u00B0", 2));
+            tvPhaseForwardActiveEnergy.setText(formatter.doubleToStringWithUnit(totalFAE,
+                    "kWh", 5));
+            tvPhaseReverseActiveEnergy.setText(formatter.doubleToStringWithUnit(totalRAE,
+                    "kWh", 5));
+            tvPhaseForwardReactiveEnergy.setText(formatter.doubleToStringWithUnit(totalFRE,
+                    "kvarh", 5));
+            tvPhaseReverseReactiveEnergy.setText(formatter.doubleToStringWithUnit(totalRRE,
+                    "kvarh", 5));
 
             tvPhaseForwardActiveEnergyBalanced.setText(
-                    doubleToString(em.getTotalForwardActiveEnergyBalanced(), "kWh"));
+                    formatter.doubleToStringWithUnit(em.getTotalForwardActiveEnergyBalanced(),
+                            "kWh", 5));
             tvPhaseReverseActiveEnergyBalanced.setText(
-                    doubleToString(em.getTotalReverseActiveEnergyBalanced(), "kWh"));
+                    formatter.doubleToStringWithUnit(em.getTotalReverseActiveEnergyBalanced(),
+                            "kWh", 5));
 
             chartHelper.setTotalActiveEnergy(
                     em.getTotalActiveEnergyForAllPhases(chartHelper.isProductionDataSource()));
