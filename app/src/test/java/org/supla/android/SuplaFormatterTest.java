@@ -32,11 +32,7 @@ public class SuplaFormatterTest extends TestCase  {
 
     public void testDoubleToStringConversionWithUnit() {
         String p = new DecimalFormat().format(1.2).equals("1,2") ? "," : ".";
-
-        formatter.doubleToStringWithUnit(5321.000000001,
-                null,
-                5);
-
+        
         assertEquals("321"+p+"00", formatter.doubleToStringWithUnit(
                 321.000000001,
                 null,
