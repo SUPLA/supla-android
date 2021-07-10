@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    tools:context="org.supla.android.CfgActivity">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
+  <data>
+    <import type="android.view.View" />
+    <variable
+        name="viewModel"
+        type="org.supla.android.cfg.CfgViewModel" />
+  </data>
 
+  <RelativeLayout
+      android:id="@+id/cfg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/activity_bg"
+      tools:context="org.supla.android.cfg.CfgActivity">
     <RelativeLayout
         android:id="@+id/cfg_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
-
+      <include
+          android:id="@+id/cfg_basic"
+          android:visibility="@{viewModel.advanced ? View.GONE : View.VISIBLE}"
+          layout="@layout/activity_cfg_basic" />
+      <include
+          android:id="@+id/cfg_advanced"
+          android:visibility="@{viewModel.advanced ? View.VISIBLE : View.GONE}"
+          layout="@layout/activity_cfg_advanced" />
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true">
-
-        <CheckBox
-            android:id="@+id/cfg_cb_advanced"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:buttonTint="@color/channel_btn"
-            android:text="@string/advanced_settings" />
+      <CheckBox
+          android:id="@+id/cfg_cb_advanced"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:layout_marginBottom="10dp"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@={viewModel.advanced}"
+          android:text="@string/advanced_settings"
+          />
     </RelativeLayout>
-
-</RelativeLayout>
+  </RelativeLayout>
+</layout>

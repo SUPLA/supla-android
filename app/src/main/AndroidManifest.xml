@@ -55,7 +55,7 @@
             android:screenOrientation="sensorPortrait"></activity>
 
         <activity
-            android:name=".CfgActivity"
+            android:name=".cfg.CfgActivity"
             android:launchMode="singleTop"
             android:screenOrientation="sensorPortrait"></activity>
 

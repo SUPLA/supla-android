@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -52,7 +53,7 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @SuppressLint("registered")
-public class BaseActivity extends Activity implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
+public class BaseActivity extends AppCompatActivity implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
