@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.supla.android.cfg.CfgViewModel" />
+    </data>
+
+
+    <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
@@ -13,7 +23,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
-
+        <include
+            android:id="@+id/cfg_basic"
+            android:visibility="@{viewModel.advanced ? View.GONE : View.VISIBLE}"
+            layout="@layout/activity_cfg_basic" />
+        <include
+            android:id="@+id/cfg_advanced"
+            android:visibility="@{viewModel.advanced ? View.VISIBLE : View.GONE}"
+            layout="@layout/activity_cfg_advanced" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -30,7 +47,9 @@
             android:layout_marginBottom="10dp"
             android:buttonTint="@color/channel_btn"
             android:text="@string/advanced_settings"
+            android:checked="@={viewModel.advanced}"
             android:textSize="25sp" />
     </RelativeLayout>
 
 </RelativeLayout>
+</layout>

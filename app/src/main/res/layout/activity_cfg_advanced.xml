@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <data/>
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.supla.android.cfg.CfgViewModel" />
+    </data>
+
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +31,7 @@
         android:layout_marginRight="25dp"
         android:inputType="textUri"
         android:padding="5dp"
+        android:text="@={viewModel.cfgData.serverAddr}"
         android:textSize="14sp" />
 
     <TextView
@@ -51,6 +59,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="25dp"
         android:padding="5dp"
+        android:text="@={`` + viewModel.cfgData.accessID}"
         android:textSize="14sp" />
 
     <TextView
@@ -78,6 +87,7 @@
         android:layout_marginRight="25dp"
         android:inputType="textPassword"
         android:padding="5dp"
+        android:text="@={viewModel.cfgData.accessIDpwd}"
         android:textSize="14sp" />
 
     <TextView
@@ -106,14 +116,16 @@
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cfg_save_adv"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_below="@+id/cfg_label_access_pwd"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:enabled="@{viewModel.saveEnabled}"
+        android:onClick="@{() -> viewModel.onSaveConfig()}"
         android:background="@drawable/btnok" />
 
 </RelativeLayout>
