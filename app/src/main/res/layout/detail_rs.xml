@@ -61,13 +61,13 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/rsBtnUp"
                         android:layout_width="85dp"
                         android:layout_height="79dp"
                         android:background="@drawable/rs_up" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/rsBtnDown"
                         android:layout_width="85dp"
                         android:layout_height="75dp"
@@ -80,7 +80,7 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/rsBtnStop"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
@@ -94,13 +94,13 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/rsBtnOpen"
                         android:layout_width="85dp"
                         android:layout_height="79dp"
                         android:background="@drawable/rs_open" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/rsBtnClose"
                         android:layout_width="85dp"
                         android:layout_height="75dp"

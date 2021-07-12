@@ -84,7 +84,7 @@
                 android:layout_weight="0"
                 android:background="@drawable/rounded_white_btn">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnGetNodeList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -121,14 +121,14 @@
             android:layout_marginRight="20dp"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAddNodeLeft"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:background="@drawable/zwave_add" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAddNodeRight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -168,13 +168,13 @@
             android:layout_weight="0"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRemoveNodeLeft"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/zwave_remove" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRemoveNodeRight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -214,14 +214,14 @@
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnResetAndClearLeft"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/zwave_reset"
                 android:textColor="#ffff0000" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnResetAndClearRight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

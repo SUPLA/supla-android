@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/diw_settings_bg">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/diwBtnInfo"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -18,7 +18,7 @@
         android:background="@drawable/vlinfo"
         android:visibility="visible" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/diwBtnOK"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -112,7 +112,7 @@
                     android:orientation="horizontal"
                     android:layout_weight="1">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/diwCfgInMonostable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/diwCfgInBistable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

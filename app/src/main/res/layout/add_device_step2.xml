@@ -51,7 +51,7 @@
             android:textSize="18sp"
             android:visibility="gone"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_edit_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -82,7 +82,7 @@
             android:padding="5dp"
             android:textSize="18sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_look_button"
             android:layout_width="30dp"
             android:layout_height="30dp"

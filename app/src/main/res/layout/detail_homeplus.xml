@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:visibility="visible">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/hpBtnSettings"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -52,7 +52,7 @@
             android:layout_marginTop="0dp"
             android:background="@drawable/heatpollogo" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/hpBtnSchedule"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -100,7 +100,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnTurboMinus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -117,7 +117,7 @@
                     android:text="TextView"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnTurboPlus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -139,7 +139,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnWaterMaxMinus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -156,7 +156,7 @@
                     android:text="TextView"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnWaterMaxPlus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -178,7 +178,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnEcoReductionMinus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -195,7 +195,7 @@
                     android:text="TextView"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnEcoReductionPlus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -217,7 +217,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnAutoMinus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -234,7 +234,7 @@
                     android:text="TextView"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnAutoPlus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -256,7 +256,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnEcoMinus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -273,7 +273,7 @@
                     android:text="TextView"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/hpBtnEcoPlus"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -375,7 +375,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnOnOff"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -393,7 +393,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnNormal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -404,7 +404,7 @@
                                 android:text="@string/hp_normal"
                                 android:textColor="@android:color/white" />
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnEco"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -425,7 +425,7 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnTurbo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -435,7 +435,7 @@
                                 android:text="@string/hp_turbo"
                                 android:textColor="@android:color/white" />
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnAuto"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -460,14 +460,14 @@
                             android:gravity="center_vertical|center_horizontal"
                             android:orientation="vertical">
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnPlus"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_marginBottom="20dp"
                                 android:background="@drawable/hp_plus" />
 
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/hpBtnMinus"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"

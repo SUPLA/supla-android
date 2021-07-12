@@ -24,7 +24,7 @@
             android:textColor="@color/wake_up_settings_infotitle"
             android:textSize="20sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -166,14 +166,14 @@
             android:layout_marginRight="5dp"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@android:string/cancel" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnOK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -24,7 +24,7 @@
             android:textColor="@color/channelstate_infotitle"
             android:textSize="25sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -548,7 +548,7 @@
         </LinearLayout>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnReset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
