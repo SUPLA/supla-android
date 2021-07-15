@@ -1,11 +1,8 @@
 package org.supla.android.cfg
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import kotlin.properties.Delegates
 import androidx.lifecycle.MutableLiveData
-import org.supla.android.SuplaApp
 
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
