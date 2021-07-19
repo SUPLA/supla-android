@@ -24,6 +24,9 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -40,8 +43,24 @@ public abstract class ChannelBase extends DbItem {
     private int UserIconId;
     private int Flags;
 
+    private TemperaturePresenterFactory temperaturePresenterFactory;
+
+    // Special magic constant used to represent temperature value representing
+    // that temperature data is not available. This should be done differently
+    // at some point in future.
+    public final static int TEMPERATURE_NA_VALUE = -273;
+
+    public  ChannelBase() {
+        temperaturePresenterFactory = SuplaApp.getApp();
+    }
+
+    public ChannelBase(TemperaturePresenterFactory tpFact) {
+        temperaturePresenterFactory = tpFact;
+    }
+
+
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
                                                                      Double measuredTempTo,
                                                                      Double presetTempFrom,
                                                                      Double presetTempTo,
@@ -64,27 +83,26 @@ public abstract class ChannelBase extends DbItem {
 
         String measured;
         String preset;
+        TemperaturePresenter tp = getTemperaturePresenter();
 
-        if (measuredTempFrom != null && measuredTempFrom > -273) {
-            measured = String.format("%.2f", measuredTempFrom)
-                    + (char) 0x00B0;
-            if (measuredTempTo != null && measuredTempTo > -273) {
-                measured += String.format(" - %.2f", measuredTempTo)
-                        + (char) 0x00B0;
+        if (measuredTempFrom != null && measuredTempFrom > TEMPERATURE_NA_VALUE) {
+            measured = tp.getConvertedValue(measuredTempFrom) + tp.getUnitString();
+            if (measuredTempTo != null && measuredTempTo > TEMPERATURE_NA_VALUE) {
+                measured += " - " + tp.getConvertedValue(measuredTempTo) + tp.getUnitString();
             }
         } else {
-            measured = "---" + (char) 0x00B0;
+            measured = "---" + tp.getUnitString();
         }
 
-        if (presetTempFrom != null && presetTempFrom > -273) {
-            preset = "/" + Integer.toString(presetTempFrom.intValue())
-                    + (char) 0x00B0;
-            if (presetTempTo != null && presetTempTo > -273) {
-                preset += " - " + Integer.toString(presetTempTo.intValue())
-                        + (char) 0x00B0;
+        if (presetTempFrom != null && presetTempFrom > TEMPERATURE_NA_VALUE) {
+            preset = "/" + Integer.toString((int)tp.getConvertedValue(presetTempFrom))
+                    + tp.getUnitString();
+            if (presetTempTo != null && presetTempTo > TEMPERATURE_NA_VALUE) {
+                preset += " - " + Integer.toString((int)tp.getConvertedValue(presetTempTo))
+                        + tp.getUnitString();
             }
         } else {
-            preset = "/---" + (char) 0x00B0;
+            preset = "/---" + tp.getUnitString();
         }
 
         SpannableString ss = new SpannableString(measured + preset);
@@ -102,7 +120,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
                                                                      Double measuredTempTo,
                                                                      Double presetTempFrom,
                                                                      Double presetTempTo) {
@@ -113,7 +131,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
                                                                      Double presetTemp) {
         return getHumanReadableThermostatTemperature(measuredTemp,
                 null, presetTemp, null);
@@ -580,8 +598,8 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
                 if (getOnLine()
-                        && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
+                        && value.getTemp(getFunc()) >= TEMPERATURE_NA_VALUE) {
+                    return getTemperaturePresenter().formattedWithUnit(value, this);
                 } else {
                     return "---";
                 }
@@ -598,8 +616,8 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 double temp = value.getTemp(getFunc());
                 if (getOnLine()
-                        && temp >= -273) {
-                    return String.format("%.1f\u00B0", temp);
+                        && temp >= TEMPERATURE_NA_VALUE) {
+                    return getTemperaturePresenter().formattedWithUnit(value, this);
                 } else {
                     return "---";
                 }
@@ -693,6 +711,11 @@ public abstract class ChannelBase extends DbItem {
 
         return null;
     }
+
+    protected TemperaturePresenter getTemperaturePresenter() {
+        return temperaturePresenterFactory.getTemperaturePresenter();
+    }
+
 
     public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
 

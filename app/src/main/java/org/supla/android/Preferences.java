@@ -26,6 +26,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 
+import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 
@@ -49,6 +50,7 @@ public class Preferences {
     private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
     private static final String pref_brightness_picker_type_slider
             = "pref_brightness_picker_type_slider";
+    private static final String pref_temperature_unit = "pref_temperature_unit";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -263,5 +265,24 @@ public class Preferences {
             return _prefs.getBoolean(pref_brightness_picker_type_slider, false);
         }
         return null;
+    }
+
+    public TemperatureUnit getTemperatureUnit() {
+        String v = _prefs.getString(pref_temperature_unit, "C");
+        if (v.length() < 1) v = "C";
+        switch (v.charAt(0)) {
+            case 'F':
+                return TemperatureUnit.FAHRENHEIT;
+            default:
+                return TemperatureUnit.CELSIUS;
+        }
+    }
+    public void setTemperatureUnit(TemperatureUnit u) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        switch(u) {
+            case FAHRENHEIT: ed.putString(pref_temperature_unit, "F"); break;
+            case CELSIUS: ed.putString(pref_temperature_unit, "C"); break;
+        }
+        ed.apply();
     }
 }

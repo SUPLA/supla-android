@@ -24,6 +24,9 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
@@ -42,6 +45,9 @@ public class Channel extends ChannelBase {
     private short ProductID;
     private int DeviceID;
     private int position;
+
+    public Channel() { super(); }
+    public Channel(TemperaturePresenterFactory p) { super(p); }
 
     public int getChannelId() {
         return getRemoteId();
@@ -214,7 +220,7 @@ public class Channel extends ChannelBase {
     }
 
     public double getTemp() {
-        return Value != null ? Value.getTemp(getFunc()) : -273;
+        return Value != null ? getTemperaturePresenter().getTemp(Value, this) : TEMPERATURE_NA_VALUE;
     }
 
     public double getDistance() {
