@@ -233,7 +233,7 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
     }
 
     public CfgRepository getCfgRepository() {
-        return new PrefsCfgRepositoryImpl(this, DbHelper.getInstance(this));
+        return new PrefsCfgRepositoryImpl(this);
     }
 
     public TemperaturePresenter getTemperaturePresenter() {

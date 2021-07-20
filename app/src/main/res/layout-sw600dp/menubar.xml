@@ -7,9 +7,9 @@
     android:background="@color/menubar">
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/menubutton"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
@@ -52,9 +52,9 @@
         android:textSize="30sp"
         android:visibility="invisible" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/groupbutton"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentEnd="true"

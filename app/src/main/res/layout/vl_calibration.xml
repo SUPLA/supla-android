@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/vl_settings_bg">
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/vlBtnInfo"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -17,7 +17,7 @@
         android:background="@drawable/vlinfo"
         android:visibility="visible" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/vlBtnRestore"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -28,7 +28,7 @@
         android:background="@drawable/vlrestore"
         android:visibility="visible" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/vlBtnOK"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -66,7 +66,7 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgDmAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgDm1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_mode1" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgDm2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_mode2" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgDm3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgBoostAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                 android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgBoostYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_yes" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgBoostNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
             android:layout_marginBottom="-1dp"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgOpRange"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -188,7 +188,7 @@
                 android:text="@string/cfg_op_range"
                 android:textColor="@android:color/black" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/vlCfgBoost"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -241,7 +241,7 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/vlCfgLedImgOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -251,7 +251,7 @@
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ledonwhite" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/vlCfgLedImgOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -261,7 +261,7 @@
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ledoff" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/vlCfgLedImgAlwaysOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

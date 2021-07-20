@@ -39,7 +39,7 @@
                 android:visibility="visible"
                 android:weightSum="2">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbTabBtn_RGB"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -48,7 +48,7 @@
                     android:text="RGB"
                     android:textSize="@dimen/rgb_detail_tab_btn_text" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbTabBtn_Dimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -71,7 +71,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/rgbwBtnPowerOnOff"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -99,7 +99,7 @@
                 android:visibility="visible"
                 android:weightSum="0">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbwBtnInfo"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -112,7 +112,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbwBtnSettings"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -134,7 +134,7 @@
                 android:visibility="visible"
                 android:weightSum="2">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbTabBtn_Wheel"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -144,7 +144,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/rgb_detail_tab_btn_text" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/rgbTabBtn_Slider"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"

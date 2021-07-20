@@ -26,11 +26,13 @@ interface CfgRepository {
     fun storeCfg(cfg: CfgData)
 }
 
-class PrefsCfgRepositoryImpl(ctx: Context, private val helper: DbHelper): CfgRepository {
+class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val prefs: Preferences
+    private val helper: DbHelper
 
     init {
         prefs = Preferences(ctx)
+	helper = DbHelper.getInstance(ctx)
     }
 
     override fun getCfg(): CfgData {

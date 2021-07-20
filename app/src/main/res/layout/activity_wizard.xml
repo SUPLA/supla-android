@@ -28,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/menubar">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/wizard_next_left_part"
             android:layout_width="@dimen/wizard_btnnextl_width"
             android:layout_height="40dp"
@@ -42,7 +42,7 @@
             android:textColor="@color/activity_status_bg_normal" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/wizard_next_middle_part"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -55,7 +55,7 @@
             android:textAllCaps="false"
             android:textColor="@color/wizart_next_btn_text_enabled" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/wizard_next_right_part"
             android:layout_width="@dimen/wizard_btnnextr_width"
             android:layout_height="40dp"

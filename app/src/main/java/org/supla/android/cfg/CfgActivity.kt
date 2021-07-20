@@ -18,30 +18,44 @@ package org.supla.android.cfg
  */
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-import org.supla.android.R
-import org.supla.android.NavigationActivity
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.getSystemService
-import androidx.core.view.forEach
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import org.supla.android.*
+import org.supla.android.NavigationActivity.INTENTSENDER
+import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
+import org.supla.android.NavigationActivity.showStatus
 import org.supla.android.databinding.ActivityCfgBinding
-import org.supla.android.SuplaApp
 
 
-class CfgActivity: NavigationActivity() {
+//NavigationActivity
+class CfgActivity: AppCompatActivity() {
 
     private lateinit var viewModel: CfgViewModel
     private lateinit var binding: ActivityCfgBinding
 
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
-        viewModel = CfgViewModel(PrefsCfgRepositoryImpl(this, dbHelper))
-        setContentView(R.layout.activity_cfg)
+
+	viewModel = CfgViewModel(PrefsCfgRepositoryImpl(this))
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
+            binding.viewModel = viewModel
+            binding.lifecycleOwner = this
+            binding.cfgAdvanced.viewModel = viewModel
+            binding.cfgBasic.viewModel = viewModel
+
+            viewModel.nextAction.observe(this) {
+                it?.let { handleNavigationDirective(it) }
+            }
+            viewModel.didSaveConfig.observe(this) {
+                it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
+            }
+
 
         var type = SuplaApp.getApp().typefaceOpenSansRegular
         val edbg = resources.getDrawable(R.drawable.rounded_edittext)
@@ -71,36 +85,8 @@ class CfgActivity: NavigationActivity() {
         binding.cfgCbAdvanced.setTypeface(type)
     }
 
-    override fun Inflate(resID: Int, root: ViewGroup?): View {
-        /*
-         NavigationActivity overrides a lot on view creation code path and discards normal
-         mvvm binding configuration on its way. While the ultimate solution is to refactor
-         the whole navigation code to mvvm, currently the project changes besides cfg activity
-         should be minimal so we need this hack for now.
-         */
-
-        if(resID == R.layout.activity_cfg) {
-            binding = DataBindingUtil.inflate(layoutInflater, resID, root, true)
-            binding.viewModel = viewModel
-            binding.lifecycleOwner = this
-            binding.cfgAdvanced.viewModel = viewModel
-            binding.cfgBasic.viewModel = viewModel
-
-            viewModel.nextAction.observe(this) {
-                it?.let { handleNavigationDirective(it) }
-            }
-            viewModel.didSaveConfig.observe(this) {
-                it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
-            }
-
-            return binding.root
-        } else {
-            return super.Inflate(resID, root)
-        }
-    }
-
     override fun onBackPressed() {
-        showMain(this)
+        showMain()
         finish()
     }
 
@@ -117,13 +103,49 @@ class CfgActivity: NavigationActivity() {
         when(what) {
             CfgViewModel.NavigationFlow.CREATE_ACCOUNT -> showCreateAccount()
             CfgViewModel.NavigationFlow.STATUS -> {
-                showStatus(this)
+                showStatus()
                 finish()
             }
             CfgViewModel.NavigationFlow.MAIN -> {
-                showMain(this)
+                showMain()
                 finish()
             }
         }
     }
+
+
+    // Temporary navigation methods
+    private fun showMain() {
+
+        val client = SuplaApp.getApp().suplaClient
+
+        if (client != null
+            && client.registered()
+        ) {
+            showActivity(this, MainActivity::class.java, 0)
+        } else {
+            showStatus()
+        }
+
+
+    }
+
+    private fun showCreateAccount() {
+        showActivity(this, CreateAccountActivity::class.java, 0)
+
+    }
+
+    private fun showStatus() {
+        showActivity(this, StatusActivity::class.java, 0)
+
+    }
+
+    private fun showActivity(sender: Activity, cls: Class<*>, flags: Int) {
+        val i = Intent(sender.baseContext, cls)
+        i.flags = if (flags == 0) Intent.FLAG_ACTIVITY_REORDER_TO_FRONT else flags
+        i.putExtra(INTENTSENDER, if (sender is MainActivity) INTENTSENDER_MAIN else "")
+        sender.startActivity(i)
+        sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    }
+
 }

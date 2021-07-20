@@ -177,6 +177,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
         btn.setText(getResources().getString(textResId).toUpperCase());
+	btn.setBackground(null);
         btn.setTag(id);
         buttons.add(btn);
         ll.addView(btn);
@@ -202,6 +203,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
+	    btn.setBackground(null);
             btn.setOnClickListener(this);
             btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);
