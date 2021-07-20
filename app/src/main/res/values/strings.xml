@@ -93,6 +93,7 @@
     <string name="access_id">ACCESS IDENTIFIER</string>
     <string name="password">PASSWORD</string>
     <string name="email">E-MAIL ADDRESS</string>
+    <string name="temp_unit">TEMPERATURE UNIT</string>
     <string name="advanced_settings">Advanced settings</string>
     <string name="create_account"><u>Create an account</u></string>
 

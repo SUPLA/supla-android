@@ -116,6 +116,49 @@
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
+        <RadioGroup
+            android:id="@+id/groupTemperatureUnit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="25dp"
+            android:padding="5dp"
+            android:layout_below="@id/cfg_label_access_pwd"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/btnCelsius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+		android:textSize="14sp"
+                android:text="°C" />
+
+            <RadioButton
+                android:id="@+id/btnFahrenheit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+		android:textSize="14sp"
+                android:text="°F" />
+        </RadioGroup>
+	
+        <TextView
+            android:id="@+id/cfg_label_temp_unit"
+            android:layout_below="@id/groupTemperatureUnit"
+	    android:layout_alignLeft="@id/groupTemperatureUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_marginTop="4dp"
+	    android:layout_marginLeft="2dp"
+            android:text="@string/temp_unit"
+	    android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"
+            android:textSize="9sp" />
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cfg_save_adv"
         style="@style/Widget.AppCompat.Button.Borderless"
