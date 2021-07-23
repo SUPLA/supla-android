@@ -22,6 +22,7 @@
         android:xlargeScreens="true" />
 
     <application
+        android:name="org.supla.android.SuplaApp"
         android:allowBackup="true"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_descriptor"

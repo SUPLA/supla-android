@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.supla.android.cfg.TemperatureUnit" />
         <variable
             name="viewModel"
             type="org.supla.android.cfg.CfgViewModel" />
@@ -131,13 +132,19 @@
                 android:id="@+id/btnCelsius"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/channel_btn"
+                android:checked="@{viewModel.temperatureUnit == TemperatureUnit.CELSIUS }"
+                android:onClick="@{() -> viewModel.setTemperatureUnit(TemperatureUnit.CELSIUS) }"
                 android:text="°C" />
 
             <RadioButton
                 android:id="@+id/btnFahrenheit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/channel_btn"
                 android:layout_marginLeft="24dp"
+                android:checked="@{viewModel.temperatureUnit == TemperatureUnit.FAHRENHEIT }"
+                android:onClick="@{() -> viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)}"
                 android:text="°F" />
         </RadioGroup>
 	

@@ -59,16 +59,13 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
     }
 
     public static SuplaApp getApp() {
-
-        synchronized (_lck1) {
-
-            if (_SuplaApp == null) {
-                _SuplaApp = new SuplaApp();
-            }
-
-        }
-
         return _SuplaApp;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SuplaApp._SuplaApp = this;
     }
 
     public static void Vibrate(Context context) {
