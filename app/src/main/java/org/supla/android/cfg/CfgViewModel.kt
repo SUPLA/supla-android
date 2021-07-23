@@ -17,6 +17,7 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
@@ -24,27 +25,33 @@ import androidx.lifecycle.MutableLiveData
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN }
+    val cfgData: CfgData = repository.getCfg()
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val advanced = MutableLiveData<Boolean>(false)
     val saveEnabled = MutableLiveData<Boolean>(true)
-    val temperatureUnit = MutableLiveData<TemperatureUnit>(TemperatureUnit.CELSIUS)
+    val _temperatureUnit = MutableLiveData<TemperatureUnit>(cfgData.temperatureUnit)
+    val temperatureUnit: LiveData<TemperatureUnit> = _temperatureUnit
+
     val nextAction = MutableLiveData<NavigationFlow?>()
-    val cfgData: CfgData = repository.getCfg()
+
+    fun setTemperatureUnit(unit: TemperatureUnit) {
+        _temperatureUnit.value = unit
+        cfgData.temperatureUnit = unit
+    }
+
 
     fun onCreateAccount() {
-        android.util.Log.i("SUPLA", "will create account")
         nextAction.value = NavigationFlow.CREATE_ACCOUNT
     }
 
     fun onSaveConfig() {
-        android.util.Log.i("SUPLA", "save config")
         saveEnabled.value = false
         if(cfgData.isDirty.value == true) {
             repository.storeCfg(cfgData)
-            nextAction.value = NavigationFlow.STATUS
             _didSaveConfig.value = true
         }
+        nextAction.value = NavigationFlow.STATUS
     }
 }

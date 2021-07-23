@@ -132,15 +132,21 @@
                 android:id="@+id/btnCelsius"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/channel_btn"
 		android:textSize="35sp"
+                android:checked="@{viewModel.temperatureUnit == TemperatureUnit.CELSIUS }"
+                android:onClick="@{() -> viewModel.setTemperatureUnit(TemperatureUnit.CELSIUS) }"
                 android:text="°C" />
 
             <RadioButton
                 android:id="@+id/btnFahrenheit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/channel_btn"
                 android:layout_marginLeft="24dp"
 		android:textSize="35sp"
+		android:checked="@{viewModel.temperatureUnit == TemperatureUnit.FAHRENHEIT }"
+                android:onClick="@{() -> viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)}"
                 android:text="°F" />
         </RadioGroup>
 	

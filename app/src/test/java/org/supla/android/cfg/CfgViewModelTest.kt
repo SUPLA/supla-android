@@ -31,6 +31,7 @@ import org.mockito.kotlin.*
 class CfgViewModelTest: TestCase() {
 
     private val mockRepository = Mockito.mock(CfgRepository::class.java)
+    private val fakeCfg = CfgData("localhost", 0, "****", "noone@nowhere")
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -43,14 +44,20 @@ class CfgViewModelTest: TestCase() {
 
     @Test
     fun beforeInteactionNoNavigationDecision() {
-        val viewModel = CfgViewModel(mockRepository)
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn fakeCfg
+        }
+        val viewModel = CfgViewModel(repository)
         assertNull("should not be set initially",
                     viewModel.nextAction.value)
     }
 
     @Test
     fun createAccountActionResultsInNavigationToCreateAccountView() {
-        val viewModel = CfgViewModel(mockRepository)
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn fakeCfg
+        }
+        val viewModel = CfgViewModel(repository)
         viewModel.onCreateAccount()
         viewModel.nextAction.observeForever { }
         assertEquals(viewModel.nextAction.value,
@@ -59,7 +66,11 @@ class CfgViewModelTest: TestCase() {
 
     @Test
     fun startsInBasicView() {
-        val viewModel = CfgViewModel(mockRepository)
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn fakeCfg
+        }
+
+        val viewModel = CfgViewModel(repository)
         assertFalse(viewModel.advanced.value!!)
     }
 
@@ -100,7 +111,7 @@ class CfgViewModelTest: TestCase() {
         }
         val viewModel = CfgViewModel(repository)
         assertFalse(viewModel.cfgData.isDirty.value!!)
-        viewModel.cfgData.temperatureUnit = TemperatureUnit.FAHRENHEIT
+        viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
         assertTrue(viewModel.cfgData.isDirty.value!!)
         viewModel.onSaveConfig()
         assertEquals(initialData.serverAddr, storedData!!.serverAddr)
