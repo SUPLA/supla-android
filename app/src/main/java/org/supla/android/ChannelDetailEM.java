@@ -286,6 +286,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             rlButtons2.setVisibility(INVISIBLE);
             setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
+            if (singlePhase) {
+                phase = 1;
+            }
         }
     }
 
