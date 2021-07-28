@@ -26,9 +26,7 @@ public class SuplaFormatter {
         df.setMinimumFractionDigits(2);
         String sdbl = df.format(dbl);
 
-        int a;
-
-        for(a=sdbl.length()-1;a>=0;a--) {
+        for(int a=sdbl.length()-1;a>=0;a--) {
             char c = sdbl.charAt(a);
 
             if (c == ',' || c == '.') {
