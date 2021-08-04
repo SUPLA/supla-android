@@ -1,0 +1,33 @@
+kind: pipeline
+name: default
+
+steps:
+- name: run_tests
+  image: devel/supla-andrid-ci
+  pull: never
+  commands:
+    - ./gradlew build connectedCheck
+      
+- name: slack
+  image: plugins/slack
+  depends_on: [run_tests]
+  settings:
+    webhook: 
+      from_secret: slack_webhook 
+    channel: github
+    username: drone@supla-android
+
+    # here's the template :)
+    # notice that the repo endpoint is hardcoded to `https://github.com/`.
+    # you may adjust it accordingly.
+    template: >
+      *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`) in {{since build.created}}
+
+      Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> at: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{repo.owner}}/{{repo.name}}/{{ build.branch }}> by: {{ build.author }}
+
+      <{{ build.link }}|Visit build page ↗>
+  when:
+    status: [success, failure]
+    event:
+      exclude:
+        - pull_request
