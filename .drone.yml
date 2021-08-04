@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: connectedCheck
-  image: devel/supla-andrid-ci
+  image: devel/supla-android-ci
   pull: never
   commands:
     - ./gradlew build connectedCheck
