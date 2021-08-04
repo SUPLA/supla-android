@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 
 steps:
-- name: run_tests
+- name: connectedCheck
   image: devel/supla-andrid-ci
   pull: never
   commands:
@@ -10,7 +10,7 @@ steps:
       
 - name: slack
   image: plugins/slack
-  depends_on: [run_tests]
+  depends_on: [connectedCheck]
   settings:
     webhook: 
       from_secret: slack_webhook 
