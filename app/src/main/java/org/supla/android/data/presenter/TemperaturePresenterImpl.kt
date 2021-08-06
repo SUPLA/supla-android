@@ -36,7 +36,7 @@ class TemperaturePresenterImpl(private val config: CfgData): TemperaturePresente
         if(rawValue <= ChannelBase.TEMPERATURE_NA_VALUE) {
             return rawValue // Pass-through special value without conversion.
         }
-        return if(config.temperatureUnit == TemperatureUnit.FAHRENHEIT) {
+        return if(config.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
             toFahrenheit(rawValue)
         } else {
             rawValue
@@ -44,7 +44,7 @@ class TemperaturePresenterImpl(private val config: CfgData): TemperaturePresente
     }
 
     override fun getUnitString(): String {
-        return if (config.temperatureUnit==TemperatureUnit.FAHRENHEIT) "\u00B0F" else "\u00B0C"
+        return if (config.temperatureUnit.value==TemperatureUnit.FAHRENHEIT) "\u00B0F" else "\u00B0C"
     }
 
     private fun toFahrenheit(celsiusValue: Double): Double {

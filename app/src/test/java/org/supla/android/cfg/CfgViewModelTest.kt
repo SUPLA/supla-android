@@ -93,12 +93,12 @@ class CfgViewModelTest: TestCase() {
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
         val viewModel = CfgViewModel(repository)
-        viewModel.cfgData.serverAddr = "otherhost"
+        viewModel.cfgData.serverAddr.value = "otherhost"
         viewModel.onSaveConfig()
-        assertEquals("otherhost", storedData!!.serverAddr)
-        assertEquals(initialData.accessID, storedData!!.accessID)
-        assertEquals(initialData.accessIDpwd, storedData!!.accessIDpwd)
-        assertEquals(initialData.email, storedData!!.email)
+        assertEquals("otherhost", storedData!!.serverAddr.value)
+        assertEquals(initialData.accessID.value, storedData!!.accessID.value)
+        assertEquals(initialData.accessIDpwd.value, storedData!!.accessIDpwd.value)
+        assertEquals(initialData.email.value, storedData!!.email.value)
     }
 
     @Test
@@ -110,16 +110,33 @@ class CfgViewModelTest: TestCase() {
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
         val viewModel = CfgViewModel(repository)
-        assertFalse(viewModel.cfgData.isDirty.value!!)
+        assertFalse(viewModel.isDirty.value!!)
         viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
-        assertTrue(viewModel.cfgData.isDirty.value!!)
+        assertTrue(viewModel.isDirty.value!!)
         viewModel.onSaveConfig()
         assertEquals(initialData.serverAddr, storedData!!.serverAddr)
         assertEquals(initialData.accessID, storedData!!.accessID)
         assertEquals(initialData.accessIDpwd, storedData!!.accessIDpwd)
         assertEquals(initialData.email, storedData!!.email)
-        assertEquals(TemperatureUnit.FAHRENHEIT, storedData!!.temperatureUnit)
+        assertEquals(TemperatureUnit.FAHRENHEIT, storedData!!.temperatureUnit.value)
 
+    }
+
+    @Test
+    fun changingEmailAddressClearsServerDataInConfig() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+            "whatever@email.com")
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+        }
+        val vm = CfgViewModel(repository)
+        assertEquals("localhost", vm.cfgData.serverAddr.value)
+        assertEquals(6666, vm.cfgData.accessID.value)
+        assertEquals("pwd", vm.cfgData.accessIDpwd.value)
+        vm.onEmailChange("", 0, 0, 0)
+        assertEquals("", vm.cfgData.serverAddr.value)
+        assertEquals(0, vm.cfgData.accessID.value)
+        assertEquals("", vm.cfgData.accessIDpwd.value)
     }
 
 }

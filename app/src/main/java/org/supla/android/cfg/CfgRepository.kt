@@ -43,11 +43,11 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
     override fun storeCfg(cfg: CfgData) {
         helper.deleteUserIcons() // TODO: I'm not sure if this is the right place for this yet.
-        prefs.serverAddress = cfg.serverAddr
-        prefs.accessID = cfg.accessID
-        prefs.accessIDpwd = cfg.accessIDpwd
-        prefs.email = cfg.email
-        prefs.temperatureUnit = cfg.temperatureUnit
+        prefs.serverAddress = cfg.serverAddr.value
+        prefs.accessID = cfg.accessID.value ?: 0
+        prefs.accessIDpwd = cfg.accessIDpwd.value
+        prefs.email = cfg.email.value
+        prefs.temperatureUnit = cfg.temperatureUnit.value
         prefs.setPreferedProtocolVersion()
     }
 

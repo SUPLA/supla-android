@@ -43,6 +43,7 @@
         android:layout_marginRight="25dp"
         android:inputType="textEmailAddress"
         android:text="@={viewModel.cfgData.email}"
+	android:onTextChanged="@{viewModel::onEmailChange}"
         android:padding="5dp"
         android:textSize="14sp" />
 
