@@ -67,6 +67,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         if (!mInitialized) {
             mInitialized = true;
             setVisibility(GONE);
+            setBackgroundColor(0);
             setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT));
             setOrientation(VERTICAL);
@@ -177,7 +178,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
         btn.setText(getResources().getString(textResId).toUpperCase());
-	btn.setBackground(null);
+	    btn.setBackgroundColor(0);
         btn.setTag(id);
         buttons.add(btn);
         ll.addView(btn);
@@ -203,7 +204,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
-	    btn.setBackground(null);
+	        btn.setBackgroundColor(0);
             btn.setOnClickListener(this);
             btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);
@@ -226,6 +227,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
                     LayoutParams.MATCH_PARENT);
             btn.setLayoutParams(params);
             btn.setTransformationMethod(null);
+            btn.setBackgroundColor(0);
         }
 
     }
