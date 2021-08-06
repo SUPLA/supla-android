@@ -1,6 +1,10 @@
 language: android
 dist: trusty
 
+before_install:
+  - yes | sdkmanager "platforms;android-30"
+  - yes | sdkmanager "build-tools;30.0.3"
+
 notifications:
   slack:
     rooms:
@@ -8,8 +12,8 @@ notifications:
 
 android:
   components:
-    - build-tools-29.0.3
-    - android-29
+    - build-tools-30.0.2
+    - android-30
     - extra
   licenses:
     - android-sdk-preview-license-.+

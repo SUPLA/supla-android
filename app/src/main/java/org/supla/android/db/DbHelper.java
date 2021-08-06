@@ -50,7 +50,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 17;
+    public static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 

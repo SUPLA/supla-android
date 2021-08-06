@@ -155,6 +155,11 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
             fieldMap.put("upd", "1");
         }
 
+        if (fieldMap.get("pro") != null) {
+            // Set protocol to "Supla"
+            fieldMap.put("pro", "0");
+        }
+
         retryCount = 3;
 
         while (retryCount > 0)

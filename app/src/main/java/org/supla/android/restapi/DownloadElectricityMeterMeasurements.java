@@ -57,19 +57,6 @@ public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMea
         return new ElectricityMeasurementItem((ElectricityMeasurementItem) src);
     }
 
-    protected IncrementalMeasurementItem getOlderUncalculatedIncrementalMeasurement(
-            SQLiteDatabase db, int channelId, long timestamp) {
-        return getMeasurementsDbH().getOlderUncalculatedElectricityMeasurement(
-                channelId,
-                timestamp);
-    }
-
-    protected void deleteUncalculatedIncrementalMeasurements(SQLiteDatabase db,
-                                                             int channelId) {
-        getMeasurementsDbH().deleteUncalculatedElectricityMeasurements(
-                channelId);
-    }
-
     protected void addIncrementalMeasurement(SQLiteDatabase db,
                                              IncrementalMeasurementItem item) {
         getMeasurementsDbH().addElectricityMeasurement((ElectricityMeasurementItem) item);

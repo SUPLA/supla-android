@@ -283,6 +283,8 @@ public class SuplaConst {
     public final static int SUPLA_CALCFG_RESULT_DEBUG = 105;
     public final static int SUPLA_CALCFG_RESULT_NOT_SUPPORTED_IN_SLAVE_MODE = 106;
 
+    public final static int SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF = 0x1;
+
     public static String getCaption(int func, Context context) {
 
         int idx = -1;

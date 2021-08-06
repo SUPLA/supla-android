@@ -407,8 +407,8 @@
     <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
     <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
     <string name="diw_cfg_info_in_options">Opcje wejścia</string>
-    <string translatable="false" name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
-    <string translatable="false" name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
+    <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
+    <string name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
     <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
     <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
     <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
@@ -417,4 +417,6 @@
     <string name="channel_name">Nazwa kanału</string>
     <string name="location_name">Nazwa lokalizacji</string>
     <string name="str_default">Domyślnie</string>
+    <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
+    <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
 </resources>

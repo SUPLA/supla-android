@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 
-import org.supla.android.Trace;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
@@ -416,5 +415,12 @@ public class ChannelValue extends DbItem {
 
     public DigiglassValue getDigiglassValue() {
         return new DigiglassValue(getChannelValue());
+    }
+
+    public boolean overcurrentRelayOff() {
+        byte[] value = getChannelValue();
+
+        return value.length > 1
+                && (value[1] & SuplaConst.SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF) > 0;
     }
 }

@@ -89,8 +89,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER + " BIGINT NOT NULL," +
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
                 + " DOUBLE NOT NULL," +
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
-                + " INTEGER NOT NULL," +
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
                 + " INTEGER NOT NULL)";
 
@@ -108,8 +106,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + "_unique_index ON "
                 + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
                 + "(" + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + ", "
-                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
-                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED + ")";
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ")";
 
         execSQL(db, SQL_CREATE_INDEX);
     }
@@ -133,10 +130,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ", "
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT + " "
                 + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COMPLEMENT
-                + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
-                + " WHERE "
-                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
-                + " > 0";
+                + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME;
 
         execSQL(db, SQL_CREATE_EM_VIEW);
     }
@@ -162,8 +156,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED + " REAL NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED + " REAL NULL," +
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED +
-                " INTEGER NOT NULL," +
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT +
                 " INTEGER NOT NULL)";
 
@@ -175,18 +167,13 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP);
 
         createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED);
-
-        createIndex(db, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT);
 
         final String SQL_CREATE_INDEX = "CREATE UNIQUE INDEX "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + "_unique_index ON "
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 + "(" + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + ", "
-                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
-                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
-                + " )";
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + " )";
 
         execSQL(db, SQL_CREATE_INDEX);
     }
@@ -225,10 +212,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT + " "
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
-                + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
-                + " WHERE "
-                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_INCREASE_CALCULATED
-                + " > 0";
+                + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME;
 
         execSQL(db, SQL_CREATE_EM_VIEW);
     }
@@ -350,14 +334,16 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         createImpulseCounterLogTable(db);
     }
 
-    private void upgradeToV11(SQLiteDatabase db) {
-        Trace.d(DbHelper.class.getName(), "upgradeToV11");
-
+    private void recreateTables(SQLiteDatabase db) {
         execSQL(db, "DROP TABLE " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
         execSQL(db, "DROP TABLE " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
 
         createImpulseCounterLogTable(db);
         createElectricityMeterLogTable(db);
+    }
+
+    private void upgradeToV11(SQLiteDatabase db) {
+        recreateTables(db);
     }
 
     private void upgradeToV12(SQLiteDatabase db) {
@@ -375,6 +361,10 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
                 + " ADD COLUMN " + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED
                 + " REAL NULL");
+    }
+
+    private void upgradeToV18(SQLiteDatabase db) {
+        recreateTables(db);
     }
 
     private void recreateViews(SQLiteDatabase db) {
@@ -411,6 +401,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                         break;
                     case 13:
                         upgradeToV14(db);
+                        break;
+                    case 17:
+                        upgradeToV18(db);
                         break;
                 }
             }
@@ -454,20 +447,12 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         return measurableItemsRepository.getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
     }
 
-    public ElectricityMeasurementItem getOlderUncalculatedElectricityMeasurement(int channelId, long timestamp) {
-        return measurableItemsRepository.getOlderUncalculatedElectricityMeasurement(channelId, timestamp);
-    }
-
     public void addElectricityMeasurement(ElectricityMeasurementItem emi) {
         measurableItemsRepository.addElectricityMeasurement(emi);
     }
 
     public void deleteElectricityMeasurements(int channelId) {
         measurableItemsRepository.deleteElectricityMeasurements(channelId);
-    }
-
-    public void deleteUncalculatedElectricityMeasurements(int channelId) {
-        measurableItemsRepository.deleteUncalculatedElectricityMeasurements(channelId);
     }
 
     public Cursor getThermostatMeasurements(int channelId) {
@@ -544,15 +529,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         return measurableItemsRepository.getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
     }
 
-    public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(int channelId, long timestamp) {
-        return measurableItemsRepository.getOlderUncalculatedImpulseCounterMeasurement(channelId, timestamp);
-    }
-
     public void deleteImpulseCounterMeasurements(int channelId) {
         measurableItemsRepository.deleteImpulseCounterMeasurements(channelId);
-    }
-
-    public void deleteUncalculatedImpulseCounterMeasurements(int channelId) {
-        measurableItemsRepository.deleteUncalculatedImpulseCounterMeasurements(channelId);
     }
 }

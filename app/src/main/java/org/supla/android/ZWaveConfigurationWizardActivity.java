@@ -1182,6 +1182,14 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
         setBtnNextPreloaderVisible(false);
 
         if (mSelectedCahnnel != null) {
+
+            for (ZWaveNode n : mNodeList) {
+                if (n.getChannelId() != null
+                    && n.getChannelId().intValue() == mSelectedCahnnel.getChannelId()) {
+                    n.setChannelId(null);
+                }
+            }
+
             int _nodeId = nodeId == 0 ? mAssignedNodeId : nodeId;
             if (_nodeId > 0) {
                 for (ZWaveNode n : mNodeList) {

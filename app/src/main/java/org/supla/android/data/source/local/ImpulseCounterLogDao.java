@@ -68,23 +68,6 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
         }
     }
 
-    public ImpulseCounterMeasurementItem getOlderUncalculatedImpulseCounterMeasurement(int channelId, long timestamp) {
-        String[] projection = {
-                SuplaContract.ImpulseCounterLogEntry._ID,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
-        };
-
-        return getItem(ImpulseCounterMeasurementItem::new, projection, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP, timestamp),
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED, 0));
-    }
-
     public Cursor getImpulseCounterMeasurements(int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
         return read(sqLiteDatabase -> {
             String sql = "SELECT SUM("
@@ -123,12 +106,6 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
 
     public void deleteImpulseCounterMeasurements(int channelId) {
         delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId));
-    }
-
-    public void deleteUncalculatedImpulseCounterMeasurements(int channelId) {
-        delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED, 0),
                 key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId));
     }
 }
