@@ -125,6 +125,7 @@
             android:layout_marginRight="25dp"
             android:padding="5dp"
             android:layout_below="@id/cfg_label_access_pwd"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <RadioButton
@@ -160,6 +161,7 @@
             android:layout_marginTop="4dp"
 	    android:layout_marginLeft="2dp"
             android:text="@string/temp_unit"
+            android:visibility="gone"
 	    android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="9sp" />
