@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -42,7 +43,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener,
-        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener {
+        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener, View.OnClickListener,
+        SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
     private LinearLayout llRollerShutter;
     private SuplaRollerShutter rollerShutter;
@@ -55,7 +57,9 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnStop;
     private Button btnOpen;
     private Button btnClose;
+    private Button btnRecalibrate;
     private Timer delayTimer1;
+    private SuperuserAuthorizationDialog authDialog;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -95,12 +99,14 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnStop = findViewById(R.id.rsBtnStop);
         btnOpen = findViewById(R.id.rsBtnOpen);
         btnClose = findViewById(R.id.rsBtnClose);
+        btnRecalibrate = findViewById(R.id.rsBtnRecalibrate);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
         btnStop.setOnTouchListener(this);
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
+        btnRecalibrate.setOnClickListener(this);
 
         Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
 
@@ -135,6 +141,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             delayTimer1 = null;
         }
 
+        btnRecalibrate.setVisibility(INVISIBLE);
 
         if (!isGroup()) {
             status.setVisibility(View.GONE);
@@ -153,6 +160,11 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             } else {
                 tvPercent.setText(Integer.toString((int) p) + "%");
             }
+
+            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) > 0) {
+                btnRecalibrate.setVisibility(VISIBLE);
+            }
+
         } else {
             status.setVisibility(View.VISIBLE);
 
@@ -321,6 +333,53 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         SuplaApp.Vibrate(getContext());
 
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btnRecalibrate) {
+            authDialog =
+                    new SuperuserAuthorizationDialog(getContext());
+            authDialog.setObject(btnRecalibrate);
+            authDialog.setOnAuthorizarionResultListener(this);
+            authDialog.showIfNeeded();
+        }
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog authDialog,
+                                                 boolean Success, int Code) {
+        if (Success && authDialog.getObject() == btnRecalibrate) {
+
+            authDialog.close();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.recalibration_question);
+
+            builder.setPositiveButton(R.string.yes,
+                    (dialog, id) -> {
+                        SuplaClient client = getClient();
+                        if (client != null) {
+                            client.deviceCalCfgRequest(getRemoteId(),
+                                    false,
+                                    SuplaConst.SUPLA_CALCFG_CMD_RECALIBRATE,
+                                    0,
+                                    null);
+                        }
+                    });
+
+            builder.setNeutralButton(R.string.no,
+                    (dialog, id) -> dialog.cancel());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        this.authDialog = null;
+    }
+
+    @Override
+    public void authorizationCanceled() {
+        authDialog = null;
     }
 
     private class DelayTask extends TimerTask {

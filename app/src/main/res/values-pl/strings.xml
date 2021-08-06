@@ -419,4 +419,5 @@
     <string name="str_default">Domyślnie</string>
     <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
     <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
+    <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
 </resources>

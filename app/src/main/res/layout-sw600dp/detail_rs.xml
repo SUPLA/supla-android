@@ -143,11 +143,19 @@
                         android:id="@+id/rsDetailPercentCaption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:text="@string/rs_percent_caption"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/rs_detail_info_text" />
+
+                    <Button
+                        android:id="@+id/rsBtnRecalibrate"
+                        android:layout_weight="1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/recalibrate" />
 
                     <TextView
                         android:id="@+id/rsDetailPercent"
