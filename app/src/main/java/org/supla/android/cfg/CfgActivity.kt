@@ -33,7 +33,6 @@ import org.supla.android.NavigationActivity.showStatus
 import org.supla.android.databinding.ActivityCfgBinding
 
 
-//NavigationActivity
 class CfgActivity: AppCompatActivity() {
 
     private lateinit var viewModel: CfgViewModel
