@@ -32,7 +32,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
-    val advanced = MutableLiveData<Boolean>(false)
     val saveEnabled = MutableLiveData<Boolean>(true)
 
     val nextAction = MutableLiveData<NavigationFlow?>()
@@ -42,6 +41,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _accessIDObserver: Observer<Int>
     private val _accessIDPwdObserver: Observer<String>
     private val _temperatureUnitObserver: Observer<TemperatureUnit>
+    private val _advancedObserver: Observer<Boolean>
 
     init {
         val email = cfgData.email.value
@@ -54,12 +54,15 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) _isDirty.value = true }
         val temperatureUnit = cfgData.temperatureUnit.value
         _temperatureUnitObserver = Observer<TemperatureUnit> { if(it != temperatureUnit) _isDirty.value = true }
+        val isAdvanced = cfgData.isAdvanced.value ?: false
+        _advancedObserver = Observer { if(it != isAdvanced) _isDirty.value = true }
 
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
         cfgData.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
         cfgData.temperatureUnit.observeForever(_temperatureUnitObserver)
+        cfgData.isAdvanced.observeForever(_advancedObserver)
     }
 
     override fun onCleared() {
@@ -68,6 +71,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.accessID.removeObserver(_accessIDObserver)
         cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
         cfgData.temperatureUnit.removeObserver(_temperatureUnitObserver)
+        cfgData.isAdvanced.removeObserver(_advancedObserver)
 
         super.onCleared()
     }

@@ -27,10 +27,12 @@ data class CfgData(private var _serverAddr: String,
                    private var _accessID: Int,
                    private var _accessIDpwd: String,
                    private var _email: String,
+                   private var _isAdvanced: Boolean,
                    private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS) {
     val serverAddr = MutableLiveData<String>(_serverAddr)
     val accessID = MutableLiveData<Int>(_accessID)
     val accessIDpwd = MutableLiveData<String>(_accessIDpwd)
     val email = MutableLiveData<String>(_email)
     val temperatureUnit = MutableLiveData<TemperatureUnit>(_temperatureUnit)
+    val isAdvanced = MutableLiveData<Boolean>(_isAdvanced)
 }

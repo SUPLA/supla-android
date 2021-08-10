@@ -31,7 +31,7 @@ import org.mockito.kotlin.*
 class CfgViewModelTest: TestCase() {
 
     private val mockRepository = Mockito.mock(CfgRepository::class.java)
-    private val fakeCfg = CfgData("localhost", 0, "****", "noone@nowhere")
+    private val fakeCfg = CfgData("localhost", 0, "****", "noone@nowhere", false)
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -71,13 +71,13 @@ class CfgViewModelTest: TestCase() {
         }
 
         val viewModel = CfgViewModel(repository)
-        assertFalse(viewModel.advanced.value!!)
+        assertFalse(viewModel.cfgData.isAdvanced.value!!)
     }
 
     @Test
     fun saveIsOneShot() {
         Mockito.`when`(mockRepository.getCfg())
-            .thenReturn(CfgData("localhost", 6666, "pwd", ""))
+            .thenReturn(CfgData("localhost", 6666, "pwd", "", true))
         val viewModel = CfgViewModel(mockRepository)
         assertTrue(viewModel.saveEnabled.value!!)
         viewModel.onSaveConfig()
@@ -86,7 +86,7 @@ class CfgViewModelTest: TestCase() {
 
     @Test
     fun savedChangePropagatesToRepository() {
-        val initialData = CfgData("localhost", 6666, "pwd", "")
+        val initialData = CfgData("localhost", 6666, "pwd", "", true)
         var storedData: CfgData? = null
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn initialData
@@ -103,7 +103,7 @@ class CfgViewModelTest: TestCase() {
 
     @Test
     fun temperatureUnitChangePropagatesToRepository() {
-        val initialData = CfgData("localhost", 6666, "pwd", "")
+        val initialData = CfgData("localhost", 6666, "pwd", "", true)
         var storedData: CfgData? = null
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn initialData
@@ -125,7 +125,7 @@ class CfgViewModelTest: TestCase() {
     @Test
     fun changingEmailAddressClearsServerDataInConfig() {
         val initialData = CfgData("localhost", 6666, "pwd",
-            "whatever@email.com")
+            "whatever@email.com", true)
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn initialData
         }

@@ -29,11 +29,11 @@
         android:layout_centerHorizontal="true">
         <include
             android:id="@+id/cfg_basic"
-            android:visibility="@{viewModel.advanced ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
             layout="@layout/activity_cfg_basic" />
         <include
             android:id="@+id/cfg_advanced"
-            android:visibility="@{viewModel.advanced ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
             layout="@layout/activity_cfg_advanced" />
     </RelativeLayout>
     </ScrollView>
@@ -49,7 +49,7 @@
           android:layout_marginLeft="10dp"
           android:layout_marginBottom="10dp"
           android:buttonTint="@color/channel_btn"
-          android:checked="@={viewModel.advanced}"
+          android:checked="@={viewModel.cfgData.isAdvanced}"
           android:text="@string/advanced_settings"
           />
     </RelativeLayout>
