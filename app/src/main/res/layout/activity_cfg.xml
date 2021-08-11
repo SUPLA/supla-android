@@ -45,7 +45,6 @@
           android:id="@+id/cfg_cb_advanced"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-	  android:layout_below="@id/cfg"
           android:layout_marginLeft="10dp"
           android:layout_marginBottom="10dp"
           android:buttonTint="@color/channel_btn"
