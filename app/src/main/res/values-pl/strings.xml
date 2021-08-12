@@ -412,11 +412,12 @@
     <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
     <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
     <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
-    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2.4Ghz nie została odnaleziona lub siec ta jest poza zasięgiem.</string>
+    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
     <string name="incorrect_email_or_password">Błędy adres email lub hasło</string>
     <string name="channel_name">Nazwa kanału</string>
     <string name="location_name">Nazwa lokalizacji</string>
     <string name="str_default">Domyślnie</string>
     <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
     <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
+    <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
 </resources>

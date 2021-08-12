@@ -138,21 +138,20 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
     public final static int SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
     public final static int SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION1 = 0x0080;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION2 = 0x0100;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION3 = 0x0200;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION4 = 0x0400;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION5 = 0x0800;
+    public final static int SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION = 0x1000;
+    public final static int SUPLA_CHANNEL_FLAG_CALCFG_RESET_COUNTERS = 0x2000;
+    public final static int SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE = 0x4000;
     public final static int SUPLA_CHANNEL_FLAG_CHANNELSTATE = 0x00010000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
-    public final static int SUPLA_CHANNEL_FLAG_RS_AUTOCALIBRATION = 0x00100000;
+    public final static int SUPLA_CHANNEL_FLAG_TIME_SETTING_NOT_AVAILABLE = 0x00100000;
     public final static int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
     public final static int SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION = 0x00400000;
     public final static int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
     public final static int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
     public final static int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
+    public final static int SUPLA_CHANNEL_FLAG_POSSIBLE_SLEEP_MODE = 0x04000000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
@@ -266,6 +265,7 @@ public class SuplaConst {
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
     public final static int SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST = 2030;
+    public final static int SUPLA_CALCFG_CMD_RECALIBRATE = 8000;
 
     public final static int ZWAVE_NODE_FLAG_CHANNEL_ASSIGNED = 0x1;
     public final static int ZWAVE_NODE_FLAG_WAKEUP_TIME_SETTABLE = 0x2;

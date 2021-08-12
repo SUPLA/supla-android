@@ -405,4 +405,5 @@
     <string name="dgf_too_long_operation_warning" translatable="false">"Le sezioni di vetro sono esposte per più di 20 ore, questo può influire negativamente sulla loro durata. Si consiglia di coprire tutte le sezioni per un minimo di 4 ore per rigenerarle. "</string>
     <string name="dgf_planned_regeneration_in_progress" translatable="false">Rigenerazione pianificata in corso.</string>
     <string name="dgf_regeneration_after20h" translatable="false">Rigenerazione avviata dopo 20 ore di funzionamento in corso.</string>
+    <string name="recalibration_question">Confermi di voler avviare la calibrazione?</string>
 </resources>
