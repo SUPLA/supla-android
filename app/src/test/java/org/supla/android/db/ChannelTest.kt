@@ -34,9 +34,9 @@ import java.nio.ByteBuffer
 class ChannelTest: TestCase() {
 
     private val celsiusCfg = CfgData("whatever", 0, "xxxx",
-        "none@nowhere", false, TemperatureUnit.CELSIUS)
+        "none@nowhere", false, null, TemperatureUnit.CELSIUS)
     private val fahrenheitCfg = CfgData("whatever", 0, "xxxx",
-    "none@nowhere", false, TemperatureUnit.FAHRENHEIT)
+    "none@nowhere", false, null, TemperatureUnit.FAHRENHEIT)
 
 
     @Test

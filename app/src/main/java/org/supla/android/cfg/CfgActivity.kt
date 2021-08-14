@@ -19,13 +19,12 @@ package org.supla.android.cfg
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
@@ -41,12 +40,12 @@ class CfgActivity: AppCompatActivity() {
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
 
-	viewModel = CfgViewModel(PrefsCfgRepositoryImpl(this))
+	val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
+	viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
+	
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
             binding.viewModel = viewModel
             binding.lifecycleOwner = this
-            binding.cfgAdvanced.viewModel = viewModel
-            binding.cfgBasic.viewModel = viewModel
 
             viewModel.nextAction.observe(this) {
                 it?.let { handleNavigationDirective(it) }
@@ -54,44 +53,11 @@ class CfgActivity: AppCompatActivity() {
             viewModel.didSaveConfig.observe(this) {
                 it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
             }
-
-
-        var type = SuplaApp.getApp().typefaceOpenSansRegular
-        val edbg = resources.getDrawable(R.drawable.rounded_edittext)
-        arrayOf(binding.cfgAdvanced.edServerAddr, binding.cfgAdvanced.edAccessID,
-            binding.cfgAdvanced.edAccessIDpwd, binding.cfgBasic.cfgEmail)
-            .forEach {
-                it.setOnFocusChangeListener { v, hasFocus ->
-                    if(!hasFocus) { hideKeyboard(v) }
-                }
-                it.setTypeface(type)
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    it.setBackground(edbg)
-                } else {
-                    it.setBackgroundDrawable(edbg)
-                }
-            }
-        arrayOf(binding.cfgBasic.cfgLabelEmail).forEach {
-            it.setTypeface(type)
-        }
-        type = SuplaApp.getApp().typefaceQuicksandRegular
-        arrayOf(binding.cfgBasic.cfgLabelTitleBasic,
-        binding.cfgAdvanced.cfgLabelTitleAdv).forEach {
-            it.setTypeface(type)
-        }
-
-        binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
-        binding.cfgCbAdvanced.setTypeface(type)
     }
 
     override fun onBackPressed() {
         showMain()
         finish()
-    }
-
-    fun hideKeyboard(v: View) {
-        val service = getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
-        service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 
     fun handleNavigationDirective(what: CfgViewModel.NavigationFlow) {
@@ -108,6 +74,9 @@ class CfgActivity: AppCompatActivity() {
             CfgViewModel.NavigationFlow.MAIN -> {
                 showMain()
                 finish()
+            }
+            CfgViewModel.NavigationFlow.OPEN_PROFILES -> {
+                findNavController( R.id.nav_host_fragment).navigate(R.id.openProfiles)
             }
         }
     }

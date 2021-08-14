@@ -37,7 +37,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
     override fun getCfg(): CfgData {
         return CfgData(prefs.serverAddress, prefs.accessID, prefs.accessIDpwd,
-                       prefs.email, prefs.isAdvancedCfg, prefs.temperatureUnit)
+                       prefs.email, prefs.isAdvancedCfg, null, prefs.temperatureUnit)
     }
 
 

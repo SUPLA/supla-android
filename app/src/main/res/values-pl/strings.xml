@@ -79,6 +79,11 @@
     <string name="advanced_settings">Ustawienia zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
+    <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
+    <string name="cfg_profile_name_default">Domyślny</string>
+    <string name="cfg_label_email_auth">Autoryzacja - Email</string>
+    <string name="cfg_label_access_id_auth">Identyfikator dostępu</string>
+
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n
    opublikowanej przez Free Software Foundation w wersji 2\n

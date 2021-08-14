@@ -25,7 +25,7 @@ import androidx.lifecycle.Observer
 
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
-    enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN }
+    enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, OPEN_PROFILES }
     val cfgData: CfgData = repository.getCfg()
     private val _isDirty = MutableLiveData<Boolean>(false)
     val isDirty: LiveData<Boolean> = _isDirty
@@ -80,9 +80,18 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.temperatureUnit.value = unit
     }
 
+    fun selectEmailAuth(useEmailAuth: Boolean) {
+	/* TODO: add logic for field cleanup? */
+	cfgData.authByEmail.value = useEmailAuth
+    }
+
 
     fun onCreateAccount() {
         nextAction.value = NavigationFlow.CREATE_ACCOUNT
+    }
+
+    fun openProfiles() {
+        nextAction.value = NavigationFlow.OPEN_PROFILES
     }
 
     fun onSaveConfig() {
