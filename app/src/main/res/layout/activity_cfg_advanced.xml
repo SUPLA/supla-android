@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
   <data>
@@ -93,6 +94,7 @@
 	  android:layout_weight="1"
 	  android:buttonTint="@color/channel_btn"
 	  android:text="@string/cfg_label_email_auth"
+	  android:checked="@{viewModel.cfgData.authByEmail}"
 	  android:onClick="@{() -> viewModel.selectEmailAuth(true)}"
 	  />
       
@@ -104,6 +106,7 @@
 	  android:layout_marginLeft="12dp"
 	  android:buttonTint="@color/channel_btn"
 	  android:text="@string/cfg_label_access_id_auth"
+	  android:checked="@{!viewModel.cfgData.authByEmail}"
 	  android:onClick="@{() -> viewModel.selectEmailAuth(false)}"
 	  />
     </RadioGroup>
@@ -114,22 +117,20 @@
 	android:layout_height="wrap_content"
 	android:layout_below="@id/authType"
 	android:layout_centerHorizontal="true">
-      <RelativeLayout
+      <androidx.constraintlayout.widget.ConstraintLayout
 	  android:id="@+id/emailAuthForm"
 	  android:layout_width="match_parent"
 	  android:layout_height="wrap_content"
-	  android:layout_alignParentTop="true"
-	  android:layout_alignParentLeft="true"
-	  android:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}"
+	  app:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}"
 	  >
 
 	<EditText
             android:id="@+id/cfg_email"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-	    android:layout_alignParentStart="true"
-	    android:layout_alignParentLeft="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+	    app:layout_constraintTop_toTopOf="parent"
+	    app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="50dp"
             android:layout_marginRight="25dp"
@@ -143,16 +144,55 @@
             android:id="@+id/cfg_label_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cfg_email"
-            android:layout_alignStart="@+id/cfg_email"
-            android:layout_alignLeft="@+id/cfg_email"
+            app:layout_constraintTop_toBottomOf="@+id/cfg_email"
+            app:layout_constraintStart_toStartOf="@+id/cfg_email"
+            app:layout_constraintLeft_toLeftOf="@+id/cfg_email"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="4dp"
             android:text="@string/email"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="9sp" />
-      </RelativeLayout>
+	<EditText
+	    android:id="@+id/edServerAddrEmail"
+	    android:layout_width="0dp"
+	    android:layout_height="wrap_content"
+	    app:layout_constraintTop_toTopOf="@id/cfg_label_email"
+	    app:layout_constraintLeft_toLeftOf="@id/cfg_email"
+	    app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
+	    android:padding="5dp"
+	    android:textSize="14sp"
+	    android:layout_marginTop="30dp"
+	    android:layout_marginRight="25dp" />
+
+	<CheckBox
+	    android:id="@+id/edServerAddrAutoEmail"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginRight="25dp"
+	    app:layout_constrainedWidth="true"
+	    app:layout_constraintRight_toRightOf="parent"
+	    app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
+	    android:text="AUTO"
+	    android:buttonTint="@color/channel_btn"
+	    android:textSize="@dimen/default_text_size" />
+	
+	<TextView
+            android:id="@+id/cfg_label_svr_address_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/edServerAddrEmail"
+            app:layout_constraintStart_toStartOf="@id/edServerAddrEmail"
+            app:layout_constraintLeft_toLeftOf="@id/edServerAddrEmail"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/server_address"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"
+            android:textSize="9sp" />
+	
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
       <RelativeLayout
 	  android:id="@+id/cfg_accessIdAuthForm"
 	  android:layout_width="match_parent"

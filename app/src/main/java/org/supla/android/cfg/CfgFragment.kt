@@ -33,7 +33,9 @@ class CfgFragment: Fragment() {
         binding.cfgBasic.viewModel = viewModel
 	var type = SuplaApp.getApp().typefaceOpenSansRegular
 	val edbg = resources.getDrawable(R.drawable.rounded_edittext)
-        arrayOf(binding.cfgAdvanced.edServerAddr, binding.cfgAdvanced.edAccessID,
+        arrayOf(binding.cfgAdvanced.edServerAddr,
+		binding.cfgAdvanced.edServerAddrEmail!!,
+		binding.cfgAdvanced.edAccessID,
 		binding.cfgAdvanced.edAccessIDpwd, binding.cfgAdvanced.cfgEmail!!,
 		binding.cfgAdvanced.cfgProfileName!!, binding.cfgBasic.cfgEmail)
             .forEach {
