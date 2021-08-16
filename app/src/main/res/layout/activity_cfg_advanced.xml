@@ -190,8 +190,6 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="9sp" />
-	
-
       </androidx.constraintlayout.widget.ConstraintLayout>
       <RelativeLayout
 	  android:id="@+id/cfg_accessIdAuthForm"
@@ -298,6 +296,65 @@
 		  android:text="@string/settings"
 		  android:textColor="@android:color/black"
 		  android:textSize="30sp" />
+	  <!-- Begin section with advanced settings -->
+	  <View
+	      android:id="@+id/cfg_horiz_divisor"
+	      android:layout_width="fill_parent"
+	      android:layout_height="2dp"
+              android:layout_marginLeft="25dp"
+              android:layout_marginTop="30dp"
+              android:layout_marginRight="25dp"
+	      android:background="@color/channel_btn"
+	      android:layout_below="@id/authFormWrapper" />
+
+	  <!-- Channel height -->
+	  <RadioGroup
+	      android:id="@+id/groupChannelHeight"
+	      android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="25dp"
+              android:layout_marginTop="30dp"
+              android:layout_marginRight="25dp"
+              android:padding="5dp"
+              android:layout_below="@id/cfg_horiz_divisor"
+              android:orientation="horizontal">
+	    <RadioButton
+		android:id="@+id/btnChannel150"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/channel_btn"
+		android:text="150%" />
+	    <RadioButton
+		android:id="@+id/btnChannel100"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/channel_btn"
+		android:checked="true"
+		android:text="100%" />
+	    <RadioButton
+		android:id="@+id/btnChannel80"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/channel_btn"
+		android:text="80%" />
+	  </RadioGroup>
+    <TextView
+        android:id="@+id/cfg_label_channel_height"
+        android:layout_below="@id/groupChannelHeight"
+	android:layout_alignLeft="@id/groupChannelHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
+        android:layout_marginTop="4dp"
+	android:layout_marginLeft="2dp"
+        android:text="CHANNEL HEIGHT"
+	android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="9sp" />
+
+
+	  <!-- Temperature unit -->
     <RadioGroup
         android:id="@+id/groupTemperatureUnit"
         android:layout_width="match_parent"
@@ -306,7 +363,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="25dp"
         android:padding="5dp"
-        android:layout_below="@id/authFormWrapper"
+        android:layout_below="@id/cfg_label_channel_height"
         android:orientation="horizontal">
 
       <RadioButton
@@ -344,12 +401,55 @@
         android:textColor="@android:color/black"
         android:textSize="9sp" />
 
+    <!-- Button auto-hide -->
+	  <RadioGroup
+	      android:id="@+id/groupButtonAutoHide"
+	      android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="25dp"
+              android:layout_marginTop="30dp"
+              android:layout_marginRight="25dp"
+              android:padding="5dp"
+              android:layout_below="@id/cfg_label_temp_unit"
+              android:orientation="horizontal">
+	    <RadioButton
+		android:id="@+id/btnButtonAutoHide"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/channel_btn"
+		android:checked="true"
+		android:text="YES" />
+	    <RadioButton
+		android:id="@+id/btnNoButtonAutoHide"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:buttonTint="@color/channel_btn"
+		android:text="NO" />
+	  </RadioGroup>
+    <TextView
+        android:id="@+id/cfg_label_button_auto_hide"
+        android:layout_below="@id/groupButtonAutoHide"
+	android:layout_alignLeft="@id/groupButtonAutoHide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
+        android:layout_marginTop="4dp"
+	android:layout_marginLeft="2dp"
+        android:text="AUTO-HIDE BUTTONS"
+	android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="9sp" />
+
+    
+
+    <!-- End of advanced settings section -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cfg_save_adv"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_below="@id/cfg_label_temp_unit"
+        android:layout_below="@id/cfg_label_button_auto_hide"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:enabled="@{viewModel.saveEnabled}"

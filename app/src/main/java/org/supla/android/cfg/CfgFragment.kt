@@ -49,7 +49,12 @@ class CfgFragment: Fragment() {
                     it.setBackgroundDrawable(edbg)
                 }
             }
-        arrayOf(binding.cfgBasic.cfgLabelEmail).forEach {
+        arrayOf(binding.cfgBasic.cfgLabelEmail,
+		binding.cfgAdvanced.cfgLabelEmail!!,
+		binding.cfgAdvanced.cfgLabelSvrAddress!!,
+		binding.cfgAdvanced.cfgLabelChannelHeight!!,
+		binding.cfgAdvanced.cfgLabelTempUnit,
+		binding.cfgAdvanced.cfgLabelButtonAutoHide!!).forEach {
             it.setTypeface(type)
         }
         type = SuplaApp.getApp().typefaceQuicksandRegular
