@@ -2,13 +2,71 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-  <LinearLayout
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.supla.android.cfg.CfgViewModel" />
+        <variable
+            name="profilesVM"
+            type="org.supla.android.cfg.ProfilesViewModel" />
+    </data>
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical">
-    <TextView
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/cfg_label_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="Profiles"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <ListView
+            android:id="@+id/profilesList"
+        	android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+	android:layout_height="0dp"
+        android:layout_weight="1"
 	android:text="Hi there" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="6dp"
+            android:text="Activate" />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginBottom="12dp"
+          android:orientation="horizontal">
+          <androidx.appcompat.widget.AppCompatButton
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:layout_marginRight="6dp"
+              android:onClick="@{() -> profilesVM.onNewProfile()}"
+              android:text="New" />
+          <androidx.appcompat.widget.AppCompatButton
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:layout_marginRight="6dp"
+              android:text="Rename" />
+          <androidx.appcompat.widget.AppCompatButton
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:text="Delete" />
+      </LinearLayout>
   </LinearLayout>
 </layout>

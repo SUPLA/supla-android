@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, OPEN_PROFILES }
+    val currentProfile = MutableLiveData<String>()
     val cfgData: CfgData = repository.getCfg()
     private val _isDirty = MutableLiveData<Boolean>(false)
     val isDirty: LiveData<Boolean> = _isDirty

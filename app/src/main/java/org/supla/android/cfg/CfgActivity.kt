@@ -56,8 +56,11 @@ class CfgActivity: AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        showMain()
-        finish()
+        val navController = findNavController(R.id.nav_host_fragment)
+        if(!navController.navigateUp()) {
+            showMain()
+            finish()
+        }
     }
 
     fun handleNavigationDirective(what: CfgViewModel.NavigationFlow) {

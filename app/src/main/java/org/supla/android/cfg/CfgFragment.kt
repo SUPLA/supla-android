@@ -17,7 +17,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentCfgBinding
 
 class CfgFragment: Fragment() {
-    private val viewModel: CfgViewModel by activityViewModels()
+        private val viewModel: CfgViewModel by activityViewModels()
     private lateinit var binding: FragmentCfgBinding
 
     override fun onCreateView(
