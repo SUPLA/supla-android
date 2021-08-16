@@ -19,6 +19,7 @@ package org.supla.android;
  */
 
 import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
@@ -39,7 +40,7 @@ import org.supla.android.cfg.PrefsCfgRepositoryImpl;
 import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
-public class SuplaApp extends Application implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+public class SuplaApp extends MultiDexApplication implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
     TemperaturePresenterFactory {
 
     private static final Object _lck1 = new Object();
