@@ -15,26 +15,55 @@
       android:layout_height="match_parent"
       android:orientation="vertical"
       android:background="@color/activity_bg">
-    <ScrollView
-	android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-      <RelativeLayout
-          android:id="@+id/cfg_content"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_gravity="top"
-          android:layout_centerHorizontal="true">
-        <include
-            android:id="@+id/cfg_basic"
-            android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
-            layout="@layout/activity_cfg_basic" />
-        <include
-            android:id="@+id/cfg_advanced"
+    <FrameLayout
+		android:layout_weight="1"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+      <ScrollView
+
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical">
+	  <RelativeLayout
+              android:id="@+id/cfg_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="top"
+              android:layout_centerHorizontal="true">
+            <include
+		android:id="@+id/cfg_basic"
+		android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
+		layout="@layout/activity_cfg_basic" />
+            <include
+		android:id="@+id/cfg_advanced"
+		android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
+		layout="@layout/activity_cfg_advanced" />
+	  </RelativeLayout>
+	  <View
+	      android:layout_height="50dp"
+	      android:layout_width="match_parent" />
+	</LinearLayout>
+      </ScrollView>
+      <FrameLayout
+	  android:layout_width="match_parent"
+	  android:layout_height="50dp"
+	  android:layout_gravity="bottom"
+	  android:background="@drawable/gradient_shape">
+	<androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cfg_save_adv"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
-            layout="@layout/activity_cfg_advanced" />
-      </RelativeLayout>
-    </ScrollView>
+            android:layout_width="50dp"
+	    android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:enabled="@{viewModel.saveEnabled}"
+            android:onClick="@{() -> viewModel.onSaveConfig()}"
+            android:background="@drawable/btnok" />
+      </FrameLayout>
+    </FrameLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
