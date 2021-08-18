@@ -167,7 +167,7 @@ public class ChannelGroup extends ChannelBase {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-                BufferTotalValue += Integer.toString(value.getPercent());
+                BufferTotalValue += Integer.toString(value.getRollerShutterValue().getPosition());
                 BufferTotalValue += ":";
                 BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
                 break;

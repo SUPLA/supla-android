@@ -285,6 +285,12 @@ public class SuplaConst {
 
     public final static int SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF = 0x1;
 
+    public final static int RS_VALUE_FLAG_TILT_IS_SET = 0x1;
+    public final static int RS_VALUE_FLAG_CALIBRATION_FAILED = 0x2;
+    public final static int RS_VALUE_FLAG_CALIBRATION_LOST = 0x4;
+    public final static int RS_VALUE_FLAG_MOTOR_PROBLEM = 0x8;
+    public final static int RS_VALUE_FLAG_CALIBRATION_IN_PROGRESS = 0x10;
+
     public static String getCaption(int func, Context context) {
 
         int idx = -1;

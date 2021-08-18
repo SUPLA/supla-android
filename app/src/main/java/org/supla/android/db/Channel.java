@@ -223,7 +223,7 @@ public class Channel extends ChannelBase {
 
     public byte getClosingPercentage() {
 
-        byte p = Value != null ? Value.getPercent() : 0;
+        byte p = Value != null ? Value.getRollerShutterValue().getPosition() : 0;
 
         if (p < 100 && getSubValueHi())
             p = 100;
@@ -344,7 +344,6 @@ public class Channel extends ChannelBase {
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 if (getValue().overcurrentRelayOff()) {
                     if (message != null) {
                         message.append(context.getResources().getString(R.string.overcurrent_warning));
@@ -355,6 +354,26 @@ public class Channel extends ChannelBase {
         }
 
         switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                ChannelValue value = getValue();
+                if (value.calibrationFailed()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.calibration_failed));
+                    }
+                    return 1;
+                } else if (value.calibrationLost()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.calibration_lost));
+                    }
+                    return 1;
+                } else if (value.motorProblem()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.motor_problem));
+                    }
+                    return 2;
+                }
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 if (getValue().isManuallyClosed() || getValue().flooding()) {
@@ -405,7 +424,7 @@ public class Channel extends ChannelBase {
                     }
                     return 2;
                 } else
-                return 0;
+                    return 0;
         }
 
         return 0;
