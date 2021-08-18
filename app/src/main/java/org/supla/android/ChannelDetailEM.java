@@ -589,7 +589,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             Channel channel = (Channel) getChannelFromDatabase();
             if (channel != null) {
                 if (channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ) {
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER) {
                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
                     if (client != null) {
                         client.turnOnOff(getContext(), !channel.getValue().hiValue(),
