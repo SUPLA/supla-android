@@ -707,6 +707,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
@@ -724,7 +725,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     }
 
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);

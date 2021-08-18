@@ -132,6 +132,7 @@ public class ChannelListView extends ListView {
 
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                     if (channel != null && channel.getValue() != null) {
 
                         if (channel.getValue().getSubValueType()
@@ -215,6 +216,7 @@ public class ChannelListView extends ListView {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                     if (channel != null && channel.getValue() != null) {
                         if (channel.getValue().getSubValueType()
                                 == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
