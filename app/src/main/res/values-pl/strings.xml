@@ -420,7 +420,7 @@
     <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
     <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
     <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
-    <string translatable="false" name="calibration_failed">Kalibracja niepowodzeniem.</string>
-    <string translatable="false" name="calibration_lost">Kalibracja została utracona.</string>
-    <string translatable="false" name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
+    <string name="calibration_failed">Kalibracja niepowodzeniem.</string>
+    <string name="calibration_lost">Kalibracja została utracona.</string>
+    <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
 </resources>
