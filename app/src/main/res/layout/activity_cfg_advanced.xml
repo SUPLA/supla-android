@@ -6,6 +6,7 @@
   <data>
     <import type="android.view.View" />
     <import type="org.supla.android.cfg.TemperatureUnit" />
+    <import type="android.R" />
     <variable
         name="viewModel"
         type="org.supla.android.cfg.CfgViewModel" />
@@ -76,216 +77,229 @@
 				  />
 		  </LinearLayout>
 	  </RelativeLayout>
-    <RadioGroup
-	android:id="@+id/authType"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_marginLeft="25dp"
-	android:layout_marginTop="30dp"
-	android:layout_marginRight="25dp"
-	android:padding="5dp"
-	android:layout_below="@id/profileForm"
-	android:orientation="horizontal"
-	android:layout_centerHorizontal="true">
-      <androidx.appcompat.widget.AppCompatRadioButton
-	  android:id="@+id/btnEmailAuth"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_weight="1"
-	  android:buttonTint="@color/channel_btn"
-	  android:text="@string/cfg_label_email_auth"
-	  android:checked="@{viewModel.cfgData.authByEmail}"
-	  android:onClick="@{() -> viewModel.selectEmailAuth(true)}"
-	  />
-      
-      <androidx.appcompat.widget.AppCompatRadioButton
-	  android:id="@+id/btnAccessIdAuth"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_weight="1"
-	  android:layout_marginLeft="12dp"
-	  android:buttonTint="@color/channel_btn"
-	  android:text="@string/cfg_label_access_id_auth"
-	  android:checked="@{!viewModel.cfgData.authByEmail}"
-	  android:onClick="@{() -> viewModel.selectEmailAuth(false)}"
-	  />
-    </RadioGroup>
+	  <LinearLayout
+	      android:id="@+id/authType"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"
+	      android:layout_marginLeft="25dp"
+	      android:layout_marginTop="30dp"
+	      android:layout_marginRight="25dp"
+	      android:padding="5dp"
+	      android:background="@color/vl_settings_bg"
+	      android:layout_below="@id/profileForm"
+	      android:orientation="vertical"
+	      android:layout_centerHorizontal="true">
+	    <TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Authentication type"
+		android:textColor="@android:color/black" />
+	    <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:layout_marginTop="5dp"
+		android:background="@drawable/rounded_tab_background"
+		android:orientation="horizontal"
+		android:padding="2dp">
+	      <androidx.appcompat.widget.AppCompatButton
+		  android:id="@+id/btnEmailAuth"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_weight="1"
+		  android:text="@string/cfg_label_email_auth"
+		  android:textColor="@{viewModel.cfgData.authByEmail ? @android:color/white : @android:color/black}"
+		  app:backgroundResource="@{viewModel.cfgData.authByEmail ?  org.supla.android.R.drawable.rounded_sel_btn : android.R.color.transparent}"
+		  android:onClick="@{() -> viewModel.selectEmailAuth(true)}"
+		  />
+	      
+	      <androidx.appcompat.widget.AppCompatButton
+		  android:id="@+id/btnAccessIdAuth"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_weight="1"
+		  android:layout_marginLeft="-1dp"
+		  android:text="@string/cfg_label_access_id_auth"
+		  android:textColor="@{!viewModel.cfgData.authByEmail ? @android:color/white : @android:color/black}"
+		  app:backgroundResource="@{!viewModel.cfgData.authByEmail ?  org.supla.android.R.drawable.rounded_sel_btn : android.R.color.transparent}"
+		  android:onClick="@{() -> viewModel.selectEmailAuth(false)}"
+		  />
+	      
+	    </LinearLayout>
+<!--
+		  <FrameLayout
+			  android:id="@+id/authFormWrapper"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"> -->
+			  <androidx.constraintlayout.widget.ConstraintLayout
+				  android:id="@+id/emailAuthForm"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  app:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}"
+				  >
 
-    <FrameLayout
-	android:id="@+id/authFormWrapper"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/authType"
-	android:layout_centerHorizontal="true">
-      <androidx.constraintlayout.widget.ConstraintLayout
-	  android:id="@+id/emailAuthForm"
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"
-	  app:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}"
-	  >
+				  <EditText
+					  android:id="@+id/cfg_email"
+					  android:layout_width="0dp"
+					  android:layout_height="wrap_content"
+					  app:layout_constraintLeft_toLeftOf="parent"
+					  app:layout_constraintTop_toTopOf="parent"
+					  app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
+					  android:layout_marginLeft="25dp"
+					  android:layout_marginTop="50dp"
+					  android:layout_marginRight="25dp"
+					  android:inputType="textEmailAddress"
+					  android:text="@={viewModel.cfgData.email}"
+					  android:onTextChanged="@{viewModel::onEmailChange}"
+					  android:padding="5dp"
+					  android:textSize="14sp" />
 
-	<EditText
-            android:id="@+id/cfg_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-	    app:layout_constraintTop_toTopOf="parent"
-	    app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="25dp"
-            android:inputType="textEmailAddress"
-            android:text="@={viewModel.cfgData.email}"
-            android:onTextChanged="@{viewModel::onEmailChange}"
-            android:padding="5dp"
-            android:textSize="14sp" />
+				  <TextView
+					  android:id="@+id/cfg_label_email"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  app:layout_constraintTop_toBottomOf="@+id/cfg_email"
+					  app:layout_constraintStart_toStartOf="@+id/cfg_email"
+					  app:layout_constraintLeft_toLeftOf="@+id/cfg_email"
+					  android:layout_marginLeft="2dp"
+					  android:layout_marginTop="4dp"
+					  android:text="@string/email"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+				  <EditText
+					  android:id="@+id/edServerAddrEmail"
+					  android:layout_width="0dp"
+					  android:layout_height="wrap_content"
+					  app:layout_constraintTop_toTopOf="@id/cfg_label_email"
+					  app:layout_constraintLeft_toLeftOf="@id/cfg_email"
+					  app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
+					  android:padding="5dp"
+					  android:textSize="14sp"
+					  android:layout_marginTop="30dp"
+					  android:layout_marginRight="25dp" />
 
-	<TextView
-            android:id="@+id/cfg_label_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/cfg_email"
-            app:layout_constraintStart_toStartOf="@+id/cfg_email"
-            app:layout_constraintLeft_toLeftOf="@+id/cfg_email"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/email"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textSize="9sp" />
-	<EditText
-	    android:id="@+id/edServerAddrEmail"
-	    android:layout_width="0dp"
-	    android:layout_height="wrap_content"
-	    app:layout_constraintTop_toTopOf="@id/cfg_label_email"
-	    app:layout_constraintLeft_toLeftOf="@id/cfg_email"
-	    app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
-	    android:padding="5dp"
-	    android:textSize="14sp"
-	    android:layout_marginTop="30dp"
-	    android:layout_marginRight="25dp" />
+				  <CheckBox
+					  android:id="@+id/edServerAddrAutoEmail"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  android:layout_marginRight="25dp"
+					  app:layout_constrainedWidth="true"
+					  app:layout_constraintRight_toRightOf="parent"
+					  app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
+					  android:text="AUTO"
+					  android:buttonTint="@color/channel_btn"
+					  android:textSize="@dimen/default_text_size" />
 
-	<CheckBox
-	    android:id="@+id/edServerAddrAutoEmail"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginRight="25dp"
-	    app:layout_constrainedWidth="true"
-	    app:layout_constraintRight_toRightOf="parent"
-	    app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
-	    android:text="AUTO"
-	    android:buttonTint="@color/channel_btn"
-	    android:textSize="@dimen/default_text_size" />
-	
-	<TextView
-            android:id="@+id/cfg_label_svr_address_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edServerAddrEmail"
-            app:layout_constraintStart_toStartOf="@id/edServerAddrEmail"
-            app:layout_constraintLeft_toLeftOf="@id/edServerAddrEmail"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/server_address"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textSize="9sp" />
-      </androidx.constraintlayout.widget.ConstraintLayout>
-      <RelativeLayout
-	  android:id="@+id/cfg_accessIdAuthForm"
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_alignParentTop="true"
-	  android:layout_alignParentLeft="true"
-	  android:visibility="@{viewModel.cfgData.authByEmail ? View.GONE : View.VISIBLE}">
-	<EditText
-            android:id="@+id/edServerAddr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-	    	android:layout_alignParentStart="true"
-			android:layout_alignParentLeft="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="25dp"
-            android:inputType="textUri"
-            android:padding="5dp"
-            android:text="@={viewModel.cfgData.serverAddr}"
-            android:textSize="14sp" />
-	
-	<TextView
-            android:id="@+id/cfg_label_svr_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edServerAddr"
-            android:layout_alignStart="@id/edServerAddr"
-            android:layout_alignLeft="@id/edServerAddr"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/server_address"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textSize="9sp" />
-	
-	<EditText
-            android:id="@+id/edAccessID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cfg_label_svr_address"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="25dp"
-            android:padding="5dp"
-            android:text="@={`` + viewModel.cfgData.accessID}"
-            android:textSize="14sp" />
-	
-	<TextView
-            android:id="@+id/cfg_label_access_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edAccessID"
-            android:layout_alignStart="@+id/edAccessID"
-            android:layout_alignLeft="@+id/edAccessID"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/access_id"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textSize="9sp" />
-	
-	<EditText
-            android:id="@+id/edAccessIDpwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cfg_label_access_id"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="25dp"
-            android:inputType="textPassword"
-            android:padding="5dp"
-            android:text="@={viewModel.cfgData.accessIDpwd}"
-            android:textSize="14sp" />
-	
-	<TextView
-            android:id="@+id/cfg_label_access_pwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edAccessIDpwd"
-            android:layout_alignLeft="@+id/edAccessIDpwd"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="false"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/password"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textSize="9sp" />
-	
-      </RelativeLayout>
-    </FrameLayout>
+				  <TextView
+					  android:id="@+id/cfg_label_svr_address_email"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  app:layout_constraintTop_toBottomOf="@id/edServerAddrEmail"
+					  app:layout_constraintStart_toStartOf="@id/edServerAddrEmail"
+					  app:layout_constraintLeft_toLeftOf="@id/edServerAddrEmail"
+					  android:layout_marginLeft="2dp"
+					  android:layout_marginTop="4dp"
+					  android:text="@string/server_address"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+			  </androidx.constraintlayout.widget.ConstraintLayout>
+			  <RelativeLayout
+				  android:id="@+id/cfg_accessIdAuthForm"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:layout_alignParentTop="true"
+				  android:layout_alignParentLeft="true"
+				  android:visibility="@{viewModel.cfgData.authByEmail ? View.GONE : View.VISIBLE}">
+				  <EditText
+					  android:id="@+id/edServerAddr"
+					  android:layout_width="match_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_alignParentTop="true"
+					  android:layout_alignParentStart="true"
+					  android:layout_alignParentLeft="true"
+					  android:layout_marginLeft="25dp"
+					  android:layout_marginTop="25dp"
+					  android:layout_marginRight="25dp"
+					  android:inputType="textUri"
+					  android:padding="5dp"
+					  android:text="@={viewModel.cfgData.serverAddr}"
+					  android:textSize="14sp" />
+
+				  <TextView
+					  android:id="@+id/cfg_label_svr_address"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@id/edServerAddr"
+					  android:layout_alignStart="@id/edServerAddr"
+					  android:layout_alignLeft="@id/edServerAddr"
+					  android:layout_marginLeft="2dp"
+					  android:layout_marginTop="4dp"
+					  android:text="@string/server_address"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+
+				  <EditText
+					  android:id="@+id/edAccessID"
+					  android:layout_width="match_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@+id/cfg_label_svr_address"
+					  android:layout_alignParentStart="true"
+					  android:layout_alignParentLeft="true"
+					  android:layout_marginLeft="25dp"
+					  android:layout_marginTop="30dp"
+					  android:layout_marginRight="25dp"
+					  android:padding="5dp"
+					  android:text="@={`` + viewModel.cfgData.accessID}"
+					  android:textSize="14sp" />
+
+				  <TextView
+					  android:id="@+id/cfg_label_access_id"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@+id/edAccessID"
+					  android:layout_alignStart="@+id/edAccessID"
+					  android:layout_alignLeft="@+id/edAccessID"
+					  android:layout_marginLeft="2dp"
+					  android:layout_marginTop="4dp"
+					  android:text="@string/access_id"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+
+				  <EditText
+					  android:id="@+id/edAccessIDpwd"
+					  android:layout_width="match_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@+id/cfg_label_access_id"
+					  android:layout_centerVertical="true"
+					  android:layout_marginLeft="25dp"
+					  android:layout_marginTop="30dp"
+					  android:layout_marginRight="25dp"
+					  android:inputType="textPassword"
+					  android:padding="5dp"
+					  android:text="@={viewModel.cfgData.accessIDpwd}"
+					  android:textSize="14sp" />
+
+				  <TextView
+					  android:id="@+id/cfg_label_access_pwd"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@+id/edAccessIDpwd"
+					  android:layout_alignLeft="@+id/edAccessIDpwd"
+					  android:layout_alignParentStart="false"
+					  android:layout_alignParentLeft="false"
+					  android:layout_marginLeft="2dp"
+					  android:layout_marginTop="4dp"
+					  android:text="@string/password"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+
+			  </RelativeLayout>
+		  <!-- </FrameLayout> -->
+	  </LinearLayout>
 	  <TextView
 		  android:id="@+id/cfg_label_title_adv"
 		  android:layout_width="wrap_content"
@@ -305,10 +319,10 @@
               android:layout_marginTop="30dp"
               android:layout_marginRight="25dp"
 	      android:background="@color/channel_btn"
-	      android:layout_below="@id/authFormWrapper" />
+	      android:layout_below="@id/authType" />
 
 	  <!-- Channel height -->
-	  <RadioGroup
+	  <LinearLayout
 	      android:id="@+id/groupChannelHeight"
 	      android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -316,43 +330,51 @@
               android:layout_marginTop="30dp"
               android:layout_marginRight="25dp"
               android:padding="5dp"
+	      android:background="@color/vl_settings_bg"
               android:layout_below="@id/cfg_horiz_divisor"
-              android:orientation="horizontal">
-	    <RadioButton
+              android:orientation="vertical"
+	      android:layout_centerHorizontal="true">
+	    <TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="CHANNEL HEIGHT"
+		android:color="@android:color/black" />
+	    <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:layout_marginTop="5dp"
+		android:background="@drawable/rounded_tab_background"
+		android:orientation="horizontal"
+		android:padding="2dp">
+	    <androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/btnChannel150"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:buttonTint="@color/channel_btn"
+		android:layout_weight="1"
+		android:textColor="@android:color/black"
+		android:background="@android:color/transparent"
 		android:text="150%" />
-	    <RadioButton
+	    <androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/btnChannel100"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
+		  android:layout_weight="1"
+		  android:layout_marginLeft="-1dp"
 		android:layout_height="wrap_content"
-		android:buttonTint="@color/channel_btn"
+		android:textColor="@android:color/white"
+		android:background="@drawable/rounded_sel_btn"
 		android:checked="true"
 		android:text="100%" />
-	    <RadioButton
+	    <androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/btnChannel80"
-		android:layout_width="wrap_content"
+		  android:layout_weight="1"
+		android:layout_width="0dp"
+		  android:layout_marginLeft="-1dp"
 		android:layout_height="wrap_content"
-		android:buttonTint="@color/channel_btn"
+		android:textColor="@android:color/black"
+		android:background="@android:color/transparent"
 		android:text="80%" />
-	  </RadioGroup>
-    <TextView
-        android:id="@+id/cfg_label_channel_height"
-        android:layout_below="@id/groupChannelHeight"
-	android:layout_alignLeft="@id/groupChannelHeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentLeft="false"
-        android:layout_marginTop="4dp"
-	android:layout_marginLeft="2dp"
-        android:text="CHANNEL HEIGHT"
-	android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
-        android:textSize="9sp" />
-
+	    </LinearLayout>
+	  </LinearLayout>
 
 	  <!-- Temperature unit -->
     <RadioGroup
@@ -363,7 +385,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="25dp"
         android:padding="5dp"
-        android:layout_below="@id/cfg_label_channel_height"
+        android:layout_below="@id/groupChannelHeight"
         android:orientation="horizontal">
 
       <RadioButton
