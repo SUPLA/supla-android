@@ -51,6 +51,7 @@ public class Preferences {
     private static final String pref_brightness_picker_type_slider
             = "pref_brightness_picker_type_slider";
     private static final String pref_temperature_unit = "pref_temperature_unit";
+    private static final String pref_button_autohide = "pref_button_autohide";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -283,6 +284,16 @@ public class Preferences {
             case FAHRENHEIT: ed.putString(pref_temperature_unit, "F"); break;
             case CELSIUS: ed.putString(pref_temperature_unit, "C"); break;
         }
+        ed.apply();
+    }
+
+    public boolean isButtonAutohide() {
+        return _prefs.getBoolean(pref_button_autohide, true);
+    }
+
+    public void setButtonAutohide(boolean val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putBoolean(pref_button_autohide, val);
         ed.apply();
     }
 }

@@ -32,12 +32,15 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
     init {
         prefs = Preferences(ctx)
-	helper = DbHelper.getInstance(ctx)
+	      helper = DbHelper.getInstance(ctx)
     }
 
     override fun getCfg(): CfgData {
-        return CfgData(prefs.serverAddress, prefs.accessID, prefs.accessIDpwd,
-                       prefs.email, prefs.isAdvancedCfg, null, prefs.temperatureUnit)
+        return CfgData(prefs.serverAddress, prefs.accessID, 
+                       prefs.accessIDpwd,
+                       prefs.email, prefs.isAdvancedCfg, null, 
+                       prefs.temperatureUnit,
+                       prefs.isButtonAutohide)
     }
 
 
@@ -49,6 +52,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.email = cfg.email.value
         prefs.temperatureUnit = cfg.temperatureUnit.value
         prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
+        prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.setPreferedProtocolVersion()
     }
 

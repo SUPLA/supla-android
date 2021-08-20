@@ -43,6 +43,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _accessIDPwdObserver: Observer<String>
     private val _temperatureUnitObserver: Observer<TemperatureUnit>
     private val _advancedObserver: Observer<Boolean>
+    private val _buttonAutohideObserver: Observer<Boolean>
 
     init {
         val email = cfgData.email.value
@@ -58,12 +59,16 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         val isAdvanced = cfgData.isAdvanced.value ?: false
         _advancedObserver = Observer { if(it != isAdvanced) _isDirty.value = true }
 
+        val isButtonAutohide = cfgData.buttonAutohide.value!!
+        _buttonAutohideObserver = Observer { if(it != isButtonAutohide) _isDirty.value = true }
+
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
         cfgData.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
         cfgData.temperatureUnit.observeForever(_temperatureUnitObserver)
         cfgData.isAdvanced.observeForever(_advancedObserver)
+        cfgData.buttonAutohide.observeForever(_buttonAutohideObserver)
     }
 
     override fun onCleared() {
@@ -73,6 +78,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
         cfgData.temperatureUnit.removeObserver(_temperatureUnitObserver)
         cfgData.isAdvanced.removeObserver(_advancedObserver)
+        cfgData.buttonAutohide.removeObserver(_buttonAutohideObserver)
 
         super.onCleared()
     }
@@ -82,8 +88,12 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     }
 
     fun selectEmailAuth(useEmailAuth: Boolean) {
-	/* TODO: add logic for field cleanup? */
-	cfgData.authByEmail.value = useEmailAuth
+	      /* TODO: add logic for field cleanup? */
+	      cfgData.authByEmail.value = useEmailAuth
+    }
+
+    fun setButtonAutohide(autohideEnabled: Boolean) {
+        cfgData.buttonAutohide.value = autohideEnabled
     }
 
 

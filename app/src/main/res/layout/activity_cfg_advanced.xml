@@ -435,18 +435,21 @@
               android:layout_below="@id/cfg_label_temp_unit"
               android:orientation="horizontal">
 	    <RadioButton
-		android:id="@+id/btnButtonAutoHide"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:buttonTint="@color/channel_btn"
-		android:checked="true"
-		android:text="YES" />
+		      android:id="@+id/btnButtonAutoHide"
+		      android:layout_width="wrap_content"
+		      android:layout_height="wrap_content"
+		      android:buttonTint="@color/channel_btn"
+		      android:checked="@{viewModel.cfgData.buttonAutohide}"
+          android:onClick="@{() -> viewModel.setButtonAutohide(true)}"
+		      android:text="YES" />
 	    <RadioButton
-		android:id="@+id/btnNoButtonAutoHide"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:buttonTint="@color/channel_btn"
-		android:text="NO" />
+		      android:id="@+id/btnNoButtonAutoHide"
+		      android:layout_width="wrap_content"
+		      android:layout_height="wrap_content"
+		      android:buttonTint="@color/channel_btn"
+          android:checked="@{!viewModel.cfgData.buttonAutohide}"
+          android:onClick="@{() -> viewModel.setButtonAutohide(false)}"
+		      android:text="NO" />
 	  </RadioGroup>
     <TextView
         android:id="@+id/cfg_label_button_auto_hide"

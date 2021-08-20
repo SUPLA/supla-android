@@ -139,4 +139,31 @@ class CfgViewModelTest: TestCase() {
         assertEquals("", vm.cfgData.accessIDpwd.value)
     }
 
+    @Test
+    fun defaultSettingForButtonAutohideIsTrue() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+                                  "whatever@email.com", false)
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+        }
+        val vm = CfgViewModel(repository)
+        assertEquals(true, vm.cfgData.buttonAutohide.value)
+    }
+    
+    @Test
+    fun buttonAutohidePropagatesToRepository() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+                                  "dont@ca.re", false)
+        var storedData: CfgData? = null
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+            on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
+        }
+        val viewModel = CfgViewModel(repository)
+        val origVal = viewModel.cfgData.buttonAutohide.value!!
+        val newVal = !origVal
+        viewModel.cfgData.buttonAutohide.value = newVal
+        viewModel.onSaveConfig()
+        assertEquals(newVal, storedData!!.buttonAutohide.value)
+    }
 }
