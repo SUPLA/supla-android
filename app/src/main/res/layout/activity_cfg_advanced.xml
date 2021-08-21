@@ -6,6 +6,7 @@
   <data>
     <import type="android.view.View" />
     <import type="org.supla.android.cfg.TemperatureUnit" />
+    <import type="org.supla.android.cfg.ChannelHeight" />
     <import type="android.R" />
     <variable
         name="viewModel"
@@ -353,6 +354,7 @@
 		android:layout_weight="1"
 		android:textColor="@android:color/black"
 		android:background="@android:color/transparent"
+    android:onClick="@{() -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)}"
 		android:text="150%" />
 	    <androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/btnChannel100"
@@ -362,7 +364,7 @@
 		android:layout_height="wrap_content"
 		android:textColor="@android:color/white"
 		android:background="@drawable/rounded_sel_btn"
-		android:checked="true"
+    android:onClick="@{() -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_100)}"
 		android:text="100%" />
 	    <androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/btnChannel80"
@@ -372,6 +374,7 @@
 		android:layout_height="wrap_content"
 		android:textColor="@android:color/black"
 		android:background="@android:color/transparent"
+    android:onClick="@{() -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_80)}"
 		android:text="80%" />
 	    </LinearLayout>
 	  </LinearLayout>

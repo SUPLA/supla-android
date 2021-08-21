@@ -22,6 +22,11 @@ import java.util.*
 import kotlin.properties.Delegates
 
 enum class TemperatureUnit { CELSIUS, FAHRENHEIT }
+enum class ChannelHeight(val percent: Int) { 
+                                               HEIGHT_80(80), 
+                                               HEIGHT_100(100), 
+                                               HEIGHT_150(150)
+}
 
 data class CfgData(private var _serverAddr: String,
                    private var _accessID: Int,
@@ -30,7 +35,8 @@ data class CfgData(private var _serverAddr: String,
                    private var _isAdvanced: Boolean,
 		               private var _authByEmail: Boolean? = null,
                    private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
-                   private var _buttonAutohide: Boolean = true) {
+                   private var _buttonAutohide: Boolean = true,
+                   private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100) {
     val serverAddr = MutableLiveData<String>(_serverAddr)
     val accessID = MutableLiveData<Int>(_accessID)
     val accessIDpwd = MutableLiveData<String>(_accessIDpwd)
@@ -39,6 +45,7 @@ data class CfgData(private var _serverAddr: String,
     val temperatureUnit = MutableLiveData<TemperatureUnit>(_temperatureUnit)
     val isAdvanced = MutableLiveData<Boolean>(_isAdvanced)
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
+    val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
 
     init {
         if(_authByEmail === null) {

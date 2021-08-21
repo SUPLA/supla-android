@@ -52,6 +52,7 @@ public class Preferences {
             = "pref_brightness_picker_type_slider";
     private static final String pref_temperature_unit = "pref_temperature_unit";
     private static final String pref_button_autohide = "pref_button_autohide";
+    private static final String pref_channel_height = "pref_channel_height_percent";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -295,5 +296,14 @@ public class Preferences {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putBoolean(pref_button_autohide, val);
         ed.apply();
+    }
+
+    public int getChannelHeight() {
+        return _prefs.getInt(pref_channel_height, 100);
+    }
+
+    public void setChannelHeight(int val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putInt(pref_channel_height, val);
     }
 }

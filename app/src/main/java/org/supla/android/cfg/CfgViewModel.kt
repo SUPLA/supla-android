@@ -25,11 +25,20 @@ import androidx.lifecycle.Observer
 
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
-    enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, OPEN_PROFILES }
+    enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, 
+                                OPEN_PROFILES }
     val currentProfile = MutableLiveData<String>()
     val cfgData: CfgData = repository.getCfg()
     private val _isDirty = MutableLiveData<Boolean>(false)
+    /**
+     indicates that configuration is changed and should be saved.
+     */
     val isDirty: LiveData<Boolean> = _isDirty
+
+    /**
+     indicates that auth settings are changed.
+     */
+    private var _authSettingsChanged = false
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
@@ -41,34 +50,21 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _serverAddrObserver: Observer<String>
     private val _accessIDObserver: Observer<Int>
     private val _accessIDPwdObserver: Observer<String>
-    private val _temperatureUnitObserver: Observer<TemperatureUnit>
-    private val _advancedObserver: Observer<Boolean>
-    private val _buttonAutohideObserver: Observer<Boolean>
 
     init {
         val email = cfgData.email.value
-        _emailObserver = Observer<String> { if(it != email) _isDirty.value = true }
+        _emailObserver = Observer { if(it != email) setNeedsReauth() }
         val serverAddr = cfgData.serverAddr.value
-        _serverAddrObserver = Observer<String> { if(it != serverAddr) _isDirty.value = true }
+        _serverAddrObserver = Observer<String> { if(it != serverAddr) setNeedsReauth() }
         val accessID = cfgData.accessID.value ?: 0
-        _accessIDObserver = Observer<Int> { if(it != accessID) _isDirty.value = true }
+        _accessIDObserver = Observer<Int> { if(it != accessID) setNeedsReauth() }
         val accessIDPwd = cfgData.accessIDpwd.value
-        _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) _isDirty.value = true }
-        val temperatureUnit = cfgData.temperatureUnit.value
-        _temperatureUnitObserver = Observer<TemperatureUnit> { if(it != temperatureUnit) _isDirty.value = true }
-        val isAdvanced = cfgData.isAdvanced.value ?: false
-        _advancedObserver = Observer { if(it != isAdvanced) _isDirty.value = true }
-
-        val isButtonAutohide = cfgData.buttonAutohide.value!!
-        _buttonAutohideObserver = Observer { if(it != isButtonAutohide) _isDirty.value = true }
+        _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) setNeedsReauth() }
 
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
         cfgData.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
-        cfgData.temperatureUnit.observeForever(_temperatureUnitObserver)
-        cfgData.isAdvanced.observeForever(_advancedObserver)
-        cfgData.buttonAutohide.observeForever(_buttonAutohideObserver)
     }
 
     override fun onCleared() {
@@ -76,24 +72,36 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.serverAddr.removeObserver(_serverAddrObserver)
         cfgData.accessID.removeObserver(_accessIDObserver)
         cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
-        cfgData.temperatureUnit.removeObserver(_temperatureUnitObserver)
-        cfgData.isAdvanced.removeObserver(_advancedObserver)
-        cfgData.buttonAutohide.removeObserver(_buttonAutohideObserver)
 
         super.onCleared()
     }
 
     fun setTemperatureUnit(unit: TemperatureUnit) {
-        cfgData.temperatureUnit.value = unit
+        if(cfgData.temperatureUnit.value != unit) {
+            cfgData.temperatureUnit.value = unit
+            setConfigDirty()
+        }
     }
 
     fun selectEmailAuth(useEmailAuth: Boolean) {
-	      /* TODO: add logic for field cleanup? */
-	      cfgData.authByEmail.value = useEmailAuth
+        if(cfgData.authByEmail.value != useEmailAuth) {
+	          cfgData.authByEmail.value = useEmailAuth
+            setNeedsReauth()
+        }
     }
 
     fun setButtonAutohide(autohideEnabled: Boolean) {
-        cfgData.buttonAutohide.value = autohideEnabled
+        if(cfgData.buttonAutohide.value != autohideEnabled) {
+            cfgData.buttonAutohide.value = autohideEnabled
+            setConfigDirty()
+        }
+    }
+
+    fun setChannelHeight(height: ChannelHeight) {
+        if(cfgData.channelHeight.value != height) {
+            cfgData.channelHeight.value = height
+            setConfigDirty()
+        }
     }
 
 
@@ -111,12 +119,34 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
             repository.storeCfg(cfgData)
             _didSaveConfig.value = true
         }
-        nextAction.value = NavigationFlow.STATUS
+
+        if(_authSettingsChanged == true) {
+            nextAction.value = NavigationFlow.STATUS
+        } else {
+            nextAction.value = NavigationFlow.MAIN
+        }
     }
 
     fun onEmailChange(s: CharSequence, start: Int, before: Int, count: Int) {
         cfgData.accessIDpwd.value = ""
         cfgData.serverAddr.value = ""
         cfgData.accessID.value = 0
+    }
+
+    /**
+     sets reauth flag, used to indicate that authentication
+     settings are changed.
+     */
+    private fun setNeedsReauth() {
+        _authSettingsChanged = true
+        setConfigDirty()
+    }
+
+    /**
+     sets config dirty flag, to indicate that configuration has
+     been updated.
+     */
+    private fun setConfigDirty() {
+        _isDirty.value = true
     }
 }

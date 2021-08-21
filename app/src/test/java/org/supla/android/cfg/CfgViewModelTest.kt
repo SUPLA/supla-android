@@ -162,8 +162,50 @@ class CfgViewModelTest: TestCase() {
         val viewModel = CfgViewModel(repository)
         val origVal = viewModel.cfgData.buttonAutohide.value!!
         val newVal = !origVal
-        viewModel.cfgData.buttonAutohide.value = newVal
+        viewModel.setButtonAutohide(newVal)
         viewModel.onSaveConfig()
         assertEquals(newVal, storedData!!.buttonAutohide.value)
+    }
+
+    @Test
+    fun `default channel height is 100 percent`() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+                                  "dont@ca.re", false)
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+        }
+        val viewModel = CfgViewModel(repository)
+        assertEquals(ChannelHeight.HEIGHT_100, viewModel.cfgData.channelHeight.value)
+    }
+
+    @Test
+    fun `setting channel height to 80`() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+                                  "dont@ca.re", false)
+        var storedData: CfgData? = null
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+            on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
+        }
+        val viewModel = CfgViewModel(repository)
+        viewModel.setChannelHeight(ChannelHeight.HEIGHT_80)
+        viewModel.onSaveConfig()
+        assertEquals(ChannelHeight.HEIGHT_80, storedData!!.channelHeight.value)
+    }
+
+    @Test
+    fun `setting channel height to 150`() {
+        val initialData = CfgData("localhost", 6666, "pwd",
+                                  "dont@ca.re", false)
+        var storedData: CfgData? = null
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+            on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
+        }
+        val viewModel = CfgViewModel(repository)
+        viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
+        viewModel.onSaveConfig()
+        assertEquals(ChannelHeight.HEIGHT_150, storedData!!.channelHeight.value)
+        
     }
 }

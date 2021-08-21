@@ -39,6 +39,7 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.ViewHelper;
+import org.supla.android.Preferences;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -93,19 +94,21 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         right_btn = new FrameLayout(context);
         left_btn = new FrameLayout(context);
 
+        float heightScale = (new Preferences(context).getChannelHeight() + 0f) / 100f;
+        int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScale);
+
         right_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         left_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         content = new RelativeLayout(context);
-        content.setLayoutParams(new LayoutParams(
-                LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+        content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
         content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
