@@ -20,7 +20,10 @@ package org.supla.android.cfg
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Build
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -40,19 +43,25 @@ class CfgActivity: AppCompatActivity() {
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
 
-	val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
-	viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
-	
+	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
+	      viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
+	      
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
-            binding.viewModel = viewModel
-            binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
-            viewModel.nextAction.observe(this) {
-                it?.let { handleNavigationDirective(it) }
-            }
-            viewModel.didSaveConfig.observe(this) {
-                it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
-            }
+        viewModel.nextAction.observe(this) {
+            it?.let { handleNavigationDirective(it) }
+        }
+        viewModel.didSaveConfig.observe(this) {
+            it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+           window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+           window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+           window.setStatusBarColor(getColor(R.color.splash_bg));
+        }
     }
 
     override fun onBackPressed() {
