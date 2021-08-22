@@ -53,9 +53,6 @@ class CfgActivity: AppCompatActivity() {
         viewModel.nextAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
         }
-        viewModel.didSaveConfig.observe(this) {
-            it?.let { SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect() }
-        }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -80,6 +77,7 @@ class CfgActivity: AppCompatActivity() {
         when(what) {
             CfgViewModel.NavigationFlow.CREATE_ACCOUNT -> showCreateAccount()
             CfgViewModel.NavigationFlow.STATUS -> {
+                SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect()
                 showStatus()
                 finish()
             }

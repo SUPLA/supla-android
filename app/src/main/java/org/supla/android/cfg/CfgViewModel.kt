@@ -50,6 +50,8 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _serverAddrObserver: Observer<String>
     private val _accessIDObserver: Observer<Int>
     private val _accessIDPwdObserver: Observer<String>
+    private val _advancedObserver: Observer<Boolean>
+
 
     init {
         val email = cfgData.email.value
@@ -61,10 +63,14 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         val accessIDPwd = cfgData.accessIDpwd.value
         _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) setNeedsReauth() }
 
+        val isAdvanced = cfgData.isAdvanced.value
+        _advancedObserver = Observer { if(it != isAdvanced) setConfigDirty() }
+
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
         cfgData.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
+        cfgData.isAdvanced.observeForever(_advancedObserver)
     }
 
     override fun onCleared() {
@@ -72,6 +78,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.serverAddr.removeObserver(_serverAddrObserver)
         cfgData.accessID.removeObserver(_accessIDObserver)
         cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
+        cfgData.isAdvanced.removeObserver(_advancedObserver)
 
         super.onCleared()
     }

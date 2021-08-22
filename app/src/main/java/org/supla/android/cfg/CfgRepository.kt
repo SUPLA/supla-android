@@ -40,7 +40,8 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
                        prefs.accessIDpwd,
                        prefs.email, prefs.isAdvancedCfg, null, 
                        prefs.temperatureUnit,
-                       prefs.isButtonAutohide)
+                       prefs.isButtonAutohide,
+                       ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100)
     }
 
 
@@ -53,6 +54,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.temperatureUnit = cfg.temperatureUnit.value
         prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
+        prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
     }
 
