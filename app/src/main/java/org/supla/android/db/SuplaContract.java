@@ -82,6 +82,18 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VALUE = "extendedvalue";
     }
 
+    public static abstract class AuthProfileEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "auth_profile";
+
+        public static final String _ID = "_auth_profile_id";
+        public static final String COLUMN_NAME_PROFILE_NAME = "profile_name";
+        public static final String COLUMN_NAME_EMAIL_ADDR = "email_addr";
+        public static final String COLUMN_NAME_SERVER_ADDR = "server_addr";
+        public static final String COLUMN_NAME_ACCESS_ID = "access_id";
+        public static final String COLUMN_NAME_ACCESS_ID_PWD = "access_id_pwd";
+    }
+
     public static abstract class ChannelViewEntry implements BaseColumns {
 
         public static final String VIEW_NAME = "channel_v1";

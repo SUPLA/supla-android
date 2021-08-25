@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.wifi" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -32,6 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+      <uses-library android:name="android.test.runner"
+                    android:required="false" />
 
         <activity
             android:name=".StartActivity"

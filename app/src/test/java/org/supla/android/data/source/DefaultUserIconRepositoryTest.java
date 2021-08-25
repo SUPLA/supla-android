@@ -3,9 +3,10 @@ package org.supla.android.data.source;
 import android.database.Cursor;
 
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.supla.android.data.source.local.UserIconDao;
@@ -38,9 +39,14 @@ public class DefaultUserIconRepositoryTest {
     @Mock
     private ImageCacheProvider imageCacheProvider;
 
-    @InjectMocks
     private DefaultUserIconRepository userIconRepository;
 
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        userIconRepository = new DefaultUserIconRepository(userIconDao, imageCacheProvider, 0);
+    }
+    
     @Test
     public void shouldNotAddUserIconsWhenWrongId() {
         // given

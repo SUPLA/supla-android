@@ -49,15 +49,18 @@ public class DefaultChannelRepository implements ChannelRepository {
 
     private final ChannelDao channelDao;
     private final LocationDao locationDao;
+    private int profileId;
 
-    public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
+    public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao,
+                                    int profileId) {
         this.channelDao = channelDao;
         this.locationDao = locationDao;
+        this.profileId = profileId;
     }
 
     @Override
     public Channel getChannel(int channelId) {
-        return channelDao.getChannel(channelId);
+        return channelDao.getChannel(channelId, profileId);
     }
 
     @Override
