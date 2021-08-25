@@ -831,8 +831,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
-            lp.topMargin = (int)(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
-                                 * heightScaleFactor);
+            lp.topMargin = (int)(heightScaleFactor<0.7?0:(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+                                 * heightScaleFactor));
             setLayoutParams(lp);
         }
 
@@ -897,11 +897,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         private void SetTextDimensions(TextView Text, ImageView Img,
                                        Boolean visible, int width) {
-
+            int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
+            int sh = scaledDimension(h);
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+            RelativeLayout.LayoutParams lp =
+                new RelativeLayout.LayoutParams(width, sh);
 
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
@@ -920,9 +921,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetImgDimensions(ImageView Img, int width, int height) {
-
+            int sh = scaledDimension(height);
+            int sw = scaledDimension(width);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    scaledDimension(width), scaledDimension(height));
+                    sw<width?sw:width, sh<height?sh:height);
 
 
             if (Img == Img1) {
