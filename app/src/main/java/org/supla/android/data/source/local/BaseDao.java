@@ -105,9 +105,9 @@ public abstract class BaseDao {
         });
     }
 
-    void insert(DbItem item, String tableName) {
-        write(sqLiteDatabase -> {
-            sqLiteDatabase.insert(tableName, null, item.getContentValues());
+    long insert(DbItem item, String tableName) {
+        return write(sqLiteDatabase -> {
+            return sqLiteDatabase.insertOrThrow(tableName, null, item.getContentValues());
         });
     }
 
