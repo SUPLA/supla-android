@@ -189,6 +189,8 @@
 					  app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
 					  android:text="AUTO"
 					  android:buttonTint="@color/channel_btn"
+            android:checked="@{viewModel.serverAutoDiscovery}"
+            android:onClick="@{() -> viewModel.toggleServerAutoDiscovery()}"
 					  android:textSize="@dimen/default_text_size" />
 
 				  <TextView

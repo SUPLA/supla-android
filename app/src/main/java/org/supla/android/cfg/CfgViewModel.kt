@@ -40,6 +40,12 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
      */
     private var _authSettingsChanged = false
 
+    /**
+     server address auto discovery flag.
+     */
+    private val _serverAutoDiscovery = MutableLiveData<Boolean>()
+    val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
+
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val saveEnabled = MutableLiveData<Boolean>(true)
@@ -71,6 +77,8 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
         cfgData.isAdvanced.observeForever(_advancedObserver)
+
+        _serverAutoDiscovery.value = !(email?.isEmpty() ?: true) && (serverAddr?.isEmpty() ?: true)
     }
 
     override fun onCleared() {
@@ -138,6 +146,15 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.accessIDpwd.value = ""
         cfgData.serverAddr.value = ""
         cfgData.accessID.value = 0
+    }
+
+    fun toggleServerAutoDiscovery() {
+        if(_serverAutoDiscovery.value == true) {
+            _serverAutoDiscovery.value = false
+        } else {
+            cfgData.serverAddr.value = ""
+            _serverAutoDiscovery.value = true
+        }
     }
 
     /**
