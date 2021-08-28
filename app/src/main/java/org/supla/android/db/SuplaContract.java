@@ -92,6 +92,16 @@ public class SuplaContract {
         public static final String COLUMN_NAME_SERVER_ADDR = "server_addr";
         public static final String COLUMN_NAME_ACCESS_ID = "access_id";
         public static final String COLUMN_NAME_ACCESS_ID_PWD = "access_id_pwd";
+
+        public static final String[] ALL_COLUMNS = {
+             AuthProfileEntry._ID,
+             AuthProfileEntry.COLUMN_NAME_PROFILE_NAME,
+             AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR,
+             AuthProfileEntry.COLUMN_NAME_SERVER_ADDR,
+             AuthProfileEntry.COLUMN_NAME_ACCESS_ID,
+             AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD
+        };
+                                                    
     }
 
     public static abstract class ChannelViewEntry implements BaseColumns {

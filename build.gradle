@@ -8,6 +8,7 @@ buildscript {
     ext.nav_version = "2.3.5"
     ext.gradle_version = "6.5"
     ext.multidex_version = "2.0.1"
+    ext.room_version = "2.3.0"
 
     repositories {
         google()

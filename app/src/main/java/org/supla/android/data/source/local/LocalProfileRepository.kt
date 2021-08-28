@@ -19,19 +19,58 @@ package org.supla.android.data.source.local
  */
 
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.db.SuplaContract
 import org.supla.android.db.AuthProfileItem
 
 class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepository, BaseDao(provider) {
 
 
-    override fun createNamedProfile(name: String): Int {
+    override fun createNamedProfile(name: String): Long {
         val item = AuthProfileItem(name)
 
-        return item.id.toInt()
+        return insert(item, 
+                      SuplaContract.AuthProfileEntry.TABLE_NAME)
+    }
+
+    override fun getProfile(id: Long): AuthProfileItem? {
+        return getItem({ AuthProfileItem("") }, 
+                       SuplaContract.AuthProfileEntry.ALL_COLUMNS, 
+                       SuplaContract.AuthProfileEntry.TABLE_NAME,
+                       key(SuplaContract.AuthProfileEntry._ID, id))
+    }
+
+    override fun deleteProfile(id: Long) {
+        delete(SuplaContract.AuthProfileEntry.TABLE_NAME,
+               key(SuplaContract.AuthProfileEntry._ID, id))
+    }
+
+    override fun updateProfile(profile: AuthProfileItem) {
+        update(profile, SuplaContract.AuthProfileEntry.TABLE_NAME,
+               key(SuplaContract.AuthProfileEntry._ID, profile.id))
     }
 
     override val allProfiles: List<AuthProfileItem>
         get() {
-            throw Exception("not yet")
+            return read() {
+                var rv = mutableListOf<AuthProfileItem>()
+                val cursor = 
+                    it.query(SuplaContract.AuthProfileEntry.TABLE_NAME,
+                             SuplaContract.AuthProfileEntry.ALL_COLUMNS,
+                             null /*selection*/,
+                             null /*selectionArgs*/,
+                             null /*groupBy*/,
+                             null /*having*/,
+                             SuplaContract.AuthProfileEntry._ID /*order by*/,
+                             null /*limit*/)
+                cursor.moveToFirst()
+                while(!cursor.isAfterLast()) {
+                    val itm = AuthProfileItem("")
+                    itm.AssignCursorData(cursor)
+                    rv.add(itm)
+                    cursor.moveToNext()
+                }
+                cursor.close()
+                rv
+            }
         }
 }
