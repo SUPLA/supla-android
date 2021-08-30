@@ -58,8 +58,11 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnOpen;
     private Button btnClose;
     private Button btnRecalibrate;
+    private TextView rsTvPressTime;
+    private SuplaWarningIcon warningIcon;
     private Timer delayTimer1;
     private SuperuserAuthorizationDialog authDialog;
+    private long btnUpDownTouchedAt;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -100,6 +103,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnOpen = findViewById(R.id.rsBtnOpen);
         btnClose = findViewById(R.id.rsBtnClose);
         btnRecalibrate = findViewById(R.id.rsBtnRecalibrate);
+        rsTvPressTime = findViewById(R.id.rsTvPressTime);
+        warningIcon = findViewById(R.id.rsWarningIcon);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
@@ -142,6 +147,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         }
 
         btnRecalibrate.setVisibility(INVISIBLE);
+        rsTvPressTime.setVisibility(INVISIBLE);
+        warningIcon.setChannel(getChannelBase());
 
         if (!isGroup()) {
             status.setVisibility(View.GONE);
@@ -157,6 +164,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             if (p < 0) {
                 tvPercent.setText(R.string.calibration);
+                rsTvPressTime.setVisibility(VISIBLE);
             } else {
                 tvPercent.setText(Integer.toString((int) p) + "%");
             }
@@ -303,6 +311,22 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         if (client == null)
             return false;
 
+        if (v == btnUp || v == btnDown) {
+            if (action == MotionEvent.ACTION_DOWN) {
+                btnUpDownTouchedAt = System.currentTimeMillis();
+            } else if (action == MotionEvent.ACTION_UP
+                    || action == MotionEvent.ACTION_CANCEL) {
+                if (btnUpDownTouchedAt > 0) {
+                    String time = String.format("%.2fs",
+                            (System.currentTimeMillis()-btnUpDownTouchedAt)/1000f);
+                    rsTvPressTime.setText(time);
+                } else {
+                    rsTvPressTime.setText("");
+                }
+                btnUpDownTouchedAt = 0;
+            }
+        }
+
         if (v == btnUp) {
 
             client.open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
@@ -393,6 +417,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         public void run() {
             // You can do anything you want with param
         }
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+        rsTvPressTime.setText("");
     }
 }
 

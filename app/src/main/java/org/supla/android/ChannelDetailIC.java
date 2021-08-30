@@ -63,6 +63,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private TextView tvCurrentCost;
     private TextView tvTotalCost;
     private ImageView icImgIcon;
+    private SuplaWarningIcon warningIcon;
     private Spinner icSpinnerMaster;
     private Spinner icSpinnerSlave;
     private ImageView ivGraph;
@@ -95,6 +96,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         icImgIcon = findViewById(R.id.icimgIcon);
         icImgIcon.setClickable(true);
         icImgIcon.setOnClickListener(this);
+        warningIcon = findViewById(R.id.icWarningIcon);
 
         chartHelper = new ImpulseCounterChartHelper(getContext());
         chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
@@ -139,6 +141,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
             icImgIcon.setTag(channel.getImageIdx());
         }
+
+        warningIcon.setChannel(getChannelBase());
 
         MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
