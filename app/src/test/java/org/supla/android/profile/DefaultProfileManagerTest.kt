@@ -75,33 +75,38 @@ class DefaultProfileManagerTest: TestCase() {
         val cp = MockedImageCacheProvider()
         val udao = UserIconDao(dbh)
         val id1 = repo.createNamedProfile("p1")
+        assertEquals(1, id1)
         val id2 = repo.createNamedProfile("p2")
+        assertEquals(2, id2)
         val uirepo1 = DefaultUserIconRepository(udao, cp, id1)
         val uirepo2 = DefaultUserIconRepository(udao, cp, id2)
         
-        val iconid = 1
+        val iconid1 = 1
+        val iconid2 = 2
 
         // given that each profile has a single icon added
-        val img1 = byteArrayOf(0x01)
-        val img2 = byteArrayOf(0x02)
-        uirepo1.addUserIcons(iconid, img1, img1, img1, img1)
-        uirepo2.addUserIcons(iconid, img2, img2, img2, img2)
+        val img1 = byteArrayOf(0x08)
+        val img2 = byteArrayOf(0x09)
+        uirepo1.addUserIcons(iconid1, img1, img1, img1, img1)
+        uirepo2.addUserIcons(iconid2, img2, img2, img2, img2)
 
         // when profile 1 is selected
         pM.activateProfile(id1)
         
         // then icon set 1 is available
+        assertEquals(id1, pM.activeProfile.id)
         DefaultUserIconRepository(udao, cp, pM.activeProfile.id)
             .loadUserIconsIntoCache()
-        assertEquals(0x01, cp.img[0])
+        assertEquals(0x08, cp.img[0])
 
         // when profile 2 is selected
         pM.activateProfile(id2)
         
         // then icon set 2 is available
+        assertEquals(id2, pM.activeProfile.id)
         DefaultUserIconRepository(udao, cp, pM.activeProfile.id)
             .loadUserIconsIntoCache()
-        assertEquals(0x02, cp.img[0])
+        assertEquals(0x09, cp.img[0])
 
     }
 }

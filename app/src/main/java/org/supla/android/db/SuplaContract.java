@@ -207,6 +207,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_IMAGE2 = "image2";
         public static final String COLUMN_NAME_IMAGE3 = "image3";
         public static final String COLUMN_NAME_IMAGE4 = "image4";
+
+        // Reference to owning profile
+        public static final String COLUMN_NAME_PROFILE_ID = "profile_id";
     }
 
     public static abstract class ElectricityMeterLogEntry implements BaseColumns {

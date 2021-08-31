@@ -97,7 +97,7 @@ public class DefaultUserIconRepositoryTest {
         assertTrue(result);
 
         ArgumentCaptor<UserIconDao.Image[]> insertedImagesCaptor = ArgumentCaptor.forClass(UserIconDao.Image[].class);
-        verify(userIconDao).insert(eq(id), insertedImagesCaptor.capture());
+        verify(userIconDao).insert(eq(id), insertedImagesCaptor.capture(), eq(0L));
         ArgumentCaptor<UserIconDao.Image> cachedImagesCaptor = ArgumentCaptor.forClass(UserIconDao.Image.class);
         verify(imageCacheProvider, times(4)).addImage(eq(id), cachedImagesCaptor.capture());
         verifyNoMoreInteractions(userIconDao, imageCacheProvider);
@@ -122,7 +122,7 @@ public class DefaultUserIconRepositoryTest {
         // when
         userIconRepository.deleteUserIcons();
         // then
-        verify(userIconDao).delete();
+        verify(userIconDao).delete(0);
         verifyNoMoreInteractions(userIconDao);
         verifyZeroInteractions(imageCacheProvider);
     }
@@ -136,7 +136,7 @@ public class DefaultUserIconRepositoryTest {
         int imageColumnIndex = 1;
 
         Cursor cursor = mockCursor(id, idColumnIndex, image, imageColumnIndex);
-        when(userIconDao.getUserIcons()).thenReturn(cursor);
+        when(userIconDao.getUserIcons(0)).thenReturn(cursor);
 
         // when
         userIconRepository.loadUserIconsIntoCache();
@@ -164,7 +164,7 @@ public class DefaultUserIconRepositoryTest {
         int imageColumnIndex = 1;
 
         Cursor cursor = mockCursor(id, idColumnIndex, image, imageColumnIndex);
-        when(userIconDao.getUserIcons()).thenReturn(cursor);
+        when(userIconDao.getUserIcons(0)).thenReturn(cursor);
 
         // when
         userIconRepository.loadUserIconsIntoCache();

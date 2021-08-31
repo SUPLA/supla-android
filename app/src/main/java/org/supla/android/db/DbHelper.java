@@ -363,7 +363,13 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {
-        
+        final String SQL_ALTER_USER_ICONS_ENTRY =
+            "ALTER TABLE " +
+            SuplaContract.UserIconsEntry.TABLE_NAME +
+            " ADD COLUMN " +
+            SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID +
+            " INTEGER NOT NULL DEFAULT 1";
+        execSQL(db, SQL_ALTER_USER_ICONS_ENTRY);
     }
 
     @Override
@@ -376,8 +382,11 @@ public class DbHelper extends BaseDbHelper {
         createChannelGroupRelationTable(db);
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
-        createAuthProfileTable(db);
 
+        if(DbHelper.DATABASE_VERSION == 19) {
+            upgradeToV19(db);
+        }
+        
         // Create views at the end
         createChannelView(db);
         createChannelGroupValueView(db);
