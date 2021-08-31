@@ -53,6 +53,7 @@ public class Preferences {
     private static final String pref_temperature_unit = "pref_temperature_unit";
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
+    public static final String pref_active_profile = "pref_active_profile";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -305,6 +306,16 @@ public class Preferences {
     public void setChannelHeight(int val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putInt(pref_channel_height, val);
+        ed.apply();
+    }
+
+    public long getActiveProfileId() {
+        return _prefs.getLong(pref_active_profile, 0);
+    }
+
+    public void setActiveProfileId(long val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putLong(pref_active_profile, val);
         ed.apply();
     }
 }

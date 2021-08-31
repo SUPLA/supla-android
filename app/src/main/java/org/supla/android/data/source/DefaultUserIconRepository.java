@@ -30,11 +30,11 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
     private final UserIconDao userIconDao;
     private final ImageCacheProvider imageCacheProvider;
-    private final int profileId;
+    private final long profileId;
 
     public DefaultUserIconRepository(UserIconDao userIconDao,
                                      ImageCacheProvider imageCacheProvider,
-                                     int profileId) {
+                                     long profileId) {
         this.userIconDao = userIconDao;
         this.imageCacheProvider = imageCacheProvider;
         this.profileId = profileId;
