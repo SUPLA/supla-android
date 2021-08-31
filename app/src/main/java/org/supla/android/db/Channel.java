@@ -223,7 +223,7 @@ public class Channel extends ChannelBase {
 
     public byte getClosingPercentage() {
 
-        byte p = Value != null ? Value.getRollerShutterValue().getPosition() : 0;
+        byte p = Value != null ? Value.getRollerShutterValue().getClosingPercentage() : 0;
 
         if (p < 100 && getSubValueHi())
             p = 100;

@@ -20,29 +20,29 @@ package org.supla.android.lib;
 
 public class RollerShutterValue {
 
-    private byte position;
+    private byte closingPercentage;
     private byte tilt;
     private byte bottomPosition;
     private short flags;
 
     public RollerShutterValue(byte[] value) {
-        position = -1;
+        closingPercentage = -1;
 
         if (value != null && value.length >= 5) {
-            position = value[0];
+            closingPercentage = value[0];
             tilt = value[1];
             bottomPosition = value[2];
             flags = value[3];
             flags |= (short)(value[4] << 8);
         }
 
-        if (position < -1 || position > 100) {
-            position = -1;
+        if (closingPercentage < -1 || closingPercentage > 100) {
+            closingPercentage = -1;
         }
     }
 
-    public byte getPosition() {
-        return position;
+    public byte getClosingPercentage() {
+        return closingPercentage;
     }
 
     public byte getTilt() {
