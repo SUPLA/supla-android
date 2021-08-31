@@ -704,24 +704,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    public void onChannelWarningButtonClick(ChannelListView clv, int remoteId) {
-        Channel channel = getDbHelper().getChannel(remoteId);
-        if (channel != null) {
-            String warning = channel.getChannelWarningMessage(this);
-            if (warning != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(android.R.string.dialog_alert_title);
-                builder.setMessage(warning);
-
-                builder.setNeutralButton(R.string.ok, (dialog, id) -> dialog.cancel());
-
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        }
-    }
-
-    @Override
     public void onChannelCaptionLongClick(ChannelListView clv, int remoteId) {
         SuplaApp.Vibrate(this);
 

@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.util.Base64;
 
 import org.supla.android.lib.DigiglassValue;
+import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
@@ -417,10 +418,26 @@ public class ChannelValue extends DbItem {
         return new DigiglassValue(getChannelValue());
     }
 
+    public RollerShutterValue getRollerShutterValue() {
+        return new RollerShutterValue(getChannelValue());
+    }
+
     public boolean overcurrentRelayOff() {
         byte[] value = getChannelValue();
 
         return value.length > 1
                 && (value[1] & SuplaConst.SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF) > 0;
+    }
+
+    public boolean calibrationFailed() {
+        return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_CALIBRATION_FAILED) > 0;
+    }
+
+    public boolean calibrationLost() {
+        return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_CALIBRATION_LOST) > 0;
+    }
+
+    public boolean motorProblem() {
+        return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_MOTOR_PROBLEM) > 0;
     }
 }

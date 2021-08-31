@@ -406,4 +406,7 @@
     <string name="dgf_planned_regeneration_in_progress" translatable="false">Rigenerazione pianificata in corso.</string>
     <string name="dgf_regeneration_after20h" translatable="false">Rigenerazione avviata dopo 20 ore di funzionamento in corso.</string>
     <string name="recalibration_question">Confermi di voler avviare la calibrazione?</string>
+    <string name="calibration_failed">Calibrazione fallita.</string>
+    <string name="calibration_lost">Calibrazione persa.</string>
+    <string name="motor_problem">Problema al motore / Arresto inaspettato.</string>
 </resources>

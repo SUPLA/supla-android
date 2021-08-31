@@ -375,7 +375,8 @@ public class SuplaClient extends Thread {
     public boolean turnOnOff(Context context, boolean turnOn,
                              int remoteId, boolean group, int channelFunc, boolean vibrate) {
         if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH)) {
+              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
             if (turnOn) {
                 DbHelper helper = DbHelper.getInstance(context);
                 if (helper == null) {
