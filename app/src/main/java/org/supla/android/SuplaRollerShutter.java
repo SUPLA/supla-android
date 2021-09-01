@@ -201,6 +201,7 @@ public class SuplaRollerShutter extends View {
             bottomPosition = 100;
         }
         this.bottomPosition = bottomPosition;
+        invalidate();
     }
 
     public int getLouverCount() {
