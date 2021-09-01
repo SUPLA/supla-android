@@ -149,12 +149,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         btnRecalibrate.setVisibility(INVISIBLE);
         rsTvPressTime.setVisibility(INVISIBLE);
-        warningIcon.setChannel(getChannelBase());
 
         if (!isGroup()) {
             status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
             setRollerShutterVisible(channel);
+            warningIcon.setChannel(channel);
 
             RollerShutterValue rsValue = channel.getValue().getRollerShutterValue();
 
@@ -177,6 +177,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         } else {
             status.setVisibility(View.VISIBLE);
+            warningIcon.setChannel(null);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             setRollerShutterVisible(cgroup);

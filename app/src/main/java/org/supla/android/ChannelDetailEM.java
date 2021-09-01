@@ -374,7 +374,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             emImgIcon.setTag(channel.getImageIdx());
         }
 
-        warningIcon.setChannel(getChannelBase());
+        warningIcon.setChannel(channel);
 
         ChannelExtendedValue cev = channel.getExtendedValue();
 
