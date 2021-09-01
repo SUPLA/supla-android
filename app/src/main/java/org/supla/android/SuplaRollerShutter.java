@@ -57,7 +57,7 @@ public class SuplaRollerShutter extends View {
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
     private ArrayList<Float> Markers = null;
-    private float bootomPosition;
+    private float bottomPosition;
 
     public SuplaRollerShutter(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -190,17 +190,17 @@ public class SuplaRollerShutter extends View {
         invalidate();
     }
 
-    public float getBootomPosition() {
-        return bootomPosition;
+    public float getBottomPosition() {
+        return bottomPosition;
     }
 
-    public void setBootomPosition(float bootomPosition) {
-        if (bootomPosition < 0) {
-            bootomPosition = 0;
-        } else if (bootomPosition > 100) {
-            bootomPosition = 100;
+    public void setBottomPosition(float bottomPosition) {
+        if (bottomPosition < 0) {
+            bottomPosition = 0;
+        } else if (bottomPosition > 100) {
+            bottomPosition = 100;
         }
-        this.bootomPosition = bootomPosition;
+        this.bottomPosition = bottomPosition;
     }
 
     public int getLouverCount() {
@@ -379,9 +379,9 @@ public class SuplaRollerShutter extends View {
 
         h = getHeight();
 
-        if (bootomPosition > 0) {
-            if (percent <= bootomPosition) {
-                h *= (percent * 100 / bootomPosition) / 100;
+        if (bottomPosition > 0) {
+            if (percent <= bottomPosition) {
+                h *= (percent * 100 / bottomPosition) / 100;
             }
         } else {
             h *= percent / 100;
@@ -401,7 +401,7 @@ public class SuplaRollerShutter extends View {
 
         int _LouverCount = LouverCount;
 
-        if (bootomPosition > 0 && percent > bootomPosition) {
+        if (bottomPosition > 0 && percent > bottomPosition) {
             _LouverCount = (int)(getHeight() / LouverHeight)+1;
         }
 
@@ -411,8 +411,8 @@ public class SuplaRollerShutter extends View {
 
             float _LouverSpaceing = LouverSpaceing;
 
-            if (bootomPosition > 0 && percent > bootomPosition) {
-                float n = (_LouverCount-1)-((100-percent)/((100-bootomPosition) / (_LouverCount-1)));
+            if (bottomPosition > 0 && percent > bottomPosition) {
+                float n = (_LouverCount-1)-((100-percent)/((100- bottomPosition) / (_LouverCount-1)));
 
                 if (n-a > 0) {
                     n = 1 - (n-a);

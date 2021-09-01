@@ -160,7 +160,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             rollerShutter.setMarkers(null);
             rollerShutter.setPercent(rsValue.getClosingPercentage());
-            rollerShutter.setBootomPosition(rsValue.getBottomPosition());
+            rollerShutter.setBottomPosition(rsValue.getBottomPosition());
             roofWindow.setMarkers(null);
             roofWindow.setClosingPercentage(rsValue.getClosingPercentage());
 
@@ -183,7 +183,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             setRollerShutterVisible(cgroup);
 
             rollerShutter.setPercent(0);
-            rollerShutter.setBootomPosition(0);
+            rollerShutter.setBottomPosition(0);
             roofWindow.setClosingPercentage(0);
             status.setPercent(cgroup.getOnLinePercent());
 
