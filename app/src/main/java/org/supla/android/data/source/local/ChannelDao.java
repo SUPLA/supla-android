@@ -239,10 +239,10 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getChannelListCursorWithDefaultOrder(String where) {
-        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
                 + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
-                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED";
 
         return getChannelListCursor(orderBY, where);
     }
