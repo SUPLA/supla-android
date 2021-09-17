@@ -149,18 +149,18 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         btnRecalibrate.setVisibility(INVISIBLE);
         rsTvPressTime.setVisibility(INVISIBLE);
-        warningIcon.setChannel(getChannelBase());
 
         if (!isGroup()) {
             status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
             setRollerShutterVisible(channel);
+            warningIcon.setChannel(channel);
 
             RollerShutterValue rsValue = channel.getValue().getRollerShutterValue();
 
             rollerShutter.setMarkers(null);
             rollerShutter.setPercent(rsValue.getClosingPercentage());
-            rollerShutter.setBootomPosition(rsValue.getBottomPosition());
+            rollerShutter.setBottomPosition(rsValue.getBottomPosition());
             roofWindow.setMarkers(null);
             roofWindow.setClosingPercentage(rsValue.getClosingPercentage());
 
@@ -177,12 +177,13 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         } else {
             status.setVisibility(View.VISIBLE);
+            warningIcon.setChannel(null);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
             setRollerShutterVisible(cgroup);
 
             rollerShutter.setPercent(0);
-            rollerShutter.setBootomPosition(0);
+            rollerShutter.setBottomPosition(0);
             roofWindow.setClosingPercentage(0);
             status.setPercent(cgroup.getOnLinePercent());
 

@@ -446,4 +446,8 @@
     <string translatable="false" name="calibration_failed">Calibration failed.</string>
     <string translatable="false" name="calibration_lost">Calibration lost.</string>
     <string translatable="false" name="motor_problem">Motor problem / Unexpected stop.</string>
+    <string translatable="false" name="lastconnectionresetcause_unknown">0: unknown</string>
+    <string translatable="false" name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
+    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi connection lost</string>
+    <string translatable="false" name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
 </resources>

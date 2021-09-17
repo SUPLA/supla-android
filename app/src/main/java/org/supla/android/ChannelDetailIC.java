@@ -142,7 +142,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             icImgIcon.setTag(channel.getImageIdx());
         }
 
-        warningIcon.setChannel(getChannelBase());
+        warningIcon.setChannel(channel);
 
         MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
