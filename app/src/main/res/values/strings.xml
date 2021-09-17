@@ -93,8 +93,19 @@
     <string name="access_id">ACCESS IDENTIFIER</string>
     <string name="password">PASSWORD</string>
     <string name="email">E-MAIL ADDRESS</string>
+    <string name="temp_unit">TEMPERATURE UNIT</string>
     <string name="advanced_settings">Advanced settings</string>
     <string name="create_account"><u>Create an account</u></string>
+
+    <!-- Configuration screen, profile name of current profile
+	 (editable) -->
+    <string name="cfg_label_profile_name">CURRENT PROFILE</string>
+    <!-- default name for a profile (usually assigned for initial
+	 account or when migrating settings from previous version of
+	 the app. -->
+    <string name="cfg_profile_name_default">Default</string>
+    <string name="cfg_label_email_auth">Email authorization</string>
+    <string name="cfg_label_access_id_auth">Access identifier</string>
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 

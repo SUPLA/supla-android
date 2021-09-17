@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.cfg.CfgActivity;
 
 @SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
@@ -86,7 +87,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public static void showCfg(Activity sender) {
-        showActivity(sender, CfgActivity.class, 0);
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0);
     }
 
     @Override

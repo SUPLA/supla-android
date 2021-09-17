@@ -82,6 +82,28 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VALUE = "extendedvalue";
     }
 
+    public static abstract class AuthProfileEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "auth_profile";
+
+        public static final String _ID = "_auth_profile_id";
+        public static final String COLUMN_NAME_PROFILE_NAME = "profile_name";
+        public static final String COLUMN_NAME_EMAIL_ADDR = "email_addr";
+        public static final String COLUMN_NAME_SERVER_ADDR = "server_addr";
+        public static final String COLUMN_NAME_ACCESS_ID = "access_id";
+        public static final String COLUMN_NAME_ACCESS_ID_PWD = "access_id_pwd";
+
+        public static final String[] ALL_COLUMNS = {
+             AuthProfileEntry._ID,
+             AuthProfileEntry.COLUMN_NAME_PROFILE_NAME,
+             AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR,
+             AuthProfileEntry.COLUMN_NAME_SERVER_ADDR,
+             AuthProfileEntry.COLUMN_NAME_ACCESS_ID,
+             AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD
+        };
+                                                    
+    }
+
     public static abstract class ChannelViewEntry implements BaseColumns {
 
         public static final String VIEW_NAME = "channel_v1";
@@ -185,6 +207,9 @@ public class SuplaContract {
         public static final String COLUMN_NAME_IMAGE2 = "image2";
         public static final String COLUMN_NAME_IMAGE3 = "image3";
         public static final String COLUMN_NAME_IMAGE4 = "image4";
+
+        // Reference to owning profile
+        public static final String COLUMN_NAME_PROFILE_ID = "profile_id";
     }
 
     public static abstract class ElectricityMeterLogEntry implements BaseColumns {

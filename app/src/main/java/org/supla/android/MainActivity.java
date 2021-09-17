@@ -24,6 +24,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,7 +59,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnDetailListener,
         ChannelListView.OnSectionLayoutTouchListener,
         SuplaRestApiClientTask.IAsyncResults,
-        ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener {
+        ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -118,6 +121,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuBar();
         showMenuButton();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -277,6 +282,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     protected void onDestroy() {
         // Trace.d("MainActivity", "Destroyed!");
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .unregisterOnSharedPreferenceChangeListener(this);
+
         super.onDestroy();
     }
 
@@ -554,7 +563,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        clv.hideButton(false);
+        if(new Preferences(this).isButtonAutohide())
+            clv.hideButton(false);
 
         if (client == null)
             return;
@@ -717,6 +727,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         LocationCaptionEditor editor = new LocationCaptionEditor(this);
         editor.edit(locationId);
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences prefss, String key) {
+        if(key.equals(Preferences.pref_channel_height)) {
+            /* Ivalidate the adapter, so that channel list can
+               be rebuilt with new layout. */
+            channelListViewCursorAdapter = null;
+        }
     }
 
     private interface Reorder {

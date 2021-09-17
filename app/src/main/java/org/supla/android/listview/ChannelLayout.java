@@ -40,6 +40,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
+import org.supla.android.Preferences;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -82,6 +83,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private boolean LeftButtonEnabled;
     private boolean DetailSliderEnabled;
 
+    private float heightScaleFactor = 1f;
+
 
     public ChannelLayout(Context context, ChannelListView parentListView) {
         super(context);
@@ -94,19 +97,21 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         right_btn = new FrameLayout(context);
         left_btn = new FrameLayout(context);
 
+        heightScaleFactor = (new Preferences(context).getChannelHeight() + 0f) / 100f;
+        int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
+
         right_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         left_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         content = new RelativeLayout(context);
-        content.setLayoutParams(new LayoutParams(
-                LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+        content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
         content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
@@ -158,10 +163,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         bottom_line = new LineView(context);
         content.addView(bottom_line);
 
-        imgl = new ChannelImageLayout(context);
+        imgl = new ChannelImageLayout(context, heightScaleFactor);
         content.addView(imgl);
 
-        caption_text = new CaptionView(context, imgl.getId());
+        caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
         caption_text.setOnLongClickListener(this);
         content.addView(caption_text);
 
@@ -801,10 +806,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         public int left_btn_right;
     }
 
-    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
+    private class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
 
-        public CaptionView(Context context, int imgl_id) {
+        public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
             super(context);
 
             setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
@@ -818,7 +823,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
+            lp.topMargin = (int)(heightScaleFactor<0.7?0:(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+                                 * heightScaleFactor));
             setLayoutParams(lp);
         }
 
@@ -832,9 +838,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
+        private float heightScaleFactor = 1f;
 
-        public ChannelImageLayout(Context context) {
+        public ChannelImageLayout(Context context, float heightScaleFactor) {
             super(context);
+
+            this.heightScaleFactor = heightScaleFactor;
 
             setId(ViewHelper.generateViewId());
             mFunc = 0;
@@ -852,9 +861,14 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             ImageView Img = new ImageView(context);
             Img.setId(ViewHelper.generateViewId());
+            Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             addView(Img);
 
             return Img;
+        }
+
+        private int scaledDimension(int dim) {
+            return (int)(dim * heightScaleFactor);
         }
 
         private TextView newTextView(Context context) {
@@ -875,11 +889,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         private void SetTextDimensions(TextView Text, ImageView Img,
                                        Boolean visible, int width) {
-
+            int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
+            int sh = scaledDimension(h);
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+            RelativeLayout.LayoutParams lp =
+                new RelativeLayout.LayoutParams(width, sh);
 
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
@@ -898,9 +913,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetImgDimensions(ImageView Img, int width, int height) {
-
+            int sh = scaledDimension(height);
+            int sw = scaledDimension(width);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, height);
+                    sw<width?sw:width, sh<height?sh:height);
 
 
             if (Img == Img1) {
@@ -954,7 +970,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             }
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+                    width,
+                    scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_img_height)));
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);

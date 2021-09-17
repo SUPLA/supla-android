@@ -20,8 +20,8 @@ package org.supla.android.data.source.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
@@ -41,7 +41,7 @@ public class ChannelDao extends BaseDao {
         super(databaseAccessProvider);
     }
 
-    public Channel getChannel(int channelId) {
+    public Channel getChannel(int channelId, int profileId) {
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID,

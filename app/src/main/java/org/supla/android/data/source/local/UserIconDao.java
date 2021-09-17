@@ -21,7 +21,7 @@ package org.supla.android.data.source.local;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.supla.android.db.SuplaContract;
 
@@ -31,7 +31,7 @@ public class UserIconDao extends BaseDao {
         super(databaseAccessProvider);
     }
 
-    public void insert(int Id, Image images[]) {
+    public void insert(int Id, Image images[], long profileId) {
         if (images.length != 4) {
             throw new IllegalArgumentException("Expects allways 4 images");
         }
@@ -44,6 +44,7 @@ public class UserIconDao extends BaseDao {
                 values.put(image.column, image.value);
             }
         }
+        values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID, profileId);
 
         write(sqLiteDatabase -> {
             sqLiteDatabase.insertWithOnConflict(SuplaContract.UserIconsEntry.TABLE_NAME,
@@ -51,17 +52,21 @@ public class UserIconDao extends BaseDao {
         });
     }
 
-    public void delete() {
-        delete(SuplaContract.UserIconsEntry.TABLE_NAME);
+    public void delete(long profileId) {
+        delete(SuplaContract.UserIconsEntry.TABLE_NAME,
+               key(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID, profileId));
     }
 
-    public Cursor getUserIcons() {
+    public Cursor getUserIcons(long profileId) {
         String sql = "SELECT " + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
-                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME
+                + " WHERE " + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID
+                + " = " + profileId
+            ;
 
         return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
     }

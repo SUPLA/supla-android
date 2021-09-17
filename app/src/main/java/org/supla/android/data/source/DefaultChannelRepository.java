@@ -19,7 +19,7 @@ package org.supla.android.data.source;
  */
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
@@ -49,15 +49,18 @@ public class DefaultChannelRepository implements ChannelRepository {
 
     private final ChannelDao channelDao;
     private final LocationDao locationDao;
+    private int profileId;
 
-    public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
+    public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao,
+                                    int profileId) {
         this.channelDao = channelDao;
         this.locationDao = locationDao;
+        this.profileId = profileId;
     }
 
     @Override
     public Channel getChannel(int channelId) {
-        return channelDao.getChannel(channelId);
+        return channelDao.getChannel(channelId, profileId);
     }
 
     @Override

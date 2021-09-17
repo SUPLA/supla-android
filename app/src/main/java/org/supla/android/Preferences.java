@@ -26,6 +26,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 
+import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 
@@ -49,6 +50,10 @@ public class Preferences {
     private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
     private static final String pref_brightness_picker_type_slider
             = "pref_brightness_picker_type_slider";
+    private static final String pref_temperature_unit = "pref_temperature_unit";
+    private static final String pref_button_autohide = "pref_button_autohide";
+    public static final String pref_channel_height = "pref_channel_height_percent";
+    public static final String pref_active_profile = "pref_active_profile";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -263,5 +268,54 @@ public class Preferences {
             return _prefs.getBoolean(pref_brightness_picker_type_slider, false);
         }
         return null;
+    }
+
+    public TemperatureUnit getTemperatureUnit() {
+        String v = _prefs.getString(pref_temperature_unit, "C");
+        if (v.length() < 1) v = "C";
+        switch (v.charAt(0)) {
+            case 'F':
+                return TemperatureUnit.FAHRENHEIT;
+            default:
+                return TemperatureUnit.CELSIUS;
+        }
+    }
+    public void setTemperatureUnit(TemperatureUnit u) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        switch(u) {
+            case FAHRENHEIT: ed.putString(pref_temperature_unit, "F"); break;
+            case CELSIUS: ed.putString(pref_temperature_unit, "C"); break;
+        }
+        ed.apply();
+    }
+
+    public boolean isButtonAutohide() {
+        return _prefs.getBoolean(pref_button_autohide, true);
+    }
+
+    public void setButtonAutohide(boolean val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putBoolean(pref_button_autohide, val);
+        ed.apply();
+    }
+
+    public int getChannelHeight() {
+        return _prefs.getInt(pref_channel_height, 100);
+    }
+
+    public void setChannelHeight(int val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putInt(pref_channel_height, val);
+        ed.apply();
+    }
+
+    public long getActiveProfileId() {
+        return _prefs.getLong(pref_active_profile, 0);
+    }
+
+    public void setActiveProfileId(long val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putLong(pref_active_profile, val);
+        ed.apply();
     }
 }
