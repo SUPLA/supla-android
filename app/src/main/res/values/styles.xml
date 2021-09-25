@@ -3,13 +3,24 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="toolbarStyle">@style/AppBar</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="AppTheme">
+      <item name="brandPrimaryForegroundColor">#ffffff</item>
+      <item name="brandPrimaryBackgroundColor">#12a71e</item>
     </style>
 
     <style name="MenuBarTitle">
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">?attr/brandPrimaryForegroundColor</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">28sp</item>
-    </style>
+    </style>    
 
+    <style name="AppBar">
+      <item name="titleTextAppearance">@style/MenuBarTitle</item>
+      <item name="android:textColorPrimary">#ff0000</item>
+      <item name="android:background">?brandPrimaryBackgroundColor</item>
+    </style>
 
 </resources>

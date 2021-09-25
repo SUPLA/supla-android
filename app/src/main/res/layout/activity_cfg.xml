@@ -10,12 +10,40 @@
         name="viewModel"
         type="org.supla.android.cfg.CfgViewModel" />
   </data>
-
-  <androidx.fragment.app.FragmentContainerView
-      android:id="@+id/nav_host_fragment"
-      android:name="androidx.navigation.fragment.NavHostFragment"
+  <!-- Note: this part should go to more generic nav activity
+       once new navigation model gets implemented in the rest
+       of the app. -->
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      id="@+id/nav_area"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:defaultNavHost="true"
-      app:navGraph="@navigation/nav_graph" />
+      android:background="@color/activity_bg">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        >
+    <androidx.core.widget.NestedScrollView
+        id="@+id/nav_header_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <org.supla.android.ui.AppBar
+          android:id="@+id/nav_toolbar"
+          style="@style/AppBar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          />
+
+    </androidx.core.widget.NestedScrollView>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
+
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

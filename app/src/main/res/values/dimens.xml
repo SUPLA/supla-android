@@ -44,4 +44,7 @@
     <dimen name="menuitem_homepage_text_size">12sp</dimen>
     <dimen name="menuitem_padding">2dp</dimen>
     <dimen name="default_text_size">14sp</dimen>
+
+    <!-- layout element dimensions, from new design -->
+    <dimen name="top_bar_height">44dp</dimen>
 </resources>

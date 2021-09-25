@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- new color definitions start here -->
+    <color name="supla_green">#12a71e</color> 
+    <!-- new color definitions end here -->
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
     <color name="channel_btn_pressed">#5ae966</color>

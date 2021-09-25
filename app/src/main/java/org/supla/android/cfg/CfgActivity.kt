@@ -28,6 +28,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.fragment.NavHostFragment
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
@@ -46,7 +49,8 @@ class CfgActivity: AppCompatActivity() {
 	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
 	      viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 	      
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
+        binding = DataBindingUtil.setContentView(this,
+                                                 R.layout.activity_cfg)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -59,6 +63,14 @@ class CfgActivity: AppCompatActivity() {
            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
            window.setStatusBarColor(getColor(R.color.splash_bg));
         }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val cfg = AppBarConfiguration(navController.graph)
+
+        NavigationUI
+            .setupWithNavController(binding.navToolbar,
+                                    navController,
+                                    cfg)
     }
 
     override fun onBackPressed() {
@@ -125,5 +137,4 @@ class CfgActivity: AppCompatActivity() {
         sender.startActivity(i)
         sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-
 }
