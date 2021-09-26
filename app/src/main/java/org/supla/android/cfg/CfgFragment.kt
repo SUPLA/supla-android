@@ -31,13 +31,15 @@ class CfgFragment: Fragment() {
         binding.viewModel = viewModel
         binding.cfgAdvanced.viewModel = viewModel
         binding.cfgBasic.viewModel = viewModel
-	var type = SuplaApp.getApp().typefaceOpenSansRegular
-	val edbg = resources.getDrawable(R.drawable.rounded_edittext)
+
+	      var type = SuplaApp.getApp().typefaceOpenSansRegular
+	      val edbg = resources.getDrawable(R.drawable.rounded_edittext)
+
         arrayOf(binding.cfgAdvanced.edServerAddr,
-//		binding.cfgAdvanced.edServerAddrEmail!!,
-		binding.cfgAdvanced.edAccessID,
-		binding.cfgAdvanced.edAccessIDpwd, /*binding.cfgAdvanced.cfgEmail!!,
-		binding.cfgAdvanced.cfgProfileName!!,*/ binding.cfgBasic.cfgEmail)
+                //		binding.cfgAdvanced.edServerAddrEmail!!,
+                binding.cfgAdvanced.edAccessID,
+		            binding.cfgAdvanced.edAccessIDpwd, /*binding.cfgAdvanced.cfgEmail!!,
+		            binding.cfgAdvanced.cfgProfileName!!,*/ binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
 						  if(!hasFocus) { hideKeyboard(v) }
@@ -53,7 +55,10 @@ class CfgFragment: Fragment() {
 /*		binding.cfgAdvanced.cfgLabelEmail!!,
 		binding.cfgAdvanced.cfgLabelSvrAddress!!,
 		//binding.cfgAdvanced.cfgLabelChannelHeight!!,*/
-		binding.cfgAdvanced.cfgLabelTempUnit,
+	 binding.cfgAdvanced.cfgLabelTempUnit,
+    binding.cfgBasic.cfgCreateAccount,
+    binding.cfgBasic.dontHaveAccountText,
+    binding.cfgBasic.cfgCbAdvanced
 		/*binding.cfgAdvanced.cfgLabelButtonAutoHide!!*/).forEach {
             it.setTypeface(type)
         }
@@ -64,7 +69,7 @@ class CfgFragment: Fragment() {
         }
 
         binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
-        binding.cfgCbAdvanced.setTypeface(type)
+//        binding.cfgCbAdvanced.setTypeface(type)
 
         return binding.root
     }

@@ -2,4 +2,5 @@
 <resources>
   <attr name="brandPrimaryForegroundColor" format="color" />
   <attr name="brandPrimaryBackgroundColor" format="color" />
+  <attr name="linkColor" format="color" />
 </resources>

@@ -44,7 +44,11 @@
     <dimen name="menuitem_homepage_text_size">12sp</dimen>
     <dimen name="menuitem_padding">2dp</dimen>
     <dimen name="default_text_size">14sp</dimen>
+    <dimen name="basic_auth_top_margin">130dp</dimen>
 
     <!-- layout element dimensions, from new design -->
     <dimen name="top_bar_height">44dp</dimen>
+    <dimen name="form_element_spacing">12dp</dimen>
+    <dimen name="standalone_button_height">44dp</dimen>
+    <dimen name="new_screen_margin">24dp</dimen>
 </resources>

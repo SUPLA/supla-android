@@ -76,7 +76,7 @@
     <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
     <string name="password">HASŁO</string>
     <string name="email">ADRES E-MAIL</string>
-    <string name="advanced_settings">Ustawienia zaawansowane</string>
+    <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
     <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>

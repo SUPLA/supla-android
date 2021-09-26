@@ -67,6 +67,7 @@ class CfgActivity: AppCompatActivity() {
         val navController = navHostFragment.navController
         val cfg = AppBarConfiguration(navController.graph)
 
+        setSupportActionBar(binding.navToolbar)
         NavigationUI
             .setupWithNavController(binding.navToolbar,
                                     navController,

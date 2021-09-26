@@ -1,88 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="org.supla.android.cfg.CfgViewModel" />
-    </data>
+  <data>
+    <import type="android.view.View" />
+    <variable
+        name="viewModel"
+        type="org.supla.android.cfg.CfgViewModel" />
+  </data>
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    android:clickable="true"
-    android:focusableInTouchMode="true"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="org.supla.android.CfgActivity">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/activity_bg"
+      android:clickable="true"
+      android:focusableInTouchMode="true"
+      android:paddingLeft="@dimen/new_screen_margin"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      android:paddingRight="@dimen/new_screen_margin"
+      android:paddingBottom="@dimen/activity_vertical_margin"
+      tools:context="org.supla.android.CfgActivity">
+
+    <TextView
+        android:id="@+id/dont_have_account_text"
+        android:text="@string/dont_have_account_yet"
+        android:layout_below="@+id/cfg_save_basic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:singleLine="false"
+        android:gravity="center_horizontal" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cfg_create_account"
-        style="@android:style/Widget.Button"
+        style="@style/LinkButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cfg_save_basic"
+        android:layout_height="20sp"
+        android:layout_below="@+id/dont_have_account_text"
+        android:layout_marginTop="4dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:background="@android:color/transparent"
         android:onClick="@{() -> viewModel.onCreateAccount()}"
         android:text="@string/create_account" />
+
+
+    <TextView
+        android:id="@+id/cfg_label_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cfg_label_title_basic"
+        android:layout_alignStart="@+id/cfg_email"
+        android:layout_alignLeft="@+id/cfg_email"
+        android:layout_marginLeft="2dp"
+        android:text="@string/email"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginTop="50dp"
+        android:textColor="@android:color/black"
+        android:textSize="9sp" />
 
     <EditText
         android:id="@+id/cfg_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cfg_label_title_basic"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_below="@+id/cfg_label_email"
         android:inputType="textEmailAddress"
         android:text="@={viewModel.cfgData.email}"
         android:onTextChanged="@{viewModel::onEmailChange}"
         android:padding="5dp"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/cfg_label_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cfg_email"
-        android:layout_alignStart="@+id/cfg_email"
-        android:layout_alignLeft="@+id/cfg_email"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/email"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
-        android:textSize="9sp" />
-
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/cfg_cb_advanced"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/cfg_email"
+          android:layout_alignRight="@id/cfg_email"
+          android:layout_marginTop="@dimen/form_element_spacing"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@={viewModel.cfgData.isAdvanced}"
+          android:text="@string/advanced_settings"
+	        android:textSize="@dimen/default_text_size"
+          />
     <TextView
         android:id="@+id/cfg_label_title_basic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:text="@string/settings"
-        android:textColor="@android:color/black"
-        android:textSize="30sp" />
+        android:layout_marginTop="@dimen/basic_auth_top_margin"
+        android:text="@string/your_account"
+        android:textAppearance="@style/your_account"
+        android:gravity="center_horizontal|top" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <org.supla.android.ui.StandaloneRoundedButton
         android:id="@+id/cfg_save_basic"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/cfg_label_email"
+        style="@style/StandaloneRoundedGreenButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standalone_button_height"
+        android:layout_below="@+id/cfg_cb_advanced"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:enabled="@{viewModel.saveEnabled}"
         android:onClick="@{() -> viewModel.onSaveConfig()}"
-        android:background="@drawable/btnok" />
+        android:text="@string/confirm_button_text"
+         />
 
-</RelativeLayout>
+   
+  </RelativeLayout>
 </layout>

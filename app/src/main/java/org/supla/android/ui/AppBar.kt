@@ -27,6 +27,7 @@ import android.view.Gravity
 import androidx.databinding.DataBindingUtil
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.Toolbar.LayoutParams
+import org.supla.android.SuplaApp
 import org.supla.android.databinding.AppBarBinding
 import org.supla.android.R
 
@@ -43,6 +44,9 @@ class AppBar @JvmOverloads constructor(
         binding = DataBindingUtil.inflate(inflater, R.layout.app_bar, this,
                                           false)
         val params = LayoutParams(Gravity.CENTER_HORIZONTAL)
+
+        binding.title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
+
         addView(binding.root, params)
     }
 

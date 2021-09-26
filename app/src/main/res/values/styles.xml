@@ -4,11 +4,15 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="toolbarStyle">@style/AppBar</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
       <item name="brandPrimaryForegroundColor">#ffffff</item>
       <item name="brandPrimaryBackgroundColor">#12a71e</item>
+      <item name="linkColor">#007AFF</item>
     </style>
 
     <style name="MenuBarTitle">
@@ -18,9 +22,38 @@
     </style>    
 
     <style name="AppBar">
-      <item name="titleTextAppearance">@style/MenuBarTitle</item>
-      <item name="android:textColorPrimary">#ff0000</item>
+      <item name="titleTextAppearance">@style/title</item>
       <item name="android:background">?brandPrimaryBackgroundColor</item>
     </style>
 
+    <style name="title">
+      <item name="android:textSize">25sp</item>
+      <item name="android:letterSpacing">-0.01</item>
+      <item name="android:textColor">#FFFFFF</item>
+      <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="your_account">
+      <item name="android:textSize">34sp</item>
+
+      <item name="android:letterSpacing">-0.01</item>
+
+      <item name="android:textColor">#000000</item>
+
+    </style>
+
+    <style name="StandaloneRoundedGreenButton"
+           parent="Widget.AppCompat.Button.Borderless">
+      <item name="android:background">@drawable/rounded_button</item>
+      <item name="android:textColor">?brandPrimaryForegroundColor</item>
+      <item name="android:textSize">17sp</item>
+      <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="LinkButton" parent="android:Widget.Button">
+      <item name="android:background">@android:color/transparent</item>
+      <item name="android:textColor">?linkColor</item>
+      <item name="android:textSize">14sp</item>
+      <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

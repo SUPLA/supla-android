@@ -1,4 +1,7 @@
 <resources>
+    <string name="your_account" translatable="false">Your account</string>
+    <string name="confirm_button_text" translatable="false">Confirm</string>
+    <string name="dont_have_account_yet" translatable="false">Don\'t have an account in Supla Cloud yet?</string>
 
     <string name="app_name" translatable="false">SUPLA</string>
     <string name="profiles_title">Profiles</string>
@@ -95,8 +98,8 @@
     <string name="password">PASSWORD</string>
     <string name="email">E-MAIL ADDRESS</string>
     <string name="temp_unit">TEMPERATURE UNIT</string>
-    <string name="advanced_settings">Advanced settings</string>
-    <string name="create_account"><u>Create an account</u></string>
+    <string name="advanced_settings">Advanced</string>
+    <string name="create_account">Create</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->
