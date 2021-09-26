@@ -47,22 +47,6 @@ android:layout_height="match_parent">
 	            android:layout_width="match_parent" />
 	      </LinearLayout>
       </ScrollView>
-      <FrameLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="50dp"
-	        android:layout_gravity="bottom"
-	        android:background="@drawable/gradient_shape">
-	      <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/cfg_save_adv"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
-            android:layout_width="50dp"
-	          android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:enabled="@{viewModel.saveEnabled}"
-            android:onClick="@{() -> viewModel.onSaveConfig()}"
-            android:background="@drawable/btnok" />
-      </FrameLayout>
     </FrameLayout>
     <RelativeLayout
         android:layout_width="match_parent"

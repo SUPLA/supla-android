@@ -35,11 +35,11 @@ class CfgFragment: Fragment() {
 	      var type = SuplaApp.getApp().typefaceOpenSansRegular
 	      val edbg = resources.getDrawable(R.drawable.rounded_edittext)
 
-        arrayOf(binding.cfgAdvanced.edServerAddr,
+        arrayOf(//binding.cfgAdvanced.edServerAddr,
                 //		binding.cfgAdvanced.edServerAddrEmail!!,
-                binding.cfgAdvanced.edAccessID,
-		            binding.cfgAdvanced.edAccessIDpwd, /*binding.cfgAdvanced.cfgEmail!!,
-		            binding.cfgAdvanced.cfgProfileName!!,*/ binding.cfgBasic.cfgEmail)
+//                binding.cfgAdvanced.edAccessID,
+//		            binding.cfgAdvanced.edAccessIDpwd, /*binding.cfgAdvanced.cfgEmail!!,
+		 /*           binding.cfgAdvanced.cfgProfileName!!,*/ binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
 						  if(!hasFocus) { hideKeyboard(v) }
@@ -55,7 +55,7 @@ class CfgFragment: Fragment() {
 /*		binding.cfgAdvanced.cfgLabelEmail!!,
 		binding.cfgAdvanced.cfgLabelSvrAddress!!,
 		//binding.cfgAdvanced.cfgLabelChannelHeight!!,*/
-	 binding.cfgAdvanced.cfgLabelTempUnit,
+//	 binding.cfgAdvanced.cfgLabelTempUnit,
     binding.cfgBasic.cfgCreateAccount,
     binding.cfgBasic.dontHaveAccountText,
     binding.cfgBasic.cfgCbAdvanced
@@ -63,8 +63,7 @@ class CfgFragment: Fragment() {
             it.setTypeface(type)
         }
         type = SuplaApp.getApp().typefaceQuicksandRegular
-        arrayOf(binding.cfgBasic.cfgLabelTitleBasic,
-		binding.cfgAdvanced.cfgLabelTitleAdv).forEach {
+        arrayOf(binding.cfgBasic.cfgLabelTitleBasic).forEach {
             it.setTypeface(type)
         }
 

@@ -99,6 +99,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
+    implementation "com.github.ceryle:SegmentedButton:v2.0.2"
+
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
   // Jetpack Compose Integration

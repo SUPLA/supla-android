@@ -51,4 +51,5 @@
     <dimen name="form_element_spacing">12dp</dimen>
     <dimen name="standalone_button_height">44dp</dimen>
     <dimen name="new_screen_margin">24dp</dimen>
+    <dimen name="segmented_button_height">28dp</dimen>
 </resources>

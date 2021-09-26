@@ -37,7 +37,7 @@ class AppBar @JvmOverloads constructor(
 ) : Toolbar(ctx, attrs, defStyleAttr) {
 
 
-    private lateinit var binding: AppBarBinding;
+    private val binding: AppBarBinding;
 
     init {
         val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
