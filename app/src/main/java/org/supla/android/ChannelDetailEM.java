@@ -112,6 +112,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private ProgressBar emProgress;
     private LinearLayout llBalance;
     private TextView tvlBalance;
+    private SuplaWarningIcon warningIcon;
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
     private boolean mBalanceAvailable;
@@ -184,6 +185,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         llBalance = findViewById(R.id.emtv_llBalance);
         tvlBalance = findViewById(R.id.emtv_lBalance);
+
+        warningIcon = findViewById(R.id.emWarningIcon);
 
         btnPhase1 = findViewById(R.id.embtn_Phase1);
         btnPhase2 = findViewById(R.id.embtn_Phase2);
@@ -286,6 +289,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             rlButtons2.setVisibility(INVISIBLE);
             setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
+            if (singlePhase) {
+                phase = 1;
+            }
         }
     }
 
@@ -367,6 +373,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
             emImgIcon.setTag(channel.getImageIdx());
         }
+
+        warningIcon.setChannel(getChannelBase());
 
         ChannelExtendedValue cev = channel.getExtendedValue();
 
@@ -586,7 +594,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             Channel channel = (Channel) getChannelFromDatabase();
             if (channel != null) {
                 if (channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ) {
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER) {
                     SuplaClient client = SuplaApp.getApp().getSuplaClient();
                     if (client != null) {
                         client.turnOnOff(getContext(), !channel.getValue().hiValue(),

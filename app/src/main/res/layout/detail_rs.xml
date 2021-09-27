@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,6 +48,15 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1">
 
+            <org.supla.android.SuplaWarningIcon
+                android:id="@+id/rsWarningIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                app:srcCompat="@drawable/channel_warning_level1" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -109,6 +119,19 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/rsTvPressTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="1dp"
+                android:text="1.25s"
+                android:textColor="#8C8B8B"
+                android:textSize="14sp" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -143,11 +166,20 @@
                         android:id="@+id/rsDetailPercentCaption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:text="@string/rs_percent_caption"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/rs_detail_info_text" />
+
+                    <Button
+                        android:id="@+id/rsBtnRecalibrate"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/recalibrate"
+                        android:visibility="visible" />
 
                     <TextView
                         android:id="@+id/rsDetailPercent"

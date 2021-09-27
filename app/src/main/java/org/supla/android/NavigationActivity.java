@@ -24,12 +24,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -135,6 +138,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                MenuBarLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        MenuBarLayout.getLayoutParams().height));
+            }
 
             MenuButton = findViewById(R.id.menubutton);
             MenuButton.setVisibility(View.GONE);

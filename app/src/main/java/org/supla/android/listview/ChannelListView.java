@@ -74,7 +74,6 @@ public class ChannelListView extends ListView {
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
     private Point mChannelStateIconTouchPoint;
-    private Point mChannelWarningIconTouchPoint;
 
     public ChannelListView(Context context) {
         super(context);
@@ -132,6 +131,7 @@ public class ChannelListView extends ListView {
 
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                     if (channel != null && channel.getValue() != null) {
 
                         if (channel.getValue().getSubValueType()
@@ -215,6 +215,7 @@ public class ChannelListView extends ListView {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                     if (channel != null && channel.getValue() != null) {
                         if (channel.getValue().getSubValueType()
                                 == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
@@ -333,7 +334,6 @@ public class ChannelListView extends ListView {
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             mChannelStateIconTouchPoint = null;
-            mChannelWarningIconTouchPoint = null;
         }
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN
@@ -395,8 +395,6 @@ public class ChannelListView extends ListView {
                         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
                             mChannelStateIconTouchPoint =
                                     channelLayout.stateIconTouched((int) ev.getX(), (int) ev.getY());
-                            mChannelWarningIconTouchPoint =
-                                    channelLayout.warningIconTouched((int) ev.getX(), (int) ev.getY());
                         }
 
                     }
@@ -424,7 +422,6 @@ public class ChannelListView extends ListView {
                             buttonSliding = true;
                             if (channelLayout.percentOfSliding() > 3f) {
                                 mChannelStateIconTouchPoint = null;
-                                mChannelWarningIconTouchPoint = null;
                             }
                         }
 
@@ -500,11 +497,6 @@ public class ChannelListView extends ListView {
                     && Math.abs(mChannelStateIconTouchPoint.y-Y) < 30f
                     && Math.abs(mChannelStateIconTouchPoint.x-X) < 30f ) {
                 onChannelButtonClickListener.onChannelStateButtonClick(this,
-                        channelLayout.getRemoteId());
-            } else if (mChannelWarningIconTouchPoint != null
-                    && Math.abs(mChannelWarningIconTouchPoint.y-Y) < 30f
-                    && Math.abs(mChannelWarningIconTouchPoint.x-X) < 30f ) {
-                onChannelButtonClickListener.onChannelWarningButtonClick(this,
                         channelLayout.getRemoteId());
             }
         }
@@ -910,7 +902,6 @@ public class ChannelListView extends ListView {
 
     public interface OnChannelButtonClickListener {
         void onChannelStateButtonClick(ChannelListView clv, int remoteId);
-        void onChannelWarningButtonClick(ChannelListView clv, int remoteId);
     }
 
     public interface OnChannelButtonTouchListener {

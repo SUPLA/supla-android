@@ -38,6 +38,7 @@ import android.widget.TextView;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
+import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -71,7 +72,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private SuplaChannelStatus right_ActiveStatus;
     private SuplaChannelStatus left_onlineStatus;
     private ImageView channelStateIcon;
-    private ImageView channelWarningIcon;
+    private SuplaWarningIcon channelWarningIcon;
 
     private LineView bottom_line;
 
@@ -131,7 +132,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         content.addView(channelStateIcon);
         channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
 
-        channelWarningIcon = new ImageView(context);
+        channelWarningIcon = new SuplaWarningIcon(context);
         channelWarningIcon.setId(ViewHelper.generateViewId());
         content.addView(channelWarningIcon);
         channelWarningIcon.setLayoutParams(getChannelWarningImageLayoutParams());
@@ -593,7 +594,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
 
         channelStateIcon.setVisibility(INVISIBLE);
-        channelWarningIcon.setVisibility(INVISIBLE);
+        channelWarningIcon.setChannel(cbase);
 
         boolean _mMeasurementSubChannel = !mGroup
                 && (((Channel)cbase).getValue().getSubValueType()
@@ -631,25 +632,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             right_ActiveStatus.setPercent(activePercent);
         } else {
             right_ActiveStatus.setVisibility(View.GONE);
-
             int stateIcon = 0;
-            int warningIcon = 0;
 
             if (cbase instanceof Channel) {
                 stateIcon = ((Channel) cbase).getChannelStateIcon();
-                warningIcon = ((Channel) cbase).getChannelWarningIcon();
             }
 
             if (stateIcon != 0) {
                 channelStateIcon.setImageResource(stateIcon);
                 channelStateIcon.setVisibility(VISIBLE);
             }
-
-            if (warningIcon != 0) {
-                channelWarningIcon.setImageResource(warningIcon);
-                channelWarningIcon.setVisibility(VISIBLE);
-            }
-
         }
 
         {
@@ -707,6 +699,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
@@ -724,7 +717,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     }
 
                     break;
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
@@ -1072,10 +1064,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     public Point stateIconTouched(int x, int y) {
         return iconTouched(x, y, channelStateIcon) ? new Point(x,y) : null;
-    }
-
-    public Point warningIconTouched(int x, int y) {
-        return iconTouched(x, y, channelWarningIcon) ? new Point(x,y) : null;
     }
 
     public int getRemoteId() {

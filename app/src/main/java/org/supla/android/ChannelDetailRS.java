@@ -20,6 +20,7 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
@@ -42,7 +44,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener,
-        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener {
+        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener, View.OnClickListener,
+        SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
     private LinearLayout llRollerShutter;
     private SuplaRollerShutter rollerShutter;
@@ -55,7 +58,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnStop;
     private Button btnOpen;
     private Button btnClose;
+    private Button btnRecalibrate;
+    private TextView rsTvPressTime;
+    private SuplaWarningIcon warningIcon;
     private Timer delayTimer1;
+    private SuperuserAuthorizationDialog authDialog;
+    private long btnUpDownTouchedAt;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -95,12 +103,16 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnStop = findViewById(R.id.rsBtnStop);
         btnOpen = findViewById(R.id.rsBtnOpen);
         btnClose = findViewById(R.id.rsBtnClose);
+        btnRecalibrate = findViewById(R.id.rsBtnRecalibrate);
+        rsTvPressTime = findViewById(R.id.rsTvPressTime);
+        warningIcon = findViewById(R.id.rsWarningIcon);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
         btnStop.setOnTouchListener(this);
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
+        btnRecalibrate.setOnClickListener(this);
 
         Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
 
@@ -135,24 +147,34 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             delayTimer1 = null;
         }
 
+        btnRecalibrate.setVisibility(INVISIBLE);
+        rsTvPressTime.setVisibility(INVISIBLE);
+        warningIcon.setChannel(getChannelBase());
 
         if (!isGroup()) {
             status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
             setRollerShutterVisible(channel);
 
-            byte p = channel.getClosingPercentage();
+            RollerShutterValue rsValue = channel.getValue().getRollerShutterValue();
 
             rollerShutter.setMarkers(null);
-            rollerShutter.setPercent(p);
+            rollerShutter.setPercent(rsValue.getClosingPercentage());
+            rollerShutter.setBootomPosition(rsValue.getBottomPosition());
             roofWindow.setMarkers(null);
-            roofWindow.setClosingPercentage(p);
+            roofWindow.setClosingPercentage(rsValue.getClosingPercentage());
 
-            if (p < 0) {
+            if (rsValue.getClosingPercentage() < 0) {
                 tvPercent.setText(R.string.calibration);
+                rsTvPressTime.setVisibility(VISIBLE);
             } else {
-                tvPercent.setText(Integer.toString((int) p) + "%");
+                tvPercent.setText(Integer.toString((int) rsValue.getClosingPercentage()) + "%");
             }
+
+            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) > 0) {
+                btnRecalibrate.setVisibility(VISIBLE);
+            }
+
         } else {
             status.setVisibility(View.VISIBLE);
 
@@ -160,6 +182,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             setRollerShutterVisible(cgroup);
 
             rollerShutter.setPercent(0);
+            rollerShutter.setBootomPosition(0);
             roofWindow.setClosingPercentage(0);
             status.setPercent(cgroup.getOnLinePercent());
 
@@ -291,6 +314,22 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         if (client == null)
             return false;
 
+        if (v == btnUp || v == btnDown) {
+            if (action == MotionEvent.ACTION_DOWN) {
+                btnUpDownTouchedAt = System.currentTimeMillis();
+            } else if (action == MotionEvent.ACTION_UP
+                    || action == MotionEvent.ACTION_CANCEL) {
+                if (btnUpDownTouchedAt > 0) {
+                    String time = String.format("%.2fs",
+                            (System.currentTimeMillis()-btnUpDownTouchedAt)/1000f);
+                    rsTvPressTime.setText(time);
+                } else {
+                    rsTvPressTime.setText("");
+                }
+                btnUpDownTouchedAt = 0;
+            }
+        }
+
         if (v == btnUp) {
 
             client.open(getRemoteId(), isGroup(), action == MotionEvent.ACTION_DOWN ? 2 : 0);
@@ -323,6 +362,53 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         return true;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == btnRecalibrate) {
+            authDialog =
+                    new SuperuserAuthorizationDialog(getContext());
+            authDialog.setObject(btnRecalibrate);
+            authDialog.setOnAuthorizarionResultListener(this);
+            authDialog.showIfNeeded();
+        }
+    }
+
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog authDialog,
+                                                 boolean Success, int Code) {
+        if (Success && authDialog.getObject() == btnRecalibrate) {
+
+            authDialog.close();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.recalibration_question);
+
+            builder.setPositiveButton(R.string.yes,
+                    (dialog, id) -> {
+                        SuplaClient client = getClient();
+                        if (client != null) {
+                            client.deviceCalCfgRequest(getRemoteId(),
+                                    false,
+                                    SuplaConst.SUPLA_CALCFG_CMD_RECALIBRATE,
+                                    0,
+                                    null);
+                        }
+                    });
+
+            builder.setNeutralButton(R.string.no,
+                    (dialog, id) -> dialog.cancel());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        this.authDialog = null;
+    }
+
+    @Override
+    public void authorizationCanceled() {
+        authDialog = null;
+    }
+
     private class DelayTask extends TimerTask {
         int percent;
 
@@ -334,6 +420,12 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         public void run() {
             // You can do anything you want with param
         }
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+        rsTvPressTime.setText("");
     }
 }
 
