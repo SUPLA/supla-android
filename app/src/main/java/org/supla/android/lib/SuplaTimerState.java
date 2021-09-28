@@ -31,10 +31,10 @@ public class SuplaTimerState implements Serializable {
     private int senderId;
     private String senderName;
 
-    public SuplaTimerState(long remainingTime, byte[] targetValue, int senderId, String senderName) {
+    public SuplaTimerState(long countdownEndsAt, byte[] targetValue, int senderId, String senderName) {
 
-        if (remainingTime > 0) {
-            countdownEndsAt = new Date(remainingTime);
+        if (countdownEndsAt > 0) {
+            this.countdownEndsAt = new Date(countdownEndsAt);
         }
 
         this.targetValue = targetValue;
