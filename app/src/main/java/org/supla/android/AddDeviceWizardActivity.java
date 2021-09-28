@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -33,6 +34,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.net.NetworkSpecifier;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -46,6 +48,7 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -333,6 +336,33 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         tvIODevLastState.setText(result.deviceLastState, TextView.BufferType.NORMAL);
 
         showPage(PAGE_DONE);
+
+        if(result.needsCloudConfig) {
+            showCloudFollowupPopup();
+        }
+    }
+
+    private void showCloudFollowupPopup() {
+
+        new AlertDialog.Builder(this)
+	    .setCancelable(false)
+	    .setTitle(R.string.add_device_needs_cloud_title)
+	    .setMessage(R.string.add_device_needs_cloud_message)
+	    .setPositiveButton(R.string.add_device_needs_cloud_go,
+			       new DialogInterface.OnClickListener() {
+				   @Override
+				   public void onClick(DialogInterface dialog, int which) {
+				       Intent i = new Intent(Intent.ACTION_VIEW);
+				       i.setData(Uri.parse("https://cloud.supla.org"));
+				       showMain(AddDeviceWizardActivity.this);
+				       startActivity(i);
+				       finish();
+
+				   }
+			       })
+	    .setNegativeButton(R.string.add_device_needs_cloud_dismiss, null)
+	    .create()
+	    .show();
     }
 
     private void cleanUp() {
@@ -469,8 +499,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         }, 0, 100);
 
 
-        showPage(PAGE_STEP_1);
-
+	showPage(PAGE_STEP_1);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_NETWORK_STATE)
