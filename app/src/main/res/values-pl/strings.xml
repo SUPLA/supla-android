@@ -430,4 +430,9 @@
 	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia Wi-Fi</string>
     <string translatable="false"
 	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
+        <string translatable="false" name="add_device_needs_cloud_title">Konfiguracja urządzenia</string>
+    <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
+    <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
+    <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
+
 </resources>
