@@ -18,6 +18,7 @@ android {
 
         ndk {
             moduleName "suplaclient"
+            debugSymbolLevel 'FULL'
         }
     }
 
