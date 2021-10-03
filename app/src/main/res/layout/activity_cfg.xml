@@ -30,21 +30,12 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         >
-<!--
-    <androidx.core.widget.NestedScrollView
-        id="@+id/nav_header_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
--->
       <org.supla.android.ui.AppBar
           android:id="@+id/nav_toolbar"
           style="@style/AppBar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
           />
-<!--
-    </androidx.core.widget.NestedScrollView>
--->
     </com.google.android.material.appbar.AppBarLayout>
 
   </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -33,32 +33,28 @@ class CfgFragment: Fragment() {
         binding.cfgBasic.viewModel = viewModel
 
 	      var type = SuplaApp.getApp().typefaceOpenSansRegular
-	      val edbg = resources.getDrawable(R.drawable.rounded_edittext)
 
-        arrayOf(//binding.cfgAdvanced.edServerAddr,
-                //		binding.cfgAdvanced.edServerAddrEmail!!,
-//                binding.cfgAdvanced.edAccessID,
-//		            binding.cfgAdvanced.edAccessIDpwd, /*binding.cfgAdvanced.cfgEmail!!,
-		 /*           binding.cfgAdvanced.cfgProfileName!!,*/ binding.cfgBasic.cfgEmail)
+        arrayOf(binding.cfgAdvanced.edServerAddr,
+                binding.cfgAdvanced.edServerAddrEmail,
+                binding.cfgAdvanced.edAccessID,
+		            binding.cfgAdvanced.edAccessIDpwd, 
+                binding.cfgAdvanced.cfgEmail,
+		            /*binding.cfgAdvanced.cfgProfileName!!,*/ 
+                binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
-						  if(!hasFocus) { hideKeyboard(v) }
+						                                      if(!hasFocus) { hideKeyboard(v) }
                 }
                 it.setTypeface(type)
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    it.setBackground(edbg)
-                } else {
-                    it.setBackgroundDrawable(edbg)
-                }
             }
         arrayOf(binding.cfgBasic.cfgLabelEmail,
-/*		binding.cfgAdvanced.cfgLabelEmail!!,
-		binding.cfgAdvanced.cfgLabelSvrAddress!!,
-		//binding.cfgAdvanced.cfgLabelChannelHeight!!,*/
-//	 binding.cfgAdvanced.cfgLabelTempUnit,
-    binding.cfgBasic.cfgCreateAccount,
-    binding.cfgBasic.dontHaveAccountText,
-    binding.cfgBasic.cfgCbAdvanced
+		            binding.cfgAdvanced.cfgLabelEmail,
+		            binding.cfgAdvanced.cfgLabelSvrAddress,
+                //		            binding.cfgAdvanced.cfgLabelChannelHeight!!,
+                //	 binding.cfgAdvanced.cfgLabelTempUnit,
+                binding.cfgBasic.cfgCreateAccount,
+                binding.cfgBasic.dontHaveAccountText,
+                binding.cfgBasic.cfgCbAdvanced
 		/*binding.cfgAdvanced.cfgLabelButtonAutoHide!!*/).forEach {
             it.setTypeface(type)
         }
@@ -68,7 +64,17 @@ class CfgFragment: Fragment() {
         }
 
         binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
-//        binding.cfgCbAdvanced.setTypeface(type)
+        //        binding.cfgCbAdvanced.setTypeface(type)
+
+        if(viewModel.cfgData.authByEmail.value!!) {
+            binding.cfgAdvanced.authType.position = 0;
+        } else {
+            binding.cfgAdvanced.authType.position = 1;
+        }
+
+        binding.cfgAdvanced.authType.setOnPositionChangedListener() { 
+            pos -> viewModel.cfgData.authByEmail.value = pos == 0                              
+        }
 
         return binding.root
     }

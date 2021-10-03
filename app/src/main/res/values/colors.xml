@@ -72,4 +72,6 @@
     <color name="wake_up_settings_infotext">#000000</color>
     <color name="wake_up_settings_infoline">#B4B7BA</color>
 
+    <color name="switcher_background_light">#1F767880</color>
+    <color name="switcher_border_light">#7678801F</color>
 </resources>

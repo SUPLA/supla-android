@@ -66,6 +66,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_below="@+id/cfg_label_email"
+        android:background="@drawable/rounded_edittext"
         android:inputType="textEmailAddress"
         android:text="@={viewModel.cfgData.email}"
         android:onTextChanged="@{viewModel::onEmailChange}"
@@ -73,13 +74,13 @@
         android:textSize="14sp" />
 
       <androidx.appcompat.widget.SwitchCompat
+          android:theme="@style/Switch"
           android:id="@+id/cfg_cb_advanced"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/cfg_email"
           android:layout_alignRight="@id/cfg_email"
           android:layout_marginTop="@dimen/form_element_spacing"
-          android:buttonTint="@color/channel_btn"
           android:checked="@={viewModel.cfgData.isAdvanced}"
           android:text="@string/advanced_settings"
 	        android:textSize="@dimen/default_text_size"
