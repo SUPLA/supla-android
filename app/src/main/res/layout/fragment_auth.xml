@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <data>
+    <import type="android.view.View" />
+    <variable
+	      name="viewModel"
+	      type="org.supla.android.cfg.CfgViewModel" />
+  </data>
+  
+  <LinearLayout
+      android:id="@+id/cfg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:background="@color/activity_bg">
+    <FrameLayout
+		    android:layout_weight="1"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent">
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+	      <LinearLayout
+	          android:layout_width="match_parent"
+	          android:layout_height="match_parent"
+	          android:orientation="vertical">
+	        <RelativeLayout
+              android:id="@+id/cfg_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="top"
+              android:layout_centerHorizontal="true">
+            <include
+		            android:id="@+id/cfg_basic"
+		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
+		            layout="@layout/activity_cfg_basic" />
+            <include
+		            android:id="@+id/cfg_advanced"
+		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
+		            layout="@layout/activity_cfg_advanced" />
+	        </RelativeLayout>
+	        <View
+	            android:layout_height="50dp"
+	            android:layout_width="match_parent" />
+	      </LinearLayout>
+      </ScrollView>
+    </FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+    </RelativeLayout>
+  </LinearLayout>
+</layout>

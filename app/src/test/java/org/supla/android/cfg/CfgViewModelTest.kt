@@ -179,7 +179,7 @@ class CfgViewModelTest: TestCase() {
     }
 
     @Test
-    fun `setting channel height to 80`() {
+    fun `setting channel height to 60`() {
         val initialData = CfgData("localhost", 6666, "pwd",
                                   "dont@ca.re", false)
         var storedData: CfgData? = null
@@ -188,9 +188,9 @@ class CfgViewModelTest: TestCase() {
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
         val viewModel = CfgViewModel(repository)
-        viewModel.setChannelHeight(ChannelHeight.HEIGHT_80)
+        viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
         viewModel.onSaveConfig()
-        assertEquals(ChannelHeight.HEIGHT_80, storedData!!.channelHeight.value)
+        assertEquals(ChannelHeight.HEIGHT_60, storedData!!.channelHeight.value)
     }
 
     @Test

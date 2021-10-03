@@ -128,13 +128,16 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         nextAction.value = NavigationFlow.OPEN_PROFILES
     }
 
-    fun onSaveConfig() {
-        saveEnabled.value = false
+    fun saveConfig() {
         if(isDirty.value == true) {
             repository.storeCfg(cfgData)
             _didSaveConfig.value = true
         }
+    }
 
+    fun onSaveConfig() {
+        saveEnabled.value = false
+        saveConfig()
         if(_authSettingsChanged == true) {
             nextAction.value = NavigationFlow.STATUS
         } else {

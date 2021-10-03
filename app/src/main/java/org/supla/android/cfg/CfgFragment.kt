@@ -17,7 +17,8 @@ import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentCfgBinding
 
 class CfgFragment: Fragment() {
-        private val viewModel: CfgViewModel by activityViewModels()
+
+    private val viewModel: CfgViewModel by activityViewModels()
     private lateinit var binding: FragmentCfgBinding
 
     override fun onCreateView(
@@ -29,58 +30,43 @@ class CfgFragment: Fragment() {
 					  container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.cfgAdvanced.viewModel = viewModel
-        binding.cfgBasic.viewModel = viewModel
 
 	      var type = SuplaApp.getApp().typefaceOpenSansRegular
 
-        arrayOf(binding.cfgAdvanced.edServerAddr,
-                binding.cfgAdvanced.edServerAddrEmail,
-                binding.cfgAdvanced.edAccessID,
-		            binding.cfgAdvanced.edAccessIDpwd, 
-                binding.cfgAdvanced.cfgEmail,
-		            /*binding.cfgAdvanced.cfgProfileName!!,*/ 
-                binding.cfgBasic.cfgEmail)
-            .forEach {
-                it.setOnFocusChangeListener { v, hasFocus ->
-						                                      if(!hasFocus) { hideKeyboard(v) }
-                }
-                it.setTypeface(type)
+        arrayOf(binding.appSettingsTitle,
+                binding.channelHeightLabel,
+                binding.temperatureUnitLabel,
+                binding.buttonAutohideLabel).forEach {
+            it.setTypeface(type)
+        }
+
+        when(viewModel.cfgData.channelHeight.value!!) {
+            ChannelHeight.HEIGHT_150 -> binding.channelHeight.position = 0
+            ChannelHeight.HEIGHT_100 -> binding.channelHeight.position = 1
+            ChannelHeight.HEIGHT_60 -> binding.channelHeight.position = 2
+        }
+
+        binding.temperatureUnit.setOnPositionChangedListener() {
+            pos -> when(pos) {
+                0 -> viewModel.setTemperatureUnit(TemperatureUnit.CELSIUS)
+                1 -> viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
             }
-        arrayOf(binding.cfgBasic.cfgLabelEmail,
-		            binding.cfgAdvanced.cfgLabelEmail,
-		            binding.cfgAdvanced.cfgLabelSvrAddress,
-                //		            binding.cfgAdvanced.cfgLabelChannelHeight!!,
-                //	 binding.cfgAdvanced.cfgLabelTempUnit,
-                binding.cfgBasic.cfgCreateAccount,
-                binding.cfgBasic.dontHaveAccountText,
-                binding.cfgBasic.cfgCbAdvanced
-		/*binding.cfgAdvanced.cfgLabelButtonAutoHide!!*/).forEach {
-            it.setTypeface(type)
+            viewModel.saveConfig()
         }
-        type = SuplaApp.getApp().typefaceQuicksandRegular
-        arrayOf(binding.cfgBasic.cfgLabelTitleBasic).forEach {
-            it.setTypeface(type)
+        binding.channelHeight.setOnPositionChangedListener() {
+            pos -> when(pos) {
+                0 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
+                1 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_100)
+                2 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
+            }
+            viewModel.saveConfig()
         }
 
-        binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
-        //        binding.cfgCbAdvanced.setTypeface(type)
-
-        if(viewModel.cfgData.authByEmail.value!!) {
-            binding.cfgAdvanced.authType.position = 0;
-        } else {
-            binding.cfgAdvanced.authType.position = 1;
-        }
-
-        binding.cfgAdvanced.authType.setOnPositionChangedListener() { 
-            pos -> viewModel.cfgData.authByEmail.value = pos == 0                              
+        binding.buttonAutohide.setOnClickListener() {
+            viewModel.setButtonAutohide(!viewModel.cfgData.buttonAutohide.value!!)
+            viewModel.saveConfig()
         }
 
         return binding.root
-    }
-
-    fun hideKeyboard(v: View) {
-        val service = SuplaApp.getApp().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
-        service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 }

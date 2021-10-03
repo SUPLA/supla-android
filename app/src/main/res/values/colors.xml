@@ -74,4 +74,6 @@
 
     <color name="switcher_background_light">#1F767880</color>
     <color name="switcher_border_light">#7678801F</color>
+
+    <color name="list_separator_bg">#E5E5E5</color>
 </resources>

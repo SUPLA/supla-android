@@ -54,16 +54,12 @@ class CfgActivity: AppCompatActivity() {
 	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 
         val navToolbar: AppBar
+        val binding: ActivityCfgBinding = DataBindingUtil.setContentView(this,
+                                                                         R.layout.activity_cfg)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        navToolbar = binding.navToolbar
 
-        if(getIntent().getAction() == ACTION_PROFILE) {
-            val binding: ActivityCfgBinding = DataBindingUtil.setContentView(this,
-                                                                             R.layout.activity_cfg)
-            binding.viewModel = viewModel
-            binding.lifecycleOwner = this
-            navToolbar = binding.navToolbar
-        } else {
-            return;
-        }
         viewModel.nextAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
         }
@@ -75,9 +71,17 @@ class CfgActivity: AppCompatActivity() {
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val cfg = AppBarConfiguration(navController.graph)
 
         setSupportActionBar(navToolbar)
+        if(getIntent().getAction() == ACTION_CONFIG) {
+            /* FIXME: this workaround is to be removed when navigation controller
+               is implemented in entire app. */
+            val graph = navHostFragment.navController.graph
+            graph.startDestination = R.id.cfgMain
+            navController.graph = graph
+        }
+
+        val cfg = AppBarConfiguration(navController.graph)
         NavigationUI.setupWithNavController(navToolbar,
                                             navController,
                                             cfg)

@@ -1,4 +1,7 @@
 <resources>
+    <string name="confirm_button_text" translatable="false">Zatwierdź</string>
+    <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
+
 
     <string name="feedback_title">Wyślij email</string>
     <string name="donate_title">Wesprzyj projekt</string>
@@ -83,6 +86,12 @@
     <string name="cfg_profile_name_default">Domyślny</string>
     <string name="cfg_label_email_auth">Autoryzacja - Email</string>
     <string name="cfg_label_access_id_auth">Identyfikator dostępu</string>
+    <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
+    <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
+    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przyciksów</string>
+
+    <string translatable="false" name="profile">Twoje konto</string>
+    <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n

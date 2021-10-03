@@ -5,52 +5,160 @@
   <data>
     <import type="android.view.View" />
     <variable
-	      name="viewModel"
-	      type="org.supla.android.cfg.CfgViewModel" />
+        name="viewModel"
+        type="org.supla.android.cfg.CfgViewModel" />
   </data>
-  
   <LinearLayout
       android:id="@+id/cfg"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:paddingLeft="@dimen/new_screen_margin"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      android:paddingRight="@dimen/new_screen_margin"
+      android:paddingBottom="@dimen/activity_vertical_margin"
       android:orientation="vertical"
       android:background="@color/activity_bg">
-    <FrameLayout
-		    android:layout_weight="1"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent">
-      <ScrollView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-	      <LinearLayout
-	          android:layout_width="match_parent"
-	          android:layout_height="match_parent"
-	          android:orientation="vertical">
-	        <RelativeLayout
-              android:id="@+id/cfg_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="top"
-              android:layout_centerHorizontal="true">
-            <include
-		            android:id="@+id/cfg_basic"
-		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
-		            layout="@layout/activity_cfg_basic" />
-            <include
-		            android:id="@+id/cfg_advanced"
-		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
-		            layout="@layout/activity_cfg_advanced" />
-	        </RelativeLayout>
-	        <View
-	            android:layout_height="50dp"
-	            android:layout_width="match_parent" />
-	      </LinearLayout>
-      </ScrollView>
-    </FrameLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/appSettingsTitle"
+        android:layout_marginTop="@dimen/form_field_spacing"
+        android:layout_marginBottom="6dp"
+        android:paddingTop="@dimen/new_screen_margin"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_width="match_parent"
+        android:textAllCaps="true"
+        android:text="@string/menubar_appsettings" />
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+      <TextView
+          android:id="@+id/channelHeightLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_channel_height" />
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:id="@+id/channelHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:sbg_animateSelector="fastOutSlowIn"
+            app:sbg_animateSelectorDuration="500"
+            app:sbg_selectorColor="#ffffff"
+            app:sbg_backgroundColor="?attr/switcherBackgroundColor"
+            app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
+            app:sbg_radius="6dp">
+          <co.ceryle.segmentedbutton.SegmentedButton
+              android:layout_width="@dimen/segmented_button_width_small"
+              android:layout_margin="4dp"
+              app:sb_textColor="#000000"
+              android:layout_height="@dimen/segmented_button_height"
+              app:sb_text="150%" />
+          <co.ceryle.segmentedbutton.SegmentedButton
+              android:layout_width="@dimen/segmented_button_width_small"
+              android:layout_margin="4dp"
+              app:sb_textColor="#000000"
+              android:layout_height="@dimen/segmented_button_height"
+              app:sb_text="100%" />
+          <co.ceryle.segmentedbutton.SegmentedButton
+              android:layout_width="@dimen/segmented_button_width_small"
+              android:layout_margin="4dp"
+              app:sb_textColor="#000000"
+              android:layout_height="@dimen/segmented_button_height"
+              app:sb_text="60%" />
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
     </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+        
+
+    <RelativeLayout
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">        
+      <TextView
+          android:id="@+id/temperatureUnitLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_temperature_unit" />
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:id="@+id/temperatureUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:sbg_animateSelector="fastOutSlowIn"
+            app:sbg_animateSelectorDuration="500"
+            app:sbg_selectorColor="#ffffff"
+            app:sbg_backgroundColor="?attr/switcherBackgroundColor"
+            app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
+            app:sbg_radius="6dp">
+          <co.ceryle.segmentedbutton.SegmentedButton
+              android:layout_width="@dimen/segmented_button_width_small"
+              android:layout_margin="4dp"
+              app:sb_textColor="#000000"
+              android:layout_height="@dimen/segmented_button_height"
+              app:sb_text="°C" />
+          <co.ceryle.segmentedbutton.SegmentedButton
+              android:layout_width="@dimen/segmented_button_width_small"
+              android:layout_margin="4dp"
+              app:sb_textColor="#000000"
+              android:layout_height="@dimen/segmented_button_height"
+              app:sb_text="°F" />
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+    </RelativeLayout>
+
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">        
+      
+      <TextView
+          android:id="@+id/buttonAutohideLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_button_autohide" />
+    
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/buttonAutohide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:buttonTint="@color/channel_btn"
+        android:checked="@{viewModel.cfgData.buttonAutohide}"
+	      android:textSize="@dimen/default_text_size"
+        />
+
+
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
   </LinearLayout>
 </layout>

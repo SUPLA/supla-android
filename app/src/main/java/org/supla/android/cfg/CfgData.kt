@@ -23,7 +23,7 @@ import kotlin.properties.Delegates
 
 enum class TemperatureUnit { CELSIUS, FAHRENHEIT }
 enum class ChannelHeight(val percent: Int) { 
-                                               HEIGHT_80(60), 
+                                               HEIGHT_60(60), 
                                                HEIGHT_100(100), 
                                                HEIGHT_150(150)
 }

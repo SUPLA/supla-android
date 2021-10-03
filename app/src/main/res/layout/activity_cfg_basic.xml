@@ -94,7 +94,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/basic_auth_top_margin"
-        android:text="@string/your_account"
+        android:text="@string/profile"
         android:textAppearance="@style/your_account"
         android:gravity="center_horizontal|top" />
 

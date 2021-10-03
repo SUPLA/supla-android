@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:app="http://schemas.android.com/apk/res-auto"
-	    app:startDestination="@id/cfgMain"
+	    app:startDestination="@id/cfgAuth"
 	    android:id="@+id/nav_graph">
   <fragment
-      android:id="@+id/cfgMain"
-      android:name="org.supla.android.cfg.CfgFragment"
+      android:id="@+id/cfgAuth"
+      android:name="org.supla.android.cfg.AuthFragment"
       android:label="@string/menubar_title">
     <action
 	      android:id="@+id/openProfiles"
 	      app:destination="@id/cfgProfiles" />
   </fragment>
+
+  <fragment
+      android:id="@+id/cfgMain"
+      android:name="org.supla.android.cfg.CfgFragment"
+      android:label="@string/menubar_appsettings" />
 
   <fragment
       android:id="@+id/cfgProfiles"
