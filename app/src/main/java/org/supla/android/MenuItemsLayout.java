@@ -28,6 +28,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     public static final int BTN_FREE_SPACE = 0x40;
     public static final int BTN_Z_WAVE = 0x80;
     public static final int BTN_CLOUD = 0x90;
+    public static final int BTN_PROFILE = 0x1000;
     public static final int BTN_ALL = 0xFFFF;
     ArrayList<Button> buttons = new ArrayList<>();
     private LinearLayout mMainButtonsAreaLayout = null;
@@ -242,6 +243,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         mMainButtonsAreaLayout.removeAllViews();
         buttons.clear();
 
+        addButton(BTN_PROFILE, R.drawable.profile, R.string.profile);
         addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
         addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
         addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);

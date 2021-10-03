@@ -57,14 +57,22 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private TextView title;
     private TextView detailTitle;
 
-    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+    private static void showActivity(Activity sender, Class<?> cls, int flags, String action) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
         i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
         i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
+        if(action != null) {
+            i.setAction(action);
+        }
+        
         sender.startActivity(i);
 
         sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+        showActivity(sender, cls, flags, null);
     }
 
     public static void showMain(Activity sender) {
@@ -86,8 +94,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         showActivity(sender, StatusActivity.class, 0);
     }
 
+    public static void showProfile(Activity sender) {
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_PROFILE);
+    }
+
     public static void showCfg(Activity sender) {
-        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0);
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_CONFIG);
     }
 
     @Override
@@ -448,6 +462,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
                 case MenuItemsLayout.BTN_HOMEPAGE:
                     openHomepage();
+                    break;
+                case MenuItemsLayout.BTN_PROFILE:
+                    showProfile(this);
                     break;
             }
         }

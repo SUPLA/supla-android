@@ -31,29 +31,39 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
+import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
 import org.supla.android.NavigationActivity.showStatus
-import org.supla.android.databinding.ActivityCfgBinding
+import org.supla.android.ui.AppBar
 
 
 class CfgActivity: AppCompatActivity() {
 
-    private lateinit var viewModel: CfgViewModel
-    private lateinit var binding: ActivityCfgBinding
+    companion object {
+        const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
+        const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
+    }
+
 
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
 
 	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
-	      viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
-	      
-        binding = DataBindingUtil.setContentView(this,
-                                                 R.layout.activity_cfg)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 
+        val navToolbar: AppBar
+
+        if(getIntent().getAction() == ACTION_PROFILE) {
+            val binding: ActivityCfgBinding = DataBindingUtil.setContentView(this,
+                                                                             R.layout.activity_cfg)
+            binding.viewModel = viewModel
+            binding.lifecycleOwner = this
+            navToolbar = binding.navToolbar
+        } else {
+            return;
+        }
         viewModel.nextAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
         }
@@ -67,11 +77,10 @@ class CfgActivity: AppCompatActivity() {
         val navController = navHostFragment.navController
         val cfg = AppBarConfiguration(navController.graph)
 
-        setSupportActionBar(binding.navToolbar)
-        NavigationUI
-            .setupWithNavController(binding.navToolbar,
-                                    navController,
-                                    cfg)
+        setSupportActionBar(navToolbar)
+        NavigationUI.setupWithNavController(navToolbar,
+                                            navController,
+                                            cfg)
     }
 
     override fun onBackPressed() {
