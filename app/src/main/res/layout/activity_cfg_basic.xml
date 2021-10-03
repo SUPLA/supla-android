@@ -22,6 +22,7 @@
       tools:context="org.supla.android.CfgActivity">
 
     <TextView
+        style="@style/FormLabel"
         android:id="@+id/dont_have_account_text"
         android:text="@string/dont_have_account_yet"
         android:layout_below="@+id/cfg_save_basic"
@@ -45,6 +46,7 @@
 
 
     <TextView
+        style="@style/FormLabel"
         android:id="@+id/cfg_label_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

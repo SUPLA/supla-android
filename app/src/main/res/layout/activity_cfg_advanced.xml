@@ -83,6 +83,7 @@
           android:layout_height="wrap_content"
           app:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}">
 			  <TextView
+            style="@style/FormLabel"
 					  android:id="@+id/cfg_label_email"
 					  android:layout_width="wrap_content"
 					  android:layout_height="wrap_content"
@@ -111,6 +112,7 @@
 					  android:textSize="14sp" />
 
 			  <TextView
+            style="@style/FormLabel"
 					  android:id="@+id/cfg_label_svr_address_email"
 					  android:layout_width="wrap_content"
 					  android:layout_height="wrap_content"
@@ -132,9 +134,12 @@
 					  app:layout_constraintTop_toBottomOf="@id/cfg_label_svr_address_email"
 					  app:layout_constraintLeft_toLeftOf="@id/cfg_email"
 					  app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail"
+            android:enabled="@{!viewModel.serverAutoDiscovery}"
             android:layout_marginTop="@dimen/form_label_dist"
+            android:inputType="textUri"
 					  android:padding="5dp"
 					  android:textSize="14sp"
+            android:text="@={viewModel.cfgData.serverAddr}"
 					  android:layout_marginRight="25dp" />
 
 				<CheckBox
@@ -165,6 +170,7 @@
 				  android:visibility="@{viewModel.cfgData.authByEmail ? View.GONE : View.VISIBLE}">
 
 			  <TextView
+            style="@style/FormLabel"
 					  android:id="@+id/cfg_label_svr_address"
 					  android:layout_width="wrap_content"
 					  android:layout_height="wrap_content"
@@ -191,6 +197,7 @@
 					  android:text="@={viewModel.cfgData.serverAddr}"
 					  android:textSize="14sp" />
 			  <TextView
+            style="@style/FormLabel"
 					  android:id="@+id/cfg_label_access_id"
 					  android:layout_width="wrap_content"
 					  android:layout_height="wrap_content"
@@ -218,6 +225,7 @@
 					  android:textSize="14sp" />
 
 			  <TextView
+            style="@style/FormLabel"
 					  android:id="@+id/cfg_label_access_pwd"
 					  android:layout_width="wrap_content"
 					  android:layout_height="wrap_content"
