@@ -52,7 +52,12 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.accessIDpwd = cfg.accessIDpwd.value
         prefs.email = cfg.email.value
         prefs.temperatureUnit = cfg.temperatureUnit.value
-        prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
+
+        /* Keep semantics used by the communication library */
+        prefs.isAdvancedCfg = (cfg.accessID.value ?: 0) > 0 && 
+             !(cfg.accessIDpwd.value ?: "").isEmpty()
+
+
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
