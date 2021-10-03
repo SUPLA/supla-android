@@ -30,14 +30,11 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
     private final UserIconDao userIconDao;
     private final ImageCacheProvider imageCacheProvider;
-    private final long profileId;
 
     public DefaultUserIconRepository(UserIconDao userIconDao,
-                                     ImageCacheProvider imageCacheProvider,
-                                     long profileId) {
+                                     ImageCacheProvider imageCacheProvider) {
         this.userIconDao = userIconDao;
         this.imageCacheProvider = imageCacheProvider;
-        this.profileId = profileId;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class DefaultUserIconRepository implements UserIconRepository {
                 new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4, 4),
         };
 
-        userIconDao.insert(id, images, profileId);
+        userIconDao.insert(id, images);
         for (UserIconDao.Image image : images) {
             if (image.value != null) {
                 imageCacheProvider.addImage(id, image);
@@ -64,12 +61,12 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
     @Override
     public void deleteUserIcons() {
-        userIconDao.delete(profileId);
+        userIconDao.delete();
     }
 
     @Override
     public void loadUserIconsIntoCache() {
-        Cursor cursor = userIconDao.getUserIcons(profileId);
+        Cursor cursor = userIconDao.getUserIcons();
         if (cursor.moveToFirst()) {
             do {
                 for (ImageType imageType : ImageType.values()) {

@@ -41,7 +41,7 @@ public class ChannelDao extends BaseDao {
         super(databaseAccessProvider);
     }
 
-    public Channel getChannel(int channelId, int profileId) {
+    public Channel getChannel(int channelId) {
         String[] projection = {
                 SuplaContract.ChannelViewEntry._ID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID,

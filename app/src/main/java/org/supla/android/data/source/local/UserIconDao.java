@@ -31,7 +31,7 @@ public class UserIconDao extends BaseDao {
         super(databaseAccessProvider);
     }
 
-    public void insert(int Id, Image images[], long profileId) {
+    public void insert(int Id, Image images[]) {
         if (images.length != 4) {
             throw new IllegalArgumentException("Expects allways 4 images");
         }
@@ -44,7 +44,6 @@ public class UserIconDao extends BaseDao {
                 values.put(image.column, image.value);
             }
         }
-        values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID, profileId);
 
         write(sqLiteDatabase -> {
             sqLiteDatabase.insertWithOnConflict(SuplaContract.UserIconsEntry.TABLE_NAME,
@@ -52,21 +51,17 @@ public class UserIconDao extends BaseDao {
         });
     }
 
-    public void delete(long profileId) {
-        delete(SuplaContract.UserIconsEntry.TABLE_NAME,
-               key(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID, profileId));
+    public void delete() {
+        delete(SuplaContract.UserIconsEntry.TABLE_NAME);
     }
 
-    public Cursor getUserIcons(long profileId) {
+    public Cursor getUserIcons() {
         String sql = "SELECT " + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
-                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME
-                + " WHERE " + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID
-                + " = " + profileId
-            ;
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
 
         return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
     }

@@ -50,7 +50,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 19;
+    public static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -64,13 +64,11 @@ public class DbHelper extends BaseDbHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.channelRepository = new DefaultChannelRepository(
                 new ChannelDao(this),
-                new LocationDao(this),
-                                                              0 /*FIXME: get profile id */);
+                new LocationDao(this));
         this.colorListRepository = new DefaultColorListRepository(
                 new ColorListDao(this));
         this.userIconRepository = new DefaultUserIconRepository(
-                new UserIconDao(this), new ImageCacheProvider(),
-                                                                0 /*FIXME: get profile id */);
+                new UserIconDao(this), new ImageCacheProvider());
     }
 
     /**
@@ -170,19 +168,6 @@ public class DbHelper extends BaseDbHelper {
         execSQL(db, SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE);
         createIndex(db, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID);
-    }
-
-    private void createAuthProfileTable(SQLiteDatabase db) {
-        final String SQL_CREATE_AUTHPROFILE_TABLE = "CREATE TABLE " +
-            SuplaContract.AuthProfileEntry.TABLE_NAME + " (" +
-            SuplaContract.AuthProfileEntry._ID + " INTEGER PRIMARY KEY," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME + " TEXT NOT NULL UNIQUE," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR + " TEXT," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR + " TEXT," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT)";
-
-        execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }
 
     private void createChannelView(SQLiteDatabase db) {
@@ -363,13 +348,7 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {
-        final String SQL_ALTER_USER_ICONS_ENTRY =
-            "ALTER TABLE " +
-            SuplaContract.UserIconsEntry.TABLE_NAME +
-            " ADD COLUMN " +
-            SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILE_ID +
-            " INTEGER NOT NULL DEFAULT 1";
-        execSQL(db, SQL_ALTER_USER_ICONS_ENTRY);
+        
     }
 
     @Override
@@ -382,10 +361,6 @@ public class DbHelper extends BaseDbHelper {
         createChannelGroupRelationTable(db);
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
-
-        if(DbHelper.DATABASE_VERSION == 19) {
-            upgradeToV19(db);
-        }
         
         // Create views at the end
         createChannelView(db);
@@ -519,12 +494,6 @@ public class DbHelper extends BaseDbHelper {
                 + " INTEGER NOT NULL default 0");
     }
 
-    private void upgradeToV19(SQLiteDatabase db) {
-        createAuthProfileTable(db);
-        insertDefaultProfile(db);
-        alterTablesToReferProfile(db);
-    }
-
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -574,9 +543,6 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 16:
                         upgradeToV17(db);
-                        break;
-                    case 18:
-                        upgradeToV19(db);
                         break;
                 }
             }

@@ -4,10 +4,9 @@ import android.database.Cursor;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.MockitoAnnotations;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.supla.android.data.source.local.ChannelDao;
@@ -52,27 +51,22 @@ public class DefaultChannelRepositoryTest {
     @Mock
     private LocationDao locationDao;
 
+    @InjectMocks
     private DefaultChannelRepository defaultChannelRepository;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        defaultChannelRepository = new DefaultChannelRepository(channelDao, locationDao, 0);
-    }
-    
     @Test
     public void shouldProvideChannelFromDao() {
         // given
         int channelId = 123;
         Channel channel = mock(Channel.class);
-        when(channelDao.getChannel(channelId, 0)).thenReturn(channel);
+        when(channelDao.getChannel(channelId)).thenReturn(channel);
 
         // when
         Channel result = defaultChannelRepository.getChannel(channelId);
 
         // then
         Assert.assertSame(channel, result);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verifyNoMoreInteractions(channelDao);
         verifyZeroInteractions(locationDao);
     }
@@ -146,7 +140,7 @@ public class DefaultChannelRepositoryTest {
         // then
         assertTrue(result);
         ArgumentCaptor<Channel> channelArgumentCaptor = ArgumentCaptor.forClass(Channel.class);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
@@ -180,7 +174,7 @@ public class DefaultChannelRepositoryTest {
         // then
         assertTrue(result);
         ArgumentCaptor<Channel> channelArgumentCaptor = ArgumentCaptor.forClass(Channel.class);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verify(channelDao).getChannelCountForLocation(locationId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
@@ -208,14 +202,14 @@ public class DefaultChannelRepositoryTest {
 
         Channel channel = new Channel();
         channel.setId(channelDbId);
-        when(channelDao.getChannel(channelId, 0)).thenReturn(channel);
+        when(channelDao.getChannel(channelId)).thenReturn(channel);
 
         // when
         boolean result = defaultChannelRepository.updateChannel(suplaChannel);
 
         // then
         assertTrue(result);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verify(channelDao).update(channel);
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
@@ -246,7 +240,7 @@ public class DefaultChannelRepositoryTest {
         Channel channel = new Channel();
         channel.setId(channelDbId);
         channel.setLocationId(locationId + 1);
-        when(channelDao.getChannel(channelId, 0)).thenReturn(channel);
+        when(channelDao.getChannel(channelId)).thenReturn(channel);
 
         when(channelDao.getChannelCountForLocation(locationId)).thenReturn(channelsCount);
 
@@ -255,7 +249,7 @@ public class DefaultChannelRepositoryTest {
 
         // then
         assertTrue(result);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verify(channelDao).getChannelCountForLocation(locationId);
         verify(channelDao).update(channel);
         verify(locationDao).getLocation(locationId);
@@ -285,14 +279,14 @@ public class DefaultChannelRepositoryTest {
                 8, 7, 6, 5, 4, 3, (short) 2, (short) 1, channelValue(suplaChannelValue));
         channel.setId(channelDbId);
         channel.setVisible(1);
-        when(channelDao.getChannel(channelId, 0)).thenReturn(channel);
+        when(channelDao.getChannel(channelId)).thenReturn(channel);
 
         // when
         boolean result = defaultChannelRepository.updateChannel(suplaChannel);
 
         // then
         assertFalse(result);
-        verify(channelDao).getChannel(channelId, 0);
+        verify(channelDao).getChannel(channelId);
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
