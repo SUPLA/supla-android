@@ -434,5 +434,5 @@
     <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
     <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
     <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
-
+    <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
 </resources>
