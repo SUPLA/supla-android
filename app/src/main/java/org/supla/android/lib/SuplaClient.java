@@ -107,6 +107,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
 
+    private native boolean scTimerArm(long _supla_client, int ChannelID, int On, int DurationMS);
+
     private native boolean scSetRGBW(long _supla_client, int ID, int Group,
                                      int Color, int ColorBrightness, int Brightness,
                                      int TurnOnOff);
@@ -304,6 +306,16 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean timerArm(int ChannelID, boolean On, int DurationMS) {
+        lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scTimerArm(_supla_client_ptr,
+                    ChannelID, On ? 1 : 0, DurationMS);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+    
     public boolean open(int ChannelID, int Open) {
         return open(ChannelID, false, Open);
     }

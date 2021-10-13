@@ -79,7 +79,6 @@ public class ThermostatHP {
         schedule = null;
 
         if (cev == null
-                || cev.getType() != SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1
                 || cev.getExtendedValue().ThermostatValue == null) {
             return false;
         }

@@ -50,7 +50,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 18;
+    public static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -161,7 +161,6 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelExtendedValueEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
-                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + " BLOB)";
 
 
@@ -185,7 +184,6 @@ public class DbHelper extends BaseDbHelper {
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
                 "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + ", " +
-                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
@@ -477,12 +475,21 @@ public class DbHelper extends BaseDbHelper {
                 + " INTEGER NOT NULL default 0");
     }
 
-    private void recreateViews(SQLiteDatabase db) {
+    private void upgradeToV19(SQLiteDatabase db) {
+        dropViews(db);
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
+        createChannelExtendedValueTable(db);
+    }
+
+    private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
+    }
 
+    private void recreateViews(SQLiteDatabase db) {
+        dropViews(db);
         createChannelView(db);
         createChannelGroupValueView(db);
     }
@@ -526,6 +533,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 16:
                         upgradeToV17(db);
+                        break;
+                    case 18:
+                        upgradeToV19(db);
                         break;
                 }
             }

@@ -267,7 +267,6 @@ public class Channel extends ChannelBase {
 
     public String getUnit() {
         if (getExtendedValue() != null
-                && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
                 && getExtendedValue().getExtendedValue() != null
                 && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
 
@@ -316,8 +315,7 @@ public class Channel extends ChannelBase {
     public SuplaChannelState getChannelState() {
         ChannelExtendedValue ev = getExtendedValue();
 
-        if (ev != null && (ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1
-                || ev.getType() == SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1)) {
+        if (ev != null) {
             return ev.getExtendedValue().ChannelStateValue;
         }
 

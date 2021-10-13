@@ -20,6 +20,8 @@ package org.supla.android.lib;
 
 import android.annotation.SuppressLint;
 
+import org.supla.android.Trace;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,7 +36,7 @@ public class SuplaTimerState implements Serializable {
     public SuplaTimerState(long countdownEndsAt, byte[] targetValue, int senderId, String senderName) {
 
         if (countdownEndsAt > 0) {
-            this.countdownEndsAt = new Date(countdownEndsAt);
+            this.countdownEndsAt = new Date(countdownEndsAt*1000);
         }
 
         this.targetValue = targetValue;
@@ -48,6 +50,10 @@ public class SuplaTimerState implements Serializable {
 
     public byte[] getTargetValue() {
         return targetValue;
+    }
+
+    public boolean expectedHiValue() {
+        return targetValue != null && targetValue[0] > 0;
     }
 
     public int getSenderId() {
