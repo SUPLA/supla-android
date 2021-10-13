@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.supla.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +22,7 @@
         android:xlargeScreens="true" />
 
     <application
+        android:name="org.supla.android.SuplaApp"
         android:allowBackup="true"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_descriptor"
@@ -54,7 +56,7 @@
             android:screenOrientation="sensorPortrait"></activity>
 
         <activity
-            android:name=".CfgActivity"
+            android:name=".cfg.CfgActivity"
             android:launchMode="singleTop"
             android:screenOrientation="sensorPortrait"></activity>
 

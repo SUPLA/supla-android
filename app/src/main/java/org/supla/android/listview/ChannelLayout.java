@@ -801,7 +801,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         public int left_btn_right;
     }
 
-    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
+    private class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
 
         public CaptionView(Context context, int imgl_id) {

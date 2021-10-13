@@ -142,7 +142,7 @@
                     android:padding="2dp"
                     android:orientation="horizontal">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/diwCfgInOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 android:orientation="horizontal"
                 android:padding="2dp">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/diwCfgLedImgOn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ledonwhite" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/diwCfgLedImgOff"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ledoff" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/diwCfgLedImgAlwaysOff"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

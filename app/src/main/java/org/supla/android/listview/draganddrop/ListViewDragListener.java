@@ -19,7 +19,7 @@ package org.supla.android.listview.draganddrop;
  */
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;

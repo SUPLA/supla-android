@@ -3,10 +3,10 @@ package org.supla.android;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StringRes;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -67,6 +67,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         if (!mInitialized) {
             mInitialized = true;
             setVisibility(GONE);
+            setBackgroundColor(0);
             setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT));
             setOrientation(VERTICAL);
@@ -177,6 +178,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
         btn.setText(getResources().getString(textResId).toUpperCase());
+	    btn.setBackgroundColor(0);
         btn.setTag(id);
         buttons.add(btn);
         ll.addView(btn);
@@ -202,6 +204,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
+	        btn.setBackgroundColor(0);
             btn.setOnClickListener(this);
             btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);
@@ -224,6 +227,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
                     LayoutParams.MATCH_PARENT);
             btn.setLayoutParams(params);
             btn.setTransformationMethod(null);
+            btn.setBackgroundColor(0);
         }
 
     }

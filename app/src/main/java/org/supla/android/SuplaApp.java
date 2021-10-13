@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -33,8 +34,13 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
+import org.supla.android.cfg.CfgRepository;
+import org.supla.android.cfg.PrefsCfgRepositoryImpl;
+import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
-public class SuplaApp extends Application implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
+public class SuplaApp extends Application implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+    TemperaturePresenterFactory {
 
     private static final Object _lck1 = new Object();
     private static final Object _lck3 = new Object();
@@ -53,16 +59,13 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
     }
 
     public static SuplaApp getApp() {
-
-        synchronized (_lck1) {
-
-            if (_SuplaApp == null) {
-                _SuplaApp = new SuplaApp();
-            }
-
-        }
-
         return _SuplaApp;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SuplaApp._SuplaApp = this;
     }
 
     public static void Vibrate(Context context) {
@@ -224,5 +227,14 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
                 }
             }
         }
+    }
+
+    public CfgRepository getCfgRepository() {
+        return new PrefsCfgRepositoryImpl(this);
+    }
+
+    public TemperaturePresenter getTemperaturePresenter() {
+        CfgRepository repo = getCfgRepository();
+        return new TemperaturePresenterImpl(getCfgRepository().getCfg());
     }
 }
