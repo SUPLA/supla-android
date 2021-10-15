@@ -46,6 +46,9 @@ class CfgFragment: Fragment() {
             ChannelHeight.HEIGHT_60 -> binding.channelHeight.position = 2
         }
 
+        if(viewModel.cfgData.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
+            binding.temperatureUnit.position = 1
+        }
         binding.temperatureUnit.setOnPositionChangedListener() {
             pos -> when(pos) {
                 0 -> viewModel.setTemperatureUnit(TemperatureUnit.CELSIUS)
