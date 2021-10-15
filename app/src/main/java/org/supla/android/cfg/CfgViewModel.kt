@@ -162,6 +162,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
             cfgData.serverAddr.value = ""
             _serverAutoDiscovery.value = true
         }
+        setNeedsReauth()
     }
 
     private fun clearEmail() {
