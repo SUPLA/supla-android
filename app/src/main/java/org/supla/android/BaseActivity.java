@@ -81,12 +81,7 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
         super.onCreate(savedInstanceState);
         dbHelper = DbHelper.getInstance(this);
         SuplaApp.getApp().initTypefaceCollection(this);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getColor(R.color.splash_bg));
-        }
+        setStatusBarColor(R.color.splash_bg);
     }
 
     @Override
@@ -378,5 +373,14 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
                 .subscribe(onComplete, onError));
     }
 
+
+    protected void setStatusBarColor(int colorId) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getColor(colorId));
+        }
+    }
 
 }

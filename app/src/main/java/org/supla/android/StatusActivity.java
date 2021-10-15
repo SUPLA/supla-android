@@ -107,6 +107,7 @@ public class StatusActivity extends NavigationActivity {
             mode = 1;
 
             rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            setStatusBarColor(R.color.activity_status_bg_err);
             btnCloud.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
