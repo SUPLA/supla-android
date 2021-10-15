@@ -55,12 +55,13 @@ class AuthFragment: Fragment() {
                 binding.cfgBasic.cfgCbAdvanced).forEach {
             it.setTypeface(type)
         }
+        binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
+
         type = SuplaApp.getApp().typefaceQuicksandRegular
         arrayOf(binding.cfgBasic.cfgLabelTitleBasic).forEach {
             it.setTypeface(type)
         }
 
-        binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
 
         if(viewModel.cfgData.authByEmail.value!!) {
             binding.cfgAdvanced.authType.position = 0

@@ -85,6 +85,8 @@ class CfgActivity: AppCompatActivity() {
         NavigationUI.setupWithNavController(navToolbar,
                                             navController,
                                             cfg)
+
+        
     }
 
     override fun onResume() {
