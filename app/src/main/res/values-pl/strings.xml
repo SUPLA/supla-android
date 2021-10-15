@@ -1,5 +1,5 @@
 <resources>
-    <string name="confirm_button_text" translatable="false">Zatwierdź</string>
+    <string name="confirm_button_text" translatable="false">OK</string>
     <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
