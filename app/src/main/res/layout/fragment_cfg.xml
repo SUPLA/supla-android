@@ -63,19 +63,19 @@
               android:layout_margin="4dp"
               app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_text="150%" />
+              app:sb_drawable="@drawable/channel_height_small" />
           <co.ceryle.segmentedbutton.SegmentedButton
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_text="100%" />
+              app:sb_drawable="@drawable/channel_height_normal" />
           <co.ceryle.segmentedbutton.SegmentedButton
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_text="60%" />
+              app:sb_drawable="@drawable/channel_height_big" />
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
     </RelativeLayout>
     

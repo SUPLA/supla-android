@@ -42,9 +42,9 @@ class CfgFragment: Fragment() {
 
         val pos: Int
         when(viewModel.cfgData.channelHeight.value!!) {
-            ChannelHeight.HEIGHT_150 -> pos = 0
+            ChannelHeight.HEIGHT_150 -> pos = 2
             ChannelHeight.HEIGHT_100 -> pos = 1
-            ChannelHeight.HEIGHT_60 -> pos = 2
+            ChannelHeight.HEIGHT_60 -> pos = 0
         }
         // Work-around bug in Ceryle segmented control, when
         // setting position without animation in groups of 
@@ -65,9 +65,9 @@ class CfgFragment: Fragment() {
         }
         binding.channelHeight.setOnPositionChangedListener() {
             pos -> when(pos) {
-                0 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
+                2 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
                 1 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_100)
-                2 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
+                0 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
             }
             viewModel.saveConfig()
         }
