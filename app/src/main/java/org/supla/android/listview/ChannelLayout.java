@@ -969,8 +969,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 width *= 3;
             }
 
+            int sw = scaledDimension(width);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width,
+                    (sw < width)?sw:width,
                     scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_img_height)));
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
