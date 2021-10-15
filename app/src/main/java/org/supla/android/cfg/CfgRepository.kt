@@ -18,6 +18,8 @@ package org.supla.android.cfg
  */
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import org.supla.android.Preferences
 import org.supla.android.db.DbHelper
 
@@ -29,16 +31,22 @@ interface CfgRepository {
 class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val prefs: Preferences
     private val helper: DbHelper
+    private val context: Context
 
+    private val kProfileInAdvancedMode = "org.supla.android.profile.default.advanced"
     init {
         prefs = Preferences(ctx)
 	      helper = DbHelper.getInstance(ctx)
+        context = ctx
     }
 
     override fun getCfg(): CfgData {
+        val sp = PreferenceManager.getDefaultSharedPreferences(context)
         return CfgData(prefs.serverAddress, prefs.accessID, 
                        prefs.accessIDpwd,
-                       prefs.email, prefs.isAdvancedCfg, null, 
+                       prefs.email, 
+                       sp.getBoolean(kProfileInAdvancedMode, false), 
+                       null, 
                        prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100)
@@ -61,6 +69,11 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
+
+        val sp = PreferenceManager.getDefaultSharedPreferences(context)
+        val ed = sp.edit()
+        ed.putBoolean(kProfileInAdvancedMode, cfg.isAdvanced.value ?: false)
+        ed.apply()
     }
 
 }
