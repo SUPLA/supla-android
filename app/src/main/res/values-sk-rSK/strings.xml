@@ -341,7 +341,7 @@
     <string name="wake_up_frequency" >Frekvencia budenia</string>
     <string name="wakeup_info" >*) Vložené nastavenia sa použijú pri najbližšom vybudení uzla.</string>
     <string name="wheel" >Koliesko</string>
-    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_rssi" >WiFi RSSI</string>
     <string name="wifi_signal_strength" >Intenzita WiFi signálu</string>
     <string name="wifi_throttling" >"Kvôli limitom skenovania WiFi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas. "</string>
     <string name="wizard_step1_txt2" >"Uisti sa, že mobilné dáta sú počas pridávania zariadení vypnuté. V opačnom prípade sa pridávanie nemusí podariť. "</string>

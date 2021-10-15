@@ -329,7 +329,7 @@
     <string name="wake_up_frequency" >Frequência de ativação</string>
     <string name="wakeup_info" >*) As configurações inseridas serão aplicadas na próxima vez que o nó for ativado.</string>
     <string name="wheel" >Rotativo</string>
-    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_rssi" >WiFi RSSI</string>
     <string name="wifi_signal_strength" >Força do sinal WiFi</string>
     <string name="wifi_throttling" >Devido aos limites de varredura de rede WiFi impostos pelo sistema Android, deve aguardar o tempo apresentado acima.</string>
     <string name="wizard_step1_txt2" >Certifique-se de que os dados móveis estão desligados ao adicionar dispositivos. Caso contrário, a adição pode falhar.</string>

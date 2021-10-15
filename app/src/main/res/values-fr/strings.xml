@@ -329,7 +329,7 @@
     <string name="wake_up_frequency">Fréquence de réveil</string>
     <string name="wakeup_info">*) Les paramètres saisis seront appliqués la prochaine fois que le nœud se réveillera.</string>
     <string name="wheel">Cercle</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Force du signal WiFi</string>
     <string name="wifi_throttling">En raison des limites de l\'analyse du réseau WiFi imposées par le système Android, vous devez attendre le temps présenté ci-dessus.</string>
     <string name="wizard_step1_txt2">Assurez-vous que les données mobiles sont désactivées lors de l\'ajout d\'appareils. Sinon, l\'ajout peut échouer.</string>

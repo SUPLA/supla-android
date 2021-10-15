@@ -390,7 +390,7 @@
     <string name="MAC" translatable="false">MAC</string>
     <string name="battery_level">Battery level</string>
     <string name="battery_powered">Battery powered</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Wifi signal strength</string>
     <string name="bridge_node_online">Bridge node - online</string>
     <string name="bridge_signal_strength">Bridge - signal strength</string>

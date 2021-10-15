@@ -371,7 +371,7 @@
     <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
     <string name="battery_level">Poziom baterii</string>
     <string name="battery_powered">Zasilanie bateryjne</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Siła sygnału WiFi</string>
     <string name="bridge_node_online">Węzeł mostu - online</string>
     <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
