@@ -46,16 +46,16 @@ class CfgActivity: AppCompatActivity() {
         const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
     }
 
-
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
+
+        SuplaApp.getApp().initTypefaceCollection(this)
 
 	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
 	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 
         val navToolbar: AppBar
-        val binding: ActivityCfgBinding = DataBindingUtil.setContentView(this,
-                                                                         R.layout.activity_cfg)
+        val binding: ActivityCfgBinding  = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         navToolbar = binding.navToolbar
@@ -85,6 +85,15 @@ class CfgActivity: AppCompatActivity() {
         NavigationUI.setupWithNavController(navToolbar,
                                             navController,
                                             cfg)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val navController = findNavController(R.id.nav_host_fragment)
+        val dest = navController?.currentDestination
+        if(dest != null) {
+            getSupportActionBar()?.setTitle(dest.label ?: "")
+        }
     }
 
     override fun onBackPressed() {
