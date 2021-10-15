@@ -101,6 +101,11 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     fun selectEmailAuth(useEmailAuth: Boolean) {
         if(cfgData.authByEmail.value != useEmailAuth) {
 	          cfgData.authByEmail.value = useEmailAuth
+            if(useEmailAuth) {
+                clearAccessID()
+            } else {
+                clearEmail()
+            }
             setNeedsReauth()
         }
     }
@@ -146,9 +151,8 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     }
 
     fun onEmailChange(s: CharSequence, start: Int, before: Int, count: Int) {
-        cfgData.accessIDpwd.value = ""
         cfgData.serverAddr.value = ""
-        cfgData.accessID.value = 0
+        clearAccessID()
     }
 
     fun toggleServerAutoDiscovery() {
@@ -158,6 +162,15 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
             cfgData.serverAddr.value = ""
             _serverAutoDiscovery.value = true
         }
+    }
+
+    private fun clearEmail() {
+        cfgData.email.value = ""
+    }
+
+    private fun clearAccessID() {
+        cfgData.accessIDpwd.value = ""
+        cfgData.accessID.value = 0
     }
 
     /**

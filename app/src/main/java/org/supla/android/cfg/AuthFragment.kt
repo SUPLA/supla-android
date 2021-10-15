@@ -70,7 +70,7 @@ class AuthFragment: Fragment() {
         }
 
         binding.cfgAdvanced.authType.setOnPositionChangedListener() { 
-            pos -> viewModel.cfgData.authByEmail.value = pos == 0                              
+            pos -> viewModel.selectEmailAuth(pos == 0)
         }
 
         return binding.root
