@@ -90,7 +90,9 @@ class CfgActivity: AppCompatActivity() {
     override fun onBackPressed() {
         val navController = findNavController(R.id.nav_host_fragment)
         if(!navController.navigateUp()) {
-            showMain()
+            if(Preferences(this).configIsSet()) {
+                showMain()
+            }
             finish()
         }
     }
