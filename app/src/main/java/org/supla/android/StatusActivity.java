@@ -133,6 +133,7 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 2) {
             mode = 2;
 
+            setStatusBarColor(R.color.activity_status_bg_normal);
             rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
             btnCloud.setVisibility(View.INVISIBLE);
 
