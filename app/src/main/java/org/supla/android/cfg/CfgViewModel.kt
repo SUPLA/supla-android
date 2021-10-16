@@ -21,6 +21,7 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
@@ -34,6 +35,16 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
      indicates that configuration is changed and should be saved.
      */
     val isDirty: LiveData<Boolean> = _isDirty
+
+    val accessID = MediatorLiveData<String>().apply {
+        addSource(cfgData.accessID) { value ->
+                                 if(value != null && value > 0) {
+                                     setValue(value.toString())
+                                 } else {
+                                     setValue("")
+                                 }
+                             }
+    }
 
     /**
      indicates that auth settings are changed.
@@ -54,7 +65,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     private val _emailObserver: Observer<String>
     private val _serverAddrObserver: Observer<String>
-    private val _accessIDObserver: Observer<Int>
+    private val _accessIDObserver: Observer<String>
     private val _accessIDPwdObserver: Observer<String>
     private val _advancedObserver: Observer<Boolean>
 
@@ -64,8 +75,20 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         _emailObserver = Observer { if(it != email) setNeedsReauth() }
         val serverAddr = cfgData.serverAddr.value
         _serverAddrObserver = Observer<String> { if(it != serverAddr) setNeedsReauth() }
-        val accessID = cfgData.accessID.value ?: 0
-        _accessIDObserver = Observer<Int> { if(it != accessID) setNeedsReauth() }
+        val accessID = accessID.value ?: ""
+        _accessIDObserver = Observer<String> { if(it != accessID) {
+                                                   setNeedsReauth()
+                                               }                                   
+                                                  
+                                               try {
+                                                   val intval = it.toInt()
+                                                   if((cfgData.accessID.value ?: 0) != intval) {
+                                                       cfgData.accessID.value = intval
+                                                   }
+                                               } catch(_: NumberFormatException) {
+                                                   // ignored
+                                               }
+        }
         val accessIDPwd = cfgData.accessIDpwd.value
         _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) setNeedsReauth() }
 
@@ -74,7 +97,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
-        cfgData.accessID.observeForever(_accessIDObserver)
+        this.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
         cfgData.isAdvanced.observeForever(_advancedObserver)
 
@@ -84,7 +107,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     override fun onCleared() {
         cfgData.email.removeObserver(_emailObserver)
         cfgData.serverAddr.removeObserver(_serverAddrObserver)
-        cfgData.accessID.removeObserver(_accessIDObserver)
+        accessID.removeObserver(_accessIDObserver)
         cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
         cfgData.isAdvanced.removeObserver(_advancedObserver)
 
@@ -101,11 +124,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     fun selectEmailAuth(useEmailAuth: Boolean) {
         if(cfgData.authByEmail.value != useEmailAuth) {
 	          cfgData.authByEmail.value = useEmailAuth
-            if(useEmailAuth) {
-                clearAccessID()
-            } else {
-                clearEmail()
-            }
             setNeedsReauth()
         }
     }
@@ -171,7 +189,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     private fun clearAccessID() {
         cfgData.accessIDpwd.value = ""
-        cfgData.accessID.value = 0
+        cfgData.accessID.value = null
     }
 
     /**

@@ -63,7 +63,7 @@ class AuthFragment: Fragment() {
         }
 
 
-        if(viewModel.cfgData.authByEmail.value!!) {
+        if(viewModel.cfgData.authByEmail.value ?: false) {
             binding.cfgAdvanced.authType.setPosition(0, false)
         } else {
             binding.cfgAdvanced.authType.setPosition(1, false)

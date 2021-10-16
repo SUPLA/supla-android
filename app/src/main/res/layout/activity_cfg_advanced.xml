@@ -210,7 +210,7 @@
 					  android:layout_alignParentLeft="true"
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
-					  android:text="@={`` + viewModel.cfgData.accessID}"
+					  android:text="@={viewModel.accessID}"
 					  android:textSize="14sp" />
 
 			  <TextView

@@ -29,7 +29,7 @@ enum class ChannelHeight(val percent: Int) {
 }
 
 data class CfgData(private var _serverAddr: String,
-                   private var _accessID: Int,
+                   private var _accessID: Int?,
                    private var _accessIDpwd: String,
                    private var _email: String,
                    private var _isAdvanced: Boolean,

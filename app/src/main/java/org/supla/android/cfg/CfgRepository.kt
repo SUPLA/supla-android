@@ -33,7 +33,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val helper: DbHelper
     private val context: Context
 
-    private val kProfileInAdvancedMode = "org.supla.android.profile.default.advanced"
+    private val kProfileAdvancedEmailAuth = "org.supla.android.profile.default.advanced_email_auth"
     init {
         prefs = Preferences(ctx)
 	      helper = DbHelper.getInstance(ctx)
@@ -45,8 +45,8 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         return CfgData(prefs.serverAddress, prefs.accessID, 
                        prefs.accessIDpwd,
                        prefs.email, 
-                       sp.getBoolean(kProfileInAdvancedMode, false), 
-                       null, 
+                       prefs.isAdvancedCfg, 
+                       sp.getBoolean(kProfileAdvancedEmailAuth, true), 
                        prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100)
@@ -61,18 +61,14 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.email = cfg.email.value
         prefs.temperatureUnit = cfg.temperatureUnit.value
 
-        /* Keep semantics used by the communication library */
-        prefs.isAdvancedCfg = (cfg.accessID.value ?: 0) > 0 && 
-             !(cfg.accessIDpwd.value ?: "").isEmpty()
-
+        prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
 
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
-
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
         val ed = sp.edit()
-        ed.putBoolean(kProfileInAdvancedMode, cfg.isAdvanced.value ?: false)
+        ed.putBoolean(kProfileAdvancedEmailAuth, cfg.authByEmail.value ?: true)
         ed.apply()
     }
 
