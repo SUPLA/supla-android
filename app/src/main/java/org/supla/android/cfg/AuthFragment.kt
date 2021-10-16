@@ -52,7 +52,7 @@ class AuthFragment: Fragment() {
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
                 binding.cfgBasic.cfgCreateAccount,
                 binding.cfgBasic.dontHaveAccountText,
-                binding.cfgBasic.cfgCbAdvanced).forEach {
+                binding.cfgCbAdvanced).forEach {
             it.setTypeface(type)
         }
         binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)

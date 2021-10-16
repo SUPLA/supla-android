@@ -15,9 +15,9 @@
       android:background="@color/activity_bg"
       android:clickable="true"
       android:focusableInTouchMode="true"
-      android:paddingLeft="@dimen/new_screen_margin"
+      android:paddingLeft="@dimen/activity_horizontal_margin"
       android:paddingTop="@dimen/activity_vertical_margin"
-      android:paddingRight="@dimen/new_screen_margin"
+      android:paddingRight="@dimen/activity_horizontal_margin"
       android:paddingBottom="@dimen/activity_vertical_margin"
       tools:context="org.supla.android.CfgActivity">
 
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="@dimen/form_field_spacing"
         android:singleLine="false"
         android:gravity="center_horizontal" />
 
@@ -75,25 +75,13 @@
         android:padding="5dp"
         android:textSize="14sp" />
 
-      <androidx.appcompat.widget.SwitchCompat
-          android:theme="@style/Switch"
-          android:id="@+id/cfg_cb_advanced"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/cfg_email"
-          android:layout_alignRight="@id/cfg_email"
-          android:layout_marginTop="@dimen/form_element_spacing"
-          android:checked="@={viewModel.cfgData.isAdvanced}"
-          android:text="@string/advanced_settings"
-	        android:textSize="@dimen/default_text_size"
-          />
     <TextView
         android:id="@+id/cfg_label_title_basic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/basic_auth_top_margin"
+        android:layout_marginTop="@dimen/form_field_spacing"
         android:text="@string/profile"
         android:textAppearance="@style/your_account"
         android:gravity="center_horizontal|top" />
@@ -103,7 +91,7 @@
         style="@style/StandaloneRoundedGreenButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/standalone_button_height"
-        android:layout_below="@+id/cfg_cb_advanced"
+        android:layout_below="@+id/cfg_email"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:enabled="@{viewModel.saveEnabled}"

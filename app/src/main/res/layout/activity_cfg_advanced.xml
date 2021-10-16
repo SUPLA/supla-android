@@ -26,19 +26,6 @@
       tools:context="org.supla.android.CfgActivity">
 
     
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/cfg_cb_advanced"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@id/authType"
-        android:layout_marginTop="@dimen/form_field_spacing"
-        android:buttonTint="@color/channel_btn"
-        android:checked="@={viewModel.cfgData.isAdvanced}"
-        android:text="@string/advanced_settings"
-	      android:textSize="@dimen/default_text_size"
-        />
-
 
     <co.ceryle.segmentedbutton.SegmentedButtonGroup
 	      android:id="@+id/authType"
@@ -46,7 +33,9 @@
 	      android:layout_height="wrap_content"
 	      android:layout_below="@id/cfg_cb_advanced"
 	      android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/form_field_spacing"
+        android:layout_marginTop="@dimen/form_label_spacing"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
         app:sbg_animateSelector="fastOutSlowIn"
         app:sbg_animateSelectorDuration="500"
         app:sbg_selectorColor="#ffffff"
