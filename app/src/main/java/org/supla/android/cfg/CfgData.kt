@@ -36,7 +36,8 @@ data class CfgData(private var _serverAddr: String,
 		               private var _authByEmail: Boolean? = null,
                    private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
                    private var _buttonAutohide: Boolean = true,
-                   private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100) {
+                   private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
+                   private var _isServerAuto: Boolean) {
     val serverAddr = MutableLiveData<String>(_serverAddr)
     val accessID = MutableLiveData<Int>(_accessID)
     val accessIDpwd = MutableLiveData<String>(_accessIDpwd)
@@ -46,6 +47,7 @@ data class CfgData(private var _serverAddr: String,
     val isAdvanced = MutableLiveData<Boolean>(_isAdvanced)
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
     val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
+    val isServerAuto = MutableLiveData<Boolean>(_isServerAuto)
 
     init {
         if(_authByEmail === null) {

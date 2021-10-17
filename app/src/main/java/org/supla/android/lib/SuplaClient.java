@@ -35,6 +35,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.profile.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread {
@@ -710,10 +712,9 @@ public class SuplaClient extends Thread {
         Preferences prefs = new Preferences(_context);
 
 
-        if ((prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
-                && versionError.RemoteVersion >= 5
-                && versionError.Version > versionError.RemoteVersion
-                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion) {
+        if (versionError.RemoteVersion >= 7
+            && versionError.Version > versionError.RemoteVersion
+            && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion) {
 
             // set prefered to lower
             prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
@@ -1278,7 +1279,7 @@ public class SuplaClient extends Thread {
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-                    if (prefs.isAdvancedCfg()) {
+                    if (isAccessIDAuthentication()) {
                         cfg.AccessID = prefs.getAccessID();
                         cfg.AccessIDpwd = prefs.getAccessIDpwd();
 
@@ -1289,7 +1290,7 @@ public class SuplaClient extends Thread {
 
                     } else {
                         cfg.Email = prefs.getEmail();
-                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
+                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
                             if (cfg.Host.isEmpty()) {
@@ -1338,5 +1339,15 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
+    }
+
+    private boolean isAccessIDAuthentication() {
+        ProfileManager pm = new SingleAccountProfileManager(_context);
+        return !pm.getAuthInfo().getEmailAuth();
+    }
+
+    private boolean shouldAutodiscoverHost() {
+        ProfileManager pm = new SingleAccountProfileManager(_context);
+        return pm.getAuthInfo().getServerAutoDetect();
     }
 }

@@ -169,15 +169,18 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     }
 
     fun onEmailChange(s: CharSequence, start: Int, before: Int, count: Int) {
-        cfgData.serverAddr.value = ""
-        clearAccessID()
+        if (_serverAutoDiscovery.value == true) {
+            cfgData.serverAddr.value = ""
+        }
     }
 
     fun toggleServerAutoDiscovery() {
         if(_serverAutoDiscovery.value == true) {
             _serverAutoDiscovery.value = false
+            cfgData.isServerAuto.value = false
         } else {
             cfgData.serverAddr.value = ""
+            cfgData.isServerAuto.value = true
             _serverAutoDiscovery.value = true
         }
         setNeedsReauth()

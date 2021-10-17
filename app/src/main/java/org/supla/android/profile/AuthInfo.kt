@@ -1,5 +1,4 @@
 package org.supla.android.profile
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,7 +18,5 @@ package org.supla.android.profile
  */
 
 
-interface ProfileManager {
-    fun getAuthInfo(): AuthInfo
-    fun storeAuthInfo(info: AuthInfo)
-}
+data class AuthInfo(val emailAuth: Boolean, 
+                    val serverAutoDetect: Boolean)

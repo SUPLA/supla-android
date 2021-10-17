@@ -18,10 +18,9 @@ package org.supla.android.cfg
  */
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import org.supla.android.Preferences
 import org.supla.android.db.DbHelper
+import org.supla.android.profile.*
 
 interface CfgRepository {
     fun getCfg(): CfgData
@@ -32,24 +31,26 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val prefs: Preferences
     private val helper: DbHelper
     private val context: Context
+    private val pm: ProfileManager
 
-    private val kProfileAdvancedEmailAuth = "org.supla.android.profile.default.advanced_email_auth"
     init {
         prefs = Preferences(ctx)
 	      helper = DbHelper.getInstance(ctx)
+        pm = SingleAccountProfileManager(ctx)
         context = ctx
     }
 
     override fun getCfg(): CfgData {
-        val sp = PreferenceManager.getDefaultSharedPreferences(context)
+        val info = pm.getAuthInfo()
         return CfgData(prefs.serverAddress, prefs.accessID, 
                        prefs.accessIDpwd,
                        prefs.email, 
                        prefs.isAdvancedCfg, 
-                       sp.getBoolean(kProfileAdvancedEmailAuth, true), 
+                       info.emailAuth, 
                        prefs.temperatureUnit,
                        prefs.isButtonAutohide,
-                       ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100)
+                       ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
+                       info.serverAutoDetect)
     }
 
 
@@ -66,10 +67,10 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
-        val sp = PreferenceManager.getDefaultSharedPreferences(context)
-        val ed = sp.edit()
-        ed.putBoolean(kProfileAdvancedEmailAuth, cfg.authByEmail.value ?: true)
-        ed.apply()
+
+        val info = pm.getAuthInfo().copy(emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!,
+                                         serverAutoDetect = cfg.isServerAuto.value!!)
+        pm.storeAuthInfo(info)
     }
 
 }
