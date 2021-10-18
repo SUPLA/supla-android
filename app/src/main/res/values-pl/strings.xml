@@ -446,5 +446,6 @@
 	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
     <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
     <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
+    <string translatable="false" name="add_device_warning">Kreator dodawania urządzeń nie jest dostępny, gdy wybrano tryb uwierzytelniania identyfikatorem dostępu.</string>
 
 </resources>

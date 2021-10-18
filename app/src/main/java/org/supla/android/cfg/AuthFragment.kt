@@ -50,6 +50,7 @@ class AuthFragment: Fragment() {
         arrayOf(binding.cfgBasic.cfgLabelEmail,
 		            binding.cfgAdvanced.cfgLabelEmail,
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
+                binding.cfgAdvanced.addDeviceWarning,
                 binding.cfgBasic.cfgCreateAccount,
                 binding.cfgBasic.dontHaveAccountText,
                 binding.cfgCbAdvanced).forEach {

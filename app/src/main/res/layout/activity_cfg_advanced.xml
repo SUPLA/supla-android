@@ -240,7 +240,16 @@
 					  android:text="@={viewModel.cfgData.accessIDpwd}"
 					  android:textSize="14sp" />
         
-        
+        <TextView
+            android:id="@+id/addDeviceWarning"
+					  android:layout_width="match_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@id/edAccessIDpwd"
+					  android:layout_marginTop="@dimen/form_label_spacing"
+					  android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text="@string/add_device_warning" />
 		  </RelativeLayout>
     </FrameLayout>
 
