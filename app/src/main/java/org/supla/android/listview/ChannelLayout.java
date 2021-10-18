@@ -891,11 +891,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                                        Boolean visible, int width) {
             int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
             int sh = scaledDimension(h);
+
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
             RelativeLayout.LayoutParams lp =
                 new RelativeLayout.LayoutParams(width, sh);
-
+            
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
 
@@ -970,13 +971,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             }
 
             int sw = scaledDimension(width);
+            int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height),
+                sh = scaledDimension(h);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    (sw < width)?sw:width,
-                    scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_img_height)));
+                    (sw < width)?sw:width, sh);
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
+            int topMargin = scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin));
+
+            lp.setMargins(0, topMargin, 0, 0);
 
             setLayoutParams(lp);
             SetImgDimensions(Img1);
