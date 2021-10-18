@@ -107,8 +107,8 @@
 	 account or when migrating settings from previous version of
 	 the app. -->
     <string translatable="false" name="cfg_profile_name_default">Default</string>
-    <string translatable="false" name="cfg_label_email_auth">Email authorization</string>
-    <string translatable="false" name="cfg_label_access_id_auth">Access identifier</string>
+    <string translatable="false" name="cfg_label_email_auth">Email</string>
+    <string translatable="false" name="cfg_label_access_id_auth">Access ID</string>
     <string translatable="false" name="cfg_checkbox_server_auto">Auto</string>
     <string translatable="false" name="cfg_channel_height">Channel height</string>
     <string translatable="false" name="cfg_temperature_unit">Temperature unit</string>
@@ -460,4 +460,6 @@
     <string translatable="false" name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
     <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi connection lost</string>
     <string translatable="false" name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
+    <string translatable="false" name="basic_profile_warning">Setting not available</string>
+    <string translatable="false" name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
 </resources>

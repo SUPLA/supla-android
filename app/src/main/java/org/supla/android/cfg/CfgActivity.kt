@@ -31,6 +31,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
+import android.app.AlertDialog
+import android.content.DialogInterface
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
@@ -119,6 +121,17 @@ class CfgActivity: AppCompatActivity() {
                 SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect()
                 showStatus()
                 finish()
+            }
+            CfgViewModel.NavigationFlow.BASIC_MODE_ALERT -> {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.basic_profile_warning)
+                    .setMessage(R.string.basic_config_unavailable)
+                    .setPositiveButton(android.R.string.ok) {
+                        dlg, what ->
+                            dlg.cancel()
+                    }.create().show()
+                
+
             }
             CfgViewModel.NavigationFlow.MAIN -> {
                 showMain()

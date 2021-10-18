@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, 
+                                BASIC_MODE_ALERT,
                                 OPEN_PROFILES }
     val currentProfile = MutableLiveData<String>()
     val cfgData: CfgData = repository.getCfg()
@@ -54,12 +55,15 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     /**
      server address auto discovery flag.
      */
-    private val _serverAutoDiscovery = MutableLiveData<Boolean>()
+    private val _serverAutoDiscovery = MutableLiveData<Boolean>(cfgData.isServerAuto.value)
     val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val saveEnabled = MutableLiveData<Boolean>(true)
+
+    private val _isAdvancedMode = MutableLiveData<Boolean>(cfgData.isAdvanced.value)
+    val isAdvancedMode: LiveData<Boolean> = _isAdvancedMode
 
     val nextAction = MutableLiveData<NavigationFlow?>()
 
@@ -92,8 +96,23 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         val accessIDPwd = cfgData.accessIDpwd.value
         _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) setNeedsReauth() }
 
-        val isAdvanced = cfgData.isAdvanced.value
-        _advancedObserver = Observer { if(it != isAdvanced) setConfigDirty() }
+        val isAdvanced = isAdvancedMode.value
+        _advancedObserver = Observer { 
+           if(it != isAdvanced) { 
+                                  setConfigDirty()
+           }
+           if(it == false) {
+               // Do some sanity checks before going into
+               // basic mode
+               if(!((cfgData.authByEmail.value == true) &&
+                  (cfgData.isServerAuto.value == true))) {
+                   nextAction.value = NavigationFlow.BASIC_MODE_ALERT
+                   cfgData.isAdvanced.value = true
+               }
+           }
+           _isAdvancedMode.value = it
+
+        }
 
         cfgData.email.observeForever(_emailObserver)
         cfgData.serverAddr.observeForever(_serverAddrObserver)
@@ -101,7 +120,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
         cfgData.isAdvanced.observeForever(_advancedObserver)
 
-        _serverAutoDiscovery.value = !(email?.isEmpty() ?: true) && (serverAddr?.isEmpty() ?: true)
     }
 
     override fun onCleared() {

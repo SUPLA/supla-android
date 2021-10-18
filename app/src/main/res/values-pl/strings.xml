@@ -84,8 +84,8 @@
 
     <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
     <string name="cfg_profile_name_default">Domyślny</string>
-    <string name="cfg_label_email_auth">Autoryzacja - Email</string>
-    <string name="cfg_label_access_id_auth">Identyfikator dostępu</string>
+    <string name="cfg_label_email_auth">Email</string>
+    <string name="cfg_label_access_id_auth">Identyfikator</string>
     <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
     <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
     <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przyciksów</string>
@@ -444,4 +444,7 @@
 	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia Wi-Fi</string>
     <string translatable="false"
 	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
+    <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
+    <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
+
 </resources>
