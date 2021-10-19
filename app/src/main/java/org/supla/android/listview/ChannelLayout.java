@@ -35,6 +35,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.widget.TextViewCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
@@ -240,6 +242,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
         int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
 
+        if(mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
+            margin = 0;
+            
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
         lp.leftMargin = margin;
 
@@ -645,6 +650,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             if (stateIcon != 0) {
                 channelStateIcon.setImageResource(stateIcon);
+                channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
                 channelStateIcon.setVisibility(VISIBLE);
             }
         }
@@ -873,12 +879,19 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         private TextView newTextView(Context context) {
 
-            TextView Text = new TextView(context);
+            AppCompatTextView Text = new AppCompatTextView(context);
             Text.setId(ViewHelper.generateViewId());
 
             Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
-            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.channel_imgtext_size));
+
+            float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+
+            Text.setMaxLines(1);
+            Text.setAutoSizeTextTypeUniformWithConfiguration((((int)textSize) * 2) / 3,
+                                                             (int)textSize, 1,
+                                                             TypedValue.COMPLEX_UNIT_PX);
+
             Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
@@ -898,7 +911,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 new RelativeLayout.LayoutParams(width, sh);
             
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
 
             Text.setLayoutParams(lp);
             Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
@@ -907,9 +919,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
-
-            SetTextDimensions(Text, Img, visible,
-                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width));
+            int w = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width);
+            SetTextDimensions(Text, Img, visible, w);
 
         }
 
@@ -974,13 +985,11 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height),
                 sh = scaledDimension(h);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    (sw < width)?sw:width, sh);
+                    (sw < width)?((sw + width) / 2):width, (sh < h)?sh:h);
 
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            int topMargin = scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin));
-
-            lp.setMargins(0, topMargin, 0, 0);
+            
 
             setLayoutParams(lp);
             SetImgDimensions(Img1);
