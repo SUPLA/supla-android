@@ -162,40 +162,12 @@
 				  android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
 				  android:visibility="@{viewModel.cfgData.authByEmail ? View.GONE : View.VISIBLE}">
-
-			  <TextView
-            style="@style/FormLabel"
-					  android:id="@+id/cfg_label_svr_address"
-					  android:layout_width="wrap_content"
-					  android:layout_height="wrap_content"
-					  android:layout_alignParentTop="true"
-					  android:layout_alignStart="@id/edServerAddr"
-					  android:layout_alignLeft="@id/edServerAddr"
-					  android:layout_marginLeft="2dp"
-            android:layout_marginTop="@dimen/form_label_spacing"
-					  android:layout_marginBottom="@dimen/form_label_dist"
-					  android:text="@string/server_address"
-					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
-					  android:textSize="9sp" />
-			  <EditText
-					  android:id="@+id/edServerAddr"
-					  android:layout_width="match_parent"
-					  android:layout_height="wrap_content"
-					  android:layout_below="@id/cfg_label_svr_address"
-					  android:layout_alignParentStart="true"
-					  android:layout_alignParentLeft="true"
-					  android:inputType="textUri"
-            android:background="@drawable/rounded_edittext"
-					  android:padding="5dp"
-					  android:text="@={viewModel.cfgData.serverAddrForAccessID}"
-					  android:textSize="14sp" />
 			  <TextView
             style="@style/FormLabel"
 					  android:id="@+id/cfg_label_access_id"
 					  android:layout_width="wrap_content"
+					  android:layout_alignParentTop="true"
 					  android:layout_height="wrap_content"
-					  android:layout_below="@id/edServerAddr"
 					  android:layout_alignStart="@id/edAccessID"
 					  android:layout_alignLeft="@id/edAccessID"
 					  android:layout_marginLeft="2dp"
@@ -243,6 +215,34 @@
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
 					  android:text="@={viewModel.cfgData.accessIDpwd}"
+					  android:textSize="14sp" />
+
+			  <TextView
+            style="@style/FormLabel"
+					  android:id="@+id/cfg_label_svr_address"
+					  android:layout_width="wrap_content"
+					  android:layout_height="wrap_content"
+            android:layout_below="@id/edAccessIDpwd"
+					  android:layout_alignStart="@id/edServerAddr"
+					  android:layout_alignLeft="@id/edServerAddr"
+					  android:layout_marginLeft="2dp"
+            android:layout_marginTop="@dimen/form_label_spacing"
+					  android:layout_marginBottom="@dimen/form_label_dist"
+					  android:text="@string/server_address"
+					  android:textAppearance="?android:attr/textAppearanceSmall"
+					  android:textColor="@android:color/black"
+					  android:textSize="9sp" />
+			  <EditText
+					  android:id="@+id/edServerAddr"
+					  android:layout_width="match_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@id/cfg_label_svr_address"
+					  android:layout_alignParentStart="true"
+					  android:layout_alignParentLeft="true"
+					  android:inputType="textUri"
+            android:background="@drawable/rounded_edittext"
+					  android:padding="5dp"
+					  android:text="@={viewModel.cfgData.serverAddrForAccessID}"
 					  android:textSize="14sp" />
         
         <TextView
