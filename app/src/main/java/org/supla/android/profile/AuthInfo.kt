@@ -19,4 +19,6 @@ package org.supla.android.profile
 
 
 data class AuthInfo(val emailAuth: Boolean, 
-                    val serverAutoDetect: Boolean)
+                    val serverAutoDetect: Boolean,
+                    val serverForEmail: String = "",
+                    val serverForAccessID: String = "")

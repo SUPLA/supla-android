@@ -37,8 +37,10 @@ data class CfgData(private var _serverAddr: String,
                    private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
                    private var _buttonAutohide: Boolean = true,
                    private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
-                   private var _isServerAuto: Boolean) {
+                   private var _isServerAuto: Boolean,
+                   private var _serverAddrAccessID: String) {
     val serverAddr = MutableLiveData<String>(_serverAddr)
+    val serverAddrForAccessID = MutableLiveData<String>(_serverAddrAccessID)
     val accessID = MutableLiveData<Int>(_accessID)
     val accessIDpwd = MutableLiveData<String>(_accessIDpwd)
     val email = MutableLiveData<String>(_email)

@@ -42,7 +42,9 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
     override fun getCfg(): CfgData {
         val info = pm.getAuthInfo()
-        return CfgData(prefs.serverAddress, prefs.accessID, 
+        var emailServerHeuristicValue =  if(info.serverForEmail.isEmpty()) prefs.serverAddress else info.serverForEmail
+        return CfgData(emailServerHeuristicValue, 
+                       prefs.accessID, 
                        prefs.accessIDpwd,
                        prefs.email, 
                        prefs.isAdvancedCfg, 
@@ -50,13 +52,13 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
                        prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
-                       info.serverAutoDetect)
+                       info.serverAutoDetect,
+                       info.serverForAccessID)
     }
 
 
     override fun storeCfg(cfg: CfgData) {
         helper.deleteUserIcons() // TODO: I'm not sure if this is the right place for this yet.
-        prefs.serverAddress = cfg.serverAddr.value
         prefs.accessID = cfg.accessID.value ?: 0
         prefs.accessIDpwd = cfg.accessIDpwd.value
         prefs.email = cfg.email.value
@@ -68,9 +70,23 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.setPreferedProtocolVersion()
 
-        val info = pm.getAuthInfo().copy(emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!,
-                                         serverAutoDetect = cfg.isServerAuto.value!!)
+        val emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!
+        val info = pm.getAuthInfo()
+            .copy(emailAuth = emailAuth,
+                  serverAutoDetect = cfg.isServerAuto.value!!,
+                  serverForEmail = cfg.serverAddr.value ?: "",
+                  serverForAccessID = cfg.serverAddrForAccessID.value ?: "")
         pm.storeAuthInfo(info)
+
+        if(emailAuth) {
+            if(!prefs.isAdvancedCfg || info.serverAutoDetect) {
+                prefs.serverAddress = ""
+            } else {
+                prefs.serverAddress = info.serverForEmail
+            }
+        } else {
+            prefs.serverAddress = info.serverForAccessID
+        }
     }
 
 }

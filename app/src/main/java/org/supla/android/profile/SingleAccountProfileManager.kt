@@ -28,6 +28,8 @@ class SingleAccountProfileManager(private val context: Context): ProfileManager 
 
     private val kProfileAdvancedEmailAuth = "org.supla.android.profile.default.advanced_email_auth"
     private val kProfileAdvancedServerAutoDetect = "org.supla.android.profile.default.server_auto_detect"
+    private val kProfileAdvancedEmailServer = "org.supla.anrdoid.profile.default.email.server"
+    private val kProfileAdvancedAccessIDServer = "org.supla.android.profile.default.access_id.server"
 
     override fun getAuthInfo(): AuthInfo {
         val prefs = Preferences(context)
@@ -36,14 +38,23 @@ class SingleAccountProfileManager(private val context: Context): ProfileManager 
         val autoDetect = sp.getBoolean(kProfileAdvancedServerAutoDetect, 
                                        !prefs.isAdvancedCfg || 
                                        (useEmail && prefs.serverAddress.isEmpty()))
-        return AuthInfo(emailAuth = useEmail, serverAutoDetect = autoDetect)
+        val emailServer = sp.getString(kProfileAdvancedEmailServer, "")
+        val accessIDServer = sp.getString(kProfileAdvancedAccessIDServer, "")
+
+        return AuthInfo(emailAuth = useEmail, serverAutoDetect = autoDetect,
+                        serverForEmail = emailServer!!,
+                        serverForAccessID = accessIDServer!!)
     }
 
     override fun storeAuthInfo(info: AuthInfo) {
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
         val ed = sp.edit()
+
         ed.putBoolean(kProfileAdvancedEmailAuth, info.emailAuth)
         ed.putBoolean(kProfileAdvancedServerAutoDetect, info.serverAutoDetect)
+        ed.putString(kProfileAdvancedEmailServer, info.serverForEmail)
+        ed.putString(kProfileAdvancedAccessIDServer, info.serverForAccessID)
+
         ed.apply()
     }
 }

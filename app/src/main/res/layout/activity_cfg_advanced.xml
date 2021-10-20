@@ -188,7 +188,7 @@
 					  android:inputType="textUri"
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
-					  android:text="@={viewModel.cfgData.serverAddr}"
+					  android:text="@={viewModel.cfgData.serverAddrForAccessID}"
 					  android:textSize="14sp" />
 			  <TextView
             style="@style/FormLabel"
