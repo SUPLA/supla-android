@@ -249,7 +249,7 @@
             android:id="@+id/addDeviceWarning"
 					  android:layout_width="match_parent"
 					  android:layout_height="wrap_content"
-					  android:layout_below="@id/edAccessIDpwd"
+					  android:layout_below="@id/edServerAddr"
 					  android:layout_marginTop="@dimen/form_label_spacing"
 					  android:layout_centerHorizontal="true"
             android:gravity="center"
