@@ -24,6 +24,7 @@ import android.widget.FrameLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.Gravity
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.Toolbar.LayoutParams
@@ -45,12 +46,21 @@ class AppBar @JvmOverloads constructor(
                                           false)
         val params = LayoutParams(Gravity.CENTER_HORIZONTAL)
 
-        binding.title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
-
+        arrayOf(binding.title, binding.subtitle).forEach {
+                it.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
+        }
         addView(binding.root, params)
     }
 
     override fun setTitle(title: CharSequence) {
         binding.title.text = title
+        binding.title.visibility = View.VISIBLE
+        binding.subtitle.visibility = View.INVISIBLE
+    }
+
+    override fun setSubtitle(subtitle: CharSequence) {
+        binding.subtitle.visibility = View.VISIBLE
+        binding.title.visibility = View.INVISIBLE
+        binding.subtitle.text = subtitle
     }
 }

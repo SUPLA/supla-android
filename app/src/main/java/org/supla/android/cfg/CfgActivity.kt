@@ -48,6 +48,8 @@ class CfgActivity: AppCompatActivity() {
         const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
     }
 
+    private lateinit var binding: ActivityCfgBinding
+
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
 
@@ -57,7 +59,7 @@ class CfgActivity: AppCompatActivity() {
 	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 
         val navToolbar: AppBar
-        val binding: ActivityCfgBinding  = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         navToolbar = binding.navToolbar
@@ -96,7 +98,22 @@ class CfgActivity: AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         val dest = navController?.currentDestination
         if(dest != null) {
-            getSupportActionBar()?.setTitle(dest.label ?: "")
+            // Temporary hack to match look and feel of the rest of the app
+            // prior to moving everything into navigation graph.
+            if(dest.id == R.id.cfgAuth) {
+                getSupportActionBar()?.setTitle(dest.label ?: "")
+            } else {
+                getSupportActionBar()?.setSubtitle(dest.label ?: "")
+            }
+        }
+
+        val sender = getIntent().getStringExtra(INTENTSENDER)
+        if(sender != null && sender.equals(INTENTSENDER_MAIN)) {
+            // show back button
+            binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
+            binding.navToolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
         }
     }
 
