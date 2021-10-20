@@ -14,7 +14,7 @@
           style="@style/title"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:gravity="center_horizontal" />
+          android:gravity="center" />
 
       <TextView
           android:id="@+id/subtitle"
@@ -24,6 +24,7 @@
           android:layout_alignParentLeft="false"
           android:layout_alignParentEnd="true"
           android:layout_alignParentRight="false"
+          android:paddingTop="7dp"
           android:layout_marginLeft="45dp"
           android:layout_marginRight="45dp"
           android:gravity="center"
