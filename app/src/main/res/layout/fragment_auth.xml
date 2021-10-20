@@ -15,6 +15,18 @@
       android:layout_height="match_parent"
       android:orientation="vertical"
       android:background="@color/activity_bg">
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/cfg_cb_advanced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="71dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:buttonTint="@color/channel_btn"
+        android:checked="@={viewModel.cfgData.isAdvanced}"
+        android:text="@string/advanced_settings"
+	      android:textSize="@dimen/default_text_size"
+        />
     <FrameLayout
 		    android:layout_weight="1"
 		    android:layout_width="match_parent"
@@ -26,18 +38,6 @@
 	          android:layout_width="match_parent"
 	          android:layout_height="match_parent"
 	          android:orientation="vertical">
-          <androidx.appcompat.widget.SwitchCompat
-              android:id="@+id/cfg_cb_advanced"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="right"
-              android:layout_marginTop="71dp"
-              android:layout_marginRight="@dimen/activity_horizontal_margin"
-              android:buttonTint="@color/channel_btn"
-              android:checked="@={viewModel.cfgData.isAdvanced}"
-              android:text="@string/advanced_settings"
-	            android:textSize="@dimen/default_text_size"
-              />
 	        <RelativeLayout
               android:id="@+id/cfg_content"
               android:layout_width="match_parent"
@@ -58,11 +58,55 @@
 	            android:layout_width="match_parent" />
 	      </LinearLayout>
       </ScrollView>
+      <View
+          android:layout_height="50dp"
+          android:layout_width="match_parent"
+          android:layout_gravity="bottom"
+          android:background="@drawable/gradient_shape" />
     </FrameLayout>
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
+
+    <org.supla.android.ui.StandaloneRoundedButton
+        android:id="@+id/cfg_save"
+        style="@style/StandaloneRoundedGreenButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standalone_button_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:enabled="@{viewModel.saveEnabled}"
+        android:onClick="@{() -> viewModel.onSaveConfig()}"
+        android:text="@string/confirm_button_text"
+         />
+    <TextView
+        style="@style/FormLabel"
+        android:id="@+id/dont_have_account_text"
+        android:text="@string/dont_have_account_yet"
+        android:layout_below="@+id/cfg_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/form_field_spacing"
+        android:singleLine="false"
+        android:gravity="center_horizontal" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cfg_create_account"
+        style="@style/LinkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:layout_below="@+id/dont_have_account_text"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/form_field_spacing"
+        android:layout_centerHorizontal="true"
+        android:onClick="@{() -> viewModel.onCreateAccount()}"
+        android:text="@string/create_account" />
+
+
     </RelativeLayout>
   </LinearLayout>
 </layout>

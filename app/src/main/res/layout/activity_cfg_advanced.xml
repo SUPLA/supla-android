@@ -254,22 +254,13 @@
 					  android:layout_centerHorizontal="true"
             android:gravity="center"
             android:textSize="14sp"
+            android:textColor="@color/red_alert"
+            android:padding="4dp"
+            android:background="@drawable/rounded_border"
             android:text="@string/add_device_warning" />
 		  </RelativeLayout>
     </FrameLayout>
 
-    <org.supla.android.ui.StandaloneRoundedButton
-        android:id="@+id/cfg_save_advanced"
-        style="@style/StandaloneRoundedGreenButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/standalone_button_height"
-        android:layout_below="@id/authFormWrapper"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:enabled="@{viewModel.saveEnabled}"
-        android:onClick="@{() -> viewModel.onSaveConfig()}"
-        android:text="@string/confirm_button_text"
-        />
   </RelativeLayout>
 
 

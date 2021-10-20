@@ -52,12 +52,12 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.cbAutoLabel,
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
                 binding.cfgAdvanced.addDeviceWarning,
-                binding.cfgBasic.cfgCreateAccount,
-                binding.cfgBasic.dontHaveAccountText,
+                binding.cfgCreateAccount,
+                binding.dontHaveAccountText,
                 binding.cfgCbAdvanced).forEach {
             it.setTypeface(type)
         }
-        binding.cfgBasic.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
+        binding.cfgCreateAccount.setTypeface(type, Typeface.BOLD)
 
         type = SuplaApp.getApp().typefaceQuicksandRegular
         arrayOf(binding.cfgBasic.cfgLabelTitleBasic).forEach {
