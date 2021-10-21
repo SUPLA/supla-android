@@ -87,10 +87,13 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     private float heightScaleFactor = 1f;
 
+    private Preferences prefs;
+
 
     public ChannelLayout(Context context, ChannelListView parentListView) {
         super(context);
 
+        prefs = new Preferences(context);
         setOrientation(LinearLayout.HORIZONTAL);
 
         mParentListView = parentListView;
@@ -99,7 +102,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         right_btn = new FrameLayout(context);
         left_btn = new FrameLayout(context);
 
-        heightScaleFactor = (new Preferences(context).getChannelHeight() + 0f) / 100f;
+        heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
         int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
 
         right_btn.setLayoutParams(new LayoutParams(
@@ -644,7 +647,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             right_ActiveStatus.setVisibility(View.GONE);
             int stateIcon = 0;
 
-            if (cbase instanceof Channel) {
+            if (cbase instanceof Channel && prefs.isShowChannelInfo()) {
                 stateIcon = ((Channel) cbase).getChannelStateIcon();
             }
 

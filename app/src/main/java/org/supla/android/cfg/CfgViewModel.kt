@@ -160,6 +160,13 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         }
     }
 
+    fun setShowChannelInfo(show: Boolean) {
+        if(cfgData.showChannelInfo.value != show) {
+            cfgData.showChannelInfo.value = show
+            setConfigDirty()
+        }
+    }
+
 
     fun onCreateAccount() {
         nextAction.value = NavigationFlow.CREATE_ACCOUNT

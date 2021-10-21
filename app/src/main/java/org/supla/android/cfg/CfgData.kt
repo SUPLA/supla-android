@@ -38,7 +38,8 @@ data class CfgData(private var _serverAddr: String,
                    private var _buttonAutohide: Boolean = true,
                    private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
                    private var _isServerAuto: Boolean,
-                   private var _serverAddrAccessID: String) {
+                   private var _serverAddrAccessID: String,
+                   private var _showChannelInfo: Boolean) {
     val serverAddr = MutableLiveData<String>(_serverAddr)
     val serverAddrForAccessID = MutableLiveData<String>(_serverAddrAccessID)
     val accessID = MutableLiveData<Int>(_accessID)
@@ -50,6 +51,7 @@ data class CfgData(private var _serverAddr: String,
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
     val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
     val isServerAuto = MutableLiveData<Boolean>(_isServerAuto)
+    val showChannelInfo = MutableLiveData<Boolean>(_showChannelInfo)
 
     init {
         if(_authByEmail === null) {

@@ -54,6 +54,7 @@ public class Preferences {
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
     public static final String pref_active_profile = "pref_active_profile";
+    private static final String pref_show_channel_info = "pref_show_channel_info";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -316,6 +317,16 @@ public class Preferences {
     public void setActiveProfileId(long val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putLong(pref_active_profile, val);
+        ed.apply();
+    }
+
+    public boolean isShowChannelInfo() {
+        return _prefs.getBoolean(pref_show_channel_info, true);
+    }
+
+    public void setShowChannelInfo(boolean val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putBoolean(pref_show_channel_info, val);
         ed.apply();
     }
 }

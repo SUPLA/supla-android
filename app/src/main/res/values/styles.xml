@@ -69,4 +69,15 @@
     <style name="FormLabel" parent="">
       <item name="android:textColor">#B4B7BA</item>
     </style>
+
+    <style name="SegmentedButtonGroup">
+      <item name="sbg_animateSelectorDuration">100</item>
+      <item name="sbg_selectorColor">#FFFFFF</item>
+      <item name="sbg_backgroundColor">?attr/switcherBackgroundColor</item>
+      <item name="sbg_selectorBackgroundDrawable">@drawable/segment_group_selector</item>
+      <item name="sbg_radius">6dp</item>
+    </style>
+    <style name="SegmentedButton">
+      <item name="sb_textColor">#000000</item>
+    </style>
 </resources>

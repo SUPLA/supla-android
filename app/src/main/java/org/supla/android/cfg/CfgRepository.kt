@@ -53,7 +53,8 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
                        info.serverAutoDetect,
-                       info.serverForAccessID)
+                       info.serverForAccessID,
+                       prefs.isShowChannelInfo)
     }
 
 
@@ -68,6 +69,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
+        prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
         prefs.setPreferedProtocolVersion()
 
         val emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!

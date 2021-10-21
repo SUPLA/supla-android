@@ -52,26 +52,24 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:sbg_selectorColor="#ffffff"
-            app:sbg_backgroundColor="?attr/switcherBackgroundColor"
-            app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
-            app:sbg_radius="6dp">
+            style="@style/SegmentedButtonGroup"
+            >
           <co.ceryle.segmentedbutton.SegmentedButton
+              style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
-              app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
               app:sb_drawable="@drawable/channel_height_small" />
           <co.ceryle.segmentedbutton.SegmentedButton
+              style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
-              app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
               app:sb_drawable="@drawable/channel_height_normal" />
           <co.ceryle.segmentedbutton.SegmentedButton
+              style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
-              app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
               app:sb_drawable="@drawable/channel_height_big" />
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -96,25 +94,22 @@
           android:layout_height="wrap_content"
           android:text="@string/cfg_temperature_unit" />
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            style="@style/SegmentedButtonGroup"
             android:id="@+id/temperatureUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            app:sbg_selectorColor="#ffffff"
-            app:sbg_backgroundColor="?attr/switcherBackgroundColor"
-            app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
-            app:sbg_radius="6dp">
+            android:layout_centerVertical="true">
           <co.ceryle.segmentedbutton.SegmentedButton
+              style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
-              app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
               app:sb_text="°C" />
           <co.ceryle.segmentedbutton.SegmentedButton
+              style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
-              app:sb_textColor="#000000"
               android:layout_height="@dimen/segmented_button_height"
               app:sb_text="°F" />
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
@@ -152,6 +147,39 @@
 
 
     </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">        
+      
+      <TextView
+          android:id="@+id/showChannelInfoLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/show_channel_info" />
+    
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/showChannelInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:buttonTint="@color/channel_btn"
+        android:checked="@{viewModel.cfgData.showChannelInfo}"
+	      android:textSize="@dimen/default_text_size"
+        />
+
+
+    </RelativeLayout>
+    
     
     <View android:layout_width="match_parent"
           android:layout_height="@dimen/list_separator_thickness"

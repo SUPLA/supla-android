@@ -49,7 +49,7 @@ class CfgFragment: Fragment() {
         // Work-around bug in Ceryle segmented control, when
         // setting position without animation in groups of 
         // more than 2 buttons.
-        for(c in 0..pos) {
+        for(c in 1..pos) {
             binding.channelHeight.setPosition(c, false)
         }
 
@@ -70,10 +70,16 @@ class CfgFragment: Fragment() {
                 0 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
             }
             viewModel.saveConfig()
+            
         }
 
         binding.buttonAutohide.setOnClickListener() {
             viewModel.setButtonAutohide(!viewModel.cfgData.buttonAutohide.value!!)
+            viewModel.saveConfig()
+        }
+
+        binding.showChannelInfo.setOnClickListener() {
+            viewModel.setShowChannelInfo(!viewModel.cfgData.buttonAutohide.value!!)
             viewModel.saveConfig()
         }
 

@@ -28,6 +28,7 @@
     
 
     <co.ceryle.segmentedbutton.SegmentedButtonGroup
+        style="@style/SegmentedButtonGroup"
 	      android:id="@+id/authType"
 	      android:layout_width="match_parent"
 	      android:layout_height="wrap_content"
@@ -35,21 +36,17 @@
 	      android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/form_label_spacing"
         android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        app:sbg_selectorColor="#ffffff"
-        app:sbg_backgroundColor="?attr/switcherBackgroundColor"
-        app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
-        app:sbg_radius="6dp">
+        android:layout_marginLeft="0dp">
       <co.ceryle.segmentedbutton.SegmentedButton
+          style="@style/SegmentedButton"
           android:layout_width="0dp"
           android:layout_weight="1"
           android:layout_margin="4dp"
-          app:sb_textColor="#000000"
           android:layout_height="@dimen/segmented_button_height"
           app:sb_text="@string/cfg_label_email_auth" />
       <co.ceryle.segmentedbutton.SegmentedButton
+          style="@style/SegmentedButton"
           android:layout_width="0dp"
-          app:sb_textColor="#000000"
           android:layout_margin="4dp"
           android:layout_weight="1"
           android:layout_height="@dimen/segmented_button_height"
