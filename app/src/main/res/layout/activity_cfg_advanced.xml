@@ -36,8 +36,6 @@
         android:layout_marginTop="@dimen/form_label_spacing"
         android:layout_marginRight="0dp"
         android:layout_marginLeft="0dp"
-        app:sbg_animateSelector="fastOutSlowIn"
-        app:sbg_animateSelectorDuration="500"
         app:sbg_selectorColor="#ffffff"
         app:sbg_backgroundColor="?attr/switcherBackgroundColor"
         app:sbg_selectorBackgroundDrawable="@drawable/segment_group_selector"
