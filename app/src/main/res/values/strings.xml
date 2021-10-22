@@ -406,9 +406,9 @@
     <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1">Enter Wi-Fi Network name and password to use with new I/O Device</string>
+    <string name="wizard_step2_txt1">Enter WiFi Network name and password to use with new I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
+    <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
     <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
     <string name="save_without_saving">Do you want to quit without saving?</string>
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
@@ -458,7 +458,7 @@
     <string translatable="false" name="motor_problem">Motor problem / Unexpected stop.</string>
     <string translatable="false" name="lastconnectionresetcause_unknown">0: unknown</string>
     <string translatable="false" name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
-    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi connection lost</string>
+    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
     <string translatable="false" name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
     <string translatable="false" name="basic_profile_warning">Setting not available</string>
     <string translatable="false" name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>

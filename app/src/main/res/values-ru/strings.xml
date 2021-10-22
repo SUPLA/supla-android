@@ -114,7 +114,7 @@
     <string name="next">Далее</string>
     <string name="wizard_addnetwork_error">Не удается добавить конфигурацию сети wi-fi!</string>
     <string name="wizard_result_conn_error">Не удается установить соединение с устройством!</string>
-    <string name="wizard_iodevice_notfound">Не найдено никаких устройств! Убедитесь, что устройство, которое вы хотите настроить, работает в режиме конфигурации, а затем попробуйте снова. ВНИМАНИЕ - Некоторые версии Android требуют включенного GPS для того, чтобы позволить приложениям проанализировать Wi-Fi сети. В связи с этим, убедитесь, что GPS включен.</string>
+    <string name="wizard_iodevice_notfound">Не найдено никаких устройств! Убедитесь, что устройство, которое вы хотите настроить, работает в режиме конфигурации, а затем попробуйте снова. ВНИМАНИЕ - Некоторые версии Android требуют включенного GPS для того, чтобы позволить приложениям проанализировать WiFi сети. В связи с этим, убедитесь, что GPS включен.</string>
     <string name="wizard_step3_txt1">Подключите ваше устройство ввода-вывода к питанию. Устройство должно по умолчанию работать в режиме конфигурации, информируя об этом миганием светодиода состояния следующим образом</string>
     <string name="wizard_wifi_timeout">Превышено время ожидания данных о текущей сети wi-fi!</string>
     <string name="wizard_connect_timeout">Превышено время ожидания соединения с устройством ввода-вывода!</string>
@@ -252,7 +252,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Теплосчетчик</string>
-    <string name="wizard_step2_txt1">Введите имя и пароль вашей домашней или корпоративной сети Wi-Fi, через которую исполнительное устройство сможет подключиться к серверу.</string>
+    <string name="wizard_step2_txt1">Введите имя и пароль вашей домашней или корпоративной сети WiFi, через которую исполнительное устройство сможет подключиться к серверу.</string>
     <string name="aritmetic_balance_days" >Арифметический баланс - Дни</string>
     <string name="aritmetic_balance_hours" >Арифметический баланс - Часы</string>
     <string name="aritmetic_balance_minutes" >Арифметический баланс - Минуты</string>
@@ -337,7 +337,7 @@
     <string name="wheel" >Круг</string>
     <string name="wifi_rssi" >Wi-fi RSSI</string>
     <string name="wifi_signal_strength" >Сила сигнала WiFi</string>
-    <string name="wifi_throttling" >В связи с ограничениями сканирования Wi-Fi, установленными системой Android, следует подождать время, указанное выше.</string>
+    <string name="wifi_throttling" >В связи с ограничениями сканирования WiFi, установленными системой Android, следует подождать время, указанное выше.</string>
     <string name="wizard_step1_txt2" >Убедитесь, что при добавлении устройств мобильные данные отключены. В противном случае добавление может завершиться неудачей.</string>
     <string name="yes" >Да</string>
     <string name="z_wave" >Мост z-wave</string>

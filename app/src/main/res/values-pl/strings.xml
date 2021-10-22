@@ -441,7 +441,7 @@
     <string translatable="false"
 	    name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
     <string translatable="false"
-	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia Wi-Fi</string>
+	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia WiFi</string>
     <string translatable="false"
 	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
     <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>

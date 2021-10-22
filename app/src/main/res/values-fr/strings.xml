@@ -106,11 +106,11 @@
     <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
     <string name="wizard_iodev_name">Nom</string>
     <string name="next">Continuer</string>
-    <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau Wi-Fi !</string>
+    <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau WiFi !</string>
     <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
-    <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le Wi-Fi, assurez-vous donc que le GPS est activé.</string>
+    <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le WiFi, assurez-vous donc que le GPS est activé.</string>
     <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
-    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau Wi-Fi actuel est dépassé!</string>
+    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé!</string>
     <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>

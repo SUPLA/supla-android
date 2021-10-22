@@ -127,7 +127,7 @@
     <string name="wizard_reconnect_timeout">Bola prekročená lehota čakania na návrat do základnej WiFi siete!</string>
     <string name="device_reg_request_timeout">Bola prekročená lehota čakania na informácie o dostupnosti registrácie zariadení!</string>
 
-    <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať Wi-Fi site. Preto skontrolujte, že je GPS spustené.</string>
+    <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať WiFi site. Preto skontrolujte, že je GPS spustené.</string>
 
 
     <string name="wizard_done">Konfigurácia zariadenia bola úspešne dokončená :)</string>
