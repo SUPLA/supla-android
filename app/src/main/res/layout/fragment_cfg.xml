@@ -46,33 +46,33 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cfg_channel_height" />
-        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+        <org.supla.android.ui.SegmentedButtonGroup
+            style="@style/SegmentedButtonGroup"
             android:id="@+id/channelHeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            style="@style/SegmentedButtonGroup"
             >
-          <co.ceryle.segmentedbutton.SegmentedButton
+          <org.supla.android.ui.SegmentedButton
               style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_drawable="@drawable/channel_height_small" />
-          <co.ceryle.segmentedbutton.SegmentedButton
+              android:src="@drawable/channel_height_small" />
+          <org.supla.android.ui.SegmentedButton
               style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_drawable="@drawable/channel_height_normal" />
-          <co.ceryle.segmentedbutton.SegmentedButton
+              android:src="@drawable/channel_height_normal" />
+          <org.supla.android.ui.SegmentedButton
               style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_drawable="@drawable/channel_height_big" />
-        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+              android:src="@drawable/channel_height_big"  />
+        </org.supla.android.ui.SegmentedButtonGroup>
     </RelativeLayout>
     
     <View android:layout_width="match_parent"
@@ -93,26 +93,26 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cfg_temperature_unit" />
-        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+        <org.supla.android.ui.SegmentedButtonGroup
             style="@style/SegmentedButtonGroup"
             android:id="@+id/temperatureUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
-          <co.ceryle.segmentedbutton.SegmentedButton
+          <org.supla.android.ui.SegmentedButton
               style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_text="°C" />
-          <co.ceryle.segmentedbutton.SegmentedButton
+              android:text="°C" />
+          <org.supla.android.ui.SegmentedButton
               style="@style/SegmentedButton"
               android:layout_width="@dimen/segmented_button_width_small"
               android:layout_margin="4dp"
               android:layout_height="@dimen/segmented_button_height"
-              app:sb_text="°F" />
-        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+              android:text="°F" />
+        </org.supla.android.ui.SegmentedButtonGroup>
     </RelativeLayout>
 
     

@@ -46,15 +46,10 @@ class CfgFragment: Fragment() {
             ChannelHeight.HEIGHT_100 -> pos = 1
             ChannelHeight.HEIGHT_60 -> pos = 0
         }
-        // Work-around bug in Ceryle segmented control, when
-        // setting position without animation in groups of 
-        // more than 2 buttons.
-        for(c in 1..pos) {
-            binding.channelHeight.setPosition(c, false)
-        }
+        binding.channelHeight.position = pos
 
         if(viewModel.cfgData.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
-            binding.temperatureUnit.setPosition(1, false)
+            binding.temperatureUnit.position = 1
         }
         binding.temperatureUnit.setOnPositionChangedListener() {
             pos -> when(pos) {

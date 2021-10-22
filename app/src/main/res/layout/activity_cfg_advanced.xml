@@ -27,7 +27,7 @@
 
     
 
-    <co.ceryle.segmentedbutton.SegmentedButtonGroup
+    <org.supla.android.ui.SegmentedButtonGroup
         style="@style/SegmentedButtonGroup"
 	      android:id="@+id/authType"
 	      android:layout_width="match_parent"
@@ -37,22 +37,22 @@
         android:layout_marginTop="@dimen/form_label_spacing"
         android:layout_marginRight="0dp"
         android:layout_marginLeft="0dp">
-      <co.ceryle.segmentedbutton.SegmentedButton
+      <org.supla.android.ui.SegmentedButton
           style="@style/SegmentedButton"
           android:layout_width="0dp"
           android:layout_weight="1"
           android:layout_margin="4dp"
           android:layout_height="@dimen/segmented_button_height"
-          app:sb_text="@string/cfg_label_email_auth" />
-      <co.ceryle.segmentedbutton.SegmentedButton
+          android:text="@string/cfg_label_email_auth" />
+      <org.supla.android.ui.SegmentedButton
           style="@style/SegmentedButton"
           android:layout_width="0dp"
           android:layout_margin="4dp"
           android:layout_weight="1"
           android:layout_height="@dimen/segmented_button_height"
-          app:sb_text="@string/cfg_label_access_id_auth" />
+          android:text="@string/cfg_label_access_id_auth" />
 
-    </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+    </org.supla.android.ui.SegmentedButtonGroup>
 
 		<FrameLayout
 			  android:id="@+id/authFormWrapper"

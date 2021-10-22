@@ -71,13 +71,9 @@
     </style>
 
     <style name="SegmentedButtonGroup">
-      <item name="sbg_animateSelectorDuration">100</item>
-      <item name="sbg_selectorColor">#FFFFFF</item>
-      <item name="sbg_backgroundColor">?attr/switcherBackgroundColor</item>
-      <item name="sbg_selectorBackgroundDrawable">@drawable/segment_group_selector</item>
-      <item name="sbg_radius">6dp</item>
+      <item name="android:background">@drawable/segment_group_background</item>
     </style>
     <style name="SegmentedButton">
-      <item name="sb_textColor">#000000</item>
+      <item name="android:background">@drawable/segmented_button_background</item>
     </style>
 </resources>
