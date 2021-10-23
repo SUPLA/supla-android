@@ -183,6 +183,7 @@
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
 					  android:text="@={viewModel.accessID}"
+            android:maxLines="1"
 					  android:textSize="14sp" />
 
 			  <TextView
