@@ -28,6 +28,8 @@ import android.os.Message;
 import android.os.Vibrator;
 
 import org.supla.android.db.DbHelper;
+import org.supla.android.data.source.ProfileRepository;
+import org.supla.android.data.source.local.LocalProfileRepository;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -37,6 +39,8 @@ import org.supla.android.restapi.SuplaRestApiClientTask;
 import java.util.ArrayList;
 import org.supla.android.cfg.CfgRepository;
 import org.supla.android.cfg.PrefsCfgRepositoryImpl;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.MultiAccountProfileManager;
 import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
@@ -75,6 +79,11 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
 
         if (v != null)
             v.vibrate(100);
+    }
+
+    public ProfileManager getProfileManager(Context ctx) {
+        ProfileRepository repo = new LocalProfileRepository(DbHelper.getInstance(ctx));
+        return new MultiAccountProfileManager(ctx, repo);
     }
 
     public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {

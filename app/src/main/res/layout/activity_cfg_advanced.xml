@@ -65,7 +65,7 @@
           android:id="@+id/emailAuthForm"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:visibility="@{viewModel.cfgData.authByEmail ? View.VISIBLE : View.GONE}">
+          app:visibility="@{viewModel.authByEmail ? View.VISIBLE : View.GONE}">
 			  <TextView
             style="@style/FormLabel"
 					  android:id="@+id/cfg_label_email"
@@ -90,7 +90,7 @@
             app:layout_constraintTop_toBottomOf="@id/cfg_label_email"
 					  app:layout_constraintRight_toRightOf="parent"
 					  android:inputType="textEmailAddress"
-					  android:text="@={viewModel.cfgData.email}"
+					  android:text="@={viewModel.emailAddress}"
 					  android:onTextChanged="@{viewModel::onEmailChange}"
 					  android:padding="5dp"
 					  android:textSize="14sp" />
@@ -123,7 +123,7 @@
             android:inputType="textUri"
 					  android:padding="5dp"
 					  android:textSize="14sp"
-            android:text="@={viewModel.cfgData.serverAddr}"
+            android:text="@={viewModel.serverAddrEmail}"
 					  android:layout_marginRight="25dp" />
 
 				<androidx.appcompat.widget.AppCompatCheckBox
@@ -156,7 +156,7 @@
 				  android:layout_alignParentTop="true"
 				  android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
-				  android:visibility="@{viewModel.cfgData.authByEmail ? View.GONE : View.VISIBLE}">
+				  android:visibility="@{viewModel.authByEmail ? View.GONE : View.VISIBLE}">
 			  <TextView
             style="@style/FormLabel"
 					  android:id="@+id/cfg_label_access_id"
@@ -210,7 +210,7 @@
 					  android:inputType="textPassword"
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
-					  android:text="@={viewModel.cfgData.accessIDpwd}"
+					  android:text="@={viewModel.accessIDpwd}"
 					  android:textSize="14sp" />
 
 			  <TextView
@@ -238,7 +238,7 @@
 					  android:inputType="textUri"
             android:background="@drawable/rounded_edittext"
 					  android:padding="5dp"
-					  android:text="@={viewModel.cfgData.serverAddrForAccessID}"
+					  android:text="@={viewModel.serverAddrAccessID}"
 					  android:textSize="14sp" />
         
         <TextView

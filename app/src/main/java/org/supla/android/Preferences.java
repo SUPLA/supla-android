@@ -29,21 +29,15 @@ import android.util.Base64;
 import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.profile.*;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 import java.util.Random;
 
 public class Preferences {
 
     private static final String pref_guid = "pref_guid";
-    private static final String pref_serveraddr = "pref_serveraddr";
-    private static final String pref_accessid = "pref_accessid";
-    private static final String pref_accessidpwd = "pref_accessidpwd";
-    private static final String pref_email = "pref_email";
     private static final String pref_authkey = "pref_authkey";
-    private static final String pref_advanced = "pref_advanced";
-    private static final String pref_cfg_ver = "pref_cfg_ver";
-    private static final String pref_proto_ver = "pref_proto_ver";
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
     private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
@@ -54,7 +48,6 @@ public class Preferences {
     private static final String pref_temperature_unit = "pref_temperature_unit";
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
-    public static final String pref_active_profile = "pref_active_profile";
     private static final String pref_show_channel_info = "pref_show_channel_info";
 
     private SharedPreferences _prefs;
@@ -64,24 +57,9 @@ public class Preferences {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
         _context = context;
 
-        if (getCfgVersion() == 0) {
-
-            setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
-            setCfgVersion(2);
-        }
-
         context.getContentResolver();
     }
 
-    private int getCfgVersion() {
-        return _prefs.getInt(pref_cfg_ver, 0);
-    }
-
-    public void setCfgVersion(int version) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_cfg_ver, version);
-        editor.apply();
-    }
 
     private String getDeviceID() {
         String Id = null;
@@ -153,85 +131,9 @@ public class Preferences {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
 
-    public String getServerAddress() {
-        return _prefs.getString(pref_serveraddr, "");
-    }
-
-    public void setServerAddress(String ServerAddress) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_serveraddr, ServerAddress.trim());
-        editor.apply();
-    }
-
-    public int getAccessID() {
-        return _prefs.getInt(pref_accessid, 0);
-    }
-
-    public void setAccessID(int AccessID) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_accessid, AccessID);
-        editor.apply();
-    }
-
-    public String getAccessIDpwd() {
-        return _prefs.getString(pref_accessidpwd, "");
-    }
-
-    public void setAccessIDpwd(String AccessIDpwd) {
-
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_accessidpwd, AccessIDpwd.trim());
-        editor.apply();
-    }
-
-    public String getEmail() {
-        return _prefs.getString(pref_email, "");
-    }
-
-    public void setEmail(String email) {
-
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_email, email.trim());
-        editor.apply();
-    }
-
     public boolean configIsSet() {
-        ProfileManager pm = new SingleAccountProfileManager(_context);
-        AuthInfo authInfo = pm.getAuthInfo();
-
-        if(authInfo.getEmailAuth()) {
-            return !getEmail().equals("") && 
-                (authInfo.getServerAutoDetect() || !getServerAddress().equals(""));
-        } else {
-            return !getServerAddress().equals("") && getAccessID() != 0 && 
-                !getAccessIDpwd().equals("");
-        }
-    }
-
-    public boolean isAdvancedCfg() {
-        return _prefs.getBoolean(pref_advanced, false);
-    }
-
-    public void setAdvancedCfg(Boolean advanced) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putBoolean(pref_advanced, advanced);
-        editor.apply();
-    }
-
-    public int getPreferedProtocolVersion() {
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.getMaxProtoVersion());
-    }
-
-    public void setPreferedProtocolVersion(int version) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_proto_ver, version);
-        editor.apply();
-    }
-
-    public void setPreferedProtocolVersion() {
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        setPreferedProtocolVersion(client == null ? 0 : client.getMaxProtoVersion());
+        return SuplaApp.getApp().getProfileManager(_context)
+            .getCurrentProfile().getAuthInfo().isAuthDataComplete();
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
@@ -313,16 +215,6 @@ public class Preferences {
     public void setChannelHeight(int val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putInt(pref_channel_height, val);
-        ed.apply();
-    }
-
-    public long getActiveProfileId() {
-        return _prefs.getLong(pref_active_profile, 0);
-    }
-
-    public void setActiveProfileId(long val) {
-        SharedPreferences.Editor ed = _prefs.edit();
-        ed.putLong(pref_active_profile, val);
         ed.apply();
     }
 

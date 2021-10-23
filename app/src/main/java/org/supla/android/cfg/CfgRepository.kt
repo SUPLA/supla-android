@@ -31,64 +31,26 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val prefs: Preferences
     private val helper: DbHelper
     private val context: Context
-    private val pm: ProfileManager
 
     init {
         prefs = Preferences(ctx)
 	      helper = DbHelper.getInstance(ctx)
-        pm = SingleAccountProfileManager(ctx)
         context = ctx
     }
 
     override fun getCfg(): CfgData {
-        val info = pm.getAuthInfo()
-        var emailServerHeuristicValue =  if(info.serverForEmail.isEmpty()) prefs.serverAddress else info.serverForEmail
-        return CfgData(emailServerHeuristicValue, 
-                       prefs.accessID, 
-                       prefs.accessIDpwd,
-                       prefs.email, 
-                       prefs.isAdvancedCfg, 
-                       info.emailAuth, 
-                       prefs.temperatureUnit,
+        return CfgData(prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
-                       info.serverAutoDetect,
-                       info.serverForAccessID,
                        prefs.isShowChannelInfo)
     }
 
 
     override fun storeCfg(cfg: CfgData) {
-        helper.deleteUserIcons() // TODO: I'm not sure if this is the right place for this yet.
-        prefs.accessID = cfg.accessID.value ?: 0
-        prefs.accessIDpwd = cfg.accessIDpwd.value
-        prefs.email = cfg.email.value
         prefs.temperatureUnit = cfg.temperatureUnit.value
-
-        prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
-
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
-        prefs.setPreferedProtocolVersion()
-
-        val emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!
-        val info = pm.getAuthInfo()
-            .copy(emailAuth = emailAuth,
-                  serverAutoDetect = cfg.isServerAuto.value!!,
-                  serverForEmail = cfg.serverAddr.value ?: "",
-                  serverForAccessID = cfg.serverAddrForAccessID.value ?: "")
-        pm.storeAuthInfo(info)
-
-        if(emailAuth) {
-            if(!prefs.isAdvancedCfg || info.serverAutoDetect) {
-                prefs.serverAddress = ""
-            } else {
-                prefs.serverAddress = info.serverForEmail
-            }
-        } else {
-            prefs.serverAddress = info.serverForAccessID
-        }
     }
 
 }

@@ -35,7 +35,8 @@ import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaVersionError;
-import org.supla.android.profile.*;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 public class StatusActivity extends NavigationActivity {
 
@@ -219,8 +220,8 @@ public class StatusActivity extends NavigationActivity {
                 && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
-            ProfileManager pm = new SingleAccountProfileManager(this);
-            if (pm.getAuthInfo().getEmailAuth()) {
+            ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+            if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
                 }

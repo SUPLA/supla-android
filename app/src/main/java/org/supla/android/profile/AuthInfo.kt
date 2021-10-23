@@ -17,8 +17,35 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.db.DbItem
 
-data class AuthInfo(val emailAuth: Boolean, 
-                    val serverAutoDetect: Boolean,
-                    val serverForEmail: String = "",
-                    val serverForAccessID: String = "")
+data class AuthInfo(var emailAuth: Boolean, 
+                    var serverAutoDetect: Boolean,
+                    var serverForEmail: String = "",
+                    var serverForAccessID: String = "",
+                    var emailAddress: String = "",
+                    var accessID: Int = 0,
+                    var accessIDpwd: String = "",
+                    var preferredProtocolVersion: Int = 0) {
+
+    /**
+     Returns server used for current authentication method
+     */
+    val serverForCurrentAuthMethod: String 
+        get() = if(emailAuth) serverForEmail else serverForAccessID
+
+    /**
+     A flag indicating if current authentication settings
+     are complete (but not necessarily correct).
+     */
+    val isAuthDataComplete: Boolean 
+        get() {
+            if(emailAuth) {
+                return !emailAddress.isEmpty() &&
+                (serverAutoDetect || !serverForCurrentAuthMethod.isEmpty())
+            } else {
+                return !serverForCurrentAuthMethod.isEmpty() &&
+                    accessID > 0 && !accessIDpwd.isEmpty()
+            }
+        }
+}

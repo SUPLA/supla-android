@@ -24,6 +24,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 
+import org.supla.android.SuplaApp
+
 class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, 
@@ -37,15 +39,8 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
      */
     val isDirty: LiveData<Boolean> = _isDirty
 
-    val accessID = MediatorLiveData<String>().apply {
-        addSource(cfgData.accessID) { value ->
-                                 if(value != null && value > 0) {
-                                     setValue(value.toString())
-                                 } else {
-                                     setValue("")
-                                 }
-                             }
-    }
+    val accessID : MutableLiveData<String>
+
 
     /**
      indicates that auth settings are changed.
@@ -55,79 +50,93 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     /**
      server address auto discovery flag.
      */
-    private val _serverAutoDiscovery = MutableLiveData<Boolean>(cfgData.isServerAuto.value)
-    val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
+    private val _serverAutoDiscovery: MutableLiveData<Boolean>
+    val serverAutoDiscovery: LiveData<Boolean>
+    
+    private val _authByEmail: MutableLiveData<Boolean>
+    val authByEmail: LiveData<Boolean>
+    val emailAddress: MutableLiveData<String>
+    val serverAddrEmail: MutableLiveData<String>
+    val serverAddrAccessID: MutableLiveData<String>
+    val accessIDpwd: MutableLiveData<String>
+
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val saveEnabled = MutableLiveData<Boolean>(true)
 
-    private val _isAdvancedMode = MutableLiveData<Boolean>(cfgData.isAdvanced.value)
-    val isAdvancedMode: LiveData<Boolean> = _isAdvancedMode
+    val isAdvancedMode: MutableLiveData<Boolean>
 
     val nextAction = MutableLiveData<NavigationFlow?>()
 
     private val _emailObserver: Observer<String>
-    private val _serverAddrObserver: Observer<String>
+    private val _serverAddrEmailObserver: Observer<String>
+    private val _serverAddrAccessIDObserver: Observer<String>
     private val _accessIDObserver: Observer<String>
     private val _accessIDPwdObserver: Observer<String>
     private val _advancedObserver: Observer<Boolean>
 
 
     init {
-        val email = cfgData.email.value
-        _emailObserver = Observer { if(it != email) setNeedsReauth() }
-        val serverAddr = cfgData.serverAddr.value
-        _serverAddrObserver = Observer<String> { if(it != serverAddr) setNeedsReauth() }
-        val accessID = accessID.value ?: ""
-        _accessIDObserver = Observer<String> { if(it != accessID) {
-                                                   setNeedsReauth()
-                                               }                                   
-                                                  
-                                               try {
-                                                   val intval = it.toInt()
-                                                   if((cfgData.accessID.value ?: 0) != intval) {
-                                                       cfgData.accessID.value = intval
-                                                   }
-                                               } catch(_: NumberFormatException) {
-                                                   // ignored
-                                               }
+        val app = SuplaApp.getApp()
+        val pm = app.getProfileManager(app)
+        val profile = pm.getCurrentProfile()
+        val authInfo = profile.authInfo
+
+        _authByEmail = MutableLiveData(authInfo.emailAuth)
+        authByEmail = _authByEmail
+
+        val accessIDstr = if(authInfo.accessID > 0) authInfo.accessID.toString() else ""
+        accessID = MutableLiveData<String>(accessIDstr)
+        _accessIDObserver = Observer<String> {  if(it != accessIDstr) setNeedsReauth() }                                   
+        accessID.observeForever(_accessIDObserver)
+
+        _serverAutoDiscovery = MutableLiveData<Boolean>(authInfo.serverAutoDetect)
+        serverAutoDiscovery = _serverAutoDiscovery
+
+        emailAddress = MutableLiveData(authInfo.emailAddress)
+        _emailObserver = Observer { if(it != authInfo.emailAddress) setNeedsReauth() }
+        emailAddress.observeForever(_emailObserver)
+
+        serverAddrEmail = MutableLiveData(authInfo.serverForEmail)
+        _serverAddrEmailObserver = Observer { if(it != authInfo.serverForEmail) setNeedsReauth() }
+        serverAddrEmail.observeForever(_serverAddrEmailObserver)
+
+        serverAddrAccessID = MutableLiveData(authInfo.serverForAccessID)
+        _serverAddrAccessIDObserver = Observer { if(it != authInfo.serverForAccessID) setNeedsReauth() }
+        serverAddrAccessID.observeForever(_serverAddrAccessIDObserver)
+
+
+        accessIDpwd = MutableLiveData(authInfo.accessIDpwd)
+        _accessIDPwdObserver = Observer { if(it != authInfo.accessIDpwd) setNeedsReauth() }
+        accessIDpwd.observeForever(_accessIDPwdObserver)
+
+        isAdvancedMode = MutableLiveData<Boolean>(profile.advancedAuthSetup)
+        _advancedObserver = Observer {
+            if(it != profile.advancedAuthSetup) {
+                setConfigDirty()
+            }
+            if(it == false) {
+                // Do some sanity checks before going into
+                // basic mode
+                if(!((authByEmail.value == true) &&
+                      (serverAutoDiscovery.value == true))) {
+                    nextAction.value = NavigationFlow.BASIC_MODE_ALERT
+                    isAdvancedMode.value = true
+                }
+            }            
         }
-        val accessIDPwd = cfgData.accessIDpwd.value
-        _accessIDPwdObserver = Observer<String>  { if(it != accessIDPwd) setNeedsReauth() }
-
-        val isAdvanced = isAdvancedMode.value
-        _advancedObserver = Observer { 
-           if(it != isAdvanced) { 
-                                  setConfigDirty()
-           }
-           if(it == false) {
-               // Do some sanity checks before going into
-               // basic mode
-               if(!((cfgData.authByEmail.value == true) &&
-                  (cfgData.isServerAuto.value == true))) {
-                   nextAction.value = NavigationFlow.BASIC_MODE_ALERT
-                   cfgData.isAdvanced.value = true
-               }
-           }
-           _isAdvancedMode.value = it
-
-        }
-
-        cfgData.email.observeForever(_emailObserver)
-        cfgData.serverAddr.observeForever(_serverAddrObserver)
-        this.accessID.observeForever(_accessIDObserver)
-        cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
-        cfgData.isAdvanced.observeForever(_advancedObserver)
+        isAdvancedMode.observeForever(_advancedObserver)
 
     }
 
     override fun onCleared() {
-        cfgData.email.removeObserver(_emailObserver)
-        cfgData.serverAddr.removeObserver(_serverAddrObserver)
+        emailAddress.removeObserver(_emailObserver)
+        serverAddrEmail.removeObserver(_serverAddrEmailObserver)
+        serverAddrAccessID.removeObserver(_serverAddrAccessIDObserver)
         accessID.removeObserver(_accessIDObserver)
-        cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
-        cfgData.isAdvanced.removeObserver(_advancedObserver)
+        accessIDpwd.removeObserver(_accessIDPwdObserver)
+        isAdvancedMode.removeObserver(_advancedObserver)
 
         super.onCleared()
     }
@@ -140,8 +149,8 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     }
 
     fun selectEmailAuth(useEmailAuth: Boolean) {
-        if(cfgData.authByEmail.value != useEmailAuth) {
-	          cfgData.authByEmail.value = useEmailAuth
+        if(_authByEmail.value != useEmailAuth) {
+	          _authByEmail.value = useEmailAuth
             setNeedsReauth()
         }
     }
@@ -181,6 +190,27 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
             repository.storeCfg(cfgData)
             _didSaveConfig.value = true
         }
+
+        if(_authSettingsChanged) {
+            val app = SuplaApp.getApp()
+            val pm = app.getProfileManager(app)
+            val profile = pm.getCurrentProfile()
+
+            profile.authInfo.emailAuth = _authByEmail.value!!
+            try {
+                profile.authInfo.accessID = accessID.value?.toInt() ?: 0
+            } catch(_: NumberFormatException) {
+                profile.authInfo.accessID = 0
+            }
+            profile.authInfo.serverAutoDetect = serverAutoDiscovery.value ?: true
+            profile.authInfo.emailAddress = emailAddress.value ?: ""
+            profile.authInfo.serverForEmail = serverAddrEmail.value ?: ""
+            profile.authInfo.serverForAccessID = serverAddrAccessID.value ?: ""
+            profile.authInfo.accessIDpwd = accessIDpwd.value ?: ""
+            profile.advancedAuthSetup = isAdvancedMode.value ?: false
+            
+            pm.updateCurrentProfile(profile)
+        }
     }
 
     fun onSaveConfig() {
@@ -195,29 +225,27 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     fun onEmailChange(s: CharSequence, start: Int, before: Int, count: Int) {
         if (_serverAutoDiscovery.value == true) {
-            cfgData.serverAddr.value = ""
+            serverAddrEmail.value = ""
         }
     }
 
     fun toggleServerAutoDiscovery() {
         if(_serverAutoDiscovery.value == true) {
             _serverAutoDiscovery.value = false
-            cfgData.isServerAuto.value = false
         } else {
-            cfgData.serverAddr.value = ""
-            cfgData.isServerAuto.value = true
+            serverAddrEmail.value = ""
             _serverAutoDiscovery.value = true
         }
         setNeedsReauth()
     }
 
     private fun clearEmail() {
-        cfgData.email.value = ""
+        emailAddress.value = ""
     }
 
     private fun clearAccessID() {
-        cfgData.accessIDpwd.value = ""
-        cfgData.accessID.value = null
+        accessIDpwd.value = ""
+        accessID.value = ""
     }
 
     /**

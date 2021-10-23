@@ -47,7 +47,7 @@
         android:layout_below="@+id/cfg_label_email"
         android:background="@drawable/rounded_edittext"
         android:inputType="textEmailAddress"
-        android:text="@={viewModel.cfgData.email}"
+        android:text="@={viewModel.emailAddress}"
         android:onTextChanged="@{viewModel::onEmailChange}"
         android:padding="5dp"
         android:textSize="14sp" />

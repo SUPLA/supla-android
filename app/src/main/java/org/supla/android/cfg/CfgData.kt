@@ -28,41 +28,12 @@ enum class ChannelHeight(val percent: Int) {
                                                HEIGHT_150(150)
 }
 
-data class CfgData(private var _serverAddr: String,
-                   private var _accessID: Int?,
-                   private var _accessIDpwd: String,
-                   private var _email: String,
-                   private var _isAdvanced: Boolean,
-		               private var _authByEmail: Boolean? = null,
-                   private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
+data class CfgData(private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
                    private var _buttonAutohide: Boolean = true,
                    private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
-                   private var _isServerAuto: Boolean,
-                   private var _serverAddrAccessID: String,
                    private var _showChannelInfo: Boolean) {
-    val serverAddr = MutableLiveData<String>(_serverAddr)
-    val serverAddrForAccessID = MutableLiveData<String>(_serverAddrAccessID)
-    val accessID = MutableLiveData<Int>(_accessID)
-    val accessIDpwd = MutableLiveData<String>(_accessIDpwd)
-    val email = MutableLiveData<String>(_email)
-    val authByEmail: MutableLiveData<Boolean>
     val temperatureUnit = MutableLiveData<TemperatureUnit>(_temperatureUnit)
-    val isAdvanced = MutableLiveData<Boolean>(_isAdvanced)
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
     val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
-    val isServerAuto = MutableLiveData<Boolean>(_isServerAuto)
     val showChannelInfo = MutableLiveData<Boolean>(_showChannelInfo)
-
-    init {
-        if(_authByEmail === null) {
-            /*
-                To support backward compatibility try
-                to derive the setting value using other
-                parameters.
-             */
-            authByEmail = MutableLiveData(_accessID == 0)
-        } else {
-            authByEmail = MutableLiveData(_authByEmail!!)
-        }
-    }
 }

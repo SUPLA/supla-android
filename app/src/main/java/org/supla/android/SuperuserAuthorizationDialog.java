@@ -40,6 +40,8 @@ import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 
+import org.supla.android.profile.AuthInfo;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,14 +81,17 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edPassword.addTextChangedListener(this);
 
         Preferences prefs = new Preferences(context);
-        edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
+        AuthInfo ainfo = SuplaApp.getApp().getProfileManager(context)
+            .getCurrentProfile().getAuthInfo();
+        edEmail.setText(ainfo.getEmailAddress(),
+                        EditText.BufferType.EDITABLE);
 
         tvErrorMessage = v.findViewById(R.id.dialogError);
         tvErrorMessage.setVisibility(View.INVISIBLE);
 
         TextView tvInfo = v.findViewById(R.id.tvInfo);
         tvInfo.setText(context.getResources().
-                getString(prefs.getServerAddress().contains(".supla.org") ?
+                getString(ainfo.getServerForEmail().contains(".supla.org") ?
                         R.string.enter_suplaorg_credentails
                         : R.string.enter_superuser_credentials));
 

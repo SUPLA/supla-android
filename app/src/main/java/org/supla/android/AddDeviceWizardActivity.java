@@ -59,6 +59,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -382,9 +384,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        Preferences prefs = new Preferences(this);
-
-        if (prefs.isAdvancedCfg()) {
+        boolean isAdvanced = SuplaApp.getApp().getProfileManager(this)
+            .getCurrentProfile().getAdvancedAuthSetup();
+        if (isAdvanced) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
@@ -1063,6 +1065,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         final ConnectivityManager connectivityManager = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
         espNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(@NonNull Network network) {
@@ -1080,10 +1084,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         espConfigTask.setDelegate(wizard);
 
                         setStep(STEP_CONFIGURE);
+                        AuthInfo info = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                info.getServerForEmail(),
+                                info.getEmailAddress());
                     }
                 });
 
@@ -1148,6 +1153,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         manager.disconnect();
 
         final Preferences prefs = new Preferences(this);
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
 
         stateChangedReceiver = new BroadcastReceiver() {
             @Override
@@ -1172,10 +1179,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         stateChangedReceiver = null;
 
                         setStep(STEP_CONFIGURE);
+
+                        AuthInfo ai = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                ai.getServerForEmail(),
+                                ai.getEmailAddress());
                     }
 
                 }

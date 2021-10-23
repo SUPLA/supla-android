@@ -23,7 +23,7 @@
         android:layout_marginTop="71dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:buttonTint="@color/channel_btn"
-        android:checked="@={viewModel.cfgData.isAdvanced}"
+        android:checked="@={viewModel.isAdvancedMode}"
         android:text="@string/advanced_settings"
 	      android:textSize="@dimen/default_text_size"
         />
@@ -46,11 +46,11 @@
               android:layout_centerHorizontal="true">
             <include
 		            android:id="@+id/cfg_basic"
-		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.GONE : View.VISIBLE}"
+		            android:visibility="@{viewModel.isAdvancedMode ? View.GONE : View.VISIBLE}"
 		            layout="@layout/activity_cfg_basic" />
             <include
 		            android:id="@+id/cfg_advanced"
-		            android:visibility="@{viewModel.cfgData.isAdvanced ? View.VISIBLE : View.GONE}"
+		            android:visibility="@{viewModel.isAdvancedMode ? View.VISIBLE : View.GONE}"
 		            layout="@layout/activity_cfg_advanced" />
 	        </RelativeLayout>
 	        <View
