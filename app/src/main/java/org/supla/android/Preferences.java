@@ -29,6 +29,7 @@ import android.util.Base64;
 import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.profile.*;
 
 import java.util.Random;
 
@@ -195,11 +196,16 @@ public class Preferences {
     }
 
     public boolean configIsSet() {
+        ProfileManager pm = new SingleAccountProfileManager(_context);
+        AuthInfo authInfo = pm.getAuthInfo();
 
-        if (isAdvancedCfg())
-            return !getServerAddress().equals("") && getAccessID() != 0 && !getAccessIDpwd().equals("");
-
-        return !getEmail().equals("");
+        if(authInfo.getEmailAuth()) {
+            return !getEmail().equals("") && 
+                (authInfo.getServerAutoDetect() || !getServerAddress().equals(""));
+        } else {
+            return !getServerAddress().equals("") && getAccessID() != 0 && 
+                !getAccessIDpwd().equals("");
+        }
     }
 
     public boolean isAdvancedCfg() {
