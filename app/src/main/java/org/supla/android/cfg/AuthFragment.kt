@@ -43,7 +43,17 @@ class AuthFragment: Fragment() {
                 binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
-						                                      if(!hasFocus) { hideKeyboard(v) }
+                   val createAccountVisibility: Int
+                   if(hasFocus) { 
+                      createAccountVisibility = View.GONE
+                   } else {
+                      hideKeyboard(v)
+                      createAccountVisibility = View.VISIBLE
+                   }
+                   arrayOf(binding.dontHaveAccountText,
+                           binding.cfgCreateAccount).forEach {
+                       it.visibility = createAccountVisibility
+                   }
                 }
                 it.setTypeface(type)
             }
