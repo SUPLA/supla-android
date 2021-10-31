@@ -191,8 +191,7 @@ class CfgViewModel(private val repository: CfgRepository,
         }
 
         if(_authSettingsChanged) {
-            val app = SuplaApp.getApp()
-            val pm = app.getProfileManager(app)
+            val pm = profileManager
             val profile = pm.getCurrentProfile()
 
             profile.authInfo.emailAuth = _authByEmail.value!!

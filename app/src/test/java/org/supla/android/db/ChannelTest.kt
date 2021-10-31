@@ -26,6 +26,7 @@ import org.supla.android.TemperaturePresenterFactory
 import org.supla.android.db.Channel
 import org.supla.android.cfg.CfgData
 import org.supla.android.cfg.TemperatureUnit
+import org.supla.android.cfg.ChannelHeight
 import org.supla.android.data.presenter.TemperaturePresenterImpl
 import org.supla.android.lib.SuplaConst
 import java.nio.ByteBuffer
@@ -33,10 +34,10 @@ import java.nio.ByteBuffer
 @RunWith(MockitoJUnitRunner::class)
 class ChannelTest: TestCase() {
 
-    private val celsiusCfg = CfgData("whatever", 0, "xxxx",
-        "none@nowhere", false, null, TemperatureUnit.CELSIUS)
-    private val fahrenheitCfg = CfgData("whatever", 0, "xxxx",
-    "none@nowhere", false, null, TemperatureUnit.FAHRENHEIT)
+    private val celsiusCfg = CfgData(TemperatureUnit.CELSIUS, true,
+                                     ChannelHeight.HEIGHT_100, true)
+    private val fahrenheitCfg = CfgData(TemperatureUnit.FAHRENHEIT, true,
+                                     ChannelHeight.HEIGHT_100, true)
 
 
     @Test
