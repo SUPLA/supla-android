@@ -69,4 +69,8 @@ data class AuthProfileItem(var name: String = "",
 
         return vals
     }
+
+    fun isEmailAuthorizationEnabled(): Boolean {
+        return authInfo.emailAuth
+    }
 }

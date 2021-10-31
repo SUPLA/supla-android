@@ -24,9 +24,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 
-import org.supla.android.SuplaApp
+import org.supla.android.profile.ProfileManager
 
-class CfgViewModel(private val repository: CfgRepository): ViewModel() {
+class CfgViewModel(private val repository: CfgRepository,
+                   private val profileManager: ProfileManager): ViewModel() {
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, 
                                 BASIC_MODE_ALERT,
@@ -78,8 +79,7 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
 
     init {
-        val app = SuplaApp.getApp()
-        val pm = app.getProfileManager(app)
+        val pm = profileManager
         val profile = pm.getCurrentProfile()
         val authInfo = profile.authInfo
 
@@ -127,7 +127,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
             }            
         }
         isAdvancedMode.observeForever(_advancedObserver)
-
     }
 
     override fun onCleared() {

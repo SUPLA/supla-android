@@ -55,7 +55,8 @@ class CfgActivity: AppCompatActivity() {
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
-	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this))
+	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
+                                          SuplaApp.getApp().getProfileManager(this))
 	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
 
         val navToolbar: AppBar
