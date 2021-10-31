@@ -74,7 +74,7 @@ class CfgFragment: Fragment() {
         }
 
         binding.showChannelInfo.setOnClickListener() {
-            viewModel.setShowChannelInfo(!viewModel.cfgData.buttonAutohide.value!!)
+            viewModel.setShowChannelInfo(!viewModel.cfgData.showChannelInfo.value!!)
             viewModel.saveConfig()
         }
 
