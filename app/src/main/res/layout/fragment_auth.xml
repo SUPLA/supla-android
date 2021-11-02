@@ -43,6 +43,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_gravity="top"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
               android:layout_centerHorizontal="true">
             <include
 		            android:id="@+id/cfg_basic"
@@ -94,6 +96,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:singleLine="false"
+        android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}"
         android:gravity="center_horizontal" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -106,6 +109,7 @@
         android:layout_marginBottom="@dimen/form_field_spacing"
         android:layout_centerHorizontal="true"
         android:onClick="@{() -> viewModel.onCreateAccount()}"
+        android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}"
         android:text="@string/create_account" />
 
 

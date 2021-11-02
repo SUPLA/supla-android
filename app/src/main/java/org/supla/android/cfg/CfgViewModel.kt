@@ -262,4 +262,7 @@ class CfgViewModel(private val repository: CfgRepository,
     private fun setConfigDirty() {
         _isDirty.value = true
     }
+
+    val hasValidAccount : Boolean
+        get() =  profileManager.getCurrentProfile().authInfo.isAuthDataComplete
 }
