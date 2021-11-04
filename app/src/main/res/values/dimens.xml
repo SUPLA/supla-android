@@ -13,6 +13,7 @@
     <dimen name="channel_dot_margin">20dp</dimen>
     <dimen name="channel_btn_text_size">18sp</dimen>
     <dimen name="channel_caption_top_margin">18dp</dimen>
+    <dimen name="channel_caption_bottom_margin">3dp</dimen>
     <dimen name="channel_caption_text_size">11sp</dimen>
     <dimen name="channel_section_text">26sp</dimen>
     <dimen name="channel_imgtext_size">20sp</dimen>
