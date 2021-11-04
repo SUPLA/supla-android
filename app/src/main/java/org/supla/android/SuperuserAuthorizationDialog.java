@@ -57,10 +57,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private Object object;
     private Timer timeoutTimer;
     private static SuperuserAuthorizationDialog lastVisibleInstance;
+    private AlertDialog.Builder builder;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.superuser_auth_dialog, null);
 
@@ -91,8 +92,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                         : R.string.enter_superuser_credentials));
 
         builder.setView(v);
-        dialog = builder.create();
-        dialog.setOnCancelListener(this);
     }
 
     boolean isClientRegistered() {
@@ -128,11 +127,14 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             edEmail.setEnabled(false);
         }
 
-        if (dialog != null) {
-            lastVisibleInstance = this;
-            cancelTimeoutTimer();
-            dialog.show();
+        if (dialog == null) {
+            dialog = builder.create();
+            dialog.setOnCancelListener(this);
         }
+
+        lastVisibleInstance = this;
+        cancelTimeoutTimer();
+        dialog.show();
     }
 
     public void ShowError(String msg) {
