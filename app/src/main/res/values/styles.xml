@@ -32,6 +32,7 @@
     <style name="SuplaToolbarNavigationButtonStyle"
            parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
       <item name="android:paddingTop">10dp</item>
+      <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="title" parent="@style/MenuBarTitle" />
