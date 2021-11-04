@@ -54,8 +54,9 @@ class SegmentedButton @JvmOverloads constructor(
             innerView = txtView
         }
 
-        val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                          FrameLayout.LayoutParams.MATCH_PARENT)
+        val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                                          FrameLayout.LayoutParams.WRAP_CONTENT,
+                                          Gravity.CENTER)
         addView(innerView, 0, lp)
 
         elevation = ctx.getResources().getDimensionPixelSize(R.dimen.segmented_button_elevation).toFloat()
