@@ -180,11 +180,13 @@ public class StatusActivity extends NavigationActivity {
 
     @Override
     protected void onDisconnectedMsg() {
+        authorizationDialog = null;
         setStatusConnectingProgress(0);
     }
 
     @Override
     protected void onConnectingMsg() {
+        authorizationDialog = null;
         setStatusConnectingProgress(25);
     }
 
