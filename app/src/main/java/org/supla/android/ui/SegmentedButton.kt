@@ -54,8 +54,8 @@ class SegmentedButton @JvmOverloads constructor(
             innerView = txtView
         }
 
-        val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                                          FrameLayout.LayoutParams.WRAP_CONTENT,
+        val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                                          FrameLayout.LayoutParams.MATCH_PARENT,
                                           Gravity.CENTER)
         addView(innerView, 0, lp)
 
