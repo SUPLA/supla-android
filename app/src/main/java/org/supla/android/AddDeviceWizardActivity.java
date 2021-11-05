@@ -414,7 +414,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        if (SuplaApp.getApp().getProfileManager(this)
+        if (!SuplaApp.getApp().getProfileManager(this)
             .getCurrentProfile().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
