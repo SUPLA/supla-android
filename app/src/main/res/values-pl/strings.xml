@@ -447,7 +447,8 @@
     <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
     <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
     <string translatable="false" name="add_device_warning">Kreator automatycznego dodawania urządzeń nie jest dostępny w trybie uwierzytelniania identyfikatorem dostępu. Urządzenia mogą być wówczas dodawane ręcznie.</string>
-    <string translatable="false" name="show_channel_info">Pokazywanie informacji o kanale</string>
+    <string translatable="false" name="show_channel_info">Pokazywanie
+    przycisku ⓘ</string>
         <string translatable="false" name="add_device_needs_cloud_title">Konfiguracja urządzenia</string>
     <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
     <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
