@@ -48,7 +48,7 @@ class AuthFragment: Fragment() {
                       createAccountVisibility = View.GONE
                    } else {
                       hideKeyboard(v)
-                      createAccountVisibility = View.VISIBLE
+                      createAccountVisibility = if(viewModel.hasValidAccount) View.GONE else View.VISIBLE
                    }
                    arrayOf(binding.dontHaveAccountText,
                            binding.cfgCreateAccount).forEach {
