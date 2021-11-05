@@ -230,6 +230,11 @@ class CfgViewModel(private val repository: CfgRepository,
     fun toggleServerAutoDiscovery() {
         if(_serverAutoDiscovery.value == true) {
             _serverAutoDiscovery.value = false
+
+	    val email = emailAddress.value
+	    if(serverAddrEmail.value == "" && email != null) {		
+		serverAddrEmail.value = email.substringAfter("@")
+	    }
         } else {
             serverAddrEmail.value = ""
             _serverAutoDiscovery.value = true
