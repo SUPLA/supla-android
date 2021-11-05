@@ -81,7 +81,6 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edPassword = v.findViewById(R.id.dialogPwd);
         edPassword.addTextChangedListener(this);
 
-        Preferences prefs = new Preferences(context);
         AuthInfo ainfo = SuplaApp.getApp().getProfileManager(context)
             .getCurrentProfile().getAuthInfo();
         edEmail.setText(ainfo.getEmailAddress(),
