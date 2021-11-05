@@ -77,6 +77,11 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
                     }
                 }
 
+		String cloudConfigKey = "no_visible_channels";
+		result.needsCloudConfig =
+		    fieldMap.containsKey(cloudConfigKey) &&
+		    "1".equals(fieldMap.get(cloudConfigKey));
+
                 Elements sel = doc.getElementsByTag("select");
 
                 if (sel != null) {
@@ -222,5 +227,6 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         String deviceFirmwareVersion;
         String deviceGUID;
         String deviceMAC;
+        boolean needsCloudConfig;
     }
 }

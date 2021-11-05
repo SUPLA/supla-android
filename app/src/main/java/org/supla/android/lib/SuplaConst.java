@@ -63,6 +63,7 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_BELONG_TO_GROUP = 27;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_HAS_SCHEDULE = 28;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE = 29;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_ACTION_TRIGGER = 30;
 
     public final static int SUPLA_CHANNELFNC_NONE = 0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK = 10;

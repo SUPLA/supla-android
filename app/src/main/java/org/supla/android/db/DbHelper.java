@@ -163,7 +163,6 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " (" +
                 SuplaContract.ChannelExtendedValueEntry._ID + " INTEGER PRIMARY KEY," +
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " INTEGER NOT NULL," +
-                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + " INTEGER NOT NULL," +
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + " BLOB)";
 
 
@@ -206,7 +205,6 @@ public class DbHelper extends BaseDbHelper {
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE + ", " +
                 "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE + ", " +
-                "CEV." + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_FUNC + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + ", " +
@@ -516,12 +514,16 @@ public class DbHelper extends BaseDbHelper {
         alterTablesToReferProfile(db);
     }
 
-    private void recreateViews(SQLiteDatabase db) {
+
+    private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
+    }
 
+    private void recreateViews(SQLiteDatabase db) {
+        dropViews(db);
         createChannelView(db);
         createChannelGroupValueView(db);
     }
