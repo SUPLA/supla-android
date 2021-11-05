@@ -59,4 +59,5 @@
     <dimen name="segmented_button_width_small">59dp</dimen>
     <dimen name="list_separator_thickness">2dp</dimen>
     <dimen name="segmented_button_elevation">4dp</dimen>
+    <dimen name="advanced_top_offset">4dp</dimen>
 </resources>
