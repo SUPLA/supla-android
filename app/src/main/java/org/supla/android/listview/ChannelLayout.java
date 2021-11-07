@@ -65,6 +65,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private FrameLayout right_btn;
     private FrameLayout left_btn;
 
+    private RelativeLayout channelIconContainer;
+
     private ChannelImageLayout imgl;
 
     private TextView left_btn_text;
@@ -137,6 +139,11 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         left_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(left_onlineStatus);
 
+        channelIconContainer = new RelativeLayout(context);
+        content.addView(channelIconContainer);
+        channelIconContainer
+            .setLayoutParams(getChannelIconContainerLayoutParams());
+
         channelStateIcon = new ImageView(context);
         channelStateIcon.setId(ViewHelper.generateViewId());
         content.addView(channelStateIcon);
@@ -169,11 +176,11 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         content.addView(bottom_line);
 
         imgl = new ChannelImageLayout(context, heightScaleFactor);
-        content.addView(imgl);
+        channelIconContainer.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
         caption_text.setOnLongClickListener(this);
-        content.addView(caption_text);
+        channelIconContainer.addView(caption_text);
 
         OnTouchListener tl = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -202,6 +209,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     public ChannelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
+        RelativeLayout.LayoutParams lp;
+
+        lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                             RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        return lp;
     }
 
     private TextView newTextView(Context context) {
@@ -827,15 +844,14 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             setTextColor(getResources().getColor(R.color.channel_caption_text));
             setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                                             LayoutParams.WRAP_CONTENT);
 
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
             lp.topMargin = (int)(heightScaleFactor<0.7?0:(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
                                  * heightScaleFactor));
-            lp.bottomMargin =  (int)(getResources().getDimensionPixelSize(R.dimen.channel_caption_bottom_margin)
-                                  * heightScaleFactor * 3f);
             setLayoutParams(lp);
         }
 
@@ -992,7 +1008,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                     (sw < width)?((sw + width) / 2):width, (sh < h)?sh:h);
 
-            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
             
 
