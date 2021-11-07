@@ -4,6 +4,8 @@ import android.content.Context
 import android.app.Activity
 import android.os.Bundle
 import android.os.Build
+import android.os.Looper
+import android.os.Handler
 import android.graphics.Typeface
 import android.view.inputmethod.InputMethodManager
 import android.view.LayoutInflater
@@ -19,6 +21,12 @@ import org.supla.android.databinding.FragmentAuthBinding
 class AuthFragment: Fragment() {
         private val viewModel: CfgViewModel by activityViewModels()
     private lateinit var binding: FragmentAuthBinding
+
+    /*
+     Flag to keep track if we should perform a deferred
+     action after keyboard is hidden.
+     */
+    private var pendingKeyboardHiddenAction = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +54,22 @@ class AuthFragment: Fragment() {
                    val createAccountVisibility: Int
                    if(hasFocus) { 
                       createAccountVisibility = View.GONE
-                      showKeyboard(v)
+                      // reset pending hide keyboard action as another
+                      // view had received the focus.
+                      pendingKeyboardHiddenAction = false
                    } else {
-                       hideKeyboard(v)
                        createAccountVisibility = if(viewModel.hasValidAccount) View.GONE else View.VISIBLE
+                       // schedule a pending keyboard action to be performed
+                       if(!pendingKeyboardHiddenAction) {
+                           pendingKeyboardHiddenAction = true
+                           val handler = Handler(Looper.getMainLooper())
+                           handler.postDelayed({
+                               if(pendingKeyboardHiddenAction) {
+                                   hideKeyboard(v)
+                                   pendingKeyboardHiddenAction = false
+                               }
+                           }, 10)
+                       }
                    }
                    arrayOf(binding.dontHaveAccountText,
                            binding.cfgCreateAccount).forEach {
@@ -94,8 +114,4 @@ class AuthFragment: Fragment() {
         service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 
-    fun showKeyboard(v: View) {
-        val service = SuplaApp.getApp().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
-        service?.let { it.showSoftInput(v, 0) }
-    }
 }
