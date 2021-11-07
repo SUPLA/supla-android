@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,6 +28,11 @@ class AuthFragment: Fragment() {
      action after keyboard is hidden.
      */
     private var pendingKeyboardHiddenAction = false
+    private var origHeight = 0
+  
+
+    /* Flag to indicate if scroll position should be reset */
+    private var shouldResetScrollViewOffset = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,8 +46,28 @@ class AuthFragment: Fragment() {
         binding.cfgAdvanced.viewModel = viewModel
         binding.cfgBasic.viewModel = viewModel
 
-	      var type = SuplaApp.getApp().typefaceOpenSansRegular
+        val sv = binding.scrollView
+        val vto = sv.getViewTreeObserver()
+        vto.addOnGlobalLayoutListener() {
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                val height = binding.root.getHeight()
+                if(origHeight > 0) {
+                    if(height == origHeight) {
+                        // keyboard was hidden
+                        resetScrollView()
+                    }
+                } else {
+                    origHeight = height
+                }
+                if(shouldResetScrollViewOffset) {
+                    shouldResetScrollViewOffset = false
+                    sv.smoothScrollTo(0,0)
+                }
+                                 }, 100)
+        }
 
+	      var type = SuplaApp.getApp().typefaceOpenSansRegular
         arrayOf(binding.cfgAdvanced.edServerAddr,
                 binding.cfgAdvanced.edServerAddrEmail,
                 binding.cfgAdvanced.edAccessID,
@@ -65,10 +91,11 @@ class AuthFragment: Fragment() {
                            val handler = Handler(Looper.getMainLooper())
                            handler.postDelayed({
                                if(pendingKeyboardHiddenAction) {
+                                   resetScrollView()
                                    hideKeyboard(v)
                                    pendingKeyboardHiddenAction = false
                                }
-                           }, 10)
+                           }, 100)
                        }
                    }
                    arrayOf(binding.dontHaveAccountText,
@@ -114,4 +141,7 @@ class AuthFragment: Fragment() {
         service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 
+    private fun resetScrollView() {
+        shouldResetScrollViewOffset = true
+    }
 }
