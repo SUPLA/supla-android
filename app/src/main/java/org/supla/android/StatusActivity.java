@@ -69,7 +69,7 @@ public class StatusActivity extends NavigationActivity {
         btnSettings = findViewById(R.id.status_btn);
         btnSettings.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btnSettings.setTransformationMethod(null);
-        btnSettings.setText(getResources().getText(R.string.settings));
+        btnSettings.setText(getResources().getText(R.string.profile));
         btnSettings.setOnClickListener(this);
 
         btnCloud = findViewById(R.id.cloud_btn);
