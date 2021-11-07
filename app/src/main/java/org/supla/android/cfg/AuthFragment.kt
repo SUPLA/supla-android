@@ -39,16 +39,17 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.edAccessID,
 		            binding.cfgAdvanced.edAccessIDpwd, 
                 binding.cfgAdvanced.cfgEmail,
-		            /*binding.cfgAdvanced.cfgProfileName!!,*/ 
+		            /*binding.cfgAdvanced.cfgProfileName!!,*/
                 binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
                    val createAccountVisibility: Int
                    if(hasFocus) { 
                       createAccountVisibility = View.GONE
+                      showKeyboard(v)
                    } else {
-                      hideKeyboard(v)
-                      createAccountVisibility = if(viewModel.hasValidAccount) View.GONE else View.VISIBLE
+                       hideKeyboard(v)
+                       createAccountVisibility = if(viewModel.hasValidAccount) View.GONE else View.VISIBLE
                    }
                    arrayOf(binding.dontHaveAccountText,
                            binding.cfgCreateAccount).forEach {
@@ -91,5 +92,10 @@ class AuthFragment: Fragment() {
     fun hideKeyboard(v: View) {
         val service = SuplaApp.getApp().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
         service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
+    }
+
+    fun showKeyboard(v: View) {
+        val service = SuplaApp.getApp().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+        service?.let { it.showSoftInput(v, 0) }
     }
 }
