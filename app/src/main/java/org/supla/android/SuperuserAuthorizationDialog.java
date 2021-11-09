@@ -222,8 +222,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             lastVisibleInstance = null;
         }
         SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
-        dialog.dismiss();
-        dialog = null;
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
         onAuthorizarionResultListener = null;
     }
 
