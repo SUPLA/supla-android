@@ -947,13 +947,17 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetImgDimensions(ImageView Img, int width, int height) {
+			int sw = scaledDimension(width),
+				sh = scaledDimension(height);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, height);
+																			 sw>width?width:sw, sh>height?height:sh);
 
             if (Img == Img1) {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             } else {
                 lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
+				int textMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
+				lp.setMargins(2 * textMargin, 0, 0, 0);
             }
 
             lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -1003,8 +1007,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             int sw = scaledDimension(width);
             int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height),
                 sh = scaledDimension(h);
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    (sw < width)?((sw + width) / 2):width, (sh < h)?sh:h);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+			      (sw < width)?((sw + width) / 2):width, (sh < h)?sh:h);
+			//            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(sw, sh);
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
