@@ -932,7 +932,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 new RelativeLayout.LayoutParams(width, sh);
             
             lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-
+            int textMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
+            lp.setMargins(textMargin, 0, 0, 0);
             Text.setLayoutParams(lp);
             Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 
