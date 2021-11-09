@@ -947,11 +947,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetImgDimensions(ImageView Img, int width, int height) {
-            int sh = scaledDimension(height);
-            int sw = scaledDimension(width);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    sw<width?sw:width, sh<height?sh:height);
-
+                    width, height);
 
             if (Img == Img1) {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -960,7 +957,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             }
 
             lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-
+            Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             Img.setLayoutParams(lp);
 
         }
