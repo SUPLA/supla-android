@@ -52,7 +52,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 19;
+    public static final int DATABASE_VERSION = 20;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -514,6 +514,12 @@ public class DbHelper extends BaseDbHelper {
         alterTablesToReferProfile(db);
     }
 
+    private void upgradeToV20(SQLiteDatabase db) {
+        dropViews(db);
+        execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
+        createChannelExtendedValueTable(db);
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -570,6 +576,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 18:
                         upgradeToV19(db);
+                        break;
+                    case 19:
+                        upgradeToV20(db);
                         break;
                 }
             }
