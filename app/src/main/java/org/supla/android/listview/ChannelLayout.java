@@ -88,7 +88,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private boolean DetailSliderEnabled;
 
     private float heightScaleFactor = 1f;
-
+    private boolean shouldUpdateChannelStateLayout;
+    
     private Preferences prefs;
 
 
@@ -103,6 +104,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         right_btn = new FrameLayout(context);
         left_btn = new FrameLayout(context);
+
+        shouldUpdateChannelStateLayout = true;
 
         heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
         int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
@@ -620,6 +623,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
 
+        
+
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
 
@@ -636,6 +641,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
             mMeasurementSubChannel = _mMeasurementSubChannel;
             imgl.SetDimensions();
+            shouldUpdateChannelStateLayout = true;
         }
 
         {
@@ -670,6 +676,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             if (stateIcon != 0) {
                 channelStateIcon.setImageResource(stateIcon);
+                if(shouldUpdateChannelStateLayout) {
+                    channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
+                    shouldUpdateChannelStateLayout = false;
+                }
                 channelStateIcon.setVisibility(VISIBLE);
             }
         }
