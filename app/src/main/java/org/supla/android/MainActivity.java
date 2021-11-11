@@ -561,6 +561,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc) {
 
+        if(menuIsVisible()) return;
+
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
         if(new Preferences(this).isButtonAutohide())
