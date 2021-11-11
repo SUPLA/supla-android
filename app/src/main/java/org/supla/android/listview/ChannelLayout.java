@@ -1018,7 +1018,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                 sh = scaledDimension(h);
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 			      (sw < width)?((sw + width) / 2):width, (sh < h)?sh:h);
-			//            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(sw, sh);
 
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
