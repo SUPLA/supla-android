@@ -670,7 +670,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             if (stateIcon != 0) {
                 channelStateIcon.setImageResource(stateIcon);
-                channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
                 channelStateIcon.setVisibility(VISIBLE);
             }
         }
