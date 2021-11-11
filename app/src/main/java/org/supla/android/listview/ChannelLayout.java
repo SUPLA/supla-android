@@ -915,6 +915,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
             float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
+            float sts = scaledDimension((int)textSize);
+            textSize = (sts>textSize)?sts:textSize;
             Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
             Text.setMaxLines(1);
