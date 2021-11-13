@@ -332,28 +332,28 @@ public class ChannelListView extends ListView {
         float deltaY = Math.abs(Y - LastYtouch);
         float deltaX = Math.abs(X - LastXtouch);
 
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+        if (action == MotionEvent.ACTION_DOWN) {
             mChannelStateIconTouchPoint = null;
         }
 
-        if (ev.getAction() == MotionEvent.ACTION_DOWN
+        if (action == MotionEvent.ACTION_DOWN
                 || channelLayout != null) {
 
             View view = null;
 
             if (isDetailVisible()) {
-                LastXtouch = ev.getX();
-                LastYtouch = ev.getY();
+                LastXtouch = X;
+                LastYtouch = Y;
             } else {
-                view = getChildAt(pointToPosition((int) ev.getX(), (int) ev.getY()) - getFirstVisiblePosition());
+                view = getChildAt(pointToPosition((int) X, (int) Y) - getFirstVisiblePosition());
             }
 
             if (view instanceof ChannelLayout) {
 
                 if (action == MotionEvent.ACTION_DOWN) {
 
-                    LastXtouch = ev.getX();
-                    LastYtouch = ev.getY();
+                    LastXtouch = X;
+                    LastYtouch = Y;
 
                     if (!isDetailVisible()) {
                         channelLayout = (ChannelLayout) view;
@@ -371,7 +371,7 @@ public class ChannelListView extends ListView {
 
                     if (channelLayout != null) {
                         if (channelLayout.getDetailSliderEnabled()) {
-                            Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
+                            Object obj = getItemAtPosition(pointToPosition((int) X, (int) Y));
 
                             if (obj instanceof Cursor) {
                                 ChannelBase cbase;
@@ -392,9 +392,9 @@ public class ChannelListView extends ListView {
                             }
                         }
 
-                        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                        if (action == MotionEvent.ACTION_DOWN) {
                             mChannelStateIconTouchPoint =
-                                    channelLayout.stateIconTouched((int) ev.getX(), (int) ev.getY());
+                                    channelLayout.stateIconTouched((int) X, (int) Y);
                         }
 
                     }
