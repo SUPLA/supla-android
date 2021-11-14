@@ -591,8 +591,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     }
 
     public boolean getDetailSliderEnabled() {
-
-        return DetailSliderEnabled;
+		if(RightButtonEnabled) {
+			// Only enable detail slider if right button is
+			// already expanded.
+			if(Slided() == 200)
+				return DetailSliderEnabled;
+			else
+				return false;
+		} else {
+			return DetailSliderEnabled;
+		}
     }
 
     private void setDetailSliderEnabled(boolean detailSliderEnabled) {
