@@ -20,11 +20,28 @@ package org.supla.android;
 import java.text.DecimalFormat;
 
 public class SuplaFormatter {
+
+	private static SuplaFormatter _sharedInstance = null;
+	private DecimalFormat _df;
+
+	public static SuplaFormatter sharedFormatter() {
+		if(_sharedInstance == null) {
+			_sharedInstance = new SuplaFormatter();
+		}
+		// TODO: Invalidate and reinit in case system number format
+		// has changed
+
+		return _sharedInstance;
+	}
+	
+	private SuplaFormatter() {
+		_df = new DecimalFormat();
+        _df.setMaximumFractionDigits(50);
+        _df.setMinimumFractionDigits(2);
+	}
+	
     String doubleToStringWithUnit(double dbl, String unit, int maxPrecision) {
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(50);
-        df.setMinimumFractionDigits(2);
-        String sdbl = df.format(dbl);
+        String sdbl = _df.format(dbl);
 
         for(int a=sdbl.length()-1;a>=0;a--) {
             char c = sdbl.charAt(a);

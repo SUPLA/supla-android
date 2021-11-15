@@ -71,6 +71,8 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     public void onCreate() {
         super.onCreate();
         SuplaApp._SuplaApp = this;
+
+		SuplaFormatter.sharedFormatter();
     }
 
     public static void Vibrate(Context context) {
