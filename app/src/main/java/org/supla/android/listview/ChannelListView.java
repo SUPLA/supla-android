@@ -74,6 +74,10 @@ public class ChannelListView extends ListView {
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
     private Point mChannelStateIconTouchPoint;
+	private View _stealingEventsFromView;
+	private ChannelLayout _stealingEventsVictim;
+	private long _stealingStartTime;
+	private final static long _longPressMillis = 400;
 
     public ChannelListView(Context context) {
         super(context);
@@ -284,8 +288,54 @@ public class ChannelListView extends ListView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
+        int action = ev.getAction();
+        int X = (int)ev.getRawX();
+        int Y = (int)ev.getRawY();
+
+		View tapView = null;
+		ChannelLayout chn = null;
+		ViewGroup vg = this;
+		boolean stop;
+		do {
+			stop = true;
+			int chldn = vg.getChildCount();
+			for(int i = 0; i < chldn; i++) {
+				View chld = vg.getChildAt(i);
+				if(chld.getVisibility() != View.VISIBLE) continue;
+				int[] loc = new int[2];
+				chld.getLocationOnScreen(loc);
+				if(X > loc[0] && X <= loc[0] + chld.getWidth() &&
+				   Y > loc[1] && Y <= loc[1] + chld.getHeight()) {
+					if(chld instanceof ViewGroup) {
+						vg = (ViewGroup)chld;
+						stop = false;
+						if(chld instanceof ChannelLayout) {
+							chn = (ChannelLayout)chld;
+						}
+					} else {
+						tapView = chld;
+						stop = true;
+					}
+					break;
+				}
+			}
+		} while(!stop);
+
+		if(tapView == null || chn == null) return false;
+		if(tapView == _stealingEventsFromView) return true;
+		if(action == MotionEvent.ACTION_DOWN && _stealingEventsFromView == null) {
+			_stealingEventsVictim = chn;
+			_stealingEventsFromView = tapView;
+			_stealingStartTime = ev.getEventTime();
+			return true;
+		} 
+		return false;
     }
+
+	private void stopStealingEvents() {
+		_stealingEventsVictim = null;
+		_stealingEventsFromView = null;
+	}
 
     @Override
     public void requestLayout() {
@@ -414,12 +464,14 @@ public class ChannelListView extends ListView {
 
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
+							stopStealingEvents();
                             return super.onTouchEvent(ev);
                         }
 
                         if (X != LastXtouch) {
                             channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
+							_stealingEventsVictim = null;
                             if (channelLayout.percentOfSliding() > 3f) {
                                 mChannelStateIconTouchPoint = null;
                             }
@@ -481,6 +533,7 @@ public class ChannelListView extends ListView {
                 }
 
                 detailSliding = true;
+				_stealingEventsVictim = null;
 
 
                 return true;
@@ -503,7 +556,10 @@ public class ChannelListView extends ListView {
 
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL) {
-
+			if(_stealingStartTime > _longPressMillis && _stealingEventsVictim != null) {
+				_stealingEventsVictim.onLongClick(_stealingEventsFromView);
+			}
+			stopStealingEvents();
             AnimateDetailSliding(false);
 
             if (channelLayout != null) {
