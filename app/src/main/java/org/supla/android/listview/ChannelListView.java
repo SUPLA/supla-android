@@ -556,7 +556,8 @@ public class ChannelListView extends ListView {
 
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL) {
-			if(_stealingStartTime > _longPressMillis && _stealingEventsVictim != null) {
+			if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
+			   _stealingEventsVictim != null) {
 				_stealingEventsVictim.onLongClick(_stealingEventsFromView);
 			}
 			stopStealingEvents();
