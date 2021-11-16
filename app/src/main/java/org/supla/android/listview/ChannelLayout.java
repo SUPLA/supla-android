@@ -849,6 +849,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         public int left_btn_right;
     }
 
+
     private class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
 
@@ -943,7 +944,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
             float sts = scaledDimension((int)textSize);
             textSize = (sts>textSize)?sts:textSize;
-            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, sts);
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
             Text.setMaxLines(1);
 
