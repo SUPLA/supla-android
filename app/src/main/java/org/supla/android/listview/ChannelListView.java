@@ -77,6 +77,8 @@ public class ChannelListView extends ListView {
 	private View _stealingEventsFromView;
 	private ChannelLayout _stealingEventsVictim;
 	private long _stealingStartTime;
+    private int _stealingGiveBackTolerance;
+    private final static int _stealingGiveBackToleranceMax = 12;
 	private final static long _longPressMillis = 400;
 
     public ChannelListView(Context context) {
@@ -328,6 +330,7 @@ public class ChannelListView extends ListView {
 			_stealingEventsVictim = chn;
 			_stealingEventsFromView = tapView;
 			_stealingStartTime = ev.getEventTime();
+            _stealingGiveBackTolerance = _stealingGiveBackToleranceMax;
 			return true;
 		} 
 		return super.onInterceptTouchEvent(ev);
@@ -575,8 +578,12 @@ public class ChannelListView extends ListView {
             detailSliding = false;
         }
 
-
-        return super.onTouchEvent(ev);
+        boolean handled = super.onTouchEvent(ev);
+        if(handled && action == MotionEvent.ACTION_MOVE) {
+            if(_stealingGiveBackTolerance-- < 1)
+                stopStealingEvents();
+        }
+        return handled;
 
     }
 
