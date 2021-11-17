@@ -296,6 +296,7 @@ public class ChannelListView extends ListView {
 		ChannelLayout chn = null;
 		ViewGroup vg = this;
 		boolean stop;
+
 		do {
 			stop = true;
 			int chldn = vg.getChildCount();
@@ -321,7 +322,7 @@ public class ChannelListView extends ListView {
 			}
 		} while(!stop);
 
-		if(tapView == null || chn == null) return false;
+		if(tapView == null || chn == null) return super.onInterceptTouchEvent(ev);
 		if(tapView == _stealingEventsFromView) return true;
 		if(action == MotionEvent.ACTION_DOWN && _stealingEventsFromView == null) {
 			_stealingEventsVictim = chn;
@@ -329,7 +330,7 @@ public class ChannelListView extends ListView {
 			_stealingStartTime = ev.getEventTime();
 			return true;
 		} 
-		return false;
+		return super.onInterceptTouchEvent(ev);
     }
 
 	private void stopStealingEvents() {
