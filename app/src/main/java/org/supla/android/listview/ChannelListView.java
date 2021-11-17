@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
 import org.supla.android.ChannelDetailDigiglass;
@@ -53,7 +54,8 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
-public class ChannelListView extends ListView {
+public class ChannelListView extends ListView implements
+                                                  AdapterView.OnItemLongClickListener {
 
     private float LastXtouch = -1;
     private float LastYtouch = -1;
@@ -76,6 +78,7 @@ public class ChannelListView extends ListView {
     private Point mChannelStateIconTouchPoint;
 	private View _stealingEventsFromView;
 	private ChannelLayout _stealingEventsVictim;
+    private AdapterView.OnItemLongClickListener _itmLongClickListener;
 	private long _stealingStartTime;
     private int _stealingGiveBackTolerance;
     private final static int _stealingGiveBackToleranceMax = 12;
@@ -340,6 +343,13 @@ public class ChannelListView extends ListView {
 		_stealingEventsVictim = null;
 		_stealingEventsFromView = null;
 	}
+
+
+    @Override
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l) {
+        _itmLongClickListener = l;
+        super.setOnItemLongClickListener(this);
+    }
 
     @Override
     public void requestLayout() {
@@ -985,5 +995,15 @@ public class ChannelListView extends ListView {
 
     public interface OnSectionLayoutTouchListener {
         void onSectionClick(ChannelListView clv, String caption, int locationId);
+    }
+
+    public boolean onItemLongClick(AdapterView<?> parent, View v,
+                                   int pos, long id) {
+        if(_stealingEventsVictim == null && _itmLongClickListener != null) {
+            return _itmLongClickListener.onItemLongClick(parent, v,
+                                                         pos, id);
+        } else {
+            return false;
+        }            
     }
 }
