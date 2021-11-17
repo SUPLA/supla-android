@@ -318,7 +318,7 @@ public class ChannelListView extends ListView implements
 						if(chld instanceof ChannelLayout) {
 							chn = (ChannelLayout)chld;
 						}
-					} else {
+					} else if(chld instanceof ChannelLayout.CaptionView) {
 						tapView = chld;
 						stop = true;
 					}
@@ -547,7 +547,7 @@ public class ChannelListView extends ListView implements
                 }
 
                 detailSliding = true;
-				_stealingEventsVictim = null;
+                stopStealingEvents();
 
 
                 return true;
