@@ -344,7 +344,13 @@ public class ChannelListView extends ListView implements
 		_stealingEventsFromView = null;
 	}
 
-
+    private void triggerOnLongPressIfNeeded(MotionEvent ev) {
+        if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
+           _stealingEventsVictim != null) {
+            _stealingEventsVictim.onLongClick(_stealingEventsFromView);
+            stopStealingEvents();
+        }
+    }
     @Override
     public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l) {
         _itmLongClickListener = l;
@@ -398,6 +404,13 @@ public class ChannelListView extends ListView implements
 
         if (action == MotionEvent.ACTION_DOWN) {
             mChannelStateIconTouchPoint = null;
+            triggerOnLongPressIfNeeded(ev);
+        }
+
+        if (action == MotionEvent.ACTION_MOVE) {
+            triggerOnLongPressIfNeeded(ev);
+            if(_stealingGiveBackTolerance-- < 1)
+                stopStealingEvents();
         }
 
         if (action == MotionEvent.ACTION_DOWN
@@ -478,14 +491,13 @@ public class ChannelListView extends ListView implements
 
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
-							stopStealingEvents();
                             return super.onTouchEvent(ev);
                         }
 
                         if (X != LastXtouch) {
                             channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
-							_stealingEventsVictim = null;
+							stopStealingEvents();
                             if (channelLayout.percentOfSliding() > 3f) {
                                 mChannelStateIconTouchPoint = null;
                             }
@@ -547,7 +559,6 @@ public class ChannelListView extends ListView implements
                 }
 
                 detailSliding = true;
-                stopStealingEvents();
 
 
                 return true;
@@ -570,6 +581,7 @@ public class ChannelListView extends ListView implements
 
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL) {
+            triggerOnLongPressIfNeeded(ev);
 			if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
 			   _stealingEventsVictim != null) {
 				_stealingEventsVictim.onLongClick(_stealingEventsFromView);
@@ -588,12 +600,7 @@ public class ChannelListView extends ListView implements
             detailSliding = false;
         }
 
-        boolean handled = super.onTouchEvent(ev);
-        if(handled && action == MotionEvent.ACTION_MOVE) {
-            if(_stealingGiveBackTolerance-- < 1)
-                stopStealingEvents();
-        }
-        return handled;
+        return super.onTouchEvent(ev);
 
     }
 
