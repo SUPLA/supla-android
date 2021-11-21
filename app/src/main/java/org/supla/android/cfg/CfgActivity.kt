@@ -91,13 +91,16 @@ class CfgActivity: AppCompatActivity() {
                                             navController,
                                             cfg)
 
-        
+        navController.addOnDestinationChangedListener() { ctrl, dest, arg ->
+                                                              configureNavBar()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         val navController = findNavController(R.id.nav_host_fragment)
         val dest = navController?.currentDestination
+        android.util.Log.i("SuplaNav", "current destination: " + dest)
         if(dest != null) {
             // Temporary hack to match look and feel of the rest of the app
             // prior to moving everything into navigation graph.
@@ -116,6 +119,10 @@ class CfgActivity: AppCompatActivity() {
                 onBackPressed()
             }
         }
+    }
+
+    private fun configureNavBar() {
+        binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
     }
 
     override fun onBackPressed() {
@@ -157,6 +164,10 @@ class CfgActivity: AppCompatActivity() {
             }
             CfgViewModel.NavigationFlow.OPEN_PROFILES -> {
                 findNavController( R.id.nav_host_fragment).navigate(R.id.openProfiles)
+            }
+
+            CfgViewModel.NavigationFlow.LOCATION_REORDERING -> {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.cfgLocationOrdering)
             }
         }
     }

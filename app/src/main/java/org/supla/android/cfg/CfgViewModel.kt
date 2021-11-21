@@ -31,7 +31,7 @@ class CfgViewModel(private val repository: CfgRepository,
 
     enum class NavigationFlow { CREATE_ACCOUNT, STATUS, MAIN, 
                                 BASIC_MODE_ALERT,
-                                OPEN_PROFILES }
+                                OPEN_PROFILES, LOCATION_REORDERING }
     val currentProfile = MutableLiveData<String>()
     val cfgData: CfgData = repository.getCfg()
     private val _isDirty = MutableLiveData<Boolean>(false)
@@ -182,6 +182,10 @@ class CfgViewModel(private val repository: CfgRepository,
 
     fun openProfiles() {
         nextAction.value = NavigationFlow.OPEN_PROFILES
+    }
+
+    fun openLocationReordering() {
+        nextAction.value = NavigationFlow.LOCATION_REORDERING
     }
 
     fun saveConfig() {

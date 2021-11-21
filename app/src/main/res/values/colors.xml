@@ -77,4 +77,5 @@
 
     <color name="list_separator_bg">#E5E5E5</color>
     <color name="red_alert">#EB3A28</color>
+    <color name="label_grey">#7e8082</color>
 </resources>

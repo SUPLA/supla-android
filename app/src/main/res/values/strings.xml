@@ -469,4 +469,5 @@
     <string translatable="false" name="add_device_needs_cloud_dismiss">I understand</string>
     <string translatable="false" name="add_device_needs_cloud_go">Go to CLOUD</string>
     <string translatable="false" name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
+    <string translatable="false" name="location_ordering">Locations order</string>
 </resources>

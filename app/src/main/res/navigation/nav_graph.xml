@@ -18,6 +18,11 @@
       android:label="@string/menubar_appsettings" />
 
   <fragment
+      android:id="@+id/cfgLocationOrdering"
+      android:name="org.supla.android.cfg.LocationOrderingFragment"
+      android:label="@string/location_ordering" />
+
+  <fragment
       android:id="@+id/cfgProfiles"
       android:label="@string/profiles_title"
       android:name="org.supla.android.cfg.ProfilesFragment">

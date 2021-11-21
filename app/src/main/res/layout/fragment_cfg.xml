@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
   <data>
     <import type="android.view.View" />
+    <import type="androidx.navigation.Navigation" />
     <variable
         name="viewModel"
         type="org.supla.android.cfg.CfgViewModel" />
@@ -34,10 +35,8 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/settings_cell_height">
         
       <TextView
           android:id="@+id/channelHeightLabel"
@@ -82,10 +81,8 @@
         
 
     <RelativeLayout
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">        
+        android:layout_height="@dimen/settings_cell_height">        
       <TextView
           android:id="@+id/temperatureUnitLabel"
           android:layout_alignParentLeft="true"
@@ -121,10 +118,8 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">        
+        android:layout_height="@dimen/settings_cell_height">        
       
       <TextView
           android:id="@+id/buttonAutohideLabel"
@@ -153,10 +148,8 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">        
+        android:layout_height="@dimen/settings_cell_height">        
       
       <TextView
           android:id="@+id/showChannelInfoLabel"
@@ -180,7 +173,30 @@
 
     </RelativeLayout>
     
-    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">
+      <androidx.appcompat.widget.AppCompatButton
+          style="@style/ChevronButton"
+          android:id="@+id/locationOrderingButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:onClick="@{() -> viewModel.openLocationReordering()}"
+          android:text="@string/location_ordering" />
+      <ImageView
+          android:id="@+id/locationOrderingChevron"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          app:srcCompat="@drawable/chevron_right"/>
+    </RelativeLayout>
+
     <View android:layout_width="match_parent"
           android:layout_height="@dimen/list_separator_thickness"
           android:background="@color/list_separator_bg" />

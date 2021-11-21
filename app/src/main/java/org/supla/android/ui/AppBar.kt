@@ -53,12 +53,14 @@ class AppBar @JvmOverloads constructor(
     }
 
     override fun setTitle(title: CharSequence) {
+        android.util.Log.i("SuplaNav", "settitle: " + title)
         binding.title.text = title
         binding.title.visibility = View.VISIBLE
         binding.subtitle.visibility = View.INVISIBLE
     }
 
     override fun setSubtitle(subtitle: CharSequence) {
+        android.util.Log.i("SuplaNav", "setsubtitle: " + title)
         binding.subtitle.visibility = View.VISIBLE
         binding.title.visibility = View.INVISIBLE
         binding.subtitle.text = subtitle

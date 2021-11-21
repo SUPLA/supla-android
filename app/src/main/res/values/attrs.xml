@@ -3,5 +3,6 @@
   <attr name="brandPrimaryForegroundColor" format="color" />
   <attr name="brandPrimaryBackgroundColor" format="color" />
   <attr name="linkColor" format="color" />
+  <attr name="labelColor" format="color" />
   <attr name="switcherBackgroundColor" format="reference" />
 </resources>

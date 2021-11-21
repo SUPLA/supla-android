@@ -36,7 +36,8 @@ class CfgFragment: Fragment() {
         arrayOf(binding.appSettingsTitle,
                 binding.channelHeightLabel,
                 binding.temperatureUnitLabel,
-                binding.buttonAutohideLabel).forEach {
+                binding.buttonAutohideLabel,
+                binding.locationOrderingButton).forEach {
             it.setTypeface(type)
         }
 
@@ -80,4 +81,5 @@ class CfgFragment: Fragment() {
 
         return binding.root
     }
+
 }
