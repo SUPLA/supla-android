@@ -88,7 +88,7 @@
     <string name="cfg_label_access_id_auth">Identyfikator</string>
     <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
     <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
-    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przyciksów</string>
+    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
 
     <string translatable="false" name="profile">Twoje konto</string>
     <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
