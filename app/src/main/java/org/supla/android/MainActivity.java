@@ -736,6 +736,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             /* Ivalidate the adapter, so that channel list can
                be rebuilt with new layout. */
             channelListViewCursorAdapter = null;
+            cgroupListViewCursorAdapter = null;
         }
     }
 
