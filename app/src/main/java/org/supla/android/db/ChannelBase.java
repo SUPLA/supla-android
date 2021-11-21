@@ -86,9 +86,9 @@ public abstract class ChannelBase extends DbItem {
         TemperaturePresenter tp = getTemperaturePresenter();
 
         if (measuredTempFrom != null && measuredTempFrom > TEMPERATURE_NA_VALUE) {
-            measured = tp.getConvertedValue(measuredTempFrom) + tp.getUnitString();
+            measured = String.format("%.1f%s", tp.getConvertedValue(measuredTempFrom), tp.getUnitString());
             if (measuredTempTo != null && measuredTempTo > TEMPERATURE_NA_VALUE) {
-                measured += " - " + tp.getConvertedValue(measuredTempTo) + tp.getUnitString();
+                measured += String.format(" - %.1f%s", tp.getConvertedValue(measuredTempTo), tp.getUnitString());
             }
         } else {
             measured = "---" + tp.getUnitString();
