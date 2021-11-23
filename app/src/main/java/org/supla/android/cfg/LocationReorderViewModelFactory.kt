@@ -18,19 +18,22 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
+import android.content.Context
+import org.supla.android.data.source.local.LocationDao
+import org.supla.android.db.DbHelper
 
-import org.supla.android.profile.ProfileManager
+class LocationReorderViewModelFactory(private val ctx: Context):
+    ViewModelProvider.Factory {
 
-class CfgViewModelFactory(private val repository: CfgRepository,
-                          private val profileManager: ProfileManager): ViewModelProvider.Factory {
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-	if(modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-	    return CfgViewModel(repository, profileManager) as T
-	} else {
-	    throw IllegalArgumentException("unknown view model class")
-	}
-    }
+        override fun <T: ViewModel?> create(modelClass: Class<T>): T {
+            if(modelClass.isAssignableFrom(LocationReorderViewModel::class.java)) {
+                val db = DbHelper.getInstance(ctx)
+                val dao = LocationDao(db)
+                return LocationReorderViewModel(dao) as T
+            } else {
+                throw IllegalArgumentException("unknown view model class")
+            }
+        }
 }

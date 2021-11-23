@@ -34,7 +34,9 @@ public class Location extends DbItem {
     // 0x1 - channels collapsed
     // 0x2 - channel groups collapsed
     private SortingType sorting;
+    private int sortOrder;
 
+    
     public int getLocationId() {
         return LocationId;
     }
@@ -75,6 +77,14 @@ public class Location extends DbItem {
         this.sorting = sorting;
     }
 
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int s) {
+        sortOrder = s;
+    }
+
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
@@ -83,6 +93,7 @@ public class Location extends DbItem {
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE)));
         setCollapsed(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED)));
         setSorting(SortingType.fromString(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORTING))));
+        setSortOrder(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER)));
     }
 
     public void AssignSuplaLocation(SuplaLocation location) {
@@ -107,6 +118,7 @@ public class Location extends DbItem {
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE, getVisible());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED, getCollapsed());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORTING, getSorting().name());
+        values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER, getSortOrder());
 
         return values;
     }

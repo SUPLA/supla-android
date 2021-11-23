@@ -19,7 +19,20 @@ package org.supla.android.cfg
  */
 
 import androidx.lifecycle.ViewModel
+import org.supla.android.data.source.local.LocationDao
+import org.supla.android.db.Location
 
-class LocationReorderViewModel: ViewModel() {
+class LocationReorderViewModel(private val dao: LocationDao): ViewModel() {
+    fun getLocations(): Array<Location> {
+        return dao.getLocations().toTypedArray()
+    }
 
+
+    fun onLocationsUpdate(locs: Array<Location>) {
+        var si = 0
+        for(loc in locs) {
+            loc.sortOrder = si++
+            dao.update(loc)
+        }
+    }
 }

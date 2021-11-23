@@ -36,6 +36,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_COLLAPSED = "collapsed";
         public static final String COLUMN_NAME_SORTING = "sorting";
+        public static final String COLUMN_NAME_SORT_ORDER = "sort_order";
     }
 
     public static abstract class ChannelEntry implements BaseColumns {

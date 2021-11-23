@@ -52,7 +52,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 20;
+    public static final int DATABASE_VERSION = 21;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -106,7 +106,8 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " INTEGER NOT NULL default 0," +
-                SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " TEXT NOT NULL default 'DEFAULT')";
+                SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " TEXT NOT NULL default 'DEFAULT'," +
+                SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + " INTEGER NOT NULL DEFAULT -1)";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
@@ -520,6 +521,12 @@ public class DbHelper extends BaseDbHelper {
         createChannelExtendedValueTable(db);
     }
 
+    private void upgradeToV21(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME +
+                  " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER +
+                  " INTEGER NOT NULL DEFAULT -1");
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -579,6 +586,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 19:
                         upgradeToV20(db);
+                        break;
+                    case 20:
+                        upgradeToV21(db);
                         break;
                 }
             }
