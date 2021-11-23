@@ -38,6 +38,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        internaltest {
+            initWith buildTypes.debug
+            applicationIdSuffix ".t"
+        }
+    }
+
+    sourceSets {
+        internaltest {
+            res.srcDir 'internaltest/res'
+        }
     }
 
     splits {
