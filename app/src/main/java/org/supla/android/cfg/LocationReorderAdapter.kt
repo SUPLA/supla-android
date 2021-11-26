@@ -88,13 +88,16 @@ class LocationReorderAdapter(private val ctx: Context,
                                   container, false)
         } else {
             rv = convertView
-        }
+       }
         val caption: TextView? = rv?.findViewById(R.id.tvSectionCaption)
         caption?.text = obj?.getCaption() ?: ""
         caption?.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
         val collapse: View? = rv?.findViewById(R.id.ivSectionCollapsed)
         collapse?.visibility = View.INVISIBLE
+
+        val dragHolder: View? = rv?.findViewById(R.id.ivDragHolder)
+        dragHolder?.visibility = View.VISIBLE
 
         return rv
     }
