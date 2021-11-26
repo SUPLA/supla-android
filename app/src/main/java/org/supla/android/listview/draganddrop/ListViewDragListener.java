@@ -55,9 +55,6 @@ public class ListViewDragListener implements View.OnDragListener {
             case DragEvent.ACTION_DROP:
                 onDropListener.onViewDropped(listView.pointToPosition((int) event.getX(), (int) event.getY()));
                 return true;
-            case DragEvent.ACTION_DRAG_EXITED:
-                onDropListener.onViewDropped(INVALID_POSITION);
-                return true;
             default:
                 return false;
         }

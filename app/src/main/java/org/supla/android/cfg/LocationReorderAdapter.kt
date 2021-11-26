@@ -21,6 +21,7 @@ package org.supla.android.cfg
 import android.widget.BaseAdapter
 import android.widget.ListAdapter
 import android.widget.TextView
+import android.widget.ListView
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,8 @@ import org.supla.android.listview.draganddrop.ListViewDragListener
 
 
 class LocationReorderAdapter(private val ctx: Context,
-                             private var locations: Array<Location>): 
+                             private var locations: Array<Location>,
+                             private val listView: ListView): 
     BaseAdapter(), ListAdapter {
 
     val orderedLocations: Array<Location> = locations
@@ -127,12 +129,17 @@ class LocationReorderAdapter(private val ctx: Context,
      }
 
     fun updateDrag(source: Int, dest: Int) {
+        val lastVisiblePosition = listView.getLastVisiblePosition()
+        val firstVisiblePosition = listView.getFirstVisiblePosition()
         if(dest == ListViewDragListener.INVALID_POSITION ||
            srcPosition == null) { return }
         if(dest != destPosition) {
             destPosition = dest
             notifyDataSetChanged()
+        } else if(dest == lastVisiblePosition && lastVisiblePosition < locations.size - 1) {
+           listView.smoothScrollToPosition(dest + 1)
+        } else if(dest == firstVisiblePosition && firstVisiblePosition > 0) {
+            listView.smoothScrollToPosition(dest - 1)
         }
-        
     }
 }

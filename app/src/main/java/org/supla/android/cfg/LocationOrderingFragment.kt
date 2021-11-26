@@ -49,7 +49,8 @@ class LocationOrderingFragment: Fragment(), HasDefaultViewModelProviderFactory {
         binding.viewModel = viewModel
         
         adapter = LocationReorderAdapter(getActivity()!!,
-                                         viewModel.getLocations())
+                                         viewModel.getLocations(),
+                                         binding.locationList)
         binding.locationList.adapter = adapter
         binding.locationList.setOnItemLongClickListener {
             parent, view, pos, id ->
