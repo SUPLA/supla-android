@@ -26,6 +26,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import org.supla.android.SuplaApp
 import org.supla.android.db.Location
 import org.supla.android.R
@@ -34,13 +35,24 @@ import org.supla.android.listview.draganddrop.ListViewDragListener
 
 class LocationReorderAdapter(private val ctx: Context,
                              private var locations: Array<Location>,
-                             private val listView: ListView): 
+                             private val listView: ListView,
+                             private val viewModel: LocationReorderViewModel): 
     BaseAdapter(), ListAdapter {
+
+    init {
+        val dl = ListViewDragListener(listView,
+                                      { pos -> viewDropped(pos) },
+                                      { pos -> viewMoved(pos) })
+        listView.setOnDragListener(dl)
+    }
 
     val orderedLocations: Array<Location> = locations
 
     private var destPosition: Int? = null
     private var srcPosition: Int? = null
+
+    private val isDragging: Boolean
+        get() = srcPosition != null
 
     override fun getItem(pos: Int): Location {
         return locations[pos]
@@ -83,32 +95,47 @@ class LocationReorderAdapter(private val ctx: Context,
             }
         }
 
+        val dragHolder: View?
 
         if(convertView == null) {
             val inflater = LayoutInflater.from(ctx)
             rv = inflater.inflate(R.layout.listview_section,
                                   container, false)
+            val collapse: View? = rv?.findViewById(R.id.ivSectionCollapsed)
+            collapse?.visibility = View.INVISIBLE
+
+            dragHolder = rv?.findViewById(R.id.ivDragHolder)
+            dragHolder?.visibility = View.VISIBLE
+            dragHolder?.setOnTouchListener {
+                v, event ->
+                    val pos = v.tag as? Int
+                    if(event.getAction() == MotionEvent.ACTION_DOWN && !isDragging && pos != null) {
+                        enableDrag(listView.getChildAt(pos), pos)
+                         true
+                    } else {
+                         false
+                    }
+            }
         } else {
             rv = convertView
+            dragHolder = rv?.findViewById(R.id.ivDragHolder)
        }
         val caption: TextView? = rv?.findViewById(R.id.tvSectionCaption)
         caption?.text = obj?.getCaption() ?: ""
         caption?.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
-        val collapse: View? = rv?.findViewById(R.id.ivSectionCollapsed)
-        collapse?.visibility = View.INVISIBLE
-
-        val dragHolder: View? = rv?.findViewById(R.id.ivDragHolder)
-        dragHolder?.visibility = View.VISIBLE
+        
+        dragHolder?.tag = pos
 
         return rv
     }
 
-    fun enableDrag(pos: Int) {
+    private fun enableDrag(view: View, pos: Int) {
         srcPosition = pos
+        val shadowBuilder = View.DragShadowBuilder(view)
+        view.startDrag(null, shadowBuilder, listView.getItemAtPosition(pos), 0)
     }
 
-    fun endDrag(pos: Int): Boolean {
+    private fun endDrag(pos: Int): Boolean {
         var rv = false
         var src = srcPosition
         if(src != null && pos != ListViewDragListener.INVALID_POSITION && pos != src) {
@@ -128,7 +155,7 @@ class LocationReorderAdapter(private val ctx: Context,
         return rv
      }
 
-    fun updateDrag(source: Int, dest: Int) {
+    private fun updateDrag(source: Int, dest: Int) {
         val lastVisiblePosition = listView.getLastVisiblePosition()
         val firstVisiblePosition = listView.getFirstVisiblePosition()
         if(dest == ListViewDragListener.INVALID_POSITION ||
@@ -142,4 +169,19 @@ class LocationReorderAdapter(private val ctx: Context,
             listView.smoothScrollToPosition(dest - 1)
         }
     }
+   
+    private fun viewDropped(pos: Int) {
+        if(endDrag(pos)) {
+            viewModel.onLocationsUpdate(orderedLocations)
+        }
+    }
+
+    private fun viewMoved(pos: Int) {
+        val start = srcPosition
+        if(start != null) {
+            updateDrag(start, pos)
+        }
+    }
+
+
 }

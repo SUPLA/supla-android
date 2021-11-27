@@ -37,7 +37,6 @@ class LocationOrderingFragment: Fragment(), HasDefaultViewModelProviderFactory {
     private lateinit var binding: FragmentLocationReorderBinding
     private val viewModel: LocationReorderViewModel by viewModels()
     private lateinit var adapter: LocationReorderAdapter
-    private var dragStartPos: Int? = null
     
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -50,46 +49,13 @@ class LocationOrderingFragment: Fragment(), HasDefaultViewModelProviderFactory {
         
         adapter = LocationReorderAdapter(getActivity()!!,
                                          viewModel.getLocations(),
-                                         binding.locationList)
+                                         binding.locationList,
+                                         viewModel)
         binding.locationList.adapter = adapter
-        binding.locationList.setOnItemLongClickListener {
-            parent, view, pos, id ->
-                startDrag(view, pos)
-        }
-        
-        val dl = ListViewDragListener(binding.locationList,
-                                      { pos -> viewDropped(pos) },
-                                      { pos -> viewMoved(pos) })
-        binding.locationList.setOnDragListener(dl)
 
         return binding.root
     }
-   
-    private fun viewDropped(pos: Int) {
-        if(adapter.endDrag(pos)) {
-            viewModel.onLocationsUpdate(adapter.orderedLocations)
-        }
-        dragStartPos = null
-    }
-
-    private fun viewMoved(pos: Int) {
-        val start = dragStartPos
-        if(start != null) {
-            adapter.updateDrag(start, pos)
-        }
-    }
-
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
         return LocationReorderViewModelFactory(activity ?: SuplaApp.getApp())
     }
-
-    private fun startDrag(view: View, pos: Int): Boolean {
-        dragStartPos = pos
-        val shadowBuilder = View.DragShadowBuilder(view)
-        view.startDrag(null, shadowBuilder,
-                       binding.locationList.getItemAtPosition(pos), 0)
-        adapter.enableDrag(pos)
-        return true
-    }
-
 }
