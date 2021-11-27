@@ -70,17 +70,21 @@ public class LocationDao extends BaseDao {
     }
 
     private Cursor getLocations(SQLiteDatabase db) {
-        String sql = "SELECT " + SuplaContract.LocationEntry._ID + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
-            + " FROM " + SuplaContract.LocationEntry.TABLE_NAME
+        String sql = "SELECT DISTINCT "
+            + "L." + SuplaContract.LocationEntry._ID + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+            + " FROM " + SuplaContract.LocationEntry.TABLE_NAME + " AS L JOIN "
+            + SuplaContract.ChannelEntry.TABLE_NAME + " AS C ON "
+            + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
             + " ORDER BY "
-            + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
-            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
             + " COLLATE LOCALIZED";
             return db.rawQuery(sql, null);
     }
