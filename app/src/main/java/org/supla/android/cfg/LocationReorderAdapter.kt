@@ -122,7 +122,8 @@ class LocationReorderAdapter(private val ctx: Context,
                 v, event ->
                     val pos = v.tag as? Int
                     if(event.getAction() == MotionEvent.ACTION_DOWN && !isDragging && pos != null) {
-                        enableDrag(listView.getChildAt(pos), pos)
+                        val itmView = listView.getChildAt(pos - listView.getFirstVisiblePosition())
+                        enableDrag(itmView, pos)
                          true
                     } else {
                          false
