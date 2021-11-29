@@ -60,9 +60,12 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private Timer timeoutTimer;
     private static SuperuserAuthorizationDialog lastVisibleInstance;
     private AlertDialog.Builder builder;
+    private boolean _isShowing;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
+        _isShowing = false;
+        
         builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.superuser_auth_dialog, null);
@@ -139,6 +142,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         lastVisibleInstance = this;
         cancelTimeoutTimer();
         dialog.show();
+        _isShowing = true;
     }
 
     public void ShowError(String msg) {
@@ -210,6 +214,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         if (onAuthorizarionResultListener != null) {
             onAuthorizarionResultListener.authorizationCanceled();
         }
+        _isShowing = false;
     }
 
     public void setOnAuthorizarionResultListener(OnAuthorizarionResultListener
@@ -227,6 +232,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             dialog = null;
         }
         onAuthorizarionResultListener = null;
+        _isShowing = false;
     }
 
     public Object getObject() {
@@ -256,7 +262,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     }
 
     public boolean isShowing() {
-        return dialog != null && dialog.isShowing();
+        return _isShowing;
     }
 
     @Override
@@ -278,6 +284,9 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
                 switch (msg.getCode()) {
                     case SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED:
                         ShowError(R.string.incorrect_email_or_password);
+                        if(edPassword != null) {
+                            edPassword.setText("");
+                        }
                         break;
                     case SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE:
                         ShowError(R.string.status_temporarily_unavailable);
