@@ -868,8 +868,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
-            lp.topMargin = (int)(heightScaleFactor<0.7?0:(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
-                                 * heightScaleFactor));
+            lp.topMargin = (int)(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+                                 * heightScaleFactor);
             setLayoutParams(lp);
         }
 
