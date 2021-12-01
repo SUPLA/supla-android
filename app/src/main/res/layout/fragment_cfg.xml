@@ -13,12 +13,10 @@
       android:id="@+id/cfg"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:paddingLeft="@dimen/new_screen_margin"
       android:paddingTop="@dimen/activity_vertical_margin"
-      android:paddingRight="@dimen/new_screen_margin"
       android:paddingBottom="@dimen/activity_vertical_margin"
       android:orientation="vertical"
-      android:background="@color/activity_bg">
+      android:background="@color/activity_bg_new">
 
     <TextView
         android:id="@+id/appSettingsTitle"
@@ -27,6 +25,8 @@
         android:paddingTop="@dimen/new_screen_margin"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
         android:textAllCaps="true"
         android:text="@string/menubar_appsettings" />
     
@@ -35,9 +35,12 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">
-        
+      
       <TextView
           android:id="@+id/channelHeightLabel"
           android:layout_alignParentLeft="true"
@@ -45,42 +48,45 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cfg_channel_height" />
-        <org.supla.android.ui.SegmentedButtonGroup
-            style="@style/SegmentedButtonGroup"
-            android:id="@+id/channelHeight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            >
-          <org.supla.android.ui.SegmentedButton
-              style="@style/SegmentedButton"
-              android:layout_width="@dimen/segmented_button_width_small"
-              android:layout_margin="4dp"
-              android:layout_height="@dimen/segmented_button_height"
-              android:src="@drawable/channel_height_small" />
-          <org.supla.android.ui.SegmentedButton
-              style="@style/SegmentedButton"
-              android:layout_width="@dimen/segmented_button_width_small"
-              android:layout_margin="4dp"
-              android:layout_height="@dimen/segmented_button_height"
-              android:src="@drawable/channel_height_normal" />
-          <org.supla.android.ui.SegmentedButton
-              style="@style/SegmentedButton"
-              android:layout_width="@dimen/segmented_button_width_small"
-              android:layout_margin="4dp"
-              android:layout_height="@dimen/segmented_button_height"
-              android:src="@drawable/channel_height_big"  />
-        </org.supla.android.ui.SegmentedButtonGroup>
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/channelHeight"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          >
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_small" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_normal" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_big"  />
+      </org.supla.android.ui.SegmentedButtonGroup>
     </RelativeLayout>
     
     <View android:layout_width="match_parent"
           android:layout_height="@dimen/list_separator_thickness"
           android:background="@color/list_separator_bg" />
 
-        
+    
 
     <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">        
       <TextView
@@ -90,26 +96,26 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cfg_temperature_unit" />
-        <org.supla.android.ui.SegmentedButtonGroup
-            style="@style/SegmentedButtonGroup"
-            android:id="@+id/temperatureUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true">
-          <org.supla.android.ui.SegmentedButton
-              style="@style/SegmentedButton"
-              android:layout_width="@dimen/segmented_button_width_small"
-              android:layout_margin="4dp"
-              android:layout_height="@dimen/segmented_button_height"
-              android:text="°C" />
-          <org.supla.android.ui.SegmentedButton
-              style="@style/SegmentedButton"
-              android:layout_width="@dimen/segmented_button_width_small"
-              android:layout_margin="4dp"
-              android:layout_height="@dimen/segmented_button_height"
-              android:text="°F" />
-        </org.supla.android.ui.SegmentedButtonGroup>
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/temperatureUnit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true">
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="°C" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="°F" />
+      </org.supla.android.ui.SegmentedButtonGroup>
     </RelativeLayout>
 
     
@@ -118,6 +124,9 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">        
       
@@ -128,17 +137,17 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cfg_button_autohide" />
-    
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/buttonAutohide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:buttonTint="@color/channel_btn"
-        android:checked="@{viewModel.cfgData.buttonAutohide}"
-	      android:textSize="@dimen/default_text_size"
-        />
+      
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/buttonAutohide"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@{viewModel.cfgData.buttonAutohide}"
+	        android:textSize="@dimen/default_text_size"
+          />
 
 
     </RelativeLayout>
@@ -148,6 +157,9 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">        
       
@@ -158,17 +170,17 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/show_channel_info" />
-    
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/showChannelInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:buttonTint="@color/channel_btn"
-        android:checked="@{viewModel.cfgData.showChannelInfo}"
-	      android:textSize="@dimen/default_text_size"
-        />
+      
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/showChannelInfo"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@{viewModel.cfgData.showChannelInfo}"
+	        android:textSize="@dimen/default_text_size"
+          />
 
 
     </RelativeLayout>
@@ -178,6 +190,9 @@
           android:background="@color/list_separator_bg" />
 
     <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">
       <androidx.appcompat.widget.AppCompatButton
