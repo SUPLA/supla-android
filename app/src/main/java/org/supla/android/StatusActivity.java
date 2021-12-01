@@ -178,16 +178,29 @@ public class StatusActivity extends NavigationActivity {
         }
     }
 
+    protected void closeAuthorizationDialog() {
+        if (authorizationDialog != null) {
+            authorizationDialog.close();
+            authorizationDialog = null;
+        }
+    }
+
     @Override
     protected void onDisconnectedMsg() {
-        authorizationDialog = null;
+        closeAuthorizationDialog();
         setStatusConnectingProgress(0);
     }
 
     @Override
     protected void onConnectingMsg() {
-        authorizationDialog = null;
+        closeAuthorizationDialog();
         setStatusConnectingProgress(25);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeAuthorizationDialog();
     }
 
     @Override
