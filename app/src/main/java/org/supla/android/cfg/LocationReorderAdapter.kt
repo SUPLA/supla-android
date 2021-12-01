@@ -111,13 +111,9 @@ class LocationReorderAdapter(private val ctx: Context,
 
         if(convertView == null) {
             val inflater = LayoutInflater.from(ctx)
-            rv = inflater.inflate(R.layout.listview_section,
+            rv = inflater.inflate(R.layout.listview_section_new,
                                   container, false)
-            val collapse: View? = rv?.findViewById(R.id.ivSectionCollapsed)
-            collapse?.visibility = View.INVISIBLE
-
             dragHolder = rv?.findViewById(R.id.ivDragHolder)
-            dragHolder?.visibility = View.VISIBLE
             dragHolder?.setOnTouchListener {
                 v, event ->
                     val pos = v.tag as? Int

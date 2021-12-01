@@ -61,4 +61,5 @@
     <dimen name="segmented_button_elevation">4dp</dimen>
     <dimen name="advanced_top_offset">4dp</dimen>
     <dimen name="settings_cell_height">44dp</dimen>
+    <dimen name="cell_right_margin_small">12dp</dimen>
 </resources>
