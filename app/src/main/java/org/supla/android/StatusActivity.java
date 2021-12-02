@@ -182,29 +182,32 @@ public class StatusActivity extends NavigationActivity {
         }
     }
 
-    protected void closeAuthorizationDialog() {
-        if (authorizationDialog != null) {
-            authorizationDialog.close();
+    protected void setThePointerToNullIfTheAuthDialogIsNotVisible() {
+        // Solving the problem with changing the server address
+        // where previously authorized to another one.
+        // Without this, the authorization window will not be displayed again.
+        if (authorizationDialog != null
+                && !authorizationDialog.isShowing()) {
             authorizationDialog = null;
         }
     }
 
     @Override
     protected void onDisconnectedMsg() {
-        closeAuthorizationDialog();
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
         setStatusConnectingProgress(0);
     }
 
     @Override
     protected void onConnectingMsg() {
-        closeAuthorizationDialog();
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
         setStatusConnectingProgress(25);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        closeAuthorizationDialog();
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
     }
 
     @Override
