@@ -21,10 +21,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Build
-import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -32,12 +31,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
 import android.app.AlertDialog
-import android.content.DialogInterface
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
-import org.supla.android.NavigationActivity.showStatus
 import org.supla.android.ui.AppBar
 
 
@@ -72,7 +69,8 @@ class CfgActivity: AppCompatActivity() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-           window.setStatusBarColor(getColor(R.color.splash_bg));
+           window.setStatusBarColor(ResourcesCompat.getColor(getResources(),
+               R.color.splash_bg, null));
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
