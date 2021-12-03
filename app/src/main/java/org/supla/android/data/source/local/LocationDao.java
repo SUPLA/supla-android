@@ -18,8 +18,11 @@ package org.supla.android.data.source.local;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.support.annotation.NonNull;
-
+import java.util.List;
+import java.util.LinkedList;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import androidx.annotation.NonNull;
 import org.supla.android.db.Location;
 import org.supla.android.db.SuplaContract;
 
@@ -35,7 +38,8 @@ public class LocationDao extends BaseDao {
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION,
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED,
-                SuplaContract.LocationEntry.COLUMN_NAME_SORTING
+                SuplaContract.LocationEntry.COLUMN_NAME_SORTING,
+                SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
         };
 
         return getItem(Location::new, projection, SuplaContract.LocationEntry.TABLE_NAME,
@@ -48,5 +52,43 @@ public class LocationDao extends BaseDao {
 
     public void update(Location location) {
         update(location, SuplaContract.LocationEntry.TABLE_NAME, key(SuplaContract.LocationEntry._ID, location.getId()));
+    }
+
+    public List<Location> getLocations() {
+        return read(db -> {
+                List<Location> rv = new LinkedList();
+                Cursor c = getLocations(db);
+                if(c.moveToFirst()) {
+                    do {
+                        Location l = new Location();
+                        l.AssignCursorData(c);
+                        rv.add(l);
+                    } while(c.moveToNext());
+                }
+                return rv;
+            });
+    }
+
+    private Cursor getLocations(SQLiteDatabase db) {
+        String sql = "SELECT DISTINCT "
+            + "L." + SuplaContract.LocationEntry._ID + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+            + " FROM " + SuplaContract.LocationEntry.TABLE_NAME + " AS L "
+            + "JOIN "
+            + SuplaContract.ChannelEntry.TABLE_NAME + " AS C ON "
+            + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+            + " WHERE "
+            + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0 "
+            + " ORDER BY "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+            + " COLLATE LOCALIZED";
+            return db.rawQuery(sql, null);
     }
 }

@@ -57,7 +57,7 @@
                 android:layout_weight="1"
                 android:bottomLeftRadius="10dp"
                 android:bottomRightRadius="10dp"
-                android:text="@string/settings"
+                android:text="@string/profile"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:topLeftRadius="10dp"

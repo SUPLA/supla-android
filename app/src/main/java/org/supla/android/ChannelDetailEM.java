@@ -518,7 +518,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 }
             }
 
-            SuplaFormatter formatter = new SuplaFormatter();
+            SuplaFormatter formatter = SuplaFormatter.sharedFormatter();
 
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
             tvFreq.setText(formatter.doubleToStringWithUnit(freq,

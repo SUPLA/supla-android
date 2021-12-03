@@ -43,12 +43,11 @@ import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.RequiresPermission;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,7 +60,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
 
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -412,9 +414,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        Preferences prefs = new Preferences(this);
-
-        if (prefs.isAdvancedCfg()) {
+        if (!SuplaApp.getApp().getProfileManager(this)
+            .getCurrentProfile().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
@@ -1092,6 +1093,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         final ConnectivityManager connectivityManager = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
         espNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(@NonNull Network network) {
@@ -1109,10 +1112,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         espConfigTask.setDelegate(wizard);
 
                         setStep(STEP_CONFIGURE);
+                        AuthInfo info = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                info.getServerForEmail(),
+                                info.getEmailAddress());
                     }
                 });
 
@@ -1177,6 +1181,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         manager.disconnect();
 
         final Preferences prefs = new Preferences(this);
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
 
         stateChangedReceiver = new BroadcastReceiver() {
             @Override
@@ -1201,10 +1207,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         stateChangedReceiver = null;
 
                         setStep(STEP_CONFIGURE);
+
+                        AuthInfo ai = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                ai.getServerForEmail(),
+                                ai.getEmailAddress());
                     }
 
                 }

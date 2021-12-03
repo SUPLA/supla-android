@@ -1,6 +1,9 @@
 <resources>
+    <string name="confirm_button_text" translatable="false">OK</string>
+    <string name="dont_have_account_yet" translatable="false">Don\'t have an account in Supla Cloud yet?</string>
 
     <string name="app_name" translatable="false">SUPLA</string>
+    <string name="profiles_title" translatable="false">Profiles</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>
@@ -89,12 +92,30 @@
     <string name="event_poweronoff">turned the power ON/OFF</string>
     <string name="event_turnedthelightonoff">turned the light ON/OFF</string>
 
-    <string name="server_address">SERVER ADDRESS</string>
-    <string name="access_id">ACCESS IDENTIFIER</string>
-    <string name="password">PASSWORD</string>
-    <string name="email">E-MAIL ADDRESS</string>
-    <string name="advanced_settings">Advanced settings</string>
-    <string name="create_account"><u>Create an account</u></string>
+    <string translatable="false" name="server_address">SERVER ADDRESS</string>
+    <string translatable="false" name="access_id">ACCESS IDENTIFIER</string>
+    <string translatable="false" name="password">PASSWORD</string>
+    <string translatable="false" name="email">E-MAIL ADDRESS</string>
+    <string translatable="false" name="temp_unit">TEMPERATURE UNIT</string>
+    <string translatable="false" name="advanced_settings">Advanced</string>
+    <string translatable="false" name="create_account">Create</string>
+
+    <!-- Configuration screen, profile name of current profile
+	 (editable) -->
+    <string translatable="false" name="cfg_label_profile_name">CURRENT PROFILE</string>
+    <!-- default name for a profile (usually assigned for initial
+	 account or when migrating settings from previous version of
+	 the app. -->
+    <string translatable="false" name="cfg_profile_name_default">Default</string>
+    <string translatable="false" name="cfg_label_email_auth">Email</string>
+    <string translatable="false" name="cfg_label_access_id_auth">Access ID</string>
+    <string translatable="false" name="cfg_checkbox_server_auto">Auto</string>
+    <string translatable="false" name="cfg_channel_height">Channel height</string>
+    <string translatable="false" name="cfg_temperature_unit">Temperature unit</string>
+    <string translatable="false" name="cfg_button_autohide">Auto-hide buttons</string>
+
+    <string translatable="false" name="profile">Your account</string>
+    <string translatable="false" name="menubar_appsettings">App Settings</string>
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
@@ -369,7 +390,7 @@
     <string name="MAC" translatable="false">MAC</string>
     <string name="battery_level">Battery level</string>
     <string name="battery_powered">Battery powered</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Wifi signal strength</string>
     <string name="bridge_node_online">Bridge node - online</string>
     <string name="bridge_signal_strength">Bridge - signal strength</string>
@@ -385,9 +406,9 @@
     <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
     <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
     <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1">Enter Wi-Fi Network name and password to use with new I/O Device</string>
+    <string name="wizard_step2_txt1">Enter WiFi Network name and password to use with new I/O Device</string>
     <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling">Oops...! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
+    <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
     <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
     <string name="save_without_saving">Do you want to quit without saving?</string>
     <string name="do_you_want_to_save">Do you want to save the settings?</string>
@@ -437,11 +458,16 @@
     <string translatable="false" name="motor_problem">Motor problem / Unexpected stop.</string>
     <string translatable="false" name="lastconnectionresetcause_unknown">0: unknown</string>
     <string translatable="false" name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
-    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi connection lost</string>
+    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
     <string translatable="false" name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
+    <string translatable="false" name="basic_profile_warning">Setting not available</string>
+    <string translatable="false" name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
+    <string translatable="false" name="add_device_warning">In Access ID authentication mode you won\'t be able to use automatic "Add device" wizard. However you will still be able to add it by manual "Add device" procedure.</string>
+    <string translatable="false" name="show_channel_info">Show ⓘ button</string>
     <string translatable="false" name="add_device_needs_cloud_title">Device setup</string>
     <string translatable="false" name="add_device_needs_cloud_message">This device does not have any channels visible in the application. To finish configuration go to cloud.supla.org</string>
     <string translatable="false" name="add_device_needs_cloud_dismiss">I understand</string>
     <string translatable="false" name="add_device_needs_cloud_go">Go to CLOUD</string>
     <string translatable="false" name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
+    <string translatable="false" name="location_ordering">Location order</string>
 </resources>

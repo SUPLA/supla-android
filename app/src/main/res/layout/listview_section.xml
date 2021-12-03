@@ -44,6 +44,15 @@
                 android:background="@drawable/collapsed"
                 android:cropToPadding="false"
                 android:drawingCacheQuality="high" />
+            <ImageView
+                android:id="@+id/ivDragHolder"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="16dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:src="@drawable/move_holder" />
         </FrameLayout>
 
     </LinearLayout>

@@ -31,7 +31,8 @@ public class DefaultUserIconRepository implements UserIconRepository {
     private final UserIconDao userIconDao;
     private final ImageCacheProvider imageCacheProvider;
 
-    public DefaultUserIconRepository(UserIconDao userIconDao, ImageCacheProvider imageCacheProvider) {
+    public DefaultUserIconRepository(UserIconDao userIconDao,
+                                     ImageCacheProvider imageCacheProvider) {
         this.userIconDao = userIconDao;
         this.imageCacheProvider = imageCacheProvider;
     }

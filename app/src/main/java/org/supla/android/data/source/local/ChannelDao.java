@@ -20,8 +20,8 @@ package org.supla.android.data.source.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
@@ -237,7 +237,8 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getChannelListCursorWithDefaultOrder(String where) {
-        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+                + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
                 + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED";

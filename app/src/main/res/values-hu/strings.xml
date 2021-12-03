@@ -327,7 +327,7 @@
     <string name="wake_up_frequency">Ébresztési gyakoriság</string>
     <string name="wakeup_info">*) A megadott beállításokat a csomópont következő ébredésekor alkalmazzák.</string>
     <string name="wheel">Kerék</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">WiFi jelerősség</string>
     <string name="wifi_throttling">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
     <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>

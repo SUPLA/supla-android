@@ -22,6 +22,7 @@ import android.content.Context;
 
 import org.supla.android.Preferences;
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
 
 public class SuplaRegisterError {
 
@@ -38,13 +39,15 @@ public class SuplaRegisterError {
     }
 
     public static String getHostname(Context context) {
+        String host = SuplaApp.getApp()
+            .getProfileManager(context)
+            .getCurrentProfile().getAuthInfo()
+            .getServerForCurrentAuthMethod();
 
-        Preferences prefs = new Preferences(context);
-
-        if (prefs.getServerAddress().toLowerCase().contains("supla.org")) {
+        if (host.toLowerCase().contains("supla.org")) {
             return "cloud.supla.org";
         } else {
-            return prefs.getServerAddress();
+            return host;
         }
 
     }

@@ -328,7 +328,7 @@
     <string name="wake_up_frequency">Συχνότητα αφύπνισης</string>
     <string name="wakeup_info">*) Οι καταχωρημένες ρυθμίσεις θα εφαρμοστούν την επόμενη φορά που θα ξυπνήσει ο κόμβος.</string>
     <string name="wheel">Κύκλος</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Ισχύς σήματος WiFi</string>
     <string name="wifi_throttling">Λόγω των ορίων της σάρωσης δικτύου WiFi που επιβάλλει το σύστημα Android, θα πρέπει να περιμένετε τον χρόνο που παρουσιάζεται παραπάνω.</string>
     <string name="wizard_step1_txt2">Βεβαιωθείτε ότι τα δεδομένα κινητής τηλεφωνίας είναι απενεργοποιημένα κατά την προσθήκη συσκευών. Διαφορετικά, η προσθήκη ενδέχεται να αποτύχει.</string>

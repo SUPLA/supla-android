@@ -20,8 +20,8 @@ package org.supla.android.data.source.local;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.supla.android.db.DbItem;
 
@@ -105,9 +105,9 @@ public abstract class BaseDao {
         });
     }
 
-    void insert(DbItem item, String tableName) {
-        write(sqLiteDatabase -> {
-            sqLiteDatabase.insert(tableName, null, item.getContentValues());
+    long insert(DbItem item, String tableName) {
+        return write(sqLiteDatabase -> {
+            return sqLiteDatabase.insertOrThrow(tableName, null, item.getContentValues());
         });
     }
 

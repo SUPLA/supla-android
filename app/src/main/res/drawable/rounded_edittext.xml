@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--  res/drawable/edittext_rounded_corners.xml -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_focused="true" android:state_pressed="true">
+    <item android:state_focused="true" android:state_pressed="true" android:state_enabled="true">
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
@@ -9,7 +9,7 @@
         </shape>
     </item>
 
-    <item android:state_focused="false" android:state_pressed="true">
+    <item android:state_focused="false" android:state_pressed="true" android:state_enabled="true">
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
@@ -17,7 +17,7 @@
         </shape>
     </item>
 
-    <item android:state_focused="true" android:state_pressed="false">
+    <item android:state_focused="true" android:state_pressed="false" android:state_enabled="true">
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
@@ -25,7 +25,8 @@
         </shape>
     </item>
 
-    <item android:state_focused="false" android:state_pressed="false">
+    <item android:state_focused="false"
+          android:state_pressed="false" android:state_enabled="true">
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
@@ -38,6 +39,15 @@
         <shape>
             <padding android:bottom="4dp" android:left="4dp" android:right="4dp" android:top="4dp" />
         </shape>
+    </item>
+
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="#EFEFEF" />
+            <stroke android:width="0.3dp" android:color="#BDBDBD" />
+            <corners android:radius="5dp" />
+        </shape>
+      
     </item>
 
 </selector>

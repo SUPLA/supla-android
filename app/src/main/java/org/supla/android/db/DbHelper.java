@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
@@ -33,6 +34,7 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.profile.ProfileMigrator;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -50,7 +52,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 19;
+    public static final int DATABASE_VERSION = 21;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -104,7 +106,8 @@ public class DbHelper extends BaseDbHelper {
                 SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " INTEGER NOT NULL," +
                 SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED + " INTEGER NOT NULL default 0," +
-                SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " TEXT NOT NULL default 'DEFAULT')";
+                SuplaContract.LocationEntry.COLUMN_NAME_SORTING + " TEXT NOT NULL default 'DEFAULT'," +
+                SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + " INTEGER NOT NULL DEFAULT -1)";
 
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
@@ -167,6 +170,25 @@ public class DbHelper extends BaseDbHelper {
         execSQL(db, SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE);
         createIndex(db, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID);
+    }
+
+    private void createAuthProfileTable(SQLiteDatabase db) {
+        final String SQL_CREATE_AUTHPROFILE_TABLE = "CREATE TABLE " +
+            SuplaContract.AuthProfileEntry.TABLE_NAME + " (" +
+            SuplaContract.AuthProfileEntry._ID + " INTEGER PRIMARY KEY," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME + " TEXT NOT NULL UNIQUE," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_ACCESS_ID + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_EMAIL + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_AUTO_DETECT + " INTEGER NOT NULL," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH + " INTEGER NOT NULL," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE + " INTEGER)";
+
+        execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }
 
     private void createChannelView(SQLiteDatabase db) {
@@ -332,6 +354,17 @@ public class DbHelper extends BaseDbHelper {
         execSQL(db, SQL_CREATE_INDEX);
     }
 
+    private void insertDefaultProfile(SQLiteDatabase db) {
+        ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
+        AuthProfileItem itm = migrator.makeProfileUsingPreferences();
+        db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null,
+                  itm.getContentValues());
+    }
+
+    private void alterTablesToReferProfile(SQLiteDatabase db) {
+        /* NOTE: V19 doesn't have relationships yet. */
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createLocationTable(db);
@@ -342,6 +375,7 @@ public class DbHelper extends BaseDbHelper {
         createChannelGroupRelationTable(db);
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
+        upgradeToV19(db);
 
         // Create views at the end
         createChannelView(db);
@@ -476,10 +510,23 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void upgradeToV19(SQLiteDatabase db) {
+        createAuthProfileTable(db);
+        insertDefaultProfile(db);
+        alterTablesToReferProfile(db);
+    }
+
+    private void upgradeToV20(SQLiteDatabase db) {
         dropViews(db);
         execSQL(db, "DROP TABLE " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
         createChannelExtendedValueTable(db);
     }
+
+    private void upgradeToV21(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.LocationEntry.TABLE_NAME +
+                  " ADD COLUMN " + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER +
+                  " INTEGER NOT NULL DEFAULT -1");
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -536,6 +583,12 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 18:
                         upgradeToV19(db);
+                        break;
+                    case 19:
+                        upgradeToV20(db);
+                        break;
+                    case 20:
+                        upgradeToV21(db);
                         break;
                 }
             }

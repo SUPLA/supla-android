@@ -35,6 +35,9 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.AuthProfileItem;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +47,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread {
@@ -719,16 +723,19 @@ public class SuplaClient extends Thread {
                 + Integer.valueOf(versionError.RemoteVersion).toString());
 
         regTryCounter = 0;
-        Preferences prefs = new Preferences(_context);
+
+        ProfileManager pm = getProfileManager();
+        AuthInfo info = pm.getCurrentAuthInfo();
 
 
-        if ((prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
-                && versionError.RemoteVersion >= 5
-                && versionError.Version > versionError.RemoteVersion
-                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion) {
+        if (versionError.RemoteVersion >= 7
+            && versionError.Version > versionError.RemoteVersion
+            && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
             // set prefered to lower
-            prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
+            info.setPreferredProtocolVersion(versionError.RemoteVersion);
+            pm.updateCurrentAuthInfo(info);
+            
             reconnect();
             return;
         }
@@ -782,13 +789,15 @@ public class SuplaClient extends Thread {
         Trace.d(log_tag, "registered");
 
         regTryCounter = 0;
-        Preferences prefs = new Preferences(_context);
+        ProfileManager pm = getProfileManager();
+        AuthInfo info = pm.getCurrentAuthInfo();
 
         if (getMaxProtoVersion() > 0
-                && prefs.getPreferedProtocolVersion() < getMaxProtoVersion()
-                && registerResult.Version > prefs.getPreferedProtocolVersion()
+                && info.getPreferredProtocolVersion() < getMaxProtoVersion()
+                && registerResult.Version > info.getPreferredProtocolVersion()
                 && registerResult.Version <= getMaxProtoVersion()) {
-            prefs.setPreferedProtocolVersion(registerResult.Version);
+            info.setPreferredProtocolVersion(registerResult.Version);
+            pm.updateCurrentAuthInfo(info);
         }
 
         _client_id = registerResult.ClientID;
@@ -995,9 +1004,9 @@ public class SuplaClient extends Thread {
         Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
 
         if (token != null && token.getUrl() == null) {
-            Preferences prefs = new Preferences(_context);
+            AuthInfo info = getProfileManager().getCurrentAuthInfo();
             try {
-                token.setUrl(new URL("https://" + prefs.getServerAddress()));
+                token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
             } catch (MalformedURLException ignored) {
             }
         }
@@ -1283,32 +1292,37 @@ public class SuplaClient extends Thread {
                     cfgInit(cfg);
 
                     Preferences prefs = new Preferences(_context);
+                    ProfileManager pm = getProfileManager();
+                    AuthInfo info = pm.getCurrentAuthInfo();
+                    
 
-                    cfg.Host = prefs.getServerAddress();
+                    cfg.Host = info.getServerForCurrentAuthMethod();
                     cfg.clientGUID = prefs.getClientGUID();
                     cfg.AuthKey = prefs.getAuthKey();
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-                    if (prefs.isAdvancedCfg()) {
-                        cfg.AccessID = prefs.getAccessID();
-                        cfg.AccessIDpwd = prefs.getAccessIDpwd();
+                    if (isAccessIDAuthentication()) {
+                        cfg.AccessID = info.getAccessID();
+                        cfg.AccessIDpwd = info.getAccessIDpwd();
 
                         if (regTryCounter >= 2) {
                             // supla-server v1.0 for Raspberry Compatibility fix
-                            prefs.setPreferedProtocolVersion(4);
+                            info.setPreferredProtocolVersion(4);
+                            pm.updateCurrentAuthInfo(info);
                         }
 
                     } else {
-                        cfg.Email = prefs.getEmail();
-                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
+                        cfg.Email = info.getEmailAddress();
+                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
                             if (cfg.Host.isEmpty()) {
                                 onConnError(new SuplaConnError(
                                         SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
                             } else {
-                                prefs.setServerAddress(cfg.Host);
+                                info.setServerForEmail(cfg.Host);
+                                pm.updateCurrentAuthInfo(info);
                             }
                         }
 
@@ -1316,7 +1330,7 @@ public class SuplaClient extends Thread {
                     }
 
                     oneTimePassword = "";
-                    cfg.protocol_version = prefs.getPreferedProtocolVersion();
+                    cfg.protocol_version = info.getPreferredProtocolVersion();
                     init(cfg);
                 }
 
@@ -1350,5 +1364,17 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
+    }
+
+    private boolean isAccessIDAuthentication() {
+        return !getProfileManager().getCurrentAuthInfo().getEmailAuth();
+    }
+
+    private boolean shouldAutodiscoverHost() {
+        return getProfileManager().getCurrentAuthInfo().getServerAutoDetect();
+    }
+
+    private ProfileManager getProfileManager() {
+        return SuplaApp.getApp().getProfileManager(_context);
     }
 }

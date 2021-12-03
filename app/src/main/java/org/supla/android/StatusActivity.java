@@ -35,6 +35,8 @@ import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaVersionError;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 public class StatusActivity extends NavigationActivity {
 
@@ -67,7 +69,7 @@ public class StatusActivity extends NavigationActivity {
         btnSettings = findViewById(R.id.status_btn);
         btnSettings.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btnSettings.setTransformationMethod(null);
-        btnSettings.setText(getResources().getText(R.string.settings));
+        btnSettings.setText(getResources().getText(R.string.profile));
         btnSettings.setOnClickListener(this);
 
         btnCloud = findViewById(R.id.cloud_btn);
@@ -107,6 +109,7 @@ public class StatusActivity extends NavigationActivity {
             mode = 1;
 
             rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            setStatusBarColor(R.color.activity_status_bg_err);
             btnCloud.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -132,6 +135,7 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 2) {
             mode = 2;
 
+            setStatusBarColor(R.color.activity_status_bg_normal);
             rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
             btnCloud.setVisibility(View.INVISIBLE);
 
@@ -168,7 +172,7 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            NavigationActivity.showCfg(this);
+            NavigationActivity.showProfile(this);
         } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         } else if (v == btnCloud) {
@@ -220,7 +224,8 @@ public class StatusActivity extends NavigationActivity {
     protected void onRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if (!(CurrentActivity instanceof AddDeviceWizardActivity)) {
+        if (!(CurrentActivity instanceof AddDeviceWizardActivity) &&
+            CurrentActivity != null) {
             showMain(this);
         }
 
@@ -233,8 +238,8 @@ public class StatusActivity extends NavigationActivity {
                 && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
-            Preferences prefs = new Preferences(this);
-            if (!prefs.isAdvancedCfg()) {
+            ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+            if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
                 }

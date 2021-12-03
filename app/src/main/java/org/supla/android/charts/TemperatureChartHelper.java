@@ -29,6 +29,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
@@ -37,8 +40,11 @@ import java.util.ArrayList;
 
 public class TemperatureChartHelper extends ChartHelper {
 
+    private TemperaturePresenterFactory temperaturePresenterFactory;
+
     public TemperatureChartHelper(Context context) {
         super(context);
+        temperaturePresenterFactory = SuplaApp.getApp();
     }
 
     @Override
@@ -64,9 +70,10 @@ public class TemperatureChartHelper extends ChartHelper {
     }
 
     protected float getTemperature(Cursor c) {
-        return (float) c.getDouble(
+        TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
+        return (float) tp.getConvertedValue(c.getDouble(
                 c.getColumnIndex(
-                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE));
+                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE)));
     }
 
     @Override

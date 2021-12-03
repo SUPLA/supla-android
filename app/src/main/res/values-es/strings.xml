@@ -330,7 +330,7 @@
     <string name="wake_up_frequency">Frecuencia de activación</string>
     <string name="wakeup_info">*) La configuración ingresada se aplicará la próxima vez que el nodo se active.</string>
     <string name="wheel">Círculo</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Intensidad de señal WiFi</string>
     <string name="wifi_throttling">Debido a los límites de escaneo de redes WiFi impuestos por el sistema Android, espere el tiempo presentado anteriormente.</string>
     <string name="wizard_step1_txt2">Al agregar dispositivos, asegúrese de que los datos móviles estén desactivados. De lo contrario, la acción puede fracasar.</string>
