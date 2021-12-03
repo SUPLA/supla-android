@@ -32,7 +32,7 @@
 	      android:id="@+id/authType"
 	      android:layout_width="match_parent"
 	      android:layout_height="wrap_content"
-	      android:layout_below="@id/cfg_cb_advanced"
+	      android:layout_alignParentTop="true"
 	      android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/advanced_top_offset"
         android:layout_marginRight="0dp"

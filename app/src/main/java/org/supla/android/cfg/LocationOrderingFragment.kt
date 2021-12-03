@@ -47,7 +47,7 @@ class LocationOrderingFragment: Fragment(), HasDefaultViewModelProviderFactory {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         
-        adapter = LocationReorderAdapter(getActivity()!!,
+        adapter = LocationReorderAdapter(requireActivity(),
                                          viewModel.getLocations(),
                                          binding.locationList,
                                          viewModel)

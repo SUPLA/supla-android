@@ -30,6 +30,7 @@ import android.content.res.TypedArray
 import org.supla.android.SuplaApp
 import org.supla.android.R
 
+@SuppressWarnings("ResourceType")
 class SegmentedButton @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
