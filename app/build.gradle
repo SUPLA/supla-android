@@ -15,8 +15,8 @@ android {
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
 	multiDexEnabled true
-        versionCode 133
-        versionName "2.3.77"
+        versionCode 134
+        versionName "2.3.78"
 
         sourceSets.main {
             jniLibs.srcDir 'src/main/libs'
