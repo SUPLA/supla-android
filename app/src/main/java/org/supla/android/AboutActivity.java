@@ -49,6 +49,7 @@ public class AboutActivity extends NavigationActivity {
         homepage.setTransformationMethod(null);
 
         showMenuBar();
+        showBackButton();
     }
 
     @Override

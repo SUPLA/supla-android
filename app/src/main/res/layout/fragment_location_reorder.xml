@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <data>
+    <variable name="viewModel"
+              type="org.supla.android.cfg.LocationReorderViewModel" />
+  </data>
+
+  <ListView android:id="@+id/locationList"
+            android:layout_marginTop="@dimen/top_bar_height"
+            android:paddingTop="@dimen/new_screen_margin"
+            android:background="@color/activity_bg_new"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+</layout>

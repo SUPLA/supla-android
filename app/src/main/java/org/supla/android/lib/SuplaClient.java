@@ -35,6 +35,8 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +46,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread {
@@ -106,6 +109,8 @@ public class SuplaClient extends Thread {
     private native boolean scIterate(long _supla_client, int wait_usec);
 
     private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
+
+    private native boolean scTimerArm(long _supla_client, int ChannelID, int On, int DurationMS);
 
     private native boolean scSetRGBW(long _supla_client, int ID, int Group,
                                      int Color, int ColorBrightness, int Brightness,
@@ -178,7 +183,7 @@ public class SuplaClient extends Thread {
         if (canceled()) return;
         SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
     }
-
+    
     private void init(SuplaCfg cfg) {
         synchronized (sc_lck) {
             if (_supla_client_ptr == 0) {
@@ -188,19 +193,21 @@ public class SuplaClient extends Thread {
         }
     }
 
-    private void lockClientPtr() {
+    private long lockClientPtr() {
+        long result = 0;
         synchronized (sc_lck) {
             if (_supla_client_ptr != 0) {
                 _supla_client_ptr_counter++;
+                result = _supla_client_ptr;
             }
         }
+        return result;
     }
 
     private void unlockClientPtr() {
         synchronized (sc_lck) {
             if (_supla_client_ptr != 0
                     && _supla_client_ptr_counter > 0) {
-
                 _supla_client_ptr_counter--;
             }
         }
@@ -216,10 +223,8 @@ public class SuplaClient extends Thread {
                         && _supla_client_ptr_counter == 0) {
                     scFree(_supla_client_ptr);
                     _supla_client_ptr = 0;
+                    freed = true;
                 }
-
-
-                freed = _supla_client_ptr == 0;
             }
 
             if (!freed) {
@@ -232,7 +237,7 @@ public class SuplaClient extends Thread {
     }
 
     public int getClientId() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 ? scGetId(_supla_client_ptr) : 0;
         } finally {
@@ -247,7 +252,7 @@ public class SuplaClient extends Thread {
                 connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-            lockClientPtr();
+            long _supla_client_ptr = lockClientPtr();
             try {
                 return _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
             } finally {
@@ -263,7 +268,7 @@ public class SuplaClient extends Thread {
     }
 
     private boolean connected() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
         } finally {
@@ -272,7 +277,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean registered() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
         } finally {
@@ -281,7 +286,7 @@ public class SuplaClient extends Thread {
     }
 
     private void disconnect() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
                 scDisconnect(_supla_client_ptr);
@@ -296,7 +301,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean open(int ID, boolean Group, int Open) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
         } finally {
@@ -304,13 +309,23 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public boolean timerArm(int ChannelID, boolean On, int DurationMS) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scTimerArm(_supla_client_ptr,
+                    ChannelID, On ? 1 : 0, DurationMS);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+    
     public boolean open(int ChannelID, int Open) {
         return open(ChannelID, false, Open);
     }
 
     public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness,
                            boolean TurnOnOff) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
@@ -326,7 +341,7 @@ public class SuplaClient extends Thread {
     }
 
     public void getRegistrationEnabled() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
                 scGetRegistrationEnabled(_supla_client_ptr);
@@ -337,7 +352,7 @@ public class SuplaClient extends Thread {
     }
 
     public int getProtoVersion() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
         } finally {
@@ -346,7 +361,7 @@ public class SuplaClient extends Thread {
     }
 
     public int getMaxProtoVersion() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
         } finally {
@@ -355,6 +370,10 @@ public class SuplaClient extends Thread {
     }
 
     public void oAuthTokenRequest() {
+        if (canceled() || !registered()) {
+            return;
+        }
+
         long now = System.currentTimeMillis();
         if (now - lastTokenRequest <= 5000) {
             Trace.d(log_tag, "Token already requested: "
@@ -362,7 +381,7 @@ public class SuplaClient extends Thread {
             return;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             if (_supla_client_ptr != 0 && scOAuthTokenRequest(_supla_client_ptr)) {
                 lastTokenRequest = now;
@@ -421,7 +440,7 @@ public class SuplaClient extends Thread {
     }
 
     public void superUserAuthorizationRequest(String email, String password) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
                 scSuperUserAuthorizationRequest(_supla_client_ptr, email, password);
@@ -432,7 +451,7 @@ public class SuplaClient extends Thread {
     }
 
     public void getSuperUserAuthorizationResult() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             if (_supla_client_ptr != 0) {
                 scGetSuperUserAuthorizationResult(_supla_client_ptr);
@@ -452,7 +471,7 @@ public class SuplaClient extends Thread {
 
     public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
                                        int DataType, byte[] Data) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, Command, DataType, Data);
@@ -467,7 +486,7 @@ public class SuplaClient extends Thread {
 
     public boolean thermostatScheduleCfgRequest(int ID, boolean Group,
                                                 SuplaThermostatScheduleCfg cfg) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
                     ID, Group ? 1 : 0, cfg);
@@ -477,7 +496,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean deviceCalCfgCancelAllCommands(int DeviceID) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scDeviceCalCfgCancelAllCommands(_supla_client_ptr,
                     DeviceID);
@@ -491,7 +510,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean getChannelState(int ChannelID) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
         } finally {
@@ -500,7 +519,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean getChannelBasicCfg(int ChannelID) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
         } finally {
@@ -509,7 +528,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean setChannelFunction(int ChannelID, int Function) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
@@ -519,7 +538,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean setChannelCaption(int ChannelID, String Caption) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
@@ -529,7 +548,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean setLocationCaption(int LocationID, String Caption) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
@@ -539,7 +558,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetDfgTransparency(_supla_client_ptr, ChannelID, mask, active_bits);
@@ -549,7 +568,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean reconnectAllClients() {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scReconnectAllClients(_supla_client_ptr);
@@ -559,7 +578,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean setRegistrationEnabled(int ioDeviceRegTimeSec, int clientRegTimeSec) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetRegistrationEnabled(_supla_client_ptr,
@@ -570,7 +589,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean reconnectDevice(int DeviceId) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scReconnectDevice(_supla_client_ptr, DeviceId);
@@ -584,7 +603,7 @@ public class SuplaClient extends Thread {
             return false;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveConfigModeActive(_supla_client_ptr, DeviceID.intValue());
@@ -598,7 +617,7 @@ public class SuplaClient extends Thread {
             return false;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveResetAndClear(_supla_client_ptr, DeviceID.intValue());
@@ -612,7 +631,7 @@ public class SuplaClient extends Thread {
             return false;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveAddNode(_supla_client_ptr, DeviceID.intValue());
@@ -626,7 +645,7 @@ public class SuplaClient extends Thread {
             return false;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveRemoveNode(_supla_client_ptr, DeviceID.intValue());
@@ -640,7 +659,7 @@ public class SuplaClient extends Thread {
             return false;
         }
 
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveGetNodeList(_supla_client_ptr, DeviceID.intValue());
@@ -650,7 +669,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveGetAssignedNodeId(int ChannelID) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveGetAssignedNodeId(_supla_client_ptr, ChannelID);
@@ -660,7 +679,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveAssignNodeId(int ChannelID, short NodeId) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveAssignNodeId(_supla_client_ptr, ChannelID, NodeId);
@@ -670,7 +689,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveGetWakeUpSettings(int ChannelID) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveGetWakeUpSettings(_supla_client_ptr, ChannelID);
@@ -680,7 +699,7 @@ public class SuplaClient extends Thread {
     }
 
     public boolean zwaveSetWakeUpTime(int ChannelID, int Time) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scZWaveSetWakeUpTime(_supla_client_ptr, ChannelID, Time);
@@ -691,7 +710,7 @@ public class SuplaClient extends Thread {
 
     public boolean setLightsourceLifespan(int ChannelID, boolean resetCounter,
                                           boolean setTime, int lifeSpan) {
-        lockClientPtr();
+        long _supla_client_ptr = lockClientPtr();
         try {
             return _supla_client_ptr != 0
                     && scSetLightsourceLifespan(_supla_client_ptr, ChannelID,
@@ -707,16 +726,19 @@ public class SuplaClient extends Thread {
                 + Integer.valueOf(versionError.RemoteVersion).toString());
 
         regTryCounter = 0;
-        Preferences prefs = new Preferences(_context);
+
+        ProfileManager pm = getProfileManager();
+        AuthInfo info = pm.getCurrentAuthInfo();
 
 
-        if ((prefs.isAdvancedCfg() || versionError.RemoteVersion >= 7)
-                && versionError.RemoteVersion >= 5
-                && versionError.Version > versionError.RemoteVersion
-                && prefs.getPreferedProtocolVersion() != versionError.RemoteVersion) {
+        if (versionError.RemoteVersion >= 7
+            && versionError.Version > versionError.RemoteVersion
+            && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
             // set prefered to lower
-            prefs.setPreferedProtocolVersion(versionError.RemoteVersion);
+            info.setPreferredProtocolVersion(versionError.RemoteVersion);
+            pm.updateCurrentAuthInfo(info);
+            
             reconnect();
             return;
         }
@@ -770,13 +792,15 @@ public class SuplaClient extends Thread {
         Trace.d(log_tag, "registered");
 
         regTryCounter = 0;
-        Preferences prefs = new Preferences(_context);
+        ProfileManager pm = getProfileManager();
+        AuthInfo info = pm.getCurrentAuthInfo();
 
         if (getMaxProtoVersion() > 0
-                && prefs.getPreferedProtocolVersion() < getMaxProtoVersion()
-                && registerResult.Version > prefs.getPreferedProtocolVersion()
+                && info.getPreferredProtocolVersion() < getMaxProtoVersion()
+                && registerResult.Version > info.getPreferredProtocolVersion()
                 && registerResult.Version <= getMaxProtoVersion()) {
-            prefs.setPreferedProtocolVersion(registerResult.Version);
+            info.setPreferredProtocolVersion(registerResult.Version);
+            pm.updateCurrentAuthInfo(info);
         }
 
         _client_id = registerResult.ClientID;
@@ -983,9 +1007,9 @@ public class SuplaClient extends Thread {
         Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
 
         if (token != null && token.getUrl() == null) {
-            Preferences prefs = new Preferences(_context);
+            AuthInfo info = getProfileManager().getCurrentAuthInfo();
             try {
-                token.setUrl(new URL("https://" + prefs.getServerAddress()));
+                token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
             } catch (MalformedURLException ignored) {
             }
         }
@@ -1271,32 +1295,37 @@ public class SuplaClient extends Thread {
                     cfgInit(cfg);
 
                     Preferences prefs = new Preferences(_context);
+                    ProfileManager pm = getProfileManager();
+                    AuthInfo info = pm.getCurrentAuthInfo();
+                    
 
-                    cfg.Host = prefs.getServerAddress();
+                    cfg.Host = info.getServerForCurrentAuthMethod();
                     cfg.clientGUID = prefs.getClientGUID();
                     cfg.AuthKey = prefs.getAuthKey();
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-                    if (prefs.isAdvancedCfg()) {
-                        cfg.AccessID = prefs.getAccessID();
-                        cfg.AccessIDpwd = prefs.getAccessIDpwd();
+                    if (isAccessIDAuthentication()) {
+                        cfg.AccessID = info.getAccessID();
+                        cfg.AccessIDpwd = info.getAccessIDpwd();
 
                         if (regTryCounter >= 2) {
                             // supla-server v1.0 for Raspberry Compatibility fix
-                            prefs.setPreferedProtocolVersion(4);
+                            info.setPreferredProtocolVersion(4);
+                            pm.updateCurrentAuthInfo(info);
                         }
 
                     } else {
-                        cfg.Email = prefs.getEmail();
-                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty()) {
+                        cfg.Email = info.getEmailAddress();
+                        if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                             cfg.Host = autodiscoverGetHost(cfg.Email);
 
                             if (cfg.Host.isEmpty()) {
                                 onConnError(new SuplaConnError(
                                         SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
                             } else {
-                                prefs.setServerAddress(cfg.Host);
+                                info.setServerForEmail(cfg.Host);
+                                pm.updateCurrentAuthInfo(info);
                             }
                         }
 
@@ -1304,7 +1333,7 @@ public class SuplaClient extends Thread {
                     }
 
                     oneTimePassword = "";
-                    cfg.protocol_version = prefs.getPreferedProtocolVersion();
+                    cfg.protocol_version = info.getPreferredProtocolVersion();
                     init(cfg);
                 }
 
@@ -1338,5 +1367,17 @@ public class SuplaClient extends Thread {
 
         SuplaApp.getApp().OnSuplaClientFinished(this);
         Trace.d(log_tag, "SuplaClient Finished");
+    }
+
+    private boolean isAccessIDAuthentication() {
+        return !getProfileManager().getCurrentAuthInfo().getEmailAuth();
+    }
+
+    private boolean shouldAutodiscoverHost() {
+        return getProfileManager().getCurrentAuthInfo().getServerAutoDetect();
+    }
+
+    private ProfileManager getProfileManager() {
+        return SuplaApp.getApp().getProfileManager(_context);
     }
 }

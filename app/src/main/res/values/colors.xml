@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- new color definitions start here -->
+    <color name="supla_green">#12a71e</color> 
+    <!-- new color definitions end here -->
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
     <color name="channel_btn_pressed">#5ae966</color>
@@ -69,4 +72,15 @@
     <color name="wake_up_settings_infotext">#000000</color>
     <color name="wake_up_settings_infoline">#B4B7BA</color>
 
+    <color name="switcher_background_light">#1F767880</color>
+    <color name="switcher_border_light">#7678801F</color>
+
+    <color name="list_separator_bg">#E5E5E5</color>
+    <color name="red_alert">#EB3A28</color>
+    <color name="label_grey">#7e8082</color>
+    <color name="holder_grey">#7e8082</color>
+
+    <color name="activity_bg_new">#E5E5E5</color>
+    <color name="cell_bg_new">#FAFBFC</color>
+    <color name="supla">#00d151</color>
 </resources>

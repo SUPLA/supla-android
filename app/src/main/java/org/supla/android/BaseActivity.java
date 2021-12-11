@@ -20,9 +20,11 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import androidx.core.content.res.ResourcesCompat;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Build;
+import android.view.Window;
+import android.view.WindowManager;
 
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelBasicCfg;
@@ -77,6 +79,7 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
         super.onCreate(savedInstanceState);
         dbHelper = DbHelper.getInstance(this);
         SuplaApp.getApp().initTypefaceCollection(this);
+        setStatusBarColor(R.color.splash_bg);
     }
 
     @Override
@@ -368,5 +371,15 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
                 .subscribe(onComplete, onError));
     }
 
+
+    protected void setStatusBarColor(int colorId) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ResourcesCompat.getColor(getResources(),
+                    colorId, null));
+        }
+    }
 
 }

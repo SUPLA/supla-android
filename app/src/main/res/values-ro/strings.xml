@@ -327,7 +327,7 @@
     <string name="wake_up_frequency" >Frecvenţa  de trezire</string>
     <string name="wakeup_info" >*) Setările introduse vor fi aplicate data viitoare la trezirea nodului.</string>
     <string name="wheel" >Cerc</string>
-    <string name="wifi_rssi" >Wifi RSSI</string>
+    <string name="wifi_rssi" >WiFi RSSI</string>
     <string name="wifi_signal_strength" >Puterea semnalului WiFi</string>
     <string name="wifi_throttling" >Datorită limitelor de scanare a reţelei WiFi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
     <string name="wizard_step1_txt2" >Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>

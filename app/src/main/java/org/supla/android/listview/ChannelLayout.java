@@ -35,11 +35,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.widget.TextViewCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
+import org.supla.android.Preferences;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -62,6 +65,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private FrameLayout right_btn;
     private FrameLayout left_btn;
 
+    private RelativeLayout channelIconContainer;
+
     private ChannelImageLayout imgl;
 
     private TextView left_btn_text;
@@ -82,10 +87,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private boolean LeftButtonEnabled;
     private boolean DetailSliderEnabled;
 
+    private float heightScaleFactor = 1f;
+    private boolean shouldUpdateChannelStateLayout;
+    
+    private Preferences prefs;
+
 
     public ChannelLayout(Context context, ChannelListView parentListView) {
         super(context);
 
+        prefs = new Preferences(context);
         setOrientation(LinearLayout.HORIZONTAL);
 
         mParentListView = parentListView;
@@ -94,19 +105,23 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         right_btn = new FrameLayout(context);
         left_btn = new FrameLayout(context);
 
+        shouldUpdateChannelStateLayout = true;
+
+        heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
+        int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
+
         right_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         left_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         content = new RelativeLayout(context);
-        content.setLayoutParams(new LayoutParams(
-                LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.channel_layout_height)));
+        content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
         content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
@@ -126,6 +141,11 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         left_onlineStatus = newOnlineStatus(context, false);
         left_onlineStatus.setId(ViewHelper.generateViewId());
         content.addView(left_onlineStatus);
+
+        channelIconContainer = new RelativeLayout(context);
+        content.addView(channelIconContainer);
+        channelIconContainer
+            .setLayoutParams(getChannelIconContainerLayoutParams());
 
         channelStateIcon = new ImageView(context);
         channelStateIcon.setId(ViewHelper.generateViewId());
@@ -158,12 +178,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         bottom_line = new LineView(context);
         content.addView(bottom_line);
 
-        imgl = new ChannelImageLayout(context);
-        content.addView(imgl);
+        imgl = new ChannelImageLayout(context, heightScaleFactor);
+        channelIconContainer.addView(imgl);
 
-        caption_text = new CaptionView(context, imgl.getId());
+        caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
         caption_text.setOnLongClickListener(this);
-        content.addView(caption_text);
+        channelIconContainer.addView(caption_text);
 
         OnTouchListener tl = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -192,6 +212,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     public ChannelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
+        RelativeLayout.LayoutParams lp;
+
+        lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                             RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        return lp;
     }
 
     private TextView newTextView(Context context) {
@@ -235,6 +265,9 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
         int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
 
+        if(mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
+            margin = 0;
+            
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
         lp.leftMargin = margin;
 
@@ -558,8 +591,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     }
 
     public boolean getDetailSliderEnabled() {
-
-        return DetailSliderEnabled;
+		if(RightButtonEnabled) {
+			// Only enable detail slider if right button is
+			// already expanded.
+			if(Slided() == 200)
+				return DetailSliderEnabled;
+			else
+				return false;
+		} else {
+			return DetailSliderEnabled;
+		}
     }
 
     private void setDetailSliderEnabled(boolean detailSliderEnabled) {
@@ -590,8 +631,13 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
 
+        
+
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
+
+        imgl.setText1(cbase.getHumanReadableValue());
+        imgl.setText2(cbase.getHumanReadableValue(ChannelBase.WhichOne.Second));
 
         channelStateIcon.setVisibility(INVISIBLE);
         channelWarningIcon.setChannel(cbase);
@@ -606,6 +652,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
             mMeasurementSubChannel = _mMeasurementSubChannel;
             imgl.SetDimensions();
+            shouldUpdateChannelStateLayout = true;
         }
 
         {
@@ -634,12 +681,16 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             right_ActiveStatus.setVisibility(View.GONE);
             int stateIcon = 0;
 
-            if (cbase instanceof Channel) {
+            if (cbase instanceof Channel && prefs.isShowChannelInfo()) {
                 stateIcon = ((Channel) cbase).getChannelStateIcon();
             }
 
             if (stateIcon != 0) {
                 channelStateIcon.setImageResource(stateIcon);
+                if(shouldUpdateChannelStateLayout) {
+                    channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
+                    shouldUpdateChannelStateLayout = false;
+                }
                 channelStateIcon.setVisibility(VISIBLE);
             }
         }
@@ -779,9 +830,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
         caption_text.setText(cbase.getNotEmptyCaption(getContext()));
 
-        imgl.setText1(cbase.getHumanReadableValue());
-        imgl.setText2(cbase.getHumanReadableValue(ChannelBase.WhichOne.Second));
-
     }
 
     @Override
@@ -801,30 +849,33 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         public int left_btn_right;
     }
 
-    private class CaptionView extends android.support.v7.widget.AppCompatTextView {
+
+    class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
 
-        public CaptionView(Context context, int imgl_id) {
+        public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
             super(context);
-
+            float textSize = getResources().getDimension(R.dimen.channel_caption_text_size);
+            if(heightScaleFactor > 1.0) textSize *= heightScaleFactor;
             setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
-            setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.channel_caption_text_size));
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             setTextColor(getResources().getColor(R.color.channel_caption_text));
             setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                                             LayoutParams.WRAP_CONTENT);
 
             if (imgl_id != -1)
                 lp.addRule(RelativeLayout.BELOW, imgl_id);
 
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin);
+            lp.topMargin = (int)(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+                                 * heightScaleFactor);
             setLayoutParams(lp);
         }
 
     }
 
-    private class ChannelImageLayout extends RelativeLayout {
+    private class ChannelImageLayout extends LinearLayout {
 
         private ImageView Img1;
         private ImageView Img2;
@@ -832,85 +883,110 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         private ImageId Img2Id;
         private TextView Text1;
         private TextView Text2;
+        private float heightScaleFactor = 1f;
+        private int mOldFunc;
 
-        public ChannelImageLayout(Context context) {
+        public ChannelImageLayout(Context context, float heightScaleFactor) {
             super(context);
 
+
+            this.heightScaleFactor = heightScaleFactor;
+
             setId(ViewHelper.generateViewId());
-            mFunc = 0;
-
+            mFunc = 0; mOldFunc = 0;
             Img1 = newImageView(context);
-            Img2 = newImageView(context);
-
             Text1 = newTextView(context);
+
+            Img2 = newImageView(context);
             Text2 = newTextView(context);
 
+            configureSubviews();
             SetDimensions();
+        }
+
+        private void configureSubviews() {
+            removeAllViews();
+            if(mFunc ==  SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
+                setOrientation(LinearLayout.VERTICAL);
+                addView(Text1);
+                addView(Img1);
+                addView(Text2);
+                addView(Img2);
+            } else {
+                setOrientation(LinearLayout.HORIZONTAL);
+                addView(Img1);
+                addView(Text1);
+                addView(Img2);
+                addView(Text2);
+            }
         }
 
         private ImageView newImageView(Context context) {
 
             ImageView Img = new ImageView(context);
             Img.setId(ViewHelper.generateViewId());
-            addView(Img);
+            Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
             return Img;
         }
 
+        private int scaledDimension(int dim) {
+            return (int)(dim * heightScaleFactor);
+        }
+
         private TextView newTextView(Context context) {
 
-            TextView Text = new TextView(context);
+            AppCompatTextView Text = new AppCompatTextView(context);
             Text.setId(ViewHelper.generateViewId());
 
             Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
-            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.channel_imgtext_size));
+
+            float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
+            float sts = scaledDimension((int)textSize);
+            textSize = (sts>textSize)?sts:textSize;
+            Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+
+            Text.setMaxLines(1);
+
             Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            addView(Text);
 
             return Text;
         }
 
         private void SetTextDimensions(TextView Text, ImageView Img,
-                                       Boolean visible, int width) {
+                                       Boolean visible) {
+            int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
+            int sh = scaledDimension(h);
+
+            boolean empty = Text.getText().length() == 0;
 
             Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width,
-                    getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+            LinearLayout.LayoutParams lp =
+                new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, sh);
 
-            lp.addRule(RelativeLayout.RIGHT_OF, Img.getId());
-            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
-
+            int textMargin = empty?0:getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
+            lp.setMargins(textMargin, 0, 0, 0);
             Text.setLayoutParams(lp);
-            Text.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+            Text.setVisibility(visible ? View.VISIBLE : View.GONE);
 
-
-        }
-
-        private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
-
-            SetTextDimensions(Text, Img, visible,
-                    getResources().getDimensionPixelSize(R.dimen.channel_imgtext_width));
 
         }
 
         private void SetImgDimensions(ImageView Img, int width, int height) {
+			int sw = scaledDimension(width),
+				sh = scaledDimension(height);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, height);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(sw, sh);
 
-
-            if (Img == Img1) {
-                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            } else {
-                lp.addRule(RelativeLayout.RIGHT_OF, Text1.getId());
+            if (Img == Img2) {
+				int textMargin = getResources().getDimensionPixelSize(R.dimen.channel_imgtext_leftmargin);
+				lp.setMargins(2 * textMargin, 0, 0, 0);
             }
 
-            lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-
+            Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             Img.setLayoutParams(lp);
 
         }
@@ -922,81 +998,50 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
 
         private void SetDimensions() {
-
-            int width = getResources().getDimensionPixelSize(R.dimen.channel_img_width);
-
-            if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR) {
-
-                width *= 2.5;
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-
-                width *= 4.3;
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
-                    || mMeasurementSubChannel) {
-
-                width *= 2.8;
-
-            } else if (mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-                    || mFunc == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-                width *= 3;
+            if(mOldFunc != mFunc) {
+                mOldFunc = mFunc;
+                configureSubviews();
             }
+            setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    width, getResources().getDimensionPixelSize(R.dimen.channel_img_height));
+            int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height),
+                sh = scaledDimension(h);
 
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+			      LayoutParams.WRAP_CONTENT, sh);
+            
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            lp.setMargins(0, getResources().getDimensionPixelSize(R.dimen.channel_img_top_margin), 0, 0);
-
+            
             setLayoutParams(lp);
-            SetImgDimensions(Img1);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {
 
-                RelativeLayout.LayoutParams _lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width),
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height));
+                int sdw, sdh, dh, dw;
 
-                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-                _lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                dw = getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_width);
+                dh = getResources().getDimensionPixelSize(R.dimen.channel_distanceimg_height);
+                sdw = scaledDimension(dw);
+                sdh = scaledDimension(dh);
 
+                LinearLayout.LayoutParams _lp = new LinearLayout.LayoutParams(sdw, sdh>dh?sdh:dh);
                 Img1.setLayoutParams(_lp);
                 Img1.setVisibility(View.VISIBLE);
 
-
-                _lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width),
-                        getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_height));
-
-                _lp.addRule(RelativeLayout.ABOVE, Img1.getId());
-                _lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                _lp = new LinearLayout.LayoutParams(
+                                                    scaledDimension(getResources().getDimensionPixelSize(R.dimen.channel_distanceimgtext_width)),
+                                                    LayoutParams.WRAP_CONTENT);
 
                 Text1.setLayoutParams(_lp);
                 Text1.setVisibility(View.VISIBLE);
-
+                Img2.setVisibility(View.GONE);
+                Text2.setVisibility(View.GONE);
             } else {
-                SetTextDimensions(Text1, Img1, true,
-                        getResources().getDimensionPixelSize(
-                                mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ?
-                                        R.dimen.channel_imgtext_thermometer_width :
-                                        R.dimen.channel_imgtext_width));
-
+                SetTextDimensions(Text1, Img1, true);
+                SetImgDimensions(Img1);
                 SetImgDimensions(Img2);
                 SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
             }
-
         }
 
         public void setImage(ImageId img1Id, ImageId img2Id) {
@@ -1010,14 +1055,14 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
             Img2Id = img2Id;
 
             if (Img1Id == null) {
-                Img1.setVisibility(View.INVISIBLE);
+                Img1.setVisibility(View.GONE);
             } else {
                 Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
                 Img1.setVisibility(View.VISIBLE);
             }
 
             if (Img2Id == null) {
-                Img2.setVisibility(View.INVISIBLE);
+                Img2.setVisibility(View.GONE);
             } else {
                 Img2.setImageBitmap(ImageCache.getBitmap(getContext(), img2Id));
                 Img2.setVisibility(View.VISIBLE);

@@ -90,7 +90,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
             return;
         }
 
-        String tempTxt = String.valueOf(ChannelBase.getHumanReadableThermostatTemperature(
+        String tempTxt = String.valueOf(channel.getHumanReadableThermostatTemperature(
                 thermostat.getMeasuredTemperatureMin(), null,
                 Double.valueOf(thermostat.getPresetTemperatureMin()),
                 null, 1f, 1f));

@@ -18,7 +18,7 @@ package org.supla.android.data.source.local;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.supla.android.db.ColorListItem;
 import org.supla.android.db.SuplaContract;

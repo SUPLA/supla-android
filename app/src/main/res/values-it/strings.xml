@@ -246,7 +246,7 @@
     <string name="channel_func_valve_percentage">Valve</string>
 
     <string name="channel_caption_heatmeter">Contatore di calore</string>
-    <string name="wizard_step2_txt1">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
+    <string name="wizard_step2_txt1">Inserisci il nome e la password della Tua rete WiFi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
     <string name="aritmetic_balance_days">Equilibrio aritmetico – Giorni</string>
     <string name="aritmetic_balance_hours">Equilibrio aritmetico - Ore</string>
     <string name="aritmetic_balance_minutes">Equilibrio aritmetico – Minuti</string>
@@ -330,8 +330,8 @@
     <string name="wakeup_info">*) Impostazioni inserite verranno applicate alla successiva attivazione del nodo.</string>
     <string name="wheel">Cerchio</string>
     <string name="wifi_rssi">Wi-fi RSSI</string>
-    <string name="wifi_signal_strength">Potenza del segnale Wi-Fi</string>
-    <string name="wifi_throttling">A causa dei limiti di scansione della rete   Wi-Fi imposti dal sistema Android, bisogna aspettare il tempo di cui sopra.</string>
+    <string name="wifi_signal_strength">Potenza del segnale WiFi</string>
+    <string name="wifi_throttling">A causa dei limiti di scansione della rete   WiFi imposti dal sistema Android, bisogna aspettare il tempo di cui sopra.</string>
     <string name="wizard_step1_txt2">Assicurati che dati mobili siano disabilitati quando si aggiungono i dispositivi. Altrimenti l’operazione potrebbe non riuscire.</string>
     <string name="yes">Sì</string>
     <string name="z_wave">Ponte z-wave</string>

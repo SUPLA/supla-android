@@ -30,4 +30,5 @@
     <dimen name="menuitem_text_size">30sp</dimen>
     <dimen name="menuitem_homepage_text_size">20sp</dimen>
     <dimen name="menuitem_padding">2dp</dimen>
+    <dimen name="default_text_size">25sp</dimen>
 </resources>

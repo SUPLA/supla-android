@@ -44,7 +44,6 @@ public class ChannelExtendedValue extends DbItem {
 
         return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
                 && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
-                && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE) > -1
                 && vidx > -1
                 && !cursor.isNull(vidx);
     }
@@ -65,10 +64,6 @@ public class ChannelExtendedValue extends DbItem {
         ExtendedValue = extendedValue;
     }
 
-    public int getType() {
-        return ExtendedValue == null ? 0 : ExtendedValue.Type;
-    }
-
     private Object ByteArrayToObject(byte[] value) {
         try {
             ByteArrayInputStream byteStream = new ByteArrayInputStream(value);
@@ -87,52 +82,13 @@ public class ChannelExtendedValue extends DbItem {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
 
-        if (ExtendedValue == null) {
-            ExtendedValue = new SuplaChannelExtendedValue();
-        }
-
-        ExtendedValue.Type = cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE));
         byte[] value = cursor.getBlob(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
         Object obj = ByteArrayToObject(value);
 
-        switch (getType()) {
-            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
-            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
-                if (obj instanceof SuplaChannelElectricityMeterValue) {
-                    ExtendedValue.ElectricityMeterValue = (SuplaChannelElectricityMeterValue) obj;
-                }
-                break;
-            case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
-                if (obj instanceof SuplaChannelImpulseCounterValue) {
-                    ExtendedValue.ImpulseCounterValue = (SuplaChannelImpulseCounterValue) obj;
-                }
-                break;
-            case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
-                if (obj instanceof SuplaChannelThermostatValue) {
-                    ExtendedValue.ThermostatValue = (SuplaChannelThermostatValue) obj;
-                }
-                break;
-            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
-                if (obj instanceof SuplaChannelState) {
-                    ExtendedValue.ChannelStateValue = (SuplaChannelState) obj;
-                }
-                break;
-            case SuplaConst.EV_TYPE_TIMER_STATE_V1:
-                if (obj instanceof SuplaTimerState) {
-                    ExtendedValue.TimerStateValue = (SuplaTimerState) obj;
-                }
-                break;
-            case SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1:
-                if (obj instanceof SuplaChannelAndTimerState) {
-                    ExtendedValue.TimerStateValue =
-                            ((SuplaChannelAndTimerState) obj).getTimerState();
-                    ExtendedValue.ChannelStateValue =
-                            ((SuplaChannelAndTimerState) obj).getChannelState();
-                }
-                break;
-            default:
-                ExtendedValue.Value = value;
-                break;
+        if (obj instanceof SuplaChannelExtendedValue) {
+            ExtendedValue = (SuplaChannelExtendedValue) obj;
+        } else {
+            ExtendedValue = new SuplaChannelExtendedValue();
         }
     }
 
@@ -156,40 +112,8 @@ public class ChannelExtendedValue extends DbItem {
         ContentValues values = new ContentValues();
 
         values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID, getChannelId());
-        values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE, getType());
-
-        byte[] value = new byte[0];
-
-        switch (getType()) {
-            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1:
-            case SuplaConst.EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2:
-                value = ObjectToByteArray(ExtendedValue.ElectricityMeterValue);
-                break;
-            case SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1:
-                value = ObjectToByteArray(ExtendedValue.ImpulseCounterValue);
-                break;
-            case SuplaConst.EV_TYPE_THERMOSTAT_DETAILS_V1:
-                value = ObjectToByteArray(ExtendedValue.ThermostatValue);
-                break;
-            case SuplaConst.EV_TYPE_CHANNEL_STATE_V1:
-                value = ObjectToByteArray(ExtendedValue.ChannelStateValue);
-                break;
-            case SuplaConst.EV_TYPE_TIMER_STATE_V1:
-                value = ObjectToByteArray(ExtendedValue.TimerStateValue);
-                break;
-            case SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1:
-                value = ObjectToByteArray(
-                        new SuplaChannelAndTimerState(ExtendedValue.ChannelStateValue,
-                                ExtendedValue.TimerStateValue));
-                break;
-            default:
-                if (ExtendedValue != null && ExtendedValue.Value != null) {
-                    value = ExtendedValue.Value;
-                }
-                break;
-        }
-
-        values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE, value);
+        values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
+                ObjectToByteArray(ExtendedValue));
         return values;
     }
 }

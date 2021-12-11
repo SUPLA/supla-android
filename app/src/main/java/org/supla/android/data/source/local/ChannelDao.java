@@ -20,8 +20,8 @@ package org.supla.android.data.source.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
@@ -56,7 +56,6 @@ public class ChannelDao extends BaseDao {
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
-                SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
@@ -127,7 +126,6 @@ public class ChannelDao extends BaseDao {
         String[] projection = {
                 SuplaContract.ChannelExtendedValueEntry._ID,
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
-                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TYPE,
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
         };
 
@@ -239,10 +237,11 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getChannelListCursorWithDefaultOrder(String where) {
-        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+                + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
                 + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
-                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION;
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED";
 
         return getChannelListCursor(orderBY, where);
     }
@@ -454,8 +453,6 @@ public class ChannelDao extends BaseDao {
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE + " "
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
-                    + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE + " "
-                    + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUETYPE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " "
                     + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
                     + ", C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID + " "

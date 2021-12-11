@@ -288,7 +288,15 @@ public class ChannelStatePopup implements DialogInterface.OnCancelListener, View
         if (state.getLastConnectionResetCause() != null) {
             llLastConnectionResetCause.setVisibility(View.VISIBLE);
             llProgress.setVisibility(View.GONE);
-            tvLastConnectionResetCause.setText(state.getLastConnectionResetCauseString());
+	    int res[] = { R.string.lastconnectionresetcause_unknown,
+			  R.string.lastconnectionresetcause_activity_timeout,
+			  R.string.lastconnectionresetcause_wifi_connection_lost,
+			  R.string.lastconnectionresetcause_server_connection_lost };
+	    int reset_cause = state.getLastConnectionResetCause();
+	    if(reset_cause >= 0 && reset_cause < res.length)
+		tvLastConnectionResetCause.setText(res[reset_cause]);
+	    else 
+		tvLastConnectionResetCause.setText(state.getLastConnectionResetCauseString());
         }
 
         if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH) {

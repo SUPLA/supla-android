@@ -36,6 +36,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_VISIBLE = "visible";
         public static final String COLUMN_NAME_COLLAPSED = "collapsed";
         public static final String COLUMN_NAME_SORTING = "sorting";
+        public static final String COLUMN_NAME_SORT_ORDER = "sort_order";
     }
 
     public static abstract class ChannelEntry implements BaseColumns {
@@ -78,8 +79,41 @@ public class SuplaContract {
 
         public static final String _ID = "_channel_extendedvalue_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
-        public static final String COLUMN_NAME_TYPE = "extendedvaluetype";
         public static final String COLUMN_NAME_VALUE = "extendedvalue";
+    }
+
+    public static abstract class AuthProfileEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "auth_profile";
+
+        public static final String _ID = "_auth_profile_id";
+        public static final String COLUMN_NAME_PROFILE_NAME = "profile_name";
+        public static final String COLUMN_NAME_EMAIL_ADDR = "email_addr";
+        public static final String COLUMN_NAME_SERVER_ADDR_ACCESS_ID = "server_addr_access_id";
+        public static final String COLUMN_NAME_SERVER_ADDR_EMAIL = "server_addr_email";
+        public static final String COLUMN_NAME_SERVER_AUTO_DETECT = "server_auto_detect";
+        public static final String COLUMN_NAME_EMAIL_AUTH = "email_auth";
+        public static final String COLUMN_NAME_ACCESS_ID = "access_id";
+        public static final String COLUMN_NAME_ACCESS_ID_PWD = "access_id_pwd";
+        public static final String COLUMN_NAME_PREFERRED_PROTOCOL_VERSION = "pref_protcol_ver";
+        public static final String COLUMN_NAME_IS_ACTIVE = "is_active";
+        public static final String COLUMN_NAME_IS_ADVANCED_MODE = "is_advanced";
+
+        public static final String[] ALL_COLUMNS = {
+            AuthProfileEntry._ID,                                   // 0
+            AuthProfileEntry.COLUMN_NAME_PROFILE_NAME,              // 1
+            AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR,                // 2
+            AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_ACCESS_ID,     // 3
+            AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_EMAIL,         // 4
+            AuthProfileEntry.COLUMN_NAME_SERVER_AUTO_DETECT,        // 5
+            AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH,                // 6
+            AuthProfileEntry.COLUMN_NAME_ACCESS_ID,                 // 7
+            AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD,             // 8
+            AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION,// 9
+            AuthProfileEntry.COLUMN_NAME_IS_ACTIVE,                 // 10
+            AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE           // 11
+        };
+                                                    
     }
 
     public static abstract class ChannelViewEntry implements BaseColumns {
@@ -96,8 +130,6 @@ public class SuplaContract {
         public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
         public static final String COLUMN_NAME_SUBVALUE_TYPE = ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE;
         public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
-        public static final String COLUMN_NAME_EXTENDEDVALUETYPE =
-                ChannelExtendedValueEntry.COLUMN_NAME_TYPE;
         public static final String COLUMN_NAME_EXTENDEDVALUE =
                 ChannelExtendedValueEntry.COLUMN_NAME_VALUE;
         public static final String COLUMN_NAME_TYPE = ChannelEntry.COLUMN_NAME_TYPE;

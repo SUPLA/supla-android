@@ -40,6 +40,8 @@ import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 
+import org.supla.android.profile.AuthInfo;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,10 +59,11 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     private Object object;
     private Timer timeoutTimer;
     private static SuperuserAuthorizationDialog lastVisibleInstance;
+    private AlertDialog.Builder builder;
 
     SuperuserAuthorizationDialog(Context context) {
         this.context = context;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.superuser_auth_dialog, null);
 
@@ -78,21 +81,21 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edPassword = v.findViewById(R.id.dialogPwd);
         edPassword.addTextChangedListener(this);
 
-        Preferences prefs = new Preferences(context);
-        edEmail.setText(prefs.getEmail(), EditText.BufferType.EDITABLE);
+        AuthInfo ainfo = SuplaApp.getApp().getProfileManager(context)
+            .getCurrentProfile().getAuthInfo();
+        edEmail.setText(ainfo.getEmailAddress(),
+                        EditText.BufferType.EDITABLE);
 
         tvErrorMessage = v.findViewById(R.id.dialogError);
         tvErrorMessage.setVisibility(View.INVISIBLE);
 
         TextView tvInfo = v.findViewById(R.id.tvInfo);
         tvInfo.setText(context.getResources().
-                getString(prefs.getServerAddress().contains(".supla.org") ?
+                getString(ainfo.getServerForEmail().contains(".supla.org") ?
                         R.string.enter_suplaorg_credentails
                         : R.string.enter_superuser_credentials));
 
         builder.setView(v);
-        dialog = builder.create();
-        dialog.setOnCancelListener(this);
     }
 
     boolean isClientRegistered() {
@@ -128,11 +131,14 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             edEmail.setEnabled(false);
         }
 
-        if (dialog != null) {
-            lastVisibleInstance = this;
-            cancelTimeoutTimer();
-            dialog.show();
+        if (dialog == null) {
+            dialog = builder.create();
+            dialog.setOnCancelListener(this);
         }
+
+        lastVisibleInstance = this;
+        cancelTimeoutTimer();
+        dialog.show();
     }
 
     public void ShowError(String msg) {
@@ -216,8 +222,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             lastVisibleInstance = null;
         }
         SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
-        dialog.dismiss();
-        dialog = null;
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
         onAuthorizarionResultListener = null;
     }
 

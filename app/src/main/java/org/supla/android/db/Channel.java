@@ -24,6 +24,9 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
@@ -42,6 +45,9 @@ public class Channel extends ChannelBase {
     private short ProductID;
     private int DeviceID;
     private int position;
+
+    public Channel() { super(); }
+    public Channel(TemperaturePresenterFactory p) { super(p); }
 
     public int getChannelId() {
         return getRemoteId();
@@ -214,7 +220,7 @@ public class Channel extends ChannelBase {
     }
 
     public double getTemp() {
-        return Value != null ? Value.getTemp(getFunc()) : -273;
+        return Value != null ? getTemperaturePresenter().getTemp(Value, this) : TEMPERATURE_NA_VALUE;
     }
 
     public double getDistance() {
@@ -267,7 +273,6 @@ public class Channel extends ChannelBase {
 
     public String getUnit() {
         if (getExtendedValue() != null
-                && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
                 && getExtendedValue().getExtendedValue() != null
                 && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
 
@@ -316,8 +321,7 @@ public class Channel extends ChannelBase {
     public SuplaChannelState getChannelState() {
         ChannelExtendedValue ev = getExtendedValue();
 
-        if (ev != null && (ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1
-                || ev.getType() == SuplaConst.EV_TYPE_CHANNEL_AND_TIMER_STATE_V1)) {
+        if (ev != null) {
             return ev.getExtendedValue().ChannelStateValue;
         }
 

@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -33,6 +34,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.net.NetworkSpecifier;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -41,11 +43,11 @@ import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.RequiresPermission;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,7 +60,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
 
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 
@@ -333,6 +338,33 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         tvIODevLastState.setText(result.deviceLastState, TextView.BufferType.NORMAL);
 
         showPage(PAGE_DONE);
+
+        if(result.needsCloudConfig) {
+            showCloudFollowupPopup();
+        }
+    }
+
+    private void showCloudFollowupPopup() {
+
+        new AlertDialog.Builder(this)
+	    .setCancelable(false)
+	    .setTitle(R.string.add_device_needs_cloud_title)
+	    .setMessage(R.string.add_device_needs_cloud_message)
+	    .setPositiveButton(R.string.add_device_needs_cloud_go,
+			       new DialogInterface.OnClickListener() {
+				   @Override
+				   public void onClick(DialogInterface dialog, int which) {
+				       Intent i = new Intent(Intent.ACTION_VIEW);
+				       i.setData(Uri.parse("https://cloud.supla.org"));
+				       showMain(AddDeviceWizardActivity.this);
+				       startActivity(i);
+				       finish();
+
+				   }
+			       })
+	    .setNegativeButton(R.string.add_device_needs_cloud_dismiss, null)
+	    .create()
+	    .show();
     }
 
     private void cleanUp() {
@@ -382,9 +414,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        Preferences prefs = new Preferences(this);
-
-        if (prefs.isAdvancedCfg()) {
+        if (!SuplaApp.getApp().getProfileManager(this)
+            .getCurrentProfile().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
@@ -469,8 +500,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         }, 0, 100);
 
 
-        showPage(PAGE_STEP_1);
-
+	showPage(PAGE_STEP_1);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_NETWORK_STATE)
@@ -1063,6 +1093,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         final ConnectivityManager connectivityManager = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
         espNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(@NonNull Network network) {
@@ -1080,10 +1112,11 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         espConfigTask.setDelegate(wizard);
 
                         setStep(STEP_CONFIGURE);
+                        AuthInfo info = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                info.getServerForEmail(),
+                                info.getEmailAddress());
                     }
                 });
 
@@ -1148,6 +1181,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         manager.disconnect();
 
         final Preferences prefs = new Preferences(this);
+        final ProfileManager pm = SuplaApp.getApp()
+            .getProfileManager(this);
 
         stateChangedReceiver = new BroadcastReceiver() {
             @Override
@@ -1172,10 +1207,12 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         stateChangedReceiver = null;
 
                         setStep(STEP_CONFIGURE);
+
+                        AuthInfo ai = pm.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
-                                prefs.getServerAddress(),
-                                prefs.getEmail());
+                                ai.getServerForEmail(),
+                                ai.getEmailAddress());
                     }
 
                 }

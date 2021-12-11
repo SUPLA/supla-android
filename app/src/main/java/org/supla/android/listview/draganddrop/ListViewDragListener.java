@@ -19,7 +19,7 @@ package org.supla.android.listview.draganddrop;
  */
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
@@ -55,7 +55,7 @@ public class ListViewDragListener implements View.OnDragListener {
             case DragEvent.ACTION_DROP:
                 onDropListener.onViewDropped(listView.pointToPosition((int) event.getX(), (int) event.getY()));
                 return true;
-            case DragEvent.ACTION_DRAG_EXITED:
+            case DragEvent.ACTION_DRAG_ENDED:
                 onDropListener.onViewDropped(INVALID_POSITION);
                 return true;
             default:

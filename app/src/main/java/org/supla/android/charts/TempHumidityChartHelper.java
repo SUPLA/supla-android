@@ -26,6 +26,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
@@ -37,8 +40,11 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
     boolean temperatureVisible;
     boolean humidityVisible;
 
+    private TemperaturePresenterFactory temperaturePresenterFactory;
+
     public TempHumidityChartHelper(Context context) {
         super(context);
+        temperaturePresenterFactory = SuplaApp.getApp();
     }
 
     @Override
@@ -70,9 +76,10 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
 
     @Override
     protected float getTemperature(Cursor c) {
-        return (float) c.getDouble(
+        TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
+        return (float) tp.getConvertedValue(c.getDouble(
                 c.getColumnIndex(
-                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE));
+                        SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE)));
     }
 
     public boolean isTemperatureVisible() {

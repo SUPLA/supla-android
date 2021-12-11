@@ -262,7 +262,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     }
 
     private void displayTemperature() {
-        CharSequence t = ChannelBase.getHumanReadableThermostatTemperature(
+
+        CharSequence t = getChannelBase().getHumanReadableThermostatTemperature(
                 measuredTemperatureMin, measuredTemperatureMax,
                 Double.valueOf(presetTemperatureMin),
                 presetTemperatureMax,

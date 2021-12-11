@@ -1,4 +1,7 @@
 <resources>
+    <string name="confirm_button_text" translatable="false">OK</string>
+    <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
+
 
     <string name="feedback_title">Wyślij email</string>
     <string name="donate_title">Wesprzyj projekt</string>
@@ -76,8 +79,19 @@
     <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
     <string name="password">HASŁO</string>
     <string name="email">ADRES E-MAIL</string>
-    <string name="advanced_settings">Ustawienia zaawansowane</string>
+    <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
+
+    <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
+    <string name="cfg_profile_name_default">Domyślny</string>
+    <string name="cfg_label_email_auth">Email</string>
+    <string name="cfg_label_access_id_auth">Identyfikator</string>
+    <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
+    <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
+    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
+
+    <string translatable="false" name="profile">Twoje konto</string>
+    <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n
@@ -357,7 +371,7 @@
     <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
     <string name="battery_level">Poziom baterii</string>
     <string name="battery_powered">Zasilanie bateryjne</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">Siła sygnału WiFi</string>
     <string name="bridge_node_online">Węzeł mostu - online</string>
     <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
@@ -420,7 +434,25 @@
     <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
     <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
     <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
-    <string name="calibration_failed">Kalibracja zakończona niepowodzeniem.</string>
+    <string name="calibration_failed">Kalibracja nie powiodła się.</string>
     <string name="calibration_lost">Kalibracja została utracona.</string>
     <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
+    <string translatable="false" name="lastconnectionresetcause_unknown">0: nieznany</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia WiFi</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
+    <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
+    <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
+    <string translatable="false" name="add_device_warning">Kreator automatycznego dodawania urządzeń nie jest dostępny w trybie uwierzytelniania identyfikatorem dostępu. Urządzenia mogą być wówczas dodawane ręcznie.</string>
+    <string translatable="false" name="show_channel_info">Pokazywanie
+    przycisku ⓘ</string>
+        <string translatable="false" name="add_device_needs_cloud_title">Konfiguracja urządzenia</string>
+    <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
+    <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
+    <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
+    <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
+    <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
 </resources>

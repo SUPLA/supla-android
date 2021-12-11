@@ -19,6 +19,7 @@ package org.supla.android;
  */
 
 import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
@@ -26,6 +27,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 
+import org.supla.android.db.DbHelper;
+import org.supla.android.data.source.ProfileRepository;
+import org.supla.android.data.source.local.LocalProfileRepository;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -33,8 +37,15 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
+import org.supla.android.cfg.CfgRepository;
+import org.supla.android.cfg.PrefsCfgRepositoryImpl;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.MultiAccountProfileManager;
+import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
-public class SuplaApp extends Application implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
+public class SuplaApp extends MultiDexApplication implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+    TemperaturePresenterFactory {
 
     private static final Object _lck1 = new Object();
     private static final Object _lck3 = new Object();
@@ -53,16 +64,15 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
     }
 
     public static SuplaApp getApp() {
-
-        synchronized (_lck1) {
-
-            if (_SuplaApp == null) {
-                _SuplaApp = new SuplaApp();
-            }
-
-        }
-
         return _SuplaApp;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SuplaApp._SuplaApp = this;
+
+		SuplaFormatter.sharedFormatter();
     }
 
     public static void Vibrate(Context context) {
@@ -71,6 +81,11 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
 
         if (v != null)
             v.vibrate(100);
+    }
+
+    public ProfileManager getProfileManager(Context ctx) {
+        ProfileRepository repo = new LocalProfileRepository(DbHelper.getInstance(ctx));
+        return new MultiAccountProfileManager(ctx, repo);
     }
 
     public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
@@ -224,5 +239,14 @@ public class SuplaApp extends Application implements SuplaClientMessageHandler.O
                 }
             }
         }
+    }
+
+    public CfgRepository getCfgRepository() {
+        return new PrefsCfgRepositoryImpl(this);
+    }
+
+    public TemperaturePresenter getTemperaturePresenter() {
+        CfgRepository repo = getCfgRepository();
+        return new TemperaturePresenterImpl(getCfgRepository().getCfg());
     }
 }

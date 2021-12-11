@@ -328,7 +328,7 @@
     <string name="wake_up_frequency">Vekkefrekvensen</string>
     <string name="wakeup_info">*) De angitte innstillingene blir brukt neste gang noden vekkes.</string>
     <string name="wheel">Hjul</string>
-    <string name="wifi_rssi">Wifi RSSI</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
     <string name="wifi_signal_strength">WiFi signalstyrke</string>
     <string name="wifi_throttling">På grunn av begrensningene for skanning av WiFi-nettverk pålagt av Android-systemet, må du vente den tiden som er presentert ovenfor.</string>
     <string name="wizard_step1_txt2">Forsikre deg om at mobildata er slått av når du legger til enheter. Ellers kan tillegging mislykkes.</string>
