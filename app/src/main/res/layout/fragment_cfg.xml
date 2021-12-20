@@ -194,6 +194,40 @@
         android:paddingRight="@dimen/new_screen_margin"
         android:background="@color/cell_bg_new"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      
+      <TextView
+          android:id="@+id/showOpeningPercentLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/show_opening_percent" />
+      
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/showOpeningPercent"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@{viewModel.cfgData.showOpeningPercent}"
+	        android:textSize="@dimen/default_text_size"
+          />
+
+
+    </RelativeLayout>
+    
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/settings_cell_height">
       <androidx.appcompat.widget.AppCompatButton
           style="@style/ChevronButton"

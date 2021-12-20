@@ -37,6 +37,8 @@ class CfgFragment: Fragment() {
                 binding.channelHeightLabel,
                 binding.temperatureUnitLabel,
                 binding.buttonAutohideLabel,
+                binding.showChannelInfoLabel,
+                binding.showOpeningPercentLabel,
                 binding.locationOrderingButton).forEach {
             it.setTypeface(type)
         }

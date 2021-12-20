@@ -37,7 +37,7 @@ class CfgViewModelTest: TestCase() {
     private val fakeCfg = CfgData(TemperatureUnit.CELSIUS,
                                   true,
                                   ChannelHeight.HEIGHT_100, 
-                                  true)
+                                  true, false)
 
     private val fakePM = DummyProfileManager()
 

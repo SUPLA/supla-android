@@ -42,7 +42,8 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         return CfgData(prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
-                       prefs.isShowChannelInfo)
+                       prefs.isShowChannelInfo,
+                       prefs.isShowOpeningPercent)
     }
 
 
@@ -51,6 +52,7 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
         prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
         prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
+        prefs.isShowOpeningPercent = cfg.showOpeningPercent.value ?: false
     }
 
 }

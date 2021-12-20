@@ -31,9 +31,11 @@ enum class ChannelHeight(val percent: Int) {
 data class CfgData(private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
                    private var _buttonAutohide: Boolean = true,
                    private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
-                   private var _showChannelInfo: Boolean) {
+                   private var _showChannelInfo: Boolean,
+                   private var _showOpeningPercent: Boolean) {
     val temperatureUnit = MutableLiveData<TemperatureUnit>(_temperatureUnit)
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
     val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
     val showChannelInfo = MutableLiveData<Boolean>(_showChannelInfo)
+    val showOpeningPercent = MutableLiveData<Boolean>(_showOpeningPercent)
 }

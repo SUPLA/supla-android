@@ -113,6 +113,7 @@
     <string name="rate_later">Później</string>
     <string name="rate_no_thanks">Nie, dziękuję</string>
     <string name="rs_percent_caption">Procent zamknięcia</string>
+    <string name="rs_percent_caption_open">Procent otwarcia</string>
     <string name="calibration">[Kalibracja]</string>
 
     <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email! (Wyłącz opcje zaawansowane w ustawieniach)</string>
@@ -455,4 +456,5 @@
     <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
     <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
     <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
+    <string translatable="false" name="show_opening_percent">Pokazuj % otwarcia</string>
 </resources>
