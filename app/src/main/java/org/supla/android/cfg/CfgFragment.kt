@@ -81,6 +81,10 @@ class CfgFragment: Fragment() {
             viewModel.saveConfig()
         }
 
+        binding.showOpeningPercent.setOnClickListener() {
+            viewModel.setShowOpeningPercent(!viewModel.cfgData.showOpeningPercent.value!!)
+            viewModel.saveConfig()
+        }
         return binding.root
     }
 

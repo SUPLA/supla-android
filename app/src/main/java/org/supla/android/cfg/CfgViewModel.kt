@@ -175,6 +175,13 @@ class CfgViewModel(private val repository: CfgRepository,
         }
     }
 
+    fun setShowOpeningPercent(show: Boolean) {
+        if(cfgData.showOpeningPercent.value != show) {
+            cfgData.showOpeningPercent.value = show
+            setConfigDirty()
+        }   
+    }
+
 
     fun onCreateAccount() {
         nextAction.value = NavigationFlow.CREATE_ACCOUNT
