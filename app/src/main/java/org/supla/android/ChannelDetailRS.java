@@ -281,7 +281,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     }
 
     public void onPercentChangeing(float percent) {
-        tvPercent.setText(Integer.toString((int) percent) + "%");
+        tvPercent.setText(Integer.toString((int)mappedPercentage( percent)) + "%");
     }
 
     @SuppressLint("SetTextI18n")
