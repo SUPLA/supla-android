@@ -65,6 +65,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private SuperuserAuthorizationDialog authDialog;
     private long btnUpDownTouchedAt;
     private boolean showOpening;
+    private TextView percentageCaption;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -86,11 +87,9 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         super.init();
 
-        Preferences prefs = new Preferences(getContext());
-        showOpening = prefs.isShowOpeningPercent();
-        TextView percentageCaption = findViewById(R.id.rsDetailPercentCaption);
-        percentageCaption.setText(showOpening?R.string.rs_percent_caption_open:
-                                  R.string.rs_percent_caption);
+        percentageCaption = findViewById(R.id.rsDetailPercentCaption);
+        readShowOpeningValue();
+        updatePercentageCaption();
 
         llRollerShutter = findViewById(R.id.llRS);
 
@@ -434,10 +433,29 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     public void onDetailShow() {
         super.onDetailShow();
         rsTvPressTime.setText("");
+
+        boolean prevShowOpening = showOpening;
+        readShowOpeningValue();
+
+        if(showOpening != prevShowOpening) {
+            updatePercentageCaption();
+            OnChannelDataChanged(true);
+        } 
     }
 
     private int mappedPercentage(int v) {
         return showOpening?100-v:v;
+    }
+
+    private void updatePercentageCaption() {
+        percentageCaption.setText(showOpening?R.string.rs_percent_caption_open:
+                                  R.string.rs_percent_caption);
+
+    }
+
+    private void readShowOpeningValue() {
+        Preferences prefs = new Preferences(getContext());
+        showOpening = prefs.isShowOpeningPercent();
     }
 }
 
