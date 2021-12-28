@@ -25,7 +25,7 @@ import android.os.Handler;
 import android.view.Display;
 import android.widget.TextView;
 
-public class StartActivity extends Activity {
+public class StartActivity extends BaseActivity {
 
 
     @Override
