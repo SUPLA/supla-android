@@ -19,6 +19,9 @@ steps:
     channel: github
   when:
     status: [ success, failure ]
+    event:
+      exclude:
+        - pull_request
   trigger:
     status: [ success, failure ]
     event:
