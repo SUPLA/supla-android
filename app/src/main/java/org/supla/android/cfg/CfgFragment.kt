@@ -1,4 +1,22 @@
 package org.supla.android.cfg
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 
 import android.content.Context
 import android.app.Activity
@@ -71,6 +89,15 @@ class CfgFragment: Fragment() {
             
         }
 
+        binding.showOpeningMode.position = if(viewModel.cfgData.showOpeningPercent.value == true) 0 else 1
+        binding.showOpeningMode.setOnPositionChangedListener() { 
+            pos -> when(pos) {
+                0 -> viewModel.setShowOpeningPercent(true)
+                1 -> viewModel.setShowOpeningPercent(false)
+            }
+            viewModel.saveConfig()
+        }
+
         binding.buttonAutohide.setOnClickListener() {
             viewModel.setButtonAutohide(!viewModel.cfgData.buttonAutohide.value!!)
             viewModel.saveConfig()
@@ -78,11 +105,6 @@ class CfgFragment: Fragment() {
 
         binding.showChannelInfo.setOnClickListener() {
             viewModel.setShowChannelInfo(!viewModel.cfgData.showChannelInfo.value!!)
-            viewModel.saveConfig()
-        }
-
-        binding.showOpeningPercent.setOnClickListener() {
-            viewModel.setShowOpeningPercent(!viewModel.cfgData.showOpeningPercent.value!!)
             viewModel.saveConfig()
         }
         return binding.root
