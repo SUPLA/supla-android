@@ -29,6 +29,8 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Point
+import android.util.DisplayMetrics
 import org.supla.android.SuplaApp
 import org.supla.android.db.Location
 import org.supla.android.R
@@ -56,13 +58,22 @@ class LocationReorderAdapter(private val ctx: Context,
     private val isDragging: Boolean
         get() = srcPosition != null
 
-    private class DragShadowBuilder(v: View): View.DragShadowBuilder(v) {
+    private class DragShadowBuilder(private val ctx: Context,
+                                    v: View): View.DragShadowBuilder(v) {
         
         override fun onDrawShadow(c: Canvas) {
             super.onDrawShadow(c)
             val p = Paint()
             p.setStyle(Paint.Style.STROKE)
             c.drawRect(c.getClipBounds(), p)
+        }
+
+        override fun onProvideShadowMetrics(outShadowSize: Point,
+                                            outShadowTouchPoint: Point) {
+            super.onProvideShadowMetrics(outShadowSize, outShadowTouchPoint)
+            val k = ctx.getResources().getDisplayMetrics().densityDpi /
+            DisplayMetrics.DENSITY_DEFAULT
+            outShadowTouchPoint.x = outShadowSize.x - 22 * k
         }
     }
 
@@ -140,7 +151,7 @@ class LocationReorderAdapter(private val ctx: Context,
 
     private fun enableDrag(view: View, pos: Int) {
         srcPosition = pos
-        val shadowBuilder = DragShadowBuilder(view)
+        val shadowBuilder = DragShadowBuilder(ctx, view)
         view.startDrag(null, shadowBuilder, listView.getItemAtPosition(pos), 0)
     }
 
