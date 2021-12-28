@@ -37,6 +37,8 @@ class CfgFragment: Fragment() {
                 binding.channelHeightLabel,
                 binding.temperatureUnitLabel,
                 binding.buttonAutohideLabel,
+                binding.showChannelInfoLabel,
+                binding.showOpeningPercentLabel,
                 binding.locationOrderingButton).forEach {
             it.setTypeface(type)
         }
@@ -79,6 +81,10 @@ class CfgFragment: Fragment() {
             viewModel.saveConfig()
         }
 
+        binding.showOpeningPercent.setOnClickListener() {
+            viewModel.setShowOpeningPercent(!viewModel.cfgData.showOpeningPercent.value!!)
+            viewModel.saveConfig()
+        }
         return binding.root
     }
 

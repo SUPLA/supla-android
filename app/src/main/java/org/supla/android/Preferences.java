@@ -49,6 +49,7 @@ public class Preferences {
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
     private static final String pref_show_channel_info = "pref_show_channel_info";
+    private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -225,6 +226,16 @@ public class Preferences {
     public void setShowChannelInfo(boolean val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putBoolean(pref_show_channel_info, val);
+        ed.apply();
+    }
+
+    public boolean isShowOpeningPercent() {
+        return _prefs.getBoolean(pref_show_opening_percent, false);
+    }
+
+    public void setShowOpeningPercent(boolean val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putBoolean(pref_show_opening_percent, val);
         ed.apply();
     }
 }
