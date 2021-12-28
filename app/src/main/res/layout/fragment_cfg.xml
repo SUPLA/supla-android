@@ -202,19 +202,27 @@
           android:layout_centerVertical="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/show_opening_percent" />
-      
-      <androidx.appcompat.widget.SwitchCompat
-          android:id="@+id/showOpeningPercent"
+          android:text="@string/rs_display_mode" />
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/showOpeningMode"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
           android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
-          android:checked="@{viewModel.cfgData.showOpeningPercent}"
-	        android:textSize="@dimen/default_text_size"
-          />
-
+          android:layout_centerVertical="true">
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_opening" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_closing" />
+      </org.supla.android.ui.SegmentedButtonGroup>
 
     </RelativeLayout>
     
