@@ -145,6 +145,21 @@ class CfgViewModelTest: TestCase() {
     }
 
     @Test
+    fun disablingAutoDetectionPrefillsServerField() {
+        val initialData = fakeCfg
+        val repository: CfgRepository = mock {
+            on { getCfg() } doReturn initialData
+        }
+        val vm = CfgViewModel(repository, fakePM)
+        vm.emailAddress.value = "not.available@gmail.com"
+        vm.serverAddrEmail.value = ""
+        assertEquals("", vm.serverAddrEmail.value)
+        assertEquals("not.available@gmail.com", vm.emailAddress.value)
+        vm.toggleServerAutoDiscovery()
+        assertEquals("gmail.com", vm.serverAddrEmail.value)
+    }
+
+    @Test
     fun defaultSettingForButtonAutohideIsTrue() {
         val initialData = fakeCfg
         val repository: CfgRepository = mock {
