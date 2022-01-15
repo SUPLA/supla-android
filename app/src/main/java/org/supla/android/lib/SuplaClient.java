@@ -720,6 +720,13 @@ public class SuplaClient extends Thread {
         }
     }
 
+    public String getHost() {
+        ProfileManager pm = getProfileManager();
+        AuthInfo info = pm.getCurrentAuthInfo();
+        String host = info.getServerForCurrentAuthMethod();
+        return host;
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -764,7 +771,11 @@ public class SuplaClient extends Thread {
         msg.setConnError(connError);
         sendMessage(msg);
 
-        cancel();
+        String host = this.getHost();
+
+        if (connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND || !host.contains(".supla.org")) {
+            cancel();
+        }
     }
 
     private void onConnected() {

@@ -266,9 +266,15 @@ public class StatusActivity extends NavigationActivity {
 
     @Override
     protected void onConnErrorMsg(SuplaConnError error) {
+
+        SuplaApp app = SuplaApp.getApp();
+        app.SuplaClientInitIfNeed(this);
+        SuplaClient client = app.getSuplaClient();
+        String host = client.getHost();
+
         if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
             setStatusError(getResources().getString(R.string.err_hostnotfound));
-        } else {
+        } else if (!host.contains(".supla.org")) {
             setStatusError(error.codeToString(this));
         }
     }
