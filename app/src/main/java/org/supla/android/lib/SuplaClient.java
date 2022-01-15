@@ -764,9 +764,7 @@ public class SuplaClient extends Thread {
         msg.setConnError(connError);
         sendMessage(msg);
 
-        if (connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
-            cancel();
-        }
+        cancel();
     }
 
     private void onConnected() {

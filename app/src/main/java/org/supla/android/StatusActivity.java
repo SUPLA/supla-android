@@ -266,8 +266,11 @@ public class StatusActivity extends NavigationActivity {
 
     @Override
     protected void onConnErrorMsg(SuplaConnError error) {
-        if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND)
+        if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
             setStatusError(getResources().getString(R.string.err_hostnotfound));
+        } else {
+            setStatusError(error.codeToString(this));
+        }
     }
 
     @Override
