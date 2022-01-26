@@ -545,7 +545,8 @@ public class ChannelDao extends BaseDao {
                     + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                     + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
                     + localWhere
-                    + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + ", "
+                    + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+                    + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
                     + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION + ", "
                     + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC + " DESC, "
                     + "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION;
