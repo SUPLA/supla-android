@@ -79,12 +79,18 @@ public class LocationDao extends BaseDao {
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORTING + ", "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
             + " FROM " + SuplaContract.LocationEntry.TABLE_NAME + " AS L "
-            + "JOIN "
-            + SuplaContract.ChannelEntry.TABLE_NAME + " AS C ON "
-            + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = "
-            + "L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
             + " WHERE "
-            + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0 "
+            + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " IN ("
+              + "SELECT " + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID
+              + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME
+              + " WHERE "                                                                           
+              + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0 "
+            + " UNION "
+              + "SELECT " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+              + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME
+              + " WHERE "
+              + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
+            + ")"
             + " ORDER BY "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
