@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
 
     <string name="feedback_title">Invia un’email</string>
@@ -409,4 +410,36 @@
     <string name="calibration_failed">Calibrazione fallita.</string>
     <string name="calibration_lost">Calibrazione persa.</string>
     <string name="motor_problem">Problema al motore / Arresto inaspettato.</string>
+    <string name="confirm_button_text">OK</string>
+    <string name="dont_have_account_yet">Non hai ancora un account Supla?</string>
+    <string name="cfg_label_profile_name">PROFILO CORRENTE</string>
+    <string name="cfg_profile_name_default">Default</string>
+    <string name="cfg_label_email_auth">Email</string>
+    <string name="cfg_label_access_id_auth">ID di accesso</string>
+    <string name="cfg_channel_height">Altezza canale</string>
+    <string name="cfg_temperature_unit">Unit\xe0 di temperatura</string>
+    <string name="cfg_button_autohide">Nascondi automaticamente i pulsanti</string>
+    <string name="profile">Il tuo account</string>
+    <string name="menubar_appsettings">Impostazioni App</string>
+    <string name="rs_percent_caption_open">Percentuale di apertura</string>
+    <string name="overcurrent_warning">L\'alimentazione \xe8 stata spenta a causa del superamento della soglia di corrente impostata</string>
+    <string name="overcurrent_question">L\'alimentazione \xe8 stata spenta a causa del superamento della soglia di corrente impostata. Sei sicuro di voler riattivare l\'alimentazione?</string>
+    <string name="lastconnectionresetcause_unknown">0: sconosciuto</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: connessione Wi-Fi persa</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: connessione Server persa</string>
+    <string name="basic_profile_warning">Impostazioni non disponibili</string>
+    <string name="basic_config_unavailable">Prima di disattivare la modalit\xe0 avanzata \xe8 necessario selezionare l\'autenticazione tramite email ed abilitare il riconoscimento automatico del server</string>
+    <string name="add_device_warning">Nella modalit\xe0 di autenticazione ID di accesso non \xe8 possibile utilizzare la procedura guidata di aggiunta automatica dispositivi. Tuttavia \xe8 possibile aggiungere i dispositivi tramite procedura manuale.</string>
+    <string name="show_channel_info">Mostra pulsante \u24d8</string>
+    <string name="add_device_needs_cloud_title">Impostazione dispositivo</string>
+    <string name="add_device_needs_cloud_message">Il dispositivo non ha alcun canale visibile per l\'applicazione. Per completare la configurazione accedi a cloud.supla.org</string>
+    <string name="add_device_needs_cloud_dismiss">Ho capito</string>
+    <string name="add_device_needs_cloud_go">Accedi al CLOUD</string>
+    <string name="associeted_with_at_error">La funzione del canale associato alla funzione attiva azioni non pu\xf2 essere modificata</string>
+    <string name="location_ordering">Ordine localizzazioni</string>
+    <string name="rs_display_mode">% Tapparelle</string>
+    <string name="rs_display_mode_opening">Apertura</string>
+    <string name="rs_display_mode_closing">Chiusura</string>
+
 </resources>
