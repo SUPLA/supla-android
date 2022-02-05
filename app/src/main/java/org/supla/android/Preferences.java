@@ -92,15 +92,29 @@ public class Preferences {
                 Base64.encodeToString(
                         Encryption.encryptDataWithNullOnException(
                                 data, getDeviceID()), Base64.DEFAULT));
-        editor.putBoolean(pref_key + "_encrypted", true);
+        editor.putBoolean(pref_key + "_encrypted_gcm", true);
         editor.apply();
     }
 
-    private byte[] getRandom(String pref_key, int size) {
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
 
+
+    private byte[] getRandom(String pref_key, int size) {
         byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
-        if (!_prefs.getBoolean(pref_key + "_encrypted", false)) {
+        if (!_prefs.getBoolean(pref_key + "_encrypted_gcm", false)) {
+            if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
+                result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
+            }
             encryptAndSave(pref_key, result);
         } else {
             result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
@@ -134,7 +148,7 @@ public class Preferences {
 
     public boolean configIsSet() {
         return SuplaApp.getApp().getProfileManager(_context)
-            .getCurrentProfile().getAuthInfo().isAuthDataComplete();
+                .getCurrentProfile().getAuthInfo().isAuthDataComplete();
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
