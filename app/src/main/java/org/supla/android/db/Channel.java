@@ -20,11 +20,18 @@ package org.supla.android.db;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
+import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelState;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
@@ -37,6 +44,10 @@ public class Channel extends ChannelBase {
     private short ManufacturerID;
     private short ProductID;
     private int DeviceID;
+    private int position;
+
+    public Channel() { super(); }
+    public Channel(TemperaturePresenterFactory p) { super(p); }
 
     public int getChannelId() {
         return getRemoteId();
@@ -82,6 +93,14 @@ public class Channel extends ChannelBase {
         DeviceID = deviceID;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     protected int _getOnLine() {
         return Value != null && Value.getOnLine() ? 100 : 0;
     }
@@ -121,6 +140,7 @@ public class Channel extends ChannelBase {
         setProductID(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
         setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
+        setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION)));
 
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
@@ -152,6 +172,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
 
         return values;
     }
@@ -199,16 +220,16 @@ public class Channel extends ChannelBase {
     }
 
     public double getTemp() {
-        return Value != null ? Value.getTemp(getFunc()) : -273;
+        return Value != null ? getTemperaturePresenter().getTemp(Value, this) : TEMPERATURE_NA_VALUE;
     }
 
     public double getDistance() {
         return Value != null ? Value.getDistance() : -1;
     }
 
-    public byte getRollerShutterPosition() {
+    public byte getClosingPercentage() {
 
-        byte p = Value != null ? Value.getPercent() : 0;
+        byte p = Value != null ? Value.getRollerShutterValue().getClosingPercentage() : 0;
 
         if (p < 100 && getSubValueHi())
             p = 100;
@@ -236,8 +257,9 @@ public class Channel extends ChannelBase {
     protected int imgActive(ChannelValue value) {
 
         if (getOnLine()
-                && getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-                && getRollerShutterPosition() >= 100) {
+                && (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                   || getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW)
+                && getClosingPercentage() >= 100) {
             return 1;
         }
 
@@ -249,11 +271,8 @@ public class Channel extends ChannelBase {
         return super.getImageIdx(whichImage, Value);
     }
 
-    public String getUnit(String defaultUnit) {
-        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER
-                && getExtendedValue() != null
-                && getExtendedValue().getType() == SuplaConst.EV_TYPE_IMPULSE_COUNTER_DETAILS_V1
+    public String getUnit() {
+        if (getExtendedValue() != null
                 && getExtendedValue().getExtendedValue() != null
                 && getExtendedValue().getExtendedValue().ImpulseCounterValue != null) {
 
@@ -262,34 +281,25 @@ public class Channel extends ChannelBase {
                 return unit;
             }
         }
-        return defaultUnit;
-    }
-
-    public String getUnit() {
-        // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-        if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-
-            String dUnit = "";
-            switch (getFunc()) {
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                    dUnit = "kWh";
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                    dUnit = "m\u00B3";
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-                    dUnit = "GJ";
-                    break;
-            }
-            return getUnit(dUnit);
-        }
-
         return "";
     }
 
     protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                    return String.format("%.1f " + getUnit(),
+                            value.getImpulseCounterCalculatedValue(true));
+                } else if (value.getSubValueType()
+                        == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                    return String.format("%.2f kWh", value.getTotalForwardActiveEnergy(true));
+                }
+                break;
+        }
+
         // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
         if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
             return getOnLine() ?
@@ -311,19 +321,169 @@ public class Channel extends ChannelBase {
     public SuplaChannelState getChannelState() {
         ChannelExtendedValue ev = getExtendedValue();
 
-        if (ev != null && ev.getType() == SuplaConst.EV_TYPE_CHANNEL_STATE_V1) {
+        if (ev != null) {
             return ev.getExtendedValue().ChannelStateValue;
         }
 
         return null;
     }
 
-    public int getChannelWarningLevel() {
+    public Float getLightSourceLifespanLeft() {
+        SuplaChannelState state = getChannelState();
+        if (state != null
+                && state.getLightSourceLifespan() != null
+                && state.getLightSourceLifespan() > 0) {
+
+            if (state.getLightSourceLifespanLeft() != null) {
+                return state.getLightSourceLifespanLeft();
+            } else if (state.getLightSourceOperatingTimePercentLeft() != null) {
+                return state.getLightSourceOperatingTimePercentLeft();
+            }
+        }
+        return null;
+    }
+
+    private int getChannelWarningLevel(Context context, StringBuilder message) {
+
         switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+            case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                if (getValue().overcurrentRelayOff()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.overcurrent_warning));
+                    }
+                    return 2;
+                }
+                break;
+        }
+
+        switch (getFunc()) {
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                ChannelValue value = getValue();
+                if (value.calibrationFailed()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.calibration_failed));
+                    }
+                    return 1;
+                } else if (value.calibrationLost()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.calibration_lost));
+                    }
+                    return 1;
+                } else if (value.motorProblem()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.motor_problem));
+                    }
+                    return 2;
+                }
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
-                return getValue().isManuallyClosed() || getValue().flooding() ? 2 : 0;
+                if (getValue().isManuallyClosed() || getValue().flooding()) {
+                    if (message != null) {
+                        message.append(context.getResources().getString(R.string.valve_warning));
+                    }
+                    return 2;
+                }
+                return 0;
+            case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                Float lightSourceLifespanLeft = getLightSourceLifespanLeft();
+                if (lightSourceLifespanLeft != null && lightSourceLifespanLeft <= 20) {
+
+                    if (message != null) {
+                        message.append(
+                                context.getResources().getString(
+                                        getAltIcon() == 2
+                                                ? (lightSourceLifespanLeft <= 5
+                                                ? R.string.uv_warning2: R.string.uv_warning1)
+                                                : R.string.lightsource_warning,
+                                        String.format("%.2f%%", lightSourceLifespanLeft)));
+
+                    }
+
+                    return lightSourceLifespanLeft <= 5 ? 2 : 1;
+                }
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                DigiglassValue dgfVal = getValue().getDigiglassValue();
+
+                if (dgfVal.isPlannedRegenerationInProgress()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_planned_regeneration_in_progress));
+                    }
+                    return 1;
+                } else if (dgfVal.regenerationAfter20hInProgress()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_regeneration_after20h));
+                    }
+                    return 1;
+                } else if (dgfVal.isTooLongOperationWarningPresent()) {
+                    if (message != null) {
+                        message.append(context.getResources().
+                                getString(R.string.dgf_too_long_operation_warning));
+                    }
+                    return 2;
+                } else
+                    return 0;
         }
+
+        return 0;
+    }
+
+    public String getChannelWarningMessage(Context context) {
+        StringBuilder result = new StringBuilder();
+        getChannelWarningLevel(context, result);
+        if (result.length() > 0) {
+            return result.toString();
+        }
+        return null;
+    }
+
+    public int getChannelWarningLevel() {
+        return getChannelWarningLevel(null,null);
+    }
+
+    public int getChannelWarningIcon() {
+
+        switch (getChannelWarningLevel()) {
+            case 1:
+                return R.drawable.channel_warning_level1;
+            case 2:
+                return R.drawable.channel_warning_level2;
+        }
+
+        return 0;
+    }
+
+    public int getChannelStateIcon() {
+        if ((getOnLine()
+                || (getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
+                && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
+                && (getFlags()
+                & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))) {
+            SuplaChannelState state = getChannelState();
+
+            if (state != null
+                    || (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+                if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
+                    switch (state.getDefaultIconField()) {
+                        case SuplaChannelState.FIELD_BATTERYPOWERED:
+                            if (state.isBatteryPowered()) {
+                                return R.drawable.battery;
+                            }
+                            break;
+                    }
+                }
+
+                return R.drawable.channelstateinfo;
+            }
+        }
+
         return 0;
     }
 

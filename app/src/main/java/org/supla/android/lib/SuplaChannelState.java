@@ -19,6 +19,10 @@ package org.supla.android.lib;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
+
+import org.supla.android.R;
 
 import java.io.Serializable;
 
@@ -31,35 +35,41 @@ public class SuplaChannelState implements Serializable {
     public static final int FIELD_BATTERYPOWERED = 0x0008;
     public static final int FIELD_WIFIRSSI = 0x0010;
     public static final int FIELD_WIFISIGNALSTRENGTH = 0x0020;
-    public static final int FIELD_BRIDGESIGNALSTRENGTH = 0x0040;
+    public static final int FIELD_BRIDGENODESIGNALSTRENGTH = 0x0040;
     public static final int FIELD_UPTIME = 0x0080;
     public static final int FIELD_CONNECTIONUPTIME = 0x0100;
     public static final int FIELD_BATTERYHEALTH = 0x0200;
     public static final int FIELD_BRIDGENODEONLINE = 0x0400;
     public static final int FIELD_LASTCONNECTIONRESETCAUSE = 0x0800;
+    public static final int FIELD_LIGHTSOURCELIFESPAN = 0x1000;
+    public static final int FIELD_LIGHTSOURCELIFEOPERATINGTIME = 0x2000;
 
     private int ChannelID;
     private int fields;
     private int defaultIconField;
-    private int ipv4;
+    private Integer ipv4;
     private byte[] macAddress;
     private Byte batteryLevel;
     private Boolean batteryPowered;
     private Byte wiFiRSSI;
     private Byte wiFiSignalStrength;
     private Boolean bridgeNodeOnline;
-    private Byte bridgeSignalStrength;
+    private Byte bridgeNodeSignalStrength;
     private Long uptime;
     private Long connectionUptime;
     private Byte batteryHealth;
     private Byte lastConnectionResetCause;
+    private Integer lightSourceLifespan;
+    private Float lightSourceLifespanLeft;
+    private Integer lightSourceOperatingTime;
 
     public SuplaChannelState(int ChannelID, int fields, int defaultIconField,
                              int ipv4, byte[] macAddress, byte batteryLevel,
                              byte batteryPowered, byte wiFiRSSI, byte wiFiSignalStrength,
-                             byte bridgeNodeOnline, byte bridgeSignalStrength, int uptime,
+                             byte bridgeNodeOnline, byte bridgeNodeSignalStrength, int uptime,
                              int connectionUptime, byte batteryHealth,
-                             byte lastConnectionResetCause) {
+                             byte lastConnectionResetCause, int lightSourceLifespan,
+                             int lightSourceLifespanLeft) {
 
         this.ChannelID = ChannelID;
         this.fields = fields;
@@ -97,10 +107,10 @@ public class SuplaChannelState implements Serializable {
             this.bridgeNodeOnline = bridgeNodeOnline > 0;
         }
 
-        if ((fields & FIELD_BRIDGESIGNALSTRENGTH) > 0
-                && bridgeSignalStrength >= 0
-                && bridgeSignalStrength <= 100) {
-            this.bridgeSignalStrength = bridgeSignalStrength;
+        if ((fields & FIELD_BRIDGENODESIGNALSTRENGTH) > 0
+                && bridgeNodeSignalStrength >= 0
+                && bridgeNodeSignalStrength <= 100) {
+            this.bridgeNodeSignalStrength = bridgeNodeSignalStrength;
         }
 
         if ((fields & FIELD_UPTIME) > 0) {
@@ -120,18 +130,29 @@ public class SuplaChannelState implements Serializable {
         if ((fields & FIELD_LASTCONNECTIONRESETCAUSE) > 0) {
             this.lastConnectionResetCause = lastConnectionResetCause;
         }
+
+        if ((fields & FIELD_LIGHTSOURCELIFESPAN) > 0) {
+            this.lightSourceLifespanLeft = lightSourceLifespanLeft / 100f;
+            this.lightSourceLifespan = lightSourceLifespan;
+        }
+
+        if ((fields & FIELD_LIGHTSOURCELIFEOPERATINGTIME) > 0) {
+            this.lightSourceLifespanLeft = null;
+            this.lightSourceOperatingTime = lightSourceLifespanLeft;
+        }
     }
 
     public int getChannelID() {
         return ChannelID;
     }
 
-    public int getIpv4() {
+    public Integer getIpv4() {
         return ipv4;
     }
 
     @SuppressLint("DefaultLocale")
     public String getIpv4String() {
+        int ipv4 = this.ipv4.intValue();
         return String.format(
                 "%d.%d.%d.%d",
                 (ipv4 & 0xff),
@@ -160,32 +181,68 @@ public class SuplaChannelState implements Serializable {
         return batteryLevel;
     }
 
+    public String getBatteryLevelString() {
+        return String.format("%d%%", getBatteryLevel());
+    }
+
     public Boolean isBatteryPowered() {
         return batteryPowered;
+    }
+
+    public String getBatteryPoweredString(Context context) {
+        Resources r = context.getResources();
+        return r.getString(isBatteryPowered() ? R.string.yes : R.string.no);
     }
 
     public Byte getWiFiSignalStrength() {
         return wiFiSignalStrength;
     }
 
+    public String getWiFiSignalStrengthString() {
+        return String.format("%d%%", getWiFiSignalStrength());
+    }
+
     public Byte getWiFiRSSI() {
         return wiFiRSSI;
     }
 
-    public Byte getBridgeSignalStrength() {
-        return bridgeSignalStrength;
+    public String getWiFiRSSIString() {
+        return String.format("%d", getWiFiRSSI());
+    }
+
+    public Byte getBridgeNodeSignalStrength() {
+        return bridgeNodeSignalStrength;
+    }
+
+    public String getBridgeNodeSignalStrengthString(Context context) {
+        return String.format("%d%%", getBridgeNodeSignalStrength());
+    }
+
+    private String getUptimeString(Long uptime, Context context) {
+        long secs = uptime == null ? 0 : uptime;
+
+        return String.format("%d %s %02d:%02d:%02d",
+                uptime / 86400,
+                context.getResources().getString(R.string.days).toLowerCase(),
+                uptime % 86400 / 3600,
+                uptime % 86400 % 3600 / 60,
+                uptime % 86400 % 3600 % 60);
     }
 
     public Long getUptime() {
         return uptime;
     }
 
+    public String getUptimeString(Context context) {
+        return getUptimeString(uptime, context);
+    }
+
     public Long getConnectionUptime() {
         return connectionUptime;
     }
 
-    public Boolean getBatteryPowered() {
-        return batteryPowered;
+    public String getConnectionUptimeString(Context context) {
+        return getUptimeString(connectionUptime, context);
     }
 
     public int getFields() {
@@ -196,15 +253,89 @@ public class SuplaChannelState implements Serializable {
         return defaultIconField;
     }
 
-    public Boolean getBridgeNodeOnline() {
+    public Boolean isBridgeNodeOnline() {
         return bridgeNodeOnline;
+    }
+
+    public String getBridgeNodeOnlineString(Context context) {
+        Resources r = context.getResources();
+        return r.getString(isBridgeNodeOnline() ? R.string.yes : R.string.no);
     }
 
     public Byte getBatteryHealth() {
         return batteryHealth;
     }
 
+    public String getBatteryHealthString() {
+        return String.format("%d%%", getBatteryHealth());
+    }
+
     public Byte getLastConnectionResetCause() {
         return lastConnectionResetCause;
+    }
+
+    public String getLastConnectionResetCauseString() {
+        switch (getLastConnectionResetCause()) {
+            default:
+                return String.format("%d", getLastConnectionResetCause());
+        }
+    }
+
+    public Integer getLightSourceLifespan() {
+        return lightSourceLifespan;
+    }
+
+    public Float getLightSourceLifespanLeft() {
+        return lightSourceLifespanLeft;
+    }
+
+    public String getLightSourceLifespanString() {
+
+        Float percentLeft = null;
+
+        if (getLightSourceLifespanLeft() != null) {
+            percentLeft = getLightSourceLifespanLeft();
+        } else if (getLightSourceOperatingTimePercentLeft() != null) {
+            percentLeft = getLightSourceOperatingTimePercentLeft();
+        }
+
+        if (percentLeft != null) {
+            return String.format("%dh (%.2f%%)",
+                    getLightSourceLifespan(),
+                    percentLeft);
+        }
+
+        return String.format("%dh", getLightSourceLifespan());
+    }
+
+    public Integer getLightSourceOperatingTime() {
+        return lightSourceOperatingTime;
+    }
+
+    public Float getLightSourceOperatingTimePercent() {
+        if (getLightSourceOperatingTime() != null
+                && getLightSourceLifespan() != null
+                && getLightSourceLifespan().intValue() > 0) {
+            return getLightSourceOperatingTime() / 36f / getLightSourceLifespan();
+        }
+        return null;
+    }
+
+    public Float getLightSourceOperatingTimePercentLeft() {
+        Float percent = getLightSourceOperatingTimePercent();
+        if (percent != null) {
+            return 100 - percent;
+        }
+        return null;
+    }
+
+    public String getLightSourceOperatingTimeString() {
+        long timeSec = getLightSourceOperatingTime().longValue();
+
+        return String.format("%02dh %02d:%02d",
+                timeSec / 3600,
+                timeSec % 3600 / 60,
+                timeSec % 3600 % 60);
+
     }
 }

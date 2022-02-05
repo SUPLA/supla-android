@@ -36,6 +36,7 @@ public class ChannelGroup extends ChannelBase {
     private int BufferOnLine;
     private int BufferCounter;
     private String BufferTotalValue;
+    private int position;
 
     protected int _getOnLine() {
         return OnLine;
@@ -49,6 +50,14 @@ public class ChannelGroup extends ChannelBase {
         return TotalValue == null ? "" : TotalValue;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+    
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
@@ -61,7 +70,7 @@ public class ChannelGroup extends ChannelBase {
         setAltIcon(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
         setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
-
+        setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION)));
     }
 
     public ContentValues getContentValues() {
@@ -78,6 +87,7 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON, getAltIcon());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIconId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION, position);
 
         return values;
 
@@ -113,6 +123,7 @@ public class ChannelGroup extends ChannelBase {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
             case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
@@ -155,7 +166,8 @@ public class ChannelGroup extends ChannelBase {
                 BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                BufferTotalValue += Integer.toString(value.getPercent());
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                BufferTotalValue += Integer.toString(value.getRollerShutterValue().getClosingPercentage());
                 BufferTotalValue += ":";
                 BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
                 break;
@@ -199,22 +211,22 @@ public class ChannelGroup extends ChannelBase {
         return result;
     }
 
-    public ArrayList<Integer> getRollerShutterPositions() {
-        ArrayList<Integer> result = new ArrayList<>();
+    public ArrayList<Float> getRollerShutterPositions() {
+        ArrayList<Float> result = new ArrayList<>();
         String[] items = getTotalValue().split("\\|");
 
         for (int a = 0; a < items.length; a++) {
             String[] n = items[a].split(":");
             if (n.length == 2) {
                 try {
-                    int pos = Integer.valueOf(n[0]).intValue();
+                    float pos = Integer.valueOf(n[0]).intValue();
                     int sensor = Integer.valueOf(n[1]).intValue();
 
                     if (pos < 100 && sensor == 1) {
                         pos = 100;
                     }
 
-                    result.add(Integer.valueOf(pos));
+                    result.add(Float.valueOf(pos));
                 } catch (NumberFormatException e) {
                 }
             }
@@ -394,6 +406,7 @@ public class ChannelGroup extends ChannelBase {
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
                     n = items[a].split(":");
                     if (n.length == 2) {
                         try {
@@ -456,7 +469,7 @@ public class ChannelGroup extends ChannelBase {
 
     public CharSequence getHumanReadableValue() {
         if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-            return ChannelBase.getHumanReadableThermostatTemperature(
+            return getHumanReadableThermostatTemperature(
                     getMinimumMeasuredTemperature(),
                     getMaximumMeasuredTemperature(),
                     getMinimumPresetTemperature(),

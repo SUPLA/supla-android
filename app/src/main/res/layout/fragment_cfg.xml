@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <data>
+    <import type="android.view.View" />
+    <import type="androidx.navigation.Navigation" />
+    <variable
+        name="viewModel"
+        type="org.supla.android.cfg.CfgViewModel" />
+  </data>
+  <LinearLayout
+      android:id="@+id/cfg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      android:paddingBottom="@dimen/activity_vertical_margin"
+      android:orientation="vertical"
+      android:background="@color/activity_bg_new">
+
+    <TextView
+        android:id="@+id/appSettingsTitle"
+        android:layout_marginTop="@dimen/form_field_spacing"
+        android:layout_marginBottom="6dp"
+        android:paddingTop="@dimen/new_screen_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:textAllCaps="true"
+        android:text="@string/menubar_appsettings" />
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">
+      
+      <TextView
+          android:id="@+id/channelHeightLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_channel_height" />
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/channelHeight"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          >
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_small" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_normal" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:src="@drawable/channel_height_big"  />
+      </org.supla.android.ui.SegmentedButtonGroup>
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      <TextView
+          android:id="@+id/temperatureUnitLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_temperature_unit" />
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/temperatureUnit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true">
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="°C" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width_small"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="°F" />
+      </org.supla.android.ui.SegmentedButtonGroup>
+    </RelativeLayout>
+
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      
+      <TextView
+          android:id="@+id/buttonAutohideLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cfg_button_autohide" />
+      
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/buttonAutohide"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@{viewModel.cfgData.buttonAutohide}"
+	        android:textSize="@dimen/default_text_size"
+          />
+
+
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      
+      <TextView
+          android:id="@+id/showChannelInfoLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/show_channel_info" />
+      
+      <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/showChannelInfo"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          android:buttonTint="@color/channel_btn"
+          android:checked="@{viewModel.cfgData.showChannelInfo}"
+	        android:textSize="@dimen/default_text_size"
+          />
+
+
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      
+      <TextView
+          android:id="@+id/showOpeningPercentLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rs_display_mode" />
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/showOpeningMode"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true">
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_opening" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_closing" />
+      </org.supla.android.ui.SegmentedButtonGroup>
+
+    </RelativeLayout>
+    
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">
+      <androidx.appcompat.widget.AppCompatButton
+          style="@style/ChevronButton"
+          android:id="@+id/locationOrderingButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:onClick="@{() -> viewModel.openLocationReordering()}"
+          android:text="@string/location_ordering" />
+      <ImageView
+          android:id="@+id/locationOrderingChevron"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          app:srcCompat="@drawable/chevron_right"/>
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+  </LinearLayout>
+</layout>

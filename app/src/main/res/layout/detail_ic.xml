@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/icrl_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -65,6 +66,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:visibility="visible">
+
+        <org.supla.android.SuplaWarningIcon
+            android:id="@+id/icWarningIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            app:srcCompat="@drawable/channel_warning_level1" />
 
         <ImageView
             android:id="@+id/icGraphImg"

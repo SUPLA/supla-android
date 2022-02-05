@@ -44,8 +44,8 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         return getMeasurementsDbH().getThermostatMeasurementTotalCount(getChannelId());
     }
 
-    protected void EraseMeasurements(SQLiteDatabase db) {
-        getMeasurementsDbH().deleteThermostatMeasurements(db, getChannelId());
+    protected void eraseMeasurements() {
+        getMeasurementsDbH().deleteThermostatMeasurements(getChannelId());
     }
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
@@ -55,7 +55,7 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
 
-        getMeasurementsDbH().addThermostatMeasurement(db, thi);
+        getMeasurementsDbH().addThermostatMeasurement(thi);
     }
 
 }

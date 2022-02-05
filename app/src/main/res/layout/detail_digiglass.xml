@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/homeplus_Main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/detail_rs_bg"
+    android:visibility="visible">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+        <org.supla.android.DigiglassController
+            android:id="@+id/dgfController"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></org.supla.android.DigiglassController>
+
+        <LinearLayout
+            android:id="@+id/llButtons"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="0"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:weightSum="0">
+
+            <Button
+                android:id="@+id/btnDgfTransparent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_weight="0"
+                android:background="@drawable/dgftransparent" />
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
+
+            <Button
+                android:id="@+id/btnDgfOpaque"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_weight="0"
+                android:background="@drawable/dgfopaque" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

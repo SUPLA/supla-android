@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/tvInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_superuser_credentials"
@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textEmailAddress" />
@@ -40,13 +41,33 @@
             android:layout_height="wrap_content"
             android:text="@string/email" />
 
-        <EditText
-            android:id="@+id/dialogPwd"
+        <LinearLayout
+            android:id="@+id/llPwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:ems="10"
-            android:inputType="textPassword" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/dialogPwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/btnViewPassword"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="false"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:background="@drawable/lookblack" />
+
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView19"

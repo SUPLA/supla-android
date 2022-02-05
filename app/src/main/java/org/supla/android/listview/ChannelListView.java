@@ -25,6 +25,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -32,8 +33,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
+import org.supla.android.ChannelDetailDigiglass;
 import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
 import org.supla.android.ChannelDetailRGBW;
@@ -43,29 +46,43 @@ import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
+import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 
-public class ChannelListView extends ListView {
+public class ChannelListView extends ListView implements
+                                                  AdapterView.OnItemLongClickListener {
 
     private float LastXtouch = -1;
     private float LastYtouch = -1;
     private ChannelLayout channelLayout = null;
     private ChannelLayout lastCL = null;
     private boolean buttonSliding = false;
+    private boolean rightButtonSlided100p = false;
     private Cursor _newCursor;
+    private OnChannelButtonClickListener onChannelButtonClickListener;
     private OnChannelButtonTouchListener onChannelButtonTouchListener;
     private OnDetailListener onDetailListener;
+    private OnCaptionLongClickListener onCaptionLongClickListener;
+    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
     private boolean requestLayout_Locked = false;
     private boolean detailSliding;
     private boolean detailTouchDown;
-    private SectionLayout Header;
     private boolean detailAnim;
     private boolean mDetailVisible;
     private DetailLayout mDetailLayout;
+    private Point mChannelStateIconTouchPoint;
+	private View _stealingEventsFromView;
+	private ChannelLayout _stealingEventsVictim;
+    private AdapterView.OnItemLongClickListener _itmLongClickListener;
+	private long _stealingStartTime;
+    private int _stealingGiveBackTolerance;
+    private final static int _stealingGiveBackToleranceMax = 12;
+	private final static long _longPressMillis = 400;
 
     public ChannelListView(Context context) {
         super(context);
@@ -83,8 +100,6 @@ public class ChannelListView extends ListView {
     }
 
     private void init(Context context) {
-
-
         setHeaderDividersEnabled(false);
         setFooterDividersEnabled(false);
 
@@ -92,21 +107,20 @@ public class ChannelListView extends ListView {
 
         //setFastScrollEnabled(true);
         setVerticalScrollBarEnabled(false);
-
-        Header = new SectionLayout(context);
-        Header.setCaption("ABC");
         detailSliding = false;
         detailTouchDown = false;
         detailAnim = false;
         mDetailLayout = null;
         mDetailVisible = false;
-
     }
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
+        Channel channel = null;
+        if (cbase instanceof Channel) {
+            channel = (Channel)cbase;
+        }
 
         if (mDetailLayout != null) {
-
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -117,10 +131,32 @@ public class ChannelListView extends ListView {
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                     if (!(mDetailLayout instanceof ChannelDetailRS))
                         mDetailLayout = null;
 
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                    if (channel != null && channel.getValue() != null) {
+
+                        if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                            if (!(mDetailLayout instanceof ChannelDetailIC)) {
+                                mDetailLayout = null;
+                            }
+                        } else if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                            if (!(mDetailLayout instanceof ChannelDetailEM)) {
+                                mDetailLayout = null;
+                            }
+                        } else {
+                            mDetailLayout = null;
+                        }
+                    }
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
@@ -165,13 +201,17 @@ public class ChannelListView extends ListView {
                         mDetailLayout = null;
 
                     break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                    if (!(mDetailLayout instanceof ChannelDetailDigiglass))
+                        mDetailLayout = null;
+                    break;
             }
 
         }
 
         if (mDetailLayout == null) {
-
-
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -179,7 +219,21 @@ public class ChannelListView extends ListView {
                     mDetailLayout = new ChannelDetailRGBW(getContext(), this);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
                     mDetailLayout = new ChannelDetailRS(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                    if (channel != null && channel.getValue() != null) {
+                        if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                            mDetailLayout = new ChannelDetailIC(getContext(), this);
+                        } else if (channel.getValue().getSubValueType()
+                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                            mDetailLayout = new ChannelDetailEM(getContext(), this);
+                        }
+                    }
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
@@ -205,6 +259,10 @@ public class ChannelListView extends ListView {
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                     mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
+                    break;
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                    mDetailLayout = new ChannelDetailDigiglass(getContext(), this);
                     break;
             }
 
@@ -235,7 +293,68 @@ public class ChannelListView extends ListView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
+        int action = ev.getAction();
+        int X = (int)ev.getRawX();
+        int Y = (int)ev.getRawY();
+
+		View tapView = null;
+		ChannelLayout chn = null;
+		ViewGroup vg = this;
+		boolean stop;
+
+		do {
+			stop = true;
+			int chldn = vg.getChildCount();
+			for(int i = 0; i < chldn; i++) {
+				View chld = vg.getChildAt(i);
+				if(chld.getVisibility() != View.VISIBLE) continue;
+				int[] loc = new int[2];
+				chld.getLocationOnScreen(loc);
+				if(X > loc[0] && X <= loc[0] + chld.getWidth() &&
+				   Y > loc[1] && Y <= loc[1] + chld.getHeight()) {
+					if(chld instanceof ViewGroup) {
+						vg = (ViewGroup)chld;
+						stop = false;
+						if(chld instanceof ChannelLayout) {
+							chn = (ChannelLayout)chld;
+						}
+					} else if(chld instanceof ChannelLayout.CaptionView) {
+						tapView = chld;
+						stop = true;
+					}
+					break;
+				}
+			}
+		} while(!stop);
+
+		if(tapView == null || chn == null) return super.onInterceptTouchEvent(ev);
+		if(tapView == _stealingEventsFromView) return true;
+		if(action == MotionEvent.ACTION_DOWN && _stealingEventsFromView == null) {
+			_stealingEventsVictim = chn;
+			_stealingEventsFromView = tapView;
+			_stealingStartTime = ev.getEventTime();
+            _stealingGiveBackTolerance = _stealingGiveBackToleranceMax;
+			return true;
+		} 
+		return super.onInterceptTouchEvent(ev);
+    }
+
+	private void stopStealingEvents() {
+		_stealingEventsVictim = null;
+		_stealingEventsFromView = null;
+	}
+
+    private void triggerOnLongPressIfNeeded(MotionEvent ev) {
+        if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
+           _stealingEventsVictim != null) {
+            _stealingEventsVictim.onLongClick(_stealingEventsFromView);
+            stopStealingEvents();
+        }
+    }
+    @Override
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l) {
+        _itmLongClickListener = l;
+        super.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -283,23 +402,35 @@ public class ChannelListView extends ListView {
         float deltaY = Math.abs(Y - LastYtouch);
         float deltaX = Math.abs(X - LastXtouch);
 
-        if (ev.getAction() == MotionEvent.ACTION_DOWN
+        if (action == MotionEvent.ACTION_DOWN) {
+            mChannelStateIconTouchPoint = null;
+            triggerOnLongPressIfNeeded(ev);
+        }
+
+        if (action == MotionEvent.ACTION_MOVE) {
+            triggerOnLongPressIfNeeded(ev);
+            if(_stealingGiveBackTolerance-- < 1)
+                stopStealingEvents();
+        }
+
+        if (action == MotionEvent.ACTION_DOWN
                 || channelLayout != null) {
 
             View view = null;
+
             if (isDetailVisible()) {
-                LastXtouch = ev.getX();
-                LastYtouch = ev.getY();
+                LastXtouch = X;
+                LastYtouch = Y;
             } else {
-                view = getChildAt(pointToPosition((int) ev.getX(), (int) ev.getY()) - getFirstVisiblePosition());
+                view = getChildAt(pointToPosition((int) X, (int) Y) - getFirstVisiblePosition());
             }
 
             if (view instanceof ChannelLayout) {
 
                 if (action == MotionEvent.ACTION_DOWN) {
 
-                    LastXtouch = ev.getX();
-                    LastYtouch = ev.getY();
+                    LastXtouch = X;
+                    LastYtouch = Y;
 
                     if (!isDetailVisible()) {
                         channelLayout = (ChannelLayout) view;
@@ -308,42 +439,55 @@ public class ChannelListView extends ListView {
                     buttonSliding = false;
                     detailSliding = false;
                     detailTouchDown = false;
+                    rightButtonSlided100p = false;
 
                     if (lastCL != null && lastCL != channelLayout) {
                         lastCL.AnimateToRestingPosition(true);
                         lastCL = null;
                     }
 
-                    if (channelLayout != null
-                            && channelLayout.getDetailSliderEnabled()) {
+                    if (channelLayout != null) {
+                        if (channelLayout.getDetailSliderEnabled()) {
+                            Object obj = getItemAtPosition(pointToPosition((int) X, (int) Y));
 
+                            if (obj instanceof Cursor) {
+                                ChannelBase cbase;
 
-                        Object obj = getItemAtPosition(pointToPosition((int) ev.getX(), (int) ev.getY()));
+                                if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
+                                    cbase = new ChannelGroup();
+                                } else {
+                                    cbase = new Channel();
+                                }
 
-                        if (obj instanceof Cursor) {
-                            ChannelBase cbase;
+                                cbase.AssignCursorData((Cursor) obj);
 
-                            if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
-                                cbase = new ChannelGroup();
-                            } else {
-                                cbase = new Channel();
+                                if (getDetailLayout(cbase) != null) {
+                                    detailTouchDown = true;
+                                    rightButtonSlided100p = channelLayout.Slided() == 200;
+                                    getDetailLayout(cbase).setData(cbase);
+                                }
                             }
+                        }
 
-                            cbase.AssignCursorData((Cursor) obj);
-
-                            if (getDetailLayout(cbase) != null) {
-                                detailTouchDown = true;
-                                getDetailLayout(cbase).setData(cbase);
-                            }
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            mChannelStateIconTouchPoint =
+                                    channelLayout.stateIconTouched((int) X, (int) Y);
                         }
 
                     }
 
+
                 } else if (action == MotionEvent.ACTION_MOVE) {
 
-                    if (channelLayout.getButtonsEnabled()
-                            && !detailSliding) {
+                    if (detailTouchDown && channelLayout.getButtonsEnabled()) {
+                        if (!rightButtonSlided100p || X > LastXtouch) {
+                            detailTouchDown = false;
+                        }
+                    }
 
+                    if (channelLayout.getButtonsEnabled()
+                            && !detailSliding
+                            && !detailTouchDown) {
 
                         if (!channelLayout.Sliding()
                                 && deltaY >= deltaX) {
@@ -353,6 +497,10 @@ public class ChannelListView extends ListView {
                         if (X != LastXtouch) {
                             channelLayout.Slide((int) (X - LastXtouch));
                             buttonSliding = true;
+							stopStealingEvents();
+                            if (channelLayout.percentOfSliding() > 3f) {
+                                mChannelStateIconTouchPoint = null;
+                            }
                         }
 
                         LastXtouch = X;
@@ -418,10 +566,27 @@ public class ChannelListView extends ListView {
             }
         }
 
+        if (onChannelButtonClickListener != null
+                && action == MotionEvent.ACTION_UP
+                && channelLayout != null
+                && channelLayout.getRemoteId() > 0) {
+
+            if (mChannelStateIconTouchPoint != null
+                    && Math.abs(mChannelStateIconTouchPoint.y-Y) < 30f
+                    && Math.abs(mChannelStateIconTouchPoint.x-X) < 30f ) {
+                onChannelButtonClickListener.onChannelStateButtonClick(this,
+                        channelLayout.getRemoteId());
+            }
+        }
 
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL) {
-
+            triggerOnLongPressIfNeeded(ev);
+			if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
+			   _stealingEventsVictim != null) {
+				_stealingEventsVictim.onLongClick(_stealingEventsFromView);
+			}
+			stopStealingEvents();
             AnimateDetailSliding(false);
 
             if (channelLayout != null) {
@@ -434,7 +599,6 @@ public class ChannelListView extends ListView {
             buttonSliding = false;
             detailSliding = false;
         }
-
 
         return super.onTouchEvent(ev);
 
@@ -627,6 +791,10 @@ public class ChannelListView extends ListView {
         return detailSliding || detailAnim;
     }
 
+    public boolean isChannelLayoutSlided() {
+        return channelLayout != null && channelLayout.Slided() != 0;
+    }
+
     public boolean Slided() {
 
         if (detailSliding)
@@ -723,12 +891,38 @@ public class ChannelListView extends ListView {
         this.onDetailListener = onDetailListener;
     }
 
+    public OnChannelButtonClickListener getOnChannelButtonClickListener() {
+        return onChannelButtonClickListener;
+    }
+
+    public void setOnChannelButtonClickListener(OnChannelButtonClickListener
+                                                        onChannelButtonClickListener) {
+        this.onChannelButtonClickListener = onChannelButtonClickListener;
+    }
+
     public OnChannelButtonTouchListener getOnChannelButtonTouchListener() {
         return onChannelButtonTouchListener;
     }
 
-    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener onChannelButtonTouchListener) {
+    public void setOnChannelButtonTouchListener(OnChannelButtonTouchListener
+                                                        onChannelButtonTouchListener) {
         this.onChannelButtonTouchListener = onChannelButtonTouchListener;
+    }
+
+    public OnCaptionLongClickListener getOnCaptionLongClickListener() {
+        return onCaptionLongClickListener;
+    }
+
+    public void setOnCaptionLongClickListener(OnCaptionLongClickListener onCaptionLongClickListener) {
+        this.onCaptionLongClickListener = onCaptionLongClickListener;
+    }
+
+    public OnSectionLayoutTouchListener getOnSectionLayoutTouchListener() {
+        return onSectionLayoutTouchListener;
+    }
+
+    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener onSectionLayoutTouchListener) {
+        this.onSectionLayoutTouchListener = onSectionLayoutTouchListener;
     }
 
     public boolean isDetailVisible() {
@@ -741,8 +935,9 @@ public class ChannelListView extends ListView {
         }
     }
 
-    public void hideDetail(boolean animated) {
-        if (isDetailVisible())
+    public void hideDetail(boolean animated, boolean offlineReason) {
+        if (isDetailVisible()
+                && mDetailLayout.detailWillHide(offlineReason))
 
             if (animated) {
                 AnimateDetailSliding(true);
@@ -756,8 +951,10 @@ public class ChannelListView extends ListView {
 
                 onDetailHide();
             }
+    }
 
-
+    public void hideDetail(boolean animated) {
+        hideDetail(animated, false);
     }
 
     public ChannelBase detail_getChannel() {
@@ -781,21 +978,39 @@ public class ChannelListView extends ListView {
     }
 
     public void detail_OnChannelDataChanged() {
-
         if (isDetailVisible())
             mDetailLayout.OnChannelDataChanged();
+    }
 
+    public interface OnChannelButtonClickListener {
+        void onChannelStateButtonClick(ChannelListView clv, int remoteId);
     }
 
     public interface OnChannelButtonTouchListener {
+        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc);
+    }
 
-        void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc);
+    public interface OnCaptionLongClickListener {
+        void onChannelCaptionLongClick(ChannelListView clv, int remoteId);
+        void onLocationCaptionLongClick(ChannelListView clv, int locationId);
     }
 
     public interface OnDetailListener {
-
         void onChannelDetailShow(ChannelBase channel);
-
         void onChannelDetailHide();
+    }
+
+    public interface OnSectionLayoutTouchListener {
+        void onSectionClick(ChannelListView clv, String caption, int locationId);
+    }
+
+    public boolean onItemLongClick(AdapterView<?> parent, View v,
+                                   int pos, long id) {
+        if(_stealingEventsVictim == null && _itmLongClickListener != null) {
+            return _itmLongClickListener.onItemLongClick(parent, v,
+                                                         pos, id);
+        } else {
+            return false;
+        }            
     }
 }

@@ -42,15 +42,17 @@ import org.supla.android.charts.ElectricityChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
+import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -189,6 +191,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private ProgressBar emProgress;
     private LinearLayout llBalance;
     private TextView tvlBalance;
+    private SuplaWarningIcon warningIcon;
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
     private boolean mBalanceAvailable;
@@ -345,9 +348,13 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
 
         emImgIcon = findViewById(R.id.emimgIcon);
+        emImgIcon.setClickable(true);
+        emImgIcon.setOnClickListener(this);
 
         llBalance = findViewById(R.id.emtv_llBalance);
         tvlBalance = findViewById(R.id.emtv_lBalance);
+
+        warningIcon = findViewById(R.id.emWarningIcon);
 
         btnPhase1 = findViewById(R.id.embtn_Phase1);
         btnPhase2 = findViewById(R.id.embtn_Phase2);
@@ -445,13 +452,19 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             }, 50);
 
         } else {
+            int flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
+            boolean singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
+                    && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
             llDetails.setVisibility(VISIBLE);
             chartHelper.setVisibility(GONE);
             chartHelper.clearData();
-            rlButtons1.setVisibility(VISIBLE);
+            rlButtons1.setVisibility(singlePhase ? GONE : VISIBLE);
             rlButtons2.setVisibility(INVISIBLE);
             setImgBackground(ivGraph, R.drawable.graphoff);
             ivGraph.setTag(null);
+            if (singlePhase) {
+                phase = 1;
+            }
         }
     }
 
@@ -606,14 +619,17 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     }
 
-    public void channelExtendedDataToViews(boolean setIcon) {
+    public void channelDataToViews() {
 
         Channel channel = (Channel) getChannelFromDatabase();
 
-        if (setIcon) {
+        if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
             emImgIcon.setBackgroundColor(Color.TRANSPARENT);
             emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
+            emImgIcon.setTag(channel.getImageIdx());
         }
+
+        warningIcon.setChannel(channel);
 
         ChannelExtendedValue cev = channel.getExtendedValue();
 
@@ -697,7 +713,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             double currentProduction;
             double currentCost;
 
-            DbHelper mDBH = new DbHelper(getContext(), true);
+            MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
             if (mDBH.electricityMeterMeasurementsStartsWithTheCurrentMonth(channel.getChannelId())) {
                 currentConsumption = sum.getTotalForwardActiveEnergy();
@@ -731,6 +747,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvTotalCost.setText(String.format("%.2f " + em.getCurrency(), em.getTotalCost()));
             tvCurrentCost.setText(String.format("%.2f " + em.getCurrency(),
                     currentCost));
+            ivDirection.setVisibility((em.getMeasuredValues()
+                    & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0 ? VISIBLE : INVISIBLE);
 
             Button btn = null;
             switch (phase) {
@@ -795,6 +813,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                     break;
                 }
             }
+
+            SuplaFormatter formatter = SuplaFormatter.sharedFormatter();
 
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
             tvFreq.setText(format("%.2f ", freq));
@@ -881,7 +901,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
-        channelExtendedDataToViews(true);
+        emImgIcon.setTag(-1);
+        showChart(ivGraph.getTag() != null);
+        channelDataToViews();
     }
 
     @Override
@@ -891,7 +913,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void OnChannelDataChanged() {
-        channelExtendedDataToViews(false);
+        channelDataToViews();
     }
 
     private void setBtnBackground(Button btn, int i) {
@@ -907,13 +929,27 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == ivGraph) {
+        if (v == emImgIcon) {
+            Channel channel = (Channel) getChannelFromDatabase();
+            if (channel != null) {
+                if (channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER) {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        client.turnOnOff(getContext(), !channel.getValue().hiValue(),
+                                channel.getRemoteId(), false, channel.getFunc(),
+                                true);
+                    }
+                }
+            }
+        } else if (v == ivGraph) {
             showChart(v.getTag() == null);
         } else if (v == ivDirection) {
             setProductionDataSource(!chartHelper.isProductionDataSource(), true);
         } else if (v instanceof Button && v.getTag() instanceof Integer) {
             phase = (Integer) v.getTag();
-            channelExtendedDataToViews(false);
+            channelDataToViews();
         }
     }
 
@@ -958,6 +994,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
+        ivDirection.setVisibility(INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
 

@@ -63,6 +63,7 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_BELONG_TO_GROUP = 27;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_HAS_SCHEDULE = 28;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE = 29;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_ACTION_TRIGGER = 30;
 
     public final static int SUPLA_CHANNELFNC_NONE = 0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK = 10;
@@ -78,7 +79,9 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK = 90;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_DOOR = 100;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER = 110;
+    public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW = 115;
     public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER = 120;
+    public final static int SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW = 125;
     public final static int SUPLA_CHANNELFNC_POWERSWITCH = 130;
     public final static int SUPLA_CHANNELFNC_LIGHTSWITCH = 140;
     public final static int SUPLA_CHANNELFNC_RING = 150;
@@ -106,15 +109,25 @@ public class SuplaConst {
     public final static int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
     public final static int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
     public final static int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
+    public final static int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
 
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0001;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0002;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x0004;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK = 0x0008;
-    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER = 0x0010;
-    public final static int SUPLA_BIT_FUNC_POWERSWITCH = 0x0020;
-    public final static int SUPLA_BIT_FUNC_LIGHTSWITCH = 0x0040;
-    public final static int SUPLA_BIT_FUNC_STAIRCASETIMER = 0x0080;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEGARAGEDOOR = 0x000004;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEDOORLOCK = 0x0000008;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER = 0x0000010;
+    public final static int SUPLA_BIT_FUNC_POWERSWITCH = 0x0000020;
+    public final static int SUPLA_BIT_FUNC_LIGHTSWITCH = 0x0000040;
+    public final static int SUPLA_BIT_FUNC_STAIRCASETIMER = 0x0000080;
+    public final static int SUPLA_BIT_FUNC_THERMOMETER = 0x00000100;
+    public final static int SUPLA_BIT_FUNC_HUMIDITYANDTEMPERATURE = 0x00000200;
+    public final static int SUPLA_BIT_FUNC_HUMIDITY = 0x00000400;
+    public final static int SUPLA_BIT_FUNC_WINDSENSOR = 0x00000800;
+    public final static int SUPLA_BIT_FUNC_PRESSURESENSOR = 0x00001000;
+    public final static int SUPLA_BIT_FUNC_RAINSENSOR = 0x00002000;
+    public final static int SUPLA_BIT_FUNC_WEIGHTSENSOR = 0x00004000;
+    public final static int SUPLA_BIT_FUNC_CONTROLLINGTHEROOFWINDOW = 0x00008000;
 
     public final static int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
     public final static int SUPLA_CHANNELTYPE_BRIDGE = 8000;
@@ -122,27 +135,31 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE = 0x0001;
     public final static int SUPLA_CHANNEL_FLAG_IR_BRIDGE = 0x0002;
     public final static int SUPLA_CHANNEL_FLAG_RF_BRIDGE = 0x0004;
-    public final static int SUPLA_CHANNEL_FLAG_DETAILED_STATUS = 0x0008;
+
     public final static int SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
     public final static int SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
     public final static int SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION1 = 0x0080;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION2 = 0x0100;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION3 = 0x0200;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION4 = 0x0400;
-    public final static int SUPLA_CHANNEL_FLAG_CAP_ACTION5 = 0x0800;
+    public final static int SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION = 0x1000;
+    public final static int SUPLA_CHANNEL_FLAG_CALCFG_RESET_COUNTERS = 0x2000;
+    public final static int SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE = 0x4000;
     public final static int SUPLA_CHANNEL_FLAG_CHANNELSTATE = 0x00010000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
     public final static int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
-    public final static int SUPLA_CHANNEL_FLAG_RS_AUTOCALIBRATION = 0x00100000;
+    public final static int SUPLA_CHANNEL_FLAG_TIME_SETTING_NOT_AVAILABLE = 0x00100000;
     public final static int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
+    public final static int SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION = 0x00400000;
+    public final static int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
+    public final static int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
+    public final static int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
+    public final static int SUPLA_CHANNEL_FLAG_POSSIBLE_SLEEP_MODE = 0x04000000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
     public final static int SUPLA_EVENT_CONTROLLINGTHEDOORLOCK = 40;
     public final static int SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER = 50;
+    public final static int SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW = 55;
     public final static int SUPLA_EVENT_POWERONOFF = 60;
     public final static int SUPLA_EVENT_LIGHTONOFF = 70;
     public final static int SUPLA_EVENT_VALVEOPENCLOSE = 90;
@@ -209,6 +226,8 @@ public class SuplaConst {
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
     public final static int EV_TYPE_THERMOSTAT_DETAILS_V1 = 30;
     public final static int EV_TYPE_CHANNEL_STATE_V1 = 40;
+    public final static int EV_TYPE_TIMER_STATE_V1 = 50;
+    public final static int EV_TYPE_CHANNEL_AND_TIMER_STATE_V1 = 60;
 
     public final static int SUPLA_THERMOSTAT_CMD_TURNON = 1;
     public final static int SUPLA_THERMOSTAT_CMD_SET_MODE_AUTO = 2;
@@ -233,11 +252,24 @@ public class SuplaConst {
     public final static int SUPLA_MFR_ITEAD = 6;
     public final static int SUPLA_MFR_DOYLETRATT = 7;
     public final static int SUPLA_MFR_HEATPOL = 8;
+    public final static int SUPLA_MFR_FAKRO = 9;
+    public final static int SUPLA_MFR_PEVEKO = 10;
+    public final static int SUPLA_MFR_WEKTA = 11;
+    public final static int SUPLA_MFR_STA_SYSTEM = 12;
+    public final static int SUPLA_MFR_DGF = 13;
+    public final static int SUPLA_MFR_COMELIT = 14;
+
+    public final static int ZAM_PRODID_DIW_01 = 2000;
+    public final static int COM_PRODID_WDIM100 = 2000;
 
     public final static int SUPLA_VALVE_FLAG_FLOODING = 0x1;
     public final static int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
     public final static int SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST = 2030;
+    public final static int SUPLA_CALCFG_CMD_RECALIBRATE = 8000;
+
+    public final static int ZWAVE_NODE_FLAG_CHANNEL_ASSIGNED = 0x1;
+    public final static int ZWAVE_NODE_FLAG_WAKEUP_TIME_SETTABLE = 0x2;
 
     public final static int SUPLA_CALCFG_RESULT_FALSE = 0;
     public final static int SUPLA_CALCFG_RESULT_TRUE = 1;
@@ -251,6 +283,14 @@ public class SuplaConst {
     public final static int SUPLA_CALCFG_RESULT_UNAUTHORIZED = 104;
     public final static int SUPLA_CALCFG_RESULT_DEBUG = 105;
     public final static int SUPLA_CALCFG_RESULT_NOT_SUPPORTED_IN_SLAVE_MODE = 106;
+
+    public final static int SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF = 0x1;
+
+    public final static int RS_VALUE_FLAG_TILT_IS_SET = 0x1;
+    public final static int RS_VALUE_FLAG_CALIBRATION_FAILED = 0x2;
+    public final static int RS_VALUE_FLAG_CALIBRATION_LOST = 0x4;
+    public final static int RS_VALUE_FLAG_MOTOR_PROBLEM = 0x8;
+    public final static int RS_VALUE_FLAG_CALIBRATION_IN_PROGRESS = 0x10;
 
     public static String getCaption(int func, Context context) {
 
@@ -284,8 +324,14 @@ public class SuplaConst {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
                 idx = R.string.channel_caption_rsopeningsensor;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+                idx = R.string.channel_caption_roofwindowopeningsensor;
+                break;
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 idx = R.string.channel_caption_rollershutter;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                idx = R.string.channel_caption_roofwindow;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 idx = R.string.channel_caption_powerswith;
@@ -363,6 +409,10 @@ public class SuplaConst {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 idx = R.string.channel_caption_valve;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                idx = R.string.channel_caption_digiglass;
+                break;
         }
 
         return idx == -1 || context == null ? "" : context.getResources().getString(idx);
@@ -422,8 +472,14 @@ public class SuplaConst {
             case SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 resId = R.string.channel_func_controllingtherollershutter;
                 break;
+            case SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                resId = R.string.channel_func_controllingtheroofwindow;
+                break;
             case SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
                 resId = R.string.channel_func_opensensor_rollershutter;
+                break;
+            case SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+                resId = R.string.channel_func_opensensor_roofwindow;
                 break;
             case SUPLA_CHANNELFNC_POWERSWITCH:
                 resId = R.string.channel_func_powerswitch;
@@ -495,6 +551,10 @@ public class SuplaConst {
             case SUPLA_CHANNELFNC_VALVE_PERCENTAGE:
                 resId = R.string.channel_func_valve_percentage;
                 break;
+            case SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                resId = R.string.channel_func_digiglass;
+                break;
 
         }
 
@@ -516,15 +576,33 @@ public class SuplaConst {
                     return SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK;
                 case SUPLA_BIT_FUNC_CONTROLLINGTHEROLLERSHUTTER:
                     return SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER;
+                case SUPLA_BIT_FUNC_CONTROLLINGTHEROOFWINDOW:
+                    return SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW;
                 case SUPLA_BIT_FUNC_POWERSWITCH:
                     return SUPLA_CHANNELFNC_POWERSWITCH;
                 case SUPLA_BIT_FUNC_LIGHTSWITCH:
                     return SUPLA_CHANNELFNC_LIGHTSWITCH;
                 case SUPLA_BIT_FUNC_STAIRCASETIMER:
                     return SUPLA_CHANNELFNC_STAIRCASETIMER;
+                case SUPLA_BIT_FUNC_THERMOMETER:
+                    return SUPLA_CHANNELFNC_THERMOMETER;
+                case SUPLA_BIT_FUNC_HUMIDITYANDTEMPERATURE:
+                    return SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE;
+                case SUPLA_BIT_FUNC_HUMIDITY:
+                    return SUPLA_CHANNELFNC_HUMIDITY;
+                case SUPLA_BIT_FUNC_WINDSENSOR:
+                    return SUPLA_CHANNELFNC_WINDSENSOR;
+                case SUPLA_BIT_FUNC_PRESSURESENSOR:
+                    return SUPLA_CHANNELFNC_PRESSURESENSOR;
+                case SUPLA_BIT_FUNC_RAINSENSOR:
+                    return SUPLA_CHANNELFNC_RAINSENSOR;
+                case SUPLA_BIT_FUNC_WEIGHTSENSOR:
+                    return SUPLA_CHANNELFNC_WEIGHTSENSOR;
             }
         }
 
         return 0;
     }
 }
+
+

@@ -78,9 +78,6 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         setCalculatedValue(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE)));
 
-        Calculated = cursor.getInt(cursor.getColumnIndex(
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED)) > 0;
-
         Complement = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT)) > 0;
 
@@ -95,8 +92,6 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER, getCounter());
         values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE,
                 getCalculatedValue());
-        values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_INCREASE_CALCULATED,
-                isCalculated() ? 1 : 0);
         values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT,
                 isComplement() ? 1 : 0);
         return values;

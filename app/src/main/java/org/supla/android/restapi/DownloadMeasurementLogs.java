@@ -40,10 +40,14 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     abstract protected int getLocalTotalCount();
 
-    abstract protected void EraseMeasurements(SQLiteDatabase db);
+    abstract protected void eraseMeasurements();
 
     abstract protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp,
                                                 JSONObject obj) throws JSONException;
+
+    protected long getMaxTimestampInitialOffset() {
+        return 1;
+    }
 
     protected void onFirstItem(SQLiteDatabase db) throws JSONException {
     }
@@ -52,7 +56,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
     }
 
     protected int itemsLimitPerRequest() {
-        return 1000;
+        return 10000;
     }
 
     @Override
@@ -78,7 +82,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 for (int a = 0; a < arr.length(); a++) {
                     try {
                         JSONObject obj = arr.getJSONObject(a);
-                        if (min == obj.getLong("date_timestamp")) {
+                        if (Math.abs(min-obj.getLong("date_timestamp")) < 1800) {
                             found = true;
                             break;
                         }
@@ -90,13 +94,15 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
             }
 
             if (doErase) {
-                SQLiteDatabase db = getMeasurementsDbH().getWritableDatabase();
-                EraseMeasurements(db);
-                db.close();
+                eraseMeasurements();
             }
         }
 
-        AfterTimestamp = getMaxTimestamp() + 1;
+        AfterTimestamp = getMaxTimestamp() + getMaxTimestampInitialOffset();
+        if (AfterTimestamp <= 0) {
+            AfterTimestamp = 1;
+        }
+
         int LocalTotalCount = getLocalTotalCount();
         Double percent = 0d;
 
@@ -182,7 +188,6 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
-                db.close();
             }
 
             Trace.d(log_tag, "TIME: " + Long.toString(System.currentTimeMillis() - t));

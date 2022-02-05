@@ -27,21 +27,26 @@ import android.widget.BaseAdapter;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.DbHelper;
+import org.supla.android.db.SuplaContract;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.OnSectionLayoutTouchListener {
+public class ListViewCursorAdapter extends BaseAdapter {
 
     public static final int TYPE_CHANNEL = 0;
     public static final int TYPE_SECTION = 1;
+    private static final int REORDERING_MODE_NOT_ACTIVE = -1;
     private Context context;
     private Cursor cursor;
     private ArrayList<SectionItem> Sections;
     private int currentSectionIndex;
     private boolean Group;
-    private DbHelper dbHelper;
-    private SectionLayout.OnSectionLayoutTouchListener onSectionLayoutTouchListener;
+
+    private Map<Integer, Item> positionToItemMapping;
+    private int emptyPosition = REORDERING_MODE_NOT_ACTIVE;
+    private int selectedItem = REORDERING_MODE_NOT_ACTIVE;
 
     public ListViewCursorAdapter(Context context, Cursor cursor) {
         super();
@@ -57,7 +62,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
     private void init(Context context, Cursor cursor) {
         currentSectionIndex = 0;
         Sections = new ArrayList<>();
-        dbHelper = new DbHelper(context);
         setCursor(cursor);
         this.context = context;
     }
@@ -83,19 +87,20 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     @Override
     public int getCount() {
+        if (cursor == null || cursor.isClosed()) {
+            return 0;
+        }
 
-        if (cursor != null
-                && !cursor.isClosed())
-            return cursor.getCount() + Sections.size();
-
-        return 0;
+        return cursor.getCount() + Sections.size();
     }
 
     @Override
     public Object getItem(int position) {
 
         if (Sections.size() == 0) {
-            cursor.moveToPosition(position);
+            if (cursor != null) {
+                cursor.moveToPosition(position);
+            }
             return cursor;
         }
 
@@ -214,8 +219,29 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        Object obj = getItem(position);
+        Object obj = null;
+        if (emptyPosition == -1) {
+            obj = getItem(position);
+        } else {
+            if (emptyPosition < selectedItem) {
+                if (position < emptyPosition || position > selectedItem) {
+                    obj = getItem(position);
+                }
+                else if (position > emptyPosition) {
+                    obj = getItem(position - 1);
+                }
+            } else if (emptyPosition > selectedItem) {
+                if (position < selectedItem || position > emptyPosition) {
+                    obj = getItem(position);
+                } else if (position >= selectedItem && position < emptyPosition) {
+                    obj = getItem(position + 1);
+                }
+            } else {
+                if (position != emptyPosition) {
+                    obj = getItem(position);
+                }
+            }
+        }
 
         int _collapsed;
 
@@ -228,10 +254,10 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
         if (obj instanceof SectionItem) {
 
             if (((SectionItem) obj).view == null) {
-                ((SectionItem) obj).view = new SectionLayout(context);
+                ((SectionItem) obj).view = new SectionLayout(context, parent instanceof ChannelListView ?
+                        (ChannelListView) parent : null);
                 ((SectionItem) obj).view.setCaption(((SectionItem) obj).getCaption());
                 ((SectionItem) obj).view.setLocationId(((SectionItem) obj).getLocationId());
-                ((SectionItem) obj).view.setOnSectionLayoutTouchListener(this);
                 ((SectionItem) obj).view.
                         setCollapsed((((SectionItem) obj).getCollapsed() & _collapsed) > 0);
             }
@@ -268,6 +294,9 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
             cbase.AssignCursorData((Cursor) obj);
             SectionItem channelSection = getSectionAtPosition(position);
             setData((ChannelLayout) convertView, cbase, channelSection);
+        } else {
+            ChannelLayout channelLayout = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView) parent : null);
+            convertView = channelLayout;
         }
 
         return convertView;
@@ -283,31 +312,40 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     private void setCursor(Cursor cursor) {
 
-        ArrayList<SectionItem> Sections = new ArrayList<>();
-
         currentSectionIndex = 0;
+        positionToItemMapping = new HashMap<>();
+
+        ArrayList<SectionItem> Sections = new ArrayList<>();
 
         if (cursor != null
                 && !cursor.isClosed()) {
 
             String caption = null;
-            int section_col_idx = cursor.getColumnIndex("section");
+            int position = 0;
+            int positionInLocation = 1;
+            int channelIdColumnIndex = cursor.getColumnIndex(SuplaContract.ChannelEntry._ID);
+            int sectionColumnIndex = cursor.getColumnIndex("section");
+            int locationIdColumnIndex = cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID);
+            int collapsedColumnIndex = cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED);
 
             if (cursor.moveToFirst())
                 do {
 
                     if (caption == null
-                            || !cursor.getString(section_col_idx).equals(caption)) {
+                            || !cursor.getString(sectionColumnIndex).equals(caption)) {
 
-                        caption = cursor.getString(section_col_idx);
+                        caption = cursor.getString(sectionColumnIndex);
                         Sections.add(
                                 new SectionItem(Sections.size() + cursor.getPosition(),
-                                        cursor.getInt(cursor.getColumnIndex("locatonid")),
-                                        cursor.getInt(cursor.getColumnIndex("collapsed")),
+                                        cursor.getInt(locationIdColumnIndex),
+                                        cursor.getInt(collapsedColumnIndex),
                                         caption)
                         );
+                        positionInLocation = 1;
+                        position++;
                     }
-
+                    Item item = new Item(cursor.getLong(channelIdColumnIndex), cursor.getInt(locationIdColumnIndex), positionInLocation++);
+                    positionToItemMapping.put(position++, item);
                 } while (cursor.moveToNext());
 
         }
@@ -345,17 +383,6 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     public boolean isGroup() {
         return Group;
-    }
-
-    @Override
-    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
-        if (onSectionLayoutTouchListener != null) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(this, caption, locationId);
-        }
-    }
-
-    public void setOnSectionLayoutTouchListener(SectionLayout.OnSectionLayoutTouchListener listener) {
-        onSectionLayoutTouchListener = listener;
     }
 
     public class SectionItem {
@@ -398,4 +425,49 @@ public class ListViewCursorAdapter extends BaseAdapter implements SectionLayout.
 
     }
 
+    public void updateReorderingMode(int selectedItem, int emptyPosition) {
+        boolean invalidate = emptyPosition != this.emptyPosition;
+
+        if (invalidate) {
+            this.selectedItem = selectedItem;
+            this.emptyPosition = emptyPosition;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void stopReorderingMode() {
+        this.selectedItem = REORDERING_MODE_NOT_ACTIVE;
+        this.emptyPosition = REORDERING_MODE_NOT_ACTIVE;
+
+        notifyDataSetChanged();
+    }
+
+    public boolean isInReorderingMode() {
+        return this.selectedItem > REORDERING_MODE_NOT_ACTIVE || this.emptyPosition > REORDERING_MODE_NOT_ACTIVE;
+    }
+
+    public boolean isReorderPossible(int initialPosition, int finalPosition) {
+        Item initialPositionItem = positionToItemMapping.get(initialPosition);
+        Item finalPositionItem = positionToItemMapping.get(finalPosition);
+        if (initialPositionItem == null || finalPositionItem == null) {
+            return false;
+        }
+        return initialPositionItem.locationId == finalPositionItem.locationId;
+    }
+
+    public Item getItemForPosition(int position) {
+        return positionToItemMapping.get(position);
+    }
+
+    public class Item {
+        public final long id;
+        public final int locationId;
+        public final int positionInLocation;
+
+        public Item(long id, int locationId, int positionInLocation) {
+            this.id = id;
+            this.locationId = locationId;
+            this.positionInLocation = positionInLocation;
+        }
+    }
 }

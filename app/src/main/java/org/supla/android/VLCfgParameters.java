@@ -1,6 +1,6 @@
 package org.supla.android;
 
-public class VLCfgParameters {
+public class VLCfgParameters extends DeviceCfgParameters {
 
     public final static int MODE_UNKNOWN = -1;
     public final static int MODE_AUTO = 0;
@@ -31,6 +31,7 @@ public class VLCfgParameters {
     private byte Boost;
     private byte BoostMask = (byte) 0xFF;
     private short BoostLevel;
+    private String PicFirmwareVersion;
 
     public short getLeftEdge() {
         return LeftEdge;
@@ -97,16 +98,12 @@ public class VLCfgParameters {
 
         return false;
     }
-
-    private short getShort(byte[] data, int offset) {
-        int x = (int) data[offset + 1] & 0xFF;
-        x <<= 8;
-        x |= (int) data[offset] & 0xFF;
-        return (short) x;
+    public String getPicFirmwareVersion() {
+        return PicFirmwareVersion == null ? "" : PicFirmwareVersion;
     }
 
     public boolean setParams(byte[] data) {
-        if (data == null || data.length != 15) {
+        if (data == null || data.length < 15 || data.length > 37) {
             return false;
         }
 
@@ -119,6 +116,26 @@ public class VLCfgParameters {
         BoostLevel = getShort(data, 10);
         ModeMask = data[13];
         BoostMask = data[14];
+
+        if (data.length >= 17 && data[15] == 2) {
+            setLedConfig(Byte.valueOf(data[16]));
+        } else {
+            setLedConfig(null);
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (data.length >= 37) {
+            for(int a=0;a<20;a++) {
+                if (data[17+a] == 0) {
+                    break;
+                } else {
+                    sb.append((char)data[17+a]);
+                }
+            }
+        }
+
+        PicFirmwareVersion = sb.toString();
 
         return true;
     }

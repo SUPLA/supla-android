@@ -38,8 +38,11 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
+import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
@@ -60,6 +63,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private TextView tvCurrentCost;
     private TextView tvTotalCost;
     private ImageView icImgIcon;
+    private SuplaWarningIcon warningIcon;
     private Spinner icSpinnerMaster;
     private Spinner icSpinnerSlave;
     private ImageView ivGraph;
@@ -90,6 +94,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         tvCurrentConsumption = findViewById(R.id.ictv_CurrentConsumption);
         tvCurrentCost = findViewById(R.id.ictv_CurrentCost);
         icImgIcon = findViewById(R.id.icimgIcon);
+        icImgIcon.setClickable(true);
+        icImgIcon.setOnClickListener(this);
+        warningIcon = findViewById(R.id.icWarningIcon);
 
         chartHelper = new ImpulseCounterChartHelper(getContext());
         chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
@@ -126,15 +133,18 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         return inflateLayout(R.layout.detail_ic);
     }
 
-    private void channelExtendedDataToViews(boolean setIcon) {
+    private void channelExtendedDataToViews() {
         Channel channel = (Channel) getChannelFromDatabase();
 
-        if (setIcon) {
+        if (!icImgIcon.getTag().equals(channel.getImageIdx())) {
             icImgIcon.setBackgroundColor(Color.TRANSPARENT);
             icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
+            icImgIcon.setTag(channel.getImageIdx());
         }
 
-        DbHelper mDBH = new DbHelper(getContext(), true);
+        warningIcon.setChannel(channel);
+
+        MeasurementsDbHelper mDBH = MeasurementsDbHelper.getInstance(getContext());
 
         tvMeterValue.setText("---");
         tvCurrentConsumption.setText("---");
@@ -178,13 +188,14 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     @Override
     public void OnChannelDataChanged() {
-        channelExtendedDataToViews(false);
+        channelExtendedDataToViews();
     }
 
     @Override
     public void setData(ChannelBase cbase) {
         super.setData(cbase);
-        channelExtendedDataToViews(true);
+        icImgIcon.setTag(-1);
+        channelExtendedDataToViews();
     }
 
     @Override
@@ -248,7 +259,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         icProgress.setVisibility(INVISIBLE);
         chartHelper.setDownloadProgress(null);
         chartHelper.load(getRemoteId());
-        channelExtendedDataToViews(false);
+        channelExtendedDataToViews();
     }
 
     @Override
@@ -276,7 +287,21 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     @Override
     public void onClick(View v) {
-        if (v == ivGraph && icProgress.getVisibility() == INVISIBLE) {
+        if (v == icImgIcon) {
+            Channel channel = (Channel) getChannelFromDatabase();
+            if (channel != null) {
+                if (channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                        || channel.getFunc() == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER) {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        client.turnOnOff(getContext(), !channel.getValue().hiValue(),
+                                channel.getRemoteId(), false, channel.getFunc(),
+                                true);
+                    }
+                }
+            }
+        } else if (v == ivGraph && icProgress.getVisibility() == INVISIBLE) {
             runDownloadTask();
         }
     }

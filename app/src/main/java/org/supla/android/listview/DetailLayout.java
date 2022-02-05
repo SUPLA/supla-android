@@ -73,7 +73,7 @@ public abstract class DetailLayout extends FrameLayout {
         mRemoteId = 0;
         channelBase = null;
 
-        DBH = new DbHelper(getContext());
+        DBH = DbHelper.getInstance(getContext());
         mContentView = inflateContentView();
 
         if (mContentView != null) {
@@ -208,6 +208,10 @@ public abstract class DetailLayout extends FrameLayout {
     }
 
     public boolean onBackPressed() {
+        return true;
+    }
+
+    public boolean detailWillHide(boolean offlineReason) {
         return true;
     }
 }

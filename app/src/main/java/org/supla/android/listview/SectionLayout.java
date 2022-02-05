@@ -19,6 +19,8 @@ package org.supla.android.listview;
  */
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,17 +31,29 @@ import android.widget.TextView;
 
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
+import org.supla.android.Trace;
 
-public class SectionLayout extends LinearLayout {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class SectionLayout extends LinearLayout  {
 
     private int locationId;
     private TextView Caption;
     private FrameLayout frmCollapsed;
-    private OnSectionLayoutTouchListener onSectionLayoutTouchListener;
+    private ChannelListView parentListView;
+    private Timer timer;
+    private boolean longClick;
 
     public SectionLayout(Context context) {
         super(context);
         Init(context);
+    }
+
+    public SectionLayout(Context context, ChannelListView parentListView) {
+        super(context);
+        Init(context);
+        this.parentListView = parentListView;
     }
 
     public SectionLayout(Context context, AttributeSet attrs) {
@@ -60,8 +74,12 @@ public class SectionLayout extends LinearLayout {
 
             Caption = lv.findViewById(R.id.tvSectionCaption);
             Caption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
             frmCollapsed = lv.findViewById(R.id.frmSectionCollapsed);
+
+            // Unfortunately, LongClickListener and ClickListener
+            // stop working after moving the list.
+            //Caption.setOnLongClickListener(this);
+            //Caption.setOnClickListener(this);
 
             addView(lv);
         }
@@ -76,27 +94,80 @@ public class SectionLayout extends LinearLayout {
         this.locationId = locationId;
     }
 
-    public void setOnSectionLayoutTouchListener(OnSectionLayoutTouchListener listener) {
-        onSectionLayoutTouchListener = listener;
+    public void setCollapsed(boolean collapsed) {
+        frmCollapsed.setVisibility(collapsed ? VISIBLE : GONE);
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            longClick = false;
 
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            onSectionLayoutTouchListener.onSectionLayoutTouch(this, Caption.getText().toString(), locationId);
+            if (timer != null) {
+                timer.cancel();
+            }
+
+            final int x = (int)event.getX();
+            final int y = (int)event.getY();
+
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Handler handler = new Handler(getContext().getMainLooper());
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            longClick = true;
+
+                            if (timer != null) {
+                                timer.cancel();
+                                timer = null;
+                            }
+
+                            if (parentListView != null
+                                    && parentListView.getOnCaptionLongClickListener() != null) {
+
+                                Rect bounds = new Rect();
+                                Caption.getDrawingRect(bounds);
+
+                                if (bounds.contains(x, y)) {
+                                    parentListView.getOnCaptionLongClickListener().
+                                            onLocationCaptionLongClick(parentListView, locationId);
+                                } else {
+                                    // .... OnSectionLongClick
+                                }
+                            }
+
+
+                        }
+                    };
+                    handler.post(r);
+                }
+            }, 800, 1000);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            if (!longClick) {
+                if (parentListView != null
+                        && parentListView.getOnSectionLayoutTouchListener() != null) {
+                    parentListView
+                            .getOnSectionLayoutTouchListener()
+                            .onSectionClick(parentListView, Caption.getText().toString(), locationId);
+                }
+            }
+
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
         }
 
-        //return super.onTouchEvent(event);
         return true;
-    }
-
-    public void setCollapsed(boolean collapsed) {
-        frmCollapsed.setVisibility(collapsed ? VISIBLE : INVISIBLE);
-    }
-
-    public interface OnSectionLayoutTouchListener {
-        void onSectionLayoutTouch(Object sender, String caption, int locationId);
     }
 }
 

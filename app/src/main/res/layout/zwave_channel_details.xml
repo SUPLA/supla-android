@@ -61,7 +61,6 @@
                 android:layout_weight="1"
                 android:background="@color/zwave_info_table_bg"
                 android:paddingLeft="5dp"
-                android:text="TextView"
                 android:textColor="@color/zwave_info_table_text" />
         </LinearLayout>
 
@@ -90,7 +89,6 @@
                 android:layout_weight="1"
                 android:background="@color/zwave_info_table_bg"
                 android:paddingLeft="5dp"
-                android:text="TextView"
                 android:textColor="@color/zwave_info_table_text" />
         </LinearLayout>
 
@@ -118,7 +116,6 @@
                 android:layout_weight="1"
                 android:background="@color/zwave_info_table_bg"
                 android:paddingLeft="5dp"
-                android:text="TextView"
                 android:textColor="@color/zwave_info_table_text" />
         </LinearLayout>
 
@@ -146,7 +143,6 @@
                 android:layout_weight="1"
                 android:background="@color/zwave_info_table_bg"
                 android:paddingLeft="5dp"
-                android:text="TextView"
                 android:textColor="@color/zwave_info_table_text" />
         </LinearLayout>
 
@@ -174,7 +170,6 @@
                 android:layout_weight="1"
                 android:background="@color/zwave_info_table_bg"
                 android:paddingLeft="5dp"
-                android:text="TextView"
                 android:textColor="@color/zwave_info_table_text" />
         </LinearLayout>
 

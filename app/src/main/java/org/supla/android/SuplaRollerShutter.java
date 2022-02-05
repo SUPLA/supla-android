@@ -6,13 +6,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.ArrayList;
 
 /*
@@ -41,10 +39,14 @@ public class SuplaRollerShutter extends View {
     private float FrameLineWidth = 1;
     private float Percent = 0;
     private float virtPercent = 0;
-    private int WindowColor = Color.BLACK;
+    private int GlassColor = 0xFFbed9f1;
+    private int WindowFrameColor = Color.WHITE;
+    private int WindowFrameLineColor = Color.BLACK;
     private int MarkerColor = Color.RED;
-    private int RollerShutterColor = Color.BLACK;
-    private int SunColor = Color.BLACK;
+    private int RollerShutterColor = Color.WHITE;
+    private int RollerShutterLineColor = Color.BLACK;
+    private int RollerShutterBackgroundColor = 0xffEDEDED;
+    private int SunColor = Color.WHITE;
     private float Spaceing;
     private int LouverCount = 10;
     private float LouverSpaceing;
@@ -54,7 +56,8 @@ public class SuplaRollerShutter extends View {
     private Paint paint = new Paint();
     private OnTouchListener mOnTouchListener;
     private RectF rectf = new RectF();
-    private ArrayList<Integer> Markers = null;
+    private ArrayList<Float> Markers = null;
+    private float bottomPosition;
 
     public SuplaRollerShutter(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -79,46 +82,55 @@ public class SuplaRollerShutter extends View {
         Spaceing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 (float) 3, metrics);
 
-        LouverSpaceing = Spaceing;
+        LouverSpaceing = Spaceing/2f;
     }
 
-    float getFrameLineWidth() {
+    public float getFrameLineWidth() {
         return FrameLineWidth;
     }
 
-    void setFrameLineWidth(float frameLineWidth) {
+    public void setFrameLineWidth(float frameLineWidth) {
         FrameLineWidth = frameLineWidth;
         invalidate();
     }
 
-    float getSpaceing() {
+    public float getSpaceing() {
         return Spaceing;
     }
 
-    void setSpaceing(float spaceing) {
+    public void setSpaceing(float spaceing) {
         Spaceing = spaceing;
         invalidate();
     }
 
-    int getWindowColor() {
-        return WindowColor;
+    public int getWindowFrameLineColor() {
+        return WindowFrameLineColor;
     }
 
-    void setWindowColor(int windowColor) {
-        WindowColor = windowColor;
+    void setWindowFrameLineColor(int windowFrameLineColor) {
+        WindowFrameLineColor = windowFrameLineColor;
         invalidate();
     }
 
-    int getMarkerColor() {
+    int getGlassColor() {
+        return GlassColor;
+    }
+
+    public void setGlassColor(int  glassColor) {
+        GlassColor = glassColor;
+        invalidate();
+    }
+
+    public int getMarkerColor() {
         return MarkerColor;
     }
 
-    void setMarkerColor(int markerColor) {
+    public void setMarkerColor(int markerColor) {
         MarkerColor = markerColor;
         invalidate();
     }
 
-    void setMarkers(ArrayList<Integer> markers) {
+    public void setMarkers(ArrayList<Float> markers) {
         if (markers == null) {
             Markers = null;
         } else {
@@ -127,29 +139,47 @@ public class SuplaRollerShutter extends View {
         invalidate();
     }
 
-    int getSunColor() {
+    public int getSunColor() {
         return SunColor;
     }
 
-    void setSunColor(int sunColor) {
+    public void setSunColor(int sunColor) {
         SunColor = sunColor;
         invalidate();
     }
 
-    int getRollerShutterColor() {
+    public int getRollerShutterColor() {
         return RollerShutterColor;
     }
 
-    void setRollerShutterColor(int rollerShutterColor) {
+    public void setRollerShutterColor(int rollerShutterColor) {
         RollerShutterColor = rollerShutterColor;
         invalidate();
     }
 
-    float getPercent() {
+    public int getRollerShutterLineColor() {
+        return RollerShutterLineColor;
+    }
+
+    public void setRollerShutterLineColor(int rollerShutterLineColor) {
+        RollerShutterLineColor = rollerShutterLineColor;
+        invalidate();
+    }
+
+    public int getRollerBackgroundShutterColor() {
+        return RollerShutterBackgroundColor;
+    }
+
+    public void setRollerShutterBackgroundColor(int rollerShutterBackgroundColor) {
+        RollerShutterBackgroundColor = rollerShutterBackgroundColor;
+        invalidate();
+    }
+
+    public float getPercent() {
         return Percent;
     }
 
-    void setPercent(float percent) {
+    public void setPercent(float percent) {
 
         if (percent < 0)
             percent = 0;
@@ -160,27 +190,41 @@ public class SuplaRollerShutter extends View {
         invalidate();
     }
 
-    int getLouverCount() {
+    public float getBottomPosition() {
+        return bottomPosition;
+    }
+
+    public void setBottomPosition(float bottomPosition) {
+        if (bottomPosition < 0) {
+            bottomPosition = 0;
+        } else if (bottomPosition > 100) {
+            bottomPosition = 100;
+        }
+        this.bottomPosition = bottomPosition;
+        invalidate();
+    }
+
+    public int getLouverCount() {
         return LouverCount;
     }
 
-    void setLouverCount(int louverCount) {
+    public void setLouverCount(int louverCount) {
         LouverCount = louverCount;
         invalidate();
     }
 
-    float getLouverSpaceing() {
+    public float getLouverSpaceing() {
         return LouverSpaceing;
     }
 
-    void setLouverSpaceing(float louverSpaceing) {
+    public void setLouverSpaceing(float louverSpaceing) {
         LouverSpaceing = louverSpaceing;
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-
+/*
         int bgColor = Color.TRANSPARENT;
 
         if (getBackground() instanceof ColorDrawable) {
@@ -191,9 +235,9 @@ public class SuplaRollerShutter extends View {
             bgColor = Color.WHITE;
 
         canvas.drawColor(bgColor);
-
+*/
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(WindowColor);
+        paint.setColor(WindowFrameLineColor);
         paint.setAntiAlias(true);
 
         paint.setStrokeWidth(FrameLineWidth);
@@ -207,6 +251,13 @@ public class SuplaRollerShutter extends View {
         float bottom = getHeight() - hFLW;
 
         rectf.set(left, top, right, bottom);
+
+        paint.setColor(WindowFrameColor);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        canvas.drawRoundRect(rectf, 1, 1, paint);
+
+        paint.setColor(WindowFrameLineColor);
+        paint.setStyle(Paint.Style.STROKE);
         canvas.drawRoundRect(rectf, 1, 1, paint);
 
         left = lrMargin + FrameLineWidth + Spaceing;
@@ -219,14 +270,25 @@ public class SuplaRollerShutter extends View {
         float w = (right - left) / 2 - Spaceing / 2;
         float h = (bottom - top) / 2 - Spaceing / 2;
 
-        rectf.set(left + hFLW, top + hFLW, left + w - hFLW, top - hFLW + h);
-        canvas.drawRect(rectf, paint);
-        rectf.set(right - w + hFLW, top + hFLW, right - hFLW, top - hFLW + h);
-        canvas.drawRect(rectf, paint);
-        rectf.set(left + hFLW, bottom - h + hFLW, left + w - hFLW, bottom - hFLW);
-        canvas.drawRect(rectf, paint);
-        rectf.set(right - w + hFLW, bottom - h + hFLW, right - hFLW, bottom - hFLW);
-        canvas.drawRect(rectf, paint);
+        for(int a=0;a<2;a++) {
+            if (a == 0) {
+                paint.setColor(GlassColor);
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            } else {
+                paint.setColor(WindowFrameLineColor);
+                paint.setStyle(Paint.Style.STROKE);
+            }
+
+            rectf.set(left + hFLW, top + hFLW, left + w - hFLW, top - hFLW + h);
+            canvas.drawRect(rectf, paint);
+            rectf.set(right - w + hFLW, top + hFLW, right - hFLW, top - hFLW + h);
+            canvas.drawRect(rectf, paint);
+            rectf.set(left + hFLW, bottom - h + hFLW, left + w - hFLW, bottom - hFLW);
+            canvas.drawRect(rectf, paint);
+            rectf.set(right - w + hFLW, bottom - h + hFLW, right - hFLW, bottom - hFLW);
+            canvas.drawRect(rectf, paint);
+        }
+
 
         left = right - w + Spaceing;
         top = top + Spaceing;
@@ -267,7 +329,7 @@ public class SuplaRollerShutter extends View {
 
         float percent = Moving ? virtPercent : Percent;
 
-        if (percent == 0 && Markers != null && !Markers.isEmpty()) {
+        if (!Moving && percent == 0 && Markers != null && !Markers.isEmpty()) {
 
             float markerHalfHeight = Spaceing + FrameLineWidth / 2;
             float markerArrowWidth = Spaceing * 2;
@@ -314,15 +376,23 @@ public class SuplaRollerShutter extends View {
             percent = 100;
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(bgColor);
+        paint.setColor(RollerShutterBackgroundColor);
 
-        h = getHeight() * percent / 100;
+        h = getHeight();
+
+        if (bottomPosition > 0) {
+            if (percent <= bottomPosition) {
+                h *= (percent * 100 / bottomPosition) / 100;
+            }
+        } else {
+            h *= percent / 100;
+        }
 
         rectf.set(0, 0, getWidth(), h);
         canvas.drawRect(rectf, paint);
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Moving ? (WindowColor & 0x00ffffff) | (50 << 24) : WindowColor);
+        paint.setColor(Moving ? (WindowFrameLineColor & 0x00ffffff) | (50 << 24) : WindowFrameLineColor);
         paint.setStrokeWidth(FrameLineWidth);
 
         hFLW = FrameLineWidth / 2;
@@ -330,14 +400,40 @@ public class SuplaRollerShutter extends View {
         float LouverHeight = (getHeight() - LouverSpaceing * (LouverCount - 1)) / LouverCount - FrameLineWidth;
         h -= hFLW;
 
-        for (int a = 0; a < LouverCount; a++) {
+        int _LouverCount = LouverCount;
 
+        if (bottomPosition > 0 && percent > bottomPosition) {
+            _LouverCount = (int)(getHeight() / LouverHeight)+1;
+        }
+
+        for (int a = 0; a < _LouverCount; a++) {
             if (h < 0)
                 break;
 
+            float _LouverSpaceing = LouverSpaceing;
+
+            if (bottomPosition > 0 && percent > bottomPosition) {
+                float n = (_LouverCount-1)-((100-percent)/((100- bottomPosition) / (_LouverCount-1)));
+
+                if (n-a > 0) {
+                    n = 1 - (n-a);
+                    _LouverSpaceing = LouverSpaceing * n;
+                    if (_LouverSpaceing < 0) {
+                        _LouverSpaceing = 0;
+                    }
+                }
+            }
+
             rectf.set(hFLW, h - LouverHeight, getWidth() - hFLW, h);
+
+            paint.setColor(RollerShutterColor);
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
             canvas.drawRect(rectf, paint);
-            h = h - LouverHeight - LouverSpaceing - FrameLineWidth;
+
+            paint.setColor(RollerShutterLineColor);
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawRect(rectf, paint);
+            h = h - LouverHeight - _LouverSpaceing - FrameLineWidth;
 
         }
 
@@ -349,7 +445,6 @@ public class SuplaRollerShutter extends View {
         h /= 2;
 
         canvas.drawLine(h, 0, getWidth(), 0, paint);
-
     }
 
     @Override
@@ -411,7 +506,7 @@ public class SuplaRollerShutter extends View {
         return result;
     }
 
-    void setOnPercentTouchListener(OnTouchListener l) {
+    public void setOnPercentTouchListener(OnTouchListener l) {
         mOnTouchListener = l;
     }
 

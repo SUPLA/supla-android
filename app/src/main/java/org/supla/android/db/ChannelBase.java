@@ -24,6 +24,9 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 
 import org.supla.android.R;
+import org.supla.android.SuplaApp;
+import org.supla.android.TemperaturePresenterFactory;
+import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -40,8 +43,24 @@ public abstract class ChannelBase extends DbItem {
     private int UserIconId;
     private int Flags;
 
+    private TemperaturePresenterFactory temperaturePresenterFactory;
+
+    // Special magic constant used to represent temperature value representing
+    // that temperature data is not available. This should be done differently
+    // at some point in future.
+    public final static int TEMPERATURE_NA_VALUE = -273;
+
+    public  ChannelBase() {
+        temperaturePresenterFactory = SuplaApp.getApp();
+    }
+
+    public ChannelBase(TemperaturePresenterFactory tpFact) {
+        temperaturePresenterFactory = tpFact;
+    }
+
+
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
                                                                      Double measuredTempTo,
                                                                      Double presetTempFrom,
                                                                      Double presetTempTo,
@@ -64,27 +83,26 @@ public abstract class ChannelBase extends DbItem {
 
         String measured;
         String preset;
+        TemperaturePresenter tp = getTemperaturePresenter();
 
-        if (measuredTempFrom != null && measuredTempFrom > -273) {
-            measured = String.format("%.2f", measuredTempFrom)
-                    + (char) 0x00B0;
-            if (measuredTempTo != null && measuredTempTo > -273) {
-                measured += String.format(" - %.2f", measuredTempTo)
-                        + (char) 0x00B0;
+        if (measuredTempFrom != null && measuredTempFrom > TEMPERATURE_NA_VALUE) {
+            measured = String.format("%.1f%s", tp.getConvertedValue(measuredTempFrom), tp.getUnitString());
+            if (measuredTempTo != null && measuredTempTo > TEMPERATURE_NA_VALUE) {
+                measured += String.format(" - %.1f%s", tp.getConvertedValue(measuredTempTo), tp.getUnitString());
             }
         } else {
-            measured = "---" + (char) 0x00B0;
+            measured = "---" + tp.getUnitString();
         }
 
-        if (presetTempFrom != null && presetTempFrom > -273) {
-            preset = "/" + Integer.toString(presetTempFrom.intValue())
-                    + (char) 0x00B0;
-            if (presetTempTo != null && presetTempTo > -273) {
-                preset += " - " + Integer.toString(presetTempTo.intValue())
-                        + (char) 0x00B0;
+        if (presetTempFrom != null && presetTempFrom > TEMPERATURE_NA_VALUE) {
+            preset = "/" + Integer.toString((int)tp.getConvertedValue(presetTempFrom))
+                    + tp.getUnitString();
+            if (presetTempTo != null && presetTempTo > TEMPERATURE_NA_VALUE) {
+                preset += " - " + Integer.toString((int)tp.getConvertedValue(presetTempTo))
+                        + tp.getUnitString();
             }
         } else {
-            preset = "/---" + (char) 0x00B0;
+            preset = "/---" + tp.getUnitString();
         }
 
         SpannableString ss = new SpannableString(measured + preset);
@@ -102,7 +120,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTempFrom,
                                                                      Double measuredTempTo,
                                                                      Double presetTempFrom,
                                                                      Double presetTempTo) {
@@ -113,7 +131,7 @@ public abstract class ChannelBase extends DbItem {
     }
 
     @SuppressLint("DefaultLocale")
-    static public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
+    public CharSequence getHumanReadableThermostatTemperature(Double measuredTemp,
                                                                      Double presetTemp) {
         return getHumanReadableThermostatTemperature(measuredTemp,
                 null, presetTemp, null);
@@ -220,6 +238,7 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                 return value.getSubValueHi();
 
@@ -256,6 +275,9 @@ public abstract class ChannelBase extends DbItem {
             }
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 return value.isClosed() ? 1 : 0;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                return value.getDigiglassValue().isAnySectionTransparent() ? 1 : 0;
         }
 
         return 0;
@@ -278,6 +300,7 @@ public abstract class ChannelBase extends DbItem {
                     Id = new ImageId(getUserIconId(), 1);
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
                     Id = new ImageId(getUserIconId(), (active & 0x1) > 0 ? 2
                             : ((active & 0x2) > 0 ? 3 : 1));
                     break;
@@ -292,6 +315,7 @@ public abstract class ChannelBase extends DbItem {
         }
 
         int img_idx = -1;
+        boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
 
         switch (getFunc()) {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
@@ -300,7 +324,6 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-                boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
                 switch (getAltIcon()) {
                     case 1:
 
@@ -325,7 +348,11 @@ public abstract class ChannelBase extends DbItem {
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-                img_idx = active == 1 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
+                if (_50percent) {
+                    img_idx = R.drawable.garagedoorclosed50percent;
+                } else {
+                    img_idx = active > 0 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
+                }
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
@@ -334,6 +361,10 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
             case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
                 img_idx = active == 1 ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+            case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                img_idx = active == 1 ? R.drawable.roofwindowclosed : R.drawable.roofwindowopen;
                 break;
             case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
 
@@ -360,6 +391,9 @@ public abstract class ChannelBase extends DbItem {
                 switch (getAltIcon()) {
                     case 1:
                         img_idx = active == 1 ? R.drawable.xmastreeon : R.drawable.xmastreeoff;
+                        break;
+                    case 2:
+                        img_idx = active == 1 ? R.drawable.uvon : R.drawable.uvoff;
                         break;
                     default:
                         img_idx = active == 1 ? R.drawable.lighton : R.drawable.lightoff;
@@ -443,7 +477,13 @@ public abstract class ChannelBase extends DbItem {
 
             case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
             case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                img_idx = R.drawable.electricitymeter;
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = R.drawable.powerstation;
+                    break;
+                    default:
+                        img_idx = R.drawable.electricitymeter;
+                }
                 break;
 
             case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
@@ -502,6 +542,28 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
                 img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
                 break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = active == 1 ? R.drawable.digiglasstransparent1
+                                : R.drawable.digiglass1;
+                        break;
+                    default:
+                        img_idx = active == 1 ? R.drawable.digiglasstransparent
+                                : R.drawable.digiglass;
+                }
+                break;
+            case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+                switch (getAltIcon()) {
+                    case 1:
+                        img_idx = active == 1 ? R.drawable.digiglassvtransparent1
+                                : R.drawable.digiglass1;
+                        break;
+                    default:
+                        img_idx = active == 1 ? R.drawable.digiglassvtransparent
+                                : R.drawable.digiglass;
+                }
+                break;
         }
 
         return new ImageId(img_idx);
@@ -542,8 +604,8 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
 
                 if (getOnLine()
-                        && value.getTemp(getFunc()) >= -273) {
-                    return String.format("%.1f\u00B0", value.getTemp(getFunc()));
+                        && value.getTemp(getFunc()) >= TEMPERATURE_NA_VALUE) {
+                    return getTemperaturePresenter().formattedWithUnit(value, this);
                 } else {
                     return "---";
                 }
@@ -560,8 +622,8 @@ public abstract class ChannelBase extends DbItem {
             case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
                 double temp = value.getTemp(getFunc());
                 if (getOnLine()
-                        && temp >= -273) {
-                    return String.format("%.1f\u00B0", temp);
+                        && temp >= TEMPERATURE_NA_VALUE) {
+                    return getTemperaturePresenter().formattedWithUnit(value, this);
                 } else {
                     return "---";
                 }
@@ -655,6 +717,11 @@ public abstract class ChannelBase extends DbItem {
 
         return null;
     }
+
+    protected TemperaturePresenter getTemperaturePresenter() {
+        return temperaturePresenterFactory.getTemperaturePresenter();
+    }
+
 
     public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
 

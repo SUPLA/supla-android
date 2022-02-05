@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlRgbVLCalibration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -163,13 +164,13 @@
     <LinearLayout
         android:id="@+id/vlcfgLL3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/vlcfgLL4"
         android:layout_below="@+id/vlcfgLL2"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="false"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -184,7 +185,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/vl_tab"
-                android:text="@string/vl_cfg_op_range"
+                android:text="@string/cfg_op_range"
                 android:textColor="@android:color/black" />
 
             <Button
@@ -211,6 +212,76 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vlcfgLL4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvLED"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/status_led"
+            android:textColor="@android:color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_tab_background"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/vlCfgLedImgOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@drawable/rounded_led_sel_btn"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ledonwhite" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/vlCfgLedImgOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@drawable/rounded_led_normal_btn"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ledoff" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/vlCfgLedImgAlwaysOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@drawable/rounded_led_normal_btn"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ledalwaysoff" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/vlCfgPicFirmwareVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="right"
+            android:textSize="10sp" />
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/imageView7"

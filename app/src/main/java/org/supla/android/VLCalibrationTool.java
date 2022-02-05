@@ -1,32 +1,23 @@
 package org.supla.android;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VLCalibrationTool implements View.OnClickListener,
-        SuplaRangeCalibrationWheel.OnChangeListener,
-        SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
+public class VLCalibrationTool extends DimmerCalibrationTool
+        implements SuplaRangeCalibrationWheel.OnChangeListener {
     private final static int VL_MSG_RESTORE_DEFAULTS = 0x4E;
     private final static int VL_MSG_CONFIGURATION_MODE = 0x44;
     private final static int VL_MSG_CONFIGURATION_ACK = 0x45;
@@ -39,56 +30,39 @@ public class VLCalibrationTool implements View.OnClickListener,
     private final static int VL_MSG_SET_BOOST = 0x5B;
     private final static int VL_MSG_SET_BOOST_LEVEL = 0x5C;
     private final static int VL_MSG_SET_CHILD_LOCK = 0x18;
+    private final static int VL_CALCFG_MSG_SET_LED_CONFIG = 0x01FF;
     private final static int UI_REFRESH_LOCK_TIME = 2000;
-    private final static int MIN_SEND_DELAY_TIME = 500;
-    private final static int DISPLAY_DELAY_TIME = 1000;
-    private ChannelDetailRGBW detailRGB;
-    private Button btnOK;
-    private Button btnRestore;
-    private Button btnInfo;
+
     private Button btnDmAuto;
     private Button btnDm1;
     private Button btnDm2;
     private Button btnDm3;
-    private Button btnBoostAuto;
-    private Button btnBoostYes;
-    private Button btnBoostNo;
-    private Button btnOpRange;
-    private Button btnBoost;
-    private SuplaRangeCalibrationWheel calibrationWheel;
-    private RelativeLayout mainView;
-    private SuperuserAuthorizationDialog authDialog;
-    private long uiRefreshLockTime = 0;
-    private boolean configStarted = false;
-    private VLCfgParameters cfgParameters;
+    private final Button btnBoostAuto;
+    private final Button btnBoostYes;
+    private final Button btnBoostNo;
+    private final Button btnOpRange;
+    private final Button btnBoost;
+    private final SuplaRangeCalibrationWheel calibrationWheel;
+    private final VLCfgParameters cfgParameters;
     private int mColorDisabled;
-    private Timer delayTimer1 = null;
-    private Timer delayTimer2 = null;
-
-    private long lastCalCfgTime = 0;
-    private Handler _sc_msg_handler = null;
+    private boolean restoringDefaults;
+    private Timer startConfigurationRetryTimer;
+    private final TextView tvPicFirmwareVersion;
 
     public VLCalibrationTool(ChannelDetailRGBW detailRGB) {
+        super(detailRGB);
 
-        this.detailRGB = detailRGB;
-        mainView = (RelativeLayout) detailRGB.inflateLayout(R.layout.vl_calibration);
-        mainView.setVisibility(View.GONE);
-        detailRGB.addView(mainView);
+        btnDmAuto = findBtnViewById(R.id.vlCfgDmAuto);
+        btnDm1 = findBtnViewById(R.id.vlCfgDm1);
+        btnDm2 = findBtnViewById(R.id.vlCfgDm2);
+        btnDm3 = findBtnViewById(R.id.vlCfgDm3);
 
-        btnOK = getBtn(R.id.vlBtnOK);
-        btnRestore = getBtn(R.id.vlBtnRestore);
-        btnInfo = getBtn(R.id.vlBtnInfo);
-        btnDmAuto = getBtn(R.id.vlCfgDmAuto);
-        btnDm1 = getBtn(R.id.vlCfgDm1);
-        btnDm2 = getBtn(R.id.vlCfgDm2);
-        btnDm3 = getBtn(R.id.vlCfgDm3);
-
-        btnBoostAuto = getBtn(R.id.vlCfgBoostAuto);
-        btnBoostYes = getBtn(R.id.vlCfgBoostYes);
-        btnBoostNo = getBtn(R.id.vlCfgBoostNo);
-        btnOpRange = getBtn(R.id.vlCfgOpRange);
-        btnBoost = getBtn(R.id.vlCfgBoost);
-        calibrationWheel = mainView.findViewById(R.id.vlCfgCalibrationWheel);
+        btnBoostAuto = findBtnViewById(R.id.vlCfgBoostAuto);
+        btnBoostYes = findBtnViewById(R.id.vlCfgBoostYes);
+        btnBoostNo = findBtnViewById(R.id.vlCfgBoostNo);
+        btnOpRange = findBtnViewById(R.id.vlCfgOpRange);
+        btnBoost = findBtnViewById(R.id.vlCfgBoost);
+        calibrationWheel = getMainView().findViewById(R.id.vlCfgCalibrationWheel);
         calibrationWheel.setOnChangeListener(this);
         cfgParameters = new VLCfgParameters();
 
@@ -97,69 +71,57 @@ public class VLCalibrationTool implements View.OnClickListener,
 
         btnDmAuto.setVisibility(View.GONE);
         btnBoostAuto.setVisibility(View.GONE);
+
+        setImgViews(R.id.vlCfgLedImgOn, R.id.vlCfgLedImgOff, R.id.vlCfgLedImgAlwaysOff);
+        setButtons(R.id.vlBtnOK, R.id.vlBtnRestore, R.id.vlBtnInfo);
+
+        tvPicFirmwareVersion = getMainView().findViewById(R.id.vlCfgPicFirmwareVersion);
     }
 
-    private void registerMessageHandler() {
-        if (_sc_msg_handler != null)
-            return;
+    @Override
+    protected void onSuperuserOnAuthorizarionSuccess() {
+        calCfgRequest(VL_MSG_CONFIGURATION_MODE);
+    }
 
-        _sc_msg_handler = new Handler() {
+    private void stopConfigurationRetryTimer() {
+        if (startConfigurationRetryTimer != null) {
+            startConfigurationRetryTimer.cancel();
+            startConfigurationRetryTimer = null;
+        }
+    }
+
+    private void startConfigurationAgainWithRetry() {
+
+        stopConfigurationRetryTimer();
+
+        startConfigurationRetryTimer = new Timer();
+
+        startConfigurationRetryTimer.schedule(new TimerTask() {
             @Override
-            public void handleMessage(Message msg) {
-                SuplaClientMsg _msg = (SuplaClientMsg) msg.obj;
-                if (_msg != null
-                        && _msg.getType() == SuplaClientMsg.onCalCfgResult
-                        && detailRGB != null
-                        && detailRGB.isDetailVisible()
-                        && _msg.getChannelId() == detailRGB.getRemoteId()) {
-                    onCalCfgResult(_msg.getCommand(), _msg.getResult(), _msg.getData());
-                }
+            public void run() {
+                getActivity().runOnUiThread(() -> {
+                    if (startConfigurationRetryTimer != null) {
+                        calCfgRequest(VL_MSG_CONFIGURATION_MODE);
+                    }
+                });
+
             }
-        };
+        }, 5000, 5000);
 
-        SuplaApp.getApp().addMsgReceiver(_sc_msg_handler);
-    }
-
-    private void unregisterMessageHandler() {
-        if (_sc_msg_handler != null) {
-            SuplaApp.getApp().removeMsgReceiver(_sc_msg_handler);
-            _sc_msg_handler = null;
-        }
     }
 
     @Override
-    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog dialog,
-                                                 boolean Success, int Code) {
-        if (Success) {
-            registerMessageHandler();
-            calCfgRequest(VL_MSG_CONFIGURATION_MODE);
-        } else {
-            unregisterMessageHandler();
-        }
-    }
-
-    @Override
-    public void authorizationCanceled() {
-        unregisterMessageHandler();
-    }
-
-    private void onCalCfgResult(int Command, int Result, byte[] Data) {
+    protected void onCalCfgResult(int Command, int Result, byte[] Data) {
         switch (Command) {
             case VL_MSG_CONFIGURATION_ACK:
-                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && authDialog != null) {
+                if (Result == SuplaConst.SUPLA_RESULTCODE_TRUE && !restoringDefaults) {
 
-                    NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
-                    if (activity!=null) {
-                        activity.showBackButton();
-                    }
+                    setConfigStarted();
+                    stopConfigurationRetryTimer();
 
-                    authDialog.close();
-                    authDialog = null;
-
-                    displayCfgParameters(true);
-                    detailRGB.getContentView().setVisibility(View.GONE);
-                    mainView.setVisibility(View.VISIBLE);
-                    configStarted = true;
+                } else if (restoringDefaults) {
+                    restoringDefaults = false;
+                    startConfigurationAgainWithRetry();
                 }
                 break;
             case VL_MSG_CONFIGURATION_REPORT:
@@ -169,12 +131,6 @@ public class VLCalibrationTool implements View.OnClickListener,
                 }
                 break;
         }
-    }
-
-    private Button getBtn(int resid) {
-        Button btn = mainView.findViewById(resid);
-        btn.setOnClickListener(this);
-        return btn;
     }
 
     private int viewToMode(View btn) {
@@ -233,18 +189,6 @@ public class VLCalibrationTool implements View.OnClickListener,
         return null;
     }
 
-    private void setBtnApparance(Button btn, int resid, int textColor) {
-        Drawable d = resid == 0 ? null : detailRGB.getResources().getDrawable(resid);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            btn.setBackground(d);
-        } else {
-            btn.setBackgroundDrawable(d);
-        }
-
-        btn.setTextColor(textColor);
-    }
-
     private void setMode(int mode) {
         setBtnApparance(btnDmAuto, 0,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO)
@@ -262,9 +206,8 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isModeDisabled(VLCfgParameters.MODE_3)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isModeDisabled(mode)) {
-            setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
-        }
+
+        setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
     }
 
     private void setMode() {
@@ -284,13 +227,11 @@ public class VLCalibrationTool implements View.OnClickListener,
                 cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO)
                         ? mColorDisabled : Color.BLACK);
 
-        if (!cfgParameters.isBoostDisabled(boost)) {
-            setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
+        setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
 
-            if (boost == VLCfgParameters.BOOST_YES) {
-                btnBoost.setVisibility(View.VISIBLE);
-                return;
-            }
+        if (boost == VLCfgParameters.BOOST_YES) {
+            btnBoost.setVisibility(View.VISIBLE);
+            return;
         }
 
         btnBoost.setVisibility(View.INVISIBLE);
@@ -299,6 +240,10 @@ public class VLCalibrationTool implements View.OnClickListener,
 
     private void setBoost() {
         setBoost(cfgParameters.getBoost());
+    }
+
+    private void setLedConfig() {
+        setLedConfig(cfgParameters);
     }
 
     private void displayOpRange(boolean display) {
@@ -313,122 +258,35 @@ public class VLCalibrationTool implements View.OnClickListener,
         }
     }
 
-    private void displayCfgParameters(boolean force) {
-        if (delayTimer2 != null) {
-            delayTimer2.cancel();
-            delayTimer2 = null;
-        }
-
-        if (force || System.currentTimeMillis() - lastCalCfgTime >= DISPLAY_DELAY_TIME) {
-            setMode();
-            setBoost();
-            calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
-            calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
-            calibrationWheel.setMinMax(cfgParameters.getMinimum(), cfgParameters.getMaximum());
-            calibrationWheel.setBoostLevel(cfgParameters.getBoostLevel());
-        } else {
-
-            long delayTime = 1;
-
-            if (System.currentTimeMillis() - lastCalCfgTime < DISPLAY_DELAY_TIME)
-                delayTime = DISPLAY_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
-
-            delayTimer2 = new Timer();
-
-            if (delayTime < 1) {
-                delayTime = 1;
-            }
-
-            delayTimer2.schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-                    if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
-                        ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                displayCfgParameters(false);
-                            }
-                        });
-                    }
-                }
-            }, delayTime, 1000);
-        }
+    @Override
+    protected void displayCfgParameters() {
+        setMode();
+        setBoost();
+        setLedConfig();
+        calibrationWheel.setRightEdge(cfgParameters.getRightEdge());
+        calibrationWheel.setLeftEdge(cfgParameters.getLeftEdge());
+        calibrationWheel.setMinMax(cfgParameters.getMinimum(), cfgParameters.getMaximum());
+        calibrationWheel.setBoostLevel(cfgParameters.getBoostLevel());
+        tvPicFirmwareVersion.setText(cfgParameters.getPicFirmwareVersion());
     }
 
-    private void LockUIrefresh() {
-        uiRefreshLockTime = System.currentTimeMillis() + UI_REFRESH_LOCK_TIME;
-    }
-
-    private void calCfgRequest(int cmd, Byte bdata, Short sdata) {
-        if (detailRGB == null) {
-            return;
-        }
-
-        LockUIrefresh();
-        lastCalCfgTime = System.currentTimeMillis();
-
-        if (bdata != null) {
-            detailRGB.deviceCalCfgRequest(cmd, bdata);
-        } else if (sdata != null) {
-            detailRGB.deviceCalCfgRequest(cmd, sdata);
-        } else {
-            detailRGB.deviceCalCfgRequest(cmd);
-        }
-    }
-
-    private void calCfgRequest(int cmd) {
-        calCfgRequest(cmd, null, null);
-    }
-
-    private void showRestoreConfirmDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(detailRGB.getContext());
-        builder.setMessage(R.string.restore_question);
-
-        builder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        calCfgDelayed(VL_MSG_RESTORE_DEFAULTS);
-                    }
-                });
-
-        builder.setNeutralButton(R.string.no,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private void showInformationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(detailRGB.getContext());
-        ViewGroup viewGroup = detailRGB.findViewById(android.R.id.content);
+    @Override
+    protected void showInformationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        ViewGroup viewGroup = getDetailRGB().findViewById(android.R.id.content);
         View dialogView = LayoutInflater.from(
-                detailRGB.getContext()).inflate(R.layout.vl_dimmer_config_info,
+                getContext()).inflate(R.layout.vl_dimmer_config_info,
                 viewGroup, false);
         builder.setView(dialogView);
         final AlertDialog alertDialog = builder.create();
 
-        dialogView.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
+        dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
 
-        dialogView.findViewById(R.id.btnUrl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(((Button) v).getText().toString()));
-                detailRGB.getContext().startActivity(browserIntent);
-            }
+        dialogView.findViewById(R.id.btnUrl).setOnClickListener(v -> {
+            alertDialog.dismiss();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(((Button) v).getText().toString()));
+            getContext().startActivity(browserIntent);
         });
 
         Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
@@ -444,28 +302,43 @@ public class VLCalibrationTool implements View.OnClickListener,
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt6)).setTypeface(opensansbold);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt7)).setTypeface(opensans);
         ((TextView) dialogView.findViewById(R.id.tvInfoTxt8)).setTypeface(opensans);
-
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt9)).setTypeface(opensansbold);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt10)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt11)).setTypeface(opensans);
+        ((TextView) dialogView.findViewById(R.id.tvInfoTxt12)).setTypeface(opensans);
         alertDialog.show();
     }
 
-    public void onClick(View v) {
+    @Override
+    protected void doRestore() {
+        restoringDefaults = true;
+        startConfigurationAgainWithRetry();
 
-        if (v == btnOK) {
-            configStarted = false;
-            calCfgRequest(VL_MSG_CONFIG_COMPLETE, (byte) 1, null);
-            Hide();
-            return;
-        } else if (v == btnRestore) {
-            showRestoreConfirmDialog();
-        } else if (v == btnInfo) {
-            showInformationDialog();
-            return;
-        }
+        calCfgDelayedRequest(VL_MSG_RESTORE_DEFAULTS);
+    }
+
+    private void calCfgConfigComplete(boolean save) {
+        byte[] data = new byte[1];
+        data[0] = (byte)(save ? 1 : 0);
+        calCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
+    }
+
+    @Override
+    protected void saveChanges() {
+        calCfgConfigComplete(true);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
 
         int mode = viewToMode(v);
         if (mode != VLCfgParameters.MODE_UNKNOWN) {
             setMode(mode);
             calCfgRequest(VL_MSG_SET_MODE, (byte) (mode & 0xFF), null);
+
+            showPreloaderWithText(R.string.mode_change_in_progress);
+            startConfigurationAgainWithRetry();
         }
 
         int boost = viewToBoost(v);
@@ -475,6 +348,15 @@ public class VLCalibrationTool implements View.OnClickListener,
 
             if (boost == VLCfgParameters.BOOST_YES) {
                 onBoostChanged(calibrationWheel);
+                displayOpRange(false);
+            }
+        }
+
+        if (cfgParameters.getLedConfig() != null) {
+            int ledConfig = viewToLedConfig(v);
+            if (ledConfig != VLCfgParameters.LED_UNKNOWN) {
+                setLedConfig(ledConfig);
+                calCfgRequest(VL_CALCFG_MSG_SET_LED_CONFIG, (byte) (ledConfig & 0xFF), null);
             }
         }
 
@@ -485,115 +367,48 @@ public class VLCalibrationTool implements View.OnClickListener,
         }
     }
 
-    public void Show() {
-        if (authDialog != null) {
-            authDialog.close();
-            authDialog = null;
-        }
-
-        authDialog =
-                new SuperuserAuthorizationDialog(detailRGB.getContext());
-        authDialog.setOnAuthorizarionResultListener(this);
-        authDialog.show();
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.vl_calibration;
     }
 
-    public void Hide() {
-
-        unregisterMessageHandler();
-
-        if (mainView.getVisibility() == View.VISIBLE) {
-            mainView.setVisibility(View.GONE);
-            detailRGB.getContentView().setVisibility(View.VISIBLE);
-
-            if (configStarted) {
-                configStarted = false;
-                byte[] data = new byte[1];
-                detailRGB.deviceCalCfgRequest(VL_MSG_CONFIG_COMPLETE, 0, data, true);
-            }
+    @Override
+    protected void calCfgRequest(int cmd) {
+        switch (cmd) {
+            case VL_MSG_SET_MINIMUM:
+                calCfgRequest(cmd, null,
+                        (short) calibrationWheel.getMinimum());
+                break;
+            case VL_MSG_SET_MAXIMUM:
+                calCfgRequest(cmd, null,
+                        (short) calibrationWheel.getMaximum());
+                break;
+            case VL_MSG_SET_BOOST_LEVEL:
+                calCfgRequest(cmd, null,
+                        (short) calibrationWheel.getBoostLevel());
+                break;
+            default:
+                super.calCfgRequest(cmd);
+                break;
         }
-
-    }
-
-    public boolean isVisible() {
-        return mainView.getVisibility() == View.VISIBLE;
-    }
-
-    private void calCfgDelayed(int msg) {
-        if (delayTimer1 != null) {
-            delayTimer1.cancel();
-            delayTimer1 = null;
-        }
-
-        if (System.currentTimeMillis() - lastCalCfgTime >= MIN_SEND_DELAY_TIME) {
-            switch (msg) {
-                case VL_MSG_SET_MINIMUM:
-                    calCfgRequest(msg, null,
-                            new Short((short) calibrationWheel.getMinimum()));
-                    break;
-                case VL_MSG_SET_MAXIMUM:
-                    calCfgRequest(msg, null,
-                            new Short((short) calibrationWheel.getMaximum()));
-                    break;
-                case VL_MSG_SET_BOOST_LEVEL:
-                    calCfgRequest(msg, null,
-                            new Short((short) calibrationWheel.getBoostLevel()));
-                    break;
-                default:
-                    calCfgRequest(msg);
-                    break;
-            }
-        } else {
-
-            long delayTime = 1;
-
-            if (System.currentTimeMillis() - lastCalCfgTime < MIN_SEND_DELAY_TIME)
-                delayTime = MIN_SEND_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
-
-            delayTimer1 = new Timer();
-
-            if (delayTime < 1) {
-                delayTime = 1;
-            }
-
-            delayTimer1.schedule(new DisplayDelayedTask(msg), delayTime, 1000);
-        }
-
     }
 
     @Override
     public void onRangeChanged(SuplaRangeCalibrationWheel calibrationWheel, boolean minimum) {
-        LockUIrefresh();
-        calCfgDelayed(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
+        calCfgDelayedRequest(minimum ? VL_MSG_SET_MINIMUM : VL_MSG_SET_MAXIMUM);
     }
 
     @Override
     public void onBoostChanged(SuplaRangeCalibrationWheel calibrationWheel) {
-        LockUIrefresh();
-        calCfgDelayed(VL_MSG_SET_BOOST_LEVEL);
+        calCfgDelayedRequest(VL_MSG_SET_BOOST_LEVEL);
     }
 
-    public boolean onBackPressed() {
-        Hide();
-        return false;
-    }
+    @Override
+    protected void onHide() {
+        stopConfigurationRetryTimer();
 
-    class DisplayDelayedTask extends TimerTask {
-        private int msg;
-
-        DisplayDelayedTask(int msg) {
-            this.msg = msg;
-        }
-
-        @Override
-        public void run() {
-            if (detailRGB != null && detailRGB.getContext() instanceof Activity) {
-                ((Activity) detailRGB.getContext()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        calCfgDelayed(msg);
-                    }
-                });
-            }
+        if (isConfigStarted()) {
+            calCfgConfigComplete(false);
         }
     }
 }

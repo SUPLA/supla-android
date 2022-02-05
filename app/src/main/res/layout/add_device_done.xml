@@ -30,6 +30,7 @@
         tools:ignore="ContentDescription" />
 
     <LinearLayout
+        android:id="@+id/llDeviceParams"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/flDeviceParams"
@@ -130,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:background="#FFEB3B"
                 android:gravity="left"
                 android:textColor="@android:color/black"
                 android:textSize="11sp" />
@@ -158,5 +160,18 @@
             android:textSize="14sp" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/wizard_done_txt9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llDeviceParams"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/wizard_done_explentations"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
 </RelativeLayout>

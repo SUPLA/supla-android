@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/emrl_Main"
     android:layout_width="match_parent"
@@ -16,6 +17,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:visibility="visible">
+
+        <org.supla.android.SuplaWarningIcon
+            android:id="@+id/emWarningIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            app:srcCompat="@drawable/channel_warning_level1" />
 
         <View
             android:id="@+id/view"
@@ -1200,6 +1213,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

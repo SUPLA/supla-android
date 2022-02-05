@@ -48,7 +48,10 @@ public class SuplaClientMsg {
     public final static int onZWaveGetAssignedNodeIdResult = 25;
     public final static int onZWaveAssignNodeIdResult = 26;
     public final static int onCalCfgProgressReport = 27;
-    private SuplaClient Sender;
+    public final static int onZWaveWakeUpSettingsReport = 28;
+    public final static int onZWaveSetWakeUpTimeResult = 29;
+    public final static int onLocationCaptionSetResult = 30;
+    private Object Sender;
     private int Type;
     private SuplaVersionError VersionError;
     private SuplaRegisterResult RegisterResult;
@@ -61,6 +64,7 @@ public class SuplaClientMsg {
     private SuplaChannelBasicCfg ChannelBasicCfg;
     private int ChannelId;
     private int ChannelGroupId;
+    private int LocationId;
     private boolean Success;
     private int Code;
     private int Command;
@@ -71,15 +75,17 @@ public class SuplaClientMsg {
     private ZWaveNode Node;
     private String Text;
     private short Progress;
+    private boolean ExtendedValue;
+    private ZWaveWakeUpSettings WakeUpSettings;
 
-    public SuplaClientMsg(SuplaClient sender, int type) {
+    public SuplaClientMsg(Object sender, int type) {
         Type = type;
         Sender = sender;
         ChannelId = 0;
         ChannelGroupId = 0;
     }
 
-    public SuplaClient getSender() {
+    public Object getSender() {
         return Sender;
     }
 
@@ -254,5 +260,29 @@ public class SuplaClientMsg {
 
     public void setProgress(short progress) {
         Progress = progress;
+    }
+
+    public boolean isExtendedValue() {
+        return ExtendedValue;
+    }
+
+    public void setExtendedValue(boolean extendedValue) {
+        ExtendedValue = extendedValue;
+    }
+
+    public ZWaveWakeUpSettings getWakeUpSettings() {
+        return WakeUpSettings;
+    }
+
+    public void setWakeUpSettings(ZWaveWakeUpSettings wakeUpSettings) {
+        WakeUpSettings = wakeUpSettings;
+    }
+
+    public int getLocationId() {
+        return LocationId;
+    }
+
+    public void setLocationId(int locationId) {
+        LocationId = locationId;
     }
 }

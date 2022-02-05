@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/menubar">
 
+    <ImageView
+        android:id="@+id/tv_done_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:background="@drawable/wizard_ok"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/tv_done_txt"
         android:layout_width="wrap_content"
@@ -19,15 +29,27 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/tv_done_icon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
+    <TextView
+        android:id="@+id/tv_wake_up_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_done_txt"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp"
-        android:background="@drawable/wizard_ok"
-        tools:ignore="ContentDescription" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/zwave_change_wake_up_settings"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
-
+    <Button
+        android:id="@+id/btnWakeUpSettings"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/tv_wake_up_txt"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/wakeup" />
 </RelativeLayout>

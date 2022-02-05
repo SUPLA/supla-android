@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -53,7 +54,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         SuplaColorListPicker.OnColorListTouchListener {
 
     final static private long MIN_REMOTE_UPDATE_PERIOD = 250;
-    final static private long MIN_UPDATE_DELAY = 3500;
+    final static private long MIN_UPDATE_DELAY = 3000;
     private SuplaColorBrightnessPicker cbPicker;
     private SuplaColorListPicker clPicker;
     private Button tabRGB;
@@ -66,7 +67,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private Button btnSettings;
     private Button btnInfo;
     private RelativeLayout rlMain;
-    private VLCalibrationTool vlCalibrationTool = null;
+    private DimmerCalibrationTool dimmerCalibrationTool = null;
     private long remoteUpdateTime;
     private long changeFinishedTime;
     private Timer delayTimer1;
@@ -77,6 +78,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private int lastBrightness;
     private Button btnPowerOnOff;
     private Boolean varilight;
+    private Boolean zamel;
+    private Boolean comelit;
 
     public ChannelDetailRGBW(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -174,19 +177,36 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         pickerTypeTabs.setVisibility(VISIBLE);
 
         varilight = false;
+        zamel = false;
+        comelit = false;
 
         if (getChannelBase() instanceof Channel) {
             Channel c = (Channel) getChannelBase();
             if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT
                     && c.getProductID() == 1) {
                 varilight = true;
+                if (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool)) {
+                    dimmerCalibrationTool = new VLCalibrationTool(this);
+                }
+            } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_ZAMEL) {
+                zamel = true;
+                if ((c.getProductID() == SuplaConst.ZAM_PRODID_DIW_01)
+                     && (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
+                    dimmerCalibrationTool = new DiwCalibrationTool(this);
+                }
+            } else if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_COMELIT) {
+                comelit = true;
+                if ((c.getProductID() == SuplaConst.COM_PRODID_WDIM100)
+                        && (dimmerCalibrationTool == null
+                        || !(dimmerCalibrationTool instanceof VLCalibrationTool))) {
+                    dimmerCalibrationTool = new DiwCalibrationTool(this);
+                }
             }
         }
 
-        if (varilight) {
-            vlCalibrationTool = new VLCalibrationTool(this);
-            llExtraButtons.setVisibility(VISIBLE);
-        }
+        llExtraButtons.setVisibility(dimmerCalibrationTool == null ? GONE : VISIBLE);
 
         Preferences prefs = new Preferences(getContext());
 
@@ -194,6 +214,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         if (typeSlider == null) {
             typeSlider = varilight;
         }
+
+        cbPicker.setMinBrightness(varilight || zamel || comelit ? 1f : 0f);
 
         onClick(typeSlider ? tabSlider : tabWheel);
         channelDataToViews();
@@ -203,16 +225,24 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     public void onDetailHide() {
         super.onDetailHide();
 
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
+        if (dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Hide();
+            dimmerCalibrationTool = null;
         }
     }
 
     public void onDetailShow() {
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
+        if (dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Hide();
         }
         rlMain.setVisibility(VISIBLE);
+    }
+
+    private void hideDimmerConfigurationToolIfNotLocked() {
+        if (dimmerCalibrationTool != null
+                && dimmerCalibrationTool.isExitUnlocked()) {
+            dimmerCalibrationTool.Hide();
+        }
     }
 
     public void setData(ChannelBase channel) {
@@ -222,11 +252,10 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         pickerTypeTabs.setVisibility(GONE);
 
         varilight = false;
+        zamel = false;
+        comelit = false;
 
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
-            vlCalibrationTool = null;
-        }
+        hideDimmerConfigurationToolIfNotLocked();
 
         switch (channel.getFunc()) {
 
@@ -354,12 +383,26 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         setBtnBackground(btnPowerOnOff, on ? R.drawable.rgbwpoweron : R.drawable.rgbwpoweroff);
     }
 
+    private boolean isAnyOn() {
+        ArrayList<Double>markers = cbPicker.getBrightnessMarkers();
+        if (markers != null) {
+            for(Double marker : markers) {
+                if (marker > 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @SuppressLint("SetTextI18n")
     private void pickerToUI() {
 
         lastColor = cbPicker.getColor();
         int brightness = (int) cbPicker.getBrightnessValue();
-        setPowerBtnOn(brightness > 0);
+
+        setPowerBtnOn(brightness > 0 || isAnyOn());
 
         if (cbPicker.isColorWheelVisible())
             lastColorBrightness = brightness;
@@ -369,10 +412,21 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
     @Override
     public boolean onBackPressed() {
-        if (vlCalibrationTool != null && vlCalibrationTool.isVisible()) {
-            return vlCalibrationTool.onBackPressed();
+        if (dimmerCalibrationTool != null && dimmerCalibrationTool.isVisible()) {
+            return dimmerCalibrationTool.onBackPressed();
         }
         return true;
+    }
+
+    public boolean detailWillHide(boolean offlineReason) {
+        if (super.detailWillHide(offlineReason)) {
+            return !offlineReason
+                    || dimmerCalibrationTool == null
+                    || !dimmerCalibrationTool.isVisible()
+                    || dimmerCalibrationTool.isExitUnlocked();
+
+        }
+        return false;
     }
 
     private void sendNewValues(boolean force, boolean turnOnOff) {
@@ -386,12 +440,13 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         if (client == null || (!isDetailVisible() && !force))
             return;
-
-        if (System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD
+        
+        if ((turnOnOff
+                || System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD)
                 && client.setRGBW(getRemoteId(), isGroup(), lastColor,
                 lastColorBrightness, lastBrightness, turnOnOff)) {
             remoteUpdateTime = System.currentTimeMillis();
-
+            refreshViewsWithDelay(MIN_UPDATE_DELAY);
         } else {
 
             long delayTime = 1;
@@ -430,7 +485,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private void showInformationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         ViewGroup viewGroup = findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.vl_dimmer_info,
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dimmer_info,
                 viewGroup, false);
         builder.setView(dialogView);
         final AlertDialog alertDialog = builder.create();
@@ -490,13 +545,13 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             tabSlider.setTextColor(Color.WHITE);
             btnPowerOnOff.setVisibility(VISIBLE);
         } else if (v == btnSettings
-                && vlCalibrationTool != null) {
-            vlCalibrationTool.Show();
+                && dimmerCalibrationTool != null) {
+            dimmerCalibrationTool.Show();
         } else if (v == btnPowerOnOff) {
             cbPicker.setPowerButtonOn(!cbPicker.isPowerButtonOn());
             onPowerButtonClick(cbPicker);
         } else if (v == btnInfo) {
-            if (varilight) {
+            if (dimmerCalibrationTool != null) {
                 showInformationDialog();
             }
         }
@@ -509,7 +564,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             cbPicker.setSliderVisible(v == tabSlider);
 
             Preferences prefs = new Preferences(getContext());
-            prefs.setBrightnessPickerTypeSlider(cbPicker.isSliderVisible());
+            prefs.setBrightnessPickerTypeToSlider(cbPicker.isSliderVisible());
         }
 
     }
@@ -531,10 +586,9 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
         scbPicker.setBrightnessValue(scbPicker.isPowerButtonOn() ? 100 : 0);
         pickerToUI();
         sendNewValues(true, true);
-        onChangeFinished(scbPicker);
     }
 
-    private void updateDelayed() {
+    private void refreshViewsWithDelay(long delayTime) {
 
         if (delayTimer2 != null) {
             delayTimer2.cancel();
@@ -545,19 +599,21 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
                 || cbPicker.isMoving())
             return;
 
-        if (System.currentTimeMillis() - changeFinishedTime >= MIN_UPDATE_DELAY) {
+        if (delayTime == 0 && System.currentTimeMillis() - changeFinishedTime >= MIN_UPDATE_DELAY) {
 
             channelDataToViews();
 
         } else {
 
-            long delayTime = 1;
+            if (delayTime == 0) {
+                delayTime = 1;
 
-            if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY)
-                delayTime = MIN_UPDATE_DELAY - (System.currentTimeMillis() - changeFinishedTime) + 1;
+                if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY)
+                    delayTime = MIN_UPDATE_DELAY
+                            - (System.currentTimeMillis() - changeFinishedTime) + 1;
+            }
 
             delayTimer2 = new Timer();
-
             delayTimer2.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -567,7 +623,7 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
                             @Override
                             public void run() {
-                                updateDelayed();
+                                refreshViewsWithDelay();
                             }
                         });
                     }
@@ -577,25 +633,23 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
             }, delayTime, 1000);
 
         }
+    }
 
-
+    private void refreshViewsWithDelay() {
+        refreshViewsWithDelay(0);
     }
 
     @Override
     public void onChangeFinished(SuplaColorBrightnessPicker scbPicker) {
         changeFinishedTime = System.currentTimeMillis();
-        updateDelayed();
+        refreshViewsWithDelay();
     }
 
     @Override
     public void OnChannelDataChanged() {
-        updateDelayed();
-
-        if (vlCalibrationTool != null) {
-            vlCalibrationTool.Hide();
-        }
+        refreshViewsWithDelay();
+        hideDimmerConfigurationToolIfNotLocked();
     }
-
 
     @Override
     public void onColorTouched(SuplaColorListPicker sclPicker, int color, short percent) {
@@ -630,6 +684,15 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
 
         }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (dimmerCalibrationTool != null && dimmerCalibrationTool.isVisible()) {
+            return false;
+        }
+        return super.onTouchEvent(ev);
+    }
+
 
 
 }

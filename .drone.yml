@@ -1,0 +1,28 @@
+kind: pipeline
+name: default
+
+steps:
+- name: connectedCheck
+  image: devel/supla-android-ci
+  pull: never
+  commands:
+    - ./gradlew build connectedCheck
+     
+
+- name: notify
+  image: mike1pol/drone-rocket
+  depends_on: [ connectedCheck ]
+  settings:
+    url: { from_secret: rocket_url }
+    user_id: { from_secret: rocket_user }
+    token: { from_secret: rocket_token }
+    channel: github
+  when:
+    status: [ success, failure ]
+    event:
+      exclude:
+        - pull_request
+  trigger:
+    status: [ success, failure ]
+    event:
+      exclude: [ pull_request ]

@@ -1,9 +1,13 @@
 <resources>
+    <string name="confirm_button_text" translatable="false">OK</string>
+    <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
+
 
     <string name="feedback_title">Wyślij email</string>
     <string name="donate_title">Wesprzyj projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+    <string name="forumpage_url">https://forum.supla.org</string>
 
     <string name="version">wersja</string>
 
@@ -11,7 +15,6 @@
     <string name="about">O programie</string>
     <string name="settings">Ustawienia</string>
     <string name="add_device">Dodaj urządzenie</string>
-    <string name="z_wave" translatable="false">Most z-wave</string>
 
     <string name="status_connecting">Łączenie...</string>
     <string name="status_unknown_err">Nieznany błąd</string>
@@ -19,12 +22,12 @@
     <string name="status_bad_credentials">Błędne poświadczenia</string>
     <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
     <string name="status_version_error">Niekompatybilna wersja serwera</string>
-    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Aby ją włączyć przejdź do zakładki \"Smartfony\" na  stronie %1$s</string>
-    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę %1$s i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
-    <string name="status_device_disabled">Urządzenie jest wyłączone</string>
+    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
+    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę \"Supla Cloud\" i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
+    <string name="status_device_disabled">Urządzenie jest wyłączone. Zaloguj się do \"Supla Cloud\" i włącz ten smrtfon w zakładce \"Smartfony\".</string>
     <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
-    <string name="err_hostnotfound">Adres serwera nie został znaleziony</string>
+    <string name="err_hostnotfound">Adres serwera nie został znaleziony. Upewnij się, że posiadasz połączenie z internetem oraz, że konto o wprowadzonym adresie email zostało utworzone.</string>
     <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
 
     <string name="channel_caption_gateway">Furtka</string>
@@ -76,8 +79,19 @@
     <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
     <string name="password">HASŁO</string>
     <string name="email">ADRES E-MAIL</string>
-    <string name="advanced_settings">Ustawienia zaawansowane</string>
+    <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
+
+    <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
+    <string name="cfg_profile_name_default">Domyślny</string>
+    <string name="cfg_label_email_auth">Email</string>
+    <string name="cfg_label_access_id_auth">Identyfikator</string>
+    <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
+    <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
+    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
+
+    <string translatable="false" name="profile">Twoje konto</string>
+    <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
    modyfikować zgodnie z warunkami licencji GNU General Public License\n
@@ -99,17 +113,18 @@
     <string name="rate_later">Później</string>
     <string name="rate_no_thanks">Nie, dziękuję</string>
     <string name="rs_percent_caption">Procent zamknięcia</string>
+    <string name="rs_percent_caption_open">Procent otwarcia</string>
     <string name="calibration">[Kalibracja]</string>
 
-    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email!</string>
+    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email! (Wyłącz opcje zaawansowane w ustawieniach)</string>
     <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-    <string name="wizard_step1_txt2">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+    <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
-    <string name="start">START</string>>
+    <string name="start">START</string><![CDATA[>
 
-    <string name="wizard_step2_txt1">Wprowadź hasło do Twojej sieci WiFi, której nazwa to</string>
+    ]]>
     <string name="wizard_step2_txt3">*) Sieć %1$s będzie wykorzystywana przez urządzenie wykonawcze do łączena się z serwerem.</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
@@ -131,7 +146,7 @@
     <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
-    <string name="wizard_done">Konfiguracja urządzenia zakończona powodzeniem :)</string>
+    <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
     <string name="wizard_iodev_data">Dane urządzenia</string>
     <string name="wizard_iodev_name">Nazwa</string>
     <string name="wizard_iodev_laststate">Poprzedni status</string>
@@ -178,7 +193,7 @@
     <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
     <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
     <string name="hp_cfg_temp_comfort_auto">Temperatura komfort w trybie AUTO</string>
-    <string name="hp_temp_comfort">Komfort</string>
+    <string name="hp_calendar_comfort">Komfort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
     <string name="hp_hour">godz.</string>
     <string name="total_cost">Łączny koszt</string>
@@ -257,38 +272,38 @@
     <string name="channel_func_thermostat_heatpol_homeplus">Grzałka Home+</string>
     <string name="channel_func_valve_openclose">Zawór</string>
     <string name="channel_func_valve_percentage">Zawór</string>
+    <string name="channel_caption_heatmeter">Licznik ciepła</string>
 
+    <string name="z_wave">Most z-wave</string>
     <string name="channel_caption_valve">Zawór</string>
     <string name="channel_btn_close">Zamknij</string>
     <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
+    <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="exit">Wyjście</string>
-
-    <string name="channel_caption_heatmeter">Licznik ciepła</string>
     <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
     <string name="device_name">Nazwa urządzenia</string>
     <string name="channel_number">Numer kanału</string>
     <string name="device_id">Id urządzenia</string>
     <string name="channel_id">Id kanału</string>
     <string name="soft_ver">Wersja opr.</string>
-
     <string name="function">Funkcja</string>
     <string name="caption">Podpis</string>
     <string name="device">Urządzenie</string>
     <string name="zwave_welcome_title">Kreator z-wave</string>
     <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
     <string name="zwave_before_search_title">To chwilę zajmie</string>
-    <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potwrać od kilku sekund do kilku minut.</string>
+    <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potrwać od kilku sekund do kilku minut.</string>
     <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
     <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
-    <string name="zwave_error_function_change_error">Zmiana funckji kanału zakończona niepowodzeniem. Kod %1$s</string>
+    <string name="zwave_error_function_change_error">Zmiana funkcji kanału zakończona niepowodzeniem. Kod %1$s</string>
     <string name="zwave_error_caption_change_error">Zmiana podpisu kanału zakończona niepowodzeniem. Kod %1$s</string>
     <string name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
     <string name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
     <string name="zwave_error_set_caption_timeout">Upłynął czas oczekiwania na zmianę podpisu kanału.</string>
     <string name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
-    <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzęń z-wave.</string>
+    <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzeń z-wave.</string>
     <string name="zwave_reset_and_clear">Resetuj sieć i ustawienia</string>
     <string name="zwave_add_device">Dodaj urządzenie</string>
     <string name="zwave_remove_device">Usuń urządzenie</string>
@@ -312,13 +327,11 @@
     <string name="zwave_error_common_message">Naciśnij wstecz aby wrócić do poprzedniego kroku lub \"Wyjście\" aby zakończyć.</string>
     <string name="zwave_error_slave_mode">Ta funkcja nie jest dostępna gdy most pracuje w trybie podrzędnym.</string>
     <string name="zwave_done">Gotowe! Teraz możesz zakończyć proces konfiguracji naciskając przycisk \"ok\" lub możesz nacisnąć wstecz aby skonfigurować kolejny kanał lub zmienić dotychczasowe ustawienia.</string>
-
     <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
     <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
     <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
     <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
     <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
-    <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
     <string name="bridge">Most</string>
     <string name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
     <string name="aritmetic_balance_minutes">Bilans arytmetyczny - Minuty</string>
@@ -333,7 +346,6 @@
     <string name="vector_balance_years">Bilans wektorowy - Lata</string>
     <string name="wheel">Koło</string>
     <string name="slider">Suwak</string>
-
     <string name="vl_cfg_mode">Tryb ściemniania</string>
     <string name="vl_cfg_auto">AUTO</string>
     <string name="vl_cfg_mode1">TRYB 1</string>
@@ -341,9 +353,8 @@
     <string name="vl_cfg_mode3">TRYB 3</string>
     <string name="vl_cfg_yes">TAK</string>
     <string name="vl_cfg_no">NIE</string>
-    <string name="vl_cfg_op_range">Zakres pracy</string>
+    <string name="cfg_op_range">Zakres pracy</string>
     <string name="vl_cfg_boost">Wzmocnienie</string>
-
     <string name="information">Informacje</string>
     <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
     <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
@@ -352,11 +363,100 @@
     <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
     <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
     <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
-    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zbiczem opadającym (V-Pro)</string>
+    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zboczem opadającym (V-Pro)</string>
     <string name="vl_dimmer_cfg_info_txt4">Tryb 2: Ściemnianie zboczem narastającym</string>
-    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zbiczem opadającym (Alternatywne)</string>
+    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zboczem opadającym (Alternatywne)</string>
     <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
     <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
     <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
-    <string name="vl_dimmer_cfg_info_txt9">https://www.varilight.co.uk/vps001</string>
+    <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
+    <string name="battery_level">Poziom baterii</string>
+    <string name="battery_powered">Zasilanie bateryjne</string>
+    <string name="wifi_rssi">WiFi RSSI</string>
+    <string name="wifi_signal_strength">Siła sygnału WiFi</string>
+    <string name="bridge_node_online">Węzeł mostu - online</string>
+    <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
+    <string name="uptime">Czas pracy</string>
+    <string name="connection_time">Czas połączenia</string>
+    <string name="battery_health">Żywotność baterii</string>
+    <string name="connection_reset_cause">Powód restartu połączenia</string>
+    <string name="light_source_lifespan">Żywotność źródła światła</string>
+    <string name="light_source_operatingtime">Czas pracy źródła światła</string>
+    <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
+    <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
+    <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
+    <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
+    <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
+    <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
+    <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+    <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
+    <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
+    <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
+    <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
+    <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
+    <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
+    <string name="mode_change_in_progress">Trwa zmiana trybu</string>
+    <string name="wizard_step1_txt2">Upewnij się, że dane mobilne są wyłączone podczas dodawania urządzeń. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
+    <string name="wake_up_frequency">Częstotliwość wybudzania</string>
+    <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
+    <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
+    <string name="zwave_waiting_for_resposne_timeout">Upłynął czas oczekiwania na odpowiedź mostu z-wave.</string>
+    <string name="zwave_unexpected_answer">Nieoczekiwana odpowiedź mostu. Kod:  %1$s</string>
+    <string name="seconds">Sekundy</string>
+    <string name="zwave_offline">Offline ?</string>
+    <string name="zwave_device_communication_error" >Wystąpił problem komunikacji z urządzeniem z-wave. Upewnij się, że urządzenie z-wave jest w zasięgu bramki.</string>
+    <string name="hp_calendar_eco">ECO</string>
+    <string name="channel_caption_roofwindowopeningsensor">Czujnik otwarcia okna dachowego</string>
+    <string name="channel_caption_roofwindow">Okno dachowe</string>
+    <string name="channel_func_controllingtheroofwindow">Otwieranie i zamykanie okna dachowego</string>
+    <string name="channel_func_opensensor_roofwindow">Czujnik otwarcia okna dachowego</string>
+    <string name="event_openedclosedtheroofwindow">otworzył / zamknął okno dachowe</string>
+
+    <string name="status_led">Dioda statusu</string>
+    <string name="info_led_on">Dioda LED świeci jeśli nawiązano połączenie z serwerem.</string>
+    <string name="info_led_off">Dioda LED nie świeci jeśli nawiązano połączenie z serwerem.</string>
+    <string name="info_led_alwaysoff">Dioda zawsze wyłączona, chyba, że urządzenie pracuje w trybie konfiguracji wifi (Tryb AP).</string>
+    <string name="input">Wejście</string>
+    <string name="monostable">Monostabilne</string>
+    <string name="bistable">Bistabilne</string>
+    <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
+    <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
+    <string name="diw_cfg_info_in_options">Opcje wejścia</string>
+    <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
+    <string name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
+    <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
+    <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
+    <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
+    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
+    <string name="incorrect_email_or_password">Błędy adres email lub hasło</string>
+    <string name="channel_name">Nazwa kanału</string>
+    <string name="location_name">Nazwa lokalizacji</string>
+    <string name="str_default">Domyślnie</string>
+    <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
+    <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
+    <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
+    <string name="calibration_failed">Kalibracja nie powiodła się.</string>
+    <string name="calibration_lost">Kalibracja została utracona.</string>
+    <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
+    <string translatable="false" name="lastconnectionresetcause_unknown">0: nieznany</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia WiFi</string>
+    <string translatable="false"
+	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
+    <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
+    <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
+    <string translatable="false" name="add_device_warning">Kreator automatycznego dodawania urządzeń nie jest dostępny w trybie uwierzytelniania identyfikatorem dostępu. Urządzenia mogą być wówczas dodawane ręcznie.</string>
+    <string translatable="false" name="show_channel_info">Pokazywanie
+    przycisku ⓘ</string>
+        <string translatable="false" name="add_device_needs_cloud_title">Konfiguracja urządzenia</string>
+    <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
+    <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
+    <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
+    <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
+    <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
+    <string translatable="false" name="rs_display_mode">Rolety %</string>
+    <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
+    <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
 </resources>

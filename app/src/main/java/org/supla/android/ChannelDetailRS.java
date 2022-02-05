@@ -20,19 +20,22 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
+import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
@@ -40,9 +43,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener, View.OnTouchListener, View.OnLayoutChangeListener {
+public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener,
+        View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener, View.OnClickListener,
+        SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
 
-    private SuplaRollerShutter rs;
+    private LinearLayout llRollerShutter;
+    private SuplaRollerShutter rollerShutter;
+    private SuplaRoofWindowController roofWindow;
     private SuplaChannelStatus status;
     private TextView tvPercentCaption;
     private TextView tvPercent;
@@ -51,7 +58,14 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Button btnStop;
     private Button btnOpen;
     private Button btnClose;
+    private Button btnRecalibrate;
+    private TextView rsTvPressTime;
+    private SuplaWarningIcon warningIcon;
     private Timer delayTimer1;
+    private SuperuserAuthorizationDialog authDialog;
+    private long btnUpDownTouchedAt;
+    private boolean showOpening;
+    private TextView percentageCaption;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -72,9 +86,19 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     protected void init() {
 
         super.init();
-        rs = findViewById(R.id.rs1);
-        rs.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
-        rs.setOnPercentTouchListener(this);
+
+        percentageCaption = findViewById(R.id.rsDetailPercentCaption);
+        readShowOpeningValue();
+        updatePercentageCaption();
+
+        llRollerShutter = findViewById(R.id.llRS);
+
+        rollerShutter = findViewById(R.id.rs1);
+        rollerShutter.setMarkerColor(getResources().getColor(R.color.detail_rs_marker));
+        rollerShutter.setOnPercentTouchListener(this);
+
+        roofWindow = findViewById(R.id.rw1);
+        roofWindow.setOnClosingPercentageChangeListener(this);
 
         status = findViewById(R.id.rsstatus);
         status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
@@ -85,12 +109,16 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         btnStop = findViewById(R.id.rsBtnStop);
         btnOpen = findViewById(R.id.rsBtnOpen);
         btnClose = findViewById(R.id.rsBtnClose);
+        btnRecalibrate = findViewById(R.id.rsBtnRecalibrate);
+        rsTvPressTime = findViewById(R.id.rsTvPressTime);
+        warningIcon = findViewById(R.id.rsWarningIcon);
 
         btnUp.setOnTouchListener(this);
         btnDown.setOnTouchListener(this);
         btnStop.setOnTouchListener(this);
         btnOpen.setOnTouchListener(this);
         btnClose.setOnTouchListener(this);
+        btnRecalibrate.setOnClickListener(this);
 
         Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
 
@@ -100,13 +128,22 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         tvPercent = findViewById(R.id.rsDetailPercent);
         tvPercent.setTypeface(type);
 
-        addOnLayoutChangeListener(this);
         delayTimer1 = null;
     }
 
     @Override
     public View inflateContentView() {
         return inflateLayout(R.layout.detail_rs);
+    }
+
+    private void setRollerShutterVisible(ChannelBase channelBase) {
+        if (channelBase.getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
+            llRollerShutter.setVisibility(GONE);
+            roofWindow.setVisibility(VISIBLE);
+        } else {
+            roofWindow.setVisibility(GONE);
+            llRollerShutter.setVisibility(VISIBLE);
+        }
     }
 
     private void OnChannelDataChanged(boolean withoutDelay) {
@@ -116,29 +153,47 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
             delayTimer1 = null;
         }
 
+        btnRecalibrate.setVisibility(INVISIBLE);
+        rsTvPressTime.setVisibility(INVISIBLE);
+
         if (!isGroup()) {
             status.setVisibility(View.GONE);
             Channel channel = (Channel) getChannelFromDatabase();
+            setRollerShutterVisible(channel);
+            warningIcon.setChannel(channel);
 
-            byte p = channel.getRollerShutterPosition();
+            RollerShutterValue rsValue = channel.getValue().getRollerShutterValue();
 
-            rs.setMarkers(null);
-            rs.setPercent(p);
+            rollerShutter.setMarkers(null);
+            rollerShutter.setPercent(rsValue.getClosingPercentage());
+            rollerShutter.setBottomPosition(rsValue.getBottomPosition());
+            roofWindow.setMarkers(null);
+            roofWindow.setClosingPercentage(rsValue.getClosingPercentage());
 
-            if (p < 0) {
+            if (rsValue.getClosingPercentage() < 0) {
                 tvPercent.setText(R.string.calibration);
+                rsTvPressTime.setVisibility(VISIBLE);
             } else {
-                tvPercent.setText(Integer.toString((int) p) + "%");
+                tvPercent.setText(Integer.toString((int) mappedPercentage(rsValue.getClosingPercentage())) + "%");
             }
+
+            if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) > 0) {
+                btnRecalibrate.setVisibility(VISIBLE);
+            }
+
         } else {
             status.setVisibility(View.VISIBLE);
+            warningIcon.setChannel(null);
 
             ChannelGroup cgroup = (ChannelGroup) getChannelFromDatabase();
-            rs.setPercent(0);
+            setRollerShutterVisible(cgroup);
 
+            rollerShutter.setPercent(0);
+            rollerShutter.setBottomPosition(0);
+            roofWindow.setClosingPercentage(0);
             status.setPercent(cgroup.getOnLinePercent());
 
-            ArrayList<Integer> positions = cgroup.getRollerShutterPositions();
+            ArrayList<Float> positions = cgroup.getRollerShutterPositions();
 
             int percent = -1;
 
@@ -156,7 +211,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             if (percent >= 0) {
 
-                rs.setMarkers(positions);
+                rollerShutter.setMarkers(positions);
+                roofWindow.setMarkers(positions);
                 tvPercent.setText("---");
 
                 delayTimer1 = new Timer();
@@ -168,9 +224,11 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
                                 @Override
                                 public void run() {
-                                    rs.setMarkers(null);
-                                    rs.setPercent(percent);
-                                    tvPercent.setText(Integer.toString(percent) + "%");
+                                    rollerShutter.setMarkers(null);
+                                    rollerShutter.setPercent(percent);
+                                    roofWindow.setMarkers(null);
+                                    roofWindow.setClosingPercentage(percent);
+                                    tvPercent.setText(Integer.toString(mappedPercentage(percent)) + "%");
                                 }
                             });
                         }
@@ -180,12 +238,16 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
             } else if (percent == -1) {
                 // All of RS wait for calibration
-                rs.setPercent(0);
-                rs.setMarkers(null);
+                rollerShutter.setPercent(0);
+                rollerShutter.setMarkers(null);
+                roofWindow.setClosingPercentage(0);
+                roofWindow.setMarkers(null);
                 tvPercent.setText(R.string.calibration);
             } else {
-                rs.setPercent(0);
-                rs.setMarkers(positions);
+                rollerShutter.setPercent(0);
+                rollerShutter.setMarkers(positions);
+                roofWindow.setClosingPercentage(0);
+                roofWindow.setMarkers(positions);
                 tvPercent.setText("---");
             }
 
@@ -203,9 +265,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         OnChannelDataChanged(true);
     }
 
-    @Override
-    public void onPercentChanged(SuplaRollerShutter rs, float percent) {
-
+    public void onPercentChanged(float percent) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
         if (client == null || !isDetailVisible())
@@ -215,10 +275,29 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         OnChannelDataChanged();
     }
 
+    @Override
+    public void onPercentChanged(SuplaRollerShutter rs, float percent) {
+        onPercentChanged(percent);
+    }
+
+    public void onPercentChangeing(float percent) {
+        tvPercent.setText(Integer.toString(mappedPercentage((int)percent)) + "%");
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onPercentChangeing(SuplaRollerShutter rs, float percent) {
-        tvPercent.setText(Integer.toString((int) percent) + "%");
+        onPercentChangeing(percent);
+    }
+
+    @Override
+    public void onClosingPercentageChanged(SuplaRoofWindowController controller, float closingPercentage) {
+        onPercentChanged(closingPercentage);
+    }
+
+    @Override
+    public void onClosingPercentageChangeing(SuplaRoofWindowController controller, float closingPercentage) {
+        onPercentChangeing(closingPercentage);
     }
 
     @Override
@@ -241,6 +320,22 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
 
         if (client == null)
             return false;
+
+        if (v == btnUp || v == btnDown) {
+            if (action == MotionEvent.ACTION_DOWN) {
+                btnUpDownTouchedAt = System.currentTimeMillis();
+            } else if (action == MotionEvent.ACTION_UP
+                    || action == MotionEvent.ACTION_CANCEL) {
+                if (btnUpDownTouchedAt > 0) {
+                    String time = String.format("%.2fs",
+                            (System.currentTimeMillis()-btnUpDownTouchedAt)/1000f);
+                    rsTvPressTime.setText(time);
+                } else {
+                    rsTvPressTime.setText("");
+                }
+                btnUpDownTouchedAt = 0;
+            }
+        }
 
         if (v == btnUp) {
 
@@ -275,18 +370,50 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     }
 
     @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
-        RelativeLayout rlButtons = findViewById(R.id.rlButtons);
-
-        int margin = rlButtons.getMeasuredHeight() - (btnDown.getTop() + btnDown.getHeight());
-
-        if (margin < 0) {
-            RelativeLayout rlRS = findViewById(R.id.rlRS);
-            rlRS.getLayoutParams().height += margin;
-            rlRS.requestLayout();
+    public void onClick(View view) {
+        if (view == btnRecalibrate) {
+            authDialog =
+                    new SuperuserAuthorizationDialog(getContext());
+            authDialog.setObject(btnRecalibrate);
+            authDialog.setOnAuthorizarionResultListener(this);
+            authDialog.showIfNeeded();
         }
+    }
 
+    @Override
+    public void onSuperuserOnAuthorizarionResult(SuperuserAuthorizationDialog authDialog,
+                                                 boolean Success, int Code) {
+        if (Success && authDialog.getObject() == btnRecalibrate) {
+
+            authDialog.close();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.recalibration_question);
+
+            builder.setPositiveButton(R.string.yes,
+                    (dialog, id) -> {
+                        SuplaClient client = getClient();
+                        if (client != null) {
+                            client.deviceCalCfgRequest(getRemoteId(),
+                                    false,
+                                    SuplaConst.SUPLA_CALCFG_CMD_RECALIBRATE,
+                                    0,
+                                    null);
+                        }
+                    });
+
+            builder.setNeutralButton(R.string.no,
+                    (dialog, id) -> dialog.cancel());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        this.authDialog = null;
+    }
+
+    @Override
+    public void authorizationCanceled() {
+        authDialog = null;
     }
 
     private class DelayTask extends TimerTask {
@@ -300,6 +427,35 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         public void run() {
             // You can do anything you want with param
         }
+    }
+
+    @Override
+    public void onDetailShow() {
+        super.onDetailShow();
+        rsTvPressTime.setText("");
+
+        boolean prevShowOpening = showOpening;
+        readShowOpeningValue();
+
+        if(showOpening != prevShowOpening) {
+            updatePercentageCaption();
+            OnChannelDataChanged(true);
+        } 
+    }
+
+    private int mappedPercentage(int v) {
+        return showOpening?100-v:v;
+    }
+
+    private void updatePercentageCaption() {
+        percentageCaption.setText(showOpening?R.string.rs_percent_caption_open:
+                                  R.string.rs_percent_caption);
+
+    }
+
+    private void readShowOpeningValue() {
+        Preferences prefs = new Preferences(getContext());
+        showOpening = prefs.isShowOpeningPercent();
     }
 }
 

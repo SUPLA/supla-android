@@ -18,7 +18,9 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -33,23 +35,27 @@ import org.supla.android.lib.SuplaConnError;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaVersionError;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 public class StatusActivity extends NavigationActivity {
 
     private int mode;
     private Button btnSettings;
+    private Button btnCloud;
     private Button btnRetry;
     private TextView msg;
     private ImageView img;
-    private RelativeLayout layout;
     private ProgressBar progress;
-
+    private RelativeLayout rlStatus;
+    private SuperuserAuthorizationDialog authorizationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_status);
+        rlStatus = findViewById(R.id.rlStatus);
 
         mode = 0;
 
@@ -63,13 +69,16 @@ public class StatusActivity extends NavigationActivity {
         btnSettings = findViewById(R.id.status_btn);
         btnSettings.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
         btnSettings.setTransformationMethod(null);
-        btnSettings.setText(getResources().getText(R.string.settings));
+        btnSettings.setText(getResources().getText(R.string.profile));
         btnSettings.setOnClickListener(this);
+
+        btnCloud = findViewById(R.id.cloud_btn);
+        btnCloud.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
+        btnCloud.setTransformationMethod(null);
+        btnCloud.setOnClickListener(this);
 
         btnRetry = findViewById(R.id.retry_btn);
         btnRetry.setOnClickListener(this);
-
-        layout = (RelativeLayout) msg.getParent();
 
         setStatusConnectingProgress(0);
         RegisterMessageHandler();
@@ -99,7 +108,9 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 1) {
             mode = 1;
 
-            layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_err));
+            setStatusBarColor(R.color.activity_status_bg_err);
+            btnCloud.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_black_btn));
@@ -124,7 +135,9 @@ public class StatusActivity extends NavigationActivity {
         if (mode != 2) {
             mode = 2;
 
-            layout.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
+            setStatusBarColor(R.color.activity_status_bg_normal);
+            rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
+            btnCloud.setVisibility(View.INVISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 btnSettings.setBackground(getResources().getDrawable(R.drawable.rounded_white_btn));
@@ -159,20 +172,42 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            NavigationActivity.showCfg(this);
+            NavigationActivity.showProfile(this);
         } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
+        } else if (v == btnCloud) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(getResources().getString(R.string.cloud_url)));
+            startActivity(browserIntent);
+        }
+    }
+
+    protected void setThePointerToNullIfTheAuthDialogIsNotVisible() {
+        // Solving the problem with changing the server address
+        // where previously authorized to another one.
+        // Without this, the authorization window will not be displayed again.
+        if (authorizationDialog != null
+                && !authorizationDialog.isShowing()) {
+            authorizationDialog = null;
         }
     }
 
     @Override
     protected void onDisconnectedMsg() {
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
         setStatusConnectingProgress(0);
     }
 
     @Override
     protected void onConnectingMsg() {
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
         setStatusConnectingProgress(25);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setThePointerToNullIfTheAuthDialogIsNotVisible();
     }
 
     @Override
@@ -189,7 +224,8 @@ public class StatusActivity extends NavigationActivity {
     protected void onRegisteredMsg() {
         setStatusConnectingProgress(100);
 
-        if (!(CurrentActivity instanceof AddDeviceWizardActivity)) {
+        if (!(CurrentActivity instanceof AddDeviceWizardActivity) &&
+            CurrentActivity != null) {
             showMain(this);
         }
 
@@ -197,6 +233,22 @@ public class StatusActivity extends NavigationActivity {
 
     private void _OnRegisterErrorMsg(SuplaRegisterError error) {
         setStatusError(error.codeToString(this));
+
+        if (error != null
+                && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
+                    || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
+
+            ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+            if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
+                if (authorizationDialog == null) {
+                    authorizationDialog = new SuperuserAuthorizationDialog(this);
+                }
+
+                if (!authorizationDialog.isShowing()) {
+                    authorizationDialog.showIfNeeded();
+                }
+            }
+        }
     }
 
     @Override

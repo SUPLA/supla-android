@@ -24,18 +24,20 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
+import org.supla.android.cfg.CfgActivity;
 
 @SuppressLint("registered")
 public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
@@ -55,14 +57,22 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private TextView title;
     private TextView detailTitle;
 
-    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+    private static void showActivity(Activity sender, Class<?> cls, int flags, String action) {
 
         Intent i = new Intent(sender.getBaseContext(), cls);
         i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
         i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
+        if(action != null) {
+            i.setAction(action);
+        }
+        
         sender.startActivity(i);
 
         sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    private static void showActivity(Activity sender, Class<?> cls, int flags) {
+        showActivity(sender, cls, flags, null);
     }
 
     public static void showMain(Activity sender) {
@@ -84,8 +94,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         showActivity(sender, StatusActivity.class, 0);
     }
 
+    public static void showProfile(Activity sender) {
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_PROFILE);
+    }
+
     public static void showCfg(Activity sender) {
-        showActivity(sender, CfgActivity.class, 0);
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_CONFIG);
     }
 
     @Override
@@ -136,6 +152,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
             getRootLayout().addView(MenuBarLayout);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                MenuBarLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        MenuBarLayout.getLayoutParams().height));
+            }
 
             MenuButton = findViewById(R.id.menubutton);
             MenuButton.setVisibility(View.GONE);
@@ -243,9 +265,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             if (Anim) return;
 
-            DbHelper DbH = new DbHelper(this);
-
-            int btns = DbH.isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
+            int btns = getDbHelper().isZWaveBridgeChannelAvailable() ? MenuItemsLayout.BTN_ALL
                     : MenuItemsLayout.BTN_ALL ^ MenuItemsLayout.BTN_Z_WAVE;
 
             getMenuItemsLayout().setButtonsAvailable(btns);
@@ -342,6 +362,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(browserIntent);
     }
 
+    public void openCloud() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.cloud_url)));
+        startActivity(browserIntent);
+    }
+
     public void donate() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
         startActivity(browserIntent);
@@ -432,8 +457,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 case MenuItemsLayout.BTN_HELP:
                     openForumpage();
                     break;
+                case MenuItemsLayout.BTN_CLOUD:
+                    openCloud();
+                    break;
                 case MenuItemsLayout.BTN_HOMEPAGE:
                     openHomepage();
+                    break;
+                case MenuItemsLayout.BTN_PROFILE:
+                    showProfile(this);
                     break;
             }
         }
@@ -471,7 +502,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                 new SuperuserAuthorizationDialog(this);
         mAuthDialog.setObject(sourceBtnId);
         mAuthDialog.setOnAuthorizarionResultListener(this);
-        mAuthDialog.show();
+        mAuthDialog.showIfNeeded();
     }
 
     @Override

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -109,6 +110,95 @@
                 android:textColor="@color/vl_infotext" />
 
             <TextView
+                android:id="@+id/tvInfoTxt9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/status_led"
+                android:textColor="@color/vl_infotitle"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="20dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/ledon" />
+
+                <TextView
+                    android:id="@+id/tvInfoTxt10"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="@string/info_led_on"
+                    android:textColor="@color/vl_infotext"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="20dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/ledoff" />
+
+                <TextView
+                    android:id="@+id/tvInfoTxt11"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="@string/info_led_off"
+                    android:textColor="@color/vl_infotext"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageView12"
+                    android:layout_width="20dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/ledalwaysoff" />
+
+                <TextView
+                    android:id="@+id/tvInfoTxt12"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="@string/info_led_alwaysoff"
+                    android:textColor="@color/vl_infotext"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/tvInfoTxt8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +214,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="left|center_vertical"
                 android:text="@string/vl_dimmer_cfg_info_txt9"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textColor="@color/menubar" />
 
         </LinearLayout>
     </ScrollView>

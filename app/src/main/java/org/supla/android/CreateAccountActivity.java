@@ -57,7 +57,7 @@ public class CreateAccountActivity extends NavigationActivity {
 
     @Override
     public void onBackPressed() {
-        showCfg(this);
+        showProfile(this);
         finish();
     }
 

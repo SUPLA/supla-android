@@ -24,7 +24,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,16 +37,17 @@ import android.widget.TextView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.Location;
+import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaEvent;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.ListViewCursorAdapter;
-import org.supla.android.listview.SectionLayout;
+import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
@@ -55,13 +57,17 @@ import java.util.Date;
 public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnChannelButtonTouchListener,
         ChannelListView.OnDetailListener,
-        SectionLayout.OnSectionLayoutTouchListener, SuplaRestApiClientTask.IAsyncResults {
+        ChannelListView.OnSectionLayoutTouchListener,
+        SuplaRestApiClientTask.IAsyncResults,
+        ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
     private ListViewCursorAdapter channelListViewCursorAdapter;
     private ListViewCursorAdapter cgroupListViewCursorAdapter;
-    private DbHelper DbH_ListView;
     private DownloadUserIcons downloadUserIcons = null;
 
     private RelativeLayout NotificationView;
@@ -69,6 +75,10 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private Runnable notif_nrunnable;
     private ImageView notif_img;
     private TextView notif_text;
+    private ChannelStatePopup channelStatePopup;
+
+    // Used in reordering. The initial position of taken item is saved here.
+    private Integer dragInitialPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,96 +106,186 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
         channelLV = findViewById(R.id.channelsListView);
+        channelLV.setOnChannelButtonClickListener(this);
         channelLV.setOnChannelButtonTouchListener(this);
+        channelLV.setOnCaptionLongClickListener(this);
         channelLV.setOnDetailListener(this);
 
         cgroupLV = findViewById(R.id.channelGroupListView);
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
 
-        DbH_ListView = new DbHelper(this);
-        new DbHelper(this, true); // For upgrade purposes
+        MeasurementsDbHelper.getInstance(this); // For upgrade purposes
 
         RegisterMessageHandler();
         showMenuBar();
         showMenuButton();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (channelListViewCursorAdapter != null && channelListViewCursorAdapter.isInReorderingMode()) {
+            channelListViewCursorAdapter.stopReorderingMode();
+        }
+        if (cgroupListViewCursorAdapter != null && cgroupListViewCursorAdapter.isInReorderingMode()) {
+            cgroupListViewCursorAdapter.stopReorderingMode();
+        }
+    }
 
     private boolean SetListCursorAdapter() {
 
         if (channelListViewCursorAdapter == null) {
 
-            channelListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getChannelListCursor());
-            channelListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
+            channelListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getChannelListCursor());
             channelLV.setAdapter(channelListViewCursorAdapter);
+
+            channelLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, channelLV));
+            channelLV.setOnDragListener(new ListViewDragListener(channelLV,
+                    droppedPosition -> onDragStopped(droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
+                    position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
+            channelLV.setOnSectionLayoutTouchListener(this);
 
             return true;
 
         } else if (channelListViewCursorAdapter.getCursor() == null) {
 
-            channelListViewCursorAdapter.changeCursor(DbH_ListView.getChannelListCursor());
+            channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor());
         }
 
         return false;
+    }
+
+    private boolean onDragStarted(View view, int position, ChannelListView listView) {
+        if (listView.isDetailVisible()
+                || listView.isDetailSliding()
+                || listView.isChannelLayoutSlided()) {
+            dragInitialPosition = null;
+            return false;
+        }
+        dragInitialPosition = position;
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+        view.startDrag(null, shadowBuilder, listView.getItemAtPosition(position), 0);
+        return true;
+    }
+
+    private void onDragStopped(int droppedPosition, ListViewCursorAdapter adapter, Reorder reorder) {
+        adapter.stopReorderingMode();
+        if (dragInitialPosition == null || droppedPosition == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            return;
+        }
+        if (!adapter.isReorderPossible(dragInitialPosition, droppedPosition)) {
+            // Moving outside of the section not allowed.
+            return;
+        }
+        ListViewCursorAdapter.Item initialPositionItem = adapter.getItemForPosition(dragInitialPosition);
+        ListViewCursorAdapter.Item finalPositionItem = adapter.getItemForPosition(droppedPosition);
+
+        reorder.doReorder(initialPositionItem, finalPositionItem);
+    }
+
+    private void onDragPositionChanged(int position, ListViewCursorAdapter adapter) {
+        if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
+            // Moved somewhere outside the list view or Something wrong, initial position not initialized.
+            adapter.stopReorderingMode();
+            return;
+        }
+        if (!adapter.isReorderPossible(dragInitialPosition, position)) {
+            // Moving outside of the section not allowed.
+            adapter.stopReorderingMode();
+            return;
+        }
+        adapter.updateReorderingMode(dragInitialPosition, position);
+    }
+
+    private void doChannelsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
+        subscribe(getDbHelper().reorderChannels(initialPositionItem, finalPositionItem),
+                () -> channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor()),
+                throwable -> Trace.w(TAG, "Channels reordering failed", throwable));
+    }
+
+    private void doGroupsReorder(ListViewCursorAdapter.Item initialPositionItem, ListViewCursorAdapter.Item finalPositionItem) {
+        subscribe(getDbHelper().reorderGroups(initialPositionItem, finalPositionItem),
+                () -> cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor()),
+                throwable -> Trace.w(TAG, "Groups reordering failed", throwable));
     }
 
     private boolean SetGroupListCursorAdapter() {
 
         if (cgroupListViewCursorAdapter == null) {
 
-            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, DbH_ListView.getGroupListCursor(), true);
-            cgroupListViewCursorAdapter.setOnSectionLayoutTouchListener(this);
+            cgroupListViewCursorAdapter = new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
             cgroupLV.setAdapter(cgroupListViewCursorAdapter);
+
+            cgroupLV.setOnItemLongClickListener((parent, view, position, id) -> onDragStarted(view, position, cgroupLV));
+            cgroupLV.setOnDragListener(new ListViewDragListener(cgroupLV,
+                    droppedPosition -> onDragStopped(droppedPosition, cgroupListViewCursorAdapter, this::doGroupsReorder),
+                    position -> onDragPositionChanged(position, cgroupListViewCursorAdapter)));
+            cgroupLV.setOnSectionLayoutTouchListener(this);
 
             return true;
 
         } else if (cgroupListViewCursorAdapter.getCursor() == null) {
 
-            cgroupListViewCursorAdapter.changeCursor(DbH_ListView.getGroupListCursor());
+            cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor());
         }
 
         return false;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        channelLV.hideDetail(false);
-    }
-
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-
-        if (!SetListCursorAdapter()) {
-            channelLV.setSelection(0);
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
-        }
-
-        if (!SetGroupListCursorAdapter()) {
-            cgroupLV.setSelection(0);
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
-        }
-
+    protected void hideDetail() {
         if (channelLV.getVisibility() == View.VISIBLE) {
             channelLV.hideDetail(false);
         } else {
             cgroupLV.hideDetail(false);
         }
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
+            hideDetail();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
+            return;
+        }
+
+        if (!SetListCursorAdapter()) {
+            channelLV.setSelection(0);
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
+        }
+
+        if (!SetGroupListCursorAdapter()) {
+            cgroupLV.setSelection(0);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
+        }
+
+        hideDetail();
         runDownloadTask();
 
         RateApp ra = new RateApp(this);
         ra.showDialog(1000);
-
     }
 
     @Override
     protected void onDestroy() {
         // Trace.d("MainActivity", "Destroyed!");
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .unregisterOnSharedPreferenceChangeListener(this);
+
         super.onDestroy();
     }
 
@@ -204,15 +304,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     @Override
-    protected void onDataChangedMsg(int ChannelId, int GroupId) {
+    protected void onDataChangedMsg(int ChannelId, int GroupId, boolean extendedValue) {
 
-        ChannelListView LV = null;
-        int Id = 0;
+        ChannelListView LV = channelLV;
+        int Id = ChannelId;
 
-        if (ChannelId > 0) {
-            Id = ChannelId;
-            LV = channelLV;
-        } else if (GroupId > 0) {
+        if (GroupId > 0) {
             Id = GroupId;
             LV = cgroupLV;
         }
@@ -224,16 +321,32 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 ChannelBase cbase = LV.detail_getChannel();
 
                 if (cbase != null && !cbase.getOnLine())
-                    LV.hideDetail(false);
+                    LV.hideDetail(false, true);
                 else
                     LV.detail_OnChannelDataChanged();
             }
 
-            LV.Refresh(LV == channelLV ? DbH_ListView.getChannelListCursor() :
-                    DbH_ListView.getGroupListCursor(), true);
+            LV.Refresh(LV == channelLV ? getDbHelper().getChannelListCursor() :
+                    getDbHelper().getGroupListCursor(), true);
 
         }
 
+        if (channelStatePopup != null
+                && channelStatePopup.isVisible()
+                && channelStatePopup.getRemoteId() == ChannelId) {
+            channelStatePopup.update(ChannelId);
+        }
+
+    }
+
+    @Override
+    protected void onChannelState(SuplaChannelState state) {
+        if (state != null
+                && channelStatePopup != null
+                && channelStatePopup.isVisible()
+                && channelStatePopup.getRemoteId() == state.getChannelID()) {
+            channelStatePopup.update(state);
+        }
     }
 
     @Override
@@ -263,15 +376,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 || (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED)
                 || event.ChannelID == 0) return;
 
-        DbHelper DbH = new DbHelper(this);
-
-        Channel channel = DbH.getChannel(event.ChannelID);
+        Channel channel = getDbHelper().getChannel(event.ChannelID);
         if (channel == null) return;
 
 
         int imgResId = 0;
         ImageId imgId = null;
-        String msg = "";
+        String msg;
 
         if (event.Event == SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED) {
             if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE) > 0) {
@@ -281,7 +392,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 return;
             }
         } else {
-            int msgId = 0;
+            int msgId;
             switch (event.Event) {
                 case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK:
                     msgId = R.string.event_openedthegateway;
@@ -297,6 +408,9 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                     break;
                 case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROLLERSHUTTER:
                     msgId = R.string.event_openedcloserollershutter;
+                    break;
+                case SuplaConst.SUPLA_EVENT_CONTROLLINGTHEROOFWINDOW:
+                    msgId = R.string.event_openedclosedtheroofwindow;
                     break;
                 case SuplaConst.SUPLA_EVENT_POWERONOFF:
                     msgId = R.string.event_poweronoff;
@@ -384,15 +498,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         notif_handler = new Handler();
-        notif_nrunnable = new Runnable() {
-            @Override
-            public void run() {
+        notif_nrunnable = () -> {
 
-                HideNotificationMessage();
+            HideNotificationMessage();
 
-                notif_handler = null;
-                notif_nrunnable = null;
-            }
+            notif_handler = null;
+            notif_nrunnable = null;
         };
 
         notif_handler.postDelayed(notif_nrunnable, 5000);
@@ -431,53 +542,55 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         builder.setMessage(R.string.valve_open_warning);
 
         builder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-                        if (client != null) {
-                            SuplaApp.Vibrate(context);
-                            client.open(channelId, false, 1);
-                        }
-                        dialog.cancel();
+                (dialog, id) -> {
+                    SuplaClient client = SuplaApp.getApp().getSuplaClient();
+                    if (client != null) {
+                        SuplaApp.Vibrate(context);
+                        client.open(channelId, false, 1);
                     }
+                    dialog.cancel();
                 });
 
         builder.setNeutralButton(R.string.no,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         AlertDialog alert = builder.create();
         alert.show();
     }
 
     @Override
-    public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int channelId, int channelFunc) {
+    public void onChannelButtonTouch(ChannelListView clv, boolean left, boolean up, int remoteId, int channelFunc) {
+
+        if(menuIsVisible()) return;
 
 
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        clv.hideButton(false);
+        if(new Preferences(this).isButtonAutohide())
+            clv.hideButton(false);
 
         if (client == null)
             return;
 
+        if (!up && client.turnOnOff(this, !left, remoteId, clv == cgroupLV,
+                channelFunc, true)) {
+            return;
+        }
+
         if (!left && !up && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
                 || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
-            DbHelper dbH = new DbHelper(this);
-            Channel channel = dbH.getChannel(channelId);
+            Channel channel = getDbHelper().getChannel(remoteId);
             if (channel != null
                     && channel.getValue().isClosed()
                     && (channel.getValue().flooding()
                     || channel.getValue().isManuallyClosed())) {
-                ShowValveAlertDialog(channelId, this);
+                ShowValveAlertDialog(remoteId, this);
                 return;
             }
         }
 
         if (!up
-                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
 
             SuplaApp.Vibrate(this);
         }
@@ -485,20 +598,26 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (up) {
 
-            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-                client.open(channelId, clv == cgroupLV, 0);
+            if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+            || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
+                client.open(remoteId, clv == cgroupLV, 0);
+            }
 
         } else {
 
             int Open;
 
             if (left) {
-                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 1 : 0;
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+                        ? 1 : 0;
             } else {
-                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ? 2 : 1;
+                Open = channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+                        ? 2 : 1;
             }
 
-            client.open(channelId, clv == cgroupLV, Open);
+            client.open(remoteId, clv == cgroupLV, Open);
 
         }
 
@@ -509,6 +628,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         if (channelLV.isDetailVisible()) {
             channelLV.onBackPressed();
+        } else if (cgroupLV.isDetailVisible()) {
+            cgroupLV.onBackPressed();
         } else {
             gotoMain();
         }
@@ -527,21 +648,18 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         showMenuButton();
     }
 
-    @Override
-    public void onSectionLayoutTouch(Object sender, String caption, int locationId) {
+    public void onSectionClick(ChannelListView clv, String caption, int locationId) {
 
         int _collapsed;
-        DbHelper dbHelper = new DbHelper(this);
-
-        if (sender == channelLV.getAdapter()) {
+        if (clv == channelLV) {
             _collapsed = 0x1;
-        } else if (sender == cgroupLV.getAdapter()) {
+        } else if (clv == cgroupLV) {
             _collapsed = 0x2;
         } else {
             return;
         }
 
-        Location location = dbHelper.getLocation(locationId);
+        Location location = getDbHelper().getLocation(locationId);
         int collapsed = location.getCollapsed();
 
         if ((collapsed & _collapsed) > 0) {
@@ -551,12 +669,12 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
 
         location.setCollapsed(collapsed);
-        dbHelper.updateLocation(location);
+        getDbHelper().updateLocation(location);
 
-        if (sender == channelLV.getAdapter()) {
-            channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+        if (clv == channelLV) {
+            channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         } else {
-            cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+            cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
     }
@@ -571,11 +689,11 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         if (downloadUserIcons != null) {
             if (downloadUserIcons.downloadCount() > 0) {
                 if (channelLV != null) {
-                    channelLV.Refresh(DbH_ListView.getChannelListCursor(), true);
+                    channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
                 }
 
                 if (cgroupLV != null) {
-                    cgroupLV.Refresh(DbH_ListView.getGroupListCursor(), true);
+                    cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
                 }
             }
             downloadUserIcons = null;
@@ -585,6 +703,45 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     @Override
     public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
 
+    }
+
+    @Override
+    public void onChannelStateButtonClick(ChannelListView clv, int remoteId) {
+
+        if (channelStatePopup == null) {
+            channelStatePopup = new ChannelStatePopup(this);
+        }
+
+        channelStatePopup.show(remoteId);
+    }
+
+    @Override
+    public void onChannelCaptionLongClick(ChannelListView clv, int remoteId) {
+        SuplaApp.Vibrate(this);
+
+        ChannelCaptionEditor editor = new ChannelCaptionEditor(this);
+        editor.edit(remoteId);
+    }
+
+    @Override
+    public void onLocationCaptionLongClick(ChannelListView clv, int locationId) {
+        SuplaApp.Vibrate(this);
+
+        LocationCaptionEditor editor = new LocationCaptionEditor(this);
+        editor.edit(locationId);
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences prefss, String key) {
+        if(key.equals(Preferences.pref_channel_height)) {
+            /* Ivalidate the adapter, so that channel list can
+               be rebuilt with new layout. */
+            channelListViewCursorAdapter = null;
+            cgroupListViewCursorAdapter = null;
+        }
+    }
+
+    private interface Reorder {
+        void doReorder(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem);
     }
 }
 
