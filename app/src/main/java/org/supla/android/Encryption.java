@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
@@ -30,6 +31,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.GCMParameterSpec;
 
 public class Encryption {
     private static SecretKey generateKey(String password)
@@ -52,14 +54,37 @@ public class Encryption {
         return new SecretKeySpec(password.getBytes(), "AES");
     }
 
+	private final static String ENCRYPTION_ALG = "AES/GCM/NoPadding";
+	private final static int GCM_IV_LENGTH = 12;
+	private final static int GCM_TAG_LENGTH = 16;
+
+	private static Cipher getCipher(String type, int opmode, SecretKey key)
+		throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException,
+            InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
+			   IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException {
+		Cipher cipher;
+		if(ENCRYPTION_ALG.equals(type)) {
+			byte[] IV = new byte[GCM_IV_LENGTH];
+			SecureRandom rnd = new SecureRandom();
+			rnd.nextBytes(IV);
+			cipher = Cipher.getInstance(type);
+			GCMParameterSpec parm = new GCMParameterSpec(GCM_TAG_LENGTH * 8, IV);
+			cipher.init(opmode, key, parm);
+		} else {
+			cipher = Cipher.getInstance(type);
+			cipher.init(opmode, key);
+		}
+
+		return cipher;
+	}
+
     public static byte[] encryptData(byte[] data, String password)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException,
-            UnsupportedEncodingException, InvalidKeySpecException {
+            UnsupportedEncodingException, InvalidKeySpecException, InvalidAlgorithmParameterException {
         /* Encrypt the message. */
-        Cipher cipher;
-        cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, generateKey(password));
+        Cipher cipher = Encryption.getCipher(Encryption.ENCRYPTION_ALG, Cipher.ENCRYPT_MODE,
+								  generateKey(password));
         byte[] cipherText = cipher.doFinal(data);
         return cipherText;
     }
@@ -67,11 +92,20 @@ public class Encryption {
     public static byte[] decryptData(byte[] cipherText, String password)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException,
             InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException {
-        Cipher cipher;
-        cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, generateKey(password));
-        return cipher.doFinal(cipherText);
+            IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException,
+            InvalidAlgorithmParameterException {
+	    String[] algorithms = { ENCRYPTION_ALG, "AES/ECB/PKCS5Padding" /*legacy*/ };
+	    for(int i = 0; i < algorithms.length; i++) {
+            Cipher cipher = getCipher(algorithms[i], Cipher.DECRYPT_MODE,
+                    generateKey(password));
+            try {
+                return cipher.doFinal(cipherText);
+            } catch (BadPaddingException e) {
+                if (i > 0) throw e;
+                /* Otherwise continue to legacy algorithm */
+            }
+        }
+        return null;
     }
 
     public static byte[] decryptDataWithNullOnException(byte[] cipherText, String password) {
@@ -120,6 +154,8 @@ public class Encryption {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 
