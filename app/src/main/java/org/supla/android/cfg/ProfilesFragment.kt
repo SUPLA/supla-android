@@ -23,9 +23,15 @@ class ProfilesFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        profilesVM.state.observe(viewLifecycleOwner) {
-            when(it) {
-                ProfilesViewModel.State.NEW_PROFILE_INPUT -> showNewProfileDialog()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                profilesVM.uiState.collect { uiState ->
+                    when(uiState) {
+                          is ProfilesUiState.NewProfile -> showNewProfileDialog()
+                    }
+                }
+
             }
         }
 

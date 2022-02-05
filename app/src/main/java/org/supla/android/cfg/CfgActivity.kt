@@ -43,6 +43,7 @@ class CfgActivity: AppCompatActivity() {
     companion object {
         const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
         const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
+        const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
     }
 
     private lateinit var binding: ActivityCfgBinding
@@ -82,6 +83,14 @@ class CfgActivity: AppCompatActivity() {
             val graph = navHostFragment.navController.graph
             graph.startDestination = R.id.cfgMain
             navController.graph = graph
+        } else if(getIntent().getAction() == ACTION_AUTH) {
+            val graph = navHostFragment.navController.graph
+            graph.startDestination = R.id.cfgAuth
+            navController.graph = graph
+        } else if(getIntent().getAction() == ACTION_PROFILE) {
+            val graph = navHostFragment.navController.graph
+            graph.startDestination = R.id.cfgProfiles
+            navController.graph = graph            
         }
 
         val cfg = AppBarConfiguration(navController.graph)
@@ -98,7 +107,6 @@ class CfgActivity: AppCompatActivity() {
         super.onResume()
         val navController = findNavController(R.id.nav_host_fragment)
         val dest = navController?.currentDestination
-        android.util.Log.i("SuplaNav", "current destination: " + dest)
         if(dest != null) {
             // Temporary hack to match look and feel of the rest of the app
             // prior to moving everything into navigation graph.

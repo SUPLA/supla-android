@@ -4,46 +4,66 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.R
+import org.supla.android.SuplaApp
+import org.supla.android.databinding.ProfileListItemBinding
+import org.supla.android.databinding.ProfileListNewBinding
 
-class ProfilesAdapter(private val profilesVM: ProfilesViewModel) : BaseAdapter() {
-    override fun getCount(): Int {
-        return 3
+class ProfilesAdapter(private val profilesVM: ProfilesViewModel) : 
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var profileCount: Int = 3
+
+    override fun onCreateViewHolder(parent: ViewGroup,
+                                    viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val type = SuplaApp.getApp().typefaceOpenSansRegular
+        if(viewType == R.layout.profile_list_item) {
+            val binding = ProfileListItemBinding.inflate(inflater,
+                                                         parent,
+                                                         false)
+            binding.profileLabel.setTypeface(type)
+            binding.activeIndicator.setTypeface(type)
+            return ItemViewHolder(binding)
+        } else {
+            val binding = ProfileListNewBinding.inflate(inflater,
+                                                        parent,
+                                                        false)
+            binding.addAccountLabel.setTypeface(type)
+            return ButtonViewHolder(binding)
+        }
     }
 
-    override fun getItem(position: Int): Any {
-        when(position) {
-            0 -> return "Default"
-            1 -> return "Summer cabin"
-            2 -> return "Office"
+    override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
+                                  pos: Int) {
+        //val itm = profiles.get(pos)
+        if(vh is ItemViewHolder) {
+            vh.binding.viewModel = ProfileItemViewModel("ala")
         }
-        return "wtf"
+    }
+
+    override fun getItemCount(): Int {
+        return profileCount + 1
+    }
+
+    override fun getItemViewType(pos: Int): Int {
+        if(pos < profileCount) {
+            return R.layout.profile_list_item
+        } else {
+            return R.layout.profile_list_new
+        }
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val res: View
-        if(convertView == null) {
-           val inflater = parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-           res = inflater.inflate(R.layout.profile_list_item, parent, false)
-        } else {
-            res = convertView
-        }
 
-        val textView = res.findViewById<TextView>(R.id.profileLabel)
-        val labelText = getItem(position) as String
-        if(profilesVM.activeProfile.value == labelText) {
-            textView.text = "✔ " + labelText
-        } else {
-            textView.text = labelText
-        }
+    inner class ItemViewHolder(val binding: ProfileListItemBinding) : 
+        RecyclerView.ViewHolder(binding.root)
 
-        return res
-    }
-
+    inner class ButtonViewHolder(val binding: ProfileListNewBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

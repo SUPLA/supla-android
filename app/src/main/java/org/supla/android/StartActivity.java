@@ -62,7 +62,7 @@ public class StartActivity extends BaseActivity {
                 if (prefs.configIsSet()) {
                     NavigationActivity.showMain(startActivity);
                 } else {
-                    NavigationActivity.showProfile(startActivity);
+                    NavigationActivity.showAuth(startActivity);
                 }
 
             }

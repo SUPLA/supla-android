@@ -42,4 +42,10 @@ interface ProfileManager {
      Update authentication settings of current profile.
      */
     fun updateCurrentAuthInfo(info: AuthInfo)
+
+
+    /**
+     Return list of all user profiles
+     */
+    fun getAllProfiles(): List<AuthProfileItem>
 }

@@ -172,7 +172,7 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            NavigationActivity.showProfile(this);
+            NavigationActivity.showAuth(this);
         } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         } else if (v == btnCloud) {

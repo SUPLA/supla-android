@@ -3,7 +3,7 @@
     <string name="dont_have_account_yet" translatable="false">Don\'t have an account in Supla Cloud yet?</string>
 
     <string name="app_name" translatable="false">SUPLA</string>
-    <string name="profiles_title" translatable="false">Profiles</string>
+    <string name="profiles_title" translatable="false">Accounts</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>

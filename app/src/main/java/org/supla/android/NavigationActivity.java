@@ -94,6 +94,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         showActivity(sender, StatusActivity.class, 0);
     }
 
+    public static void showAuth(Activity sender) {
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_AUTH);
+    }
+
     public static void showProfile(Activity sender) {
         showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
                      org.supla.android.cfg.CfgActivity.ACTION_PROFILE);
