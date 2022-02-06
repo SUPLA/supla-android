@@ -58,15 +58,36 @@ public class Encryption {
 	private final static int GCM_IV_LENGTH = 12;
 	private final static int GCM_TAG_LENGTH = 16;
 
+    private static byte[] IV = null;
+
 	private static Cipher getCipher(String type, int opmode, SecretKey key)
 		throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException,
             InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
 			   IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException {
 		Cipher cipher;
 		if(ENCRYPTION_ALG.equals(type)) {
-			byte[] IV = new byte[GCM_IV_LENGTH];
-			SecureRandom rnd = new SecureRandom();
-			rnd.nextBytes(IV);
+            if(IV == null) {
+                Preferences prefs = null;
+                try {
+                    prefs = new Preferences(SuplaApp.getApp());
+                } catch(NullPointerException e) {
+                    // Ignore NPE on Preferences construction,
+                    // primarily to avoid mocking within
+                    // singleton pattern for unit tests.
+                }
+                if(prefs != null) {
+                    IV = prefs.getIV();
+                }
+                
+                if(IV == null) {
+                    IV = new byte[GCM_IV_LENGTH];
+                    SecureRandom rnd = new SecureRandom();
+                    rnd.nextBytes(IV);
+                    if(prefs != null) {
+                        prefs.setIV(IV);
+                    }
+                }
+            }
 			cipher = Cipher.getInstance(type);
 			GCMParameterSpec parm = new GCMParameterSpec(GCM_TAG_LENGTH * 8, IV);
 			cipher.init(opmode, key, parm);
@@ -100,7 +121,7 @@ public class Encryption {
                     generateKey(password));
             try {
                 return cipher.doFinal(cipherText);
-            } catch (BadPaddingException e) {
+            } catch (Exception e) {
                 if (i > 0) throw e;
                 /* Otherwise continue to legacy algorithm */
             }

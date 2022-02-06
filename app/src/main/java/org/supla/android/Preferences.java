@@ -50,6 +50,7 @@ public class Preferences {
     public static final String pref_channel_height = "pref_channel_height_percent";
     private static final String pref_show_channel_info = "pref_show_channel_info";
     private static final String pref_show_opening_percent = "pref_show_opening_percent";
+    private static final String pref_iv = "pref_iv";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -236,6 +237,19 @@ public class Preferences {
     public void setShowOpeningPercent(boolean val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putBoolean(pref_show_opening_percent, val);
+        ed.apply();
+    }
+
+    public byte[] getIV() {
+        String iv = _prefs.getString(pref_iv, null);
+        if(iv == null) return null;
+        return Base64.decode(iv, Base64.DEFAULT);
+    }
+
+    public void setIV(byte[] iv) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putString(pref_iv, Base64.encodeToString(iv,
+                                                    Base64.DEFAULT));
         ed.apply();
     }
 }
