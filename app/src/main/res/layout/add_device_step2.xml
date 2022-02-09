@@ -16,7 +16,7 @@
         android:buttonTint="@android:color/white"
         android:text="@string/wizard_remember_passwd"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <LinearLayout
         android:id="@+id/llWifiName"
@@ -37,7 +37,7 @@
             android:background="@android:color/white"
             android:padding="5dp"
             android:layout_weight="1"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/wizard_wifi_name"
@@ -48,7 +48,7 @@
             android:background="@android:color/white"
             android:inputType="text"
             android:padding="5dp"
-            android:textSize="18sp"
+            android:textSize="18dp"
             android:visibility="gone"/>
 
         <Button
@@ -80,7 +80,7 @@
             android:background="@color/notification_bg"
             android:inputType="textPassword"
             android:padding="5dp"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <Button
             android:id="@+id/wizard_look_button"
@@ -105,7 +105,7 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_step2_txt1"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <ImageView
         android:id="@+id/imageView4"
