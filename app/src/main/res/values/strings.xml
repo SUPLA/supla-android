@@ -125,7 +125,7 @@
     <string name="rate_no_thanks">No thanks</string>
 
     <string name="rs_percent_caption">Percentage of closing</string>
-    <string name="rs_percent_caption_open">Percentage of opening</string>    
+    <string translatable="false"  name="rs_percent_caption_open">Percentage of opening</string>    
     <string name="calibration">[Calibration]</string>
 
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings. (Disable advanced options in the settings)</string>

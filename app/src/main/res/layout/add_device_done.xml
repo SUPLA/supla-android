@@ -17,7 +17,7 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_done"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -56,7 +56,7 @@
                 android:gravity="right"
                 android:text="@string/wizard_iodev_name"
                 android:textColor="@android:color/black"
-                android:textSize="11sp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:gravity="right"
                 android:text="@string/wizard_iodev_firmware"
                 android:textColor="@android:color/black"
-                android:textSize="11sp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:gravity="right"
                 android:text="@string/wizard_iodev_mac"
                 android:textColor="@android:color/black"
-                android:textSize="11sp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:gravity="right"
                 android:text="@string/wizard_iodev_laststate"
                 android:textColor="@android:color/black"
-                android:textSize="11sp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -106,7 +106,7 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textColor="@android:color/black"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/wizard_done_iodev_firmware"
@@ -115,7 +115,7 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textColor="@android:color/black"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/wizard_done_iodev_mac"
@@ -124,7 +124,7 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:textColor="@android:color/black"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <TextView
                 android:id="@+id/wizard_done_iodev_laststate"
@@ -134,7 +134,7 @@
                 android:background="#FFEB3B"
                 android:gravity="left"
                 android:textColor="@android:color/black"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -157,7 +157,7 @@
             android:paddingTop="10dp"
             android:text="@string/wizard_iodev_data"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
     </FrameLayout>
 
     <TextView
@@ -172,6 +172,6 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_done_explentations"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
 </RelativeLayout>
