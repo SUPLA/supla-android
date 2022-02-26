@@ -4,15 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <data>
+    <import type="android.view.View" />
     <variable name="viewModel"
               type="org.supla.android.cfg.ProfileItemViewModel"
               />
   </data>
-<!--
-      android:paddingLeft="@dimen/new_screen_margin"
-      android:paddingRight="@dimen/new_screen_margin"
 
--->
   <RelativeLayout 
       android:background="@color/cell_bg_new"
       android:layout_width="match_parent"
@@ -21,6 +18,7 @@
 
     <TextView
         android:id="@+id/profileLabel"
+        android:layout_marginLeft="@dimen/new_screen_margin"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
@@ -43,6 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/channelstate_infoline"
+        android:text="@string/cfg_profile_active_indicator"
+        android:visibility="@{viewModel.active ? View.VISIBLE : View.GONE}"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/accountDetailsChevron" />
     

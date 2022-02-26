@@ -4,6 +4,8 @@
 
     <string name="app_name" translatable="false">SUPLA</string>
     <string name="profiles_title" translatable="false">Accounts</string>
+    <string name="profile_name_label" translatable="false">PROFILE NAME</string>
+    <string name="profile_set_as_default">Set as active</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>
@@ -99,14 +101,18 @@
     <string translatable="false" name="temp_unit">TEMPERATURE UNIT</string>
     <string translatable="false" name="advanced_settings">Advanced</string>
     <string translatable="false" name="create_account">Create</string>
+    <string translatable="false" name="delete_account">Remove</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->
     <string translatable="false" name="cfg_label_profile_name">CURRENT PROFILE</string>
+    <string translatable="false" name="cfg_profile_active_indicator">active</string>
     <!-- default name for a profile (usually assigned for initial
 	 account or when migrating settings from previous version of
 	 the app. -->
     <string translatable="false" name="cfg_profile_name_default">Default</string>
+    <string translatable="false" name="cfg_profile_new_profile">Add an account</string>
+
     <string translatable="false" name="cfg_label_email_auth">Email</string>
     <string translatable="false" name="cfg_label_access_id_auth">Access ID</string>
     <string translatable="false" name="cfg_checkbox_server_auto">Auto</string>

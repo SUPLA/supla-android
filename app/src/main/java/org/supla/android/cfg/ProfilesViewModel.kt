@@ -19,33 +19,40 @@ package org.supla.android.cfg
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.StateFlow
-import androidx.lifecycle.MutableStateFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import org.supla.android.profile.ProfileManager
+import org.supla.android.profile.ProfileIdNew
+import org.supla.android.db.AuthProfileItem
 
 class ProfilesViewModel(private val profileManager: ProfileManager)
     : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfilesUiState.ListProfiles(emptyList()))
-    val uiState: StateFlow<ProfilesUiState> = _uiState
+    private val _uiState: MutableLiveData<ProfilesUiState> = 
+        MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
+    val uiState: LiveData<ProfilesUiState> = _uiState
     val profilesAdapter = ProfilesAdapter(this)
 
     init {
-        viewModelScope.launch {
-            val profiles = profileManager.getAllProfiles()
-
-            _uiState.value = ProfilesUiState.ListProfiles(profiles)
-        }
+        reload()
     }
 
     fun onNewProfile() {
+        _uiState.value = ProfilesUiState.EditProfile(ProfileIdNew)
+    }
 
+    fun onEditProfile(profileId: Long) {
+        _uiState.value = ProfilesUiState.EditProfile(profileId)
+    }
+
+    fun reload() {
+        val profiles = profileManager.getAllProfiles()
+        _uiState.value = ProfilesUiState.ListProfiles(profiles)
     }
 }
 
 sealed class ProfilesUiState {
-    data class ListProfiles(profiles: List<Profile>): ProfilesUiState()
-    data class NewProfile(): ProfilesUiState()
+    data class ListProfiles(val profiles: List<AuthProfileItem>): ProfilesUiState()
+    data class EditProfile(val profileId: Long): ProfilesUiState()
 }
 

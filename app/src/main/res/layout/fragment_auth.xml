@@ -6,7 +6,10 @@
     <import type="android.view.View" />
     <variable
 	      name="viewModel"
-	      type="org.supla.android.cfg.CfgViewModel" />
+	      type="org.supla.android.cfg.AuthItemViewModel" />
+    <variable
+        name="navCoordinator"
+        type="org.supla.android.cfg.NavCoordinator" />
   </data>
   
   <LinearLayout
@@ -26,6 +29,7 @@
         android:checked="@={viewModel.isAdvancedMode}"
         android:text="@string/advanced_settings"
 	      android:textSize="@dimen/default_text_size"
+        android:visibility="@{viewModel.allowsBasicMode ? View.VISIBLE : View.GONE}"
         />
     <FrameLayout
 		    android:layout_weight="1"
@@ -113,6 +117,19 @@
         android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}"
         android:text="@string/create_account" />
 
+
+    <org.supla.android.ui.StandaloneRoundedButton
+        android:id="@+id/cfg_delete"
+        style="@style/StandaloneRoundedRedButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standalone_button_height"
+        android:layout_marginTop="@dimen/shrink_field_spacing"
+        android:layout_marginBottom="@dimen/form_field_spacing"
+        android:layout_below="@id/cfg_create_account"
+        android:layout_centerHorizontal="true"
+        android:visibility="@{viewModel.isActive ? View.GONE : View.VISIBLE }"
+        android:onClick="@{() -> viewModel.onDeleteProfile()}"
+        android:text="@string/delete_account" />
 
     </RelativeLayout>
   </LinearLayout>

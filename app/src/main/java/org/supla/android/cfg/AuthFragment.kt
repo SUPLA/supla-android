@@ -1,4 +1,21 @@
 package org.supla.android.cfg
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.content.Context
 import android.app.Activity
@@ -15,12 +32,18 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentAuthBinding
 
 class AuthFragment: Fragment() {
-        private val viewModel: CfgViewModel by activityViewModels()
+    private val viewModel: AuthItemViewModel by viewModels()
+    private val navCoordinator: NavCoordinator by activityViewModels()
+    private val args: AuthFragmentArgs by navArgs<AuthFragmentArgs>()
+
     private lateinit var binding: FragmentAuthBinding
 
     /*
@@ -43,6 +66,7 @@ class AuthFragment: Fragment() {
 					  container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.navCoordinator = navCoordinator
         binding.cfgAdvanced.viewModel = viewModel
         binding.cfgBasic.viewModel = viewModel
 
@@ -73,7 +97,7 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.edAccessID,
 		            binding.cfgAdvanced.edAccessIDpwd, 
                 binding.cfgAdvanced.cfgEmail,
-		            /*binding.cfgAdvanced.cfgProfileName!!,*/
+		            binding.cfgAdvanced.cfgProfileName,
                 binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
@@ -110,6 +134,7 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.cbAutoLabel,
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
                 binding.cfgAdvanced.addDeviceWarning,
+                binding.cfgAdvanced.profileNameLabel,
                 binding.cfgCreateAccount,
                 binding.dontHaveAccountText,
                 binding.cfgCbAdvanced).forEach {
@@ -143,5 +168,12 @@ class AuthFragment: Fragment() {
 
     private fun resetScrollView() {
         shouldResetScrollViewOffset = true
+    }
+
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
+        return AuthItemViewModelFactory(activity ?: SuplaApp.getApp(),
+                                        args.profileId,
+                                        args.allowBasicMode,
+                                        navCoordinator)
     }
 }

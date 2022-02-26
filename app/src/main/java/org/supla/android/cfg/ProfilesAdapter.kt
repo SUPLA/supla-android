@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.db.AuthProfileItem
 import org.supla.android.databinding.ProfileListItemBinding
 import org.supla.android.databinding.ProfileListNewBinding
 
 class ProfilesAdapter(private val profilesVM: ProfilesViewModel) : 
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var profileCount: Int = 3
+    private var profiles: List<AuthProfileItem> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): RecyclerView.ViewHolder {
@@ -38,18 +39,26 @@ class ProfilesAdapter(private val profilesVM: ProfilesViewModel) :
 
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
                                   pos: Int) {
-        //val itm = profiles.get(pos)
         if(vh is ItemViewHolder) {
-            vh.binding.viewModel = ProfileItemViewModel("ala")
+            val itm = profiles.get(pos)
+            vh.binding.viewModel = ProfileItemViewModel(itm.name, itm.isActive)
+            vh.binding.root.setOnClickListener {
+                profilesVM.onEditProfile(itm.id)
+            }
+        } else if(vh is ButtonViewHolder) {
+            vh.binding.viewModel = profilesVM
+            vh.binding.root.setOnClickListener {
+                profilesVM.onNewProfile()
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return profileCount + 1
+        return profiles.size + 1
     }
 
     override fun getItemViewType(pos: Int): Int {
-        if(pos < profileCount) {
+        if(pos < profiles.size) {
             return R.layout.profile_list_item
         } else {
             return R.layout.profile_list_new
@@ -57,7 +66,12 @@ class ProfilesAdapter(private val profilesVM: ProfilesViewModel) :
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return if(position < profiles.size) profiles.get(position).id else -1
+    }
+
+    fun reloadData(newProfiles: List<AuthProfileItem>) {
+        this.profiles = newProfiles
+        notifyDataSetChanged()
     }
 
 

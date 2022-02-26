@@ -20,6 +20,7 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
+public const val ProfileIdNew: Long = -1
 
 interface ProfileManager {
 
@@ -48,4 +49,9 @@ interface ProfileManager {
      Return list of all user profiles
      */
     fun getAllProfiles(): List<AuthProfileItem>
+
+    /**
+     Return profile with given id
+     */
+    fun getProfile(id: Long): AuthProfileItem?
 }

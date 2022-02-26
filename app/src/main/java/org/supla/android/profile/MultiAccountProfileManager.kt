@@ -41,9 +41,25 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun updateCurrentAuthInfo(info: AuthInfo) {
-	val cp = getCurrentProfile()
+	      val cp = getCurrentProfile()
         var np = cp.copy(authInfo = info)
-	np.id = cp.id
+	      np.id = cp.id
         updateCurrentProfile(np)
+    }
+
+    override fun getAllProfiles(): List<AuthProfileItem> {
+        return listOf(getCurrentProfile())
+    }
+
+    override fun getProfile(id: Long): AuthProfileItem? {
+        if(id == ProfileIdNew) {
+            val authInfo = AuthInfo(emailAuth=true,
+                                    serverAutoDetect=true)
+            return AuthProfileItem(authInfo=authInfo,
+                                   advancedAuthSetup=true,
+                                   isActive=false)
+        } else {
+            return repo.getProfile(id)
+        }
     }
 }

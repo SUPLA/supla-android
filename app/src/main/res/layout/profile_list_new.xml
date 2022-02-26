@@ -5,11 +5,11 @@
 
   <data>
     <variable name="viewModel"
-              type="org.supla.android.cfg.ProfileItemViewModel"
+              type="org.supla.android.cfg.ProfilesViewModel"
               />
   </data>
 
-  <RelativeLayout 
+  <RelativeLayout
       android:paddingLeft="@dimen/new_screen_margin"
       android:paddingRight="@dimen/new_screen_margin"
       android:background="@color/activity_bg_new"

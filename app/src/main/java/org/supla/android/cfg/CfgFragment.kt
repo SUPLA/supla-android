@@ -46,7 +46,7 @@ class CfgFragment: Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cfg,
 					  container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = requireActivity()
         binding.viewModel = viewModel
 
 	      var type = SuplaApp.getApp().typefaceOpenSansRegular
