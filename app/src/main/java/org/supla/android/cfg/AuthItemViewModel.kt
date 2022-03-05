@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileManager
+import org.supla.android.profile.ProfileIdNew
 
 /**
 A view model responsible for user credential input views. Handles both
@@ -61,6 +62,8 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
      */
     private val _serverAutoDiscovery: MutableLiveData<Boolean>
     val serverAutoDiscovery: LiveData<Boolean>
+
+    val profileName: MutableLiveData<String>
     
     private val _authByEmail: MutableLiveData<Boolean>
     val authByEmail: LiveData<Boolean>
@@ -72,7 +75,13 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     val isAdvancedMode: MutableLiveData<Boolean>
     val saveEnabled = MutableLiveData<Boolean>(true)
     val isActive: MutableLiveData<Boolean>
-    val isActiveVisible: Boolean = true // TODO: from profile manager
+    val isActiveVisible: Boolean get() {
+        return (profileManager.getAllProfiles().size > 1) || (item.id == ProfileIdNew)
+    }
+
+    val isDeleteAvailable: Boolean  get() {
+        return !item.isActive && (item.id != ProfileIdNew)
+    }
 
     private val _emailObserver: Observer<String>
     private val _serverAddrEmailObserver: Observer<String>
@@ -84,9 +93,12 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
 
 
     init {
+        
         val info = item.authInfo
         _authByEmail = MutableLiveData(info.emailAuth)
         authByEmail = _authByEmail
+
+        profileName = MutableLiveData(item.name)
 
         val accessIDstr = if(info.accessID > 0) info.accessID.toString() else ""
         accessID = MutableLiveData<String>(accessIDstr)
@@ -103,6 +115,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         serverAddrEmail = MutableLiveData(info.serverForEmail)
         _serverAddrEmailObserver = Observer { if(it != info.serverForEmail) setNeedsReauth() }
         serverAddrEmail.observeForever(_serverAddrEmailObserver)
+       
 
         serverAddrAccessID = MutableLiveData(info.serverForAccessID)
         _serverAddrAccessIDObserver = Observer { if(it != info.serverForAccessID) setNeedsReauth() }
@@ -145,6 +158,10 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         super.onCleared()
     }
 
+    fun onProfileNameChange(s: CharSequence, start: Int, before: Int, count: Int) {
+        profileName.value = s.toString()
+    }
+
 
     fun selectEmailAuth(useEmailAuth: Boolean) {
         if(_authByEmail.value != useEmailAuth) {
@@ -153,34 +170,63 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         }
     }
 
-    private fun saveConfig() {
-        if(_authSettingsChanged) {
-            val pm = profileManager
-            val profile = pm.getCurrentProfile()
+    private fun saveConfig(): Boolean {
+        val pm = profileManager
+        val profile = item
+        val pn = profileName.value
 
-            profile.authInfo.emailAuth = _authByEmail.value!!
-            try {
-                profile.authInfo.accessID = accessID.value?.toInt() ?: 0
-            } catch(_: NumberFormatException) {
-                profile.authInfo.accessID = 0
-            }
-            profile.authInfo.serverAutoDetect = serverAutoDiscovery.value ?: true
-            profile.authInfo.emailAddress = emailAddress.value ?: ""
-            profile.authInfo.serverForEmail = serverAddrEmail.value ?: ""
-            profile.authInfo.serverForAccessID = serverAddrAccessID.value ?: ""
-            profile.authInfo.accessIDpwd = accessIDpwd.value ?: ""
-            profile.advancedAuthSetup = isAdvancedMode.value ?: false
-            
-            pm.updateCurrentProfile(profile)
+        if(pn != null) {
+            profile.name = pn
         }
 
+        profile.authInfo.emailAuth = _authByEmail.value!!
+        try {
+            profile.authInfo.accessID = accessID.value?.toInt() ?: 0
+        } catch(_: NumberFormatException) {
+            profile.authInfo.accessID = 0
+        }
+        profile.authInfo.serverAutoDetect = serverAutoDiscovery.value ?: true
+        profile.authInfo.emailAddress = emailAddress.value ?: ""
+        profile.authInfo.serverForEmail = serverAddrEmail.value ?: ""
+        profile.authInfo.serverForAccessID = serverAddrAccessID.value ?: ""
+        profile.authInfo.accessIDpwd = accessIDpwd.value ?: ""
+        profile.advancedAuthSetup = isAdvancedMode.value ?: false
+
+        if(profile.authInfo.isAuthDataComplete) {
+            pm.updateCurrentProfile(profile)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private fun checkForDuplicateName(profile: String): Boolean {
+        val match = profileManager.getAllProfiles().filter { it.name == profile }.firstOrNull()
+        return (match != null && match.id != item.id)
     }
 
     fun onSaveConfig() {
-        saveEnabled.value = false
-        saveConfig()
-        
-        navCoordinator.returnFromAuth(_authSettingsChanged)
+        val pname = profileName.value
+        if(pname.isNullOrBlank()) {
+            _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
+                                                         R.string.form_profile_name_missing)
+            return
+        }
+
+        if(checkForDuplicateName(pname)) {
+            _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
+                                                         R.string.form_profile_duplicate)
+            return
+        }
+
+        if(saveConfig()) {
+            saveEnabled.value = false
+            
+            navCoordinator.returnFromAuth(_authSettingsChanged)
+        } else {
+            _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
+                                                         R.string.form_profile_required_data_missing)
+        }
     }
 
     fun onEmailChange(s: CharSequence, start: Int, before: Int, count: Int) {

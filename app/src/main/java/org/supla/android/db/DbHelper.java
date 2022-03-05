@@ -19,11 +19,13 @@ package org.supla.android.db;
  */
 
 import android.content.Context;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.R;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -52,7 +54,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 21;
+    public static final int DATABASE_VERSION = 22;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -61,9 +63,11 @@ public class DbHelper extends BaseDbHelper {
     private final ChannelRepository channelRepository;
     private final ColorListRepository colorListRepository;
     private final UserIconRepository userIconRepository;
+    private Context context;
 
     private DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
         this.channelRepository = new DefaultChannelRepository(
                 new ChannelDao(this),
                 new LocationDao(this));
@@ -71,6 +75,10 @@ public class DbHelper extends BaseDbHelper {
                 new ColorListDao(this));
         this.userIconRepository = new DefaultUserIconRepository(
                 new UserIconDao(this), new ImageCacheProvider());
+    }
+
+    private Context getContext() {
+        return context;
     }
 
     /**
@@ -376,6 +384,7 @@ public class DbHelper extends BaseDbHelper {
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
         upgradeToV19(db);
+        upgradeToV22(db);
 
         // Create views at the end
         createChannelView(db);
@@ -528,6 +537,16 @@ public class DbHelper extends BaseDbHelper {
     }
 
 
+    private void upgradeToV22(SQLiteDatabase db) {
+        ContentValues cv = new ContentValues();
+        cv.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME,
+               getContext().getText(R.string.profile_default_name).toString());
+        db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv,
+                  null, null);
+        // TODO: add profile id in all data tables
+    }
+
+
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -589,6 +608,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 20:
                         upgradeToV21(db);
+                        break;
+                    case 21:
+                        upgradeToV22(db);
                         break;
                 }
             }

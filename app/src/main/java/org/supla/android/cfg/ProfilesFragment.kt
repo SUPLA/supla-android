@@ -88,6 +88,12 @@ class ProfilesFragment: Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        profilesVM.reload()
+    }
+
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
         return ProfilesViewModelFactory(activity ?: SuplaApp.getApp())
     }

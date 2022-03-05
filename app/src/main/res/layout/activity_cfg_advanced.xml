@@ -46,7 +46,12 @@
         android:layout_marginTop="@dimen/form_label_dist"
         android:layout_marginBottom="@dimen/form_label_spacing"
         android:background="@drawable/rounded_edittext"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:onTextChanged="@{viewModel.onProfileNameChange}"
         android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
+        android:text="@{viewModel.profileName}"
         android:padding="5dp"
         android:textSize="14sp" />
 

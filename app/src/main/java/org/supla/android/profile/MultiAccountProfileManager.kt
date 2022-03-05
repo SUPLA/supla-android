@@ -28,10 +28,14 @@ class MultiAccountProfileManager(private val context: Context,
     
 
     override fun getCurrentProfile(): AuthProfileItem {
-        return repo.allProfiles.filter { it.isActive == true }.first()
+        val rv = repo.allProfiles.filter { it.isActive == true }.first()
+        return rv
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
+        if(profile.id == ProfileIdNew) {
+            profile.id = repo.createNamedProfile(profile.name)
+        }
         repo.updateProfile(profile)
         DbHelper.getInstance(context).deleteUserIcons()
     } 
@@ -48,16 +52,18 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun getAllProfiles(): List<AuthProfileItem> {
-        return listOf(getCurrentProfile())
+        return repo.allProfiles
     }
 
     override fun getProfile(id: Long): AuthProfileItem? {
         if(id == ProfileIdNew) {
             val authInfo = AuthInfo(emailAuth=true,
                                     serverAutoDetect=true)
-            return AuthProfileItem(authInfo=authInfo,
-                                   advancedAuthSetup=true,
-                                   isActive=false)
+            var rv = AuthProfileItem(authInfo=authInfo,
+                                     advancedAuthSetup=true,
+                                     isActive=false)
+            rv.id = id
+            return rv
         } else {
             return repo.getProfile(id)
         }

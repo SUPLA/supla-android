@@ -55,8 +55,6 @@ class CfgActivity: AppCompatActivity() {
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
-        
-
 	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
                                           SuplaApp.getApp().getProfileManager(this))
         val provider = ViewModelProvider(this, factory)

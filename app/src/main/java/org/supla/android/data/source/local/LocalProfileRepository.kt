@@ -27,7 +27,9 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
 
 
     override fun createNamedProfile(name: String): Long {
-        return insert(makeEmptyAuthItem(), 
+        var itm = makeEmptyAuthItem()
+        itm.name = name
+        return insert(itm, 
                       SuplaContract.AuthProfileEntry.TABLE_NAME)
     }
 

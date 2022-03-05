@@ -5,7 +5,12 @@
     <string name="app_name" translatable="false">SUPLA</string>
     <string name="profiles_title" translatable="false">Accounts</string>
     <string name="profile_name_label" translatable="false">PROFILE NAME</string>
-    <string name="profile_set_as_default">Set as active</string>
+    <string name="profile_set_as_default" translatable="false">Set as active</string>
+    <string name="profile_default_name" translatable="false">Default profile</string>
+    <string name="form_error" translatable="false">Error</string>
+    <string name="form_profile_name_missing" translatable="false">Profile name is missing</string>
+    <string name="form_profile_required_data_missing" translatable="false">Required data is missing</string>
+    <string name="form_profile_duplicate" translate="false">Profile by that name already exists</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>

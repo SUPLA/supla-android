@@ -29,12 +29,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.flow.collect
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentAuthBinding
@@ -159,6 +162,29 @@ class AuthFragment: Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.editAction.collect { state ->
+                                               when(state) {
+                                                   is AuthItemEditAction.Alert -> {
+                                                       AlertDialog.Builder(requireContext())
+                                                           .setTitle(state.titleResId)
+                                                           .setMessage(state.messageResId)
+                                                           .setPositiveButton(android.R.string.ok) {
+                                                               dlg, what ->
+                                                                   dlg.cancel()
+                                                           }.create().show()
+                                                       
+                                                   }
+                                               }
+                                         
+            }
+        
+        }
     }
 
     fun hideKeyboard(v: View) {
