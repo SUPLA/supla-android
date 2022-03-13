@@ -28,6 +28,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
     private long counter;
     private double calculatedValue;
+    private int profileId;
 
     public ImpulseCounterMeasurementItem() {
         super();
@@ -39,6 +40,14 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         super(src);
         counter = src.counter;
         calculatedValue = src.calculatedValue;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
     }
 
     public long getCounter() {
@@ -80,6 +89,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
         Complement = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT)) > 0;
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID)));
 
     }
 
@@ -94,6 +104,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
                 getCalculatedValue());
         values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT,
                 isComplement() ? 1 : 0);
+        values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
         return values;
     }
 

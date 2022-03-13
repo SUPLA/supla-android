@@ -28,6 +28,7 @@ public class ChannelGroupRelation extends DbItem {
     private int GroupId;
     private int ChannelId;
     private int Visible;
+    private int profileId;
 
     public int getGroupId() {
         return GroupId;
@@ -53,13 +54,21 @@ public class ChannelGroupRelation extends DbItem {
         Visible = visible;
     }
 
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
+    }
+
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry._ID)));
         setGroupId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE)));
-
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -69,6 +78,7 @@ public class ChannelGroupRelation extends DbItem {
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID, getGroupId());
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE, getVisible());
+        values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
 

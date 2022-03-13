@@ -39,7 +39,8 @@ public class LocationDao extends BaseDao {
                 SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE,
                 SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED,
                 SuplaContract.LocationEntry.COLUMN_NAME_SORTING,
-                SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+                SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER,
+                SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID
         };
 
         return getItem(Location::new, projection, SuplaContract.LocationEntry.TABLE_NAME,
@@ -47,6 +48,7 @@ public class LocationDao extends BaseDao {
     }
 
     public void insert(Location location) {
+        location.setProfileId(getCurrentProfileId().intValue());
         insert(location, SuplaContract.LocationEntry.TABLE_NAME);
     }
 

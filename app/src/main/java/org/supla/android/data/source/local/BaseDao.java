@@ -31,7 +31,7 @@ import java.util.Date;
 public abstract class BaseDao {
 
     private final DatabaseAccessProvider databaseAccessProvider;
-
+    
     BaseDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
         this.databaseAccessProvider = databaseAccessProvider;
     }
@@ -165,6 +165,10 @@ public abstract class BaseDao {
         return new Key<>(column, id);
     }
 
+    protected Long getCurrentProfileId() {
+        return databaseAccessProvider.getCurrentProfileId();
+    }
+
     public static boolean timestampStartsWithTheCurrentMonth(long timestamp) {
         if (timestamp == 0) {
             return true;
@@ -187,6 +191,8 @@ public abstract class BaseDao {
 
         @NonNull
         SQLiteDatabase getWritableDatabase();
+
+        Long getCurrentProfileId();
     }
 
     @FunctionalInterface

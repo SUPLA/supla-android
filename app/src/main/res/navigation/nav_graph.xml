@@ -23,7 +23,7 @@
   <fragment
       android:id="@+id/cfgEditProfile"
       android:name="org.supla.android.cfg.AuthFragment"
-      android:label="@string/cfg_profile_new_profile">
+      android:label="@string/add_account">
     <argument
         android:name="profileId"
         app:argType="long" />

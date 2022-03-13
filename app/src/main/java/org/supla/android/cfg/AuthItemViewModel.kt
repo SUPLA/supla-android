@@ -89,7 +89,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     private val _accessIDObserver: Observer<String>
     private val _accessIDPwdObserver: Observer<String>
     private val _advancedObserver: Observer<Boolean>
-
+    private val _activeObserver: Observer<Boolean>
 
 
     init {
@@ -145,6 +145,15 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         isAdvancedMode.observeForever(_advancedObserver)
 
         isActive = MutableLiveData<Boolean>(item.isActive)
+        _activeObserver = Observer {
+            if(it == false && item.isActive) {
+                _editAction.value = AuthItemEditAction.Alert(R.string.profile_set_as_default,
+                                                             R.string.profile_activate_not_available)
+                isActive.value = true
+            }
+        }
+        isActive.observeForever(_activeObserver)
+
     }
 
     override fun onCleared() {
@@ -154,6 +163,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         accessID.removeObserver(_accessIDObserver)
         accessIDpwd.removeObserver(_accessIDPwdObserver)
         isAdvancedMode.removeObserver(_advancedObserver)
+        isActive.removeObserver(_activeObserver)
 
         super.onCleared()
     }
@@ -191,6 +201,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         profile.authInfo.serverForAccessID = serverAddrAccessID.value ?: ""
         profile.authInfo.accessIDpwd = accessIDpwd.value ?: ""
         profile.advancedAuthSetup = isAdvancedMode.value ?: false
+        profile.isActive = isActive.value ?: false
 
         if(profile.authInfo.isAuthDataComplete) {
             pm.updateCurrentProfile(profile)
@@ -240,7 +251,14 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     }
 
     fun onDeleteProfile() {
-        // TODO: implementation missing
+        if(item.isActive) {
+            _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
+                                                         R.string.form_cannot_delete_active_profile)
+            return
+        }
+        profileManager.removeProfile(item.id)
+        _editAction.value = AuthItemEditAction.EditingCommited(item, false)
+        navCoordinator.returnFromAuth(true)
     }
 
     fun toggleServerAutoDiscovery() {

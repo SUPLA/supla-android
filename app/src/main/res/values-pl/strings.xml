@@ -1,5 +1,18 @@
 <resources>
     <string name="confirm_button_text" translatable="false">OK</string>
+    <string name="profiles_title" translatable="false">Konta</string>
+    <string name="profile_name_label" translatable="false">NAZWA KONTA</string>
+    <string name="profile_set_as_default" translatable="false">Aktywne</string>
+    <string name="profile_activate_not_available" translatable="false">Żeby deaktywować to konto wybierz inne jako aktywne</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Nie można usunąć aktywnego konta</string>
+    <string name="delete_account">Usuń</string>
+    <string name="profile_default_name" translatable="false">Domyślne</string>
+    <string name="profile_select_active" translatable="false">Aktywne konto</string>
+    <string name="form_error" translatable="false">Błąd</string>
+    <string name="form_profile_name_missing" translatable="false">Podaj nazwę konta</string>
+    <string name="form_profile_required_data_missing" translatable="false">Uzupełnij wymagane dane</string>
+    <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
+    <string name="add_account">Dodaj konto</string>
     <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
@@ -83,7 +96,8 @@
     <string name="create_account"><u>Utwórz konto</u></string>
 
     <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
-    <string name="cfg_profile_name_default">Domyślny</string>
+    <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
+
     <string name="cfg_label_email_auth">Email</string>
     <string name="cfg_label_access_id_auth">Identyfikator</string>
     <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>

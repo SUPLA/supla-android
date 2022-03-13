@@ -21,6 +21,7 @@ package org.supla.android.profile
 import android.content.Context
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
+import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
 
 class MultiAccountProfileManager(private val context: Context,
@@ -38,6 +39,9 @@ class MultiAccountProfileManager(private val context: Context,
         }
         repo.updateProfile(profile)
         DbHelper.getInstance(context).deleteUserIcons()
+        if(profile.isActive) {
+            activateProfile(profile.id)
+        }
     } 
 
     override fun getCurrentAuthInfo(): AuthInfo {
@@ -67,5 +71,24 @@ class MultiAccountProfileManager(private val context: Context,
         } else {
             return repo.getProfile(id)
         }
+    }
+
+    override fun activateProfile(id: Long): Boolean {
+        val current = getCurrentProfile()
+        if(current.id == id) return false
+        if(repo.setProfileActive(id)) {
+            initiateReconnect()
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun removeProfile(id: Long) {
+        repo.deleteProfile(id)
+    }
+
+    private fun initiateReconnect() {
+        SuplaApp.getApp().getSuplaClient().reconnect()
     }
 }

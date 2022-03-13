@@ -52,17 +52,31 @@
         android:textSize="18dp"
         android:visibility="invisible" />
 
-    <Button
-        android:id="@+id/groupbutton"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/groupoff"
-        android:clickable="true" />
+        android:layout_marginRight="10dp">
+      <Button
+          android:id="@+id/groupbutton"
+          style="?android:attr/borderlessButtonStyle"
+          android:layout_width="45dp"
+          android:layout_height="45dp"
+          android:layout_toLeftOf="@id/profilebutton"
+          android:layout_gravity="center_vertical|right"
+          android:background="@drawable/groupoff"
+          android:clickable="true" />
 
+      <Button
+          android:id="@+id/profilebutton"
+          style="?android:attr/borderlessButtonStyle"
+          android:layout_marginLeft="10dp"
+          android:layout_width="45dp"
+          android:layout_height="45dp"
+          android:background="@drawable/profile"
+          android:clickable="true" />
+    </LinearLayout>
 </RelativeLayout>

@@ -18,6 +18,7 @@ package org.supla.android.data.source.local
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.ContentValues
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.SuplaContract
 import org.supla.android.db.AuthProfileItem
@@ -43,6 +44,17 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
     override fun deleteProfile(id: Long) {
         delete(SuplaContract.AuthProfileEntry.TABLE_NAME,
                key(SuplaContract.AuthProfileEntry._ID, id))
+        val tables = listOf(SuplaContract.LocationEntry.TABLE_NAME,
+                            SuplaContract.ChannelEntry.TABLE_NAME,
+                            SuplaContract.ChannelValueEntry.TABLE_NAME,
+                            SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+                            SuplaContract.ColorListItemEntry.TABLE_NAME,
+                            SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                            SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                            SuplaContract.UserIconsEntry.TABLE_NAME)
+        for(table in tables) {
+            delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))
+        }
     }
 
     override fun updateProfile(profile: AuthProfileItem) {
@@ -75,6 +87,32 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
             }
         }
 
+    override fun setProfileActive(id: Long): Boolean {
+        return write<Boolean> { db ->
+                var rv = false                   
+                db.beginTransaction()
+                try {
+                    val cv1 = ContentValues()
+                    cv1.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 0)
+                    db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv1,
+                              SuplaContract.AuthProfileEntry._ID + " <> ?",
+                              arrayOf(id.toString()))
+                    val cv2 = ContentValues()
+                    cv2.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 1)
+                    db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv2,
+                              SuplaContract.AuthProfileEntry._ID + " = ?",
+                              arrayOf(id.toString()))
+                    
+                    db.setTransactionSuccessful()
+                    rv = true
+                } catch(e: Exception) {
+                    android.util.Log.e("SuplaProfile", "failed to activate profile: " + id, e)
+                } finally {
+                    db.endTransaction()
+                }
+                rv
+        }
+    }
 
     private fun makeEmptyAuthItem(): AuthProfileItem {
         return AuthProfileItem(name = "",

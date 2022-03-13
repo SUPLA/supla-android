@@ -54,4 +54,16 @@ interface ProfileManager {
      Return profile with given id
      */
     fun getProfile(id: Long): AuthProfileItem?
+
+    /**
+     Activate profile with given id
+     returns true if profile has been changed (i.e. reauthentication
+     is required).
+     */
+    fun activateProfile(id: Long): Boolean
+
+    /**
+     Remove profile
+     */
+    fun removeProfile(id: Long)
 }

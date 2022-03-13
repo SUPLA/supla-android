@@ -37,6 +37,7 @@ public class ChannelValue extends DbItem {
     private byte[] Value;
     private byte[] SubValue;
     private short SubValueType;
+    private int profileId;
 
     private boolean ValueDiff(byte[] v1, byte[] v2) {
 
@@ -110,8 +111,17 @@ public class ChannelValue extends DbItem {
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE, getChannelStringValue());
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE, getChannelStringSubValue());
         values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE, getSubValueType());
+        values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        this.profileId = pid;
     }
 
     public void AssignCursorData(Cursor cursor) {
@@ -122,6 +132,7 @@ public class ChannelValue extends DbItem {
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE)));
         setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE)));
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public void AssignCursorDataFromGroupView(Cursor cursor) {
@@ -132,12 +143,14 @@ public class ChannelValue extends DbItem {
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE)));
         setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE)));
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
         setChannelValue(channelValue.Value);
         setChannelSubValue(channelValue.SubValue);
         setSubValueType(channelValue.SubValueType);
+        // NOTE: profileId expected to be set by caller
     }
 
     public boolean Diff(SuplaChannelValue channelValue) {

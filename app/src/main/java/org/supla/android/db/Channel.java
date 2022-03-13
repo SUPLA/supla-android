@@ -141,6 +141,7 @@ public class Channel extends ChannelBase {
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
         setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
         setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION)));
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID)));
 
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
@@ -173,6 +174,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
     }
