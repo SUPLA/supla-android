@@ -4,11 +4,13 @@ import android.database.Cursor;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.supla.android.SuplaApp;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
@@ -18,18 +20,21 @@ import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
-
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.lang.reflect.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -54,6 +59,22 @@ public class DefaultChannelRepositoryTest {
     @InjectMocks
     private DefaultChannelRepository defaultChannelRepository;
 
+    @Before
+    public void setUp() throws Exception {
+        AuthProfileItem profile = new AuthProfileItem("test",
+                                                      new AuthInfo(true,true, "", "", "", 0, "", 0),
+                                                      false,true);
+        profile.setId(1);
+        SuplaApp mockedApp = mock(SuplaApp.class);
+        ProfileManager pm = mock(ProfileManager.class);
+        when(pm.getCurrentProfile()).thenReturn(profile);
+        when(mockedApp.getProfileManager(mockedApp)).thenReturn(pm);
+
+        Field appFld = SuplaApp.class.getDeclaredField("_SuplaApp");
+        appFld.setAccessible(true);
+        appFld.set(SuplaApp.class, mockedApp);
+    }
+    
     @Test
     public void shouldProvideChannelFromDao() {
         // given
@@ -374,6 +395,7 @@ public class DefaultChannelRepositoryTest {
 
         SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 1,
                 2, 3, 4);
+        
 
         Location location = mock(Location.class);
         when(location.getLocationId()).thenReturn(locationId);
