@@ -459,4 +459,5 @@
     <string translatable="false" name="rs_display_mode">Rolety %</string>
     <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
     <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
+    <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
 </resources>

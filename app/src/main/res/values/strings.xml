@@ -474,4 +474,5 @@
     <string translatable="false" name="rs_display_mode">Roller shutter %</string>
     <string translatable="false" name="rs_display_mode_opening">Opening</string>
     <string translatable="false" name="rs_display_mode_closing">Closing</string>
+    <string translatable="false" name="status_accessid_inactive">Access Identifier inactive</string>
 </resources>
