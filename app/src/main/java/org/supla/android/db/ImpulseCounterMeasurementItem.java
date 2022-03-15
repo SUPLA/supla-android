@@ -28,7 +28,6 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
     private long counter;
     private double calculatedValue;
-    private int profileId;
 
     public ImpulseCounterMeasurementItem() {
         super();
@@ -40,14 +39,6 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         super(src);
         counter = src.counter;
         calculatedValue = src.calculatedValue;
-    }
-
-    public int getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(int pid) {
-        profileId = pid;
     }
 
     public long getCounter() {

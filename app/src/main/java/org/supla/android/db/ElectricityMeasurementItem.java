@@ -32,7 +32,6 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     private double[] rre;
     private double faeBalanced;
     private double raeBalanced;
-    private int profileId;
 
 
     public ElectricityMeasurementItem() {
@@ -51,14 +50,6 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         rre = emi.rre.clone();
         faeBalanced = emi.faeBalanced;
         raeBalanced = emi.raeBalanced;
-    }
-
-    public void setProfileId(int pid) {
-        profileId = pid;
-    }
-
-    public int getProfileId() {
-        return profileId;
     }
 
     public void setFae(int phase, double fae) {
