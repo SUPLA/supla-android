@@ -120,14 +120,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         super.onResume();
         CurrentActivity = this;
 
-        ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
-
         getMenuBarLayout();
-        if(pm.getAllProfiles().size() > 1) {
-            ProfileButton.setVisibility(View.VISIBLE);
-        } else {
-            ProfileButton.setVisibility(View.GONE);
-        }
+        updateProfileButtonVisibility();
     }
 
     @Override
@@ -136,6 +130,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         if (CurrentActivity == this) {
             CurrentActivity = null;
+        }
+    }
+
+    private void updateProfileButtonVisibility() {
+        int visible = GroupButton.getVisibility();
+        
+        ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+        if(pm.getAllProfiles().size() > 1) {
+            ProfileButton.setVisibility(visible);
+        } else {
+            ProfileButton.setVisibility(View.GONE);
         }
     }
 
@@ -188,6 +193,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton.setTag(0);
 
             ProfileButton = findViewById(R.id.profilebutton);
+            ProfileButton.setVisibility(View.GONE);
             ProfileButton.setOnClickListener(this);
         }
 
@@ -245,6 +251,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(0));
         GroupButton.setVisibility(View.VISIBLE);
+        updateProfileButtonVisibility();
         title.setVisibility(View.VISIBLE);
         detailTitle.setVisibility(View.INVISIBLE);
     }
@@ -255,12 +262,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(1));
         GroupButton.setVisibility(View.GONE);
+        ProfileButton.setVisibility(View.GONE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
         GroupButton.setVisibility(View.GONE);
+        ProfileButton.setVisibility(View.GONE);
     }
 
     public void setMenubarDetailTitle(String txt) {
