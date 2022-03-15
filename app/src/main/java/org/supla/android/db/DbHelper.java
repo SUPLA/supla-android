@@ -546,7 +546,6 @@ public class DbHelper extends BaseDbHelper {
                getContext().getText(R.string.profile_default_name).toString());
         db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv,
                   null, null);
-        // TODO: add profile id in all data tables
         String column_name = "profileid";
         String tables[] = {
             SuplaContract.LocationEntry.TABLE_NAME,

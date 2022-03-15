@@ -129,7 +129,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE + " "
                 + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CALCULATEDVALUE + ", "
                 + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT + " "
-                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COMPLEMENT
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_COMPLEMENT + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID + " "
+                + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_PROFILEID
                 + " FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME;
 
         execSQL(db, SQL_CREATE_EM_VIEW);
@@ -211,7 +213,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                 + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_RAE_BALANCED + ", "
 
                 + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT + " "
-                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_COMPLEMENT + ", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID + " "
+                + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PROFILEID
                 + " FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME;
 
         execSQL(db, SQL_CREATE_EM_VIEW);
@@ -305,6 +309,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         createThermostatLogTable(db);
         createTempHumidityLogTable(db);
         createTemperatureLogTable(db);
+        upgradeToV22(db);
 
         // Create views at the end
         createImpulseCounterLogView(db);
@@ -367,6 +372,23 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         recreateTables(db);
     }
 
+    private void upgradeToV22(SQLiteDatabase db) {
+        String column_name = "profileid";
+        String tables[] = {
+            SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
+            SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
+            SuplaContract.ThermostatLogEntry.TABLE_NAME,
+            SuplaContract.TemperatureLogEntry.TABLE_NAME,
+            SuplaContract.TempHumidityLogEntry.TABLE_NAME
+        };
+            
+        for(String table: tables) {
+            addColumn(db, "ALTER TABLE " + table +
+                      " ADD COLUMN " + column_name + " INTEGER NOT NULL DEFAULT 1");                  
+        }
+
+    }
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
         execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
@@ -404,6 +426,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                         break;
                     case 17:
                         upgradeToV18(db);
+                        break;
+                    case 21:
+                        upgradeToV22(db);
                         break;
                 }
             }
