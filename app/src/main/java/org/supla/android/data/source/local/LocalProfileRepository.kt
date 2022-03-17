@@ -94,15 +94,14 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
                 try {
                     val cv1 = ContentValues()
                     cv1.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 0)
-                    db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv1,
-                              SuplaContract.AuthProfileEntry._ID + " <> ?",
-                              arrayOf(id.toString()))
+                    db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv1, null,
+                              null)
                     val cv2 = ContentValues()
                     cv2.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 1)
                     db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv2,
                               SuplaContract.AuthProfileEntry._ID + " = ?",
                               arrayOf(id.toString()))
-                    
+                    android.util.Log.d("SuplaProfile", "activated profile: " + id)
                     db.setTransactionSuccessful()
                     rv = true
                 } catch(e: Exception) {

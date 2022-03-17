@@ -34,13 +34,21 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
+        val forceActivate: Boolean
         if(profile.id == ProfileIdNew) {
             profile.id = repo.createNamedProfile(profile.name)
+            forceActivate = profile.isActive
+        } else if(profile.isActive) {
+            val prev = getProfile(profile.id)
+            forceActivate = profile.isActive && !(prev?.isActive?:false)
+        } else {
+            forceActivate = false
         }
+
         repo.updateProfile(profile)
         DbHelper.getInstance(context).deleteUserIcons()
         if(profile.isActive) {
-            activateProfile(profile.id)
+            activateProfile(profile.id, forceActivate)
         }
     } 
 
@@ -74,8 +82,12 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun activateProfile(id: Long): Boolean {
+        return activateProfile(id, false)
+    }
+
+    private fun activateProfile(id: Long, force: Boolean): Boolean {
         val current = getCurrentProfile()
-        if(current.id == id) return false
+        if(current.id == id && !force) return false
         if(repo.setProfileActive(id)) {
             initiateReconnect()
             return true
@@ -89,6 +101,9 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     private fun initiateReconnect() {
-        SuplaApp.getApp().getSuplaClient().reconnect()
+        val cli = SuplaApp.getApp().getSuplaClient()
+        if(cli != null) {
+            cli.reconnect()
+        }
     }
 }

@@ -552,7 +552,6 @@ public class DbHelper extends BaseDbHelper {
             SuplaContract.ChannelEntry.TABLE_NAME,
             SuplaContract.ChannelValueEntry.TABLE_NAME,
             SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-            SuplaContract.AuthProfileEntry.TABLE_NAME,
             SuplaContract.ColorListItemEntry.TABLE_NAME,
             SuplaContract.ChannelGroupEntry.TABLE_NAME,
             SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
