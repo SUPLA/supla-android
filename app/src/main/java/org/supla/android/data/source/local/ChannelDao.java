@@ -126,7 +126,8 @@ public class ChannelDao extends BaseDao {
 
         return getItem(ChannelGroupRelation::new, projection, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
                 key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID, groupId),
-                key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, channelId));
+                key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, channelId),
+                key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
     }
 
     public ChannelExtendedValue getChannelExtendedValue(int channelId) {
@@ -577,6 +578,7 @@ public class ChannelDao extends BaseDao {
                     + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
                     + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
                     + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
+                    + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + getCurrentProfileId()
                     + localWhere
                     + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
                     + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
