@@ -186,6 +186,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
         __onDetailShow();
         tvProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
+        chartHelper.restoreSpinner(thSpinner);
         onSpinnerItemSelected();
 
         if (timer1 == null) {
@@ -208,6 +209,8 @@ public class ChannelDetailTemperature extends DetailLayout implements
     @Override
     public void onDetailHide() {
         super.onDetailHide();
+
+        chartHelper.persistSpinner(thSpinner);
 
         if (timer1 != null) {
             timer1.cancel();

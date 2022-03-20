@@ -201,6 +201,17 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onDetailShow() {
         super.onDetailShow();
+
+        chartHelper.restoreSpinners(icSpinnerMaster,
+                                    icSpinnerSlave,
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateSlaveSpinnerItems();
+                                        }
+                                    });
+                                        
+        
         icProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
         onItemSelected(null, null,
@@ -232,6 +243,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             timer1.cancel();
             timer1 = null;
         }
+
+        chartHelper.persistSpinners(icSpinnerMaster, icSpinnerSlave);
     }
 
     private void runDownloadTask() {

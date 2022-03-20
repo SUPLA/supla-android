@@ -275,6 +275,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                     onItemSelected(null, null,
                             emSpinnerMaster.getSelectedItemPosition(),
                             emSpinnerMaster.getSelectedItemId());
+                    chartHelper.restoreSpinners(emSpinnerMaster, emSpinnerSlave,
+                                                new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        updateSlaveSpinnerItems();
+                                                    }
+                                                });
+                                    
                 }
             }, 50);
 
@@ -653,6 +661,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onDetailShow() {
         super.onDetailShow();
 
+        chartHelper.restoreSpinners(emSpinnerMaster, emSpinnerSlave,
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateSlaveSpinnerItems();
+                                        }
+                                    });
+
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
         ivDirection.setVisibility(INVISIBLE);
@@ -695,6 +711,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             SuplaApp.getApp().CancelAllRestApiClientTasks(true);
             demm.setDelegate(null);
         }
+
+        chartHelper.persistSpinners(emSpinnerMaster, emSpinnerSlave);
     }
 
     @Override
