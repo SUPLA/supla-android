@@ -220,6 +220,8 @@
     <string name="all_available_history">Cała dostępna historia</string>
     <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
     <string name="no_chart_data_available">Brak danych dla wykresu.</string>
+    <string name="em_chart_phase_n">Faza %d</string>
+    <string name="em_chart_all_phases">Fazy 1+2+3</string>
     <string name="comparsion_minmin">Porównanie minuta do minuty</string>
     <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
     <string name="comparsion_dayday">Porównanie dzień do dnia</string>
