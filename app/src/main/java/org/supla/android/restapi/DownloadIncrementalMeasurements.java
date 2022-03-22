@@ -35,7 +35,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
-        int profileId = (int)profileManager.getCurrentProfile().getId();
+        int profileId = getCurrentProfileId();
         younger_item = newObject();
         younger_item.AssignJSONObject(obj);
         younger_item.setChannelId(getChannelId());

@@ -561,6 +561,7 @@ public class DbHelper extends BaseDbHelper {
         for(String table: tables) {
             addColumn(db, "ALTER TABLE " + table +
                       " ADD COLUMN " + column_name + " INTEGER NOT NULL DEFAULT 1");                  
+            createIndex(db, table, column_name);
         }
     }
 

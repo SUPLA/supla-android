@@ -187,7 +187,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                     }
 
                 } catch (JSONException e) {
-                    android.util.Log.e("Supla", "download error", e);
+                    Trace.e("Supla", "download error", e);
                     return null;
                 }
 
