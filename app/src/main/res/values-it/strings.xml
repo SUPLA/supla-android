@@ -441,5 +441,7 @@
     <string name="rs_display_mode">% Tapparelle</string>
     <string name="rs_display_mode_opening">Apertura</string>
     <string name="rs_display_mode_closing">Chiusura</string>
+    <string name="cfg_checkbox_server_auto" translatable="false">Auto</string>
+    <string name="temp_unit" translatable="false">UNITÀ DI TEMPERATURA</string>
 
 </resources>

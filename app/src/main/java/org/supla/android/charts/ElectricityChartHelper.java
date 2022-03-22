@@ -26,6 +26,7 @@ import android.graphics.Color;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.components.IMarker;
 
 import org.supla.android.R;
 import org.supla.android.db.MeasurementsDbHelper;
@@ -244,5 +245,14 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     @Override
     public String getCurrency() {
         return mProductionDataSource ? null : currency;
+    }
+
+    @Override
+    protected IMarker getMarker() {
+        if(isBalanceChartType(ctype)) {
+            return super.getMarker();
+        } else {
+            return new EMMarkerView(this, context);
+        }
     }
 }

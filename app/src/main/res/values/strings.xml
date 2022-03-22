@@ -239,6 +239,8 @@
     <string name="all_available_history">All available history</string>
     <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
     <string name="no_chart_data_available">No chart data available.</string>
+    <string name="em_chart_phase_n" translatable="false">Phase %d</string>
+    <string name="em_chart_all_phases" translatable="false">Phase 1+2+3</string>
     <string name="comparsion_minmin">Minute to minute comparison</string>
     <string name="comparsion_hourhour">Hour to hour comparison</string>
     <string name="comparsion_dayday">Day to day comparison</string>
@@ -487,4 +489,5 @@
     <string translatable="false" name="rs_display_mode">Roller shutter %</string>
     <string translatable="false" name="rs_display_mode_opening">Opening</string>
     <string translatable="false" name="rs_display_mode_closing">Closing</string>
+    <string translatable="false" name="status_accessid_inactive">Access Identifier inactive</string>
 </resources>

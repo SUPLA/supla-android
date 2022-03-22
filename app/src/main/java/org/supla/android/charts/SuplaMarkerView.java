@@ -67,7 +67,7 @@ public class SuplaMarkerView extends MarkerView {
     }
 
     protected String getValue2(Entry e) {
-        return String.format("%.2f " + getString(helper.getUnit()), e.getY());
+        return String.format("%.2f" + getString(helper.getUnit()), e.getY());
     }
 
     @Override

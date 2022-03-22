@@ -50,7 +50,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread {
-
+    private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
     private static final String log_tag = "SuplaClientThread";
     private static final Object st_lck = new Object();
     private static SuplaRegisterError lastRegisterError = null;
@@ -70,6 +70,7 @@ public class SuplaClient extends Thread {
     private long lastTokenRequest = 0;
     private boolean superUserAuthorized = false;
     private String oneTimePassword;
+    private long _connectingStatusLastTime;
 
     public SuplaClient(Context context, String oneTimePassword) {
 
@@ -1284,6 +1285,8 @@ public class SuplaClient extends Thread {
                 superUserAuthorized = false;
             }
 
+            _connectingStatusLastTime = System.currentTimeMillis();
+
             onConnecting();
             setVisible(0, 2); // Cleanup
             setVisible(2, 1);
@@ -1338,29 +1341,22 @@ public class SuplaClient extends Thread {
                 }
 
                 if (connect()) {
-
                     //noinspection StatementWithEmptyBody
                     while (!canceled() && iterate()) {
                     }
-
-                    if (!canceled()) {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-
                 }
 
             } finally {
                 free();
             }
 
-
             if (!canceled()) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ignored) {
+                long timeDiff = System.currentTimeMillis()-_connectingStatusLastTime;
+                if ( timeDiff < MINIMUM_WAITING_TIME_MSEC) {
+                    try {
+                        Thread.sleep(MINIMUM_WAITING_TIME_MSEC-timeDiff);
+                    } catch (InterruptedException ignored) {
+                    }
                 }
             }
         }

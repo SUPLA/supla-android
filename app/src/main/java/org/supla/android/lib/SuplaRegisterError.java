@@ -72,6 +72,8 @@ public class SuplaRegisterError {
                 return context.getResources().getString(R.string.status_reg_disabled);
             case SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED:
                 return context.getResources().getString(R.string.status_access_id_not_assigned);
+            case SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE:
+                return context.getResources().getString(R.string.status_accessid_inactive);
             default:
                 return context.getResources().getString(R.string.status_unknown_err) + " (" + Integer.toString(ResultCode) + ")";
         }
