@@ -95,7 +95,7 @@
     <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
-    <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
+    <string name="cfg_label_profile_name">AKTYWNE KONTO</string>
     <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
 
     <string name="cfg_label_email_auth">Email</string>

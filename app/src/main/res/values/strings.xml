@@ -4,16 +4,16 @@
 
     <string name="app_name" translatable="false">SUPLA</string>
     <string name="profiles_title" translatable="false">Accounts</string>
-    <string name="profile_name_label" translatable="false">PROFILE NAME</string>
-    <string name="profile_set_as_default" translatable="false">Set as active</string>
-    <string name="profile_activate_not_available" translatable="false">To deactivate this profile select other profile as active</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Cannot remove active profile</string>
-    <string name="profile_default_name" translatable="false">Default profile</string>
-    <string name="profile_select_active" translatable="false">Select active profile</string>
+    <string name="profile_name_label" translatable="false">ACCOUNT NAME</string>
+    <string name="profile_set_as_default" translatable="false">Account is active</string>
+    <string name="profile_activate_not_available" translatable="false">To deactivate this account select other account as active</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Cannot remove active account</string>
+    <string name="profile_default_name" translatable="false">Default account</string>
+    <string name="profile_select_active" translatable="false">Select active account</string>
     <string name="form_error" translatable="false">Error</string>
-    <string name="form_profile_name_missing" translatable="false">Profile name is missing</string>
+    <string name="form_profile_name_missing" translatable="false">Account name is missing</string>
     <string name="form_profile_required_data_missing" translatable="false">Required data is missing</string>
-    <string name="form_profile_duplicate" translate="false">Profile by that name already exists</string>
+    <string name="form_profile_duplicate" translate="false">Account by that name already exists</string>
     <string name="add_account">Add an account</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
@@ -114,7 +114,7 @@
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->
-    <string translatable="false" name="cfg_label_profile_name">CURRENT PROFILE</string>
+    <string translatable="false" name="cfg_label_profile_name">CURRENT ACCOUNT</string>
     <string translatable="false" name="cfg_profile_active_indicator">active</string>
     <!-- default name for a profile (usually assigned for initial
 	 account or when migrating settings from previous version of
@@ -127,7 +127,7 @@
     <string translatable="false" name="cfg_temperature_unit">Temperature unit</string>
     <string translatable="false" name="cfg_button_autohide">Auto-hide buttons</string>
 
-    <string translatable="false" name="profile">Your account</string>
+    <string translatable="false" name="profile">Your accounts</string>
     <string translatable="false" name="menubar_appsettings">App Settings</string>
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
