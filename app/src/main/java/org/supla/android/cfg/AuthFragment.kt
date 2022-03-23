@@ -180,6 +180,18 @@ class AuthFragment: Fragment() {
                                                            }.create().show()
                                                        
                                                    }
+                                                   is AuthItemEditAction.ConfirmDelete -> {
+                                                       AlertDialog.Builder(requireContext())
+                                                           .setTitle(R.string.delete_account_confirm_title)
+                                                           .setMessage(R.string.delete_account_confirm_message)
+                                                           .setPositiveButton(android.R.string.ok) {
+                                                               dlg, what -> 
+                                                                   viewModel.onDeleteProfile(true)
+                                                           }
+                                                           .setNegativeButton(android.R.string.cancel) {
+                                                               dlg, what -> dlg.cancel()
+                                                           }.create().show()
+                                                   }
                                                }
                                          
             }

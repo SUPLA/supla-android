@@ -128,7 +128,7 @@
         android:layout_below="@id/cfg_create_account"
         android:layout_centerHorizontal="true"
         android:visibility="@{viewModel.isDeleteAvailable ? View.VISIBLE : View.GONE }"
-        android:onClick="@{() -> viewModel.onDeleteProfile()}"
+        android:onClick="@{() -> viewModel.onDeleteProfile(false)}"
         android:text="@string/delete_account" />
 
     </RelativeLayout>

@@ -111,6 +111,8 @@
     <string translatable="false" name="advanced_settings">Advanced</string>
     <string translatable="false" name="create_account">Create</string>
     <string translatable="false" name="delete_account">Remove</string>
+    <string translatable="false" name="delete_account_confirm_title">Remove account</string>
+    <string translatable="false" name="delete_account_confirm_message">Confirm account removal</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->

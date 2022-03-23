@@ -250,10 +250,14 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         navCoordinator.navigate(NavigationFlow.CREATE_ACCOUNT)
     }
 
-    fun onDeleteProfile() {
+    fun onDeleteProfile(force: Boolean = false) {
         if(item.isActive) {
             _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
                                                          R.string.form_cannot_delete_active_profile)
+            return
+        }
+        if(!force) {
+            _editAction.value = AuthItemEditAction.ConfirmDelete()
             return
         }
         profileManager.removeProfile(item.id)
@@ -306,4 +310,5 @@ sealed class AuthItemEditAction {
         AuthItemEditAction()
     data class EditingCanceled(val item: AuthProfileItem): AuthItemEditAction()
     data class Alert(val titleResId: Int, val messageResId: Int): AuthItemEditAction()
+    class ConfirmDelete: AuthItemEditAction()
 }
