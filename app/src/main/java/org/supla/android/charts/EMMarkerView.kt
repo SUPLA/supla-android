@@ -20,6 +20,7 @@ package org.supla.android.charts
 
 import android.content.Context
 import android.widget.TextView
+import android.view.View
 
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.BarEntry
@@ -54,6 +55,10 @@ class EMMarkerView(private val ihelper: IncrementalMeterChartHelper,
                                               pv * ihelper.getPricePerUnit()))
             tvSelValue2.setText(String.format("%.2f" + getString(ihelper.getUnit()),
                                               pv))
+            if(e.getYVals().size < 2) {
+                tvValue1.visibility = View.GONE
+                tvValue2.visibility = View.GONE
+            }
         }
     }
 
