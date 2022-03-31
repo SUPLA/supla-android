@@ -42,7 +42,9 @@ class EMMarkerView(private val ihelper: IncrementalMeterChartHelper,
     }
 
     override public fun refreshContent(e: Entry, h: Highlight) {
+
         super.refreshContent(e, h)
+
 
         val si = h.getStackIndex()
         val lbl = getContext().getText(R.string.em_chart_phase_n).toString().format(si + 1)
@@ -53,13 +55,8 @@ class EMMarkerView(private val ihelper: IncrementalMeterChartHelper,
             val cur = ihelper.getCurrency() ?: ""
             tvSelValue1.setText(String.format("%.2f " + cur, 
                                               pv * ihelper.getPricePerUnit()))
-            tvSelValue2.setText(String.format("%.2f" + getString(ihelper.getUnit()),
+            tvSelValue2.setText(String.format("%.2f " + getString(ihelper.getUnit()),
                                               pv))
-            if(e.getYVals().size < 2) {
-                tvValue1.visibility = View.GONE
-                tvValue2.visibility = View.GONE
-            }
         }
     }
-
 }

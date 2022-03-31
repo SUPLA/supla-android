@@ -30,7 +30,10 @@ import com.github.mikephil.charting.components.IMarker;
 
 import org.supla.android.R;
 import org.supla.android.db.MeasurementsDbHelper;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.Channel;
+import org.supla.android.lib.SuplaConst;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,11 +46,28 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     private String colPhase1;
     private String colPhase2;
     private String colPhase3;
+    private boolean singlePhase;
+    
 
     public ElectricityChartHelper(Context context) {
         super(context);
         totalActiveEnergy = new double[]{0, 0, 0};
+        singlePhase = false;
         setProductionDataSource(false);
+    }
+
+    @Override public void loadCombinedChart(int channelId) {
+        DbHelper dbh = DbHelper.getInstance(context);
+        Channel ch = dbh.getChannel(channelId);
+        if(ch != null) {
+            int flags = ch.getFlags();
+            singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
+                && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
+        } else {
+            singlePhase = false;
+        }
+
+        super.loadCombinedChart(channelId);
     }
 
     @Override
@@ -108,13 +128,13 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
         } else {
             float[] phases = new float[3];
+
             phases[0] = (float) c.getDouble(
                     c.getColumnIndex(colPhase1));
             phases[1] = (float) c.getDouble(
                     c.getColumnIndex(colPhase2));
             phases[2] = (float) c.getDouble(
                     c.getColumnIndex(colPhase3));
-
             entries.add(new BarEntry(n, phases));
         }
     }
@@ -249,7 +269,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     @Override
     protected IMarker getMarker() {
-        if(isBalanceChartType(ctype)) {
+        if(isBalanceChartType(ctype) || singlePhase) {
             return super.getMarker();
         } else {
             return new EMMarkerView(this, context);
