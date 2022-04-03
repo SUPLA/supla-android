@@ -58,7 +58,7 @@
     <style name="StandaloneRoundedRedButton"
            parent="Widget.AppCompat.Button.Borderless">
       <item name="android:background">@drawable/rounded_button_red</item>
-      <item name="android:textColor">?brandPrimaryForegroundColor</item>
+      <item name="android:textColor">@color/supla</item>
       <item name="android:textSize">17sp</item>
       <item name="android:textAllCaps">false</item>
     </style>

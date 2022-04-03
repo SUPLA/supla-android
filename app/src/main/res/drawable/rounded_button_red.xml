@@ -15,14 +15,9 @@
         />
 
     <path
-        android:pathData="M0 0V44H327V0"
-        android:fillColor="#ff0000"
-        />
-
-    <path
         android:pathData="M9 0H318C322.971 0 327 4.02944 327 9V35C327 39.9706 322.971 44 318 44H9C4.02944 44 0 39.9706 0 35V9C0 4.02944 4.02944 0 9 0Z"
         android:strokeWidth="2"
-        android:strokeColor="#1F767880"
+        android:strokeColor="#00d151"
         />
 
   </group>
