@@ -51,7 +51,7 @@ public class Preferences {
     private static final String pref_show_channel_info = "pref_show_channel_info";
     private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
-    private static final String pref_chart_type = "pref_ct_ch%d_prof%d_%d";
+    private static final String pref_chart_type = "pref_ct_prof%d_%d";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -249,7 +249,7 @@ public class Preferences {
 
     private String getChartTypeKey(int channel, int idx) {
         int pid = (int)getProfileManager().getCurrentProfile().getId();
-        return String.format(pref_chart_type, channel, pid, idx);
+        return String.format(pref_chart_type, pid, idx);
     }
 
     public int getChartType(int channel, int idx, int def) {

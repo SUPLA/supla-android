@@ -98,7 +98,6 @@ class CfgActivity: AppCompatActivity() {
         super.onResume()
         val navController = findNavController(R.id.nav_host_fragment)
         val dest = navController?.currentDestination
-        android.util.Log.i("SuplaNav", "current destination: " + dest)
         if(dest != null) {
             // Temporary hack to match look and feel of the rest of the app
             // prior to moving everything into navigation graph.

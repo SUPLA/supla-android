@@ -759,11 +759,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public void persistSpinner(Spinner master) {
-        prefs.setChartType(channelId, 0, master.getSelectedItemPosition());
+        prefs.setChartType(channelId, 3, master.getSelectedItemPosition());
     }
 
     public void restoreSpinner(Spinner master) {
-        int mct = prefs.getChartType(channelId, 0, -1);
+        int mct = prefs.getChartType(channelId, 3, -1);
         if(mct > -1) {
             master.setSelection(mct);
         }
@@ -775,9 +775,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         int mct, sct;
         mct = prefs.getChartType(channelId, 0, -1);
         sct = prefs.getChartType(channelId, 1, -1);
-        if(mct < 0 || sct < 0) return;
+        if(mct < 0) mct = 0;
+        if(sct < 0) sct = 0;
         master.setSelection(mct);
         slaveReload.run();
+        
         slave.setSelection(sct);
     }
 

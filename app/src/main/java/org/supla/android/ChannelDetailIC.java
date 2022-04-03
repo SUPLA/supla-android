@@ -68,6 +68,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private Spinner icSpinnerSlave;
     private ImageView ivGraph;
     private Timer timer1;
+    private int masterLastSelectedIdx = -1;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -107,7 +108,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
         icSpinnerMaster = findViewById(R.id.icSpinnerMaster);
         icSpinnerMaster.setAdapter(adapter);
-        icSpinnerMaster.setOnItemSelectedListener(this);
 
         icSpinnerSlave = findViewById(R.id.icSpinnerSlave);
 
@@ -202,6 +202,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     public void onDetailShow() {
         super.onDetailShow();
 
+        icSpinnerMaster.setOnItemSelectedListener(null);
+        icSpinnerSlave.setOnItemSelectedListener(null);
+        
         chartHelper.restoreSpinners(icSpinnerMaster,
                                     icSpinnerSlave,
                                     new Runnable() {
@@ -210,13 +213,16 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
                                             updateSlaveSpinnerItems();
                                         }
                                     });
+
+        icSpinnerMaster.setOnItemSelectedListener(this);
+        onItemSelected(icSpinnerSlave, null,
+                       icSpinnerSlave.getSelectedItemPosition(),
+                       icSpinnerSlave.getSelectedItemId());
+        icSpinnerSlave.setOnItemSelectedListener(this);
                                         
         
         icProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
-        onItemSelected(null, null,
-                icSpinnerMaster.getSelectedItemPosition(),
-                icSpinnerMaster.getSelectedItemId());
 
         if (timer1 == null) {
             timer1 = new Timer();
@@ -283,7 +289,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if (parent != icSpinnerSlave) {
+        if (parent != icSpinnerSlave && masterLastSelectedIdx != position) {
+            masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
         }
 

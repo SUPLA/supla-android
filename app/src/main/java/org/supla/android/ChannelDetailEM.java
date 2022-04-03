@@ -116,6 +116,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
     private boolean mBalanceAvailable;
+    private int masterLastSelectedIdx = -1;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -213,7 +214,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper.setUnit("kWh");
 
         emSpinnerMaster = findViewById(R.id.emSpinnerMaster);
-        emSpinnerMaster.setOnItemSelectedListener(this);
+//        emSpinnerMaster.setOnItemSelectedListener(this);
 
         emSpinnerSlave = findViewById(R.id.emSpinnerSlave);
         updateSlaveSpinnerItems();
@@ -270,11 +271,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                     chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
             emSpinnerMaster.setAdapter(adapter);
 
+            emSpinnerMaster.setOnItemSelectedListener(null);
+            emSpinnerSlave.setOnItemSelectedListener(null);
+
             postDelayed(new Runnable() {
                 public void run() {
-                    onItemSelected(null, null,
-                            emSpinnerMaster.getSelectedItemPosition(),
-                            emSpinnerMaster.getSelectedItemId());
                     chartHelper.restoreSpinners(emSpinnerMaster, emSpinnerSlave,
                                                 new Runnable() {
                                                     @Override
@@ -282,7 +283,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                                                         updateSlaveSpinnerItems();
                                                     }
                                                 });
-                                    
+                    emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
+                    onItemSelected(emSpinnerSlave, null,
+                                   emSpinnerSlave.getSelectedItemPosition(),
+                                   emSpinnerSlave.getSelectedItemId());
+                    emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
                 }
             }, 50);
 
@@ -661,14 +666,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     public void onDetailShow() {
         super.onDetailShow();
 
-        chartHelper.restoreSpinners(emSpinnerMaster, emSpinnerSlave,
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            updateSlaveSpinnerItems();
-                                        }
-                                    });
-
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
         ivDirection.setVisibility(INVISIBLE);
@@ -748,7 +745,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
 
         if (parent != emSpinnerSlave) {
-            updateSlaveSpinnerItems();
+            if(masterLastSelectedIdx != position) {
+                masterLastSelectedIdx = position;
+                updateSlaveSpinnerItems();
+            }
         }
 
         chartHelper.setDateRangeBySpinners(emSpinnerMaster, emSpinnerSlave);
