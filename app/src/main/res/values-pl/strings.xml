@@ -107,7 +107,8 @@
     <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
     <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
 
-    <string translatable="false" name="profile">Twoje konta</string>
+    <string translatable="false" name="profile">Twoje konto</string>
+    <string translatable="false" name="profile_plural">Twoje konta</string>
     <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n

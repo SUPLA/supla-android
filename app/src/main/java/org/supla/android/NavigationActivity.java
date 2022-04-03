@@ -504,6 +504,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
                 case MenuItemsLayout.BTN_PROFILE:
                     showProfile(this);
+                    mMenuItemsLayout = null;
                     break;
             }
         }
