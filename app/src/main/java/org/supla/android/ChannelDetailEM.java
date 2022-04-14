@@ -276,10 +276,12 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
             postDelayed(new Runnable() {
                 public void run() {
-                    chartHelper.restoreSpinners(emSpinnerMaster, emSpinnerSlave,
+                    chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                                emSpinnerMaster, emSpinnerSlave,
                                                 new Runnable() {
                                                     @Override
                                                     public void run() {
+                                                        masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
                                                         updateSlaveSpinnerItems();
                                                     }
                                                 });
@@ -709,7 +711,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             demm.setDelegate(null);
         }
 
-        chartHelper.persistSpinners(emSpinnerMaster, emSpinnerSlave);
+        chartHelper.persistSpinners(getChannelBase().getFunc(),
+                                    emSpinnerMaster, emSpinnerSlave);
     }
 
     @Override
@@ -744,11 +747,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             return;
         }
 
-        if (parent != emSpinnerSlave) {
-            if(masterLastSelectedIdx != position) {
-                masterLastSelectedIdx = position;
-                updateSlaveSpinnerItems();
-            }
+        if (parent != emSpinnerSlave && masterLastSelectedIdx != position) {
+            masterLastSelectedIdx = position;
+            updateSlaveSpinnerItems();
         }
 
         chartHelper.setDateRangeBySpinners(emSpinnerMaster, emSpinnerSlave);

@@ -753,28 +753,29 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return dateTo;
     }
 
-    public void persistSpinners(Spinner master, Spinner slave) {
-        prefs.setChartType(channelId, 0, master.getSelectedItemPosition());
-        prefs.setChartType(channelId, 1, slave.getSelectedItemPosition());
+    public void persistSpinners(int func, Spinner master, Spinner slave) {
+        prefs.setChartType(func, 0, master.getSelectedItemPosition());
+        prefs.setChartType(func, 1, slave.getSelectedItemPosition());
     }
 
-    public void persistSpinner(Spinner master) {
-        prefs.setChartType(channelId, 3, master.getSelectedItemPosition());
+    public void persistSpinner(int func, Spinner master) {
+        prefs.setChartType(func, 3, master.getSelectedItemPosition());
     }
 
-    public void restoreSpinner(Spinner master) {
-        int mct = prefs.getChartType(channelId, 3, -1);
+    public void restoreSpinner(int func, Spinner master) {
+        int mct = prefs.getChartType(func, 3, -1);
         if(mct > -1) {
             master.setSelection(mct);
         }
     }
     
 
-    public void restoreSpinners(Spinner master, Spinner slave,
+    public void restoreSpinners(int func,Spinner master,
+                                Spinner slave,
                                 Runnable slaveReload) {
         int mct, sct;
-        mct = prefs.getChartType(channelId, 0, -1);
-        sct = prefs.getChartType(channelId, 1, -1);
+        mct = prefs.getChartType(func, 0, -1);
+        sct = prefs.getChartType(func, 1, -1);
         if(mct < 0) mct = 0;
         if(sct < 0) sct = 0;
         master.setSelection(mct);

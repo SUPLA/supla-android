@@ -204,22 +204,20 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
         icSpinnerMaster.setOnItemSelectedListener(null);
         icSpinnerSlave.setOnItemSelectedListener(null);
-        
-        chartHelper.restoreSpinners(icSpinnerMaster,
+
+        chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                    icSpinnerMaster,
                                     icSpinnerSlave,
                                     new Runnable() {
                                         @Override
                                         public void run() {
-                                            updateSlaveSpinnerItems();
+                                            masterLastSelectedIdx = icSpinnerMaster.getSelectedItemPosition();
+                                            updateSlaveSpinnerItems();                                            
                                         }
                                     });
 
         icSpinnerMaster.setOnItemSelectedListener(this);
-        onItemSelected(icSpinnerSlave, null,
-                       icSpinnerSlave.getSelectedItemPosition(),
-                       icSpinnerSlave.getSelectedItemId());
         icSpinnerSlave.setOnItemSelectedListener(this);
-                                        
         
         icProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
@@ -250,7 +248,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             timer1 = null;
         }
 
-        chartHelper.persistSpinners(icSpinnerMaster, icSpinnerSlave);
+        chartHelper.persistSpinners(getChannelBase().getFunc(),
+                                    icSpinnerMaster, icSpinnerSlave);
     }
 
     private void runDownloadTask() {
@@ -293,7 +292,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
         }
-
         chartHelper.setDateRangeBySpinners(icSpinnerMaster, icSpinnerSlave);
         chartHelper.load(getRemoteId(), icSpinnerMaster.getSelectedItemPosition());
         chartHelper.setVisibility(VISIBLE);
