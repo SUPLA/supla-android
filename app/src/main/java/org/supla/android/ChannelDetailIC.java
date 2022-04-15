@@ -71,6 +71,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private int masterLastSelectedIdx = -1;
     private int slaveLastSelectedIdx = -1;
     private int slaveNumItems = -1;
+    private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -120,18 +121,26 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     private void updateSlaveSpinnerItems() {
         icSpinnerSlave.setOnItemSelectedListener(null);
-
+                
         String[] items = chartHelper.getSlaveSpinnerItems(icSpinnerMaster);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
                 android.R.layout.simple_spinner_item, items);
         icSpinnerSlave.setAdapter(adapter);
         icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
-        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx) {
-            if(slaveNumItems > 0 && items.length != slaveNumItems) {
-                slaveLastSelectedIdx += items.length - slaveNumItems;
-            }
+        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx &&
+           slaveNumItems > 0 && items.length != slaveNumItems) {
+            slaveLastSelectedIdx += items.length - slaveNumItems;
             icSpinnerSlave.setSelection(slaveLastSelectedIdx);
+        } else if(slaveNumItems == 0 && items.length > 0) {
+            int indexMaybe = slaveLastSelectedIdx - slaveMaxItems + items.length;
+
+            if(indexMaybe < items.length) {
+                icSpinnerSlave.setSelection(indexMaybe);
+                slaveLastSelectedIdx = indexMaybe;
+            }
+        } else if(items.length == 0) {
+            slaveLastSelectedIdx += slaveMaxItems - slaveNumItems;
         }
         slaveNumItems = items.length;
         
