@@ -117,6 +117,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private DownloadElectricityMeterMeasurements demm = null;
     private boolean mBalanceAvailable;
     private int masterLastSelectedIdx = -1;
+    private int slaveLastSelectedIdx = -1;
+    private int slaveNumItems = -1;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -240,7 +242,14 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 android.R.layout.simple_spinner_item, items);
         emSpinnerSlave.setAdapter(adapter);
         emSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
+        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx) {
+            if(slaveNumItems > 0 && items.length != slaveNumItems) {
+                slaveLastSelectedIdx += items.length - slaveNumItems;
+            }
+            emSpinnerSlave.setSelection(slaveLastSelectedIdx);
+        }
 
+        slaveNumItems = items.length;
         emSpinnerSlave.setOnItemSelectedListener(this);
     }
 
@@ -750,6 +759,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         if (parent != emSpinnerSlave && masterLastSelectedIdx != position) {
             masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
+        } else if(parent == emSpinnerSlave) {
+            slaveLastSelectedIdx = position;
         }
 
         chartHelper.setDateRangeBySpinners(emSpinnerMaster, emSpinnerSlave);

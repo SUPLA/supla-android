@@ -69,6 +69,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private ImageView ivGraph;
     private Timer timer1;
     private int masterLastSelectedIdx = -1;
+    private int slaveLastSelectedIdx = -1;
+    private int slaveNumItems = -1;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -125,6 +127,14 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         icSpinnerSlave.setAdapter(adapter);
         icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
+        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx) {
+            if(slaveNumItems > 0 && items.length != slaveNumItems) {
+                slaveLastSelectedIdx += items.length - slaveNumItems;
+            }
+            icSpinnerSlave.setSelection(slaveLastSelectedIdx);
+        }
+        slaveNumItems = items.length;
+        
         icSpinnerSlave.setOnItemSelectedListener(this);
     }
 
@@ -291,7 +301,10 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         if (parent != icSpinnerSlave && masterLastSelectedIdx != position) {
             masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
+        } else if(parent == icSpinnerSlave) {
+            slaveLastSelectedIdx = position;
         }
+        
         chartHelper.setDateRangeBySpinners(icSpinnerMaster, icSpinnerSlave);
         chartHelper.load(getRemoteId(), icSpinnerMaster.getSelectedItemPosition());
         chartHelper.setVisibility(VISIBLE);
