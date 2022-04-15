@@ -66,7 +66,7 @@ interface ProfileManager {
      * returns true if profile has been changed (i.e. reauthentication
      * is required).
      */
-    fun activateProfile(id: Long, force: Boolean): Boolean
+    fun activateProfile(id: Long, force: Boolean = false): Boolean
 
     /**
      * Remove profile

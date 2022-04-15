@@ -31,9 +31,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light"
         android:usesCleartextTraffic="true">
+        <receiver
+            android:name=".widget.onoff.OnOffWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
-      <uses-library android:name="android.test.runner"
-                    android:required="false" />
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/on_off_widget_info" />
+        </receiver>
+
+        <uses-library
+            android:name="android.test.runner"
+            android:required="false" />
 
         <activity
             android:name=".StartActivity"
@@ -81,6 +93,12 @@
             android:name=".ZWaveConfigurationWizardActivity"
             android:launchMode="singleTop"
             android:screenOrientation="sensorPortrait"></activity>
+
+        <activity android:name=".widget.onoff.OnOffWidgetConfigurationActivity" android:theme="@style/AppTheme.Light">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

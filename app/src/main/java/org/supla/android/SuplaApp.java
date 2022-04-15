@@ -20,7 +20,10 @@ package org.supla.android;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import androidx.multidex.MultiDexApplication;
@@ -83,11 +86,20 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     }
 
     public static void Vibrate(Context context) {
-
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (v == null) {
+            return;
+        }
 
-        if (v != null)
-            v.vibrate(100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE),
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .build());
+        } else {
+            v.vibrate(100); //deprecated in API 26
+        }
     }
 
     public ProfileManager getProfileManager() {

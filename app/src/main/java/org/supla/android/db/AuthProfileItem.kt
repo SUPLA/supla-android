@@ -18,10 +18,9 @@ package org.supla.android.db
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.DbItem
-import org.supla.android.profile.AuthInfo
-import android.database.Cursor
 import android.content.ContentValues
+import android.database.Cursor
+import org.supla.android.profile.AuthInfo
 
 data class AuthProfileItem(var name: String = "",
                            var authInfo: AuthInfo,
