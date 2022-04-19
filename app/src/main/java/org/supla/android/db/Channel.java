@@ -22,6 +22,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
@@ -125,6 +126,7 @@ public class Channel extends ChannelBase {
         ExtendedValue = extendedValue;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
         setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));

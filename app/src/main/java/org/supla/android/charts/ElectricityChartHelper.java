@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -57,6 +58,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         if (isBalanceChartType(ctype)) {
 
@@ -125,6 +127,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
@@ -158,6 +161,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));

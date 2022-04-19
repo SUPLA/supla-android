@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.annotation.SuppressLint;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -218,6 +219,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
     }
 
     @Override
+    @SuppressLint("Range")
     public View getView(int position, View convertView, ViewGroup parent) {
         Object obj = null;
         if (emptyPosition == -1) {

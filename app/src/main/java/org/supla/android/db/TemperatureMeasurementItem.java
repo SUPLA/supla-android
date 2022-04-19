@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,7 @@ public class TemperatureMeasurementItem extends MeasurementItem {
         setTemperature(getTemperature(obj, "temperature"));
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TemperatureLogEntry._ID)));

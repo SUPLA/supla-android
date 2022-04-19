@@ -21,6 +21,7 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.BarEntry;
@@ -69,6 +70,7 @@ public class TemperatureChartHelper extends ChartHelper {
     protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
     }
 
+    @SuppressLint("Range")
     protected float getTemperature(Cursor c) {
         TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
         return (float) tp.getConvertedValue(c.getDouble(
@@ -77,6 +79,7 @@ public class TemperatureChartHelper extends ChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP));

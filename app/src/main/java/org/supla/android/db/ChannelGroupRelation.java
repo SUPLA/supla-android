@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.SuplaChannelGroupRelation;
 
@@ -62,6 +63,7 @@ public class ChannelGroupRelation extends DbItem {
         profileId = pid;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry._ID)));

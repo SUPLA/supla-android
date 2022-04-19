@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -143,6 +144,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
         setRaeBalanced(getLong(obj, "rae_balanced") / 100000.00);
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID)));

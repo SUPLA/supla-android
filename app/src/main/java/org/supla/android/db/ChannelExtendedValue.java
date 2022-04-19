@@ -19,6 +19,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.SuplaChannelAndTimerState;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
@@ -88,6 +89,7 @@ public class ChannelExtendedValue extends DbItem {
         return null;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
