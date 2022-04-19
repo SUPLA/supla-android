@@ -63,6 +63,8 @@ class ProfilesFragment: Fragment() {
                       openEditProfileView(uiState.profileId)
                   is ProfilesUiState.ListProfiles ->
                       profilesVM.profilesAdapter.reloadData(uiState.profiles)
+                  is ProfilesUiState.ProfileActivation ->
+                      requireActivity().finish()
               }
         }
 

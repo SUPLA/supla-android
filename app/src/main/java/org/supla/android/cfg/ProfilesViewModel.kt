@@ -26,7 +26,7 @@ import org.supla.android.profile.ProfileIdNew
 import org.supla.android.db.AuthProfileItem
 
 class ProfilesViewModel(private val profileManager: ProfileManager)
-    : ViewModel() {
+    : ViewModel(), EditableProfileItemViewModel.EditActionHandler {
 
     private val _uiState: MutableLiveData<ProfilesUiState> = 
         MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
@@ -41,8 +41,14 @@ class ProfilesViewModel(private val profileManager: ProfileManager)
         _uiState.value = ProfilesUiState.EditProfile(ProfileIdNew)
     }
 
-    fun onEditProfile(profileId: Long) {
+    override fun onEditProfile(profileId: Long) {
         _uiState.value = ProfilesUiState.EditProfile(profileId)
+    }
+
+    fun onActivateProfile(profileId: Long) {
+        if(profileManager.activateProfile(profileId)) {
+            _uiState.value = ProfilesUiState.ProfileActivation(profileId)
+        }
     }
 
     fun reload() {
@@ -54,5 +60,6 @@ class ProfilesViewModel(private val profileManager: ProfileManager)
 sealed class ProfilesUiState {
     data class ListProfiles(val profiles: List<AuthProfileItem>): ProfilesUiState()
     data class EditProfile(val profileId: Long): ProfilesUiState()
+    data class ProfileActivation(val profileId: Long): ProfilesUiState()
 }
 

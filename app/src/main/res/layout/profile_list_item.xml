@@ -6,7 +6,7 @@
   <data>
     <import type="android.view.View" />
     <variable name="viewModel"
-              type="org.supla.android.cfg.ProfileItemViewModel"
+              type="org.supla.android.cfg.EditableProfileItemViewModel"
               />
   </data>
 
@@ -15,26 +15,48 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/settings_cell_height">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileIconSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/new_screen_margin"
+        android:visibility="@{viewModel.active ? View.VISIBLE : View.INVISIBLE}"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/profile_selected" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileIconUnselected"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/new_screen_margin"
+        android:visibility="@{viewModel.active ? View.INVISIBLE:View.VISIBLE}"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/profile_unselected" />
+
 
     <TextView
         android:id="@+id/profileLabel"
-        android:layout_marginLeft="@dimen/new_screen_margin"
-        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/menuitem_iamge_margin"
+        android:layout_toRightOf="@id/profileIconSelected"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         app:text="@{viewModel.title}"
         />
 
-    <ImageView
-        android:id="@+id/accountDetailsChevron"
+    <ImageButton
+        android:id="@+id/accountDetailsEdit"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/new_screen_margin"
-        android:layout_marginLeft="@dimen/menuitem_iamge_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:paddingLeft="@dimen/new_screen_margin"
         android:layout_centerVertical="true"
-        app:srcCompat="@drawable/chevron_right" />
+        android:onClick="@{() -> viewModel.onEditProfile()}"
+        app:srcCompat="@drawable/pencil" />
 
     <TextView
         android:id="@+id/activeIndicator"
@@ -44,7 +66,7 @@
         android:text="@string/cfg_profile_active_indicator"
         android:visibility="@{viewModel.active ? View.VISIBLE : View.GONE}"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/accountDetailsChevron" />
+        android:layout_toLeftOf="@id/accountDetailsEdit" />
     
     <View android:layout_width="match_parent"
           android:layout_height="@dimen/list_separator_thickness"

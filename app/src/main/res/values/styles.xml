@@ -79,7 +79,8 @@
     </style>
 
     <style name="Switch" parent="">
-      <item name="colorControlActivated">#00ff00</item>
+      <item name="colorControlActivated">@color/channel_btn</item>
+      <item name="android:buttonTint">@color/channel_btn</item>
       <item name="colorSwitchThumbNormal">#f1f1f1</item>
       <item name="android:colorForeground">#42221f1f</item>
     </style>

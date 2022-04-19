@@ -139,12 +139,12 @@
           android:text="@string/cfg_button_autohide" />
       
       <androidx.appcompat.widget.SwitchCompat
+          app:theme="@style/Switch"
           android:id="@+id/buttonAutohide"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
           android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
           android:checked="@{viewModel.cfgData.buttonAutohide}"
 	        android:textSize="@dimen/default_text_size"
           />
@@ -172,12 +172,12 @@
           android:text="@string/show_channel_info" />
       
       <androidx.appcompat.widget.SwitchCompat
+          app:theme="@style/Switch"
           android:id="@+id/showChannelInfo"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
           android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
           android:checked="@{viewModel.cfgData.showChannelInfo}"
 	        android:textSize="@dimen/default_text_size"
           />

@@ -49,45 +49,18 @@
         android:maxLines="1"
         android:lines="1"
         android:singleLine="true"
-        android:onTextChanged="@{viewModel.onProfileNameChange}"
+        android:onTextChanged="@{viewModel::onProfileNameChange}"
         android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
         android:text="@{viewModel.profileName}"
         android:padding="5dp"
         android:textSize="14sp" />
-
-    <RelativeLayout
-        android:id="@+id/set_as_default_container"
-        android:layout_below="@id/cfg_profile_name"
-        android:layout_marginBottom="@dimen/form_label_spacing"
-        android:visibility="@{viewModel.isActiveVisible ? View.VISIBLE : View.GONE}"
-        android:background="@color/cell_bg_new"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_cell_height">
-      <TextView
-          android:id="@+id/setAsDefaultLabel"
-          android:layout_toLeftOf="@id/setAsDefault"
-          android:layout_centerVertical="true"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/profile_set_as_default" />
-      <androidx.appcompat.widget.SwitchCompat
-          android:id="@+id/setAsDefault"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
-          android:checked="@={viewModel.isActive}"
-          android:textSize="@dimen/default_text_size" />
-
-    </RelativeLayout>
 
     <org.supla.android.ui.SegmentedButtonGroup
         style="@style/SegmentedButtonGroup"
 	      android:id="@+id/authType"
 	      android:layout_width="match_parent"
 	      android:layout_height="wrap_content"
-        android:layout_below="@id/set_as_default_container"
+        android:layout_below="@id/cfg_profile_name"
 	      android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/advanced_top_offset"
         android:layout_marginRight="0dp"

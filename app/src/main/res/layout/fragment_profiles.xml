@@ -35,6 +35,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/profiles_title" />
 
+        <TextView
+            android:id="@+id/cfg_label_profile_act_info"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/new_screen_margin"
+            android:paddingRight="@dimen/new_screen_margin"
+            android:text="@string/profile_act_info"
+/>
+
         <View 
             android:id="@+id/sep1"
             android:layout_width="match_parent"

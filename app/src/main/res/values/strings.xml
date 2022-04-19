@@ -10,6 +10,7 @@
     <string name="form_cannot_delete_active_profile" translatable="false">Cannot remove active account</string>
     <string name="profile_default_name" translatable="false">Default account</string>
     <string name="profile_select_active" translatable="false">Select active account</string>
+    <string name="profile_act_info" translatable="false">Tap the account to log in.</string>
     <string name="form_error" translatable="false">Error</string>
     <string name="form_profile_name_missing" translatable="false">Account name is missing</string>
     <string name="form_profile_required_data_missing" translatable="false">Required data is missing</string>

@@ -41,9 +41,11 @@ class ProfilesAdapter(private val profilesVM: ProfilesViewModel) :
                                   pos: Int) {
         if(vh is ItemViewHolder) {
             val itm = profiles.get(pos)
-            vh.binding.viewModel = ProfileItemViewModel(itm.name, itm.isActive)
+            val evm = EditableProfileItemViewModel(itm)
+            evm.editActionHandler = profilesVM
+            vh.binding.viewModel = evm
             vh.binding.root.setOnClickListener {
-                profilesVM.onEditProfile(itm.id)
+                profilesVM.onActivateProfile(itm.id)
             }
         } else if(vh is ButtonViewHolder) {
             vh.binding.viewModel = profilesVM
