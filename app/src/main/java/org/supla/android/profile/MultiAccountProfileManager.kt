@@ -81,11 +81,7 @@ class MultiAccountProfileManager(private val context: Context,
         }
     }
 
-    override fun activateProfile(id: Long): Boolean {
-        return activateProfile(id, false)
-    }
-
-    private fun activateProfile(id: Long, force: Boolean): Boolean {
+    override fun activateProfile(id: Long, force: Boolean): Boolean {
         val current = getCurrentProfile()
         if(current.id == id && !force) return false
         if(repo.setProfileActive(id)) {

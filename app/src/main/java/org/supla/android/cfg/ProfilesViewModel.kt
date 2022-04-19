@@ -46,7 +46,7 @@ class ProfilesViewModel(private val profileManager: ProfileManager)
     }
 
     fun onActivateProfile(profileId: Long) {
-        if(profileManager.activateProfile(profileId)) {
+        if(profileManager.activateProfile(profileId, true)) {
             _uiState.value = ProfilesUiState.ProfileActivation(profileId)
         }
     }
