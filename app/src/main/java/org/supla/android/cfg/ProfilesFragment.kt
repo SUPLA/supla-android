@@ -71,7 +71,7 @@ class ProfilesFragment: Fragment() {
     }
 
     private fun openEditProfileView(profileId: Long) {
-        val args = AuthFragmentArgs(profileId, false, false)
+        val args = AuthFragmentArgs(profileId, true, false)
         navCoordinator.wantsBack = true
         findNavController().navigate(R.id.editProfile, args.toBundle())
     }
