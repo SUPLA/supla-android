@@ -116,6 +116,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private Timer timer1;
     private DownloadElectricityMeterMeasurements demm = null;
     private boolean mBalanceAvailable;
+    private int masterLastSelectedIdx = -1;
+    private int slaveLastSelectedIdx = -1;
+    private int slaveNumItems = -1;
+    private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -213,7 +217,6 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         chartHelper.setUnit("kWh");
 
         emSpinnerMaster = findViewById(R.id.emSpinnerMaster);
-        emSpinnerMaster.setOnItemSelectedListener(this);
 
         emSpinnerSlave = findViewById(R.id.emSpinnerSlave);
         updateSlaveSpinnerItems();
@@ -239,7 +242,22 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 android.R.layout.simple_spinner_item, items);
         emSpinnerSlave.setAdapter(adapter);
         emSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
+        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx &&
+           slaveNumItems > 0 && items.length != slaveNumItems) {
+            slaveLastSelectedIdx += items.length - slaveNumItems;    
+            emSpinnerSlave.setSelection(slaveLastSelectedIdx);
+        } else if(slaveNumItems == 0 && items.length > 0) {
+            int indexMaybe = slaveLastSelectedIdx - slaveMaxItems + items.length;
 
+            if(indexMaybe < items.length) {
+                emSpinnerSlave.setSelection(indexMaybe);
+                slaveLastSelectedIdx = indexMaybe;
+            }
+        } else if(items.length == 0) {
+            slaveLastSelectedIdx += slaveMaxItems - slaveNumItems;
+        }
+
+        slaveNumItems = items.length;
         emSpinnerSlave.setOnItemSelectedListener(this);
     }
 
@@ -270,11 +288,25 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                     chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
             emSpinnerMaster.setAdapter(adapter);
 
+            emSpinnerMaster.setOnItemSelectedListener(null);
+            emSpinnerSlave.setOnItemSelectedListener(null);
+
             postDelayed(new Runnable() {
                 public void run() {
-                    onItemSelected(null, null,
-                            emSpinnerMaster.getSelectedItemPosition(),
-                            emSpinnerMaster.getSelectedItemId());
+                    chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                                emSpinnerMaster, emSpinnerSlave,
+                                                new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
+                                                        updateSlaveSpinnerItems();
+                                                    }
+                                                });
+                    emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
+                    onItemSelected(emSpinnerSlave, null,
+                                   emSpinnerSlave.getSelectedItemPosition(),
+                                   emSpinnerSlave.getSelectedItemId());
+                    emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
                 }
             }, 50);
 
@@ -695,6 +727,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             SuplaApp.getApp().CancelAllRestApiClientTasks(true);
             demm.setDelegate(null);
         }
+
+        chartHelper.persistSpinners(getChannelBase().getFunc(),
+                                    emSpinnerMaster, emSpinnerSlave);
     }
 
     @Override
@@ -729,8 +764,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             return;
         }
 
-        if (parent != emSpinnerSlave) {
+        if (parent != emSpinnerSlave && masterLastSelectedIdx != position) {
+            masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
+        } else if(parent == emSpinnerSlave) {
+            slaveLastSelectedIdx = position;
         }
 
         chartHelper.setDateRangeBySpinners(emSpinnerMaster, emSpinnerSlave);

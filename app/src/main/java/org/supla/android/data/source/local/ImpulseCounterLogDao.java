@@ -79,8 +79,9 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
                     + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
                     + " FROM " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME
                     + " WHERE "
-                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID
-                    + " = " + channelId;
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID 
+                    + " = " + channelId + " AND " 
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_PROFILEID + " = " + getCurrentProfileId();
 
             if (dateFrom != null && dateTo != null) {
                 sql += " AND "

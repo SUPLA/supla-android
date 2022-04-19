@@ -26,6 +26,7 @@ import org.json.JSONObject;
 public abstract class MeasurementItem extends DbItem {
     protected int ChannelId;
     protected long Timestamp;
+    private int profileId;
 
     public MeasurementItem() {
         ChannelId = 0;
@@ -35,6 +36,14 @@ public abstract class MeasurementItem extends DbItem {
     public MeasurementItem(MeasurementItem src) {
         ChannelId = src.ChannelId;
         Timestamp = src.Timestamp;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
     }
 
     public int getChannelId() {

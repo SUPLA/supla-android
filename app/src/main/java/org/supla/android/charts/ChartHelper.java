@@ -47,6 +47,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.supla.android.R;
+import org.supla.android.Preferences;
 import org.supla.android.db.MeasurementsDbHelper;
 
 import java.text.SimpleDateFormat;
@@ -70,9 +71,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     private long minTimestamp;
     private LineDataSet lineDataSet;
     private Double downloadProgress;
+    private Preferences prefs;
+    private int channelId;
 
     public ChartHelper(Context context) {
         this.context = context;
+        this.prefs = new Preferences(context);
     }
 
     public CombinedChart getCombinedChart() {
@@ -527,7 +531,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public void load(int channelId, ChartType ctype) {
-
+        this.channelId = channelId;
         this.ctype = ctype;
 
         if (isPieChartType(ctype)) {
@@ -747,6 +751,37 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     public Date getDateTo() {
         return dateTo;
+    }
+
+    public void persistSpinners(int func, Spinner master, Spinner slave) {
+        prefs.setChartType(func, 0, master.getSelectedItemPosition());
+        prefs.setChartType(func, 1, slave.getSelectedItemPosition());
+    }
+
+    public void persistSpinner(int func, Spinner master) {
+        prefs.setChartType(func, 3, master.getSelectedItemPosition());
+    }
+
+    public void restoreSpinner(int func, Spinner master) {
+        int mct = prefs.getChartType(func, 3, -1);
+        if(mct > -1) {
+            master.setSelection(mct);
+        }
+    }
+    
+
+    public void restoreSpinners(int func,Spinner master,
+                                Spinner slave,
+                                Runnable slaveReload) {
+        int mct, sct;
+        mct = prefs.getChartType(func, 0, -1);
+        sct = prefs.getChartType(func, 1, -1);
+        if(mct < 0) mct = 0;
+        if(sct < 0) sct = 0;
+        master.setSelection(mct);
+        slaveReload.run();
+        
+        slave.setSelection(sct);
     }
 
     public void setDateRangeBySpinners(Spinner master, Spinner slave) {

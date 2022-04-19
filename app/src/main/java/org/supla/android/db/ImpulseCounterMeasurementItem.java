@@ -80,6 +80,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
         Complement = cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT)) > 0;
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID)));
 
     }
 
@@ -94,6 +95,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
                 getCalculatedValue());
         values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT,
                 isComplement() ? 1 : 0);
+        values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
         return values;
     }
 

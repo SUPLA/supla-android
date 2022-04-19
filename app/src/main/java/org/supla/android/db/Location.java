@@ -35,6 +35,15 @@ public class Location extends DbItem {
     // 0x2 - channel groups collapsed
     private SortingType sorting;
     private int sortOrder;
+    private int profileId;
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
+    }
 
     
     public int getLocationId() {
@@ -94,12 +103,14 @@ public class Location extends DbItem {
         setCollapsed(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED)));
         setSorting(SortingType.fromString(cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORTING))));
         setSortOrder(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER)));
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public void AssignSuplaLocation(SuplaLocation location) {
 
         setLocationId(location.Id);
         setCaption(location.Caption);
+        // NOTE: profileId assigned by caller
 
     }
 
@@ -119,6 +130,7 @@ public class Location extends DbItem {
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED, getCollapsed());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORTING, getSorting().name());
         values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER, getSortOrder());
+        values.put(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
     }

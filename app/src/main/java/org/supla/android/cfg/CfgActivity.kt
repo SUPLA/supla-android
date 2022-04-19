@@ -33,6 +33,7 @@ import androidx.navigation.fragment.NavHostFragment
 import android.app.AlertDialog
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
+import org.supla.android.profile.ProfileManager
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
 import org.supla.android.ui.AppBar
@@ -43,9 +44,11 @@ class CfgActivity: AppCompatActivity() {
     companion object {
         const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
         const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
+        const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
     }
 
     private lateinit var binding: ActivityCfgBinding
+    private var shouldShowBack = false
 
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
@@ -54,7 +57,12 @@ class CfgActivity: AppCompatActivity() {
 
 	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
                                           SuplaApp.getApp().getProfileManager(this))
-	      val viewModel = ViewModelProvider(this, factory).get(CfgViewModel::class.java)
+        val provider = ViewModelProvider(this, factory)
+        val navCoordinator = provider.get(NavCoordinator::class.java)
+
+        
+
+	      val viewModel = provider.get(CfgViewModel::class.java)
 
         val navToolbar: AppBar
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
@@ -62,7 +70,8 @@ class CfgActivity: AppCompatActivity() {
         binding.lifecycleOwner = this
         navToolbar = binding.navToolbar
 
-        viewModel.nextAction.observe(this) {
+
+        navCoordinator.navAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
         }
 
@@ -74,14 +83,34 @@ class CfgActivity: AppCompatActivity() {
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        val navInflater = navController.navInflater
+        val graph = navInflater.inflate(R.navigation.nav_graph)
 
         setSupportActionBar(navToolbar)
-        if(getIntent().getAction() == ACTION_CONFIG) {
-            /* FIXME: this workaround is to be removed when navigation controller
-               is implemented in entire app. */
-            val graph = navHostFragment.navController.graph
-            graph.startDestination = R.id.cfgMain
-            navController.graph = graph
+        /* FIXME: this workaround is to be removed when navigation controller
+           is implemented in entire app. */
+        val action = getIntent().getAction()
+        val startLoc = when(action) {
+            ACTION_CONFIG -> R.id.cfgMain
+            ACTION_AUTH -> R.id.cfgAuth
+            ACTION_PROFILE -> R.id.cfgProfiles
+            else -> null
+        }
+
+        if(startLoc != null) {
+            val args: Bundle?
+            /* Reconfigure navigation graph to dynamic
+               start location */
+              if(action == ACTION_AUTH) {
+                  val profileId = SuplaApp.getApp().getProfileManager(this)
+                      .getCurrentProfile().getId()
+                  args = AuthFragmentArgs(profileId, true, true).toBundle()
+              } else {
+                  args = null
+              }
+              
+            graph.setStartDestination(startLoc)
+            navController.setGraph(graph, args)
         }
 
         val cfg = AppBarConfiguration(navController.graph)
@@ -98,7 +127,6 @@ class CfgActivity: AppCompatActivity() {
         super.onResume()
         val navController = findNavController(R.id.nav_host_fragment)
         val dest = navController?.currentDestination
-        android.util.Log.i("SuplaNav", "current destination: " + dest)
         if(dest != null) {
             // Temporary hack to match look and feel of the rest of the app
             // prior to moving everything into navigation graph.
@@ -112,40 +140,47 @@ class CfgActivity: AppCompatActivity() {
         val sender = getIntent().getStringExtra(INTENTSENDER)
         if(sender != null && sender.equals(INTENTSENDER_MAIN)) {
             // show back button
+            shouldShowBack = true
             binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
             binding.navToolbar.setNavigationOnClickListener {
                 onBackPressed()
             }
         }
+
     }
 
     private fun configureNavBar() {
-        binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
+        if(shouldShowBack) {
+            binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
+        }
     }
 
     override fun onBackPressed() {
         val navController = findNavController(R.id.nav_host_fragment)
+        val dest = navController?.currentDestination
+
         if(!navController.navigateUp()) {
             if(Preferences(this).configIsSet()) {
                 showMain()
             }
             finish()
         }
+
     }
 
-    fun handleNavigationDirective(what: CfgViewModel.NavigationFlow) {
+    fun handleNavigationDirective(what: NavigationFlow) {
         /*
             At some point we shoud introduce navigation pattern from archiecture components.
             Before that happens, we use a bit awkward technique to drive navigation flow.
          */
         when(what) {
-            CfgViewModel.NavigationFlow.CREATE_ACCOUNT -> showCreateAccount()
-            CfgViewModel.NavigationFlow.STATUS -> {
+            NavigationFlow.CREATE_ACCOUNT -> showCreateAccount()
+            NavigationFlow.STATUS -> {
                 SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect()
                 showStatus()
                 finish()
             }
-            CfgViewModel.NavigationFlow.BASIC_MODE_ALERT -> {
+            NavigationFlow.BASIC_MODE_ALERT -> {
                 AlertDialog.Builder(this)
                     .setTitle(R.string.basic_profile_warning)
                     .setMessage(R.string.basic_config_unavailable)
@@ -156,16 +191,20 @@ class CfgActivity: AppCompatActivity() {
                 
 
             }
-            CfgViewModel.NavigationFlow.MAIN -> {
+            NavigationFlow.MAIN -> {
                 showMain()
                 finish()
             }
-            CfgViewModel.NavigationFlow.OPEN_PROFILES -> {
-                findNavController( R.id.nav_host_fragment).navigate(R.id.openProfiles)
+            NavigationFlow.OPEN_PROFILES -> {
+                findNavController( R.id.nav_host_fragment).navigate(R.id.cfgProfiles)
             }
 
-            CfgViewModel.NavigationFlow.LOCATION_REORDERING -> {
+            NavigationFlow.LOCATION_REORDERING -> {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.cfgLocationOrdering)
+            }
+
+            NavigationFlow.BACK -> {
+                findNavController(R.id.nav_host_fragment).navigateUp()
             }
         }
     }

@@ -27,7 +27,7 @@ import org.supla.android.db.DbHelper
 class LocationReorderViewModelFactory(private val ctx: Context):
     ViewModelProvider.Factory {
 
-        override fun <T: ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T: ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(LocationReorderViewModel::class.java)) {
                 val db = DbHelper.getInstance(ctx)
                 val dao = LocationDao(db)

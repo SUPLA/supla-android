@@ -27,4 +27,5 @@ interface ProfileRepository {
     fun getProfile(id: Long): AuthProfileItem?
     fun deleteProfile(id: Long)
     fun updateProfile(profile: AuthProfileItem)
+    fun setProfileActive(id: Long): Boolean
 }

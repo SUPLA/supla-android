@@ -54,6 +54,7 @@ public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
         TemperatureMeasurementItem ti = new TemperatureMeasurementItem();
         ti.AssignJSONObject(obj);
         ti.setChannelId(getChannelId());
+        ti.setProfileId(getCurrentProfileId());
 
         getMeasurementsDbH().addTemperatureMeasurement(ti);
     }
