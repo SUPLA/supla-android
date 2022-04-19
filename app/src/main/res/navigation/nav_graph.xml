@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:app="http://schemas.android.com/apk/res-auto"
-	    app:startDestination="@id/cfgAuth"
+      app:startDestination="@id/cfgAuth"
 	    android:id="@+id/nav_graph">
   <fragment
       android:id="@+id/cfgAuth"
       android:name="org.supla.android.cfg.AuthFragment"
       android:label="@string/menubar_title">
-    <action
-	      android:id="@+id/openProfiles"
-	      app:destination="@id/cfgProfiles" />
   </fragment>
 
   <fragment
@@ -23,8 +21,26 @@
       android:label="@string/location_ordering" />
 
   <fragment
+      android:id="@+id/cfgEditProfile"
+      android:name="org.supla.android.cfg.AuthFragment"
+      android:label="@string/add_account">
+    <argument
+        android:name="profileId"
+        app:argType="long" />
+    <argument
+        android:name="allowBasicMode"
+        app:argType="boolean" />
+    <argument
+        android:name="asPopup"
+        app:argType="boolean" />
+  </fragment>
+
+  <fragment
       android:id="@+id/cfgProfiles"
       android:label="@string/profiles_title"
       android:name="org.supla.android.cfg.ProfilesFragment">
+    <action
+	      android:id="@+id/editProfile"
+	      app:destination="@id/cfgEditProfile" />
   </fragment>
 </navigation>

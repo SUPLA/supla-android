@@ -112,7 +112,10 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
                     + " FROM " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME
                     + " WHERE "
                     + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
-                    + " = " + channelId;
+                    + " = " + channelId +  " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PROFILEID
+                    + " = "  + getCurrentProfileId()
+                ;
 
             if (dateFrom != null && dateTo != null) {
                 sql += " AND "
@@ -134,7 +137,8 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
     }
 
     public void deleteElectricityMeasurements(int channelId) {
-        delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId));
+        delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+               key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
     }
 
 }

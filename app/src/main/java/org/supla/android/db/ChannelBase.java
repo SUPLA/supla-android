@@ -1,3 +1,4 @@
+
 package org.supla.android.db;
 
 /*
@@ -42,6 +43,7 @@ public abstract class ChannelBase extends DbItem {
     private int AltIcon;
     private int UserIconId;
     private int Flags;
+    private int profileId;
 
     private TemperaturePresenterFactory temperaturePresenterFactory;
 
@@ -51,10 +53,12 @@ public abstract class ChannelBase extends DbItem {
     public final static int TEMPERATURE_NA_VALUE = -273;
 
     public  ChannelBase() {
+        profileId = -1;
         temperaturePresenterFactory = SuplaApp.getApp();
     }
 
     public ChannelBase(TemperaturePresenterFactory tpFact) {
+        profileId = -1;
         temperaturePresenterFactory = tpFact;
     }
 
@@ -219,6 +223,14 @@ public abstract class ChannelBase extends DbItem {
 
     public void setFlags(int flags) {
         Flags = flags;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
     }
 
     public String getNotEmptyCaption(Context context) {
@@ -727,6 +739,11 @@ public abstract class ChannelBase extends DbItem {
 
     public abstract CharSequence getHumanReadableValue();
 
+    private int getCurrentProfileId() {
+        SuplaApp app = SuplaApp.getApp();
+        return (int)app.getProfileManager(app).getCurrentProfile().getId();
+    }
+
     public void Assign(SuplaChannelBase base) {
 
         setRemoteId(base.Id);
@@ -736,7 +753,7 @@ public abstract class ChannelBase extends DbItem {
         setFlags(base.Flags);
         setAltIcon(base.AltIcon);
         setUserIconId(base.UserIcon);
-
+        setProfileId(getCurrentProfileId());
     }
 
     public boolean Diff(SuplaChannelBase base) {

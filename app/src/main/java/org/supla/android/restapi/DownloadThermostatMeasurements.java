@@ -54,6 +54,7 @@ public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
         ThermostatMeasurementItem thi = new ThermostatMeasurementItem();
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
+        thi.setProfileId(getCurrentProfileId());
 
         getMeasurementsDbH().addThermostatMeasurement(thi);
     }

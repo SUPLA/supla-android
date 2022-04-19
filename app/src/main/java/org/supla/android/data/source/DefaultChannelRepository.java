@@ -21,6 +21,7 @@ package org.supla.android.data.source;
 import android.database.Cursor;
 import androidx.annotation.Nullable;
 
+import org.supla.android.SuplaApp;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
@@ -121,6 +122,7 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup = new ChannelGroup();
             channelGroup.Assign(suplaChannelGroup);
             channelGroup.setVisible(1);
+            channelGroup.setProfileId(getCurrentProfileId());
             updateChannelGroupPosition(location, channelGroup);
 
             channelDao.insert(channelGroup);
@@ -175,7 +177,7 @@ public class DefaultChannelRepository implements ChannelRepository {
             value = new ChannelExtendedValue();
             value.setExtendedValue(suplaChannelExtendedValue);
             value.setChannelId(channelId);
-
+            
             channelDao.insert(value);
         } else {
             value.setExtendedValue(suplaChannelExtendedValue);
@@ -455,5 +457,10 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup.setPosition(0);
         }
 
+    }
+
+    private int getCurrentProfileId() {
+        SuplaApp app = SuplaApp.getApp();
+        return (int)app.getProfileManager(app).getCurrentProfile().getId();
     }
 }

@@ -90,7 +90,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
         if (cursor == null || cursor.isClosed()) {
             return 0;
         }
-
+                           
         return cursor.getCount() + Sections.size();
     }
 
@@ -273,7 +273,6 @@ public class ListViewCursorAdapter extends BaseAdapter {
             } else {
                 cbase = new Channel();
             }
-
             int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
             if ((collapsed & _collapsed) > 0) {
 

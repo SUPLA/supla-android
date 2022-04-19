@@ -28,12 +28,21 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
 
     private Double Temperature;
     private Double Humidity;
+    private int profileId;
 
     public TempHumidityMeasurementItem() {
         Temperature = null;
         Humidity = null;
     }
 
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int pid) {
+        profileId = pid;
+    }
+    
     public Double getTemperature() {
         return Temperature;
     }
@@ -71,6 +80,7 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
 
         setTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY)));
+        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -87,6 +97,8 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
         putNullOrDouble(values,
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY,
                 getHumidity());
+
+        values.put(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
     }

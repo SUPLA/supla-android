@@ -20,6 +20,7 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
+public const val ProfileIdNew: Long = -1
 
 interface ProfileManager {
 
@@ -42,4 +43,27 @@ interface ProfileManager {
      Update authentication settings of current profile.
      */
     fun updateCurrentAuthInfo(info: AuthInfo)
+
+
+    /**
+     Return list of all user profiles
+     */
+    fun getAllProfiles(): List<AuthProfileItem>
+
+    /**
+     Return profile with given id
+     */
+    fun getProfile(id: Long): AuthProfileItem?
+
+    /**
+     Activate profile with given id
+     returns true if profile has been changed (i.e. reauthentication
+     is required).
+     */
+    fun activateProfile(id: Long): Boolean
+
+    /**
+     Remove profile
+     */
+    fun removeProfile(id: Long)
 }

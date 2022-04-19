@@ -19,11 +19,13 @@ package org.supla.android.db;
  */
 
 import android.content.Context;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.R;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -52,7 +54,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 21;
+    public static final int DATABASE_VERSION = 22;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -199,6 +201,7 @@ public class DbHelper extends BaseDbHelper {
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + ", " +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION + ", " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + ", " +
                 "CV." + SuplaContract.ChannelValueEntry._ID + ", " +
                 "CEV." + SuplaContract.ChannelExtendedValueEntry._ID + ", " +
                 "CV." + SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + ", " +
@@ -226,15 +229,21 @@ public class DbHelper extends BaseDbHelper {
                 "I." + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4 + " " +
                 SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4 + " " +
                 "FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " C " +
-                "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON " +
+                "JOIN " + SuplaContract.ChannelValueEntry.TABLE_NAME + " CV ON (" +
                 "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CV." +
-                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " " +
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID + " AND " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = CV." +
+                SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID + ") " +
                 "LEFT JOIN " + SuplaContract.ChannelExtendedValueEntry.TABLE_NAME + " CEV ON " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CEV." +
-                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " " +
+                "(C." + SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID + " = CEV." +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID + " AND " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = CEV." +
+                SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID + ") " +
                 "LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I ON " +
-                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = I." +
-                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID;
+                "(C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = I." +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " AND " +
+                "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = I." +
+                SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")";
 
         execSQL(db, SQL_CREATE_CHANNELVALUE_TABLE);
     }
@@ -302,6 +311,8 @@ public class DbHelper extends BaseDbHelper {
                 "CREATE VIEW " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME + " AS " +
                         "SELECT V." + SuplaContract.ChannelGroupValueViewEntry._ID + " "
                         + SuplaContract.ChannelGroupValueViewEntry._ID + ", "
+                        + "V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID + ", "
+                        + " V." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID + ", "
                         + " G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + " "
                         + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID + ", "
                         + "G." + SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC + " "
@@ -376,6 +387,7 @@ public class DbHelper extends BaseDbHelper {
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
         upgradeToV19(db);
+        upgradeToV22(db);
 
         // Create views at the end
         createChannelView(db);
@@ -528,6 +540,32 @@ public class DbHelper extends BaseDbHelper {
     }
 
 
+    private void upgradeToV22(SQLiteDatabase db) {
+        ContentValues cv = new ContentValues();
+        cv.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME,
+               getContext().getText(R.string.profile_default_name).toString());
+        db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv,
+                  null, null);
+        String column_name = "profileid";
+        String tables[] = {
+            SuplaContract.LocationEntry.TABLE_NAME,
+            SuplaContract.ChannelEntry.TABLE_NAME,
+            SuplaContract.ChannelValueEntry.TABLE_NAME,
+            SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+            SuplaContract.ColorListItemEntry.TABLE_NAME,
+            SuplaContract.ChannelGroupEntry.TABLE_NAME,
+            SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+            SuplaContract.UserIconsEntry.TABLE_NAME
+        };
+            
+        for(String table: tables) {
+            addColumn(db, "ALTER TABLE " + table +
+                      " ADD COLUMN " + column_name + " INTEGER NOT NULL DEFAULT 1");                  
+            createIndex(db, table, column_name);
+        }
+    }
+
+
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -589,6 +627,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 20:
                         upgradeToV21(db);
+                        break;
+                    case 21:
+                        upgradeToV22(db);
                         break;
                 }
             }

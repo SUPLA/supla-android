@@ -54,6 +54,7 @@ public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
         TempHumidityMeasurementItem thi = new TempHumidityMeasurementItem();
         thi.AssignJSONObject(obj);
         thi.setChannelId(getChannelId());
+        thi.setProfileId(getCurrentProfileId());
 
         getMeasurementsDbH().addTempHumidityMeasurement(thi);
     }

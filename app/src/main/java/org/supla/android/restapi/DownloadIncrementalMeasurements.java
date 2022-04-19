@@ -5,15 +5,20 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import org.supla.android.SuplaApp;
+import org.supla.android.profile.ProfileManager;
 import org.supla.android.db.IncrementalMeasurementItem;
 
 public abstract class DownloadIncrementalMeasurements extends DownloadMeasurementLogs {
 
     private IncrementalMeasurementItem older_item = null;
     private IncrementalMeasurementItem younger_item = null;
+    private ProfileManager profileManager;
 
     public DownloadIncrementalMeasurements(Context context) {
         super(context);
+        profileManager = SuplaApp.getApp().getProfileManager(context);
     }
 
     @Override
@@ -30,10 +35,11 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
-
+        int profileId = getCurrentProfileId();
         younger_item = newObject();
         younger_item.AssignJSONObject(obj);
         younger_item.setChannelId(getChannelId());
+        younger_item.setProfileId(profileId);
 
         boolean correctDateOrder = older_item == null
                 || younger_item.getTimestamp() > older_item.getTimestamp();
@@ -41,6 +47,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
         if (older_item != null && correctDateOrder) {
 
             IncrementalMeasurementItem citem = newObject(younger_item);
+            citem.setProfileId(profileId);
 
             if (!citem.isCalculated()) {
                 citem.Calculate(older_item);

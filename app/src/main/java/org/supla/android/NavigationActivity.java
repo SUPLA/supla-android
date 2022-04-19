@@ -38,9 +38,13 @@ import android.widget.TextView;
 
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.cfg.CfgActivity;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.ProfileChooser;
 
 @SuppressLint("registered")
-public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
+public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
+                                                                ProfileChooser.Listener
+{
 
     public static final String INTENTSENDER = "sender";
     public static final String INTENTSENDER_MAIN = "main";
@@ -52,6 +56,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private ViewGroup Content;
     private Button MenuButton;
     private Button GroupButton;
+    private Button ProfileButton;
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
     private TextView title;
@@ -94,6 +99,11 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         showActivity(sender, StatusActivity.class, 0);
     }
 
+    public static void showAuth(Activity sender) {
+        showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
+                     org.supla.android.cfg.CfgActivity.ACTION_AUTH);
+    }
+
     public static void showProfile(Activity sender) {
         showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0,
                      org.supla.android.cfg.CfgActivity.ACTION_PROFILE);
@@ -109,6 +119,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         super.onResume();
         CurrentActivity = this;
+
+        getMenuBarLayout();
+        updateProfileButtonVisibility();
     }
 
     @Override
@@ -117,6 +130,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
         if (CurrentActivity == this) {
             CurrentActivity = null;
+        }
+    }
+
+    private void updateProfileButtonVisibility() {
+        int visible = GroupButton.getVisibility();
+        
+        ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+        if(pm.getAllProfiles().size() > 1) {
+            ProfileButton.setVisibility(visible);
+        } else {
+            ProfileButton.setVisibility(View.GONE);
         }
     }
 
@@ -168,6 +192,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(0);
 
+            ProfileButton = findViewById(R.id.profilebutton);
+            ProfileButton.setVisibility(View.GONE);
+            ProfileButton.setOnClickListener(this);
         }
 
         return MenuBarLayout;
@@ -224,6 +251,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(0));
         GroupButton.setVisibility(View.VISIBLE);
+        updateProfileButtonVisibility();
         title.setVisibility(View.VISIBLE);
         detailTitle.setVisibility(View.INVISIBLE);
     }
@@ -234,12 +262,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(1));
         GroupButton.setVisibility(View.GONE);
+        ProfileButton.setVisibility(View.GONE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
         GroupButton.setVisibility(View.GONE);
+        ProfileButton.setVisibility(View.GONE);
     }
 
     public void setMenubarDetailTitle(String txt) {
@@ -394,6 +424,13 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         startActivity(intent);
     }
 
+    private void showProfileSelector() {
+        ProfileManager pmgr = SuplaApp.getApp().getProfileManager(this);
+        ProfileChooser chooser = new ProfileChooser(this, pmgr);
+        chooser.setListener(this);
+        chooser.show();
+    }
+
     private void setBtnBackground(Button btn, int imgResId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             btn.setBackground(getResources().getDrawable(imgResId));
@@ -437,6 +474,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             setBtnBackground(GroupButton, img);
             onGroupButtonTouch(img == R.drawable.groupon);
+        } else if(v == ProfileButton) {
+            showProfileSelector();
         } else {
             switch (MenuItemsLayout.getButtonId(v)) {
                 case MenuItemsLayout.BTN_SETTINGS:
@@ -465,6 +504,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
                 case MenuItemsLayout.BTN_PROFILE:
                     showProfile(this);
+                    mMenuItemsLayout = null;
                     break;
             }
         }
@@ -520,5 +560,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void authorizationCanceled() {
+    }
+
+    @Override
+    public void onProfileChanged() {
     }
 }

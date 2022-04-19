@@ -10,7 +10,7 @@
     <import type="android.R" />
     <variable
         name="viewModel"
-        type="org.supla.android.cfg.CfgViewModel" />
+        type="org.supla.android.cfg.AuthItemViewModel" />
   </data>
 
   <RelativeLayout
@@ -25,14 +25,42 @@
       android:paddingBottom="@dimen/activity_vertical_margin"
       tools:context="org.supla.android.CfgActivity">
 
-    
+    <TextView
+        style="@style/FormLabel"
+        android:id="@+id/profile_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="71dp"
+	      android:layout_alignParentTop="true"
+				android:layout_marginLeft="2dp"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textSize="9sp" 
+        android:text="@string/profile_name_label"
+        android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
+        />
+    <EditText
+        android:id="@+id/cfg_profile_name"
+        android:layout_below="@id/profile_name_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/form_label_dist"
+        android:layout_marginBottom="@dimen/form_label_spacing"
+        android:background="@drawable/rounded_edittext"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:onTextChanged="@{viewModel::onProfileNameChange}"
+        android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
+        android:text="@{viewModel.profileName}"
+        android:padding="5dp"
+        android:textSize="14sp" />
 
     <org.supla.android.ui.SegmentedButtonGroup
         style="@style/SegmentedButtonGroup"
 	      android:id="@+id/authType"
 	      android:layout_width="match_parent"
 	      android:layout_height="wrap_content"
-	      android:layout_alignParentTop="true"
+        android:layout_below="@id/cfg_profile_name"
 	      android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/advanced_top_offset"
         android:layout_marginRight="0dp"
@@ -78,7 +106,6 @@
 					  android:layout_marginTop="@dimen/form_label_spacing"
 					  android:text="@string/email"
 					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
 					  android:textSize="9sp" />
         <EditText
             android:id="@+id/cfg_email"
@@ -107,7 +134,6 @@
 					  android:layout_marginTop="@dimen/form_label_spacing"
 					  android:text="@string/server_address"
 					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
 					  android:textSize="9sp" />
 
 			  <EditText
@@ -171,7 +197,6 @@
 					  android:layout_marginBottom="@dimen/form_label_dist"
 					  android:text="@string/access_id"
 					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
 					  android:textSize="9sp" />
 
 			  <EditText
@@ -200,7 +225,6 @@
 					  android:layout_marginBottom="@dimen/form_label_dist"
 					  android:text="@string/password"
 					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
 					  android:textSize="9sp" />
 
 			  <EditText
@@ -228,7 +252,6 @@
 					  android:layout_marginBottom="@dimen/form_label_dist"
 					  android:text="@string/server_address"
 					  android:textAppearance="?android:attr/textAppearanceSmall"
-					  android:textColor="@android:color/black"
 					  android:textSize="9sp" />
 			  <EditText
 					  android:id="@+id/edServerAddr"

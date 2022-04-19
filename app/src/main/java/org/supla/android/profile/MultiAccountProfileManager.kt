@@ -21,6 +21,7 @@ package org.supla.android.profile
 import android.content.Context
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
+import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
 
 class MultiAccountProfileManager(private val context: Context,
@@ -28,12 +29,27 @@ class MultiAccountProfileManager(private val context: Context,
     
 
     override fun getCurrentProfile(): AuthProfileItem {
-        return repo.allProfiles.filter { it.isActive == true }.first()
+        val rv = repo.allProfiles.filter { it.isActive == true }.first()
+        return rv
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
+        val forceActivate: Boolean
+        if(profile.id == ProfileIdNew) {
+            profile.id = repo.createNamedProfile(profile.name)
+            forceActivate = profile.isActive
+        } else if(profile.isActive) {
+            val prev = getProfile(profile.id)
+            forceActivate = profile.isActive && !(prev?.isActive?:false)
+        } else {
+            forceActivate = false
+        }
+
         repo.updateProfile(profile)
         DbHelper.getInstance(context).deleteUserIcons()
+        if(profile.isActive) {
+            activateProfile(profile.id, forceActivate)
+        }
     } 
 
     override fun getCurrentAuthInfo(): AuthInfo {
@@ -41,9 +57,53 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun updateCurrentAuthInfo(info: AuthInfo) {
-	val cp = getCurrentProfile()
+	      val cp = getCurrentProfile()
         var np = cp.copy(authInfo = info)
-	np.id = cp.id
+	      np.id = cp.id
         updateCurrentProfile(np)
+    }
+
+    override fun getAllProfiles(): List<AuthProfileItem> {
+        return repo.allProfiles
+    }
+
+    override fun getProfile(id: Long): AuthProfileItem? {
+        if(id == ProfileIdNew) {
+            val authInfo = AuthInfo(emailAuth=true,
+                                    serverAutoDetect=true)
+            var rv = AuthProfileItem(authInfo=authInfo,
+                                     advancedAuthSetup=true,
+                                     isActive=false)
+            rv.id = id
+            return rv
+        } else {
+            return repo.getProfile(id)
+        }
+    }
+
+    override fun activateProfile(id: Long): Boolean {
+        return activateProfile(id, false)
+    }
+
+    private fun activateProfile(id: Long, force: Boolean): Boolean {
+        val current = getCurrentProfile()
+        if(current.id == id && !force) return false
+        if(repo.setProfileActive(id)) {
+            initiateReconnect()
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun removeProfile(id: Long) {
+        repo.deleteProfile(id)
+    }
+
+    private fun initiateReconnect() {
+        val cli = SuplaApp.getApp().getSuplaClient()
+        if(cli != null) {
+            cli.reconnect()
+        }
     }
 }
