@@ -51,6 +51,8 @@ public class Preferences {
     private static final String pref_show_channel_info = "pref_show_channel_info";
     private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
+    private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
+
     private SharedPreferences _prefs;
     private Context _context;
 
@@ -135,8 +137,8 @@ public class Preferences {
     }
 
     public boolean configIsSet() {
-        return SuplaApp.getApp().getProfileManager(_context)
-                .getCurrentProfile().getAuthInfo().isAuthDataComplete();
+        return getProfileManager().getCurrentProfile()
+            .getAuthInfo().isAuthDataComplete();
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
@@ -238,6 +240,25 @@ public class Preferences {
     public void setShowOpeningPercent(boolean val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putBoolean(pref_show_opening_percent, val);
+        ed.apply();
+    }
+
+    private ProfileManager getProfileManager() {
+        return SuplaApp.getApp().getProfileManager(_context);
+    }
+
+    private String getChartTypeKey(int channel, int idx) {
+        int pid = (int)getProfileManager().getCurrentProfile().getId();
+        return String.format(pref_chart_type, channel, pid, idx);
+    }
+
+    public int getChartType(int channel, int idx, int def) {
+        return _prefs.getInt(getChartTypeKey(channel, idx), def);
+    }
+
+    public void setChartType(int channel, int idx,  int charttype) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putInt(getChartTypeKey(channel, idx), charttype);
         ed.apply();
     }
 }
