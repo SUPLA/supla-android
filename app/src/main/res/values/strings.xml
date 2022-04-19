@@ -14,8 +14,8 @@
     <string name="form_error" translatable="false">Error</string>
     <string name="form_profile_name_missing" translatable="false">Account name is missing</string>
     <string name="form_profile_required_data_missing" translatable="false">Required data is missing</string>
-    <string name="form_profile_duplicate" translate="false">Account by that name already exists</string>
-    <string name="add_account">Add an account</string>
+    <string name="form_profile_duplicate" translatable="false">Account by that name already exists</string>
+    <string name="add_account" translatable="false">Add an account</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>

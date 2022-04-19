@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.SuplaLocation;
 
@@ -94,6 +95,7 @@ public class Location extends DbItem {
         sortOrder = s;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));

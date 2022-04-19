@@ -19,6 +19,7 @@ package org.supla.android.data.source;
  */
 
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.db.SuplaContract;
@@ -65,6 +66,7 @@ public class DefaultUserIconRepository implements UserIconRepository {
     }
 
     @Override
+    @SuppressLint("Range")
     public void loadUserIconsIntoCache() {
         Cursor cursor = userIconDao.getUserIcons();
         if (cursor.moveToFirst()) {

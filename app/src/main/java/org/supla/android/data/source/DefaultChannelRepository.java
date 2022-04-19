@@ -20,6 +20,7 @@ package org.supla.android.data.source;
 
 import android.database.Cursor;
 import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
 
 import org.supla.android.SuplaApp;
 import org.supla.android.data.source.local.ChannelDao;
@@ -209,6 +210,7 @@ public class DefaultChannelRepository implements ChannelRepository {
     }
 
     @Override
+    @SuppressLint("Range")
     public List<Integer> updateAllChannelGroups() {
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -379,6 +381,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         channelDao.updateChannelsOrder(orderedItems, firstItemLocationId);
     }
 
+    @SuppressLint("Range")
     private List<Long> getSortedChannelIdsForLocation(int locationId) {
         ArrayList<Long> orderedItems = new ArrayList<>();
 
@@ -402,6 +405,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         channelDao.updateChannelGroupsOrder(orderedItems);
     }
 
+    @SuppressLint("Range")
     private List<Long> getSortedChannelGroupIdsForLocation(int locationId) {
         ArrayList<Long> orderedItems = new ArrayList<>();
 

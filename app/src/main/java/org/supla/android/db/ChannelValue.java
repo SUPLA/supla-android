@@ -21,6 +21,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
@@ -124,6 +125,7 @@ public class ChannelValue extends DbItem {
         this.profileId = pid;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelValueEntry._ID)));
@@ -135,6 +137,7 @@ public class ChannelValue extends DbItem {
         setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID)));
     }
 
+    @SuppressLint("Range")
     public void AssignCursorDataFromGroupView(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry._ID)));

@@ -21,6 +21,7 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -52,6 +53,7 @@ public class ThermostatChartHelper extends ChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
         TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
@@ -73,6 +75,7 @@ public class ThermostatChartHelper extends ChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP));

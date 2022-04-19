@@ -21,6 +21,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
@@ -58,6 +59,7 @@ public class ChannelGroup extends ChannelBase {
         return position;
     }
     
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));

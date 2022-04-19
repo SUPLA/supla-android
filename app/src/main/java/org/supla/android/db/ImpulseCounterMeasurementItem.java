@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +64,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
         setCalculatedValue(getDouble(obj, "calculated_value"));
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry._ID)));

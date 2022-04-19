@@ -413,7 +413,6 @@
     <string name="confirm_button_text">OK</string>
     <string name="dont_have_account_yet">Non hai ancora un account Supla?</string>
     <string name="cfg_label_profile_name">PROFILO CORRENTE</string>
-    <string name="cfg_profile_name_default">Default</string>
     <string name="cfg_label_email_auth">Email</string>
     <string name="cfg_label_access_id_auth">ID di accesso</string>
     <string name="cfg_channel_height">Altezza canale</string>

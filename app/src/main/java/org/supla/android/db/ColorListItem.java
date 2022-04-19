@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 public class ColorListItem extends DbItem {
 
@@ -69,6 +70,7 @@ public class ColorListItem extends DbItem {
         Brightness = brightness;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ColorListItemEntry._ID)));

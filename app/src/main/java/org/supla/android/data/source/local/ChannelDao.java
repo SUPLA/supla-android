@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
@@ -372,6 +373,7 @@ public class ChannelDao extends BaseDao {
         });
     }
 
+    @SuppressLint("Range")
     public List<Integer> getChannelUserIconIds() {
         String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
@@ -402,6 +404,7 @@ public class ChannelDao extends BaseDao {
         return ids;
     }
 
+    @SuppressLint("Range")
     public List<Integer> getChannelGroupUserIconIds() {
         String sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
@@ -432,6 +435,7 @@ public class ChannelDao extends BaseDao {
         return ids;
     }
 
+    @SuppressLint("Range")
     public int getChannelGroupLastPositionInLocation(int locationId) {
         Cursor cursor = getChannelGroupListCursor("G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
         if (!cursor.moveToFirst()) {

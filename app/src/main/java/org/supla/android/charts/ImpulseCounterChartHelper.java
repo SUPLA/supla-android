@@ -21,6 +21,7 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -46,6 +47,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
 
@@ -62,6 +64,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
 
         float value;
@@ -75,6 +78,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP));
