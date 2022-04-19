@@ -53,7 +53,7 @@ class ProfileChooser(private val context: Context,
     }
 
     fun selectProfile(idx: Int) {
-        if(profileManager.activateProfile(profiles[idx].id)) {
+        if(profileManager.activateProfile(profiles[idx].id, false)) {
             listener?.onProfileChanged()
         }
         dialog?.dismiss()
