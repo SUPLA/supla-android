@@ -113,7 +113,7 @@
     <string translatable="false" name="create_account">Create</string>
     <string translatable="false" name="delete_account">Remove</string>
     <string translatable="false" name="delete_account_confirm_title">Remove account</string>
-    <string translatable="false" name="delete_account_confirm_message">Confirm account removal</string>
+    <string translatable="false" name="delete_account_confirm_message">Are you sure you want to remove the account?</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->

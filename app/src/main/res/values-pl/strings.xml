@@ -8,7 +8,7 @@
     <string name="delete_account">Usuń</string>
 
     <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
-    <string translatable="false" name="delete_account_confirm_message">Potwierdź usunięcie konta</string>
+    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto ?</string>
     <string name="profile_default_name" translatable="false">Domyślne</string>
     <string name="profile_select_active" translatable="false">Aktywne konto</string>
     <string name="profile_act_info">Dotknij konta aby się zalogować</string>
