@@ -206,7 +206,7 @@ class DummyProfileManager: ProfileManager {
         return null
     }
 
-    override fun activateProfile(id: Long): Boolean {
+    override fun activateProfile(id: Long, force: Boolean): Boolean {
         return true
     }
 
