@@ -72,7 +72,7 @@ class MultiAccountProfileManager(private val context: Context,
             val authInfo = AuthInfo(emailAuth=true,
                                     serverAutoDetect=true)
             var rv = AuthProfileItem(authInfo=authInfo,
-                                     advancedAuthSetup=true,
+                                     advancedAuthSetup=false,
                                      isActive=false)
             rv.id = id
             return rv
