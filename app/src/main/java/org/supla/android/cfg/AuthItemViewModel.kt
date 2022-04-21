@@ -83,7 +83,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     }
 
     val allowsEditingProfileName: Boolean get() {
-        return profileManager.getAllProfiles().size > 1 || item.authInfo.isAuthDataComplete
+        return profileManager.getAllProfiles().size > 1 || item.authInfo.isAuthDataComplete || item.id == ProfileIdNew
     }
 
 
