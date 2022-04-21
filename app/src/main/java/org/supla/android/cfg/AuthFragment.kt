@@ -101,6 +101,7 @@ class AuthFragment: Fragment() {
 		            binding.cfgAdvanced.edAccessIDpwd, 
                 binding.cfgAdvanced.cfgEmail,
 		            binding.cfgAdvanced.cfgProfileName,
+		            binding.cfgBasic.cfgProfileName,
                 binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
@@ -138,6 +139,7 @@ class AuthFragment: Fragment() {
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
                 binding.cfgAdvanced.addDeviceWarning,
                 binding.cfgAdvanced.profileNameLabel,
+                binding.cfgBasic.profileNameLabel,
                 binding.cfgCreateAccount,
                 binding.dontHaveAccountText,
                 binding.cfgCbAdvanced).forEach {

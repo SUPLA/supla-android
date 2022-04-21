@@ -9,7 +9,7 @@
         type="org.supla.android.cfg.AuthItemViewModel" />
   </data>
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/activity_bg"
@@ -19,7 +19,45 @@
       android:paddingTop="@dimen/activity_vertical_margin"
       android:paddingRight="@dimen/activity_horizontal_margin"
       android:paddingBottom="@dimen/activity_vertical_margin"
-      tools:context="org.supla.android.CfgActivity">
+      android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/cfg_label_title_basic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/form_field_spacing"
+        android:layout_marginBottom="50dp"
+        android:text="@string/profile"
+        android:textAppearance="@style/your_account"
+        android:gravity="center_horizontal|top" />
+
+    <TextView
+        style="@style/FormLabel"
+        android:id="@+id/profile_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+				android:layout_marginLeft="2dp"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textSize="9sp" 
+        android:text="@string/profile_name_label"
+        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}"
+        />
+    <EditText
+        android:id="@+id/cfg_profile_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/form_label_dist"
+        android:layout_marginBottom="@dimen/form_label_spacing"
+        android:background="@drawable/rounded_edittext"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:onTextChanged="@{viewModel::onProfileNameChange}"
+        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}"
+        android:text="@{viewModel.profileName}"
+        android:padding="5dp"
+        android:textSize="14sp" />
+
 
 
     <TextView
@@ -27,14 +65,9 @@
         android:id="@+id/cfg_label_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cfg_label_title_basic"
-        android:layout_alignStart="@+id/cfg_email"
-        android:layout_alignLeft="@+id/cfg_email"
         android:layout_marginLeft="2dp"
         android:text="@string/email"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="50dp"
-        android:textColor="@android:color/black"
         android:textSize="9sp" />
 
     <EditText
@@ -44,7 +77,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:layout_below="@+id/cfg_label_email"
         android:background="@drawable/rounded_edittext"
         android:inputType="textEmailAddress"
         android:text="@={viewModel.emailAddress}"
@@ -52,15 +84,5 @@
         android:padding="5dp"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/cfg_label_title_basic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/form_field_spacing"
-        android:text="@string/profile"
-        android:textAppearance="@style/your_account"
-        android:gravity="center_horizontal|top" />
-  </RelativeLayout>
+  </LinearLayout>
 </layout>

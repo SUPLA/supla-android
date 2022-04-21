@@ -23,6 +23,21 @@
   <fragment
       android:id="@+id/cfgEditProfile"
       android:name="org.supla.android.cfg.AuthFragment"
+      android:label="@string/edit_account">
+    <argument
+        android:name="profileId"
+        app:argType="long" />
+    <argument
+        android:name="allowBasicMode"
+        app:argType="boolean" />
+    <argument
+        android:name="asPopup"
+        app:argType="boolean" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/cfgNewProfile"
+      android:name="org.supla.android.cfg.AuthFragment"
       android:label="@string/add_account">
     <argument
         android:name="profileId"
@@ -42,5 +57,8 @@
     <action
 	      android:id="@+id/editProfile"
 	      app:destination="@id/cfgEditProfile" />
+    <action
+        android:id="@+id/newProfile"
+        app:destination="@id/cfgNewProfile" />
   </fragment>
 </navigation>

@@ -25,6 +25,7 @@ import org.supla.android.db.DbHelper
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileManager
 import org.supla.android.profile.MultiAccountProfileManager
+import org.supla.android.profile.ProfileIdNew
 
 import org.supla.android.data.source.local.LocalProfileRepository
 
@@ -41,6 +42,9 @@ class AuthItemViewModelFactory(private val ctx: Context,
                 val repo = LocalProfileRepository(DbHelper.getInstance(ctx))
                 val pm = MultiAccountProfileManager(ctx, repo)
                 val profile = pm.getProfile(profileId)!!
+                if(profileId == ProfileIdNew && allowBasicMode) {
+                    profile.advancedAuthSetup = false
+                }
                 return AuthItemViewModel(pm, profile, allowBasicMode,
                                          navCoordinator) as T
             } else {

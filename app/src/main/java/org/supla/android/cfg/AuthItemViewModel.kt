@@ -51,7 +51,6 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         MutableStateFlow(null)
     val editAction: StateFlow<AuthItemEditAction?> = _editAction
 
-    
     /**
      indicates that auth settings are changed.
      */
@@ -82,6 +81,11 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     val isDeleteAvailable: Boolean  get() {
         return !item.isActive && (item.id != ProfileIdNew)
     }
+
+    val allowsEditingProfileName: Boolean get() {
+        return profileManager.getAllProfiles().size > 1 || item.authInfo.isAuthDataComplete
+    }
+
 
     private val _emailObserver: Observer<String>
     private val _serverAddrEmailObserver: Observer<String>
@@ -153,7 +157,6 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
             }
         }
         isActive.observeForever(_activeObserver)
-
     }
 
     override fun onCleared() {

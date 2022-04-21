@@ -30,13 +30,13 @@
         android:id="@+id/profile_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="21dp"
 	      android:layout_alignParentTop="true"
 				android:layout_marginLeft="2dp"
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textSize="9sp" 
         android:text="@string/profile_name_label"
-        android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
+        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE }"
         />
     <EditText
         android:id="@+id/cfg_profile_name"
@@ -50,7 +50,7 @@
         android:lines="1"
         android:singleLine="true"
         android:onTextChanged="@{viewModel::onProfileNameChange}"
-        android:visibility="@{viewModel.allowsBasicMode ? View.GONE : View.VISIBLE}"
+        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}"
         android:text="@{viewModel.profileName}"
         android:padding="5dp"
         android:textSize="14sp" />
