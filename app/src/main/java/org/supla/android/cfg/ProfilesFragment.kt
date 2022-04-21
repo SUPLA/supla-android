@@ -71,9 +71,10 @@ class ProfilesFragment: Fragment() {
     }
 
     private fun openEditProfileView(profileId: Long) {
+        val navId = if(profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
         val args = AuthFragmentArgs(profileId, true, false)
         navCoordinator.wantsBack = true
-        findNavController().navigate(R.id.editProfile, args.toBundle())
+        findNavController().navigate(navId, args.toBundle())
     }
 
     override fun onCreateView(

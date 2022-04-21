@@ -17,6 +17,7 @@
     <string name="form_profile_required_data_missing" translatable="false">Uzupełnij wymagane dane</string>
     <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
     <string name="add_account">Dodaj konto</string>
+    <string name="edit_account">Edytuj konto</string>
     <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
