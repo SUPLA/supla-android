@@ -441,6 +441,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        if(Anim) return;
 
         if (v == MenuButton && MenuButton.getTag().equals(Integer.valueOf(1))) {
             onBackPressed();
