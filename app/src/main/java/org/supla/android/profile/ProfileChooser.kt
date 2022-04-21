@@ -11,6 +11,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.BaseObservable
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.MainActivity
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.cfg.ProfileItemViewModel
 import org.supla.android.databinding.ProfileChooserListItemBinding
@@ -50,6 +51,11 @@ class ProfileChooser(private val context: Context,
             setView(chooserView)
             dialog = show()
         }
+    }
+
+    fun dismiss() {
+        dialog?.dismiss()
+        dialog = null
     }
 
     fun selectProfile(idx: Int) {

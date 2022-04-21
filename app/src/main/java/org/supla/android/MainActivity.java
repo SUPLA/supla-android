@@ -526,6 +526,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
     @Override
     protected void onGroupButtonTouch(boolean On) {
+        if(menuIsVisible() || channelLV.isDetailSliding() ||
+           cgroupLV.isDetailSliding()) return;
         if (On) {
             channelLV.setVisibility(View.GONE);
             cgroupLV.setVisibility(View.VISIBLE);
@@ -641,6 +643,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onChannelDetailShow(ChannelBase channel) {
         setMenubarDetailTitle(channel.getNotEmptyCaption(this));
         showBackButton();
+        dismissProfileSelector();
     }
 
     @Override

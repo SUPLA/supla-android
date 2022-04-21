@@ -61,6 +61,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private SuperuserAuthorizationDialog mAuthDialog;
     private TextView title;
     private TextView detailTitle;
+    private ProfileChooser profileChooser;
 
     private static void showActivity(Activity sender, Class<?> cls, int flags, String action) {
 
@@ -426,9 +427,16 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     private void showProfileSelector() {
         ProfileManager pmgr = SuplaApp.getApp().getProfileManager(this);
-        ProfileChooser chooser = new ProfileChooser(this, pmgr);
-        chooser.setListener(this);
-        chooser.show();
+        profileChooser = new ProfileChooser(this, pmgr);
+        profileChooser.setListener(this);
+        profileChooser.show();
+    }
+
+    public void dismissProfileSelector() {
+        if(profileChooser != null) {
+            profileChooser.dismiss();
+            profileChooser = null;
+        }
     }
 
     private void setBtnBackground(Button btn, int imgResId) {
