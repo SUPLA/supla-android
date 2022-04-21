@@ -11,7 +11,7 @@
   </data>
 
   <RelativeLayout 
-      android:background="@color/cell_bg_new"
+      android:background="@color/popup_profile_cell_bg"
       android:layout_width="match_parent"
       android:layout_height="@dimen/settings_cell_height">
 
