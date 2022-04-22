@@ -212,6 +212,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         return mMenuItemsLayout;
     }
 
+    private void resetMenuItems() {
+        if(mMenuItemsLayout != null) {
+            if(mMenuItemsLayout.getParent() instanceof ViewGroup) {
+                ViewGroup parent = (ViewGroup)mMenuItemsLayout.getParent();
+                parent.removeView(mMenuItemsLayout);
+            }
+
+            mMenuItemsLayout = null;
+        }
+    }
+
     protected RelativeLayout getContentLayout() {
 
         if (ContentLayout == null) {
@@ -513,7 +524,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
                     break;
                 case MenuItemsLayout.BTN_PROFILE:
                     showProfile(this);
-                    mMenuItemsLayout = null;
+                    resetMenuItems();
                     break;
             }
         }
