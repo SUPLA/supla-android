@@ -132,6 +132,7 @@ public class Preferences {
     /**
        Legacy method. Should not be used in new code.
     */
+    @Deprecated
     public byte[] getClientGUID() {
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }
@@ -139,6 +140,7 @@ public class Preferences {
     /**
        Legacy method. Should not be used in new code.
     */
+    @Deprecated
     public byte[] getAuthKey() {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
