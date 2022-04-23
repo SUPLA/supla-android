@@ -18,7 +18,12 @@ package org.supla.android.data.source.local
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlin.random.Random
 import android.content.ContentValues
+import org.supla.android.Preferences
+import org.supla.android.SuplaApp
+import org.supla.android.Encryption
+import org.supla.android.lib.SuplaConst
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.SuplaContract
 import org.supla.android.db.AuthProfileItem
@@ -30,6 +35,9 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
     override fun createNamedProfile(name: String): Long {
         var itm = makeEmptyAuthItem()
         itm.name = name
+        itm.authInfo.guid = encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
+        itm.authInfo.authKey = encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
+        android.util.Log.d("Profile", "guid len: " + itm.authInfo.guid.size)
         return insert(itm, 
                       SuplaContract.AuthProfileEntry.TABLE_NAME)
     }
@@ -119,6 +127,11 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
                                                    serverAutoDetect = true),
                                advancedAuthSetup = false,
                                isActive = false)
+    }
+
+    private fun encrypted(bytes: ByteArray): ByteArray {
+        val key = Preferences.getDeviceID(SuplaApp.getApp())
+        return Encryption.encryptDataWithNullOnException(bytes, key)
     }
 
 }

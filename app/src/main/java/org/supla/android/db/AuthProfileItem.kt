@@ -47,7 +47,9 @@ data class AuthProfileItem(var name: String = "",
                             emailAuth = cur.getInt(6) > 0,
                             accessID = cur.getInt(7),
                             accessIDpwd = string(cur, 8),
-                            preferredProtocolVersion = cur.getInt(9)
+                            preferredProtocolVersion = cur.getInt(9),
+                            guid = cur.getBlob(12),
+                            authKey = cur.getBlob(13)
         )
         isActive = cur.getInt(10) > 0
         advancedAuthSetup = cur.getInt(11) > 0
@@ -66,6 +68,8 @@ data class AuthProfileItem(var name: String = "",
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, if(isActive) 1 else 0)
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE, if(advancedAuthSetup) 1 else 0)
+        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID, authInfo.guid)
+        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY, authInfo.authKey)
 
         return vals
     }

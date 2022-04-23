@@ -18,7 +18,11 @@ package org.supla.android.profile
  */
 
 
+import kotlin.random.Random
 import android.content.Context
+import org.supla.android.Preferences
+import org.supla.android.Encryption
+import org.supla.android.lib.SuplaConst
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
 import org.supla.android.SuplaApp
@@ -29,8 +33,11 @@ class MultiAccountProfileManager(private val context: Context,
     
 
     override fun getCurrentProfile(): AuthProfileItem {
-        val rv = repo.allProfiles.filter { it.isActive == true }.first()
-        return rv
+        if(repo.allProfiles.size == 0) {
+            return getProfile(ProfileIdNew)!!
+        } else {
+            return repo.allProfiles.filter { it.isActive == true }.first()
+        }
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
@@ -70,10 +77,12 @@ class MultiAccountProfileManager(private val context: Context,
     override fun getProfile(id: Long): AuthProfileItem? {
         if(id == ProfileIdNew) {
             val authInfo = AuthInfo(emailAuth=true,
-                                    serverAutoDetect=true)
+                                    serverAutoDetect=true,
+                                    guid=encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE)),
+                                    authKey=encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE)))
             var rv = AuthProfileItem(authInfo=authInfo,
                                      advancedAuthSetup=false,
-                                     isActive=false)
+                                     isActive=if(repo.allProfiles.size > 0) false else true)
             rv.id = id
             return rv
         } else {
@@ -101,5 +110,10 @@ class MultiAccountProfileManager(private val context: Context,
         if(cli != null) {
             cli.reconnect()
         }
+    }
+
+    private fun encrypted(bytes: ByteArray): ByteArray {
+        val key = Preferences.getDeviceID(context)
+        return Encryption.encryptDataWithNullOnException(bytes, key)
     }
 }

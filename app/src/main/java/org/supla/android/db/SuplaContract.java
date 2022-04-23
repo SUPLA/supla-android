@@ -102,6 +102,8 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PREFERRED_PROTOCOL_VERSION = "pref_protcol_ver";
         public static final String COLUMN_NAME_IS_ACTIVE = "is_active";
         public static final String COLUMN_NAME_IS_ADVANCED_MODE = "is_advanced";
+        public static final String COLUMN_NAME_GUID = "guid";
+        public static final String COLUMN_NAME_AUTHKEY = "auth_key";
 
         public static final String[] ALL_COLUMNS = {
             AuthProfileEntry._ID,                                   // 0
@@ -115,7 +117,9 @@ public class SuplaContract {
             AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD,             // 8
             AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION,// 9
             AuthProfileEntry.COLUMN_NAME_IS_ACTIVE,                 // 10
-            AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE           // 11
+            AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE,          // 11
+            AuthProfileEntry.COLUMN_NAME_GUID,                      // 12
+            AuthProfileEntry.COLUMN_NAME_AUTHKEY                    // 13
         };
                                                     
     }

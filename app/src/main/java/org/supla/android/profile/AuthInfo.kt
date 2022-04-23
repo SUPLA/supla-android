@@ -26,7 +26,9 @@ data class AuthInfo(var emailAuth: Boolean,
                     var emailAddress: String = "",
                     var accessID: Int = 0,
                     var accessIDpwd: String = "",
-                    var preferredProtocolVersion: Int = 0) {
+                    var preferredProtocolVersion: Int = 0,
+                    var guid: ByteArray = byteArrayOf(),
+                    var authKey: ByteArray = byteArrayOf()) {
 
     /**
      Returns server used for current authentication method
