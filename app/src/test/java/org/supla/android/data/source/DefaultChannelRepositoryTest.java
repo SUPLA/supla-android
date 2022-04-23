@@ -62,7 +62,8 @@ public class DefaultChannelRepositoryTest {
     @Before
     public void setUp() throws Exception {
         AuthProfileItem profile = new AuthProfileItem("test",
-                                                      new AuthInfo(true,true, "", "", "", 0, "", 0),
+                                                      new AuthInfo(true,true, "", "", "", 0, "", 0,
+                                                                   new byte[0], new byte[0]),
                                                       false,true);
         profile.setId(1);
         SuplaApp mockedApp = mock(SuplaApp.class);

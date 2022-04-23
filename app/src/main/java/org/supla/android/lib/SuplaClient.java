@@ -32,6 +32,7 @@ import org.supla.android.BuildConfig;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
+import org.supla.android.Encryption;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
@@ -184,7 +185,7 @@ public class SuplaClient extends Thread {
         if (canceled()) return;
         SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
     }
-    
+
     private void init(SuplaCfg cfg) {
         synchronized (sc_lck) {
             if (_supla_client_ptr == 0) {
@@ -319,7 +320,7 @@ public class SuplaClient extends Thread {
             unlockClientPtr();
         }
     }
-    
+
     public boolean open(int ChannelID, int Open) {
         return open(ChannelID, false, Open);
     }
@@ -739,7 +740,7 @@ public class SuplaClient extends Thread {
             // set prefered to lower
             info.setPreferredProtocolVersion(versionError.RemoteVersion);
             pm.updateCurrentAuthInfo(info);
-            
+
             reconnect();
             return;
         }
@@ -1300,11 +1301,11 @@ public class SuplaClient extends Thread {
                     Preferences prefs = new Preferences(_context);
                     ProfileManager pm = getProfileManager();
                     AuthInfo info = pm.getCurrentAuthInfo();
-                    
+
 
                     cfg.Host = info.getServerForCurrentAuthMethod();
-                    cfg.clientGUID = prefs.getClientGUID();
-                    cfg.AuthKey = prefs.getAuthKey();
+                    cfg.clientGUID = decrypted(info.getGuid());
+                    cfg.AuthKey = decrypted(info.getAuthKey());
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
@@ -1375,5 +1376,10 @@ public class SuplaClient extends Thread {
 
     private ProfileManager getProfileManager() {
         return SuplaApp.getApp().getProfileManager(_context);
+    }
+
+    private byte[] decrypted(byte[] payload) {
+        String key = Preferences.getDeviceID(_context);
+        return Encryption.decryptDataWithNullOnException(payload, key);
     }
 }

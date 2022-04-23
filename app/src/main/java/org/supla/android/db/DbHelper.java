@@ -26,6 +26,8 @@ import android.database.sqlite.SQLiteDatabase;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.R;
+import org.supla.android.Preferences;
+import org.supla.android.Encryption;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -54,7 +56,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 22;
+    public static final int DATABASE_VERSION = 23;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -388,6 +390,7 @@ public class DbHelper extends BaseDbHelper {
         createUserIconsTable(db);
         upgradeToV19(db);
         upgradeToV22(db);
+        upgradeToV23(db);
 
         // Create views at the end
         createChannelView(db);
@@ -565,6 +568,49 @@ public class DbHelper extends BaseDbHelper {
         }
     }
 
+    private void updateEncryptBlob(SQLiteDatabase db, String table,
+                                   String column, byte[] payload) {
+        ContentValues cv = new ContentValues();
+        byte[] encrypted;
+        String key = Preferences.getDeviceID(getContext());
+
+        if(payload == null)
+            encrypted = null;
+        else
+            encrypted = Encryption.encryptDataWithNullOnException(payload,
+                                                                  key);
+        if(encrypted == null) {
+            cv.putNull(column);
+        } else {
+            cv.put(column, encrypted);
+        }
+
+        db.update(table, cv, null, null);
+    }
+                                   
+
+    private void upgradeToV23(SQLiteDatabase db) {
+        addColumn(db, "ALTER TABLE " + SuplaContract.AuthProfileEntry.TABLE_NAME +
+                  " ADD COLUMN " + SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID +
+                  " BLOB");
+        addColumn(db, "ALTER TABLE " + SuplaContract.AuthProfileEntry.TABLE_NAME +
+                  " ADD COLUMN " + SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY +
+                  " BLOB");
+
+        Preferences prefs = new Preferences(getContext());
+        
+        // Migrate existing guid / authkey if any
+        updateEncryptBlob(db,
+                          SuplaContract.AuthProfileEntry.TABLE_NAME,
+                          SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID,
+                          prefs.getClientGUID());
+        updateEncryptBlob(db,
+                          SuplaContract.AuthProfileEntry.TABLE_NAME,
+                          SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY,
+                          prefs.getAuthKey());
+        
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -631,6 +677,10 @@ public class DbHelper extends BaseDbHelper {
                     case 21:
                         upgradeToV22(db);
                         break;
+                    case 22:
+                        upgradeToV23(db);
+                        break;
+                    
                 }
             }
 

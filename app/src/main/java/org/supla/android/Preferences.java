@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
 
 import org.supla.android.cfg.TemperatureUnit;
@@ -63,15 +62,12 @@ public class Preferences {
         context.getContentResolver();
     }
 
-
-    private String getDeviceID() {
+    public static String getDeviceID(Context ctx) {
         String Id = null;
 
         try {
-            final TelephonyManager tm = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Id = Settings.Secure.getString(_context.getContentResolver(),
+                Id = Settings.Secure.getString(ctx.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
             } else {
                 Id = Build.SERIAL;
@@ -86,6 +82,12 @@ public class Preferences {
         }
 
         return (Id == null || Id.length() == 0) ? "unknown" : Id;
+
+    }
+
+
+    private String getDeviceID() {
+        return Preferences.getDeviceID(_context);
     }
 
     private void encryptAndSave(String pref_key, byte[] data) {
@@ -126,12 +128,17 @@ public class Preferences {
 
     }
 
-    // TODO: Store GUID and AuthKey in the Android key system (API >= 14). Issue 127
 
+    /**
+       Legacy method. Should not be used in new code.
+    */
     public byte[] getClientGUID() {
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }
 
+    /**
+       Legacy method. Should not be used in new code.
+    */
     public byte[] getAuthKey() {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
