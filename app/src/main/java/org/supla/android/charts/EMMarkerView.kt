@@ -51,12 +51,15 @@ class EMMarkerView(private val ihelper: IncrementalMeterChartHelper,
         tvSelLabel.setText(lbl)
 
         if(e is BarEntry) {
-            val pv = e.getYVals()[si]
-            val cur = ihelper.getCurrency() ?: ""
-            tvSelValue1.setText(String.format("%.2f " + cur, 
-                                              pv * ihelper.getPricePerUnit()))
-            tvSelValue2.setText(String.format("%.2f " + getString(ihelper.getUnit()),
-                                              pv))
+            val vals = e.getYVals()
+            if(vals != null) {
+                val pv = e.getYVals()[si]
+                val cur = ihelper.getCurrency() ?: ""
+                tvSelValue1.setText(String.format("%.2f " + cur, 
+                                                  pv * ihelper.getPricePerUnit()))
+                tvSelValue2.setText(String.format("%.2f " + getString(ihelper.getUnit()),
+                                                  pv))
+            }
         }
     }
 }
