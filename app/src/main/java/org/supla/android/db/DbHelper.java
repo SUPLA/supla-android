@@ -371,7 +371,7 @@ public class DbHelper extends BaseDbHelper {
         ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
         AuthProfileItem itm = migrator.makeProfileUsingPreferences();
         db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null,
-                  itm.getContentValues());
+                  itm.getContentValuesV22());
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {

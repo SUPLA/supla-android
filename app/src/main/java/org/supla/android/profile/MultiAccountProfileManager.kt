@@ -33,11 +33,7 @@ class MultiAccountProfileManager(private val context: Context,
     
 
     override fun getCurrentProfile(): AuthProfileItem {
-        if(repo.allProfiles.size == 0) {
-            return getProfile(ProfileIdNew)!!
-        } else {
-            return repo.allProfiles.filter { it.isActive == true }.first()
-        }
+        return repo.allProfiles.filter { it.isActive == true }.first()
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
