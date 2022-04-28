@@ -37,9 +37,12 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
         itm.name = name
         itm.authInfo.guid = encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
         itm.authInfo.authKey = encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
-        android.util.Log.d("Profile", "guid len: " + itm.authInfo.guid.size)
         return insert(itm, 
                       SuplaContract.AuthProfileEntry.TABLE_NAME)
+    }
+
+    override fun getCurrentProfileId(): Long? {
+        return allProfiles.filter { it.isActive == true }.first()?.id
     }
 
     override fun getProfile(id: Long): AuthProfileItem? {

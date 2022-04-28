@@ -77,7 +77,6 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = DbHelper.getInstance(this);
         SuplaApp.getApp().initTypefaceCollection(this);
         setStatusBarColor(R.color.splash_bg);
     }
@@ -85,6 +84,8 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     @Override
     protected void onResume() {
         super.onResume();
+
+        invalidateDbHelper();
 
         if (bgTimer != null) {
             bgTimer.cancel();
@@ -361,7 +362,14 @@ public class BaseActivity extends Activity implements SuplaClientMessageHandler.
     }
 
     protected DbHelper getDbHelper() {
+        if(dbHelper == null)
+            dbHelper = DbHelper.getInstance(this);
+
         return dbHelper;
+    }
+
+    protected void invalidateDbHelper() {
+        dbHelper = null;
     }
 
     protected void subscribe(Completable completable, Action onComplete, Consumer<? super Throwable> onError) {

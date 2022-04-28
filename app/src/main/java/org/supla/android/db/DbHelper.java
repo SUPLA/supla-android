@@ -56,7 +56,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 23;
+    public static final int DATABASE_VERSION = 24;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -77,6 +77,7 @@ public class DbHelper extends BaseDbHelper {
                 new UserIconDao(this), new ImageCacheProvider());
     }
 
+
     /**
      * Gets a single instance of the {@link DbHelper} class. If the instance does not exist, is created like in classic Singleton pattern.
      *
@@ -94,6 +95,15 @@ public class DbHelper extends BaseDbHelper {
             }
         }
         return result;
+    }
+
+    /**
+       Invalidate previous singleton, so new one can be in effect.
+    */
+    public static void invalidate() {
+        synchronized (mutex) {
+            instance = new DbHelper(SuplaApp.getApp());
+        }
     }
 
     @Override
@@ -391,6 +401,7 @@ public class DbHelper extends BaseDbHelper {
         upgradeToV19(db);
         upgradeToV22(db);
         upgradeToV23(db);
+        upgradeToV24(db);
 
         // Create views at the end
         createChannelView(db);
@@ -611,6 +622,19 @@ public class DbHelper extends BaseDbHelper {
         
     }
 
+    private void upgradeToV24(SQLiteDatabase db) {
+        String indexName = SuplaContract.UserIconsEntry.TABLE_NAME +
+                "_unique_index";
+        
+        execSQL(db, "DELETE FROM " + SuplaContract.UserIconsEntry.TABLE_NAME);
+        execSQL(db, "DROP INDEX " + indexName);
+
+        execSQL(db, "CREATE UNIQUE INDEX " + indexName + " ON "
+                + SuplaContract.UserIconsEntry.TABLE_NAME + "("
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + ", "
+                + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")");
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -680,7 +704,9 @@ public class DbHelper extends BaseDbHelper {
                     case 22:
                         upgradeToV23(db);
                         break;
-                    
+                    case 23:
+                        upgradeToV24(db);
+                        break;
                 }
             }
 

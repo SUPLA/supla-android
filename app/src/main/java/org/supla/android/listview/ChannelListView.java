@@ -771,6 +771,7 @@ public class ChannelListView extends ListView implements
 
         if (onDetailListener != null)
             onDetailListener.onChannelDetailHide();
+        mDetailLayout = null;
     }
 
     private void setChannelBackgroundColor(int color) {

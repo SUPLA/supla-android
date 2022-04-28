@@ -25,8 +25,10 @@ import org.supla.android.Encryption
 import org.supla.android.lib.SuplaConst
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
+import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.images.ImageCache
 
 class MultiAccountProfileManager(private val context: Context,
                                  private val repo: ProfileRepository): ProfileManager {
@@ -90,6 +92,11 @@ class MultiAccountProfileManager(private val context: Context,
         val current = getCurrentProfile()
         if(current.id == id && !force) return false
         if(repo.setProfileActive(id)) {
+            ImageCache.clear()
+            DbHelper.invalidate()
+            MeasurementsDbHelper.invalidate()
+            DbHelper.getInstance(SuplaApp.getApp())
+                .loadUserIconsIntoCache()
             initiateReconnect()
             return true
         } else {

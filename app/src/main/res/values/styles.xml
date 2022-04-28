@@ -85,6 +85,10 @@
       <item name="android:colorForeground">#42221f1f</item>
     </style>
 
+    <style name="CheckBox" parent="">
+      <item name="android:buttonTint">@color/channel_btn</item>
+    </style>
+
     <style name="FormLabel" parent="">
       <item name="android:textColor">#B4B7BA</item>
     </style>

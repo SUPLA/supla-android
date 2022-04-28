@@ -584,5 +584,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onProfileChanged() {
+        invalidateDbHelper();
     }
 }

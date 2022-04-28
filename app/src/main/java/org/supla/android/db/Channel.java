@@ -491,5 +491,9 @@ public class Channel extends ChannelBase {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "{channelId=" + getRemoteId() + ", profileId=" + getProfileId() + ", value=" + Value + "}";
+    }
 }
 

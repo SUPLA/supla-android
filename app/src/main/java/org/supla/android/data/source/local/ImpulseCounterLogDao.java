@@ -61,10 +61,12 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
         if (withoutComplement) {
             return getCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                     key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT, 0));
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
         } else {
             return getCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId));
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
         }
     }
 
@@ -107,6 +109,7 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
 
     public void deleteImpulseCounterMeasurements(int channelId) {
         delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId));
+                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
     }
 }
