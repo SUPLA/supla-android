@@ -74,6 +74,12 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         return result;
     }
 
+    public static void invalidate() {
+        synchronized(mutex) {
+            instance = null;
+        }
+    }
+
     @Override
     protected String getDatabaseNameForLog() {
         return M_DATABASE_NAME;
@@ -310,6 +316,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         createTempHumidityLogTable(db);
         createTemperatureLogTable(db);
         upgradeToV22(db);
+        upgradeToV24(db);
 
         // Create views at the end
         createImpulseCounterLogView(db);
@@ -389,6 +396,56 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
     }
 
+    private void upgradeToV24(SQLiteDatabase db) {
+        // Clear data and extend unique indexes with profile id.
+        String unique = "_unique_index";
+
+        execSQL(db, "DROP INDEX " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + unique);
+        execSQL(db, "DELETE FROM " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+        execSQL(db, "CREATE UNIQUE INDEX "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME + unique + " ON "
+                + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID + " )");
+
+        execSQL(db, "DROP INDEX " + SuplaContract.ThermostatLogEntry.TABLE_NAME + unique);
+        execSQL(db, "DELETE FROM " + SuplaContract.ThermostatLogEntry.TABLE_NAME);
+        execSQL(db, "CREATE UNIQUE INDEX "
+                + SuplaContract.ThermostatLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.ThermostatLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP + ")");
+        
+        execSQL(db, "DROP INDEX " + SuplaContract.TemperatureLogEntry.TABLE_NAME + unique);
+        execSQL(db, "DELETE FROM " + SuplaContract.TemperatureLogEntry.TABLE_NAME);
+        execSQL(db, "CREATE UNIQUE INDEX "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TemperatureLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP + ")");
+
+        execSQL(db, "DROP INDEX " + SuplaContract.TempHumidityLogEntry.TABLE_NAME + unique);
+        execSQL(db, "DELETE FROM " + SuplaContract.TempHumidityLogEntry.TABLE_NAME);
+        execSQL(db, "CREATE UNIQUE INDEX "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME + "_unique_index ON "
+                + SuplaContract.TempHumidityLogEntry.TABLE_NAME
+                + "(" + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP + ")");
+       
+        
+        execSQL(db, "DROP INDEX " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + unique);
+        execSQL(db, "DELETE FROM " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+        execSQL(db, "CREATE UNIQUE INDEX "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME + unique + " ON "
+                + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME
+                + "(" + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP + ", "
+                + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID + ")");
+        
+    }
+
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
         execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
@@ -429,6 +486,10 @@ public class MeasurementsDbHelper extends BaseDbHelper {
                         break;
                     case 21:
                         upgradeToV22(db);
+                        break;
+
+                    case 23:
+                        upgradeToV24(db);
                         break;
                 }
             }

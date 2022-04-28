@@ -456,4 +456,18 @@ public class ChannelValue extends DbItem {
     public boolean motorProblem() {
         return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_MOTOR_PROBLEM) > 0;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{channelId=");
+        sb.append(ChannelId);
+        sb.append(", online=");
+        sb.append(OnLine);
+        sb.append(", profileId=");
+        sb.append(profileId);
+        sb.append("}");
+
+        return sb.toString();
+    }
 }

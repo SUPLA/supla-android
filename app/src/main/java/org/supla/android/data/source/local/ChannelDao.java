@@ -378,9 +378,12 @@ public class ChannelDao extends BaseDao {
         String sql = "SELECT C." + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
                 + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME + " AS C"
-                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (C."
                 + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON + " = "
                 + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " AND "
+                + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")"
                 + " WHERE " + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE +
                 " > 0 AND " + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON +
                 " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID 
@@ -409,9 +412,12 @@ public class ChannelDao extends BaseDao {
         String sql = "SELECT C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + " " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
                 + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME + " AS C"
-                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON C."
+                + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (C."
                 + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = "
                 + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                + " AND "
+                + "C." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = "
+                + "U." + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")"
                 + " WHERE " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE +
                 " > 0 AND " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON +
                 " > 0 AND U." + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
@@ -579,8 +585,10 @@ public class ChannelDao extends BaseDao {
                     + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = L."
                     + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID + ")"
                     + " LEFT JOIN " + SuplaContract.UserIconsEntry.TABLE_NAME + " I"
-                    + " ON G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
+                    + " ON (G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON + " = I."
                     + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                    + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = I."
+                    + SuplaContract .UserIconsEntry.COLUMN_NAME_PROFILEID + ")"
                     + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
                     + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + getCurrentProfileId()
                     + localWhere

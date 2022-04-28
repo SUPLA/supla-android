@@ -773,6 +773,7 @@ public class SuplaClient extends Thread {
 
     private void onConnected() {
         Trace.d(log_tag, "connected");
+        DbH = DbHelper.getInstance(_context);
 
         sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnected));
     }

@@ -85,7 +85,6 @@ public abstract class MeasurementsBaseDao extends BaseDao {
             c.moveToFirst();
             int max = c.getInt(0);
             c.close();
-
             return max;
         });
     }

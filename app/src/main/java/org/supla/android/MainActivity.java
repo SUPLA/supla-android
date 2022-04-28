@@ -262,6 +262,17 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             return;
         }
 
+        resetListViews();
+        
+        hideDetail();
+        runDownloadTask();
+
+        RateApp ra = new RateApp(this);
+        ra.showDialog(1000);
+    }
+
+    private void resetListViews() {
+        
         if (!SetListCursorAdapter()) {
             channelLV.setSelection(0);
             channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
@@ -272,11 +283,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
-        hideDetail();
-        runDownloadTask();
-
-        RateApp ra = new RateApp(this);
-        ra.showDialog(1000);
     }
 
     @Override
@@ -319,7 +325,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             if (LV.detail_getRemoteId() == Id) {
 
                 ChannelBase cbase = LV.detail_getChannel();
-
                 if (cbase != null && !cbase.getOnLine())
                     LV.hideDetail(false, true);
                 else
@@ -741,6 +746,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             channelListViewCursorAdapter = null;
             cgroupListViewCursorAdapter = null;
         }
+    }
+
+    @Override
+    public void onProfileChanged() {
+        super.onProfileChanged();
+        resetListViews();
+        runDownloadTask();
     }
 
     private interface Reorder {
