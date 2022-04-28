@@ -75,11 +75,13 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
         if (withoutComplement) {
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                     key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0));
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
         } else {
 
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId)
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId())
             );
         }
     }

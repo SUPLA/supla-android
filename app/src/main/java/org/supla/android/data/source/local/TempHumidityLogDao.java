@@ -42,12 +42,14 @@ public class TempHumidityLogDao extends MeasurementsBaseDao {
 
     public int getTempHumidityMeasurementTotalCount(int channelId) {
         return getCount(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
-                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId));
+                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
     }
 
     public void deleteTempHumidityMeasurements(int channelId) {
         delete(SuplaContract.TempHumidityLogEntry.TABLE_NAME,
-                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId));
+                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                key(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
     }
 
     public void addTempHumidityMeasurement(TempHumidityMeasurementItem emi) {
