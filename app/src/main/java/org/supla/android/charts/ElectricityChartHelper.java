@@ -274,7 +274,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     @Override
     protected IMarker getMarker() {
         if(isBalanceChartType(ctype) || isComparisonChartType(ctype) ||
-           singlePhase) {
+           isPieChartType(ctype) || singlePhase) {
             return super.getMarker();
         } else {
             return new EMMarkerView(this, context);
