@@ -47,12 +47,13 @@ class EMMarkerView(private val ihelper: IncrementalMeterChartHelper,
 
 
         val si = h.getStackIndex()
-        val lbl = getContext().getText(R.string.em_chart_phase_n).toString().format(si + 1)
+        val lbl = getContext().getText(R.string.em_chart_phase_n)
+            .toString().format(si + 1)
         tvSelLabel.setText(lbl)
 
         if(e is BarEntry) {
             val vals = e.getYVals()
-            if(vals != null) {
+            if(vals != null && si >= 0 && vals.size > si) {
                 val pv = e.getYVals()[si]
                 val cur = ihelper.getCurrency() ?: ""
                 tvSelValue1.setText(String.format("%.2f " + cur, 

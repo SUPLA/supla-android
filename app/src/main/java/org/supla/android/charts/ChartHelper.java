@@ -73,6 +73,8 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     private Double downloadProgress;
     private Preferences prefs;
     private int channelId;
+    private ZoomSettings persistedZoom;
+
 
     public ChartHelper(Context context) {
         this.context = context;
@@ -107,7 +109,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return false;
     }
 
-    public boolean isComparsionChartType(ChartType chartType) {
+    public boolean isComparisonChartType(ChartType chartType) {
         switch (chartType) {
             case Bar_Comparsion_MinMin:
             case Bar_Comparsion_HourHour:
@@ -337,7 +339,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             c.close();
         }
 
-        if (barEntries.size() > 0 && isComparsionChartType(ctype)) {
+        if (barEntries.size() > 0 && isComparisonChartType(ctype)) {
             for (int a = barEntries.size() - 1; a > 0; a--) {
 
                 BarEntry e1 = barEntries.get(a);
@@ -875,5 +877,34 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         Bar_VectorBalance_Days,
         Bar_VectorBalance_Months,
         Bar_VectorBalance_Years
+    }
+
+    public void persistZoom() {
+        persistedZoom = new ZoomSettings(combinedChart);
+    }
+
+    public void restoreZoom() {
+        if(persistedZoom != null) {
+            persistedZoom.apply(combinedChart);
+            persistedZoom = null;
+        }
+    }
+
+    private class ZoomSettings {
+        float scaleX;
+        float scaleY;
+        float x;
+        float y;
+
+        ZoomSettings(CombinedChart chart) {
+            x = (chart.getLowestVisibleX() + chart.getHighestVisibleX()) / 2.0f;
+            y = (chart.getYChartMin() + chart.getYChartMax()) / 2.0f;
+            scaleX = chart.getScaleX();
+            scaleY = chart.getScaleY();
+        }
+
+        void apply(CombinedChart chart) {
+            chart.zoom(scaleX, scaleY, x, y);
+        }
     }
 }

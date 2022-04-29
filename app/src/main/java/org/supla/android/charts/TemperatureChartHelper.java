@@ -98,4 +98,10 @@ public class TemperatureChartHelper extends ChartHelper {
     protected IMarker getMarker() {
         return new SuplaMarkerView(this, context, R.layout.chart_marker);
     }
+
+    @Override
+    public void moveToEnd() {
+        super.moveToEnd();
+        combinedChart.fitScreen();
+    }
 }
