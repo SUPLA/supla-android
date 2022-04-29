@@ -107,7 +107,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return false;
     }
 
-    public boolean isComparsionChartType(ChartType chartType) {
+    public boolean isComparisonChartType(ChartType chartType) {
         switch (chartType) {
             case Bar_Comparsion_MinMin:
             case Bar_Comparsion_HourHour:
@@ -337,7 +337,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             c.close();
         }
 
-        if (barEntries.size() > 0 && isComparsionChartType(ctype)) {
+        if (barEntries.size() > 0 && isComparisonChartType(ctype)) {
             for (int a = barEntries.size() - 1; a > 0; a--) {
 
                 BarEntry e1 = barEntries.get(a);

@@ -225,7 +225,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     @Override
     protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
-        if ((isProductionDataSource() && isComparsionChartType(ctype))) {
+        if ((isProductionDataSource() && isComparisonChartType(ctype))) {
             barDataSet.setColorDependsOnTheValue(true);
             barDataSet.setColors(getBarChartComparsionColors(true));
         } else {
@@ -273,7 +273,8 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     @Override
     protected IMarker getMarker() {
-        if(isBalanceChartType(ctype) || singlePhase) {
+        if(isBalanceChartType(ctype) || isComparisonChartType(ctype) ||
+           singlePhase) {
             return super.getMarker();
         } else {
             return new EMMarkerView(this, context);
