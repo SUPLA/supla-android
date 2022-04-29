@@ -741,7 +741,7 @@ public abstract class ChannelBase extends DbItem {
 
     private int getCurrentProfileId() {
         SuplaApp app = SuplaApp.getApp();
-        return (int)app.getProfileManager(app).getCurrentProfile().getId();
+        return (int)app.getProfileManager().getCurrentProfile().getId();
     }
 
     public void Assign(SuplaChannelBase base) {

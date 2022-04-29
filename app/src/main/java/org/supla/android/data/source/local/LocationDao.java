@@ -46,11 +46,11 @@ public class LocationDao extends BaseDao {
         return getItem(Location::new, projection, SuplaContract.LocationEntry.TABLE_NAME,
                        key(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID, locationId),
                        key(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID,
-                           getCurrentProfileId().intValue()));
+                               getCachedProfileId().intValue()));
     }
 
     public void insert(Location location) {
-        location.setProfileId(getCurrentProfileId().intValue());
+        location.setProfileId(getCachedProfileId().intValue());
         insert(location, SuplaContract.LocationEntry.TABLE_NAME);
     }
 
@@ -60,7 +60,7 @@ public class LocationDao extends BaseDao {
 
     public List<Location> getLocations() {
         return read(db -> {
-                List<Location> rv = new LinkedList();
+                List<Location> rv = new LinkedList<>();
                 Cursor c = getLocations(db);
                 if(c.moveToFirst()) {
                     do {
@@ -98,7 +98,7 @@ public class LocationDao extends BaseDao {
             + ")"
             + " AND "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID + " = "
-            + getCurrentProfileId()
+            + getCachedProfileId()
             + " ORDER BY "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION

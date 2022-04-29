@@ -26,10 +26,8 @@ import android.provider.Settings;
 import android.util.Base64;
 
 import org.supla.android.cfg.TemperatureUnit;
-import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.AuthInfo;
 
 import java.util.Random;
 
@@ -253,7 +251,7 @@ public class Preferences {
     }
 
     private ProfileManager getProfileManager() {
-        return SuplaApp.getApp().getProfileManager(_context);
+        return SuplaApp.getApp().getProfileManager();
     }
 
     private String getChartTypeKey(int channel, int idx) {

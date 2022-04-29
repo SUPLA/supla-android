@@ -18,34 +18,33 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.app.Application;
-import androidx.multidex.MultiDexApplication;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 
-import org.supla.android.db.DbHelper;
+import androidx.multidex.MultiDexApplication;
+
+import org.supla.android.cfg.CfgRepository;
+import org.supla.android.cfg.PrefsCfgRepositoryImpl;
+import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.presenter.TemperaturePresenterImpl;
 import org.supla.android.data.source.ProfileRepository;
 import org.supla.android.data.source.local.LocalProfileRepository;
+import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
+import org.supla.android.profile.MultiAccountProfileManager;
+import org.supla.android.profile.ProfileIdHolder;
+import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
-import org.supla.android.cfg.CfgRepository;
-import org.supla.android.cfg.PrefsCfgRepositoryImpl;
-import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.MultiAccountProfileManager;
-import org.supla.android.data.presenter.TemperaturePresenter;
-import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
 public class SuplaApp extends MultiDexApplication implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
-    TemperaturePresenterFactory {
+        TemperaturePresenterFactory {
 
     private static final Object _lck1 = new Object();
     private static final Object _lck3 = new Object();
@@ -58,6 +57,9 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     private SuplaOAuthToken _OAuthToken;
     private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
     private static long lastWifiScanTime;
+
+    private ProfileManager profileManager;
+    private final ProfileIdHolder profileIdHolder = new ProfileIdHolder(null);
 
     public SuplaApp() {
         SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -72,6 +74,11 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
         super.onCreate();
         SuplaApp._SuplaApp = this;
 
+        DbHelper dbHelper = DbHelper.getInstance(this);
+        ProfileRepository repo = new LocalProfileRepository(dbHelper);
+        profileManager = new MultiAccountProfileManager(dbHelper, Preferences.getDeviceID(this), repo, profileIdHolder);
+        profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
+
 		SuplaFormatter.sharedFormatter();
     }
 
@@ -83,9 +90,8 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
             v.vibrate(100);
     }
 
-    public ProfileManager getProfileManager(Context ctx) {
-        ProfileRepository repo = new LocalProfileRepository(DbHelper.getInstance(ctx));
-        return new MultiAccountProfileManager(ctx, repo);
+    public ProfileManager getProfileManager() {
+        return profileManager;
     }
 
     public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
@@ -246,7 +252,10 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     }
 
     public TemperaturePresenter getTemperaturePresenter() {
-        CfgRepository repo = getCfgRepository();
         return new TemperaturePresenterImpl(getCfgRepository().getCfg());
+    }
+
+    public ProfileIdHolder getProfileIdHolder() {
+        return profileIdHolder;
     }
 }

@@ -33,7 +33,6 @@ import androidx.navigation.fragment.NavHostFragment
 import android.app.AlertDialog
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
-import org.supla.android.profile.ProfileManager
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
 import org.supla.android.ui.AppBar
@@ -55,8 +54,8 @@ class CfgActivity: AppCompatActivity() {
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
-	      val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
-                                          SuplaApp.getApp().getProfileManager(this))
+        val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
+                                          SuplaApp.getApp().profileManager)
         val provider = ViewModelProvider(this, factory)
         val navCoordinator = provider.get(NavCoordinator::class.java)
 
@@ -102,8 +101,7 @@ class CfgActivity: AppCompatActivity() {
             /* Reconfigure navigation graph to dynamic
                start location */
               if(action == ACTION_AUTH) {
-                  val profileId = SuplaApp.getApp().getProfileManager(this)
-                      .getCurrentProfile().getId()
+                  val profileId = SuplaApp.getApp().profileManager.getCurrentProfile().id
                   args = AuthFragmentArgs(profileId, true, true).toBundle()
               } else {
                   args = null

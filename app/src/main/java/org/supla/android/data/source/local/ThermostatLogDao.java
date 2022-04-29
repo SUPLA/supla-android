@@ -41,13 +41,13 @@ public class ThermostatLogDao extends MeasurementsBaseDao {
     public int getThermostatMeasurementTotalCount(int channelId) {
         return getCount(SuplaContract.ThermostatLogEntry.TABLE_NAME,
                 key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
     public void deleteThermostatMeasurements(int channelId) {
         delete(SuplaContract.ThermostatLogEntry.TABLE_NAME,
                 key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
     public void addThermostatMeasurement(ThermostatMeasurementItem emi) {

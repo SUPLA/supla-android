@@ -33,16 +33,12 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
 
 
     override fun createNamedProfile(name: String): Long {
-        var itm = makeEmptyAuthItem()
+        val itm = makeEmptyAuthItem()
         itm.name = name
         itm.authInfo.guid = encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
         itm.authInfo.authKey = encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
         return insert(itm, 
                       SuplaContract.AuthProfileEntry.TABLE_NAME)
-    }
-
-    override fun getCurrentProfileId(): Long? {
-        return allProfiles.filter { it.isActive == true }.first()?.id
     }
 
     override fun getProfile(id: Long): AuthProfileItem? {
@@ -75,8 +71,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
 
     override val allProfiles: List<AuthProfileItem>
         get() {
-            return read() {
-                var rv = mutableListOf<AuthProfileItem>()
+            return read {
+                val rv = mutableListOf<AuthProfileItem>()
                 val cursor = 
                     it.query(SuplaContract.AuthProfileEntry.TABLE_NAME,
                              SuplaContract.AuthProfileEntry.ALL_COLUMNS,

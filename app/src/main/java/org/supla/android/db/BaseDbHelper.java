@@ -22,19 +22,22 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import androidx.annotation.Nullable;
-import org.supla.android.profile.ProfileManager;
+
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.data.source.local.BaseDao;
 
 public abstract class BaseDbHelper extends SQLiteOpenHelper implements BaseDao.DatabaseAccessProvider {
 
-    private Context context;
+    private final Context context;
+    private final ProfileIdProvider profileIdProvider;
 
     BaseDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context;
+        this.profileIdProvider = () -> SuplaApp.getApp().getProfileIdHolder().getProfileId();
     }
 
     protected Context getContext() {
@@ -67,8 +70,6 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper implements BaseDao.D
     protected abstract String getDatabaseNameForLog();
 
     public Long getCurrentProfileId() {
-        ProfileManager pm = SuplaApp.getApp()
-            .getProfileManager(getContext());
-        return pm.getCurrentProfile().getId();
+        return profileIdProvider.provideProfileId();
     }
 }

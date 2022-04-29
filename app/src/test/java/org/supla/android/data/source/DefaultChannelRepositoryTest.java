@@ -69,7 +69,7 @@ public class DefaultChannelRepositoryTest {
         SuplaApp mockedApp = mock(SuplaApp.class);
         ProfileManager pm = mock(ProfileManager.class);
         when(pm.getCurrentProfile()).thenReturn(profile);
-        when(mockedApp.getProfileManager(mockedApp)).thenReturn(pm);
+        when(mockedApp.getProfileManager()).thenReturn(pm);
 
         Field appFld = SuplaApp.class.getDeclaredField("_SuplaApp");
         appFld.setAccessible(true);

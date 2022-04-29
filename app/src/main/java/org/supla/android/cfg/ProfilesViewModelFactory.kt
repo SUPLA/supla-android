@@ -18,21 +18,15 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
-import android.content.Context
-import org.supla.android.db.DbHelper
-import org.supla.android.profile.ProfileManager
-import org.supla.android.profile.MultiAccountProfileManager
-import org.supla.android.data.source.local.LocalProfileRepository
+import androidx.lifecycle.ViewModelProvider
+import org.supla.android.SuplaApp
 
-class ProfilesViewModelFactory(private val ctx: Context):
-    ViewModelProvider.Factory {
+class ProfilesViewModelFactory: ViewModelProvider.Factory {
 
         override fun <T: ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
-                val repo = LocalProfileRepository(DbHelper.getInstance(ctx))
-                val pm = MultiAccountProfileManager(ctx, repo)
+                val pm = SuplaApp.getApp().profileManager
                 return ProfilesViewModel(pm) as T
             } else {
                 throw IllegalArgumentException("unknown view model class")

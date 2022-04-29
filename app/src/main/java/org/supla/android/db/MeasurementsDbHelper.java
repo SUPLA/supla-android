@@ -74,12 +74,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         return result;
     }
 
-    public static void invalidate() {
-        synchronized(mutex) {
-            instance = null;
-        }
-    }
-
     @Override
     protected String getDatabaseNameForLog() {
         return M_DATABASE_NAME;

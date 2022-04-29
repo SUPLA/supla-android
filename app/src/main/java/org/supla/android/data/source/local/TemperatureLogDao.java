@@ -43,13 +43,13 @@ public class TemperatureLogDao extends MeasurementsBaseDao {
     public int getTemperatureMeasurementTotalCount(int channelId) {
         return getCount(SuplaContract.TemperatureLogEntry.TABLE_NAME,
                 key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
     public void deleteTemperatureMeasurements(int channelId) {
         delete(SuplaContract.TemperatureLogEntry.TABLE_NAME,
                 key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                key(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
     public void addTemperatureMeasurement(TemperatureMeasurementItem emi) {

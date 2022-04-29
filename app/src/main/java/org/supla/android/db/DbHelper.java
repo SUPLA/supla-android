@@ -97,15 +97,6 @@ public class DbHelper extends BaseDbHelper {
         return result;
     }
 
-    /**
-       Invalidate previous singleton, so new one can be in effect.
-    */
-    public static void invalidate() {
-        synchronized (mutex) {
-            instance = new DbHelper(SuplaApp.getApp());
-        }
-    }
-
     @Override
     protected String getDatabaseNameForLog() {
         return DATABASE_NAME;

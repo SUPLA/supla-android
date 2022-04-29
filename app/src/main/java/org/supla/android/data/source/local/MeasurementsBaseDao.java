@@ -44,7 +44,7 @@ public abstract class MeasurementsBaseDao extends BaseDao {
         String[] selectionArgs = {
                 String.valueOf(channelId),
                 String.valueOf(lastSecondInMonthWithOffset(monthOffset).getTimeInMillis() / 1000),
-                String.valueOf(getCurrentProfileId())
+                String.valueOf(getCachedProfileId())
         };
 
         return read(sqLiteDatabase -> {
@@ -78,7 +78,7 @@ public abstract class MeasurementsBaseDao extends BaseDao {
                 + tableName
                 + " WHERE " + colChannelId
                 + " = " + channelId
-                + " AND profileid = " + getCurrentProfileId();
+                + " AND profileid = " + getCachedProfileId();
 
         return read(sqLiteDatabase -> {
             Cursor c = sqLiteDatabase.rawQuery(selection, null);
