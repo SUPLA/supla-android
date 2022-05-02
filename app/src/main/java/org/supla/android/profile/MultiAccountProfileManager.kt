@@ -107,6 +107,7 @@ class MultiAccountProfileManager(private val dbHelper: DbHelper,
     }
 
     private fun initiateReconnect() {
+        SuplaApp.getApp().CancelAllRestApiClientTasks(true)
         SuplaApp.getApp().suplaClient?.reconnect()
     }
 
