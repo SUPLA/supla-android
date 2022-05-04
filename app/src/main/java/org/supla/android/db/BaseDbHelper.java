@@ -73,7 +73,7 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper implements BaseDao.D
 
     protected abstract String getDatabaseNameForLog();
 
-    public Long getCurrentProfileId() {
+    public Long getCachedProfileId() {
         return profileIdProvider.getCachedProfileId();
     }
 }

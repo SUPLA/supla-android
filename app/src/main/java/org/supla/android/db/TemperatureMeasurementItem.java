@@ -28,19 +28,9 @@ import org.json.JSONObject;
 public class TemperatureMeasurementItem extends MeasurementItem {
 
     private Double Temperature;
-    private int profileId;
 
     public TemperatureMeasurementItem() {
         Temperature = null;
-    }
-
-    public int getProfileId() {
-        return profileId;
-    }
-
-
-    public void setProfileId(int pid) {
-        profileId = pid;
     }
 
     public Double getTemperature() {
@@ -69,7 +59,7 @@ public class TemperatureMeasurementItem extends MeasurementItem {
         setTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE)));
 
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.TemperatureLogEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {

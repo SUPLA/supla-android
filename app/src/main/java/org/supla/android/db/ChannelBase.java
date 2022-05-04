@@ -43,7 +43,7 @@ public abstract class ChannelBase extends DbItem {
     private int AltIcon;
     private int UserIconId;
     private int Flags;
-    private int profileId;
+    private long profileId;
 
     private TemperaturePresenterFactory temperaturePresenterFactory;
 
@@ -225,11 +225,11 @@ public abstract class ChannelBase extends DbItem {
         Flags = flags;
     }
 
-    public int getProfileId() {
+    public long getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(int pid) {
+    public void setProfileId(long pid) {
         profileId = pid;
     }
 
@@ -739,9 +739,8 @@ public abstract class ChannelBase extends DbItem {
 
     public abstract CharSequence getHumanReadableValue();
 
-    private int getCurrentProfileId() {
-        SuplaApp app = SuplaApp.getApp();
-        return (int)app.getProfileManager().getCurrentProfile().getId();
+    private long getCurrentProfileId() {
+        return SuplaApp.getApp().getProfileManager().getCurrentProfile().getId();
     }
 
     public void Assign(SuplaChannelBase base) {

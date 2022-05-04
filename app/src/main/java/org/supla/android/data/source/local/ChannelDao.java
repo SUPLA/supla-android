@@ -167,7 +167,7 @@ public class ChannelDao extends BaseDao {
 
     public void insert(Channel channel) {
         if(channel.getProfileId() == -1) {
-            channel.setProfileId(getCachedProfileId().intValue());
+            channel.setProfileId(getCachedProfileId());
         }
         insert(channel, SuplaContract.ChannelEntry.TABLE_NAME);
     }
@@ -178,7 +178,7 @@ public class ChannelDao extends BaseDao {
     }
 
     public void insert(ChannelValue channelValue) {
-        channelValue.setProfileId(getCachedProfileId().intValue());
+        channelValue.setProfileId(getCachedProfileId());
         insert(channelValue, SuplaContract.ChannelValueEntry.TABLE_NAME);
     }
 
@@ -189,7 +189,7 @@ public class ChannelDao extends BaseDao {
     }
 
     public void insert(ChannelExtendedValue channelExtendedValue) {
-        channelExtendedValue.setProfileId(getCachedProfileId().intValue());
+        channelExtendedValue.setProfileId(getCachedProfileId());
         insert(channelExtendedValue, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
     }
 
@@ -200,7 +200,7 @@ public class ChannelDao extends BaseDao {
     }
 
     public void insert(ChannelGroup channelGroup) {
-        channelGroup.setProfileId(getCachedProfileId().intValue());
+        channelGroup.setProfileId(getCachedProfileId());
         insert(channelGroup, SuplaContract.ChannelGroupEntry.TABLE_NAME);
     }
 
@@ -211,7 +211,7 @@ public class ChannelDao extends BaseDao {
     }
 
     public void insert(ChannelGroupRelation channelGroupRelation) {
-        channelGroupRelation.setProfileId(getCachedProfileId().intValue());
+        channelGroupRelation.setProfileId(getCachedProfileId());
         insert(channelGroupRelation, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME);
     }
 

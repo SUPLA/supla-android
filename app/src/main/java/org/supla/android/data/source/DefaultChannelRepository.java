@@ -123,7 +123,7 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup = new ChannelGroup();
             channelGroup.Assign(suplaChannelGroup);
             channelGroup.setVisible(1);
-            channelGroup.setProfileId(channelDao.getCachedProfileId().intValue());
+            channelGroup.setProfileId(channelDao.getCachedProfileId());
             updateChannelGroupPosition(location, channelGroup);
 
             channelDao.insert(channelGroup);

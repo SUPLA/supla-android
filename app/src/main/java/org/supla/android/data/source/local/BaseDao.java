@@ -166,7 +166,7 @@ public abstract class BaseDao {
     }
 
     public Long getCachedProfileId() {
-        return databaseAccessProvider.getCurrentProfileId();
+        return databaseAccessProvider.getCachedProfileId();
     }
 
     public static boolean timestampStartsWithTheCurrentMonth(long timestamp) {
@@ -192,7 +192,7 @@ public abstract class BaseDao {
         @NonNull
         SQLiteDatabase getWritableDatabase();
 
-        Long getCurrentProfileId();
+        Long getCachedProfileId();
     }
 
     @FunctionalInterface

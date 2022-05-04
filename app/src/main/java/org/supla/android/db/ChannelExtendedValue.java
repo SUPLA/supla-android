@@ -38,7 +38,7 @@ import java.io.ObjectOutputStream;
 
 public class ChannelExtendedValue extends DbItem {
     private int ChannelId;
-    private int profileId;
+    private long profileId;
     
     private SuplaChannelExtendedValue ExtendedValue;
 
@@ -59,11 +59,11 @@ public class ChannelExtendedValue extends DbItem {
         ChannelId = channelId;
     }
 
-    public int getProfileId() {
+    public long getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(int pid) {
+    public void setProfileId(long pid) {
         profileId = pid;
     }
 
@@ -93,7 +93,7 @@ public class ChannelExtendedValue extends DbItem {
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID)));
 
         byte[] value = cursor.getBlob(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
         Object obj = ByteArrayToObject(value);

@@ -29,7 +29,7 @@ public class ChannelGroupRelation extends DbItem {
     private int GroupId;
     private int ChannelId;
     private int Visible;
-    private int profileId;
+    private long profileId;
 
     public int getGroupId() {
         return GroupId;
@@ -55,11 +55,11 @@ public class ChannelGroupRelation extends DbItem {
         Visible = visible;
     }
 
-    public int getProfileId() {
+    public long getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(int pid) {
+    public void setProfileId(long pid) {
         profileId = pid;
     }
 
@@ -70,7 +70,7 @@ public class ChannelGroupRelation extends DbItem {
         setGroupId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {

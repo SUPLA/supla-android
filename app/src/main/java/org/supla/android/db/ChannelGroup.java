@@ -73,7 +73,7 @@ public class ChannelGroup extends ChannelBase {
         setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
         setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
