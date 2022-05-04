@@ -30,12 +30,11 @@ import org.supla.android.SuplaApp;
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     private long AfterTimestamp = 0;
-    private int _profileId;
+    private long _profileId;
 
     public DownloadMeasurementLogs(Context context) {
         super(context);
-        _profileId = (int)SuplaApp.getApp().getProfileManager()
-            .getCurrentProfile().getId();
+        _profileId = SuplaApp.getApp().getProfileManager().getCurrentProfile().getId();
     }
 
     abstract protected long getMinTimestamp();
@@ -63,7 +62,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         return 10000;
     }
 
-    protected int getCurrentProfileId() {
+    protected long getCurrentProfileId() {
         return _profileId;
     }
 

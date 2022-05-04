@@ -30,19 +30,10 @@ public class ThermostatMeasurementItem extends MeasurementItem {
     private boolean On;
     private Double MeasuredTemperature;
     private Double PresetTemperature;
-    private int profileId;
 
     public ThermostatMeasurementItem() {
         MeasuredTemperature = null;
         PresetTemperature = null;
-    }
-
-    public int getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(int pid) {
-        profileId = pid;
     }
 
     public boolean isOn() {
@@ -95,7 +86,7 @@ public class ThermostatMeasurementItem extends MeasurementItem {
 
         setPresetTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {

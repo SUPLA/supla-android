@@ -45,12 +45,11 @@ public class LocationDao extends BaseDao {
 
         return getItem(Location::new, projection, SuplaContract.LocationEntry.TABLE_NAME,
                        key(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID, locationId),
-                       key(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID,
-                               getCachedProfileId().intValue()));
+                       key(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
     public void insert(Location location) {
-        location.setProfileId(getCachedProfileId().intValue());
+        location.setProfileId(getCachedProfileId());
         insert(location, SuplaContract.LocationEntry.TABLE_NAME);
     }
 

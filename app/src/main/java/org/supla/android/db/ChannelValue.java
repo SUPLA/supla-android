@@ -38,7 +38,7 @@ public class ChannelValue extends DbItem {
     private byte[] Value;
     private byte[] SubValue;
     private short SubValueType;
-    private int profileId;
+    private long profileId;
 
     private boolean ValueDiff(byte[] v1, byte[] v2) {
 
@@ -117,11 +117,11 @@ public class ChannelValue extends DbItem {
         return values;
     }
 
-    public int getProfileId() {
+    public long getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(int pid) {
+    public void setProfileId(long pid) {
         this.profileId = pid;
     }
 
@@ -134,7 +134,7 @@ public class ChannelValue extends DbItem {
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE)));
         setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID)));
     }
 
     @SuppressLint("Range")
@@ -146,7 +146,7 @@ public class ChannelValue extends DbItem {
         setChannelStringValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE)));
         setChannelStringSubValue(cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE)));
         setSubValueType(cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE)));
-        setProfileId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
