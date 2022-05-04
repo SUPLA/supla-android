@@ -123,7 +123,7 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup = new ChannelGroup();
             channelGroup.Assign(suplaChannelGroup);
             channelGroup.setVisible(1);
-            channelGroup.setProfileId(getCurrentProfileId());
+            channelGroup.setProfileId(channelDao.getCachedProfileId().intValue());
             updateChannelGroupPosition(location, channelGroup);
 
             channelDao.insert(channelGroup);
@@ -461,10 +461,5 @@ public class DefaultChannelRepository implements ChannelRepository {
             channelGroup.setPosition(0);
         }
 
-    }
-
-    private int getCurrentProfileId() {
-        SuplaApp app = SuplaApp.getApp();
-        return (int)app.getProfileManager(app).getCurrentProfile().getId();
     }
 }

@@ -22,8 +22,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -81,7 +79,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edPassword = v.findViewById(R.id.dialogPwd);
         edPassword.addTextChangedListener(this);
 
-        AuthInfo ainfo = SuplaApp.getApp().getProfileManager(context)
+        AuthInfo ainfo = SuplaApp.getApp().getProfileManager()
             .getCurrentProfile().getAuthInfo();
         edEmail.setText(ainfo.getEmailAddress(),
                         EditText.BufferType.EDITABLE);

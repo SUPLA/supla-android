@@ -34,7 +34,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     public DownloadMeasurementLogs(Context context) {
         super(context);
-        _profileId = (int)SuplaApp.getApp().getProfileManager(context)
+        _profileId = (int)SuplaApp.getApp().getProfileManager()
             .getCurrentProfile().getId();
     }
 

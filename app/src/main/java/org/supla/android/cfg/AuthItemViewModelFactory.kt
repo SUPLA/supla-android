@@ -18,29 +18,21 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
-import android.content.Context
-import org.supla.android.db.DbHelper
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.profile.ProfileManager
-import org.supla.android.profile.MultiAccountProfileManager
+import androidx.lifecycle.ViewModelProvider
+import org.supla.android.SuplaApp
 import org.supla.android.profile.ProfileIdNew
 
-import org.supla.android.data.source.local.LocalProfileRepository
-
-class AuthItemViewModelFactory(private val ctx: Context,
-                               private val profileId: Long,
+class AuthItemViewModelFactory(private val profileId: Long,
                                private val allowBasicMode: Boolean,
                                private val navCoordinator: NavCoordinator):
     ViewModelProvider.Factory {
-        
-            
-            
+
+
+
         override fun <T: ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(AuthItemViewModel::class.java)) {
-                val repo = LocalProfileRepository(DbHelper.getInstance(ctx))
-                val pm = MultiAccountProfileManager(ctx, repo)
+                val pm = SuplaApp.getApp().profileManager
                 val profile = pm.getProfile(profileId)!!
                 if(profileId == ProfileIdNew && allowBasicMode) {
                     profile.advancedAuthSetup = false

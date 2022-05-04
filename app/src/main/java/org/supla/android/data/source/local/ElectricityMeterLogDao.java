@@ -76,12 +76,12 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                     key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
                     key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
         } else {
 
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                     key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId())
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId())
             );
         }
     }
@@ -116,7 +116,7 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
                     + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
                     + " = " + channelId +  " AND "
                     + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PROFILEID
-                    + " = "  + getCurrentProfileId()
+                    + " = "  + getCachedProfileId()
                 ;
 
             if (dateFrom != null && dateTo != null) {
@@ -140,7 +140,7 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
 
     public void deleteElectricityMeasurements(int channelId) {
         delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-               key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+               key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
 }

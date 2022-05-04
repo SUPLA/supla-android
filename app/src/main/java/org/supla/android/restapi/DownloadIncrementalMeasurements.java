@@ -18,7 +18,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
     public DownloadIncrementalMeasurements(Context context) {
         super(context);
-        profileManager = SuplaApp.getApp().getProfileManager(context);
+        profileManager = SuplaApp.getApp().getProfileManager();
     }
 
     @Override

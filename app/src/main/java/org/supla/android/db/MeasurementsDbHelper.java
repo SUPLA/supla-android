@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.data.source.DefaultMeasurableItemsRepository;
 import org.supla.android.data.source.MeasurableItemsRepository;
@@ -45,8 +46,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
     private final MeasurableItemsRepository measurableItemsRepository;
 
-    private MeasurementsDbHelper(Context context) {
-        super(context, M_DATABASE_NAME, null, DATABASE_VERSION);
+    private MeasurementsDbHelper(Context context, ProfileIdProvider profileIdProvider) {
+        super(context, M_DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
         this.measurableItemsRepository = new DefaultMeasurableItemsRepository(
                 new ImpulseCounterLogDao(this),
                 new ElectricityMeterLogDao(this),
@@ -67,17 +68,11 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {
-                    instance = result = new MeasurementsDbHelper(context);
+                    instance = result = new MeasurementsDbHelper(context, () -> SuplaApp.getApp().getProfileIdHolder().getProfileId());
                 }
             }
         }
         return result;
-    }
-
-    public static void invalidate() {
-        synchronized(mutex) {
-            instance = null;
-        }
     }
 
     @Override

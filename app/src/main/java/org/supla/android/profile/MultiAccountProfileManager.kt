@@ -18,24 +18,22 @@ package org.supla.android.profile
  */
 
 
-import kotlin.random.Random
-import android.content.Context
-import org.supla.android.Preferences
 import org.supla.android.Encryption
-import org.supla.android.lib.SuplaConst
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.DbHelper
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.DbHelper
 import org.supla.android.images.ImageCache
+import org.supla.android.lib.SuplaConst
+import kotlin.random.Random
 
-class MultiAccountProfileManager(private val context: Context,
-                                 private val repo: ProfileRepository): ProfileManager {
-    
+class MultiAccountProfileManager(private val dbHelper: DbHelper,
+                                 private val deviceId: String,
+                                 private val repo: ProfileRepository,
+                                 private val profileIdHolder: ProfileIdHolder) : ProfileManager {
 
     override fun getCurrentProfile(): AuthProfileItem {
-        return repo.allProfiles.filter { it.isActive == true }.first()
+        return repo.allProfiles.first { it.isActive }
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
@@ -51,20 +49,20 @@ class MultiAccountProfileManager(private val context: Context,
         }
 
         repo.updateProfile(profile)
-        DbHelper.getInstance(context).deleteUserIcons()
+        dbHelper.deleteUserIcons()
         if(profile.isActive) {
             activateProfile(profile.id, forceActivate)
         }
-    } 
+    }
 
     override fun getCurrentAuthInfo(): AuthInfo {
         return getCurrentProfile().authInfo
     }
 
     override fun updateCurrentAuthInfo(info: AuthInfo) {
-	      val cp = getCurrentProfile()
-        var np = cp.copy(authInfo = info)
-	      np.id = cp.id
+        val cp = getCurrentProfile()
+        val np = cp.copy(authInfo = info)
+        np.id = cp.id
         updateCurrentProfile(np)
     }
 
@@ -73,35 +71,35 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun getProfile(id: Long): AuthProfileItem? {
-        if(id == ProfileIdNew) {
+        return if (id == ProfileIdNew) {
             val authInfo = AuthInfo(emailAuth=true,
                                     serverAutoDetect=true,
                                     guid=encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE)),
                                     authKey=encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE)))
-            var rv = AuthProfileItem(authInfo=authInfo,
+            val rv = AuthProfileItem(authInfo=authInfo,
                                      advancedAuthSetup=false,
                                      isActive=if(repo.allProfiles.size > 0) false else true)
             rv.id = id
-            return rv
+            rv
         } else {
-            return repo.getProfile(id)
+            repo.getProfile(id)
         }
     }
 
     override fun activateProfile(id: Long, force: Boolean): Boolean {
         val current = getCurrentProfile()
-        if(current.id == id && !force) return false
-        if(repo.setProfileActive(id)) {
-            ImageCache.clear()
-            DbHelper.invalidate()
-            MeasurementsDbHelper.invalidate()
-            DbHelper.getInstance(SuplaApp.getApp())
-                .loadUserIconsIntoCache()
-            initiateReconnect()
-            return true
-        } else {
+        if((current.id == id && !force)) {
             return false
         }
+
+
+        ImageCache.clear()
+        DbHelper.getInstance(SuplaApp.getApp()).loadUserIconsIntoCache()
+        initiateReconnect()
+        if(repo.setProfileActive(id)) {
+            profileIdHolder.profileId = id
+        }
+        return true
     }
 
     override fun removeProfile(id: Long) {
@@ -109,14 +107,14 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     private fun initiateReconnect() {
-        val cli = SuplaApp.getApp().getSuplaClient()
-        if(cli != null) {
-            cli.reconnect()
+        with(SuplaApp.getApp()) {
+            CancelAllRestApiClientTasks(true)
+            cleanupToken()
+            suplaClient?.reconnect()
         }
     }
 
     private fun encrypted(bytes: ByteArray): ByteArray {
-        val key = Preferences.getDeviceID(context)
-        return Encryption.encryptDataWithNullOnException(bytes, key)
+        return Encryption.encryptDataWithNullOnException(bytes, deviceId)
     }
 }

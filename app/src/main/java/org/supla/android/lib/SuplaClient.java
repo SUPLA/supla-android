@@ -1376,7 +1376,7 @@ public class SuplaClient extends Thread {
     }
 
     private ProfileManager getProfileManager() {
-        return SuplaApp.getApp().getProfileManager(_context);
+        return SuplaApp.getApp().getProfileManager();
     }
 
     private byte[] decrypted(byte[] payload) {

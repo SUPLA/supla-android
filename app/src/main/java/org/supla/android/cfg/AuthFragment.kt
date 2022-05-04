@@ -17,10 +17,8 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.app.Activity
 import android.os.Bundle
-import android.os.Build
 import android.os.Looper
 import android.os.Handler
 import android.graphics.Typeface
@@ -28,7 +26,6 @@ import android.view.inputmethod.InputMethodManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -177,8 +174,7 @@ class AuthFragment: Fragment() {
                                                            .setTitle(state.titleResId)
                                                            .setMessage(state.messageResId)
                                                            .setPositiveButton(android.R.string.ok) {
-                                                               dlg, what ->
-                                                                   dlg.cancel()
+                                                               dlg, _ -> dlg.cancel()
                                                            }.create().show()
                                                        
                                                    }
@@ -187,11 +183,11 @@ class AuthFragment: Fragment() {
                                                            .setTitle(R.string.delete_account_confirm_title)
                                                            .setMessage(R.string.delete_account_confirm_message)
                                                            .setPositiveButton(android.R.string.ok) {
-                                                               dlg, what -> 
+                                                               _, _ ->
                                                                    viewModel.onDeleteProfile(true)
                                                            }
                                                            .setNegativeButton(android.R.string.cancel) {
-                                                               dlg, what -> dlg.cancel()
+                                                               dlg, _ -> dlg.cancel()
                                                            }.create().show()
                                                    }
                                                }
@@ -211,8 +207,7 @@ class AuthFragment: Fragment() {
     }
 
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-        return AuthItemViewModelFactory(activity ?: SuplaApp.getApp(),
-                                        args.profileId,
+        return AuthItemViewModelFactory(args.profileId,
                                         args.allowBasicMode,
                                         navCoordinator)
     }

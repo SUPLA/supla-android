@@ -98,6 +98,6 @@ class ProfilesFragment: Fragment() {
     }
 
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-        return ProfilesViewModelFactory(activity ?: SuplaApp.getApp())
+        return ProfilesViewModelFactory()
     }
 }

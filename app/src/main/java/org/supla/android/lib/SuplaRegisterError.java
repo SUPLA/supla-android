@@ -20,7 +20,6 @@ package org.supla.android.lib;
 
 import android.content.Context;
 
-import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 
@@ -28,28 +27,10 @@ public class SuplaRegisterError {
 
     public int ResultCode;
 
-    SuplaRegisterError() {
-
-    }
-
     SuplaRegisterError(SuplaRegisterError err) {
         if (err != null) {
             ResultCode = err.ResultCode;
         }
-    }
-
-    public static String getHostname(Context context) {
-        String host = SuplaApp.getApp()
-            .getProfileManager(context)
-            .getCurrentProfile().getAuthInfo()
-            .getServerForCurrentAuthMethod();
-
-        if (host.toLowerCase().contains("supla.org")) {
-            return "cloud.supla.org";
-        } else {
-            return host;
-        }
-
     }
 
     public String codeToString(Context context, boolean authDialog) {

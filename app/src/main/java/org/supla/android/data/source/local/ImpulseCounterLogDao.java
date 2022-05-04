@@ -20,12 +20,12 @@ package org.supla.android.data.source.local;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import androidx.annotation.NonNull;
 
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.SuplaContract;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class ImpulseCounterLogDao extends MeasurementsBaseDao {
@@ -62,11 +62,11 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
             return getCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                     key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
                     key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
-                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
         } else {
             return getCount(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                     key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                    key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
         }
     }
 
@@ -83,7 +83,7 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
                     + " WHERE "
                     + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_CHANNELID 
                     + " = " + channelId + " AND " 
-                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_PROFILEID + " = " + getCurrentProfileId();
+                    + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_PROFILEID + " = " + getCachedProfileId();
 
             if (dateFrom != null && dateTo != null) {
                 sql += " AND "
@@ -110,6 +110,6 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
     public void deleteImpulseCounterMeasurements(int channelId) {
         delete(SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
                 key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCurrentProfileId()));
+                key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 }

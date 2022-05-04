@@ -241,7 +241,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         }
 
         boolean hasManyAccounts = 
-            SuplaApp.getApp().getProfileManager(getContext())
+            SuplaApp.getApp().getProfileManager()
             .getAllProfiles().size() > 1;
 
         availableButtons = available;

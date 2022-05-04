@@ -24,15 +24,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -137,7 +134,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private void updateProfileButtonVisibility() {
         int visible = GroupButton.getVisibility();
         
-        ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+        ProfileManager pm = SuplaApp.getApp().getProfileManager();
         if(pm.getAllProfiles().size() > 1) {
             ProfileButton.setVisibility(visible);
         } else {
@@ -437,7 +434,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showProfileSelector() {
-        ProfileManager pmgr = SuplaApp.getApp().getProfileManager(this);
+        ProfileManager pmgr = SuplaApp.getApp().getProfileManager();
         profileChooser = new ProfileChooser(this, pmgr);
         profileChooser.setListener(this);
         profileChooser.show();

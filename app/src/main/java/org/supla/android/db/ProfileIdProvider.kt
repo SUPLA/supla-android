@@ -1,5 +1,4 @@
-package org.supla.android.cfg
-
+package org.supla.android.db
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,18 +17,11 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import org.supla.android.SuplaApp
-
-class ProfilesViewModelFactory: ViewModelProvider.Factory {
-
-        override fun <T: ViewModel> create(modelClass: Class<T>): T {
-            if(modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
-                val pm = SuplaApp.getApp().profileManager
-                return ProfilesViewModel(pm) as T
-            } else {
-                throw IllegalArgumentException("unknown view model class")
-            }
-        }
+interface ProfileIdProvider {
+    /**
+     * Provides in memory cached profile ID.
+     *
+     * @return profile ID or null during the app startup before it's loaded.
+     */
+    fun getCachedProfileId(): Long?
 }
