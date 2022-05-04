@@ -34,10 +34,14 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper implements BaseDao.D
     private final Context context;
     private final ProfileIdProvider profileIdProvider;
 
-    BaseDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+    BaseDbHelper(@Nullable Context context,
+                 @Nullable String name,
+                 @Nullable SQLiteDatabase.CursorFactory factory,
+                 int version,
+                 ProfileIdProvider profileIdProvider) {
         super(context, name, factory, version);
         this.context = context;
-        this.profileIdProvider = () -> SuplaApp.getApp().getProfileIdHolder().getProfileId();
+        this.profileIdProvider = profileIdProvider;
     }
 
     protected Context getContext() {
@@ -70,6 +74,6 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper implements BaseDao.D
     protected abstract String getDatabaseNameForLog();
 
     public Long getCurrentProfileId() {
-        return profileIdProvider.provideProfileId();
+        return profileIdProvider.getCachedProfileId();
     }
 }

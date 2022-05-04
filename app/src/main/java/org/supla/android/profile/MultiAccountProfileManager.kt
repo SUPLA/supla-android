@@ -107,8 +107,11 @@ class MultiAccountProfileManager(private val dbHelper: DbHelper,
     }
 
     private fun initiateReconnect() {
-        SuplaApp.getApp().CancelAllRestApiClientTasks(true)
-        SuplaApp.getApp().suplaClient?.reconnect()
+        with(SuplaApp.getApp()) {
+            CancelAllRestApiClientTasks(true)
+            cleanupToken()
+            suplaClient?.reconnect()
+        }
     }
 
     private fun encrypted(bytes: ByteArray): ByteArray {

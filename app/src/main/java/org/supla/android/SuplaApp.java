@@ -115,16 +115,6 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
         return SuplaClientInitIfNeed(context, null);
     }
 
-    public void SuplaClientTerminate() {
-
-        synchronized (_lck1) {
-
-            if (_SuplaClient != null) {
-                _SuplaClient.cancel();
-            }
-        }
-    }
-
     public void OnSuplaClientFinished(SuplaClient sender) {
 
         synchronized (_lck1) {
@@ -257,5 +247,9 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
 
     public ProfileIdHolder getProfileIdHolder() {
         return profileIdHolder;
+    }
+
+    public void cleanupToken() {
+        _OAuthToken = null;
     }
 }

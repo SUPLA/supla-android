@@ -66,8 +66,8 @@ public class DbHelper extends BaseDbHelper {
     private final ColorListRepository colorListRepository;
     private final UserIconRepository userIconRepository;
 
-    private DbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
         this.channelRepository = new DefaultChannelRepository(
                 new ChannelDao(this),
                 new LocationDao(this));
@@ -90,7 +90,7 @@ public class DbHelper extends BaseDbHelper {
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {
-                    instance = result = new DbHelper(context);
+                    instance = result = new DbHelper(context, () -> SuplaApp.getApp().getProfileIdHolder().getProfileId());
                 }
             }
         }
