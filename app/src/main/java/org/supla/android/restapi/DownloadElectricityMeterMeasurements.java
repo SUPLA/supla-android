@@ -27,8 +27,8 @@ import org.supla.android.db.IncrementalMeasurementItem;
 
 public class DownloadElectricityMeterMeasurements extends DownloadIncrementalMeasurements {
 
-    public DownloadElectricityMeterMeasurements(Context context) {
-        super(context);
+    public DownloadElectricityMeterMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     protected long getMinTimestamp() {

@@ -38,7 +38,12 @@ import org.supla.android.cfg.CfgActivity;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.profile.ProfileChooser;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
 @SuppressLint("registered")
+@AndroidEntryPoint
 public class NavigationActivity extends BaseActivity implements View.OnClickListener, SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
                                                                 ProfileChooser.Listener
 {
@@ -46,6 +51,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     public static final String INTENTSENDER = "sender";
     public static final String INTENTSENDER_MAIN = "main";
 
+    @Inject ProfileManager profileManager;
     private RelativeLayout RootLayout;
     private RelativeLayout ContentLayout;
     private RelativeLayout MenuBarLayout;
@@ -134,8 +140,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private void updateProfileButtonVisibility() {
         int visible = GroupButton.getVisibility();
         
-        ProfileManager pm = SuplaApp.getApp().getProfileManager();
-        if(pm.getAllProfiles().size() > 1) {
+        if(profileManager.getAllProfiles().size() > 1) {
             ProfileButton.setVisibility(visible);
         } else {
             ProfileButton.setVisibility(View.GONE);
@@ -434,8 +439,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showProfileSelector() {
-        ProfileManager pmgr = SuplaApp.getApp().getProfileManager();
-        profileChooser = new ProfileChooser(this, pmgr);
+        profileChooser = new ProfileChooser(this, profileManager);
         profileChooser.setListener(this);
         profileChooser.show();
     }

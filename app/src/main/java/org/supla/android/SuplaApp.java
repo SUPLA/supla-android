@@ -29,20 +29,21 @@ import org.supla.android.cfg.CfgRepository;
 import org.supla.android.cfg.PrefsCfgRepositoryImpl;
 import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.data.presenter.TemperaturePresenterImpl;
-import org.supla.android.data.source.ProfileRepository;
-import org.supla.android.data.source.local.LocalProfileRepository;
-import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
-import org.supla.android.profile.MultiAccountProfileManager;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class SuplaApp extends MultiDexApplication implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
         TemperaturePresenterFactory {
 
@@ -58,8 +59,8 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<SuplaRestApiClientTask>();
     private static long lastWifiScanTime;
 
-    private ProfileManager profileManager;
-    private final ProfileIdHolder profileIdHolder = new ProfileIdHolder(null);
+    @Inject ProfileManager profileManager;
+    @Inject ProfileIdHolder profileIdHolder;
 
     public SuplaApp() {
         SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -73,10 +74,6 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     public void onCreate() {
         super.onCreate();
         SuplaApp._SuplaApp = this;
-
-        DbHelper dbHelper = DbHelper.getInstance(this);
-        ProfileRepository repo = new LocalProfileRepository(dbHelper);
-        profileManager = new MultiAccountProfileManager(dbHelper, Preferences.getDeviceID(this), repo, profileIdHolder);
         profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
 
 		SuplaFormatter.sharedFormatter();
@@ -90,10 +87,6 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
             v.vibrate(100);
     }
 
-    public ProfileManager getProfileManager() {
-        return profileManager;
-    }
-
     public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
 
         SuplaClient result;
@@ -101,7 +94,7 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
         synchronized (_lck1) {
 
             if (_SuplaClient == null || _SuplaClient.canceled()) {
-                _SuplaClient = new SuplaClient(context, oneTimePassword);
+                _SuplaClient = new SuplaClient(context, oneTimePassword, profileManager);
                 _SuplaClient.start();
             }
 
@@ -243,10 +236,6 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
 
     public TemperaturePresenter getTemperaturePresenter() {
         return new TemperaturePresenterImpl(getCfgRepository().getCfg());
-    }
-
-    public ProfileIdHolder getProfileIdHolder() {
-        return profileIdHolder;
     }
 
     public void cleanupToken() {

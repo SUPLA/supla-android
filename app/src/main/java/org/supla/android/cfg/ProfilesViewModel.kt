@@ -21,11 +21,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.profile.ProfileIdNew
 import org.supla.android.db.AuthProfileItem
+import javax.inject.Inject
 
-class ProfilesViewModel(private val profileManager: ProfileManager)
+@HiltViewModel
+class ProfilesViewModel @Inject constructor(private val profileManager: ProfileManager)
     : ViewModel(), EditableProfileItemViewModel.EditActionHandler {
 
     private val _uiState: MutableLiveData<ProfilesUiState> = 

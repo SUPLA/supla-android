@@ -739,11 +739,7 @@ public abstract class ChannelBase extends DbItem {
 
     public abstract CharSequence getHumanReadableValue();
 
-    private long getCurrentProfileId() {
-        return SuplaApp.getApp().getProfileManager().getCurrentProfile().getId();
-    }
-
-    public void Assign(SuplaChannelBase base) {
+    public void Assign(SuplaChannelBase base, int profileId) {
 
         setRemoteId(base.Id);
         setLocationId(base.LocationID);
@@ -752,7 +748,7 @@ public abstract class ChannelBase extends DbItem {
         setFlags(base.Flags);
         setAltIcon(base.AltIcon);
         setUserIconId(base.UserIcon);
-        setProfileId(getCurrentProfileId());
+        setProfileId(profileId);
     }
 
     public boolean Diff(SuplaChannelBase base) {

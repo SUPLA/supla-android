@@ -43,6 +43,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -59,23 +60,6 @@ public class DefaultChannelRepositoryTest {
     @InjectMocks
     private DefaultChannelRepository defaultChannelRepository;
 
-    @Before
-    public void setUp() throws Exception {
-        AuthProfileItem profile = new AuthProfileItem("test",
-                                                      new AuthInfo(true,true, "", "", "", 0, "", 0,
-                                                                   new byte[0], new byte[0]),
-                                                      false,true);
-        profile.setId(1);
-        SuplaApp mockedApp = mock(SuplaApp.class);
-        ProfileManager pm = mock(ProfileManager.class);
-        when(pm.getCurrentProfile()).thenReturn(profile);
-        when(mockedApp.getProfileManager()).thenReturn(pm);
-
-        Field appFld = SuplaApp.class.getDeclaredField("_SuplaApp");
-        appFld.setAccessible(true);
-        appFld.set(SuplaApp.class, mockedApp);
-    }
-    
     @Test
     public void shouldProvideChannelFromDao() {
         // given
@@ -164,6 +148,7 @@ public class DefaultChannelRepositoryTest {
         ArgumentCaptor<Channel> channelArgumentCaptor = ArgumentCaptor.forClass(Channel.class);
         verify(channelDao).getChannel(channelId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
@@ -199,6 +184,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannel(channelId);
         verify(channelDao).getChannelCountForLocation(locationId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
@@ -233,6 +219,7 @@ public class DefaultChannelRepositoryTest {
         assertTrue(result);
         verify(channelDao).getChannel(channelId);
         verify(channelDao).update(channel);
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
@@ -274,6 +261,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannel(channelId);
         verify(channelDao).getChannelCountForLocation(locationId);
         verify(channelDao).update(channel);
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
@@ -378,7 +366,7 @@ public class DefaultChannelRepositoryTest {
         assertTrue(result);
         ArgumentCaptor<ChannelGroup> channelArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
         verify(channelDao).getChannelGroup(channelGroupId);
-        verify(channelDao).getCachedProfileId();
+        verify(channelDao, times(2)).getCachedProfileId();
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
@@ -412,7 +400,7 @@ public class DefaultChannelRepositoryTest {
         assertTrue(result);
         ArgumentCaptor<ChannelGroup> channelGroupArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
         verify(channelDao).getChannelGroup(channelGroupId);
-        verify(channelDao).getCachedProfileId();
+        verify(channelDao, times(2)).getCachedProfileId();
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).insert(channelGroupArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
@@ -450,6 +438,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelGroup(channelGroupId);
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).update(channelGroup);
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 
@@ -487,6 +476,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelGroup(channelGroupId);
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).update(channelGroup);
+        verify(channelDao).getCachedProfileId();
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao, channelDao);
 

@@ -8,8 +8,8 @@ import org.supla.android.db.IncrementalMeasurementItem;
 
 public class DownloadImpulseCounterMeasurements extends DownloadIncrementalMeasurements {
 
-    public DownloadImpulseCounterMeasurements(Context context) {
-        super(context);
+    public DownloadImpulseCounterMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     protected long getMinTimestamp() {

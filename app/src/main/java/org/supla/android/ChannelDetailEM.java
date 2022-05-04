@@ -18,6 +18,8 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import static java.lang.String.format;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -49,15 +51,18 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static java.lang.String.format;
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults, AdapterView.OnItemSelectedListener {
 
     final Handler mHandler = new Handler();
@@ -120,6 +125,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private int slaveLastSelectedIdx = -1;
     private int slaveNumItems = -1;
     private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -653,7 +661,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
 
         if (demm == null) {
-            demm = new DownloadElectricityMeterMeasurements(this.getContext());
+            demm = new DownloadElectricityMeterMeasurements(this.getContext(), profileIdHolder.getProfileId().intValue());
             demm.setChannelId(getRemoteId());
             demm.setDelegate(this);
             demm.execute();

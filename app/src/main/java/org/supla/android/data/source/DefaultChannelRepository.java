@@ -87,7 +87,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         Channel channel = getChannel(suplaChannel.Id);
         if (channel == null) {
             channel = new Channel();
-            channel.Assign(suplaChannel);
+            channel.Assign(suplaChannel, channelDao.getCachedProfileId().intValue());
             channel.setVisible(1);
             updateChannelPosition(location, channel);
 
@@ -101,7 +101,7 @@ public class DefaultChannelRepository implements ChannelRepository {
                 // channel changed location - position update needed.
                 updateChannelPosition(location, channel);
             }
-            channel.Assign(suplaChannel);
+            channel.Assign(suplaChannel, channelDao.getCachedProfileId().intValue());
             channel.setVisible(1);
 
             channelDao.update(channel);
@@ -121,7 +121,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         ChannelGroup channelGroup = getChannelGroup(suplaChannelGroup.Id);
         if (channelGroup == null) {
             channelGroup = new ChannelGroup();
-            channelGroup.Assign(suplaChannelGroup);
+            channelGroup.Assign(suplaChannelGroup, channelDao.getCachedProfileId().intValue());
             channelGroup.setVisible(1);
             channelGroup.setProfileId(channelDao.getCachedProfileId());
             updateChannelGroupPosition(location, channelGroup);
@@ -137,7 +137,7 @@ public class DefaultChannelRepository implements ChannelRepository {
                 updateChannelGroupPosition(location, channelGroup);
             }
 
-            channelGroup.Assign(suplaChannelGroup);
+            channelGroup.Assign(suplaChannelGroup, channelDao.getCachedProfileId().intValue());
             channelGroup.setVisible(1);
 
             channelDao.update(channelGroup);

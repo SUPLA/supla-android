@@ -26,10 +26,13 @@ import android.provider.Settings;
 import android.util.Base64;
 
 import org.supla.android.cfg.TemperatureUnit;
+import org.supla.android.di.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.profile.ProfileManager;
 
 import java.util.Random;
+
+import dagger.hilt.android.EntryPointAccessors;
 
 public class Preferences {
 
@@ -50,12 +53,16 @@ public class Preferences {
 
     private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
 
-    private SharedPreferences _prefs;
-    private Context _context;
+    private final Context _context;
+    private final ProfileManager profileManager;
+    private final SharedPreferences _prefs;
 
     public Preferences(Context context) {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
         _context = context;
+        profileManager = EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ProfileManagerEntryPoint.class)
+                .provideProfileManager();
 
         context.getContentResolver();
     }
@@ -144,7 +151,7 @@ public class Preferences {
     }
 
     public boolean configIsSet() {
-        return getProfileManager().getCurrentProfile()
+        return profileManager.getCurrentProfile()
             .getAuthInfo().isAuthDataComplete();
     }
 
@@ -250,12 +257,8 @@ public class Preferences {
         ed.apply();
     }
 
-    private ProfileManager getProfileManager() {
-        return SuplaApp.getApp().getProfileManager();
-    }
-
     private String getChartTypeKey(int channel, int idx) {
-        int pid = (int)getProfileManager().getCurrentProfile().getId();
+        int pid = (int)profileManager.getCurrentProfile().getId();
         return String.format(pref_chart_type, channel, pid, idx);
     }
 

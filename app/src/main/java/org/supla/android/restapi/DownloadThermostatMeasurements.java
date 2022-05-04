@@ -27,8 +27,8 @@ import org.supla.android.db.ThermostatMeasurementItem;
 
 public class DownloadThermostatMeasurements extends DownloadMeasurementLogs {
 
-    public DownloadThermostatMeasurements(Context context) {
-        super(context);
+    public DownloadThermostatMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     protected long getMinTimestamp() {

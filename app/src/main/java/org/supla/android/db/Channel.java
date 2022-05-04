@@ -181,8 +181,8 @@ public class Channel extends ChannelBase {
         return values;
     }
 
-    public void Assign(SuplaChannel channel) {
-        super.Assign(channel);
+    public void Assign(SuplaChannel channel, int profileId) {
+        super.Assign(channel, profileId);
         setDeviceID(channel.DeviceID);
         setType(channel.Type);
         setProtocolVersion(channel.ProtocolVersion);

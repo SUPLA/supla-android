@@ -76,6 +76,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AddDeviceWizardActivity extends WizardActivity implements
         ESPConfigureTask.AsyncResponse, AdapterView.OnItemSelectedListener, View.OnTouchListener,
         WifiThrottlingNotificationDialog.OnDialogResultListener {
@@ -142,6 +147,8 @@ public class AddDeviceWizardActivity extends WizardActivity implements
     private TextView tvIODevMAC;
     private TextView tvIODevLastState;
     private String CurrrentSSID;
+
+    @Inject ProfileManager profileManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -414,8 +421,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        if (!SuplaApp.getApp().getProfileManager()
-            .getCurrentProfile().isEmailAuthorizationEnabled()) {
+        if (!profileManager.getCurrentProfile().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
@@ -1093,7 +1099,6 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         final ConnectivityManager connectivityManager = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final ProfileManager pm = SuplaApp.getApp().getProfileManager();
         espNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(@NonNull Network network) {
@@ -1111,7 +1116,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         espConfigTask.setDelegate(wizard);
 
                         setStep(STEP_CONFIGURE);
-                        AuthInfo info = pm.getCurrentAuthInfo();
+                        AuthInfo info = profileManager.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
                                 info.getServerForEmail(),
@@ -1179,8 +1184,6 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         manager.disconnect();
 
-        final ProfileManager pm = SuplaApp.getApp().getProfileManager();
-
         stateChangedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
@@ -1205,7 +1208,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                         setStep(STEP_CONFIGURE);
 
-                        AuthInfo ai = pm.getCurrentAuthInfo();
+                        AuthInfo ai = profileManager.getCurrentAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
                                 ai.getServerForEmail(),
