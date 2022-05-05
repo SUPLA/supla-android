@@ -89,11 +89,17 @@ public class LocationDao extends BaseDao {
               + " FROM " + SuplaContract.ChannelEntry.TABLE_NAME
               + " WHERE "                                                                           
               + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0 "
+              + " AND "
+              + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = "
+              + getCurrentProfileId()
             + " UNION "
               + "SELECT " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
               + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME
               + " WHERE "
               + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
+              + " AND "
+              + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = "
+              + getCurrentProfileId()
             + ")"
             + " AND "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID + " = "
