@@ -378,6 +378,7 @@ public class DefaultChannelRepositoryTest {
         assertTrue(result);
         ArgumentCaptor<ChannelGroup> channelArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
         verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getCachedProfileId();
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).insert(channelArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
@@ -411,6 +412,7 @@ public class DefaultChannelRepositoryTest {
         assertTrue(result);
         ArgumentCaptor<ChannelGroup> channelGroupArgumentCaptor = ArgumentCaptor.forClass(ChannelGroup.class);
         verify(channelDao).getChannelGroup(channelGroupId);
+        verify(channelDao).getCachedProfileId();
         verify(channelDao).getChannelGroupLastPositionInLocation(locationId);
         verify(channelDao).insert(channelGroupArgumentCaptor.capture());
         verify(locationDao).getLocation(locationId);
