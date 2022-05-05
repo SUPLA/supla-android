@@ -91,7 +91,7 @@ public class LocationDao extends BaseDao {
               + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE + " > 0 "
               + " AND "
               + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = "
-              + getCurrentProfileId()
+              + getCachedProfileId()
             + " UNION "
               + "SELECT " + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
               + " FROM " + SuplaContract.ChannelGroupEntry.TABLE_NAME
@@ -99,7 +99,7 @@ public class LocationDao extends BaseDao {
               + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
               + " AND "
               + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = "
-              + getCurrentProfileId()
+              + getCachedProfileId()
             + ")"
             + " AND "
             + "L." + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID + " = "
