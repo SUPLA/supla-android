@@ -94,11 +94,11 @@ class MultiAccountProfileManager(private val dbHelper: DbHelper,
 
 
         ImageCache.clear()
-        DbHelper.getInstance(SuplaApp.getApp()).loadUserIconsIntoCache()
         initiateReconnect()
         if(repo.setProfileActive(id)) {
             profileIdHolder.profileId = id
         }
+        DbHelper.getInstance(SuplaApp.getApp()).loadUserIconsIntoCache()
         return true
     }
 
