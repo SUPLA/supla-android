@@ -444,16 +444,18 @@
     <string name="seconds">Seconds</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
 
-    <string name="on_off_widget_configure_title">Widget Configuration</string>
-    <string name="on_off_widget_configure_message">Channel of widget</string>
-    <string name="on_off_widget_configure_name_label">Display name</string>
-    <string name="on_off_widget_configure_error">Could not configure channel…</string>
-    <string name="on_off_widget_configure_no_selection">No channel selected</string>
-    <string name="on_off_widget_description">Widget which simplifies the usage of on/off operations.</string>
-    <string name="on_off_widget_app_not_initialized">Please login first!</string>
-    <string name="on_off_widget_command_error">Communication failure!</string>
-    <string name="on_off_widget_command_no_connection">No internet connection!</string>
-    <string name="on_off_widget_command_started">Done</string>
+    <string translatable="false" name="on_off_widget_configure_title">Widget Configuration</string>
+    <string translatable="false" name="on_off_widget_configure_profile_label">Account</string>
+    <string translatable="false" name="on_off_widget_configure_channel_label">Channel of widget</string>
+    <string translatable="false" name="on_off_widget_configure_name_label">Display name</string>
+    <string translatable="false" name="on_off_widget_configure_error">Could not configure channel…</string>
+    <string translatable="false" name="on_off_widget_configure_no_selection">No channel selected</string>
+    <string translatable="false" name="on_off_widget_description">Widget which simplifies the usage of on/off operations.</string>
+    <string translatable="false" name="on_off_widget_app_not_initialized">Please login first!</string>
+    <string translatable="false" name="on_off_widget_command_error">Communication failure!</string>
+    <string translatable="false" name="on_off_widget_command_no_connection">No internet connection!</string>
+    <string translatable="false" name="on_off_widget_command_started">Done</string>
+    <string translatable="false" name="on_off_widget_removed_label">Channel removed</string>
 
     <string translatable="false" name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
     <string translatable="false" name="channel_caption_roofwindow">Roof window</string>

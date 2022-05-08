@@ -30,8 +30,7 @@
             android:layout_weight="1"
             android:background="@drawable/widget_button_background"
             android:padding="5dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/lightoff" />
+            android:scaleType="fitCenter" />
 
         <ImageButton
             android:id="@+id/on_off_widget_turn_on_button"
@@ -43,9 +42,19 @@
             android:layout_weight="1"
             android:background="@drawable/widget_button_background"
             android:padding="5dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/lighton" />
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/on_off_widget_removed_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/on_off_widget_removed_label"
+        android:textColor="@color/widget_text"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.onoff.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,22 +21,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
+import org.supla.android.data.source.ChannelRepository
+import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
-import org.supla.android.db.DbHelper
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import java.security.InvalidParameterException
+import javax.inject.Inject
 
-class OnOffWidgetConfigurationViewModel(private val preferences: Preferences,
-                                        private val dbHelper: DbHelper,
-                                        private val widgetPreferences: WidgetPreferences,
-                                        private val profileManager: ProfileManager) : ViewModel() {
+@HiltViewModel
+class OnOffWidgetConfigurationViewModel @Inject constructor(
+        private val preferences: Preferences,
+        private val widgetPreferences: WidgetPreferences,
+        private val profileManager: ProfileManager,
+        private val channelRepository: ChannelRepository
+) : ViewModel() {
 
     private val _userLoggedIn = MutableLiveData<Boolean>()
     val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -47,9 +53,13 @@ class OnOffWidgetConfigurationViewModel(private val preferences: Preferences,
     private val _confirmationResult = MutableLiveData<Result<Channel>>()
     val confirmationResult: LiveData<Result<Channel>> = _confirmationResult
 
+    private val _profilesList = MutableLiveData<List<AuthProfileItem>>()
+    val profilesList: LiveData<List<AuthProfileItem>> = _profilesList
+
     private val _channelsList = MutableLiveData<List<Channel>>()
     val channelsList: LiveData<List<Channel>> = _channelsList
 
+    var selectedProfile: AuthProfileItem? = null
     var selectedChannel: Channel? = null
     var widgetId: Int? = null
     var displayName: String? = null
@@ -81,22 +91,30 @@ class OnOffWidgetConfigurationViewModel(private val preferences: Preferences,
         displayName = s.toString()
     }
 
+    fun changeProfile(profile: AuthProfileItem?) {
+        if (profile == null) {
+            return // nothing to do
+        }
+        _dataLoading.value = true
+        selectedProfile = profile
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                loadSwitches()
+                _dataLoading.postValue(false)
+            }
+        }
+    }
+
     private fun triggerDataLoad() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val configSet = preferences.configIsSet()
                 if (configSet) {
-                    val switches = getAllChannels().filter {
-                        it.func == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-                                || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMER
-                                || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-                                || it.func == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-                                || it.func == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-                    }
-                    _channelsList.postValue(switches)
-                    if (switches.isNotEmpty()) {
-                        selectedChannel = switches[0]
-                    }
+                    _profilesList.postValue(profileManager.getAllProfiles())
+                    selectedProfile = profileManager.getCurrentProfile()
+
+                    loadSwitches()
                 }
 
                 _dataLoading.postValue(false)
@@ -105,8 +123,23 @@ class OnOffWidgetConfigurationViewModel(private val preferences: Preferences,
         }
     }
 
+    private fun loadSwitches() {
+        val switches = getAllChannels()
+                .filter {
+                    it.func == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                            || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMER
+                            || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+                            || it.func == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+                            || it.func == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                }
+        _channelsList.postValue(switches)
+        if (switches.isNotEmpty()) {
+            selectedChannel = switches[0]
+        }
+    }
+
     private fun getAllChannels(): List<Channel> {
-        dbHelper.channelListCursor.use { cursor ->
+        channelRepository.getAllProfileChannels(selectedProfile?.id).use { cursor ->
             val channels = mutableListOf<Channel>()
             if (!cursor.moveToFirst()) {
                 return channels
@@ -125,7 +158,7 @@ class OnOffWidgetConfigurationViewModel(private val preferences: Preferences,
 
     private fun setWidgetConfiguration(widgetId: Int, channelId: Int, channelName: String,
                                        channelFunction: Int, channelColor: Int) {
-        widgetPreferences.setWidgetConfiguration(widgetId, WidgetConfiguration(channelId, channelName, channelFunction, channelColor, profileManager.getCurrentProfile().id))
+        widgetPreferences.setWidgetConfiguration(widgetId, WidgetConfiguration(channelId, channelName, channelFunction, channelColor, selectedProfile!!.id, true))
     }
 }
 

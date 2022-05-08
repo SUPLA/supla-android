@@ -1,41 +1,5 @@
 package org.supla.android.data.source;
 
-import android.database.Cursor;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.supla.android.SuplaApp;
-import org.supla.android.data.source.local.ChannelDao;
-import org.supla.android.data.source.local.LocationDao;
-import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelGroupRelation;
-import org.supla.android.db.ChannelValue;
-import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.db.AuthProfileItem;
-import org.supla.android.lib.SuplaChannel;
-import org.supla.android.lib.SuplaChannelExtendedValue;
-import org.supla.android.lib.SuplaChannelGroup;
-import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaChannelValue;
-import org.supla.android.lib.SuplaLocation;
-import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.AuthInfo;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.lang.reflect.*;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -45,9 +9,40 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
+import android.database.Cursor;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.supla.android.data.source.local.ChannelDao;
+import org.supla.android.data.source.local.LocationDao;
+import org.supla.android.db.Channel;
+import org.supla.android.db.ChannelExtendedValue;
+import org.supla.android.db.ChannelGroup;
+import org.supla.android.db.ChannelGroupRelation;
+import org.supla.android.db.ChannelValue;
+import org.supla.android.db.Location;
+import org.supla.android.db.SuplaContract;
+import org.supla.android.lib.SuplaChannel;
+import org.supla.android.lib.SuplaChannelExtendedValue;
+import org.supla.android.lib.SuplaChannelGroup;
+import org.supla.android.lib.SuplaChannelGroupRelation;
+import org.supla.android.lib.SuplaChannelValue;
+import org.supla.android.lib.SuplaLocation;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultChannelRepositoryTest {
@@ -74,7 +69,7 @@ public class DefaultChannelRepositoryTest {
         Assert.assertSame(channel, result);
         verify(channelDao).getChannel(channelId);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -91,7 +86,7 @@ public class DefaultChannelRepositoryTest {
         Assert.assertSame(channelValue, result);
         verify(channelDao).getChannelValue(channelValueId);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -108,7 +103,7 @@ public class DefaultChannelRepositoryTest {
         Assert.assertSame(channelValue, result);
         verify(channelDao).getChannelGroup(channelGroupId);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -123,7 +118,7 @@ public class DefaultChannelRepositoryTest {
         assertFalse(result);
         verify(locationDao).getLocation(anyInt());
         verifyNoMoreInteractions(locationDao);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
     }
 
     @Test
@@ -341,7 +336,7 @@ public class DefaultChannelRepositoryTest {
         assertFalse(result);
         verify(locationDao).getLocation(anyInt());
         verifyNoMoreInteractions(locationDao);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
     }
 
     @Test
@@ -385,7 +380,7 @@ public class DefaultChannelRepositoryTest {
 
         SuplaChannelGroup suplaChannelGroup = suplaChannelGroup(channelGroupId, locationId, "caption", 1,
                 2, 3, 4);
-        
+
 
         Location location = mock(Location.class);
         when(location.getLocationId()).thenReturn(locationId);
@@ -532,7 +527,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelValue(channelId);
         verify(channelDao).insert(channelValueArgumentCaptor.capture());
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
         assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
     }
@@ -558,7 +553,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelValue(channelId);
         verify(channelDao).update(channelValueArgumentCaptor.capture());
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
         assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
     }
@@ -584,7 +579,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelValue(channelId);
         verify(channelDao).update(channelValueArgumentCaptor.capture());
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
         assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
     }
@@ -608,7 +603,7 @@ public class DefaultChannelRepositoryTest {
         assertFalse(result);
         verify(channelDao).getChannelValue(channelId);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -626,7 +621,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelExtendedValue(channelId);
         verify(channelDao).insert(argumentCaptor.capture());
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
         assertSame(suplaChannelExtendedValue, argumentCaptor.getValue().getExtendedValue());
         assertEquals(channelId, argumentCaptor.getValue().getChannelId());
@@ -650,7 +645,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).update(channelExtendedValue);
         verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
         verifyNoMoreInteractions(channelDao, channelExtendedValue);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
     }
 
@@ -672,7 +667,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelGroupRelation(channelId, groupId);
         verify(channelDao).insert(argumentCaptor.capture());
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
 
         assertEquals(channelId, argumentCaptor.getValue().getChannelId());
         assertEquals(groupId, argumentCaptor.getValue().getGroupId());
@@ -702,7 +697,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelGroupRelation).Assign(suplaChannelGroupRelation);
         verify(channelGroupRelation).setVisible(1);
         verifyNoMoreInteractions(channelDao, channelGroupRelation);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -726,7 +721,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelGroupRelation(channelId, groupId);
         verify(channelGroupRelation).getVisible();
         verifyNoMoreInteractions(channelDao, channelGroupRelation);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -742,7 +737,7 @@ public class DefaultChannelRepositoryTest {
         assertEquals(channelCount, result);
         verify(channelDao).getChannelCount();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -760,7 +755,7 @@ public class DefaultChannelRepositoryTest {
         assertEquals(expectedResult, result);
         verify(channelDao).setChannelsVisible(visible, whereVisible);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -778,7 +773,7 @@ public class DefaultChannelRepositoryTest {
         assertEquals(expectedResult, result);
         verify(channelDao).setChannelGroupsVisible(visible, whereVisible);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -796,7 +791,7 @@ public class DefaultChannelRepositoryTest {
         assertEquals(expectedResult, result);
         verify(channelDao).setChannelGroupRelationsVisible(visible, whereVisible);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -812,7 +807,7 @@ public class DefaultChannelRepositoryTest {
         assertEquals(expectedResult, result);
         verify(channelDao).setChannelsOffline();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -829,7 +824,7 @@ public class DefaultChannelRepositoryTest {
         assertSame(expectedResult, result);
         verify(channelDao).getChannelListCursorWithDefaultOrder(where);
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -845,7 +840,7 @@ public class DefaultChannelRepositoryTest {
         assertSame(expectedResult, result);
         verify(channelDao).getChannelGroupListCursor();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -861,7 +856,7 @@ public class DefaultChannelRepositoryTest {
         assertSame(expectedResult, result);
         verify(channelDao).isZWaveBridgeChannelAvailable();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -877,7 +872,7 @@ public class DefaultChannelRepositoryTest {
         assertSame(expectedResult, result);
         verify(channelDao).getZWaveBridgeChannels();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -899,7 +894,7 @@ public class DefaultChannelRepositoryTest {
         verify(channelDao).getChannelUserIconIds();
         verify(channelDao).getChannelGroupUserIconIds();
         verifyNoMoreInteractions(channelDao);
-        verifyZeroInteractions(locationDao);
+        verifyNoInteractions(locationDao);
     }
 
     @Test
@@ -916,7 +911,7 @@ public class DefaultChannelRepositoryTest {
         assertSame(expectedResult, result);
         verify(locationDao).getLocation(locationId);
         verifyNoMoreInteractions(locationDao);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
     }
 
     @Test
@@ -935,7 +930,7 @@ public class DefaultChannelRepositoryTest {
         verify(locationDao).getLocation(locationId);
         verify(locationDao).insert(argumentCaptor.capture());
         verifyNoMoreInteractions(locationDao);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
 
         assertEquals(locationId, argumentCaptor.getValue().getLocationId());
         assertEquals(caption, argumentCaptor.getValue().getCaption());
@@ -965,7 +960,7 @@ public class DefaultChannelRepositoryTest {
         verify(location).AssignSuplaLocation(suplaLocation);
         verify(location).setVisible(1);
         verifyNoMoreInteractions(locationDao, location);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
     }
 
     @Test
@@ -987,7 +982,7 @@ public class DefaultChannelRepositoryTest {
         verify(locationDao).getLocation(locationId);
         verify(location).Diff(suplaLocation);
         verifyNoMoreInteractions(locationDao, location);
-        verifyZeroInteractions(channelDao);
+        verifyNoInteractions(channelDao);
     }
 
     @Test
@@ -1001,7 +996,7 @@ public class DefaultChannelRepositoryTest {
         // then
         verify(locationDao).update(location);
         verifyNoMoreInteractions(locationDao);
-        verifyZeroInteractions(channelDao, location);
+        verifyNoInteractions(channelDao, location);
     }
 
     @Test
@@ -1013,7 +1008,7 @@ public class DefaultChannelRepositoryTest {
         defaultChannelRepository.updateLocation(location);
 
         // then
-        verifyZeroInteractions(locationDao, channelDao);
+        verifyNoInteractions(locationDao, channelDao);
     }
 
     @Test
@@ -1040,6 +1035,20 @@ public class DefaultChannelRepositoryTest {
         assertEquals(13L, (long) newOrder.get(2));
         assertEquals(15L, (long) newOrder.get(3));
         assertEquals(14L, (long) newOrder.get(4));
+    }
+
+    @Test
+    public void shouldGetAllChannelsForProfile() {
+        // given
+        long profileId = 123L;
+        Cursor cursor = mock(Cursor.class);
+        when(channelDao.getAllChannels("func <> 0  AND (C.profileid = " + profileId + ") ")).thenReturn(cursor);
+
+        // when
+        Cursor returned = defaultChannelRepository.getAllProfileChannels(profileId);
+
+        // then
+        assertSame(cursor, returned);
     }
 
     private void assertChannel(Channel channel, int id, int locationId, String caption, int func, int flags,

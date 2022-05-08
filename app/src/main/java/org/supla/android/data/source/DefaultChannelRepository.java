@@ -22,7 +22,6 @@ import android.database.Cursor;
 import androidx.annotation.Nullable;
 import android.annotation.SuppressLint;
 
-import org.supla.android.SuplaApp;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
@@ -371,6 +370,14 @@ public class DefaultChannelRepository implements ChannelRepository {
         }
 
         locationDao.update(location);
+    }
+
+    @Override
+    public Cursor getAllProfileChannels(Long profileId) {
+        return channelDao.getAllChannels(
+                SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 "
+                        + " AND (C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = "
+                        + profileId + ") ");
     }
 
     private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {

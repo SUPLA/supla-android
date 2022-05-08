@@ -261,6 +261,19 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getChannelListCursorWithDefaultOrder(String where) {
+        where += " AND (C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = "
+                + getCachedProfileId() + ") ";
+
+        String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
+                + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
+                + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " DESC, "
+                + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED";
+
+        return getChannelListCursor(orderBY, where);
+    }
+
+    public Cursor getAllChannels(String where) {
         String orderBY = "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
                 + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
                 + "C." + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION + ", "
@@ -306,7 +319,9 @@ public class ChannelDao extends BaseDao {
                         + " AND ("
                         + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
                         + " & " + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
-                        + " ) > 0";
+                        + " ) > 0 "
+                        + " AND (C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = "
+                        + getCachedProfileId() + ")";
 
         String orderBy = "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID + ", "
                 + "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID;
@@ -526,8 +541,6 @@ public class ChannelDao extends BaseDao {
                     + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID + ")"
                     + " WHERE C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0 "
                     + localWhere
-                    + " AND (C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = "
-                    + getCachedProfileId() + ")"
                     + " ORDER BY " + orderBy + " COLLATE LOCALIZED ASC"; // For proper ordering of language special characters like ą, ł, ü, ö
             return sqLiteDatabase.rawQuery(sql, null);
         });

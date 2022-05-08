@@ -568,10 +568,10 @@ public class DbHelper extends BaseDbHelper {
             SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
             SuplaContract.UserIconsEntry.TABLE_NAME
         };
-            
+
         for(String table: tables) {
             addColumn(db, "ALTER TABLE " + table +
-                      " ADD COLUMN " + column_name + " INTEGER NOT NULL DEFAULT 1");                  
+                      " ADD COLUMN " + column_name + " INTEGER NOT NULL DEFAULT 1");
             createIndex(db, table, column_name);
         }
     }
@@ -595,7 +595,7 @@ public class DbHelper extends BaseDbHelper {
 
         db.update(table, cv, null, null);
     }
-                                   
+
 
     private void upgradeToV23(SQLiteDatabase db) {
         addColumn(db, "ALTER TABLE " + SuplaContract.AuthProfileEntry.TABLE_NAME +
@@ -606,7 +606,7 @@ public class DbHelper extends BaseDbHelper {
                   " BLOB");
 
         Preferences prefs = new Preferences(getContext());
-        
+
         // Migrate existing guid / authkey if any
         updateEncryptBlob(db,
                           SuplaContract.AuthProfileEntry.TABLE_NAME,
@@ -616,13 +616,13 @@ public class DbHelper extends BaseDbHelper {
                           SuplaContract.AuthProfileEntry.TABLE_NAME,
                           SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY,
                           prefs.getAuthKey());
-        
+
     }
 
     private void upgradeToV24(SQLiteDatabase db) {
         String indexName = SuplaContract.UserIconsEntry.TABLE_NAME +
                 "_unique_index";
-        
+
         execSQL(db, "DELETE FROM " + SuplaContract.UserIconsEntry.TABLE_NAME);
         execSQL(db, "DROP INDEX " + indexName);
 
@@ -844,5 +844,9 @@ public class DbHelper extends BaseDbHelper {
             return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
         }
         return channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id);
+    }
+
+    public ChannelRepository getChannelRepository() {
+        return channelRepository;
     }
 }

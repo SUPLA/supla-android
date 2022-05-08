@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.onoff.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,14 +23,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import org.supla.android.R
-import org.supla.android.db.Channel
-import org.supla.android.lib.SuplaConst
+import org.supla.android.db.DbItem
 
-class OnOffWidgetConfigurationSpinnerAdapter(context: Context, objects: MutableList<Channel>) : ArrayAdapter<Channel>(context, android.R.layout.simple_spinner_item, objects) {
+abstract class OnOffWidgetConfigurationSpinnerBase<T>(
+        context: Context,
+        objects: MutableList<T>
+) : ArrayAdapter<T>(context, R.layout.spinner_item, objects) where T : DbItem {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createItemView(position, convertView, R.layout.spinner_item)
+        return createItemView(position, convertView, R.layout.spinner_display_item)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -38,20 +41,22 @@ class OnOffWidgetConfigurationSpinnerAdapter(context: Context, objects: MutableL
     }
 
     override fun getItemId(position: Int): Long {
-        return getItem(position)?.channelId?.toLong()!!
+        return getItem(position)?.id!!
     }
 
-    fun postChannels(channels: List<Channel>) {
+    abstract fun getItemText(item: T): String
+
+    fun postItems(channels: List<T>) {
         clear()
         addAll(channels)
         notifyDataSetChanged()
     }
 
-    private fun createItemView(position: Int, convertView: View?, layout: Int): View {
+    private fun createItemView(position: Int, convertView: View?, @LayoutRes layout: Int): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(layout, null)
-        val item: Channel = getItem(position) ?: return view
+        val item = getItem(position) ?: return view
 
-        view.findViewById<TextView>(R.id.spinner_text)?.text = item.getNotEmptyCaption(context)
+        view.findViewById<TextView>(R.id.spinner_text)?.text = getItemText(item)
         return view
     }
 }

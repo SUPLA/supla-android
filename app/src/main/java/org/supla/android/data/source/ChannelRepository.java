@@ -19,8 +19,6 @@ package org.supla.android.data.source;
  */
 
 import android.database.Cursor;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
@@ -91,4 +89,6 @@ public interface ChannelRepository {
     boolean updateLocation(SuplaLocation suplaLocation);
 
     void updateLocation(Location location);
+
+    Cursor getAllProfileChannels(Long profileId);
 }

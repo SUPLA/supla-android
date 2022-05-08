@@ -1,7 +1,8 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.onoff.configuration
 
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.Rule
@@ -13,9 +14,9 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
-import org.supla.android.db.DbHelper
 import org.supla.android.db.SuplaContract
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
@@ -34,23 +35,27 @@ class OnOffWidgetConfigurationViewModelTest {
     private lateinit var preferences: Preferences
 
     @Mock
-    private lateinit var dbHelper: DbHelper
-
-    @Mock
     private lateinit var widgetPreferences: WidgetPreferences
 
     @Mock
     private lateinit var profileManager: ProfileManager
 
+    @Mock
+    private lateinit var channelRepository: ChannelRepository
+
     @Test
-    fun `should load only channels with switch function`() {
+    fun `should load only channels with switch function`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(1)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
         // when
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
@@ -59,7 +64,7 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `should load all channels with switch function`() {
+    fun `should load all channels with switch function`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels(
                 SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
@@ -67,11 +72,15 @@ class OnOffWidgetConfigurationViewModelTest {
                 SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
                 SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
                 SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(1)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
         // when
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
@@ -80,14 +89,18 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `should provide empty list of channels if no channel available`() {
+    fun `should provide empty list of channels if no channel available`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels()
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(1)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
         // when
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
@@ -96,12 +109,10 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `shouldn't allow to save the selection when there is no widget id set`() {
+    fun `shouldn't allow to save the selection when there is no widget id set`() = runBlocking {
         // given
-        val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
 
         // when
         viewModel.confirmSelection()
@@ -114,12 +125,10 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `shouldn't allow to save selection when there is no channel selected`() {
+    fun `shouldn't allow to save selection when there is no channel selected`() = runBlocking {
         // given
-        val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
 
         // when
         viewModel.widgetId = 123
@@ -133,12 +142,10 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `shouldn't allow to save selection when there is no display name for channel provided`() {
+    fun `shouldn't allow to save selection when there is no display name for channel provided`() = runBlocking {
         // given
-        val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
 
         // when
         viewModel.widgetId = 123
@@ -153,17 +160,17 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
-    fun `should be able to save selection when all necessary information provided`() {
+    fun `should be able to save selection when all necessary information provided`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
-        whenever(dbHelper.channelListCursor).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
         val profileId: Long = 123
-        val profile = mock<AuthProfileItem>() {
+        val profile = mock<AuthProfileItem> {
             on { id } doReturn profileId
         }
         whenever(profileManager.getCurrentProfile()).thenReturn(profile)
-        val viewModel = OnOffWidgetConfigurationViewModel(preferences, dbHelper, widgetPreferences, profileManager)
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
 
         val channelId = 234
         val channelFunc = SuplaConst.SUPLA_CHANNELFNC_DIMMER

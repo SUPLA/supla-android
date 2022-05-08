@@ -1,5 +1,6 @@
 package org.supla.android.di
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,8 @@ import org.supla.android.db.DbHelper
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
+import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.WidgetVisibilityHandler
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +31,29 @@ class ApplicationModule {
             @ApplicationContext context: Context,
             dbHelper: DbHelper,
             profileRepository: ProfileRepository,
-            profileIdHolder: ProfileIdHolder): ProfileManager {
-        return MultiAccountProfileManager(dbHelper, Preferences.getDeviceID(context), profileRepository, profileIdHolder)
+            profileIdHolder: ProfileIdHolder,
+            widgetVisibilityHandler: WidgetVisibilityHandler): ProfileManager {
+        return MultiAccountProfileManager(
+                dbHelper,
+                Preferences.getDeviceID(context),
+                profileRepository,
+                profileIdHolder,
+                widgetVisibilityHandler
+        )
     }
+
+    @Provides
+    @Singleton
+    fun providePreferences(@ApplicationContext context: Context) =
+            Preferences(context)
+
+    @Provides
+    @Singleton
+    fun provideWidgetPreferences(@ApplicationContext context: Context) =
+            WidgetPreferences(context)
+
+    @Provides
+    @Singleton
+    fun provideAppWidgetManager(@ApplicationContext context: Context) =
+            AppWidgetManager.getInstance(context)
 }

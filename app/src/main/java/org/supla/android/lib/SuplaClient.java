@@ -38,6 +38,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.widget.WidgetVisibilityHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -397,8 +398,8 @@ public class SuplaClient extends Thread {
     public boolean turnOnOff(Context context, boolean turnOn,
                              int remoteId, boolean group, int channelFunc, boolean vibrate) {
         if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-              || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
             if (turnOn) {
                 DbHelper helper = DbHelper.getInstance(context);
                 if (helper == null) {
@@ -734,8 +735,8 @@ public class SuplaClient extends Thread {
 
 
         if (versionError.RemoteVersion >= 7
-            && versionError.Version > versionError.RemoteVersion
-            && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
+                && versionError.Version > versionError.RemoteVersion
+                && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
             // set prefered to lower
             info.setPreferredProtocolVersion(versionError.RemoteVersion);
@@ -859,7 +860,7 @@ public class SuplaClient extends Thread {
     }
 
     private void locationUpdate(SuplaLocation location) {
-        Trace.d(log_tag, "Location "+Integer.toString(location.Id)+" "+location.Caption);
+        Trace.d(log_tag, "Location " + Integer.toString(location.Id) + " " + location.Caption);
 
         if (DbH.updateLocation(location)) {
             Trace.d(log_tag, "Location updated");
@@ -978,7 +979,7 @@ public class SuplaClient extends Thread {
         if (DbH.updateChannelValue(channelValueUpdate)) {
 
             Trace.d(log_tag, "Channel id" + channelValueUpdate.Id
-                    + " sub_value type: " +  channelValueUpdate.Value.SubValueType
+                    + " sub_value type: " + channelValueUpdate.Value.SubValueType
                     + " value updated" + " OnLine: " + channelValueUpdate.OnLine
                     + " value[0]: " + channelValueUpdate.Value.Value[0]);
             onDataChanged(channelValueUpdate.Id, 0);
@@ -1351,10 +1352,10 @@ public class SuplaClient extends Thread {
             }
 
             if (!canceled()) {
-                long timeDiff = System.currentTimeMillis()-_connectingStatusLastTime;
-                if ( timeDiff < MINIMUM_WAITING_TIME_MSEC) {
+                long timeDiff = System.currentTimeMillis() - _connectingStatusLastTime;
+                if (timeDiff < MINIMUM_WAITING_TIME_MSEC) {
                     try {
-                        Thread.sleep(MINIMUM_WAITING_TIME_MSEC-timeDiff);
+                        Thread.sleep(MINIMUM_WAITING_TIME_MSEC - timeDiff);
                     } catch (InterruptedException ignored) {
                     }
                 }

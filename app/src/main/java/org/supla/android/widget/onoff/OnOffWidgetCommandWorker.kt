@@ -29,9 +29,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.extensions.getProfileManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaConst
-import org.supla.android.widget.INVALID_PROFILE_ID
 import org.supla.android.widget.WidgetPreferences
 
 
@@ -46,10 +46,14 @@ private const val MAX_WAIT_TIME = 3000 // in ms
  * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
  */
-class OnOffWidgetCommandWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class OnOffWidgetCommandWorker(
+        appContext: Context,
+        workerParams: WorkerParameters
+) : Worker(appContext, workerParams) {
 
     val handler = Handler(Looper.getMainLooper())
     val preferences = WidgetPreferences(appContext)
+    val profileManager = getProfileManager()
 
     override fun doWork(): Result {
         val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -100,10 +104,9 @@ class OnOffWidgetCommandWorker(appContext: Context, workerParams: WorkerParamete
             SuplaApp.getApp()
         }
 
-        if (profileId != INVALID_PROFILE_ID) {
-            val profileManager = suplaApp.getProfileManager(applicationContext)
-            profileManager.activateProfile(profileId)
-        }
+        // before change check if profile exist to avoid changing id to not existing one.
+        profileManager.getAllProfiles().firstOrNull { it.id == profileId } ?: return null
+        profileManager.activateProfile(profileId)
 
         if (suplaApp.suplaClient == null) {
             suplaApp.SuplaClientInitIfNeed(applicationContext)
