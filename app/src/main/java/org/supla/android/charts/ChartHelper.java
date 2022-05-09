@@ -47,6 +47,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.supla.android.R;
+import org.supla.android.Preferences;
 import org.supla.android.db.MeasurementsDbHelper;
 
 import java.text.SimpleDateFormat;
@@ -70,9 +71,14 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     private long minTimestamp;
     private LineDataSet lineDataSet;
     private Double downloadProgress;
+    private Preferences prefs;
+    private int channelId;
+    private ZoomSettings persistedZoom;
+
 
     public ChartHelper(Context context) {
         this.context = context;
+        this.prefs = new Preferences(context);
     }
 
     public CombinedChart getCombinedChart() {
@@ -103,7 +109,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return false;
     }
 
-    public boolean isComparsionChartType(ChartType chartType) {
+    public boolean isComparisonChartType(ChartType chartType) {
         switch (chartType) {
             case Bar_Comparsion_MinMin:
             case Bar_Comparsion_HourHour:
@@ -333,7 +339,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             c.close();
         }
 
-        if (barEntries.size() > 0 && isComparsionChartType(ctype)) {
+        if (barEntries.size() > 0 && isComparisonChartType(ctype)) {
             for (int a = barEntries.size() - 1; a > 0; a--) {
 
                 BarEntry e1 = barEntries.get(a);
@@ -527,7 +533,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     }
 
     public void load(int channelId, ChartType ctype) {
-
+        this.channelId = channelId;
         this.ctype = ctype;
 
         if (isPieChartType(ctype)) {
@@ -749,6 +755,37 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return dateTo;
     }
 
+    public void persistSpinners(int func, Spinner master, Spinner slave) {
+        prefs.setChartType(func, 0, master.getSelectedItemPosition());
+        prefs.setChartType(func, 1, slave.getSelectedItemPosition());
+    }
+
+    public void persistSpinner(int func, Spinner master) {
+        prefs.setChartType(func, 3, master.getSelectedItemPosition());
+    }
+
+    public void restoreSpinner(int func, Spinner master) {
+        int mct = prefs.getChartType(func, 3, -1);
+        if(mct > -1) {
+            master.setSelection(mct);
+        }
+    }
+    
+
+    public void restoreSpinners(int func,Spinner master,
+                                Spinner slave,
+                                Runnable slaveReload) {
+        int mct, sct;
+        mct = prefs.getChartType(func, 0, -1);
+        sct = prefs.getChartType(func, 1, -1);
+        if(mct < 0) mct = 0;
+        if(sct < 0) sct = 0;
+        master.setSelection(mct);
+        slaveReload.run();
+        
+        slave.setSelection(sct);
+    }
+
     public void setDateRangeBySpinners(Spinner master, Spinner slave) {
         Date dateFrom = null;
         Date dateTo = null;
@@ -840,5 +877,34 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         Bar_VectorBalance_Days,
         Bar_VectorBalance_Months,
         Bar_VectorBalance_Years
+    }
+
+    public void persistZoom() {
+        persistedZoom = new ZoomSettings(combinedChart);
+    }
+
+    public void restoreZoom() {
+        if(persistedZoom != null) {
+            persistedZoom.apply(combinedChart);
+            persistedZoom = null;
+        }
+    }
+
+    private class ZoomSettings {
+        float scaleX;
+        float scaleY;
+        float x;
+        float y;
+
+        ZoomSettings(CombinedChart chart) {
+            x = (chart.getLowestVisibleX() + chart.getHighestVisibleX()) / 2.0f;
+            y = (chart.getYChartMin() + chart.getYChartMax()) / 2.0f;
+            scaleX = chart.getScaleX();
+            scaleY = chart.getScaleY();
+        }
+
+        void apply(CombinedChart chart) {
+            chart.zoom(scaleX, scaleY, x, y);
+        }
     }
 }

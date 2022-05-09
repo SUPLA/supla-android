@@ -19,6 +19,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.SuplaChannelAndTimerState;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
@@ -37,6 +38,8 @@ import java.io.ObjectOutputStream;
 
 public class ChannelExtendedValue extends DbItem {
     private int ChannelId;
+    private long profileId;
+    
     private SuplaChannelExtendedValue ExtendedValue;
 
     public static boolean valueExists(Cursor cursor) {
@@ -54,6 +57,14 @@ public class ChannelExtendedValue extends DbItem {
 
     public void setChannelId(int channelId) {
         ChannelId = channelId;
+    }
+
+    public long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(long pid) {
+        profileId = pid;
     }
 
     public SuplaChannelExtendedValue getExtendedValue() {
@@ -78,9 +89,11 @@ public class ChannelExtendedValue extends DbItem {
         return null;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID)));
 
         byte[] value = cursor.getBlob(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
         Object obj = ByteArrayToObject(value);
@@ -114,6 +127,9 @@ public class ChannelExtendedValue extends DbItem {
         values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
                 ObjectToByteArray(ExtendedValue));
+        values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID,
+                   getProfileId());
+        
         return values;
     }
 }

@@ -32,6 +32,7 @@ import org.supla.android.BuildConfig;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
+import org.supla.android.Encryption;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
@@ -50,7 +51,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread {
-
+    private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
     private static final String log_tag = "SuplaClientThread";
     private static final Object st_lck = new Object();
     private static SuplaRegisterError lastRegisterError = null;
@@ -70,6 +71,7 @@ public class SuplaClient extends Thread {
     private long lastTokenRequest = 0;
     private boolean superUserAuthorized = false;
     private String oneTimePassword;
+    private long _connectingStatusLastTime;
 
     public SuplaClient(Context context, String oneTimePassword) {
 
@@ -183,7 +185,7 @@ public class SuplaClient extends Thread {
         if (canceled()) return;
         SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
     }
-    
+
     private void init(SuplaCfg cfg) {
         synchronized (sc_lck) {
             if (_supla_client_ptr == 0) {
@@ -318,7 +320,7 @@ public class SuplaClient extends Thread {
             unlockClientPtr();
         }
     }
-    
+
     public boolean open(int ChannelID, int Open) {
         return open(ChannelID, false, Open);
     }
@@ -738,7 +740,7 @@ public class SuplaClient extends Thread {
             // set prefered to lower
             info.setPreferredProtocolVersion(versionError.RemoteVersion);
             pm.updateCurrentAuthInfo(info);
-            
+
             reconnect();
             return;
         }
@@ -771,6 +773,7 @@ public class SuplaClient extends Thread {
 
     private void onConnected() {
         Trace.d(log_tag, "connected");
+        DbH = DbHelper.getInstance(_context);
 
         sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnected));
     }
@@ -1284,6 +1287,8 @@ public class SuplaClient extends Thread {
                 superUserAuthorized = false;
             }
 
+            _connectingStatusLastTime = System.currentTimeMillis();
+
             onConnecting();
             setVisible(0, 2); // Cleanup
             setVisible(2, 1);
@@ -1297,11 +1302,11 @@ public class SuplaClient extends Thread {
                     Preferences prefs = new Preferences(_context);
                     ProfileManager pm = getProfileManager();
                     AuthInfo info = pm.getCurrentAuthInfo();
-                    
+
 
                     cfg.Host = info.getServerForCurrentAuthMethod();
-                    cfg.clientGUID = prefs.getClientGUID();
-                    cfg.AuthKey = prefs.getAuthKey();
+                    cfg.clientGUID = decrypted(info.getGuid());
+                    cfg.AuthKey = decrypted(info.getAuthKey());
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
@@ -1338,29 +1343,22 @@ public class SuplaClient extends Thread {
                 }
 
                 if (connect()) {
-
                     //noinspection StatementWithEmptyBody
                     while (!canceled() && iterate()) {
                     }
-
-                    if (!canceled()) {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-
                 }
 
             } finally {
                 free();
             }
 
-
             if (!canceled()) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ignored) {
+                long timeDiff = System.currentTimeMillis()-_connectingStatusLastTime;
+                if ( timeDiff < MINIMUM_WAITING_TIME_MSEC) {
+                    try {
+                        Thread.sleep(MINIMUM_WAITING_TIME_MSEC-timeDiff);
+                    } catch (InterruptedException ignored) {
+                    }
                 }
             }
         }
@@ -1378,6 +1376,11 @@ public class SuplaClient extends Thread {
     }
 
     private ProfileManager getProfileManager() {
-        return SuplaApp.getApp().getProfileManager(_context);
+        return SuplaApp.getApp().getProfileManager();
+    }
+
+    private byte[] decrypted(byte[] payload) {
+        String key = Preferences.getDeviceID(_context);
+        return Encryption.decryptDataWithNullOnException(payload, key);
     }
 }

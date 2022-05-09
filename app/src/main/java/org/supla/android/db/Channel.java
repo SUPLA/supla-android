@@ -22,6 +22,7 @@ package org.supla.android.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
@@ -125,6 +126,7 @@ public class Channel extends ChannelBase {
         ExtendedValue = extendedValue;
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
         setDeviceID(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
@@ -141,6 +143,7 @@ public class Channel extends ChannelBase {
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
         setProtocolVersion(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
         setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID)));
 
         ChannelValue cv = new ChannelValue();
         cv.AssignCursorData(cursor);
@@ -173,6 +176,7 @@ public class Channel extends ChannelBase {
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
         values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
+        values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
     }
@@ -487,5 +491,9 @@ public class Channel extends ChannelBase {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "{channelId=" + getRemoteId() + ", profileId=" + getProfileId() + ", value=" + Value + "}";
+    }
 }
 

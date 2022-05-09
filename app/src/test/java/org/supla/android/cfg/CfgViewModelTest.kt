@@ -37,7 +37,7 @@ class CfgViewModelTest: TestCase() {
     private val fakeCfg = CfgData(TemperatureUnit.CELSIUS,
                                   true,
                                   ChannelHeight.HEIGHT_100, 
-                                  true)
+                                  true, false)
 
     private val fakePM = DummyProfileManager()
 
@@ -55,38 +55,19 @@ class CfgViewModelTest: TestCase() {
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn fakeCfg
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val nc = NavCoordinator()
+        val viewModel = CfgViewModel(repository, fakePM, nc)
         assertNull("should not be set initially",
-                    viewModel.nextAction.value)
+                    nc.navAction.value)
     }
 
-    @Test
-    fun createAccountActionResultsInNavigationToCreateAccountView() {
-        val repository: CfgRepository = mock {
-            on { getCfg() } doReturn fakeCfg
-        }
-        val viewModel = CfgViewModel(repository, fakePM)
-        viewModel.onCreateAccount()
-        viewModel.nextAction.observeForever { }
-        assertEquals(viewModel.nextAction.value,
-            CfgViewModel.NavigationFlow.CREATE_ACCOUNT)
-    }
-
-    @Test
-    fun startsInBasicView() {
-        val repository: CfgRepository = mock {
-            on { getCfg() } doReturn fakeCfg
-        }
-
-        val viewModel = CfgViewModel(repository, fakePM)
-        assertFalse(viewModel.isAdvancedMode.value!!)
-    }
 
     @Test
     fun saveIsOneShot() {
         Mockito.`when`(mockRepository.getCfg())
             .thenReturn(fakeCfg)
-        val viewModel = CfgViewModel(mockRepository, fakePM)
+        val viewModel = CfgViewModel(mockRepository, fakePM,
+                                     NavCoordinator())
         assertTrue(viewModel.saveEnabled.value!!)
         viewModel.onSaveConfig()
         assertFalse(viewModel.saveEnabled.value!!)
@@ -100,7 +81,8 @@ class CfgViewModelTest: TestCase() {
             on { getCfg() } doReturn initialData
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM,
+                                     NavCoordinator())
         viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
         viewModel.onSaveConfig()
         assertEquals(TemperatureUnit.FAHRENHEIT, storedData!!.temperatureUnit.value)
@@ -117,7 +99,8 @@ class CfgViewModelTest: TestCase() {
             on { getCfg() } doReturn initialData
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM, 
+                                     NavCoordinator())
         assertFalse(viewModel.isDirty.value!!)
         viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
         assertTrue(viewModel.isDirty.value!!)
@@ -130,27 +113,13 @@ class CfgViewModelTest: TestCase() {
     }
 
     @Test
-    fun changingEmailAddressClearsServerDataInConfig() {
-        val initialData = fakeCfg
-        val repository: CfgRepository = mock {
-            on { getCfg() } doReturn initialData
-        }
-        val vm = CfgViewModel(repository, fakePM)
-        vm.emailAddress.value = "test@test.here"
-        vm.serverAddrEmail.value = "test.here"
-        assertEquals("test.here", vm.serverAddrEmail.value)
-        assertEquals("test@test.here", vm.emailAddress.value)
-        vm.onEmailChange("", 0, 0, 0)
-        assertEquals("", vm.serverAddrEmail.value)
-    }
-
-    @Test
     fun defaultSettingForButtonAutohideIsTrue() {
         val initialData = fakeCfg
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn initialData
         }
-        val vm = CfgViewModel(repository, fakePM)
+        val vm = CfgViewModel(repository, fakePM,
+                              NavCoordinator())
         assertEquals(true, vm.cfgData.buttonAutohide.value)
     }
     
@@ -162,7 +131,8 @@ class CfgViewModelTest: TestCase() {
             on { getCfg() } doReturn initialData
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM,
+                                     NavCoordinator())
         val origVal = viewModel.cfgData.buttonAutohide.value!!
         val newVal = !origVal
         viewModel.setButtonAutohide(newVal)
@@ -176,7 +146,8 @@ class CfgViewModelTest: TestCase() {
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn initialData
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM,
+                                     NavCoordinator())
         assertEquals(ChannelHeight.HEIGHT_100, viewModel.cfgData.channelHeight.value)
     }
 
@@ -188,7 +159,8 @@ class CfgViewModelTest: TestCase() {
             on { getCfg() } doReturn initialData
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM,
+                                     NavCoordinator())
         viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
         viewModel.onSaveConfig()
         assertEquals(ChannelHeight.HEIGHT_60, storedData!!.channelHeight.value)
@@ -202,7 +174,8 @@ class CfgViewModelTest: TestCase() {
             on { getCfg() } doReturn initialData
             on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
         }
-        val viewModel = CfgViewModel(repository, fakePM)
+        val viewModel = CfgViewModel(repository, fakePM,
+                                     NavCoordinator())
         viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
         viewModel.onSaveConfig()
         assertEquals(ChannelHeight.HEIGHT_150, storedData!!.channelHeight.value)
@@ -227,5 +200,19 @@ class DummyProfileManager: ProfileManager {
 
     override fun updateCurrentAuthInfo(info: AuthInfo) {
         // intentionally left empty
+    }
+
+    override fun getProfile(id: Long): AuthProfileItem? {
+        return null
+    }
+
+    override fun activateProfile(id: Long, force: Boolean): Boolean {
+        return true
+    }
+
+    override fun removeProfile(id: Long) {}
+
+    override fun getAllProfiles(): List<AuthProfileItem> {
+        TODO()
     }
 }

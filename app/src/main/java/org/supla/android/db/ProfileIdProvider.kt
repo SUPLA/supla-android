@@ -1,5 +1,4 @@
-package org.supla.android.data.source.local
-
+package org.supla.android.db
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,3 +17,11 @@ package org.supla.android.data.source.local
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+interface ProfileIdProvider {
+    /**
+     * Provides in memory cached profile ID.
+     *
+     * @return profile ID or null during the app startup before it's loaded.
+     */
+    fun getCachedProfileId(): Long?
+}

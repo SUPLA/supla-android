@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.annotation.SuppressLint;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -90,7 +91,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
         if (cursor == null || cursor.isClosed()) {
             return 0;
         }
-
+                           
         return cursor.getCount() + Sections.size();
     }
 
@@ -218,6 +219,7 @@ public class ListViewCursorAdapter extends BaseAdapter {
     }
 
     @Override
+    @SuppressLint("Range")
     public View getView(int position, View convertView, ViewGroup parent) {
         Object obj = null;
         if (emptyPosition == -1) {
@@ -273,7 +275,6 @@ public class ListViewCursorAdapter extends BaseAdapter {
             } else {
                 cbase = new Channel();
             }
-
             int collapsed = cursor.getInt(cursor.getColumnIndex("collapsed"));
             if ((collapsed & _collapsed) > 0) {
 

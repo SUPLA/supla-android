@@ -60,6 +60,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
     private ImageView ivGraph;
     private TextView tvTemperature;
     private Timer timer1;
+    private Integer lastSelectedPos;
 
     public ChannelDetailTemperature(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -186,6 +187,8 @@ public class ChannelDetailTemperature extends DetailLayout implements
         __onDetailShow();
         tvProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
+        chartHelper.restoreSpinner(getChannelBase().getFunc(),
+                                   thSpinner);
         onSpinnerItemSelected();
 
         if (timer1 == null) {
@@ -209,6 +212,9 @@ public class ChannelDetailTemperature extends DetailLayout implements
     public void onDetailHide() {
         super.onDetailHide();
 
+        chartHelper.persistSpinner(getChannelBase().getFunc(),
+                                   thSpinner);
+
         if (timer1 != null) {
             timer1.cancel();
             timer1 = null;
@@ -216,9 +222,20 @@ public class ChannelDetailTemperature extends DetailLayout implements
     }
 
     protected void onSpinnerItemSelected() {
+        int pos = thSpinner.getSelectedItemPosition();
+        if(lastSelectedPos != null && lastSelectedPos == pos) {
+            chartHelper.persistZoom();
+        }
         onItemSelected(null, null,
                 thSpinner.getSelectedItemPosition(),
                 thSpinner.getSelectedItemId());
+
+        if(lastSelectedPos != null && lastSelectedPos == pos) {
+            chartHelper.restoreZoom();
+        } else {
+            lastSelectedPos = pos;
+        }
+        
     }
 
     @Override

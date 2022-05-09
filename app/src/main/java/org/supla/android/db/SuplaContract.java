@@ -37,6 +37,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_COLLAPSED = "collapsed";
         public static final String COLUMN_NAME_SORTING = "sorting";
         public static final String COLUMN_NAME_SORT_ORDER = "sort_order";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ChannelEntry implements BaseColumns {
@@ -58,6 +59,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_PROTOCOLVERSION = "protocolversion";
         public static final String COLUMN_NAME_POSITION = "position";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
 
     }
 
@@ -71,6 +73,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_SUBVALUE = "subvalue";
         public static final String COLUMN_NAME_SUBVALUE_TYPE = "subvaluetype";
         public static final String COLUMN_NAME_VALUE = "value";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ChannelExtendedValueEntry implements BaseColumns {
@@ -80,6 +83,7 @@ public class SuplaContract {
         public static final String _ID = "_channel_extendedvalue_id"; // Primary Key
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_VALUE = "extendedvalue";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class AuthProfileEntry implements BaseColumns {
@@ -98,6 +102,8 @@ public class SuplaContract {
         public static final String COLUMN_NAME_PREFERRED_PROTOCOL_VERSION = "pref_protcol_ver";
         public static final String COLUMN_NAME_IS_ACTIVE = "is_active";
         public static final String COLUMN_NAME_IS_ADVANCED_MODE = "is_advanced";
+        public static final String COLUMN_NAME_GUID = "guid";
+        public static final String COLUMN_NAME_AUTHKEY = "auth_key";
 
         public static final String[] ALL_COLUMNS = {
             AuthProfileEntry._ID,                                   // 0
@@ -111,7 +117,9 @@ public class SuplaContract {
             AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD,             // 8
             AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION,// 9
             AuthProfileEntry.COLUMN_NAME_IS_ACTIVE,                 // 10
-            AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE           // 11
+            AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE,          // 11
+            AuthProfileEntry.COLUMN_NAME_GUID,                      // 12
+            AuthProfileEntry.COLUMN_NAME_AUTHKEY                    // 13
         };
                                                     
     }
@@ -147,6 +155,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_USERICON_IMAGE2 = UserIconsEntry.COLUMN_NAME_IMAGE2;
         public static final String COLUMN_NAME_USERICON_IMAGE3 = UserIconsEntry.COLUMN_NAME_IMAGE3;
         public static final String COLUMN_NAME_USERICON_IMAGE4 = UserIconsEntry.COLUMN_NAME_IMAGE4;
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ColorListItemEntry implements BaseColumns {
@@ -159,6 +168,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_IDX = "idx";
         public static final String COLUMN_NAME_COLOR = "color";
         public static final String COLUMN_NAME_BRIGHTNESS = "brightness";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
 
@@ -178,6 +188,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_FLAGS = "flags";
         public static final String COLUMN_NAME_TOTALVALUE = "totalvalue";
         public static final String COLUMN_NAME_POSITION = "position";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ChannelGroupRelationEntry implements BaseColumns {
@@ -188,7 +199,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_GROUPID = "groupid"; // SuplaChannelGroup.Id
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_VISIBLE = "visible";
-
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
 
@@ -204,6 +215,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_SUBVALUE = ChannelValueEntry.COLUMN_NAME_SUBVALUE;
         public static final String COLUMN_NAME_SUBVALUE_TYPE = ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE;
         public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
 
     }
 
@@ -217,6 +229,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_IMAGE2 = "image2";
         public static final String COLUMN_NAME_IMAGE3 = "image3";
         public static final String COLUMN_NAME_IMAGE4 = "image4";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ElectricityMeterLogEntry implements BaseColumns {
@@ -246,6 +259,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
 
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ElectricityMeterLogViewEntry implements BaseColumns {
@@ -268,6 +282,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
 
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
 
     }
 
@@ -281,6 +296,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ImpulseCounterLogViewEntry implements BaseColumns {
@@ -295,6 +311,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_COUNTER = "counter";
         public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
         public static final String COLUMN_NAME_COMPLEMENT = "complement";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class ThermostatLogEntry implements BaseColumns {
@@ -308,6 +325,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_ON = "ison";
         public static final String COLUMN_NAME_MEASUREDTEMPERATURE = "measured";
         public static final String COLUMN_NAME_PRESETTEMPERATURE = "preset";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class TemperatureLogEntry implements BaseColumns {
@@ -318,6 +336,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
         public static final String COLUMN_NAME_TIMESTAMP = "date";
         public static final String COLUMN_NAME_TEMPERATURE = "temperature";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
     public static abstract class TempHumidityLogEntry implements BaseColumns {
@@ -329,6 +348,7 @@ public class SuplaContract {
         public static final String COLUMN_NAME_TIMESTAMP = "date";
         public static final String COLUMN_NAME_TEMPERATURE = "temperature";
         public static final String COLUMN_NAME_HUMIDITY = "humidity";
+        public static final String COLUMN_NAME_PROFILEID = "profileid";
     }
 
 

@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.lib.SuplaChannelGroupRelation;
 
@@ -28,6 +29,7 @@ public class ChannelGroupRelation extends DbItem {
     private int GroupId;
     private int ChannelId;
     private int Visible;
+    private long profileId;
 
     public int getGroupId() {
         return GroupId;
@@ -53,13 +55,22 @@ public class ChannelGroupRelation extends DbItem {
         Visible = visible;
     }
 
+    public long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(long pid) {
+        profileId = pid;
+    }
+
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry._ID)));
         setGroupId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID)));
         setVisible(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE)));
-
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -69,6 +80,7 @@ public class ChannelGroupRelation extends DbItem {
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID, getGroupId());
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, getChannelId());
         values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE, getVisible());
+        values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
 

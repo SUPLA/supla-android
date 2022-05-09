@@ -64,6 +64,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private Timer delayTimer1;
     private SuperuserAuthorizationDialog authDialog;
     private long btnUpDownTouchedAt;
+    private boolean showOpening;
+    private TextView percentageCaption;
 
     public ChannelDetailRS(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -84,6 +86,10 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     protected void init() {
 
         super.init();
+
+        percentageCaption = findViewById(R.id.rsDetailPercentCaption);
+        readShowOpeningValue();
+        updatePercentageCaption();
 
         llRollerShutter = findViewById(R.id.llRS);
 
@@ -168,7 +174,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
                 tvPercent.setText(R.string.calibration);
                 rsTvPressTime.setVisibility(VISIBLE);
             } else {
-                tvPercent.setText(Integer.toString((int) rsValue.getClosingPercentage()) + "%");
+                tvPercent.setText(Integer.toString((int) mappedPercentage(rsValue.getClosingPercentage())) + "%");
             }
 
             if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) > 0) {
@@ -222,7 +228,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
                                     rollerShutter.setPercent(percent);
                                     roofWindow.setMarkers(null);
                                     roofWindow.setClosingPercentage(percent);
-                                    tvPercent.setText(Integer.toString(percent) + "%");
+                                    tvPercent.setText(Integer.toString(mappedPercentage(percent)) + "%");
                                 }
                             });
                         }
@@ -275,7 +281,7 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     }
 
     public void onPercentChangeing(float percent) {
-        tvPercent.setText(Integer.toString((int) percent) + "%");
+        tvPercent.setText(Integer.toString(mappedPercentage((int)percent)) + "%");
     }
 
     @SuppressLint("SetTextI18n")
@@ -427,6 +433,29 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     public void onDetailShow() {
         super.onDetailShow();
         rsTvPressTime.setText("");
+
+        boolean prevShowOpening = showOpening;
+        readShowOpeningValue();
+
+        if(showOpening != prevShowOpening) {
+            updatePercentageCaption();
+            OnChannelDataChanged(true);
+        } 
+    }
+
+    private int mappedPercentage(int v) {
+        return showOpening?100-v:v;
+    }
+
+    private void updatePercentageCaption() {
+        percentageCaption.setText(showOpening?R.string.rs_percent_caption_open:
+                                  R.string.rs_percent_caption);
+
+    }
+
+    private void readShowOpeningValue() {
+        Preferences prefs = new Preferences(getContext());
+        showOpening = prefs.isShowOpeningPercent();
     }
 }
 

@@ -155,12 +155,14 @@
             android:orientation="horizontal">
 
             <CheckBox
+                style="@style/CheckBox"
                 android:id="@+id/thCbTemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/temperature" />
 
             <CheckBox
+                style="@style/CheckBox"
                 android:id="@+id/thCbHumidity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

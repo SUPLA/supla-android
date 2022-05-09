@@ -1,9 +1,24 @@
 package org.supla.android.cfg
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import android.content.Context
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.app.Activity
 import android.os.Bundle
-import android.os.Build
 import android.os.Looper
 import android.os.Handler
 import android.graphics.Typeface
@@ -11,16 +26,24 @@ import android.view.inputmethod.InputMethodManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.flow.collect
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentAuthBinding
 
 class AuthFragment: Fragment() {
-        private val viewModel: CfgViewModel by activityViewModels()
+    private val viewModel: AuthItemViewModel by viewModels()
+    private val navCoordinator: NavCoordinator by activityViewModels()
+    private val args: AuthFragmentArgs by navArgs<AuthFragmentArgs>()
+
     private lateinit var binding: FragmentAuthBinding
 
     /*
@@ -43,6 +66,7 @@ class AuthFragment: Fragment() {
 					  container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.navCoordinator = navCoordinator
         binding.cfgAdvanced.viewModel = viewModel
         binding.cfgBasic.viewModel = viewModel
 
@@ -73,7 +97,8 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.edAccessID,
 		            binding.cfgAdvanced.edAccessIDpwd, 
                 binding.cfgAdvanced.cfgEmail,
-		            /*binding.cfgAdvanced.cfgProfileName!!,*/
+		            binding.cfgAdvanced.cfgProfileName,
+		            binding.cfgBasic.cfgProfileName,
                 binding.cfgBasic.cfgEmail)
             .forEach {
                 it.setOnFocusChangeListener { v, hasFocus ->
@@ -110,6 +135,8 @@ class AuthFragment: Fragment() {
                 binding.cfgAdvanced.cbAutoLabel,
 		            binding.cfgAdvanced.cfgLabelSvrAddress,
                 binding.cfgAdvanced.addDeviceWarning,
+                binding.cfgAdvanced.profileNameLabel,
+                binding.cfgBasic.profileNameLabel,
                 binding.cfgCreateAccount,
                 binding.dontHaveAccountText,
                 binding.cfgCbAdvanced).forEach {
@@ -136,6 +163,40 @@ class AuthFragment: Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.editAction.collect { state ->
+                                               when(state) {
+                                                   is AuthItemEditAction.Alert -> {
+                                                       AlertDialog.Builder(requireContext())
+                                                           .setTitle(state.titleResId)
+                                                           .setMessage(state.messageResId)
+                                                           .setPositiveButton(android.R.string.ok) {
+                                                               dlg, _ -> dlg.cancel()
+                                                           }.create().show()
+                                                       
+                                                   }
+                                                   is AuthItemEditAction.ConfirmDelete -> {
+                                                       AlertDialog.Builder(requireContext())
+                                                           .setTitle(R.string.delete_account_confirm_title)
+                                                           .setMessage(R.string.delete_account_confirm_message)
+                                                           .setPositiveButton(android.R.string.ok) {
+                                                               _, _ ->
+                                                                   viewModel.onDeleteProfile(true)
+                                                           }
+                                                           .setNegativeButton(android.R.string.cancel) {
+                                                               dlg, _ -> dlg.cancel()
+                                                           }.create().show()
+                                                   }
+                                               }
+                                         
+            }
+        
+        }
+    }
+
     fun hideKeyboard(v: View) {
         val service = SuplaApp.getApp().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
         service?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
@@ -143,5 +204,11 @@ class AuthFragment: Fragment() {
 
     private fun resetScrollView() {
         shouldResetScrollViewOffset = true
+    }
+
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
+        return AuthItemViewModelFactory(args.profileId,
+                                        args.allowBasicMode,
+                                        navCoordinator)
     }
 }

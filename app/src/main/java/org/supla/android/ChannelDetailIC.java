@@ -68,6 +68,10 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private Spinner icSpinnerSlave;
     private ImageView ivGraph;
     private Timer timer1;
+    private int masterLastSelectedIdx = -1;
+    private int slaveLastSelectedIdx = -1;
+    private int slaveNumItems = -1;
+    private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -107,7 +111,6 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
         icSpinnerMaster = findViewById(R.id.icSpinnerMaster);
         icSpinnerMaster.setAdapter(adapter);
-        icSpinnerMaster.setOnItemSelectedListener(this);
 
         icSpinnerSlave = findViewById(R.id.icSpinnerSlave);
 
@@ -118,13 +121,29 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
 
     private void updateSlaveSpinnerItems() {
         icSpinnerSlave.setOnItemSelectedListener(null);
-
+                
         String[] items = chartHelper.getSlaveSpinnerItems(icSpinnerMaster);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
                 android.R.layout.simple_spinner_item, items);
         icSpinnerSlave.setAdapter(adapter);
         icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
+        if(slaveLastSelectedIdx > -1 && items.length > slaveLastSelectedIdx &&
+           slaveNumItems > 0 && items.length != slaveNumItems) {
+            slaveLastSelectedIdx += items.length - slaveNumItems;
+            icSpinnerSlave.setSelection(slaveLastSelectedIdx);
+        } else if(slaveNumItems == 0 && items.length > 0) {
+            int indexMaybe = slaveLastSelectedIdx - slaveMaxItems + items.length;
+
+            if(indexMaybe < items.length) {
+                icSpinnerSlave.setSelection(indexMaybe);
+                slaveLastSelectedIdx = indexMaybe;
+            }
+        } else if(items.length == 0) {
+            slaveLastSelectedIdx += slaveMaxItems - slaveNumItems;
+        }
+        slaveNumItems = items.length;
+        
         icSpinnerSlave.setOnItemSelectedListener(this);
     }
 
@@ -201,11 +220,26 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onDetailShow() {
         super.onDetailShow();
+
+        icSpinnerMaster.setOnItemSelectedListener(null);
+        icSpinnerSlave.setOnItemSelectedListener(null);
+
+        chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                    icSpinnerMaster,
+                                    icSpinnerSlave,
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            masterLastSelectedIdx = icSpinnerMaster.getSelectedItemPosition();
+                                            updateSlaveSpinnerItems();                                            
+                                        }
+                                    });
+
+        icSpinnerMaster.setOnItemSelectedListener(this);
+        icSpinnerSlave.setOnItemSelectedListener(this);
+        
         icProgress.setVisibility(INVISIBLE);
         onClick(ivGraph);
-        onItemSelected(null, null,
-                icSpinnerMaster.getSelectedItemPosition(),
-                icSpinnerMaster.getSelectedItemId());
 
         if (timer1 == null) {
             timer1 = new Timer();
@@ -232,6 +266,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
             timer1.cancel();
             timer1 = null;
         }
+
+        chartHelper.persistSpinners(getChannelBase().getFunc(),
+                                    icSpinnerMaster, icSpinnerSlave);
     }
 
     private void runDownloadTask() {
@@ -270,10 +307,13 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if (parent != icSpinnerSlave) {
+        if (parent != icSpinnerSlave && masterLastSelectedIdx != position) {
+            masterLastSelectedIdx = position;
             updateSlaveSpinnerItems();
+        } else if(parent == icSpinnerSlave) {
+            slaveLastSelectedIdx = position;
         }
-
+        
         chartHelper.setDateRangeBySpinners(icSpinnerMaster, icSpinnerSlave);
         chartHelper.load(getRemoteId(), icSpinnerMaster.getSelectedItemPosition());
         chartHelper.setVisibility(VISIBLE);

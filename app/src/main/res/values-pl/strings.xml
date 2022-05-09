@@ -1,5 +1,23 @@
 <resources>
     <string name="confirm_button_text" translatable="false">OK</string>
+    <string name="profiles_title" translatable="false">Konta</string>
+    <string name="profile_name_label" translatable="false">NAZWA KONTA</string>
+    <string name="profile_set_as_default" translatable="false">Aktywne</string>
+    <string name="profile_activate_not_available" translatable="false">Żeby deaktywować to konto najpierw ustaw inne jako aktywne</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Nie można usunąć aktywnego konta</string>
+    <string name="delete_account">Usuń</string>
+
+    <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
+    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto ?</string>
+    <string name="profile_default_name" translatable="false">Domyślne</string>
+    <string name="profile_select_active" translatable="false">Aktywne konto</string>
+    <string name="profile_act_info">Dotknij konta aby się zalogować</string>
+    <string name="form_error" translatable="false">Błąd</string>
+    <string name="form_profile_name_missing" translatable="false">Podaj nazwę konta</string>
+    <string name="form_profile_required_data_missing" translatable="false">Uzupełnij wymagane dane</string>
+    <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
+    <string name="add_account">Dodaj konto</string>
+    <string name="edit_account">Edytuj konto</string>
     <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
@@ -82,8 +100,9 @@
     <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
-    <string name="cfg_label_profile_name">AKTYWNY PROFIL</string>
-    <string name="cfg_profile_name_default">Domyślny</string>
+    <string name="cfg_label_profile_name">AKTYWNE KONTO</string>
+    <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
+
     <string name="cfg_label_email_auth">Email</string>
     <string name="cfg_label_access_id_auth">Identyfikator</string>
     <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
@@ -91,6 +110,7 @@
     <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
 
     <string translatable="false" name="profile">Twoje konto</string>
+    <string translatable="false" name="profile_plural">Twoje konta</string>
     <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
 
     <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
@@ -108,11 +128,12 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
     </string>
 
-    <string name="rate_msg">Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string>
+    <string name="rate_msg">Czy wiesz, że Supla to otwarty i bezpłatny projekt rozwijany przez społeczność? Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string>
     <string name="rate_now">Oceń teraz</string>
     <string name="rate_later">Później</string>
     <string name="rate_no_thanks">Nie, dziękuję</string>
     <string name="rs_percent_caption">Procent zamknięcia</string>
+    <string name="rs_percent_caption_open">Procent otwarcia</string>
     <string name="calibration">[Kalibracja]</string>
 
     <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email! (Wyłącz opcje zaawansowane w ustawieniach)</string>
@@ -219,6 +240,8 @@
     <string name="all_available_history">Cała dostępna historia</string>
     <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
     <string name="no_chart_data_available">Brak danych dla wykresu.</string>
+    <string name="em_chart_phase_n">Faza %d</string>
+    <string name="em_chart_all_phases">Fazy 1+2+3</string>
     <string name="comparsion_minmin">Porównanie minuta do minuty</string>
     <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
     <string name="comparsion_dayday">Porównanie dzień do dnia</string>
@@ -455,4 +478,8 @@
     <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
     <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
     <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
+    <string translatable="false" name="rs_display_mode">Rolety %</string>
+    <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
+    <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
+    <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
 </resources>

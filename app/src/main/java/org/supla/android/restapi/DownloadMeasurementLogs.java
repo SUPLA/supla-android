@@ -25,13 +25,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.supla.android.Trace;
+import org.supla.android.SuplaApp;
 
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     private long AfterTimestamp = 0;
+    private long _profileId;
 
     public DownloadMeasurementLogs(Context context) {
         super(context);
+        _profileId = SuplaApp.getApp().getProfileManager().getCurrentProfile().getId();
     }
 
     abstract protected long getMinTimestamp();
@@ -57,6 +60,10 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     protected int itemsLimitPerRequest() {
         return 10000;
+    }
+
+    protected long getCurrentProfileId() {
+        return _profileId;
     }
 
     @Override
@@ -181,7 +188,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
                     }
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Trace.e("Supla", "download error", e);
                     return null;
                 }
 

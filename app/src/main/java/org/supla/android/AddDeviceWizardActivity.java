@@ -414,7 +414,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        if (!SuplaApp.getApp().getProfileManager(this)
+        if (!SuplaApp.getApp().getProfileManager()
             .getCurrentProfile().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
@@ -1093,8 +1093,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
         final ConnectivityManager connectivityManager = (ConnectivityManager)
                 getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final ProfileManager pm = SuplaApp.getApp()
-            .getProfileManager(this);
+        final ProfileManager pm = SuplaApp.getApp().getProfileManager();
         espNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(@NonNull Network network) {
@@ -1180,9 +1179,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         manager.disconnect();
 
-        final Preferences prefs = new Preferences(this);
-        final ProfileManager pm = SuplaApp.getApp()
-            .getProfileManager(this);
+        final ProfileManager pm = SuplaApp.getApp().getProfileManager();
 
         stateChangedReceiver = new BroadcastReceiver() {
             @Override

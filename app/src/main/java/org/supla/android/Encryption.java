@@ -18,17 +18,19 @@ package org.supla.android;
  */
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
@@ -52,32 +54,65 @@ public class Encryption {
         return new SecretKeySpec(password.getBytes(), "AES");
     }
 
+
     public static byte[] encryptData(byte[] data, String password)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException,
-            UnsupportedEncodingException, InvalidKeySpecException {
+            UnsupportedEncodingException, InvalidKeySpecException, InvalidAlgorithmParameterException {
         /* Encrypt the message. */
+
         Cipher cipher;
-        cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, generateKey(password));
-        byte[] cipherText = cipher.doFinal(data);
-        return cipherText;
+        cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+        byte[] iv = new byte[12];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(iv);
+
+        cipher.init(Cipher.ENCRYPT_MODE, generateKey(password), new GCMParameterSpec(128, iv));
+        byte [] encryptedData =  cipher.doFinal(data);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encryptedData.length);
+        byteBuffer.put(iv);
+        byteBuffer.put(encryptedData);
+        return byteBuffer.array();
     }
 
-    public static byte[] decryptData(byte[] cipherText, String password)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException,
-            InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeySpecException {
+    public static byte[] decryptData(byte[] cipherText, String password, boolean deprecatedAlg)
+            throws Exception {
         Cipher cipher;
-        cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, generateKey(password));
+        if (deprecatedAlg) {
+            cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, generateKey(password));
+            return cipher.doFinal(cipherText);
+        }
+
+        if (cipherText.length < 29) {
+            throw new Exception("Invalid cipher length!");
+        }
+
+        cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+        ByteBuffer byteBuffer = ByteBuffer.wrap(cipherText);
+        byte[] iv = new byte[12];
+        byteBuffer.get(iv);
+
+        cipherText = new byte[byteBuffer.remaining()];
+        byteBuffer.get(cipherText);
+
+        cipher.init(Cipher.DECRYPT_MODE, generateKey(password), new GCMParameterSpec(128, iv));
+
         return cipher.doFinal(cipherText);
     }
 
-    public static byte[] decryptDataWithNullOnException(byte[] cipherText, String password) {
+    public static byte[] decryptData(byte[] cipherText, String password)
+            throws Exception {
+        return decryptData(cipherText, password, false);
+    }
+
+    public static byte[] decryptDataWithNullOnException(byte[] cipherText, String password,
+                                                        boolean deprecatedAlg) {
         byte[] result = null;
         try {
-            result = decryptData(cipherText, password);
+            result = decryptData(cipherText, password, deprecatedAlg);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -96,9 +131,15 @@ public class Encryption {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return result;
+    }
+
+    public static byte[] decryptDataWithNullOnException(byte[] cipherText, String password) {
+        return decryptDataWithNullOnException(cipherText, password, false);
     }
 
     public static byte[] encryptDataWithNullOnException(byte[] data, String password) {
@@ -120,6 +161,8 @@ public class Encryption {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 

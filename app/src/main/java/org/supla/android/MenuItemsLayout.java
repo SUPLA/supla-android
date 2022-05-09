@@ -233,17 +233,22 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
     }
 
+
     public void setButtonsAvailable(int available) {
 
         if (availableButtons == available) {
             return;
         }
 
+        boolean hasManyAccounts = 
+            SuplaApp.getApp().getProfileManager()
+            .getAllProfiles().size() > 1;
+
         availableButtons = available;
         mMainButtonsAreaLayout.removeAllViews();
         buttons.clear();
 
-        addButton(BTN_PROFILE, R.drawable.profile, R.string.profile);
+        addButton(BTN_PROFILE, R.drawable.profile, hasManyAccounts?R.string.profile_plural:R.string.profile);
         addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
         addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
         addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);

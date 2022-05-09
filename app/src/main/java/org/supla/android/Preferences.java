@@ -23,14 +23,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
 
 import org.supla.android.cfg.TemperatureUnit;
-import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.AuthInfo;
 
 import java.util.Random;
 
@@ -49,6 +46,9 @@ public class Preferences {
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
     private static final String pref_show_channel_info = "pref_show_channel_info";
+    private static final String pref_show_opening_percent = "pref_show_opening_percent";
+
+    private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
 
     private SharedPreferences _prefs;
     private Context _context;
@@ -60,15 +60,12 @@ public class Preferences {
         context.getContentResolver();
     }
 
-
-    private String getDeviceID() {
+    public static String getDeviceID(Context ctx) {
         String Id = null;
 
         try {
-            final TelephonyManager tm = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Id = Settings.Secure.getString(_context.getContentResolver(),
+                Id = Settings.Secure.getString(ctx.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
             } else {
                 Id = Build.SERIAL;
@@ -83,6 +80,12 @@ public class Preferences {
         }
 
         return (Id == null || Id.length() == 0) ? "unknown" : Id;
+
+    }
+
+
+    private String getDeviceID() {
+        return Preferences.getDeviceID(_context);
     }
 
     private void encryptAndSave(String pref_key, byte[] data) {
@@ -91,15 +94,17 @@ public class Preferences {
                 Base64.encodeToString(
                         Encryption.encryptDataWithNullOnException(
                                 data, getDeviceID()), Base64.DEFAULT));
-        editor.putBoolean(pref_key + "_encrypted", true);
+        editor.putBoolean(pref_key + "_encrypted_gcm", true);
         editor.apply();
     }
-
+    
     private byte[] getRandom(String pref_key, int size) {
-
         byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
-        if (!_prefs.getBoolean(pref_key + "_encrypted", false)) {
+        if (!_prefs.getBoolean(pref_key + "_encrypted_gcm", false)) {
+            if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
+                result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
+            }
             encryptAndSave(pref_key, result);
         } else {
             result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
@@ -121,19 +126,26 @@ public class Preferences {
 
     }
 
-    // TODO: Store GUID and AuthKey in the Android key system (API >= 14). Issue 127
 
+    /**
+       Legacy method. Should not be used in new code.
+    */
+    @Deprecated
     public byte[] getClientGUID() {
         return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
     }
 
+    /**
+       Legacy method. Should not be used in new code.
+    */
+    @Deprecated
     public byte[] getAuthKey() {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
 
     public boolean configIsSet() {
-        return SuplaApp.getApp().getProfileManager(_context)
-            .getCurrentProfile().getAuthInfo().isAuthDataComplete();
+        return getProfileManager().getCurrentProfile()
+            .getAuthInfo().isAuthDataComplete();
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
@@ -225,6 +237,35 @@ public class Preferences {
     public void setShowChannelInfo(boolean val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putBoolean(pref_show_channel_info, val);
+        ed.apply();
+    }
+
+    public boolean isShowOpeningPercent() {
+        return _prefs.getBoolean(pref_show_opening_percent, false);
+    }
+
+    public void setShowOpeningPercent(boolean val) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putBoolean(pref_show_opening_percent, val);
+        ed.apply();
+    }
+
+    private ProfileManager getProfileManager() {
+        return SuplaApp.getApp().getProfileManager();
+    }
+
+    private String getChartTypeKey(int channel, int idx) {
+        int pid = (int)getProfileManager().getCurrentProfile().getId();
+        return String.format(pref_chart_type, channel, pid, idx);
+    }
+
+    public int getChartType(int channel, int idx, int def) {
+        return _prefs.getInt(getChartTypeKey(channel, idx), def);
+    }
+
+    public void setChartType(int channel, int idx,  int charttype) {
+        SharedPreferences.Editor ed = _prefs.edit();
+        ed.putInt(getChartTypeKey(channel, idx), charttype);
         ed.apply();
     }
 }

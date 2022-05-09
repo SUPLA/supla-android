@@ -75,11 +75,13 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
         if (withoutComplement) {
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
                     key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0));
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
         } else {
 
             return getCount(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId)
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+                    key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId())
             );
         }
     }
@@ -112,7 +114,10 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
                     + " FROM " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME
                     + " WHERE "
                     + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_CHANNELID
-                    + " = " + channelId;
+                    + " = " + channelId +  " AND "
+                    + SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_PROFILEID
+                    + " = "  + getCachedProfileId()
+                ;
 
             if (dateFrom != null && dateTo != null) {
                 sql += " AND "
@@ -134,7 +139,8 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
     }
 
     public void deleteElectricityMeasurements(int channelId) {
-        delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId));
+        delete(SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
+               key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
     }
 
 }

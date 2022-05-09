@@ -21,6 +21,7 @@ package org.supla.android.charts;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -53,6 +54,7 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         if (humidityVisible) {
             entries.add(new BarEntry(time, (float) c.getDouble(
@@ -69,12 +71,14 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP));
     }
 
     @Override
+    @SuppressLint("Range")
     protected float getTemperature(Cursor c) {
         TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
         return (float) tp.getConvertedValue(c.getDouble(

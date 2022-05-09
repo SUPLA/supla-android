@@ -57,12 +57,20 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/profilebutton"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="10dp"
         android:background="@drawable/groupoff"
         android:clickable="true" />
+
+      <Button
+          android:id="@+id/profilebutton"
+          style="?android:attr/borderlessButtonStyle"
+          android:layout_marginLeft="10dp"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:background="@drawable/profile"
+          android:clickable="true" />
 
 </RelativeLayout>

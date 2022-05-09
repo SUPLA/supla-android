@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +68,7 @@ public class ThermostatMeasurementItem extends MeasurementItem {
 
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry._ID)));
@@ -82,8 +84,9 @@ public class ThermostatMeasurementItem extends MeasurementItem {
         setMeasuredTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE)));
 
-        setMeasuredTemperature(cursor.getDouble(cursor.getColumnIndex(
+        setPresetTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -101,6 +104,8 @@ public class ThermostatMeasurementItem extends MeasurementItem {
         putNullOrDouble(values,
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE,
                 getPresetTemperature());
+        values.put(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
+        
 
         return values;
     }

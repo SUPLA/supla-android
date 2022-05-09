@@ -20,26 +20,56 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
+const val ProfileIdNew: Long = -1
+
+/**
+ * Additional holder class is needed because of circular dependency between
+ * MultiAccountProfileManager and DbHelper
+ */
+data class ProfileIdHolder(var profileId: Long?)
 
 interface ProfileManager {
 
     /**
-     Returns current profile.
+     * Returns current profile.
      */
     fun getCurrentProfile(): AuthProfileItem
 
     /**
-     Updates current profile.
+     * Updates current profile.
      */
     fun updateCurrentProfile(profile: AuthProfileItem)
 
     /**
-     Get authentication settings of current profile.
+     * Get authentication settings of current profile.
      */
     fun getCurrentAuthInfo(): AuthInfo
 
     /**
-     Update authentication settings of current profile.
+     * Update authentication settings of current profile.
      */
     fun updateCurrentAuthInfo(info: AuthInfo)
+
+
+    /**
+     * Return list of all user profiles
+     */
+    fun getAllProfiles(): List<AuthProfileItem>
+
+    /**
+     * Return profile with given id
+     */
+    fun getProfile(id: Long): AuthProfileItem?
+
+    /**
+     * Activate profile with given id
+     * returns true if profile has been changed (i.e. reauthentication
+     * is required).
+     */
+    fun activateProfile(id: Long, force: Boolean): Boolean
+
+    /**
+     * Remove profile
+     */
+    fun removeProfile(id: Long)
 }

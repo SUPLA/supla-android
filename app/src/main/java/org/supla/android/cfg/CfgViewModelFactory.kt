@@ -25,10 +25,15 @@ import androidx.lifecycle.ViewModel
 import org.supla.android.profile.ProfileManager
 
 class CfgViewModelFactory(private val repository: CfgRepository,
-                          private val profileManager: ProfileManager): ViewModelProvider.Factory {
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
+                          private val profileManager: ProfileManager,
+                          private val navCoordinator: NavCoordinator = NavCoordinator()): ViewModelProvider.Factory {
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
 	if(modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-	    return CfgViewModel(repository, profileManager) as T
+	    return CfgViewModel(repository, profileManager, navCoordinator) as T
+  } else if(modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
+      return ProfilesViewModel(profileManager) as T
+  } else if(modelClass.isAssignableFrom(NavCoordinator::class.java)) {
+      return navCoordinator as T
 	} else {
 	    throw IllegalArgumentException("unknown view model class")
 	}

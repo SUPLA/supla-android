@@ -82,5 +82,6 @@
 
     <color name="activity_bg_new">#E5E5E5</color>
     <color name="cell_bg_new">#FAFBFC</color>
+    <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
 </resources>

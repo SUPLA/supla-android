@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+    <import type="android.view.View" />
+    <variable name="viewModel"
+              type="org.supla.android.profile.ProfileChooser.ItemViewModel"
+              />
+  </data>
+
+  <RelativeLayout 
+      android:background="@color/popup_profile_cell_bg"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/settings_cell_height">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileIconSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/new_screen_margin"
+        android:visibility="@{viewModel.active ? View.VISIBLE : View.INVISIBLE}"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/profile_selected" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileIconUnselected"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/new_screen_margin"
+        android:visibility="@{viewModel.active ? View.INVISIBLE:View.VISIBLE}"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/profile_unselected" />
+
+    <TextView
+        android:id="@+id/profileLabel"
+        android:layout_toRightOf="@id/profileIconSelected"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/menuitem_iamge_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        app:text="@{viewModel.title}"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileSelectedCheckMark"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/new_screen_margin"
+        android:layout_marginLeft="@dimen/menuitem_iamge_margin"
+        android:visibility="@{viewModel.active ? View.VISIBLE : View.GONE}"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/check" />
+
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentBottom="true"
+          android:background="@color/list_separator_bg" />
+    
+  </RelativeLayout>
+
+</layout>

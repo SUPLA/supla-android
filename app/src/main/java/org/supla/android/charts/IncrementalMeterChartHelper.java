@@ -102,7 +102,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
     }
 
     protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
-        if (isComparsionChartType(ctype)) {
+        if (isComparisonChartType(ctype)) {
             barDataSet.setColorDependsOnTheValue(true);
             barDataSet.setColors(getBarChartComparsionColors(false));
         }

@@ -22,14 +22,19 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.components.IMarker;
 
 import org.supla.android.R;
 import org.supla.android.db.MeasurementsDbHelper;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.Channel;
+import org.supla.android.lib.SuplaConst;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,11 +47,28 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     private String colPhase1;
     private String colPhase2;
     private String colPhase3;
+    private boolean singlePhase;
+    
 
     public ElectricityChartHelper(Context context) {
         super(context);
         totalActiveEnergy = new double[]{0, 0, 0};
+        singlePhase = false;
         setProductionDataSource(false);
+    }
+
+    @Override public void loadCombinedChart(int channelId) {
+        DbHelper dbh = DbHelper.getInstance(context);
+        Channel ch = dbh.getChannel(channelId);
+        if(ch != null) {
+            int flags = ch.getFlags();
+            singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
+                && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
+        } else {
+            singlePhase = false;
+        }
+
+        super.loadCombinedChart(channelId);
     }
 
     @Override
@@ -56,6 +78,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         if (isBalanceChartType(ctype)) {
 
@@ -107,13 +130,13 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
         } else {
             float[] phases = new float[3];
+
             phases[0] = (float) c.getDouble(
                     c.getColumnIndex(colPhase1));
             phases[1] = (float) c.getDouble(
                     c.getColumnIndex(colPhase2));
             phases[2] = (float) c.getDouble(
                     c.getColumnIndex(colPhase3));
-
             entries.add(new BarEntry(n, phases));
         }
     }
@@ -124,6 +147,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
         if (ctype.equals(ChartType.Pie_PhaseRank)) {
             Resources res = context.getResources();
@@ -157,6 +181,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     }
 
     @Override
+    @SuppressLint("Range")
     protected long getTimestamp(Cursor c) {
         return c.getLong(c.getColumnIndex(
                 SuplaContract.ElectricityMeterLogViewEntry.COLUMN_NAME_TIMESTAMP));
@@ -200,7 +225,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
     @Override
     protected void prepareBarDataSet(SuplaBarDataSet barDataSet) {
-        if ((isProductionDataSource() && isComparsionChartType(ctype))) {
+        if ((isProductionDataSource() && isComparisonChartType(ctype))) {
             barDataSet.setColorDependsOnTheValue(true);
             barDataSet.setColors(getBarChartComparsionColors(true));
         } else {
@@ -244,5 +269,15 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     @Override
     public String getCurrency() {
         return mProductionDataSource ? null : currency;
+    }
+
+    @Override
+    protected IMarker getMarker() {
+        if(isBalanceChartType(ctype) || isComparisonChartType(ctype) ||
+           isPieChartType(ctype) || singlePhase) {
+            return super.getMarker();
+        } else {
+            return new EMMarkerView(this, context);
+        }
     }
 }

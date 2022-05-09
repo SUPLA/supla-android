@@ -21,6 +21,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaConst;
@@ -58,6 +59,7 @@ public class ChannelGroup extends ChannelBase {
         return position;
     }
     
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
         setRemoteId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
@@ -71,6 +73,7 @@ public class ChannelGroup extends ChannelBase {
         setUserIconId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
         setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
         setPosition(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -88,6 +91,7 @@ public class ChannelGroup extends ChannelBase {
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIconId());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
         values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION, position);
+        values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
 

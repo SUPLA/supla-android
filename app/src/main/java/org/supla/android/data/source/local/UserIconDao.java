@@ -38,6 +38,8 @@ public class UserIconDao extends BaseDao {
 
         ContentValues values = new ContentValues();
         values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
+        values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID,
+                getCachedProfileId());
 
         for (Image image : images) {
             if (image.value != null) {
@@ -61,7 +63,9 @@ public class UserIconDao extends BaseDao {
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
-                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME
+                + " WHERE " + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+                + " = " + getCachedProfileId();
 
         return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
     }

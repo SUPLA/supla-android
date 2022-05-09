@@ -20,6 +20,7 @@ package org.supla.android.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.annotation.SuppressLint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,7 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
 
     }
 
+    @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
         setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TempHumidityLogEntry._ID)));
@@ -71,6 +73,7 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
 
         setTemperature(cursor.getDouble(cursor.getColumnIndex(
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY)));
+        setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID)));
     }
 
     public ContentValues getContentValues() {
@@ -87,6 +90,8 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
         putNullOrDouble(values,
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY,
                 getHumidity());
+
+        values.put(SuplaContract.TempHumidityLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
 
         return values;
     }

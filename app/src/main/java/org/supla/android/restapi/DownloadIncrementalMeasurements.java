@@ -30,10 +30,11 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
 
     protected void SaveMeasurementItem(SQLiteDatabase db,
                                        long timestamp, JSONObject obj) throws JSONException {
-
+        long profileId = getCurrentProfileId();
         younger_item = newObject();
         younger_item.AssignJSONObject(obj);
         younger_item.setChannelId(getChannelId());
+        younger_item.setProfileId(profileId);
 
         boolean correctDateOrder = older_item == null
                 || younger_item.getTimestamp() > older_item.getTimestamp();
@@ -41,6 +42,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
         if (older_item != null && correctDateOrder) {
 
             IncrementalMeasurementItem citem = newObject(younger_item);
+            citem.setProfileId(profileId);
 
             if (!citem.isCalculated()) {
                 citem.Calculate(older_item);

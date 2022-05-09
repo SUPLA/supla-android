@@ -139,12 +139,12 @@
           android:text="@string/cfg_button_autohide" />
       
       <androidx.appcompat.widget.SwitchCompat
+          app:theme="@style/Switch"
           android:id="@+id/buttonAutohide"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
           android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
           android:checked="@{viewModel.cfgData.buttonAutohide}"
 	        android:textSize="@dimen/default_text_size"
           />
@@ -172,18 +172,60 @@
           android:text="@string/show_channel_info" />
       
       <androidx.appcompat.widget.SwitchCompat
+          app:theme="@style/Switch"
           android:id="@+id/showChannelInfo"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
           android:layout_alignParentRight="true"
-          android:buttonTint="@color/channel_btn"
           android:checked="@{viewModel.cfgData.showChannelInfo}"
 	        android:textSize="@dimen/default_text_size"
           />
 
 
     </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+          android:layout_height="@dimen/list_separator_thickness"
+          android:background="@color/list_separator_bg" />
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/new_screen_margin"
+        android:paddingRight="@dimen/new_screen_margin"
+        android:background="@color/cell_bg_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_cell_height">        
+      
+      <TextView
+          android:id="@+id/showOpeningPercentLabel"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rs_display_mode" />
+      <org.supla.android.ui.SegmentedButtonGroup
+          style="@style/SegmentedButtonGroup"
+          android:id="@+id/showOpeningMode"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true">
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_opening" />
+        <org.supla.android.ui.SegmentedButton
+            style="@style/SegmentedButton"
+            android:layout_width="@dimen/segmented_button_width"
+            android:layout_margin="4dp"
+            android:layout_height="@dimen/segmented_button_height"
+            android:text="@string/rs_display_mode_closing" />
+      </org.supla.android.ui.SegmentedButtonGroup>
+
+    </RelativeLayout>
+    
     
     <View android:layout_width="match_parent"
           android:layout_height="@dimen/list_separator_thickness"

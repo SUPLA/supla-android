@@ -36,7 +36,6 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaVersionError;
 import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.AuthInfo;
 
 public class StatusActivity extends NavigationActivity {
 
@@ -172,7 +171,12 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            NavigationActivity.showProfile(this);
+            ProfileManager pm = SuplaApp.getApp().getProfileManager();
+            if(pm.getAllProfiles().size() <= 1) {
+                NavigationActivity.showAuth(this);
+            } else {
+                NavigationActivity.showProfile(this);
+            }
         } else if (v == btnRetry) {
             SuplaApp.getApp().SuplaClientInitIfNeed(this).reconnect();
         } else if (v == btnCloud) {
@@ -238,7 +242,7 @@ public class StatusActivity extends NavigationActivity {
                 && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
-            ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
+            ProfileManager pm = SuplaApp.getApp().getProfileManager();
             if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
