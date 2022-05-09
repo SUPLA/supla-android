@@ -22,4 +22,8 @@ public class SuplaChannelExtendedValueUpdate {
 
     public int Id;
     public SuplaChannelExtendedValue Value;
+
+    public SuplaChannelExtendedValueUpdate() {
+        // This constructor is used by native code
+    }
 }

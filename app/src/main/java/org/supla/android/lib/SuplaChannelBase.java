@@ -31,4 +31,7 @@ public class SuplaChannelBase {
     public boolean OnLine;
     public String Caption;
 
+    public SuplaChannelBase() {
+        // This constructor is used by native code
+    }
 }

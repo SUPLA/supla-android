@@ -31,7 +31,7 @@ public class SuplaRegisterResult {
     public int VersionMin;
 
     public SuplaRegisterResult() {
-
+        // This constructor is used by native code
     }
 
     public SuplaRegisterResult(SuplaRegisterResult result) {

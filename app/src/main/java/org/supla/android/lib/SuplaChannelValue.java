@@ -28,4 +28,8 @@ public class SuplaChannelValue {
     public byte[] Value;
     public byte[] SubValue;
     public short SubValueType;
+
+    public SuplaChannelValue() {
+        // This constructor is used by native code
+    }
 }

@@ -24,7 +24,7 @@ public class SuplaVersionError {
     public int RemoteVersion;
 
     public SuplaVersionError() {
-
+        // This constructor is used by native code
     }
 
     public SuplaVersionError(SuplaVersionError err) {
