@@ -373,4 +373,15 @@
     <string name="zwave_welcome_title">Z-Wave-Assistent</string>
     <string name="zwave_offline">Offline ?</string>
    <string name="hp_calendar_eco">ECO</string>
+
+   <string name="on_off_widget_configure_title">Widgetkonfiguration</string>
+   <string name="on_off_widget_configure_message">Kanal des Widget</string>
+    <string name="on_off_widget_configure_name_label">Anzeigename</string>
+   <string name="on_off_widget_configure_error">Die Konfiguration konnte nicht gesetzt werden…</string>
+   <string name="on_off_widget_configure_no_selection">Kein Schalter ausgewählt</string>
+   <string name="on_off_widget_description">Widget zum Vereinfachen der Nutzung von der Schaltern</string>
+   <string name="on_off_widget_app_not_initialized">Bitte sich zuerst anmelden!</string>
+   <string name="on_off_widget_command_error">Kommunikationsfehler!</string>
+    <string name="on_off_widget_command_no_connection">Keine Internetverbindung!</string>
+    <string name="on_off_widget_command_started">Gemacht</string>
 </resources>

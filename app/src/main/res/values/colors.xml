@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- new color definitions start here -->
-    <color name="supla_green">#12a71e</color> 
+    <color name="supla_green">#12a71e</color>
+
+    <color name="supla_background_light">#F5F6F7</color>
+    <color name="supla_text_light">#000000</color>
     <!-- new color definitions end here -->
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
@@ -55,7 +58,7 @@
     <color name="zwave_btn_separator">#B4B7BA</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
-    <color name="zwave_info_table_bg">#F5F6F7</color>
+    <color name="zwave_info_table_bg">@color/supla_background_light</color>
     <color name="zwave_info_table_text">#000000</color>
     <color name="zwave_info_table_separator">#B4B7BA</color>
 
@@ -84,4 +87,8 @@
     <color name="cell_bg_new">#FAFBFC</color>
     <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
+
+    <color name="widget_text">@color/supla_text_light</color>
+    <color name="widget_button_background">#FFFFFF</color>
+    <color name="widget_background">@color/supla_background_light</color>
 </resources>

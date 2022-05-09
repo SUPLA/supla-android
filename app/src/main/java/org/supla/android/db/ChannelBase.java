@@ -295,7 +295,7 @@ public abstract class ChannelBase extends DbItem {
         return 0;
     }
 
-    protected ImageId getImageIdx(WhichOne whichImage, int active) {
+    public ImageId getImageIdx(WhichOne whichImage, int active) {
 
         if (whichImage != WhichOne.First
                 && getFunc() != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
