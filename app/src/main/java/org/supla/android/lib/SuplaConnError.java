@@ -28,7 +28,7 @@ public class SuplaConnError {
     public int Code;
 
     public SuplaConnError() {
-
+        // This constructor is used by native code
     }
 
     public SuplaConnError(int Code) {

@@ -23,4 +23,8 @@ public class SuplaChannelGroupRelation {
 
     public int ChannelGroupID;
     public int ChannelID;
+
+    public SuplaChannelGroupRelation() {
+        // This constructor is used by native code
+    }
 }

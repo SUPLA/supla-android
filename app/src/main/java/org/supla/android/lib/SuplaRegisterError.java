@@ -27,6 +27,10 @@ public class SuplaRegisterError {
 
     public int ResultCode;
 
+    public SuplaRegisterError() {
+        // This constructor is used by native code
+    }
+
     SuplaRegisterError(SuplaRegisterError err) {
         if (err != null) {
             ResultCode = err.ResultCode;

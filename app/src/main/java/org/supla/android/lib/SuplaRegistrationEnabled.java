@@ -26,7 +26,7 @@ public class SuplaRegistrationEnabled {
     public long IODeviceTimestamp;
 
     public SuplaRegistrationEnabled() {
-
+        // This constructor is used by native code
     }
 
     public SuplaRegistrationEnabled(SuplaRegistrationEnabled regen) {

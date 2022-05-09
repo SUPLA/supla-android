@@ -30,6 +30,8 @@ public class SuplaChannelThermostatValue implements Serializable {
     private Time mTime;
 
     SuplaChannelThermostatValue() {
+        // This constructor is used by native code
+
         MeasuredTemperature = null;
         PresetTemperature = null;
         Values = null;

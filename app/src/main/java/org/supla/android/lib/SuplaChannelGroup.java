@@ -20,4 +20,7 @@ package org.supla.android.lib;
 
 public class SuplaChannelGroup extends SuplaChannelBase {
 
+    public SuplaChannelGroup() {
+        // This constructor is used by native code
+    }
 }

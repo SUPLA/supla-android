@@ -28,7 +28,7 @@ public class SuplaEvent {
     public String SenderName;
 
     public SuplaEvent() {
-
+        // This constructor is used by native code
     }
 
     public SuplaEvent(SuplaEvent event) {
