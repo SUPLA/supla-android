@@ -20,24 +20,22 @@ package org.supla.android.cfg
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.supla.android.SuplaApp
 import org.supla.android.profile.ProfileIdNew
+import org.supla.android.profile.ProfileManager
 
 class AuthItemViewModelFactory(private val profileId: Long,
                                private val allowBasicMode: Boolean,
-                               private val navCoordinator: NavCoordinator):
+                               private val navCoordinator: NavCoordinator,
+                               private val profileManager: ProfileManager):
     ViewModelProvider.Factory {
-
-
 
         override fun <T: ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(AuthItemViewModel::class.java)) {
-                val pm = SuplaApp.getApp().profileManager
-                val profile = pm.getProfile(profileId)!!
+                val profile = profileManager.getProfile(profileId)!!
                 if(profileId == ProfileIdNew && allowBasicMode) {
                     profile.advancedAuthSetup = false
                 }
-                return AuthItemViewModel(pm, profile, allowBasicMode,
+                return AuthItemViewModel(profileManager, profile, allowBasicMode,
                                          navCoordinator) as T
             } else {
                 throw IllegalArgumentException("unknown view model class")

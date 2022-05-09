@@ -34,12 +34,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentAuthBinding
+import org.supla.android.profile.ProfileManager
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AuthFragment: Fragment() {
+    @Inject internal lateinit var profileManager: ProfileManager
     private val viewModel: AuthItemViewModel by viewModels()
     private val navCoordinator: NavCoordinator by activityViewModels()
     private val args: AuthFragmentArgs by navArgs<AuthFragmentArgs>()
@@ -209,6 +214,7 @@ class AuthFragment: Fragment() {
     override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
         return AuthItemViewModelFactory(args.profileId,
                                         args.allowBasicMode,
-                                        navCoordinator)
+                                        navCoordinator,
+                                        profileManager)
     }
 }

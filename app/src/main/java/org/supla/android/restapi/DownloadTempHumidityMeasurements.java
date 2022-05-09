@@ -27,8 +27,8 @@ import org.supla.android.db.TempHumidityMeasurementItem;
 
 public class DownloadTempHumidityMeasurements extends DownloadMeasurementLogs {
 
-    public DownloadTempHumidityMeasurements(Context context) {
-        super(context);
+    public DownloadTempHumidityMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     protected long getMinTimestamp() {

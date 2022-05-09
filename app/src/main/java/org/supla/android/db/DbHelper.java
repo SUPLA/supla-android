@@ -18,16 +18,16 @@ package org.supla.android.db;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.supla.android.Encryption;
+import org.supla.android.Preferences;
+import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
-import org.supla.android.R;
-import org.supla.android.Preferences;
-import org.supla.android.Encryption;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -38,7 +38,7 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
-import org.supla.android.profile.ProfileMigrator;
+import org.supla.android.di.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -48,9 +48,12 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
 import org.supla.android.listview.ListViewCursorAdapter;
+import org.supla.android.profile.ProfileIdHolder;
+import org.supla.android.profile.ProfileMigrator;
 
 import java.util.List;
 
+import dagger.hilt.android.EntryPointAccessors;
 import io.reactivex.rxjava3.core.Completable;
 
 
@@ -90,7 +93,10 @@ public class DbHelper extends BaseDbHelper {
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {
-                    instance = result = new DbHelper(context, () -> SuplaApp.getApp().getProfileIdHolder().getProfileId());
+                    ProfileIdHolder profileIdHolder = EntryPointAccessors.fromApplication(
+                            context.getApplicationContext(), ProfileIdHolderEntryPoint.class)
+                            .provideProfileIdHolder();
+                    instance = result = new DbHelper(context, profileIdHolder::getProfileId);
                 }
             }
         }

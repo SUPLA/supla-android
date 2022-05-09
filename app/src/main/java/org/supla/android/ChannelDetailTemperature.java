@@ -40,6 +40,7 @@ import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTemperatureMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
@@ -47,6 +48,11 @@ import org.supla.android.restapi.SuplaRestApiClientTask;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailTemperature extends DetailLayout implements
         SuplaRestApiClientTask.IAsyncResults, View.OnClickListener,
         AdapterView.OnItemSelectedListener {
@@ -61,6 +67,9 @@ public class ChannelDetailTemperature extends DetailLayout implements
     private TextView tvTemperature;
     private Timer timer1;
     private Integer lastSelectedPos;
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailTemperature(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -79,7 +88,7 @@ public class ChannelDetailTemperature extends DetailLayout implements
     }
 
     protected DownloadMeasurementLogs getDMLInstance() {
-        return new DownloadTemperatureMeasurements(getContext());
+        return new DownloadTemperatureMeasurements(getContext(), profileIdHolder.getProfileId().intValue());
     }
 
     protected ChartHelper getChartHelperInstance() {

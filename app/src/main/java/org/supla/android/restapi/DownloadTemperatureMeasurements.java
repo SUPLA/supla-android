@@ -27,8 +27,8 @@ import org.supla.android.db.TemperatureMeasurementItem;
 
 public class DownloadTemperatureMeasurements extends DownloadMeasurementLogs {
 
-    public DownloadTemperatureMeasurements(Context context) {
-        super(context);
+    public DownloadTemperatureMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     protected long getMinTimestamp() {

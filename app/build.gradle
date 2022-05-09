@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
@@ -120,7 +121,13 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.0.0")
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
   // Jetpack Compose Integration
   //implementation "androidx.navigation:navigation-compose:2.4.0-alpha06"
+}
+
+kapt {
+    correctErrorTypes = true
 }

@@ -31,13 +31,17 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
 import android.app.AlertDialog
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
+import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class CfgActivity: AppCompatActivity() {
 
     companion object {
@@ -46,6 +50,7 @@ class CfgActivity: AppCompatActivity() {
         const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
     }
 
+    @Inject lateinit var profileManager: ProfileManager
     private lateinit var binding: ActivityCfgBinding
     private var shouldShowBack = false
 
@@ -54,8 +59,7 @@ class CfgActivity: AppCompatActivity() {
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
-        val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this),
-                                          SuplaApp.getApp().profileManager)
+        val factory = CfgViewModelFactory(PrefsCfgRepositoryImpl(this), profileManager)
         val provider = ViewModelProvider(this, factory)
         val navCoordinator = provider.get(NavCoordinator::class.java)
 
@@ -101,7 +105,7 @@ class CfgActivity: AppCompatActivity() {
             /* Reconfigure navigation graph to dynamic
                start location */
               if(action == ACTION_AUTH) {
-                  val profileId = SuplaApp.getApp().profileManager.getCurrentProfile().id
+                  val profileId = profileManager.getCurrentProfile().id
                   args = AuthFragmentArgs(profileId, true, true).toBundle()
               } else {
                   args = null

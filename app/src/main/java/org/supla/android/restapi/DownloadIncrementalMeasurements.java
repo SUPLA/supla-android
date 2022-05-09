@@ -12,8 +12,8 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
     private IncrementalMeasurementItem older_item = null;
     private IncrementalMeasurementItem younger_item = null;
 
-    public DownloadIncrementalMeasurements(Context context) {
-        super(context);
+    public DownloadIncrementalMeasurements(Context context, int profileId) {
+        super(context, profileId);
     }
 
     @Override
