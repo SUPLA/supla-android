@@ -564,9 +564,10 @@ public class ChannelListView extends ListView implements
                             color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
                         }
 
-                        if (channelLayout != null)
+                        if (channelLayout != null) {
                             channelLayout.setBackgroundColor(color);
-
+                        }
+                        
                         setVisibility(View.VISIBLE);
                         mDetailLayout.setBackgroundColor(color);
                         mDetailLayout.setVisibility(View.VISIBLE);
