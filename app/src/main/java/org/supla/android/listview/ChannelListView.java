@@ -467,7 +467,7 @@ public class ChannelListView extends ListView implements
                     if (channelLayout != null) {
                         if (channelLayout.getDetailSliderEnabled()) {
                             ChannelBase cbase = getChannelBaseAtXY(X, Y);
-                            if(cbase != null && getDetailLayout(cbase) != null) {
+                            if (cbase != null && getDetailLayout(cbase) != null) {
                                 detailTouchDown = true;
                                 rightButtonSlided100p = channelLayout.Slided() == 200;
                                 getDetailLayout(cbase).setData(cbase);
