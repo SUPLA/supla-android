@@ -391,24 +391,6 @@ public class ChannelListView extends ListView implements
         return false;
     }
 
-    private ChannelBase getChannelBaseAtXY(float X, float Y) {
-        ChannelBase cbase = null;
-        Object obj = getItemAtPosition(pointToPosition((int) X, (int) Y));
-
-        if (obj instanceof Cursor) {
-
-            if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
-                cbase = new ChannelGroup();
-            } else {
-                cbase = new Channel();
-            }
-
-            cbase.AssignCursorData((Cursor) obj);
-        }
-        
-        return cbase;
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
@@ -466,12 +448,24 @@ public class ChannelListView extends ListView implements
 
                     if (channelLayout != null) {
                         if (channelLayout.getDetailSliderEnabled()) {
-                            ChannelBase cbase = getChannelBaseAtXY(X, Y);
-                            if (cbase != null && getDetailLayout(cbase) != null) {
-                                detailTouchDown = true;
-                                rightButtonSlided100p = channelLayout.Slided() == 200;
-                                getDetailLayout(cbase).setData(cbase);
+                            Object obj = getItemAtPosition(pointToPosition((int) X, (int) Y));
 
+                            if (obj instanceof Cursor) {
+                                ChannelBase cbase;
+
+                                if (((ListViewCursorAdapter) getAdapter()).isGroup()) {
+                                    cbase = new ChannelGroup();
+                                } else {
+                                    cbase = new Channel();
+                                }
+
+                                cbase.AssignCursorData((Cursor) obj);
+
+                                if (getDetailLayout(cbase) != null) {
+                                    detailTouchDown = true;
+                                    rightButtonSlided100p = channelLayout.Slided() == 200;
+                                    getDetailLayout(cbase).setData(cbase);
+                                }
                             }
                         }
 
@@ -551,27 +545,16 @@ public class ChannelListView extends ListView implements
 
                     int color = Color.WHITE;
 
-                    if (mDetailLayout == null) {
-                        ChannelBase cbase = getChannelBaseAtXY(X, Y);
-                        if(cbase != null) {
-                            getDetailLayout(cbase);
-                        }
+                    if (mDetailLayout.getBackground() instanceof ColorDrawable) {
+                        color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
                     }
 
-                    
-                    if (mDetailLayout != null) {
-                        if (mDetailLayout.getBackground() instanceof ColorDrawable) {
-                            color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
-                        }
+                    if (channelLayout != null)
+                        channelLayout.setBackgroundColor(color);
 
-                        if (channelLayout != null) {
-                            channelLayout.setBackgroundColor(color);
-                        }
-                        
-                        setVisibility(View.VISIBLE);
-                        mDetailLayout.setBackgroundColor(color);
-                        mDetailLayout.setVisibility(View.VISIBLE);
-                    }
+                    setVisibility(View.VISIBLE);
+                    mDetailLayout.setBackgroundColor(color);
+                    mDetailLayout.setVisibility(View.VISIBLE);
 
                 }
 
@@ -788,12 +771,6 @@ public class ChannelListView extends ListView implements
 
         if (onDetailListener != null)
             onDetailListener.onChannelDetailHide();
-
-        if( mDetailLayout.getParent() instanceof ViewGroup ) {
-            ViewGroup parent = (ViewGroup)mDetailLayout.getParent();
-            parent.removeView(mDetailLayout);
-        }
-        mDetailLayout = null;
     }
 
     private void setChannelBackgroundColor(int color) {
