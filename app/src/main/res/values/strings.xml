@@ -115,6 +115,7 @@
     <string translatable="false" name="delete_account">Remove</string>
     <string translatable="false" name="delete_account_confirm_title">Remove account</string>
     <string translatable="false" name="delete_account_confirm_message">Are you sure you want to remove the account?</string>
+    <string name="delete_account_confirm_message_with_widgets">Are you sure you want to remove the account? Confirmation will remove all account related widgets.</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->

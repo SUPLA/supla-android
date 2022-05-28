@@ -1,88 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <data>
-    <import type="android.view.View" />
-    <variable
-        name="viewModel"
-        type="org.supla.android.cfg.AuthItemViewModel" />
-  </data>
+    <data>
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@color/activity_bg"
-      android:clickable="true"
-      android:focusableInTouchMode="true"
-      android:paddingLeft="@dimen/activity_horizontal_margin"
-      android:paddingTop="@dimen/activity_vertical_margin"
-      android:paddingRight="@dimen/activity_horizontal_margin"
-      android:paddingBottom="@dimen/activity_vertical_margin"
-      android:orientation="vertical">
+        <import type="android.view.View" />
 
-    <TextView
-        android:id="@+id/cfg_label_title_basic"
+        <variable
+            name="viewModel"
+            type="org.supla.android.cfg.AuthItemViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/form_field_spacing"
-        android:layout_marginBottom="50dp"
-        android:text="@string/profile"
-        android:textAppearance="@style/your_account"
-        android:gravity="center_horizontal|top" />
+        android:layout_height="match_parent"
+        android:background="@color/activity_bg"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
-    <TextView
-        style="@style/FormLabel"
-        android:id="@+id/profile_name_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-				android:layout_marginLeft="2dp"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textSize="9sp" 
-        android:text="@string/profile_name_label"
-        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}"
-        />
-    <EditText
-        android:id="@+id/cfg_profile_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/form_label_dist"
-        android:layout_marginBottom="@dimen/form_label_spacing"
-        android:background="@drawable/rounded_edittext"
-        android:maxLines="1"
-        android:lines="1"
-        android:singleLine="true"
-        android:onTextChanged="@{viewModel::onProfileNameChange}"
-        android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}"
-        android:text="@{viewModel.profileName}"
-        android:padding="5dp"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/cfg_label_title_basic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_field_spacing"
+            android:layout_marginBottom="50dp"
+            android:fontFamily="@font/quicksand_regular"
+            android:gravity="center_horizontal|top"
+            android:text="@string/profile"
+            android:textAppearance="@style/your_account" />
 
+        <TextView
+            android:id="@+id/profile_name_label"
+            style="@style/FormLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="@string/profile_name_label"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="9sp"
+            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}" />
 
+        <EditText
+            android:id="@+id/cfg_profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/form_label_dist"
+            android:layout_marginBottom="@dimen/form_label_spacing"
+            android:background="@drawable/rounded_edittext"
+            android:fontFamily="@font/open_sans_regular"
+            android:lines="1"
+            android:maxLines="1"
+            android:onTextChanged="@{viewModel::onProfileNameChange}"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@{viewModel.profileName}"
+            android:textSize="14sp"
+            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}" />
 
-    <TextView
-        style="@style/FormLabel"
-        android:id="@+id/cfg_label_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:text="@string/email"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="9sp" />
+        <TextView
+            android:id="@+id/cfg_label_email"
+            style="@style/FormLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="@string/email"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="9sp" />
 
-    <EditText
-        android:id="@+id/cfg_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:background="@drawable/rounded_edittext"
-        android:inputType="textEmailAddress"
-        android:text="@={viewModel.emailAddress}"
-        android:onTextChanged="@{viewModel::onEmailChange}"
-        android:padding="5dp"
-        android:textSize="14sp" />
+        <EditText
+            android:id="@+id/cfg_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/rounded_edittext"
+            android:fontFamily="@font/open_sans_regular"
+            android:inputType="textEmailAddress"
+            android:onTextChanged="@{viewModel::onEmailChange}"
+            android:padding="5dp"
+            android:text="@={viewModel.emailAddress}"
+            android:textSize="14sp" />
 
-  </LinearLayout>
+    </LinearLayout>
 </layout>

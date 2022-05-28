@@ -36,8 +36,9 @@ class CfgViewModelTest: TestCase() {
     private val mockRepository = Mockito.mock(CfgRepository::class.java)
     private val fakeCfg = CfgData(TemperatureUnit.CELSIUS,
                                   true,
-                                  ChannelHeight.HEIGHT_100, 
-                                  true, false)
+                                  ChannelHeight.HEIGHT_100,
+                                  _showChannelInfo = true,
+                                  _showOpeningPercent = false)
 
     private val fakePM = DummyProfileManager()
 
@@ -46,17 +47,17 @@ class CfgViewModelTest: TestCase() {
 
 
     @Before
-    override public fun setUp() {
+    public override fun setUp() {
 
     }
 
     @Test
-    fun beforeInteactionNoNavigationDecision() {
+    fun beforeInteractionNoNavigationDecision() {
         val repository: CfgRepository = mock {
             on { getCfg() } doReturn fakeCfg
         }
         val nc = NavCoordinator()
-        val viewModel = CfgViewModel(repository, fakePM, nc)
+        CfgViewModel(repository, fakePM, nc)
         assertNull("should not be set initially",
                     nc.navAction.value)
     }

@@ -20,23 +20,22 @@ package org.supla.android.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.extensions.getAllWidgetIds
+import javax.inject.Inject
+import javax.inject.Singleton
 
-/**
- * Worker for handling widget removal. When widget is removed the preferences are cleaned up within this worker.
- */
-class RemoveWidgetsWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-    private val preferences = WidgetPreferences(appContext)
+@Singleton
+class WidgetManager @Inject constructor(
+        @ApplicationContext private val context: Context,
+        private val appWidgetManager: AppWidgetManager,
+        private val widgetPreferences: WidgetPreferences
+) {
 
-    override fun doWork(): Result {
-        val widgetIds: IntArray = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                ?: return Result.failure()
-
-        for (widgetId in widgetIds) {
-            preferences.removeWidgetConfiguration(widgetId)
-        }
-
-        return Result.success()
+    fun hasProfileWidgets(profileId: Long): Boolean {
+        return appWidgetManager.getAllWidgetIds(context).filter {
+            val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@filter false
+            return@filter widgetConfig.profileId == profileId
+        }.isNotEmpty()
     }
 }
