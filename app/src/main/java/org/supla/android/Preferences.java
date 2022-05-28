@@ -112,7 +112,11 @@ public class Preferences {
             if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
                 result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
             }
-            encryptAndSave(pref_key, result);
+            
+            if(result != null) {
+                encryptAndSave(pref_key, result);
+            }
+            
         } else {
             result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
         }
