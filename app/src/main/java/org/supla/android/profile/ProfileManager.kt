@@ -20,7 +20,8 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
-const val ProfileIdNew: Long = -1
+const val PROFILE_ID_NEW: Long = -1
+const val INVALID_PROFILE_ID: Long = -2
 
 /**
  * Additional holder class is needed because of circular dependency between

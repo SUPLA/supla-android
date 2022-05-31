@@ -11,19 +11,25 @@
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
-      <item name="colorPrimary">#12a71e</item>
+      <item name="colorPrimary">@color/supla_green</item>
+      <item name="colorPrimaryDark">@color/supla_green</item>
       <item name="brandPrimaryForegroundColor">#ffffff</item>
-      <item name="brandPrimaryBackgroundColor">#12a71e</item>
+      <item name="brandPrimaryBackgroundColor">@color/supla_green</item>
       <item name="linkColor">#007AFF</item>
       <item name="labelColor">#7e8082</item>
       <item name="switcherBackgroundColor">@color/switcher_background_light</item>
+    </style>
+
+    <style name="AppTheme.Light.Widget" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/supla_green</item>
+        <item name="colorPrimaryDark">@color/layout_background</item>
     </style>
 
     <style name="MenuBarTitle">
         <item name="android:textColor">?attr/brandPrimaryForegroundColor</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">28sp</item>
-    </style>    
+    </style>
 
     <style name="AppBar">
       <item name="titleTextAppearance">@style/title</item>

@@ -39,6 +39,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.widget.WidgetVisibilityHandler;
 
 import java.util.ArrayList;
 

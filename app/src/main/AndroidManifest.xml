@@ -94,9 +94,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="sensorPortrait"></activity>
 
-        <activity android:name=".widget.onoff.OnOffWidgetConfigurationActivity" android:theme="@style/AppTheme.Light">
+        <activity
+            android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
+            android:theme="@style/AppTheme.Light.Widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
     </application>

@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileManager
-import org.supla.android.profile.ProfileIdNew
+import org.supla.android.profile.PROFILE_ID_NEW
 
 /**
 A view model responsible for user credential input views. Handles both
@@ -74,16 +74,13 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     val isAdvancedMode: MutableLiveData<Boolean>
     val saveEnabled = MutableLiveData<Boolean>(true)
     val isActive: MutableLiveData<Boolean>
-    val isActiveVisible: Boolean get() {
-        return (profileManager.getAllProfiles().size > 1) || (item.id == ProfileIdNew)
-    }
 
     val isDeleteAvailable: Boolean  get() {
-        return !item.isActive && (item.id != ProfileIdNew)
+        return !item.isActive && (item.id != PROFILE_ID_NEW)
     }
 
     val allowsEditingProfileName: Boolean get() {
-        return profileManager.getAllProfiles().size > 1 || item.authInfo.isAuthDataComplete || item.id == ProfileIdNew
+        return profileManager.getAllProfiles().size > 1 || item.authInfo.isAuthDataComplete || item.id == PROFILE_ID_NEW
     }
 
 

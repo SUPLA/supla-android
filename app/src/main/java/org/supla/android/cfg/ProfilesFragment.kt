@@ -25,12 +25,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.FragmentProfilesBinding
-import org.supla.android.profile.ProfileIdNew
+import org.supla.android.profile.PROFILE_ID_NEW
 import org.supla.android.profile.ProfileManager
 import javax.inject.Inject
 
@@ -65,7 +64,7 @@ class ProfilesFragment: Fragment() {
     }
 
     private fun openEditProfileView(profileId: Long) {
-        val navId = if(profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
+        val navId = if(profileId == PROFILE_ID_NEW) R.id.newProfile else R.id.editProfile
         val args = AuthFragmentArgs(profileId, true, false)
         navCoordinator.wantsBack = true
         findNavController().navigate(navId, args.toBundle())

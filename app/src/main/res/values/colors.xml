@@ -87,8 +87,15 @@
     <color name="cell_bg_new">#FAFBFC</color>
     <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
+    <color name="ripple">#5112a71e</color>
+
+    <!-- New colors with day/night support -->
+
+    <color name="layout_background">#F5F6F7</color>
+    <color name="field_background">#FFFFFF</color>
+    <color name="button_background">@color/supla</color>
 
     <color name="widget_text">@color/supla_text_light</color>
-    <color name="widget_button_background">#FFFFFF</color>
     <color name="widget_background">@color/supla_background_light</color>
+    <color name="widget_fields_border">#3078801F</color>
 </resources>

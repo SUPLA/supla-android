@@ -3,7 +3,6 @@
     android:id="@+id/spinner_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/field_background"
     android:padding="8dp"
     android:textColor="@color/widget_text"
     android:textSize="16sp" />

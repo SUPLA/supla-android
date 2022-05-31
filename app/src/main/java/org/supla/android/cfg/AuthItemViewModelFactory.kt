@@ -20,7 +20,7 @@ package org.supla.android.cfg
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.supla.android.profile.ProfileIdNew
+import org.supla.android.profile.PROFILE_ID_NEW
 import org.supla.android.profile.ProfileManager
 
 class AuthItemViewModelFactory(private val profileId: Long,
@@ -32,7 +32,7 @@ class AuthItemViewModelFactory(private val profileId: Long,
         override fun <T: ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(AuthItemViewModel::class.java)) {
                 val profile = profileManager.getProfile(profileId)!!
-                if(profileId == ProfileIdNew && allowBasicMode) {
+                if(profileId == PROFILE_ID_NEW && allowBasicMode) {
                     profile.advancedAuthSetup = false
                 }
                 return AuthItemViewModel(profileManager, profile, allowBasicMode,

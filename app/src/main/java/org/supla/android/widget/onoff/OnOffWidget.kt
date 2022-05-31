@@ -22,6 +22,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -33,6 +34,8 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
+import org.supla.android.profile.INVALID_PROFILE_ID
+import org.supla.android.widget.INVALID_CHANNEL_ID
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
@@ -108,17 +111,37 @@ class OnOffWidget : AppWidgetProvider() {
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int, configuration: WidgetConfiguration?) {
     // Construct the RemoteViews object
     val views = buildWidget(context, widgetId)
-    if (configuration != null) {
+    if (configuration != null && isWidgetValid(configuration)) {
         views.setTextViewText(R.id.on_off_widget_channel_name, configuration.channelCaption)
 
         val channel = Channel()
         channel.func = configuration.channelFunction
-        views.setImageViewBitmap(R.id.on_off_widget_turn_on_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 1)))
-        views.setImageViewBitmap(R.id.on_off_widget_turn_off_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 2)))
+
+        val activeValue = getActiveValue(configuration.channelFunction)
+        views.setImageViewBitmap(R.id.on_off_widget_turn_on_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue)))
+        views.setImageViewBitmap(R.id.on_off_widget_turn_off_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0)))
+
+        views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.VISIBLE)
+        views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.VISIBLE)
+        views.setViewVisibility(R.id.on_off_widget_removed_label, View.GONE)
+    } else {
+        views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.GONE)
+        views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.GONE)
+        views.setViewVisibility(R.id.on_off_widget_removed_label, View.VISIBLE)
     }
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(widgetId, views)
 }
+
+internal fun getActiveValue(channelFunction: Int) = if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
+    3
+} else {
+    1
+}
+
+internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
+        configuration.profileId != INVALID_PROFILE_ID &&
+        configuration.channelId != INVALID_CHANNEL_ID
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
     val views = RemoteViews(context.packageName, R.layout.on_off_widget)

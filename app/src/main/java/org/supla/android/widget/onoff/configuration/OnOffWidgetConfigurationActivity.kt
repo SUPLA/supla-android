@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.onoff.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -26,39 +26,39 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.ViewModelProvider
-import org.supla.android.Preferences
+import androidx.fragment.app.FragmentActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.ActivityOnOffWidgetConfigurationBinding
+import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
-import org.supla.android.db.DbHelper
-import org.supla.android.extensions.getProfileManager
 import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.onoff.intent
+import javax.inject.Inject
 
 /**
  * Activity which displays a list of available switches during the on-off widget configuration.
  */
-class OnOffWidgetConfigurationActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class OnOffWidgetConfigurationActivity : FragmentActivity() {
 
-    private lateinit var viewModel: OnOffWidgetConfigurationViewModel
+    private val viewModel: OnOffWidgetConfigurationViewModel by viewModels()
     private lateinit var binding: ActivityOnOffWidgetConfigurationBinding
     private lateinit var widgetPreferences: WidgetPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val factory = OnOffWidgetConfigurationViewModelFactory(Preferences(this),
-                DbHelper.getInstance(this), WidgetPreferences(this), getProfileManager())
-        viewModel = ViewModelProvider(this, factory).get(OnOffWidgetConfigurationViewModel::class.java)
-
-        binding = ActivityOnOffWidgetConfigurationBinding.inflate(layoutInflater).apply {
-            viewmodel = viewModel
-            lifecycleOwner = this@OnOffWidgetConfigurationActivity
-        }
-        setupSpinner()
+        binding = ActivityOnOffWidgetConfigurationBinding
+                .inflate(layoutInflater).apply {
+                    viewmodel = viewModel
+                    lifecycleOwner = this@OnOffWidgetConfigurationActivity
+                }
+        setupSwitchesSpinner()
+        setupProfilesSpinner()
         setContentView(binding.root)
 
         // set default response
@@ -66,7 +66,8 @@ class OnOffWidgetConfigurationActivity : AppCompatActivity() {
 
         val appWidgetId = intent?.extras?.getInt(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+                AppWidgetManager.INVALID_APPWIDGET_ID)
+                ?: AppWidgetManager.INVALID_APPWIDGET_ID
         viewModel.widgetId = appWidgetId
         widgetPreferences = WidgetPreferences(this)
 
@@ -75,13 +76,27 @@ class OnOffWidgetConfigurationActivity : AppCompatActivity() {
         observeCancellation()
     }
 
-    private fun setupSpinner() {
-        val adapter = OnOffWidgetConfigurationSpinnerAdapter(this, mutableListOf())
+    private fun setupSwitchesSpinner() {
+        val adapter = OnOffWidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
         binding.widgetOnOffConfigureSwitches.adapter = adapter
         binding.widgetOnOffConfigureSwitches.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 viewModel.selectedChannel = adapter.getItem(position)
                 updateSwitchDisplayName()
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                viewModel.selectedChannel = null
+            }
+        }
+    }
+
+    private fun setupProfilesSpinner() {
+        val adapter = OnOffWidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
+        binding.widgetOnOffConfigureProfiles.adapter = adapter
+        binding.widgetOnOffConfigureProfiles.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.changeProfile(adapter.getItem(position))
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -157,9 +172,16 @@ fun setViewVisibility(view: View, isVisible: Boolean) {
     }
 }
 
-@BindingAdapter("items")
-fun setSpinnerItems(spinner: Spinner, items: List<Channel>?) {
+@BindingAdapter("channels")
+fun setSpinnerChannels(spinner: Spinner, items: List<Channel>?) {
     items?.let {
-        (spinner.adapter as OnOffWidgetConfigurationSpinnerAdapter).postChannels(it)
+        (spinner.adapter as OnOffWidgetConfigurationChannelsSpinnerAdapter).postItems(it)
+    }
+}
+
+@BindingAdapter("profiles")
+fun setSpinnerProfiles(spinner: Spinner, items: List<AuthProfileItem>?) {
+    items?.let {
+        (spinner.adapter as OnOffWidgetConfigurationProfilesSpinnerAdapter).postItems(it)
     }
 }

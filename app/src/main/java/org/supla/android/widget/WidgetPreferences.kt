@@ -21,8 +21,9 @@ package org.supla.android.widget
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import org.supla.android.profile.INVALID_PROFILE_ID
 
-const val INVALID_PROFILE_ID: Long = -111
+const val INVALID_CHANNEL_ID = -1
 private const val SHARED_PREFERENCES = "SwitchPreferences"
 
 /**
@@ -39,6 +40,7 @@ class WidgetPreferences(context: Context) {
             putInt(getKeyForChannelFunction(widgetId), configuration.channelFunction)
             putInt(getKeyForChannelColor(widgetId), configuration.channelColor)
             putLong(getKeyForProfileId(widgetId), configuration.profileId)
+            putBoolean(getKeyForWidgetVisibility(widgetId), configuration.visibility)
             apply()
         }
     }
@@ -53,7 +55,8 @@ class WidgetPreferences(context: Context) {
         val channelFunction = preferences.getInt(getKeyForChannelFunction(widgetId), -1)
         val channelColor = preferences.getInt(getKeyForChannelColor(widgetId), Color.WHITE)
         val profileId = preferences.getLong(getKeyForProfileId(widgetId), INVALID_PROFILE_ID)
-        return WidgetConfiguration(channelId, channelCaption, channelFunction, channelColor, profileId)
+        val visibility = preferences.getBoolean(getKeyForWidgetVisibility(widgetId), false)
+        return WidgetConfiguration(channelId, channelCaption, channelFunction, channelColor, profileId, visibility)
     }
 
     fun removeWidgetConfiguration(widgetId: Int) {
@@ -85,10 +88,15 @@ internal fun getKeyForProfileId(widgetId: Int): String {
     return "$SHARED_PREFERENCES.PROFILE_ID.$widgetId"
 }
 
+internal fun getKeyForWidgetVisibility(widgetId: Int): String {
+    return "$SHARED_PREFERENCES.VISIBILITY.$widgetId"
+}
+
 data class WidgetConfiguration(
         val channelId: Int,
         val channelCaption: String?,
         val channelFunction: Int,
         val channelColor: Int,
-        val profileId: Long
+        val profileId: Long,
+        val visibility: Boolean
 )
