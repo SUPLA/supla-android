@@ -18,7 +18,7 @@ android {
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
 	multiDexEnabled true
-        versionCode 147
+        versionCode 148
         versionName "2.3.80"
 
         sourceSets.main {
