@@ -158,8 +158,15 @@ public class ChannelDao extends BaseDao {
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID
             };
 
+            String selection = SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID
+                    + " = ?";
+
+            String[] selectionArgs = {
+                    String.valueOf(getCachedProfileId())
+            };
+
             return sqLiteDatabase.query(SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME,
-                    projection, null, null, null, null,
+                    projection, selection, selectionArgs, null, null,
                     SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID
             );
         });
@@ -279,7 +286,10 @@ public class ChannelDao extends BaseDao {
                 SuplaContract.ChannelViewEntry._ID
         };
 
-        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+        String selection = SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+                + " = ? "
+                + " AND "
+                + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
                 + " = ?"
                 + " AND "
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE + " > 0"
@@ -287,6 +297,7 @@ public class ChannelDao extends BaseDao {
                 + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS + " & ?) > 0";
 
         String[] selectionArgs = {
+                String.valueOf(getCachedProfileId()),
                 String.valueOf(SuplaConst.SUPLA_CHANNELTYPE_BRIDGE),
                 String.valueOf(SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE)
         };
