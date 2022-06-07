@@ -468,6 +468,7 @@
     <string name="on_off_widget_configure_name_label">Nazwa</string>
     <string name="on_off_widget_configure_error">Konfiguracja przełącznika nie powiodła się…</string>
     <string name="on_off_widget_configure_no_selection">Nie wybrano przełącznika</string>
+    <string name="on_off_widget_configure_no_channel">Brak dostępnych przełączników</string>
     <string name="on_off_widget_description">Widżet pozwalający na zmianę ustawienia przełącznika bezpośrednio z ekranu głównego telefonu.</string>
     <string name="on_off_widget_app_not_initialized">Proszę się zalogować!</string>
     <string name="on_off_widget_command_error">Błąd komunikacji!</string>

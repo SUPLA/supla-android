@@ -451,6 +451,7 @@
     <string translatable="false" name="on_off_widget_configure_name_label">Display name</string>
     <string translatable="false" name="on_off_widget_configure_error">Could not configure channel…</string>
     <string translatable="false" name="on_off_widget_configure_no_selection">No channel selected</string>
+    <string translatable="false" name="on_off_widget_configure_no_channel">No channels available</string>
     <string translatable="false" name="on_off_widget_description">Widget which simplifies the usage of on/off operations.</string>
     <string translatable="false" name="on_off_widget_app_not_initialized">Please login first!</string>
     <string translatable="false" name="on_off_widget_command_error">Communication failure!</string>
