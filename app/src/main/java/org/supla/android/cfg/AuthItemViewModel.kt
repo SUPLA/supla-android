@@ -16,16 +16,19 @@ package org.supla.android.cfg
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.profile.ProfileManager
 import org.supla.android.profile.PROFILE_ID_NEW
+import org.supla.android.profile.ProfileManager
+import org.supla.android.widget.WidgetManager
+import javax.inject.Inject
 
 /**
 A view model responsible for user credential input views. Handles both
@@ -36,17 +39,11 @@ initial authentication screen and profile editing.
 @param allowsBasicMode whether to allow basic mode (initial screen usually allows
        while profile editing mode does not.
 */
-class AuthItemViewModel(private val profileManager: ProfileManager,
-                        private val item: AuthProfileItem,
-                        val allowsBasicMode: Boolean,
-                        private val navCoordinator: NavCoordinator): ViewModel() {
-    private val _isDirty = MutableLiveData<Boolean>(false)
-    /**
-     indicates that configuration is changed and should be saved.
-     */
-    val isDirty: LiveData<Boolean> = _isDirty
-
-
+@HiltViewModel
+class AuthItemViewModel @Inject constructor(
+        private val profileManager: ProfileManager,
+        private val widgetManager: WidgetManager
+) : ViewModel() {
     private val _editAction: MutableStateFlow<AuthItemEditAction?> =
         MutableStateFlow(null)
     val editAction: StateFlow<AuthItemEditAction?> = _editAction
@@ -59,21 +56,21 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     /**
      server address auto discovery flag.
      */
-    private val _serverAutoDiscovery: MutableLiveData<Boolean>
-    val serverAutoDiscovery: LiveData<Boolean>
+    private val _serverAutoDiscovery: MutableLiveData<Boolean> = MutableLiveData()
+    val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
 
-    val profileName: MutableLiveData<String>
-    
-    private val _authByEmail: MutableLiveData<Boolean>
-    val authByEmail: LiveData<Boolean>
-    val emailAddress: MutableLiveData<String>
-    val accessID: MutableLiveData<String>
-    val serverAddrEmail: MutableLiveData<String>
-    val serverAddrAccessID: MutableLiveData<String>
-    val accessIDpwd: MutableLiveData<String>
-    val isAdvancedMode: MutableLiveData<Boolean>
-    val saveEnabled = MutableLiveData<Boolean>(true)
-    val isActive: MutableLiveData<Boolean>
+    val profileName: MutableLiveData<String> = MutableLiveData()
+
+    private val _authByEmail: MutableLiveData<Boolean> = MutableLiveData()
+    val authByEmail: LiveData<Boolean> = _authByEmail
+    val emailAddress: MutableLiveData<String> = MutableLiveData()
+    val accessID: MutableLiveData<String> = MutableLiveData()
+    val serverAddrEmail: MutableLiveData<String> = MutableLiveData()
+    val serverAddrAccessID: MutableLiveData<String> = MutableLiveData()
+    val accessIDpwd: MutableLiveData<String> = MutableLiveData()
+    val isAdvancedMode: MutableLiveData<Boolean> = MutableLiveData()
+    val saveEnabled = MutableLiveData(true)
+    val isActive: MutableLiveData<Boolean> = MutableLiveData()
 
     val isDeleteAvailable: Boolean  get() {
         return !item.isActive && (item.id != PROFILE_ID_NEW)
@@ -84,54 +81,50 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     }
 
 
-    private val _emailObserver: Observer<String>
-    private val _serverAddrEmailObserver: Observer<String>
-    private val _serverAddrAccessIDObserver: Observer<String>
-    private val _accessIDObserver: Observer<String>
-    private val _accessIDPwdObserver: Observer<String>
-    private val _advancedObserver: Observer<Boolean>
-    private val _activeObserver: Observer<Boolean>
+    private lateinit var _emailObserver: Observer<String>
+    private lateinit var _serverAddrEmailObserver: Observer<String>
+    private lateinit var _serverAddrAccessIDObserver: Observer<String>
+    private lateinit var _accessIDObserver: Observer<String>
+    private lateinit var _accessIDPwdObserver: Observer<String>
+    private lateinit var _advancedObserver: Observer<Boolean>
+    private lateinit var _activeObserver: Observer<Boolean>
+
+    private lateinit var item: AuthProfileItem
 
 
-    init {
-        
+    fun onCreated(profileId: Long) {
+        item = profileManager.getProfile(profileId)!!
         val info = item.authInfo
-        _authByEmail = MutableLiveData(info.emailAuth)
-        authByEmail = _authByEmail
-
-        profileName = MutableLiveData(item.name)
+        _authByEmail.value = info.emailAuth
+        profileName.value = item.name
 
         val accessIDstr = if(info.accessID > 0) info.accessID.toString() else ""
-        accessID = MutableLiveData<String>(accessIDstr)
-        _accessIDObserver = Observer<String> {  if(it != accessIDstr) setNeedsReauth() }                                   
+        accessID.value = accessIDstr
+        _accessIDObserver = Observer<String> {  if(it != accessIDstr) setNeedsReauth() }
         accessID.observeForever(_accessIDObserver)
 
-        _serverAutoDiscovery = MutableLiveData<Boolean>(info.serverAutoDetect)
-        serverAutoDiscovery = _serverAutoDiscovery
+        _serverAutoDiscovery.value = info.serverAutoDetect
 
-        emailAddress = MutableLiveData(info.emailAddress)
+        emailAddress.value = info.emailAddress
         _emailObserver = Observer { if(it != info.emailAddress) setNeedsReauth() }
         emailAddress.observeForever(_emailObserver)
 
-        serverAddrEmail = MutableLiveData(info.serverForEmail)
+        serverAddrEmail.value = info.serverForEmail
         _serverAddrEmailObserver = Observer { if(it != info.serverForEmail) setNeedsReauth() }
         serverAddrEmail.observeForever(_serverAddrEmailObserver)
-       
 
-        serverAddrAccessID = MutableLiveData(info.serverForAccessID)
+
+        serverAddrAccessID.value = info.serverForAccessID
         _serverAddrAccessIDObserver = Observer { if(it != info.serverForAccessID) setNeedsReauth() }
         serverAddrAccessID.observeForever(_serverAddrAccessIDObserver)
 
 
-        accessIDpwd = MutableLiveData(info.accessIDpwd)
+        accessIDpwd.value = info.accessIDpwd
         _accessIDPwdObserver = Observer { if(it != info.accessIDpwd) setNeedsReauth() }
         accessIDpwd.observeForever(_accessIDPwdObserver)
 
-        isAdvancedMode = MutableLiveData<Boolean>(if(allowsBasicMode) item.advancedAuthSetup else true)
+        isAdvancedMode.value = item.advancedAuthSetup
         _advancedObserver = Observer {
-            if(it != item.advancedAuthSetup) {
-                setConfigDirty()
-            }
             if(it == false) {
                 // Do some sanity checks before going into
                 // basic mode
@@ -141,11 +134,11 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
                                                                 R.string.basic_config_unavailable)
                     isAdvancedMode.value = true
                 }
-            }            
+            }
         }
         isAdvancedMode.observeForever(_advancedObserver)
 
-        isActive = MutableLiveData<Boolean>(item.isActive)
+        isActive.value = item.isActive
         _activeObserver = Observer {
             if(it == false && item.isActive) {
                 _editAction.value = AuthItemEditAction.Alert(R.string.profile_set_as_default,
@@ -181,7 +174,6 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     }
 
     private fun saveConfig(): Boolean {
-        val pm = profileManager
         val profile = item
         val pn = profileName.value
 
@@ -203,16 +195,16 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         profile.advancedAuthSetup = isAdvancedMode.value ?: false
         profile.isActive = isActive.value ?: false
 
-        if(profile.authInfo.isAuthDataComplete) {
-            pm.updateCurrentProfile(profile)
-            return true
+        return if(profile.authInfo.isAuthDataComplete) {
+            profileManager.updateCurrentProfile(profile)
+            true
         } else {
-            return false
+            false
         }
     }
 
     private fun checkForDuplicateName(profile: String): Boolean {
-        val match = profileManager.getAllProfiles().filter { it.name == profile }.firstOrNull()
+        val match = profileManager.getAllProfiles().firstOrNull { it.name == profile }
         return (match != null && match.id != item.id)
     }
 
@@ -232,8 +224,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
 
         if(saveConfig()) {
             saveEnabled.value = false
-            
-            navCoordinator.returnFromAuth(_authSettingsChanged)
+            _editAction.value = AuthItemEditAction.ReturnFromAuth(_authSettingsChanged)
         } else {
             _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
                                                          R.string.form_profile_required_data_missing)
@@ -247,22 +238,21 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
     }
 
     fun onCreateAccount() {
-        navCoordinator.navigate(NavigationFlow.CREATE_ACCOUNT)
+        _editAction.value = AuthItemEditAction.NavigateToCreateAccount
     }
 
     fun onDeleteProfile(force: Boolean = false) {
-        if(item.isActive) {
-            _editAction.value = AuthItemEditAction.Alert(R.string.form_error,
-                                                         R.string.form_cannot_delete_active_profile)
-            return
+        when {
+            item.isActive -> _editAction.value = AuthItemEditAction.Alert(
+                    R.string.form_error,
+                    R.string.form_cannot_delete_active_profile)
+            !force -> _editAction.value = AuthItemEditAction.ConfirmDelete(
+                    widgetManager.hasProfileWidgets(item.id))
+            else -> {
+                profileManager.removeProfile(item.id)
+                _editAction.value = AuthItemEditAction.ReturnFromAuth(true)
+            }
         }
-        if(!force) {
-            _editAction.value = AuthItemEditAction.ConfirmDelete()
-            return
-        }
-        profileManager.removeProfile(item.id)
-        _editAction.value = AuthItemEditAction.EditingCommited(item, false)
-        navCoordinator.returnFromAuth(true)
     }
 
     fun toggleServerAutoDiscovery() {
@@ -270,7 +260,7 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
             _serverAutoDiscovery.value = false
 
 	          val email = emailAddress.value
-	          if(serverAddrEmail.value == "" && email != null) {		
+	          if(serverAddrEmail.value == "" && email != null) {
 		            serverAddrEmail.value = email.substringAfter("@")
 	          }
         } else {
@@ -278,15 +268,6 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
             _serverAutoDiscovery.value = true
         }
         setNeedsReauth()
-    }
-
-    private fun clearEmail() {
-        emailAddress.value = ""
-    }
-
-    private fun clearAccessID() {
-        accessIDpwd.value = ""
-        accessID.value = ""
     }
 
     /**
@@ -297,18 +278,13 @@ class AuthItemViewModel(private val profileManager: ProfileManager,
         _authSettingsChanged = true
     }
 
-    private fun setConfigDirty() {
-        _isDirty.value = true
-    }
-
     val hasValidAccount : Boolean
         get() =  profileManager.getCurrentProfile().authInfo.isAuthDataComplete
 }
 
 sealed class AuthItemEditAction {
-    data class EditingCommited(val item: AuthProfileItem, val needsReauth: Boolean): 
-        AuthItemEditAction()
-    data class EditingCanceled(val item: AuthProfileItem): AuthItemEditAction()
     data class Alert(val titleResId: Int, val messageResId: Int): AuthItemEditAction()
-    class ConfirmDelete: AuthItemEditAction()
+    data class ReturnFromAuth(val authSettingChanged: Boolean): AuthItemEditAction()
+    data class ConfirmDelete(val hasWidgets: Boolean): AuthItemEditAction()
+    object NavigateToCreateAccount: AuthItemEditAction()
 }

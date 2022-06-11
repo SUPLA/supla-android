@@ -8,7 +8,8 @@
     <string name="delete_account">Usuń</string>
 
     <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
-    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto ?</string>
+    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto?</string>
+    <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
     <string name="profile_default_name" translatable="false">Domyślne</string>
     <string name="profile_select_active" translatable="false">Aktywne konto</string>
     <string name="profile_act_info">Dotknij konta aby się zalogować</string>
@@ -467,6 +468,7 @@
     <string name="on_off_widget_configure_name_label">Nazwa</string>
     <string name="on_off_widget_configure_error">Konfiguracja przełącznika nie powiodła się…</string>
     <string name="on_off_widget_configure_no_selection">Nie wybrano przełącznika</string>
+    <string name="on_off_widget_configure_no_channel">Brak dostępnych przełączników</string>
     <string name="on_off_widget_description">Widżet pozwalający na zmianę ustawienia przełącznika bezpośrednio z ekranu głównego telefonu.</string>
     <string name="on_off_widget_app_not_initialized">Proszę się zalogować!</string>
     <string name="on_off_widget_command_error">Błąd komunikacji!</string>

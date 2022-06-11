@@ -73,9 +73,6 @@
                 android:layout_marginVertical="4dp"
                 android:background="@drawable/background_widget_configuration_spinner"
                 android:padding="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_profile_label"
                 app:profiles="@{viewmodel.profilesList}"
                 app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
 
@@ -89,9 +86,8 @@
                 android:text="@string/on_off_widget_configure_channel_label"
                 android:textAllCaps="true"
                 android:textColor="@color/label_grey"
+                android:textSize="12sp"
                 android:textStyle="normal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_profiles"
                 app:visibility="@{!viewmodel.dataLoading}" />
 
             <Spinner
@@ -103,10 +99,19 @@
                 android:background="@drawable/background_widget_configuration_spinner"
                 android:padding="4dp"
                 app:channels="@{viewmodel.channelsList}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_channel_label"
-                app:visibility="@{!viewmodel.dataLoading}" />
+                app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.channelsList.size() > 0}" />
+
+            <TextView
+                android:id="@+id/widget_on_off_configure_no_channel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="@string/on_off_widget_configure_no_channel"
+                android:textColor="@color/widget_text"
+                android:textSize="16sp"
+                app:visibility="@{viewmodel.channelsList.size() == 0}" />
 
         </LinearLayout>
 
@@ -148,6 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:background="@drawable/background_widget_configuration_button"
+            android:enabled="@{viewmodel.channelsList.size() > 0}"
             android:onClick="@{() -> viewmodel.confirmSelection()}"
             android:text="@string/ok"
             android:textColor="#FFFFFF"

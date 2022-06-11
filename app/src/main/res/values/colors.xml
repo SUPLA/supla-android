@@ -94,6 +94,7 @@
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
     <color name="button_background">@color/supla</color>
+    <color name="button_background_disabled">#B4B7BA</color>
 
     <color name="widget_text">@color/supla_text_light</color>
     <color name="widget_background">@color/supla_background_light</color>

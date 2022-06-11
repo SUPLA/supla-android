@@ -65,7 +65,7 @@ class ProfilesFragment: Fragment() {
 
     private fun openEditProfileView(profileId: Long) {
         val navId = if(profileId == PROFILE_ID_NEW) R.id.newProfile else R.id.editProfile
-        val args = AuthFragmentArgs(profileId, true, false)
+        val args = AuthFragmentArgs(profileId, asPopup = false)
         navCoordinator.wantsBack = true
         findNavController().navigate(navId, args.toBundle())
     }

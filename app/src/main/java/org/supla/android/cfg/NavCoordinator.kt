@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class NavCoordinator(): ViewModel() {
+class NavCoordinator: ViewModel() {
 
     var wantsBack = false
 
