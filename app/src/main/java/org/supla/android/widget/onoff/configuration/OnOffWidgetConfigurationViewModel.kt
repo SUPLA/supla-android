@@ -125,13 +125,7 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
 
     private fun loadSwitches() {
         val switches = getAllChannels()
-                .filter {
-                    it.func == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-                            || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMER
-                            || it.func == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-                            || it.func == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-                            || it.func == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-                }
+                .filter { it.isSwitch() || it.isRollerShutter() }
         _channelsList.postValue(switches)
         if (switches.isNotEmpty()) {
             selectedChannel = switches[0]
@@ -165,3 +159,14 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
 class NoItemSelectedException : RuntimeException() {}
 
 class EmptyDisplayNameException : RuntimeException() {}
+
+private fun Channel.isSwitch() =
+        func == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                || func == SuplaConst.SUPLA_CHANNELFNC_DIMMER
+                || func == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+                || func == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+                || func == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+
+private fun Channel.isRollerShutter() =
+        func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+                || func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW

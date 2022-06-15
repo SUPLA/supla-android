@@ -89,6 +89,28 @@ class OnOffWidgetConfigurationViewModelTest {
     }
 
     @Test
+    fun `should load all roller shutter channels`() = runBlocking {
+        // given
+        val cursor: Cursor = mockCursorChannels(
+                SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+                SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW)
+        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
+        whenever(preferences.configIsSet()).thenReturn(true)
+
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(1)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
+        // when
+        val viewModel = OnOffWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        val channels = viewModel.channelsList.getOrAwaitValue()
+
+        // then
+        assertThat(channels.size, `is`(2))
+        verifyNoInteractions(widgetPreferences)
+    }
+
+    @Test
     fun `should provide empty list of channels if no channel available`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels()

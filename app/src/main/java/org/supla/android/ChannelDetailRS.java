@@ -18,6 +18,9 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import static org.supla.android.lib.SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE;
+import static org.supla.android.lib.SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -354,13 +357,13 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
         } else if (v == btnOpen) {
 
             if (action == MotionEvent.ACTION_DOWN)
-                client.open(getRemoteId(), isGroup(), 10);
+                client.open(getRemoteId(), isGroup(), SUPLA_CTR_ROLLER_SHUTTER_OPEN);
             else return false;
 
         } else if (v == btnClose) {
 
             if (action == MotionEvent.ACTION_DOWN)
-                client.open(getRemoteId(), isGroup(), 110);
+                client.open(getRemoteId(), isGroup(), SUPLA_CTR_ROLLER_SHUTTER_CLOSE);
             else return false;
         }
 
