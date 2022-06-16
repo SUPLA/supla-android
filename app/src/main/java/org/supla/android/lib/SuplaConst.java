@@ -293,6 +293,9 @@ public class SuplaConst {
     public final static int RS_VALUE_FLAG_MOTOR_PROBLEM = 0x8;
     public final static int RS_VALUE_FLAG_CALIBRATION_IN_PROGRESS = 0x10;
 
+    public final static int SUPLA_CTR_ROLLER_SHUTTER_OPEN = 10;
+    public final static int SUPLA_CTR_ROLLER_SHUTTER_CLOSE = 110;
+
     public static String getCaption(int func, Context context) {
 
         int idx = -1;

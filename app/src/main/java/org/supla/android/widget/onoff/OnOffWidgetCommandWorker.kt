@@ -32,6 +32,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.extensions.getProfileManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaConst.*
 import org.supla.android.widget.WidgetPreferences
 
 
@@ -45,6 +46,7 @@ private const val MAX_WAIT_TIME = 3000 // in ms
  * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
  * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
+ * It supports also opening and closing of roller shutters
  */
 class OnOffWidgetCommandWorker(
         appContext: Context,
@@ -83,15 +85,22 @@ class OnOffWidgetCommandWorker(
         showToast(R.string.on_off_widget_command_started, Toast.LENGTH_SHORT)
         SuplaApp.Vibrate(applicationContext)
 
-        if (configuration.channelFunction == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-                || configuration.channelFunction == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH) {
-            suplaClient.turnOnOff(applicationContext, inputData.getBoolean(ARG_TURN_ON, false),
-                    configuration.channelId, false, configuration.channelFunction, false)
-        } else if (configuration.channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMER
-                || configuration.channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-                || configuration.channelFunction == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING) {
-            val brightness = getBrightness()
-            suplaClient.setRGBW(configuration.channelId, configuration.channelColor, brightness, brightness, true)
+        when (configuration.channelFunction) {
+            SUPLA_CHANNELFNC_LIGHTSWITCH,
+            SUPLA_CHANNELFNC_POWERSWITCH -> {
+                suplaClient.turnOnOff(applicationContext, inputData.getBoolean(ARG_TURN_ON, false),
+                        configuration.channelId, false, configuration.channelFunction, false)
+            }
+            SUPLA_CHANNELFNC_DIMMER,
+            SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+            SUPLA_CHANNELFNC_RGBLIGHTING -> {
+                val brightness = getBrightness()
+                suplaClient.setRGBW(configuration.channelId, configuration.channelColor, brightness, brightness, true)
+            }
+            SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+            SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
+                suplaClient.open(configuration.channelId, getOpenOrClose())
+            }
         }
 
         return Result.success()
@@ -105,7 +114,8 @@ class OnOffWidgetCommandWorker(
         }
 
         // before change check if profile exist to avoid changing id to not existing one.
-        profileManager.getAllProfiles().firstOrNull { it.id == profileId } ?: return null
+        profileManager.getAllProfiles().firstOrNull { it.id == profileId }
+                ?: return null
         profileManager.activateProfile(profileId)
 
         if (suplaApp.suplaClient == null) {
@@ -124,13 +134,19 @@ class OnOffWidgetCommandWorker(
         return suplaApp.suplaClient
     }
 
-    private fun getBrightness(): Int {
-        return if (inputData.getBoolean(ARG_TURN_ON, false)) {
-            100
-        } else {
-            0
-        }
-    }
+    private fun getBrightness(): Int =
+            if (inputData.getBoolean(ARG_TURN_ON, false)) {
+                100
+            } else {
+                0
+            }
+
+    private fun getOpenOrClose(): Int =
+            if (inputData.getBoolean(ARG_TURN_ON, false)) {
+                SUPLA_CTR_ROLLER_SHUTTER_CLOSE
+            } else {
+                SUPLA_CTR_ROLLER_SHUTTER_OPEN
+            }
 
     private fun showToast(stringId: Int, length: Int) {
         handler.post {
@@ -142,7 +158,8 @@ class OnOffWidgetCommandWorker(
         val connectivityManager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val nw = connectivityManager.activeNetwork ?: return false
-            val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(nw)
+                    ?: return false
             return when {
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
@@ -151,9 +168,10 @@ class OnOffWidgetCommandWorker(
                 else -> false
             }
         } else {
-            @Suppress("DEPRECATION") val nwInfo = connectivityManager.activeNetworkInfo
-                    ?: return false
-            @Suppress("DEPRECATION") return nwInfo.isConnected
+            @Suppress("DEPRECATION")
+            val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return nwInfo.isConnected
         }
     }
 }
