@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff.configuration
+package org.supla.android.widget.shared.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,7 +27,7 @@ import androidx.annotation.LayoutRes
 import org.supla.android.R
 import org.supla.android.db.DbItem
 
-abstract class OnOffWidgetConfigurationSpinnerBase<T>(
+abstract class WidgetConfigurationSpinnerBase<T>(
         context: Context,
         objects: MutableList<T>
 ) : ArrayAdapter<T>(context, R.layout.spinner_item, objects) where T : DbItem {

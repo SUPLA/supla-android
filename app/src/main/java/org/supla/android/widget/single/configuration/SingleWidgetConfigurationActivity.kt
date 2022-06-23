@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff.configuration
+package org.supla.android.widget.single.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,24 +23,24 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.databinding.ActivityOnOffWidgetConfigurationBinding
+import org.supla.android.databinding.ActivitySingleWidgetConfigurationBinding
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.onoff.intent
 import org.supla.android.widget.shared.configuration.WidgetConfigurationActivityBase
 import org.supla.android.widget.shared.configuration.WidgetConfigurationChannelsSpinnerAdapter
 import org.supla.android.widget.shared.configuration.WidgetConfigurationProfilesSpinnerAdapter
+import org.supla.android.widget.single.intent
 import javax.inject.Inject
 
 /**
  * Activity which displays a list of available switches during the on-off widget configuration.
  */
 @AndroidEntryPoint
-class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<ActivityOnOffWidgetConfigurationBinding>() {
+class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<ActivitySingleWidgetConfigurationBinding>() {
 
     @Inject
     lateinit var widgetPreferences: WidgetPreferences
 
-    private val viewModel: OnOffWidgetConfigurationViewModel by viewModels()
+    private val viewModel: SingleWidgetConfigurationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,30 +55,30 @@ class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activit
 
     private fun setupSwitchesSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffConfigureSwitches.adapter = adapter
-        binding.widgetOnOffConfigureSwitches.onItemSelectedListener =
+        binding.widgetSingleConfigureSwitches.adapter = adapter
+        binding.widgetSingleConfigureSwitches.onItemSelectedListener =
                 channelItemSelectedListener(adapter)
     }
 
     private fun setupProfilesSpinner() {
         val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffConfigureProfiles.adapter = adapter
-        binding.widgetOnOffConfigureProfiles.onItemSelectedListener =
+        binding.widgetSingleConfigureProfiles.adapter = adapter
+        binding.widgetSingleConfigureProfiles.onItemSelectedListener =
                 profileItemSelectedListener(adapter)
     }
 
     override fun updateSwitchDisplayName(caption: String) {
-        binding.widgetOnOffConfigureName.setText(caption)
+        binding.widgetSingleConfigureName.setText(caption)
     }
 
     override fun onWidgetNameError() {
-        binding.widgetOnOffConfigureName.background =
+        binding.widgetSingleConfigureName.background =
                 ContextCompat.getDrawable(this,
                         R.drawable.rounded_edittext_err)
     }
 
     private fun observeCancellation() {
-        binding.widgetOnOffConfigureClose.setOnClickListener {
+        binding.widgetSingleConfigureClose.setOnClickListener {
             // user's just closing the window, nothing to do..
             finish()
         }
@@ -86,14 +86,14 @@ class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activit
 
     override fun viewModel() = viewModel
 
-    override fun bind() = ActivityOnOffWidgetConfigurationBinding
+    override fun bind() = ActivitySingleWidgetConfigurationBinding
             .inflate(layoutInflater).apply {
                 viewmodel = viewModel
-                lifecycleOwner = this@OnOffWidgetConfigurationActivity
+                lifecycleOwner = this@SingleWidgetConfigurationActivity
             }
 
     override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
             intent(context, intentAction, widgetId)
 
-    override fun getNameMaxLength() = resources.getInteger(R.integer.on_off_widget_name_max_length)
+    override fun getNameMaxLength() = resources.getInteger(R.integer.single_widget_name_max_length)
 }

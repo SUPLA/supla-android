@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="@string/on_off_widget_removed_label"
+        android:text="@string/widget_removed_label"
         android:textColor="@color/widget_text"
         android:textSize="16sp"
         android:visibility="gone" />

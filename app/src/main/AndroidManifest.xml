@@ -43,6 +43,18 @@
                 android:resource="@xml/on_off_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".widget.single.SingleWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/single_widget_info" />
+        </receiver>
+
         <uses-library
             android:name="android.test.runner"
             android:required="false" />
@@ -96,6 +108,13 @@
 
         <activity
             android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
+            android:theme="@style/AppTheme.Light.Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
             android:theme="@style/AppTheme.Light.Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

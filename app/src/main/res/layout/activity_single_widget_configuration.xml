@@ -6,7 +6,7 @@
 
         <variable
             name="viewmodel"
-            type="org.supla.android.widget.onoff.configuration.OnOffWidgetConfigurationViewModel" />
+            type="org.supla.android.widget.single.configuration.SingleWidgetConfigurationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:paddingBottom="16dp">
 
         <ImageButton
-            android:id="@+id/widget_on_off_configure_close"
+            android:id="@+id/widget_single_configure_close"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_margin="16dp"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/widget_on_off_configure_title"
+            android:id="@+id/widget_single_configure_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -39,18 +39,18 @@
             android:text="@string/widget_configure_title"
             android:textColor="@color/widget_text"
             android:textSize="34sp"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_close" />
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_close" />
 
         <LinearLayout
-            android:id="@+id/widget_on_off_profile_and_channel"
+            android:id="@+id/widget_single_profile_and_channel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title">
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_title">
 
             <TextView
-                android:id="@+id/widget_on_off_configure_profile_label"
+                android:id="@+id/widget_single_configure_profile_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -62,11 +62,11 @@
                 android:textSize="12sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title"
+                app:layout_constraintTop_toBottomOf="@id/widget_single_configure_title"
                 app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
 
             <Spinner
-                android:id="@+id/widget_on_off_configure_profiles"
+                android:id="@+id/widget_single_configure_profiles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -77,7 +77,7 @@
                 app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
 
             <TextView
-                android:id="@+id/widget_on_off_configure_channel_label"
+                android:id="@+id/widget_single_configure_channel_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -91,7 +91,7 @@
                 app:visibility="@{!viewmodel.dataLoading}" />
 
             <Spinner
-                android:id="@+id/widget_on_off_configure_switches"
+                android:id="@+id/widget_single_configure_switches"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -102,7 +102,7 @@
                 app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.channelsList.size() > 0}" />
 
             <TextView
-                android:id="@+id/widget_on_off_configure_no_channel"
+                android:id="@+id/widget_single_configure_no_channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -116,22 +116,22 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/widget_on_off_configure_name_label"
+            android:id="@+id/widget_single_configure_name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="19dp"
-            android:labelFor="@id/widget_on_off_configure_name"
+            android:labelFor="@id/widget_single_configure_name"
             android:text="@string/widget_configure_name_label"
             android:textAllCaps="true"
             android:textColor="@color/label_grey"
             android:textSize="12sp"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_profile_and_channel" />
+            app:layout_constraintTop_toBottomOf="@id/widget_single_profile_and_channel" />
 
         <EditText
-            android:id="@+id/widget_on_off_configure_name"
+            android:id="@+id/widget_single_configure_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -139,14 +139,14 @@
             android:background="@drawable/background_widget_configuration_field"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:maxLength="@integer/on_off_widget_name_max_length"
+            android:maxLength="@integer/single_widget_name_max_length"
             android:maxLines="1"
             android:onTextChanged="@{viewmodel::onDisplayNameChanged}"
             android:padding="12dp"
             android:textColor="@color/widget_text"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_name_label" />
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_name_label" />
 
         <Button
             android:layout_width="match_parent"
@@ -168,7 +168,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title"
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_title"
             app:visibility="@{viewmodel.dataLoading}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

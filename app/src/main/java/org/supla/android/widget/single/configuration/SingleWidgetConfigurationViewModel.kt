@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff.configuration
+package org.supla.android.widget.single.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -24,12 +24,11 @@ import org.supla.android.db.Channel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
-import org.supla.android.widget.shared.configuration.isRollerShutter
-import org.supla.android.widget.shared.configuration.isSwitch
+import org.supla.android.widget.shared.configuration.isGateController
 import javax.inject.Inject
 
 @HiltViewModel
-class OnOffWidgetConfigurationViewModel @Inject constructor(
+class SingleWidgetConfigurationViewModel @Inject constructor(
         preferences: Preferences,
         widgetPreferences: WidgetPreferences,
         profileManager: ProfileManager,
@@ -41,7 +40,6 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
         channelRepository
 ) {
     override fun filterChannels(channel: Channel): Boolean {
-        return channel.isSwitch() || channel.isRollerShutter()
+        return channel.isGateController()
     }
-
 }

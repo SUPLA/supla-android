@@ -2,6 +2,7 @@
 <resources>
 
     <integer name="background_timeout">30</integer>
-    <integer name="widget_name_max_length">20</integer>
+    <integer name="on_off_widget_name_max_length">20</integer>
+    <integer name="single_widget_name_max_length">6</integer>
 
 </resources>

@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.single
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -37,43 +37,18 @@ const val ARG_TURN_ON = "ARG_TURN_ON"
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
  * It supports also opening and closing of roller shutters
  */
-class OnOffWidgetCommandWorker(
+class SingleWidgetCommandWorker(
         appContext: Context,
         workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
     override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
         when (configuration.channelFunction) {
-            SUPLA_CHANNELFNC_LIGHTSWITCH,
-            SUPLA_CHANNELFNC_POWERSWITCH -> {
-                suplaClient.turnOnOff(applicationContext, inputData.getBoolean(ARG_TURN_ON, false),
-                        configuration.channelId, false, configuration.channelFunction, false)
-            }
-            SUPLA_CHANNELFNC_DIMMER,
-            SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-            SUPLA_CHANNELFNC_RGBLIGHTING -> {
-                val brightness = getBrightness()
-                suplaClient.setRGBW(configuration.channelId, configuration.channelColor, brightness, brightness, true)
-            }
-            SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-            SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
-                suplaClient.open(configuration.channelId, getOpenOrClose())
+            SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+            SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
+                suplaClient.open(configuration.channelId, 1)
             }
         }
         return Result.success()
     }
-
-    private fun getBrightness(): Int =
-            if (inputData.getBoolean(ARG_TURN_ON, false)) {
-                100
-            } else {
-                0
-            }
-
-    private fun getOpenOrClose(): Int =
-            if (inputData.getBoolean(ARG_TURN_ON, false)) {
-                SUPLA_CTR_ROLLER_SHUTTER_CLOSE
-            } else {
-                SUPLA_CTR_ROLLER_SHUTTER_OPEN
-            }
 }
