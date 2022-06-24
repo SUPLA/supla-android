@@ -147,7 +147,7 @@
     <string translatable="false"  name="rs_percent_caption_open">Percentage of opening</string>    
     <string name="calibration">[Calibration]</string>
 
-    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address entered in the settings. (Disable advanced options in the settings)</string>
+    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
     <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
     <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>

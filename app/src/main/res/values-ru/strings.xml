@@ -107,7 +107,6 @@
     <string name="wizard_step3_txt2">Если устройство после подключения питания не работает в режиме конфигурации, удерживайте нажатой кнопку <b>CONFIG</b> в течение минимум 5 секунд.</string>
     <string name="wizard_done">Конфигурация устройства завершена успешно :)</string>
     <string name="wizard_result_failed">Конфигурация завершена с ошибкой!</string>
-    <string name="add_wizard_is_not_available">Мастер добавления доступен, только когда установлено соединение с сервером по указанному в настройках адресу электронной почты!</string>
     <string name="wizard_iodev_laststate">Предыдущее состояние</string>
     <string name="wizard_step3_txt3">Нажмите кнопку <b>START</b>, чтобы начать конфигурацию.</string>
     <string name="wizard_iodev_name">Название</string>

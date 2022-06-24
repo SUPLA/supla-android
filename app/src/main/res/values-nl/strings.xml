@@ -87,7 +87,6 @@
     <string name="rs_percent_caption">Percentage van sluiting</string>
     <string name="calibration">[Kalibratie]</string>
 
-    <string name="add_wizard_is_not_available">De wizard Toevoegen is alleen beschikbaar wanneer een verbinding met de server tot stand is gebracht op basis van het e-mailadres dat in de instellingen is ingevoerd!</string>
     <string name="device_registration_disabled">I / O-apparaatregistratie is momenteel uitgeschakeld. Ga door naar pagina %1$s en schakel op het tabblad "Mijn SUPLA" het toevoegen van apparaten in.</string>
 
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
