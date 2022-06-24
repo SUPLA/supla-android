@@ -192,7 +192,7 @@ class AuthFragment : Fragment() {
     }
 
     private fun hideKeyboard(v: View) {
-        val service = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val service = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
         service?.hideSoftInputFromWindow(v.windowToken, 0)
     }
 
