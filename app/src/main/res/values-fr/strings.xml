@@ -101,7 +101,6 @@
     <string name="wizard_step3_txt2">Si le dispositif est allumé mais ne fonctionne pas en mode de configuration, maintenez la touche <b>CONFIG</b> pendant au moins 5 secondes.</string>
     <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
     <string name="wizard_result_failed">Échec de la configuration!</string>
-    <string name="add_wizard_is_not_available">Assistant d\'ajout est disponible uniquement lorsque vous êtes connecté au serveur en entrant votre adresse e-mail conforme à aux paramètres!</string>
     <string name="wizard_iodev_laststate">Statut précédent</string>
     <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
     <string name="wizard_iodev_name">Nom</string>

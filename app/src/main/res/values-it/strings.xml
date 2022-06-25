@@ -102,7 +102,6 @@
     <string name="wizard_step3_txt2">Se dopo aver acceso l’alimentazione il dispositivo non lavora in modalità di configurazione, tieni premuto il tasto <b>CONFIG</b> per almeno 5 secondi.</string>
     <string name="wizard_done">Configurazione del dispositivo terminata con successo :)</string>
     <string name="wizard_result_failed">Configurazione fallita!</string>
-    <string name="add_wizard_is_not_available">La procedura guidata Aggiungi un dispositivo è disponibile solo dopo aver stabilito una connessione con il server in base all’indirizzo e-mail inserito nelle impostazioni!</string>
     <string name="wizard_iodev_laststate">Stato precedente</string>
     <string name="wizard_step3_txt3">Premii il tasto <b>START</b> per iniziare la configurazione.</string>
     <string name="wizard_iodev_name">Nome</string>

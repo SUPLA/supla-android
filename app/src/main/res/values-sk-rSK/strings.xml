@@ -100,7 +100,6 @@
     <string name="rs_percent_caption">Percento zatvorenia</string>
     <string name="calibration">[Kalibrácia]</string>
 
-    <string name="add_wizard_is_not_available">Sprievodca pridaním je k dispozícii iba vtedy, keď bolo nadviazané spojenie so serverom na základe e-mailovej adresy zadanej v nastaveniach!</string>
     <string name="device_registration_disabled">Registrácia I / O zariadení je momentálne vypnutá. Ak chcete pokračovať, prejdite na stránku %1$s a v záložke „Moja SUPLA“ zapnite pridávanie zariadení.</string>
 
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>

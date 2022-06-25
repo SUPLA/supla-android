@@ -101,7 +101,6 @@
     <string name="wizard_step3_txt2">Se um dispositivo não trabalha no modo de configuração depois de o ligar à rede elétrica, mantenha o botão carregado <b>CONFIG</b> por 5 segundos ao mínimo.</string>
     <string name="wizard_done">O dispositivo foi configurado com sucesso :)</string>
     <string name="wizard_result_failed">A configuração falhou!</string>
-    <string name="add_wizard_is_not_available">O assistente para adicionar está disponível só se uma ligação com o servidor foi criada usando o enderço e-mail presente nas configurações!</string>
     <string name="wizard_iodev_laststate">Estatuto anterior</string>
     <string name="wizard_step3_txt3">Carregue no botão <b>START</b> para iniciar uma configuração.</string>
     <string name="wizard_iodev_name">Nome</string>

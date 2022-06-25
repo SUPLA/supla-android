@@ -87,7 +87,6 @@
     <string name="rs_percent_caption">Odstotek zapiranja</string>
     <string name="calibration">[Kalibracija]</string>
 
-    <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo samo, če je vzpostavljena povezava s strežnikom na podlagi e-naslova, vpisanega v nastavitvah!</string>
     <string name="device_registration_disabled">Registracija naprav je trenutno izklopljena. Za nadaljevanje pojdite na stran %1$s in v zavihku "Moja SUPLA" omogočite dodajanje naprav.</string>
 
     <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>

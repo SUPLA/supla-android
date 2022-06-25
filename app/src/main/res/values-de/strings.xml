@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">Wenn das Gerät nach dem Einschalten im Konfigurationsmodus nicht funktioniert, halten Sie die Taste <b>CONFIG</b> für mindestens 5 Sekunden gedrückt.</string>
     <string name="wizard_done">Die Konfiguration wurde erfolgreich abgeschlossen :)</string>
     <string name="wizard_result_failed">Die Konfiguration war nicht erfolgreich!</string>
-    <string name="add_wizard_is_not_available">Der Assistent zum Hinzufügen steht nur dann zur Verfügung, wenn Kontakt mit dem Server aufgrund der E-Mail-Adresse besteht!</string>
     <string name="wizard_iodev_laststate">Vorheriger Status</string>
     <string name="wizard_step3_txt3">Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.</string>
     <string name="wizard_iodev_name">Name</string>
