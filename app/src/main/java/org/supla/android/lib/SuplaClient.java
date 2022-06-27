@@ -974,6 +974,25 @@ public class SuplaClient extends Thread {
 
     }
 
+    private void sceneUpdate(SuplaScene scene) {
+        Trace.d(log_tag, "Scene id:" + scene.getId()
+                + " locationId: " + scene.getLocationId()
+                + " altIcon:" + scene.getAltIcon()
+                + " userIcon:" + scene.getUserIcon()
+                + " caption: " + scene.getCaption()
+                + " EOL: " + scene.isEol());
+    }
+
+    private void sceneStateUpdate(SuplaSceneState state) {
+        Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
+                + " startedAt: " + state.getStartedAt()
+                + " estamitedEndDate: " + state.getEstamitedEndDate()
+                + " isDuringExecution: " + state.isDuringExecution()
+                + " initiatorId: " + state.getInitiatorId()
+                + " initiatorName: " + state.getInitiatorName()
+                + " EOL: " + state.isEol());
+    }
+
     private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
         if (DbH.updateChannelValue(channelValueUpdate)) {
