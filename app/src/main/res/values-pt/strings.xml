@@ -86,12 +86,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">Se gostar da aplicação, avalie-a. Agradecemos o seu apoio!</string>
+    <string name="rate_msg">Sabia que Supla é um projeto aberto e gratuito desenvolvido pela comunidade? Se gosta desta aplicação, gaste um minuto a avaliá-la. Obrigado pelo seu apoio!</string>
     <string name="rate_now">Avalie agora</string>
     <string name="rate_later">Mais tarde</string>
     <string name="rate_no_thanks">Não, obrigado</string>
     <string name="rs_percent_caption">Percentagem do fecho</string>
     <string name="calibration">[Calibrar]</string>
+    <string name="add_wizard_is_not_available">A Opção Adicionar Assistente só está disponível quando for estabelecida uma ligação ao servidor com base no endereço de e-mail inscrito! (Desative as opções avançadas na configuração da sua conta)</string>
     <string name="wizard_step1_txt3">Para continuar carregue em <b>Continuar</b>.</string>
     <string name="add_device">Adicionar um dispositivo</string>
     <string name="advanced_settings">Configurações avançadas</string>
