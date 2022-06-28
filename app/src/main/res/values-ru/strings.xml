@@ -91,13 +91,14 @@
  Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">If you enjoy using this app, please take a moment to rate it. Thanks for your support!</string>
-    <string name="rate_now">Rate Now</string>
-    <string name="rate_later">Later</string>
-    <string name="rate_no_thanks">No thanks</string>
+    <string name="rate_msg">Знаете ли вы, что Supla - это открытый и бесплатный проект, разрабатываемый сообществом? Если вам нравится это приложение, найдите минуту, чтобы его оценить. Спасибо за вашу поддержку!</string>
+    <string name="rate_now">Оценить сейчас</string>
+    <string name="rate_later">Потом</string>
+    <string name="rate_no_thanks">Спасибо, не надо</string>
 
     <string name="rs_percent_caption">Процент закрытия</string>
     <string name="calibration">[калибровка]</string>
+    <string name="add_wizard_is_not_available">Мастер добавления доступен только при подключении к серверу на основе введенного адреса электронной почты! (Отключите дополнительные параметры в настройках вашей учетной записи)</string>
     <string name="wizard_step1_txt3">Для продолжения нажмите <b>Далее</b>.</string>
     <string name="add_device">Добавить устройство</string>
     <string name="advanced_settings">Дополнительные параметры</string>
