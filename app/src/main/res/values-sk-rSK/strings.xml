@@ -93,13 +93,14 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
     </string>
 
-    <string name="rate_msg">Páči sa vám táto aplikácia? Venujte chvíľku a ohodnoťte ju. Ďakujeme za vašu podporu!</string>
+    <string name="rate_msg">Viete, že Supla je otvorený a bezplatný projekt, rozvíjaný komunitou? Ak sa Ti táto aplikácia páči, venuj chvíľu jej ohodnoteniu. Ďakujeme za Tvoju podporu!</string>
     <string name="rate_now">Ohodnotiť teraz</string>
     <string name="rate_later">Neskôr</string>
     <string name="rate_no_thanks">Nie, ďakujem</string>
     <string name="rs_percent_caption">Percento zatvorenia</string>
     <string name="calibration">[Kalibrácia]</string>
 
+    <string name="add_wizard_is_not_available">Sprievodca pridávaním je dostupný len po nadviazaní spojenia so serverom na základe zadanej e-mailovej adresy! (Vypnite pokročilé možnosti v nastavení svojho účtu)</string>
     <string name="device_registration_disabled">Registrácia I / O zariadení je momentálne vypnutá. Ak chcete pokračovať, prejdite na stránku %1$s a v záložke „Moja SUPLA“ zapnite pridávanie zariadení.</string>
 
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
