@@ -80,13 +80,14 @@
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
-    <string name="rate_msg">Αν σας αρέσει αυτή η εφαρμογή, παρακαλώ αφιερώστε λίγο χρόνο για να την αξιολογήσετε. Σας ευχαριστώ για την υποστήριξή σας!</string>
+    <string name="rate_msg">Γνωρίζατε ότι το Supla είναι ένα ανοιχτό και δωρεάν πρόγραμμα που αναπτύσσεται από κοινότητα; Αν σας αρέσει αυτή η εφαρμογή, αφιερώστε λίγο χρόνο για να το αξιολογήσετε. Σας ευχαριστούμε για την υποστήριξή σας!</string>
     <string name="rate_now">Βαθμολογήστε τώρα</string>
     <string name="rate_later">Αργότερα</string>
     <string name="rate_no_thanks">Όχι, ευχαριστώ</string>
     <string name="rs_percent_caption">Ποσοστό κλεισίματος</string>
     <string name="calibration">[Βαθμονόμηση]</string>
 
+    <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
     <string name="device_registration_disabled">Η εγγραφή συσκευών εισόδου/εξόδου είναι αυτή τη στιγμή απενεργοποιημένη. Για να συνεχίσετε, μεταβείτε στην ιστοσελίδα %1$s και στην καρτέλα "Η SUPLA μου" ενεργοποιήστε την προσθήκη συσκευών.</string>
 
     <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
