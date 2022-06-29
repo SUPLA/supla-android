@@ -80,13 +80,14 @@
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
-    <string name="rate_msg">Als je deze applicatie leuk vindt, neem dan even de tijd om het te beoordelen. Bedankt voor uw steun!</string>
+    <string name="rate_msg">Wist u dat Supla een open en gratis project is, ontwikkeld door de gemeenschap? Als deze app je bevalt, neem dan even de tijd om haar te beoordelen. Dank u voor uw steun!</string>
     <string name="rate_now">Beoordeel het nu</string>
     <string name="rate_later">Later</string>
     <string name="rate_no_thanks">Nee, dank je</string>
     <string name="rs_percent_caption">Percentage van sluiting</string>
     <string name="calibration">[Kalibratie]</string>
 
+    <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
     <string name="device_registration_disabled">I / O-apparaatregistratie is momenteel uitgeschakeld. Ga door naar pagina %1$s en schakel op het tabblad "Mijn SUPLA" het toevoegen van apparaten in.</string>
 
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
