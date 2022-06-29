@@ -80,13 +80,14 @@
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
-    <string name="rate_msg">Dacă vă place această aplicație, vă rugăm să acordați un moment pentru a o evalua. Vă mulțumim pentru suport!</string>
+    <string name="rate_msg">Știați că Supla este un proiect deschis și gratuit care este dezvoltat de către comunitate? Dacă vă place această aplicație, vă rugăm să-i acordați un moment pentru a o evalua. Mulțumim.</string>
     <string name="rate_now">Evaluează acum</string>
     <string name="rate_later">Mai târziu</string>
     <string name="rate_no_thanks">Nu, mulțumesc</string>
     <string name="rs_percent_caption">Procentul de închidere</string>
     <string name="calibration">[Calibrare]</string>
 
+    <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
     <string name="device_registration_disabled">În prezent, înregistrarea dispozitivelor I/O este dezactivată. Pentru a continua, accesați pagina %1$s și în fila „SUPLA mea” activați adăugarea dispozitivelor.</string>
 
     <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
