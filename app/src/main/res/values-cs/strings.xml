@@ -68,12 +68,13 @@
     <string name="advanced_settings">Pokročilá nastavení</string>
     <string name="create_account"><u>Vytvořte účet</u></string>
     <string name="about_app">This program is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  as published by the Free Software Foundation; either version 2  of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful,  but WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  GNU General Public License for more details.   You should have received a copy of the GNU General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA 02111-1307, USA</string>
-    <string name="rate_msg">Pokud se vám tato aplikace líbí, chvíli si ji ohodnoťte. Děkujeme za podporu!</string>
+    <string name="rate_msg">Věděli jste, že Supla je otevřený a bezplatný komunitní projekt? Pokud se vám tato aplikace líbí, ohodnoťte ji prosím. Děkuji za Vaší podporu!</string>
     <string name="rate_now">Ohodnoťte teď</string>
     <string name="rate_later">Později</string>
     <string name="rate_no_thanks">Ne, děkuji</string>
     <string name="rs_percent_caption">Procento uzavření</string>
     <string name="calibration">[Kalibrace]</string>
+    <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
     <string name="device_registration_disabled">Registrace I / O zařízení je momentálně zakázána. Chcete-li pokračovat, přejděte na stránku %1$s a na kartě Moje SUPLA povolte přidávání zařízení</string>
     <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
     <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
