@@ -80,13 +80,14 @@
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
-    <string name="rate_msg">Dersom du liker denne appen ta litt tid til å vurdere den. Takk for ditt støtte!</string>
+    <string name="rate_msg">Visste du at Supla er et åpent og gratis samfunnsprosjekt? Hvis du liker denne appen, vennligst ta tiden og vurder den. Takk for støtten din!</string>
     <string name="rate_now">Vurder nå</string>
     <string name="rate_later">Senere</string>
     <string name="rate_no_thanks">Nei takk</string>
     <string name="rs_percent_caption">Prosent av stenging</string>
     <string name="calibration">[Kalibrering]</string>
 
+    <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
     <string name="device_registration_disabled">Registering av enheter inngang/utgang er for tiden skrudd av. For å fortsette, gå til nettsiden %1$s og i fanen ”Min SUPLA” skru på legg til enheter.</string>
 
     <string name="wizard_step1_txt1">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
