@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff.configuration
+package org.supla.android.widget.shared.configuration
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,11 +18,11 @@ package org.supla.android.widget.onoff.configuration
  */
 
 import android.content.Context
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.Channel
 
-class OnOffWidgetConfigurationProfilesSpinnerAdapter(
+class WidgetConfigurationChannelsSpinnerAdapter(
         context: Context,
-        objects: MutableList<AuthProfileItem>
-) : OnOffWidgetConfigurationSpinnerBase<AuthProfileItem>(context, objects) {
-    override fun getItemText(item: AuthProfileItem): String = item.name
+        objects: MutableList<Channel>
+) : WidgetConfigurationSpinnerBase<Channel>(context, objects) {
+    override fun getItemText(item: Channel): String = item.getNotEmptyCaption(context)
 }

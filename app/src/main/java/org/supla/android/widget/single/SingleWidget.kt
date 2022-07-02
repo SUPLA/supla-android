@@ -1,4 +1,4 @@
-package org.supla.android.widget.onoff
+package org.supla.android.widget.single
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -48,28 +48,24 @@ private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
  * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
  * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
  */
-class OnOffWidget : WidgetProviderBase() {
+class SingleWidget : WidgetProviderBase() {
 
     override fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int, configuration: WidgetConfiguration?) {
         // Construct the RemoteViews object
         val views = buildWidget(context, widgetId)
         if (configuration != null && isWidgetValid(configuration)) {
-            views.setTextViewText(R.id.on_off_widget_channel_name, configuration.channelCaption)
+            views.setTextViewText(R.id.single_widget_channel_name, configuration.channelCaption)
 
             val channel = Channel()
             channel.func = configuration.channelFunction
 
-            val activeValue = getActiveValue(configuration.channelFunction)
-            views.setImageViewBitmap(R.id.on_off_widget_turn_on_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue)))
-            views.setImageViewBitmap(R.id.on_off_widget_turn_off_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0)))
+            views.setImageViewBitmap(R.id.single_widget_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0)))
 
-            views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.VISIBLE)
-            views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.VISIBLE)
-            views.setViewVisibility(R.id.on_off_widget_removed_label, View.GONE)
+            views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+            views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
         } else {
-            views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.GONE)
-            views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.GONE)
-            views.setViewVisibility(R.id.on_off_widget_removed_label, View.VISIBLE)
+            views.setViewVisibility(R.id.single_widget_button, View.GONE)
+            views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(widgetId, views)
@@ -93,7 +89,7 @@ class OnOffWidget : WidgetProviderBase() {
                     .putBoolean(ARG_TURN_ON, turnOnOff)
                     .build()
 
-            val removeWidgetsWork = OneTimeWorkRequestBuilder<OnOffWidgetCommandWorker>()
+            val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
                     .setInputData(inputData)
                     .build()
 
@@ -103,22 +99,15 @@ class OnOffWidget : WidgetProviderBase() {
     }
 
     companion object {
-        private val TAG = OnOffWidget::javaClass.name
+        private val TAG = SingleWidget::javaClass.name
     }
 }
 
-internal fun getActiveValue(channelFunction: Int) = if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
-    3
-} else {
-    1
-}
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
-    val views = RemoteViews(context.packageName, R.layout.on_off_widget)
+    val views = RemoteViews(context.packageName, R.layout.single_widget)
     val turnOnPendingIntent = pendingIntent(context, ACTION_TURN_ON, widgetId)
-    views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
-    val turnOffPendingIntent = pendingIntent(context, ACTION_TURN_OFF, widgetId)
-    views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
+    views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
 
     return views
 }
@@ -128,8 +117,8 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
 }
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
-    Trace.d(OnOffWidget::javaClass.name, "Creating intent with action: $intentAction")
-    return Intent(context, OnOffWidget::class.java).apply {
+    Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
+    return Intent(context, SingleWidget::class.java).apply {
         action = intentAction
         flags = Intent.FLAG_RECEIVER_FOREGROUND
         putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
