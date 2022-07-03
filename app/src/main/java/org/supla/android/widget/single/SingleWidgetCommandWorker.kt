@@ -45,6 +45,8 @@ class SingleWidgetCommandWorker(
     override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
         when (configuration.channelFunction) {
             SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+            SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+            SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
             SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
                 suplaClient.open(configuration.channelId, 1)
             }

@@ -170,4 +170,8 @@ internal fun Channel.isRollerShutter() =
 
 internal fun Channel.isGateController() =
         func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
-                || func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
+                || func == SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
+
+internal fun Channel.isDoorLock() =
+        func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
+            || func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK

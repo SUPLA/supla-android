@@ -24,6 +24,7 @@ import org.supla.android.db.Channel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
+import org.supla.android.widget.shared.configuration.isDoorLock
 import org.supla.android.widget.shared.configuration.isGateController
 import javax.inject.Inject
 
@@ -40,6 +41,6 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         channelRepository
 ) {
     override fun filterChannels(channel: Channel): Boolean {
-        return channel.isGateController()
+        return channel.isGateController() || channel.isDoorLock()
     }
 }
