@@ -55,30 +55,30 @@ class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activi
 
     private fun setupSwitchesSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetSingleConfigureSwitches.adapter = adapter
-        binding.widgetSingleConfigureSwitches.onItemSelectedListener =
+        binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
+        binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =
                 channelItemSelectedListener(adapter)
     }
 
     private fun setupProfilesSpinner() {
         val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
-        binding.widgetSingleConfigureProfiles.adapter = adapter
-        binding.widgetSingleConfigureProfiles.onItemSelectedListener =
+        binding.widgetSingleCommon.widgetSingleConfigureProfiles.adapter = adapter
+        binding.widgetSingleCommon.widgetSingleConfigureProfiles.onItemSelectedListener =
                 profileItemSelectedListener(adapter)
     }
 
     override fun updateSwitchDisplayName(caption: String) {
-        binding.widgetSingleConfigureName.setText(caption)
+        binding.widgetSingleCommon.widgetSingleConfigureName.setText(caption)
     }
 
     override fun onWidgetNameError() {
-        binding.widgetSingleConfigureName.background =
+        binding.widgetSingleCommon.widgetSingleConfigureName.background =
                 ContextCompat.getDrawable(this,
                         R.drawable.rounded_edittext_err)
     }
 
     private fun observeCancellation() {
-        binding.widgetSingleConfigureClose.setOnClickListener {
+        binding.widgetSingleCommon.widgetSingleConfigureClose.setOnClickListener {
             // user's just closing the window, nothing to do..
             finish()
         }

@@ -153,9 +153,9 @@ abstract class WidgetConfigurationViewModelBase(
     }
 }
 
-class NoItemSelectedException : RuntimeException() {}
+class NoItemSelectedException : RuntimeException()
 
-class EmptyDisplayNameException : RuntimeException() {}
+class EmptyDisplayNameException : RuntimeException()
 
 internal fun Channel.isSwitch() =
         func == SUPLA_CHANNELFNC_LIGHTSWITCH

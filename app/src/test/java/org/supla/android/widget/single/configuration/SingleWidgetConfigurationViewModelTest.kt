@@ -35,7 +35,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaConst.*
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
 import org.supla.android.widget.WidgetPreferences
@@ -61,7 +61,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     @Test
     fun `should load only channels with gate function`() = runBlocking {
         // given
-        val cursor: Cursor = mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SuplaConst.SUPLA_CHANNELFNC_ALARM)
+        val cursor: Cursor = mockCursorChannels(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SUPLA_CHANNELFNC_ALARM)
         whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
@@ -82,8 +82,10 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     fun `should load all channels with switch function`() = runBlocking {
         // given
         val cursor: Cursor = mockCursorChannels(
-                SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-                SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK)
+                SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+                SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
+                SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+                SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK)
         whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
@@ -96,7 +98,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
-        MatcherAssert.assertThat(channels.size, Matchers.`is`(2))
+        MatcherAssert.assertThat(channels.size, Matchers.`is`(4))
         Mockito.verifyNoInteractions(widgetPreferences)
     }
 

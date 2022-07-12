@@ -55,30 +55,30 @@ class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activit
 
     private fun setupSwitchesSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffConfigureSwitches.adapter = adapter
-        binding.widgetOnOffConfigureSwitches.onItemSelectedListener =
+        binding.widgetOnOffCommon.widgetOnOffConfigureSwitches.adapter = adapter
+        binding.widgetOnOffCommon.widgetOnOffConfigureSwitches.onItemSelectedListener =
                 channelItemSelectedListener(adapter)
     }
 
     private fun setupProfilesSpinner() {
         val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffConfigureProfiles.adapter = adapter
-        binding.widgetOnOffConfigureProfiles.onItemSelectedListener =
+        binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.adapter = adapter
+        binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.onItemSelectedListener =
                 profileItemSelectedListener(adapter)
     }
 
     override fun updateSwitchDisplayName(caption: String) {
-        binding.widgetOnOffConfigureName.setText(caption)
+        binding.widgetOnOffCommon.widgetOnOffConfigureName.setText(caption)
     }
 
     override fun onWidgetNameError() {
-        binding.widgetOnOffConfigureName.background =
+        binding.widgetOnOffCommon.widgetOnOffConfigureName.background =
                 ContextCompat.getDrawable(this,
                         R.drawable.rounded_edittext_err)
     }
 
     private fun observeCancellation() {
-        binding.widgetOnOffConfigureClose.setOnClickListener {
+        binding.widgetOnOffCommon.widgetOnOffConfigureClose.setOnClickListener {
             // user's just closing the window, nothing to do..
             finish()
         }

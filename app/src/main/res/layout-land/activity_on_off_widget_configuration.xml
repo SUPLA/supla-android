@@ -19,20 +19,6 @@
             android:layout_height="wrap_content"
             android:paddingBottom="16dp">
 
-            <ImageButton
-                android:id="@+id/widget_on_off_configure_close"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="16dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/exit"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_close"
-                android:tint="@color/widget_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/widget_on_off_configure_title"
                 android:layout_width="match_parent"
@@ -43,123 +29,13 @@
                 android:text="@string/widget_configure_title"
                 android:textColor="@color/widget_text"
                 android:textSize="34sp"
-                app:layout_constraintEnd_toStartOf="@id/widget_on_off_configure_close"
+                app:layout_constraintEnd_toStartOf="@+id/widget_on_off_configure_close"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/widget_on_off_profile_and_channel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title">
-
-                <TextView
-                    android:id="@+id/widget_on_off_configure_profile_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="19dp"
-                    android:gravity="center"
-                    android:text="@string/widget_configure_profile_label"
-                    android:textAllCaps="true"
-                    android:textColor="@color/label_grey"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title"
-                    app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
-
-                <Spinner
-                    android:id="@+id/widget_on_off_configure_profiles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="4dp"
-                    android:background="@drawable/background_widget_configuration_spinner"
-                    android:padding="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_profile_label"
-                    app:profiles="@{viewmodel.profilesList}"
-                    app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
-
-                <TextView
-                    android:id="@+id/widget_on_off_configure_channel_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="19dp"
-                    android:gravity="center"
-                    android:text="@string/widget_configure_channel_label"
-                    android:textAllCaps="true"
-                    android:textColor="@color/label_grey"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_profiles"
-                    app:visibility="@{!viewmodel.dataLoading}" />
-
-                <Spinner
-                    android:id="@+id/widget_on_off_configure_switches"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="4dp"
-                    android:background="@drawable/background_widget_configuration_spinner"
-                    android:padding="4dp"
-                    app:channels="@{viewmodel.channelsList}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_channel_label"
-                    app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.channelsList.size() > 0}" />
-
-                <TextView
-                    android:id="@+id/widget_on_off_configure_no_channel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="8dp"
-                    android:gravity="center"
-                    android:text="@string/widget_configure_no_channel"
-                    android:textColor="@color/widget_text"
-                    android:textSize="16sp"
-                    app:visibility="@{viewmodel.channelsList.size() == 0}" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/widget_on_off_configure_name_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="19dp"
-                android:labelFor="@id/widget_on_off_configure_name"
-                android:text="@string/widget_configure_name_label"
-                android:textAllCaps="true"
-                android:textColor="@color/label_grey"
-                android:textSize="12sp"
-                android:textStyle="normal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_profile_and_channel" />
-
-            <EditText
-                android:id="@+id/widget_on_off_configure_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="4dp"
-                android:background="@drawable/background_widget_configuration_field"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:maxLength="@integer/on_off_widget_name_max_length"
-                android:maxLines="1"
-                android:onTextChanged="@{viewmodel::onDisplayNameChanged}"
-                android:padding="12dp"
-                android:textColor="@color/widget_text"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_name_label" />
+            <include
+                android:id="@+id/widget_on_off_common"
+                layout="@layout/activity_on_off_widget_common"
+                app:viewmodel="@{viewmodel}" />
 
             <Button
                 android:layout_width="match_parent"
@@ -169,22 +45,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/background_widget_configuration_button"
+                android:enabled="@{viewmodel.channelsList.size() > 0}"
                 android:onClick="@{() -> viewmodel.confirmSelection()}"
                 android:text="@string/ok"
                 android:textColor="#FFFFFF"
                 app:layout_constraintTop_toBottomOf="@+id/widget_on_off_configure_name"
                 app:visibility="@{!viewmodel.dataLoading}" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_title"
-                app:visibility="@{viewmodel.dataLoading}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
