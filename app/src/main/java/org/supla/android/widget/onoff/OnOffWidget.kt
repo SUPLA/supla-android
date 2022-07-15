@@ -79,14 +79,13 @@ class OnOffWidget : WidgetProviderBase() {
         super.onReceive(context, intent)
         Trace.i(TAG, "Got intent with action: " + intent?.action)
 
-        val intent: Intent = intent ?: return
-        val turnOnOff = when (intent.action) {
+        val turnOnOff = when (intent?.action) {
             ACTION_TURN_ON -> true
             ACTION_TURN_OFF -> false
             else -> null
         }
         if (turnOnOff != null) {
-            val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+            val widgetIds = intent?.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
                     ?: IntArray(0)
             val inputData = Data.Builder()
                     .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
@@ -107,7 +106,7 @@ class OnOffWidget : WidgetProviderBase() {
     }
 }
 
-internal fun getActiveValue(channelFunction: Int) = if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
+fun getActiveValue(channelFunction: Int) = if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
     3
 } else {
     1

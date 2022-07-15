@@ -20,8 +20,8 @@ package org.supla.android.widget.single.configuration
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -35,11 +35,13 @@ import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.Channel
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
+import org.supla.android.widget.shared.configuration.WidgetAction
 
 @RunWith(MockitoJUnitRunner::class)
 class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBase() {
@@ -74,7 +76,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
-        MatcherAssert.assertThat(channels.size, Matchers.`is`(1))
+        assertThat(channels.size, `is`(1))
         Mockito.verifyNoInteractions(widgetPreferences)
     }
 
@@ -98,7 +100,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
-        MatcherAssert.assertThat(channels.size, Matchers.`is`(4))
+        assertThat(channels.size, `is`(4))
         Mockito.verifyNoInteractions(widgetPreferences)
     }
 
@@ -118,7 +120,74 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         val channels = viewModel.channelsList.getOrAwaitValue()
 
         // then
-        MatcherAssert.assertThat(channels.size, Matchers.`is`(0))
+        assertThat(channels.size, `is`(0))
         Mockito.verifyNoInteractions(widgetPreferences)
+    }
+
+    @Test
+    fun `should update actions when channel changed to switch`() {
+        // given
+        val channel = Channel()
+        channel.func = SUPLA_CHANNELFNC_LIGHTSWITCH
+
+        // when
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        viewModel.changeChannel(channel)
+
+        // then
+        val actionsList = viewModel.actionsList.getOrAwaitValue()
+        assertThat(actionsList.size, `is`(2))
+        assertThat(actionsList[0], `is`(WidgetAction.TURN_ON))
+        assertThat(actionsList[1], `is`(WidgetAction.TURN_OFF))
+    }
+
+    @Test
+    fun `should update actions when channel changed to roller shutter`() {
+        // given
+        val channel = Channel()
+        channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+
+        // when
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        viewModel.changeChannel(channel)
+
+        // then
+        val actionsList = viewModel.actionsList.getOrAwaitValue()
+        assertThat(actionsList.size, `is`(2))
+        assertThat(actionsList[0], `is`(WidgetAction.MOVE_UP))
+        assertThat(actionsList[1], `is`(WidgetAction.MOVE_DOWN))
+    }
+
+    @Test
+    fun `should remove actions when channel changed to gate controller`() {
+        // given
+        val channel = Channel()
+        channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        viewModel.changeChannel(channel)
+
+        // when
+        channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
+        viewModel.changeChannel(channel)
+
+        // then
+        val actionsList = viewModel.actionsList.getOrAwaitValue()
+        assertThat(actionsList.size, `is`(0))
+    }
+
+    @Test
+    fun `should remove actions when no channel selected`() {
+        // given
+        val channel = Channel()
+        channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        viewModel.changeChannel(channel)
+
+        // when
+        viewModel.changeChannel(null)
+
+        // then
+        val actionsList = viewModel.actionsList.getOrAwaitValue()
+        assertThat(actionsList.size, `is`(0))
     }
 }

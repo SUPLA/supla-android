@@ -19,15 +19,15 @@ package org.supla.android.widget.single.configuration
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.ActivitySingleWidgetConfigurationBinding
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.shared.configuration.WidgetConfigurationActivityBase
-import org.supla.android.widget.shared.configuration.WidgetConfigurationChannelsSpinnerAdapter
-import org.supla.android.widget.shared.configuration.WidgetConfigurationProfilesSpinnerAdapter
+import org.supla.android.widget.shared.configuration.*
 import org.supla.android.widget.single.intent
 import javax.inject.Inject
 
@@ -45,15 +45,16 @@ class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupSwitchesSpinner()
+        setupChannelsSpinner()
         setupProfilesSpinner()
+        setupActionsSpinner()
         setContentView(binding.root)
 
         observeSelectionConfirmation()
         observeCancellation()
     }
 
-    private fun setupSwitchesSpinner() {
+    private fun setupChannelsSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
         binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
         binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =
@@ -66,6 +67,24 @@ class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activi
         binding.widgetSingleCommon.widgetSingleConfigureProfiles.onItemSelectedListener =
                 profileItemSelectedListener(adapter)
     }
+
+    private fun setupActionsSpinner() {
+        val adapter = WidgetConfigurationActionsSpinnerAdapter(this, mutableListOf())
+        binding.widgetSingleCommon.widgetSingleConfigureActions.adapter = adapter
+        binding.widgetSingleCommon.widgetSingleConfigureActions.onItemSelectedListener =
+                actionItemSelectedListener(adapter)
+    }
+
+    private fun actionItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<WidgetAction>) =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    viewModel().selectedAction = adapter.getItem(position)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    viewModel().selectedAction = null
+                }
+            }
 
     override fun updateSwitchDisplayName(caption: String) {
         binding.widgetSingleCommon.widgetSingleConfigureName.setText(caption)

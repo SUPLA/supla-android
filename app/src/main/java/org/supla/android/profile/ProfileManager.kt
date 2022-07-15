@@ -20,7 +20,8 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
-const val PROFILE_ID_NEW: Long = -1
+const val INVALID_VALUE: Long = -1
+const val PROFILE_ID_NEW: Long = INVALID_VALUE
 const val INVALID_PROFILE_ID: Long = -2
 
 /**

@@ -62,12 +62,12 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
     protected fun channelItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<Channel>) = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            viewModel().selectedChannel = adapter.getItem(position)
+            viewModel().changeChannel(adapter.getItem(position))
             updateSwitchName()
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {
-            viewModel().selectedChannel = null
+            viewModel().changeChannel(null)
         }
     }
 

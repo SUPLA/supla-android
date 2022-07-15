@@ -132,6 +132,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/widget_single_configure_name_label" />
 
+        <TextView
+            android:id="@+id/widget_single_configure_action_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="19dp"
+            android:gravity="center"
+            android:text="@string/widget_configure_action_label"
+            android:textAllCaps="true"
+            android:textColor="@color/label_grey"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_name"
+            app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.actionsList.size() > 0}" />
+
+        <Spinner
+            android:id="@+id/widget_single_configure_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="4dp"
+            android:background="@drawable/background_widget_configuration_spinner"
+            android:padding="4dp"
+            app:actions="@{viewmodel.actionsList}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_action_label"
+            app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.actionsList.size() > 0}" />
+
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

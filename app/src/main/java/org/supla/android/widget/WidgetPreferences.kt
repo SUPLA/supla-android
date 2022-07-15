@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import org.supla.android.profile.INVALID_PROFILE_ID
+import org.supla.android.profile.INVALID_VALUE
 
 const val INVALID_CHANNEL_ID = -1
 private const val SHARED_PREFERENCES = "SwitchPreferences"
@@ -41,6 +42,8 @@ class WidgetPreferences(context: Context) {
             putInt(getKeyForChannelColor(widgetId), configuration.channelColor)
             putLong(getKeyForProfileId(widgetId), configuration.profileId)
             putBoolean(getKeyForWidgetVisibility(widgetId), configuration.visibility)
+            putLong(getKeyForWidgetActionId(widgetId), configuration.actionId
+                    ?: INVALID_VALUE)
             apply()
         }
     }
@@ -56,7 +59,15 @@ class WidgetPreferences(context: Context) {
         val channelColor = preferences.getInt(getKeyForChannelColor(widgetId), Color.WHITE)
         val profileId = preferences.getLong(getKeyForProfileId(widgetId), INVALID_PROFILE_ID)
         val visibility = preferences.getBoolean(getKeyForWidgetVisibility(widgetId), false)
-        return WidgetConfiguration(channelId, channelCaption, channelFunction, channelColor, profileId, visibility)
+        val actionId = preferences.getLong(getKeyForWidgetActionId(widgetId), INVALID_VALUE)
+        return WidgetConfiguration(
+                channelId,
+                channelCaption,
+                channelFunction,
+                channelColor,
+                profileId,
+                visibility,
+                actionId)
     }
 
     fun removeWidgetConfiguration(widgetId: Int) {
@@ -92,11 +103,16 @@ internal fun getKeyForWidgetVisibility(widgetId: Int): String {
     return "$SHARED_PREFERENCES.VISIBILITY.$widgetId"
 }
 
+internal fun getKeyForWidgetActionId(widgetId: Int): String {
+    return "$SHARED_PREFERENCES.ACTION_ID.$widgetId"
+}
+
 data class WidgetConfiguration(
         val channelId: Int,
         val channelCaption: String?,
         val channelFunction: Int,
         val channelColor: Int,
         val profileId: Long,
-        val visibility: Boolean
+        val visibility: Boolean,
+        val actionId: Long?
 )

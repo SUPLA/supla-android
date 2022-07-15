@@ -49,7 +49,7 @@
                 android:onClick="@{() -> viewmodel.confirmSelection()}"
                 android:text="@string/ok"
                 android:textColor="#FFFFFF"
-                app:layout_constraintTop_toBottomOf="@+id/widget_single_configure_name"
+                app:layout_constraintTop_toBottomOf="@+id/widget_single_configure_actions"
                 app:visibility="@{!viewmodel.dataLoading}" />
 
 

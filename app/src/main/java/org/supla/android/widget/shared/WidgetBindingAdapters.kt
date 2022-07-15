@@ -22,6 +22,8 @@ import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
+import org.supla.android.widget.shared.configuration.WidgetAction
+import org.supla.android.widget.shared.configuration.WidgetConfigurationActionsSpinnerAdapter
 import org.supla.android.widget.shared.configuration.WidgetConfigurationChannelsSpinnerAdapter
 import org.supla.android.widget.shared.configuration.WidgetConfigurationProfilesSpinnerAdapter
 
@@ -45,5 +47,12 @@ fun setSpinnerChannels(spinner: Spinner, items: List<Channel>?) {
 fun setSpinnerProfiles(spinner: Spinner, items: List<AuthProfileItem>?) {
     items?.let {
         (spinner.adapter as WidgetConfigurationProfilesSpinnerAdapter).postItems(it)
+    }
+}
+
+@BindingAdapter("actions")
+fun setSpinnerActions(spinner: Spinner, items: List<WidgetAction>?) {
+    items?.let {
+        (spinner.adapter as WidgetConfigurationActionsSpinnerAdapter).postItems(it)
     }
 }

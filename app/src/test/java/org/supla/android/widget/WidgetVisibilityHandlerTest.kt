@@ -58,7 +58,7 @@ class WidgetVisibilityHandlerTest {
         val channelId = 234
         val profileId = 345L
 
-        val widgetConfiguration = WidgetConfiguration(channelId, null, 0, 0, profileId, true)
+        val widgetConfiguration = WidgetConfiguration(channelId, null, 0, 0, profileId, true, -1)
         whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
 
         every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf(widgetId)

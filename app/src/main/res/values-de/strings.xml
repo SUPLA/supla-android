@@ -377,6 +377,7 @@
     <string name="widget_configure_title">Widgetkonfiguration</string>
     <string name="widget_configure_profile_label">Konto</string>
     <string name="widget_configure_channel_label">Kanal des Widget</string>
+    <string name="widget_configure_action_label">Aktion</string>
     <string name="widget_configure_name_label">Anzeigename</string>
     <string name="widget_configure_error">Die Konfiguration konnte nicht gesetzt werden…</string>
     <string name="widget_configure_no_selection">Kein Schalter ausgewählt</string>

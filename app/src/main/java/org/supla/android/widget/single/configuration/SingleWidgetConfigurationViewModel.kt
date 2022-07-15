@@ -23,9 +23,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Channel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
-import org.supla.android.widget.shared.configuration.isDoorLock
-import org.supla.android.widget.shared.configuration.isGateController
+import org.supla.android.widget.shared.configuration.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +39,23 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         channelRepository
 ) {
     override fun filterChannels(channel: Channel): Boolean {
-        return channel.isGateController() || channel.isDoorLock()
+        return channel.isGateController()
+                || channel.isDoorLock()
+                || channel.isSwitch()
+                || channel.isRollerShutter()
+    }
+
+    override fun updateActions() {
+        if (selectedChannel?.isSwitch() == true) {
+            postActions(listOf(
+                    WidgetAction.TURN_ON,
+                    WidgetAction.TURN_OFF))
+        } else if (selectedChannel?.isRollerShutter() == true) {
+            postActions(listOf(
+                    WidgetAction.MOVE_UP,
+                    WidgetAction.MOVE_DOWN))
+        } else {
+            postActions(listOf())
+        }
     }
 }
