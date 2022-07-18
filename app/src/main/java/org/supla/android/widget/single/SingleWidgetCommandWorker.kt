@@ -24,9 +24,8 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
+import org.supla.android.widget.shared.configuration.WidgetAction
 
-
-const val ARG_TURN_ON = "ARG_TURN_ON"
 
 /**
  * Worker which is implemented for turning on/off switches. It supports following channel functions:
@@ -49,6 +48,11 @@ class SingleWidgetCommandWorker(
             SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
             SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
                 suplaClient.open(configuration.channelId, 1)
+            }
+            else -> {
+                val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
+                        configuration.actionId == WidgetAction.MOVE_DOWN.actionId
+                return performCommon(configuration, suplaClient, turnOnOrClose)
             }
         }
         return Result.success()

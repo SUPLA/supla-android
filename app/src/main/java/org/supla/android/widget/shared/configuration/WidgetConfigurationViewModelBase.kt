@@ -55,8 +55,12 @@ abstract class WidgetConfigurationViewModelBase(
     private val _channelsList = MutableLiveData<List<Channel>>()
     val channelsList: LiveData<List<Channel>> = _channelsList
 
+    private val _actionsList = MutableLiveData<List<WidgetAction>>()
+    val actionsList: LiveData<List<WidgetAction>> = _actionsList
+
     var selectedProfile: AuthProfileItem? = null
     var selectedChannel: Channel? = null
+    var selectedAction: WidgetAction? = null
     var widgetId: Int? = null
     var displayName: String? = null
 
@@ -93,16 +97,31 @@ abstract class WidgetConfigurationViewModelBase(
         }
         _dataLoading.value = true
         selectedProfile = profile
+        changeChannel(null)
+        displayName = null
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                loadSwitches()
+                loadChannels()
                 _dataLoading.postValue(false)
             }
         }
     }
 
+    fun changeChannel(channel: Channel?) {
+        selectedChannel = channel
+        updateActions()
+    }
+
     protected abstract fun filterChannels(channel: Channel): Boolean
+
+    protected open fun updateActions() {
+        // Default empty, can be overridden.
+    }
+
+    protected fun postActions(actions: List<WidgetAction>) {
+        _actionsList.postValue(actions)
+    }
 
     private fun triggerDataLoad() {
         viewModelScope.launch {
@@ -112,7 +131,7 @@ abstract class WidgetConfigurationViewModelBase(
                     _profilesList.postValue(profileManager.getAllProfiles())
                     selectedProfile = profileManager.getCurrentProfile()
 
-                    loadSwitches()
+                    loadChannels()
                 }
 
                 _dataLoading.postValue(false)
@@ -121,7 +140,7 @@ abstract class WidgetConfigurationViewModelBase(
         }
     }
 
-    private fun loadSwitches() {
+    private fun loadChannels() {
         val switches = getAllChannels().filter { filterChannels(it) }
         _channelsList.postValue(switches)
         if (switches.isNotEmpty()) {
@@ -149,13 +168,21 @@ abstract class WidgetConfigurationViewModelBase(
 
     private fun setWidgetConfiguration(widgetId: Int, channelId: Int, channelName: String,
                                        channelFunction: Int, channelColor: Int) {
-        widgetPreferences.setWidgetConfiguration(widgetId, WidgetConfiguration(channelId, channelName, channelFunction, channelColor, selectedProfile!!.id, true))
+        val configuration = WidgetConfiguration(
+                channelId,
+                channelName,
+                channelFunction,
+                channelColor,
+                selectedProfile!!.id,
+                visibility = true,
+                selectedAction?.actionId)
+        widgetPreferences.setWidgetConfiguration(widgetId, configuration)
     }
 }
 
-class NoItemSelectedException : RuntimeException() {}
+class NoItemSelectedException : RuntimeException()
 
-class EmptyDisplayNameException : RuntimeException() {}
+class EmptyDisplayNameException : RuntimeException()
 
 internal fun Channel.isSwitch() =
         func == SUPLA_CHANNELFNC_LIGHTSWITCH

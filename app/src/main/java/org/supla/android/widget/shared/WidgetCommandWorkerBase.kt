@@ -31,8 +31,10 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.extensions.getProfileManager
 import org.supla.android.lib.SuplaClient
+import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.onoff.ARG_TURN_ON
 
 private const val MAX_WAIT_TIME = 3000 // in ms
 
@@ -76,10 +78,50 @@ abstract class WidgetCommandWorkerBase(
         return perform(configuration, suplaClient)
     }
 
-    protected abstract fun perform(
+    protected open fun perform(
             configuration: WidgetConfiguration,
             suplaClient: SuplaClient
-    ): Result
+    ): Result = performCommon(
+            configuration,
+            suplaClient,
+            inputData.getBoolean(ARG_TURN_ON, false)
+    )
+
+    protected fun performCommon(
+            configuration: WidgetConfiguration,
+            suplaClient: SuplaClient,
+            turnOnOrClose: Boolean): Result {
+        when (configuration.channelFunction) {
+            SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+            SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> {
+                suplaClient.turnOnOff(
+                        applicationContext,
+                        turnOnOrClose,
+                        configuration.channelId,
+                        false,
+                        configuration.channelFunction,
+                        false)
+            }
+            SuplaConst.SUPLA_CHANNELFNC_DIMMER,
+            SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+            SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> {
+                val brightness = getBrightness(turnOnOrClose)
+                suplaClient.setRGBW(
+                        configuration.channelId,
+                        configuration.channelColor,
+                        brightness,
+                        brightness,
+                        true)
+            }
+            SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+            SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
+                suplaClient.open(
+                        configuration.channelId,
+                        getOpenOrClose(turnOnOrClose))
+            }
+        }
+        return Result.success()
+    }
 
     private fun getSuplaClient(profileId: Long): SuplaClient? {
         val suplaApp = if (applicationContext is SuplaApp) {
@@ -135,4 +177,18 @@ abstract class WidgetCommandWorkerBase(
             return nwInfo.isConnected
         }
     }
+
+    private fun getBrightness(turnOnOrClose: Boolean): Int =
+            if (turnOnOrClose) {
+                100
+            } else {
+                0
+            }
+
+    private fun getOpenOrClose(turnOnOrClose: Boolean): Int =
+            if (turnOnOrClose) {
+                SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE
+            } else {
+                SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN
+            }
 }

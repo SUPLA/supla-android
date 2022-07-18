@@ -25,12 +25,11 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import org.supla.android.R
-import org.supla.android.db.DbItem
 
 abstract class WidgetConfigurationSpinnerBase<T>(
         context: Context,
         objects: MutableList<T>
-) : ArrayAdapter<T>(context, R.layout.spinner_item, objects) where T : DbItem {
+) : ArrayAdapter<T>(context, R.layout.spinner_item, objects) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return createItemView(position, convertView, R.layout.spinner_display_item)
@@ -38,10 +37,6 @@ abstract class WidgetConfigurationSpinnerBase<T>(
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         return createItemView(position, convertView, R.layout.spinner_item)
-    }
-
-    override fun getItemId(position: Int): Long {
-        return getItem(position)?.id!!
     }
 
     abstract fun getItemText(item: T): String

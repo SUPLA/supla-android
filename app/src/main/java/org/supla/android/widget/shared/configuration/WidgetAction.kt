@@ -17,16 +17,14 @@ package org.supla.android.widget.shared.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import org.supla.android.db.Channel
+import org.supla.android.R
 
-class WidgetConfigurationChannelsSpinnerAdapter(
-        context: Context,
-        objects: MutableList<Channel>
-) : WidgetConfigurationSpinnerBase<Channel>(context, objects) {
-
-    override fun getItemText(item: Channel): String =
-            item.getNotEmptyCaption(context)
-
-    override fun getItemId(position: Int): Long = getItem(position)?.id!!
+enum class WidgetAction(
+        val actionId: Long,
+        val text: Int
+) {
+    TURN_ON(1, R.string.channel_btn_on),
+    TURN_OFF(2, R.string.channel_btn_off),
+    MOVE_UP(3, R.string.channel_btn_open),
+    MOVE_DOWN(4, R.string.channel_btn_close),
 }

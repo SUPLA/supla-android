@@ -34,12 +34,13 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
+import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
+import org.supla.android.widget.shared.configuration.WidgetAction
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
-private const val ACTION_TURN_ON = "ACTION_TURN_ON"
-private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
+private const val ACTION_PRESSED = "ACTION_PRESSED"
 
 /**
  * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
@@ -59,7 +60,19 @@ class SingleWidget : WidgetProviderBase() {
             val channel = Channel()
             channel.func = configuration.channelFunction
 
-            views.setImageViewBitmap(R.id.single_widget_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0)))
+            val active = if (turnOnOrClose(configuration)) {
+                getActiveValue(configuration.channelFunction)
+            } else {
+                0
+            }
+
+            views.setImageViewBitmap(
+                    R.id.single_widget_button,
+                    ImageCache.getBitmap(
+                            context,
+                            channel.getImageIdx(
+                                    ChannelBase.WhichOne.First,
+                                    active)))
 
             views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
             views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
@@ -75,18 +88,11 @@ class SingleWidget : WidgetProviderBase() {
         super.onReceive(context, intent)
         Trace.i(TAG, "Got intent with action: " + intent?.action)
 
-        val intent: Intent = intent ?: return
-        val turnOnOff = when (intent.action) {
-            ACTION_TURN_ON -> true
-            ACTION_TURN_OFF -> false
-            else -> null
-        }
-        if (turnOnOff != null) {
+        if (intent?.action == ACTION_PRESSED) {
             val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
                     ?: IntArray(0)
             val inputData = Data.Builder()
                     .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
-                    .putBoolean(ARG_TURN_ON, turnOnOff)
                     .build()
 
             val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
@@ -94,7 +100,10 @@ class SingleWidget : WidgetProviderBase() {
                     .build()
 
             // Work for widget ID is unique, so no other worker for the same ID will be started
-            WorkManager.getInstance().enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
+            WorkManager.getInstance().enqueueUniqueWork(
+                    getWorkId(widgetIds),
+                    ExistingWorkPolicy.KEEP,
+                    removeWidgetsWork)
         }
     }
 
@@ -106,7 +115,7 @@ class SingleWidget : WidgetProviderBase() {
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
     val views = RemoteViews(context.packageName, R.layout.single_widget)
-    val turnOnPendingIntent = pendingIntent(context, ACTION_TURN_ON, widgetId)
+    val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
     views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
 
     return views
@@ -114,6 +123,11 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
 
 internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
     return PendingIntent.getBroadcast(context, widgetId, intent(context, intentAction, widgetId), PendingIntent.FLAG_UPDATE_CURRENT)
+}
+
+internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
+    return configuration.actionId == WidgetAction.TURN_ON.actionId
+            || configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {

@@ -18,15 +18,15 @@ package org.supla.android.widget.shared.configuration
  */
 
 import android.content.Context
-import org.supla.android.db.Channel
 
-class WidgetConfigurationChannelsSpinnerAdapter(
+class WidgetConfigurationActionsSpinnerAdapter(
         context: Context,
-        objects: MutableList<Channel>
-) : WidgetConfigurationSpinnerBase<Channel>(context, objects) {
+        objects: MutableList<WidgetAction>
+) : WidgetConfigurationSpinnerBase<WidgetAction>(context, objects) {
 
-    override fun getItemText(item: Channel): String =
-            item.getNotEmptyCaption(context)
+    override fun getItemText(item: WidgetAction): String =
+            context.resources.getString(item.text)
 
-    override fun getItemId(position: Int): Long = getItem(position)?.id!!
+    override fun getItemId(position: Int): Long =
+            getItem(position)!!.actionId
 }

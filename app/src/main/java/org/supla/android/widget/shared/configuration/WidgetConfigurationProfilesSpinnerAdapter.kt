@@ -24,5 +24,9 @@ class WidgetConfigurationProfilesSpinnerAdapter(
         context: Context,
         objects: MutableList<AuthProfileItem>
 ) : WidgetConfigurationSpinnerBase<AuthProfileItem>(context, objects) {
+
     override fun getItemText(item: AuthProfileItem): String = item.name
+
+    override fun getItemId(position: Int): Long = getItem(position)?.id!!
+
 }
