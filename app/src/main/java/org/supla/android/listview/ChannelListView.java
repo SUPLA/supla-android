@@ -35,7 +35,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
+import org.supla.android.channeldetail.DetailFragment;
+import org.supla.android.channeldetail.LegacyDetailFragment;
+import org.supla.android.channeldetail.DetailContainer;
 import org.supla.android.ChannelDetailDigiglass;
 import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
@@ -47,6 +53,7 @@ import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
 import org.supla.android.Trace;
+import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -74,7 +81,8 @@ public class ChannelListView extends ListView implements
     private boolean detailTouchDown;
     private boolean detailAnim;
     private boolean mDetailVisible;
-    private DetailLayout mDetailLayout;
+    //private DetailLayout mDetailLayout;
+    private DetailContainer detailContainer;
     private Point mChannelStateIconTouchPoint;
 	private View _stealingEventsFromView;
 	private ChannelLayout _stealingEventsVictim;
@@ -110,180 +118,161 @@ public class ChannelListView extends ListView implements
         detailSliding = false;
         detailTouchDown = false;
         detailAnim = false;
-        mDetailLayout = null;
+        detailContainer = null;
         mDetailVisible = false;
     }
 
-    private DetailLayout getDetailLayout(ChannelBase cbase) {
+    private FragmentManager getFragmentManager() {
+        return ((FragmentActivity)getContext()).getSupportFragmentManager();
+    }
+
+
+    public boolean isDetailVisible() {
+        return mDetailVisible && detailContainer != null && detailContainer.getFragment().isVisible();
+    }
+
+    private void destroyDetailContainer() {
+        FragmentManager fmgr = getFragmentManager();
+        fmgr.beginTransaction()
+            .remove(detailContainer.getFragment())
+            .commit();
+        ViewGroup parent = (ViewGroup)detailContainer.getContainerView().getParent();
+        parent.removeView(detailContainer.getContainerView());
+        detailContainer = null;
+    }
+
+
+    private DetailContainer getDetailContainer(ChannelBase cbase) {
+        if(detailContainer != null) {
+            if(detailContainer.matches(cbase)) {
+                return detailContainer;
+            } else {
+                destroyDetailContainer();
+            }
+        }
+        
+        FragmentContainerView fc = new FragmentContainerView(getContext());
+        int fcid = ViewHelper.generateViewId();
+        fc.setId(fcid);
+        if(getParent() instanceof ViewGroup) {
+            ((ViewGroup)getParent()).addView(fc);
+        }
+        RelativeLayout.LayoutParams lp = new RelativeLayout
+            .LayoutParams(getWidth(), getHeight());
+        lp.setMargins(getWidth(), 0, -getWidth(), 0);
+        fc.setLayoutParams(lp);
+
+        DetailFragment df = makeDetailFragment(cbase);
+
+        FragmentManager fmgr = getFragmentManager();
+        fmgr.beginTransaction()
+            .setReorderingAllowed(false)
+            .add(fcid, df)
+            .commit();
+
+        detailContainer = new DetailContainer(cbase, fc, df);
+
+        return detailContainer;
+    }
+
+
+    private DetailFragment makeDetailFragment(ChannelBase cbase) {
+        DetailFragment rv;
+        
+        switch(cbase.getFunc()) {
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+        case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+        case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+        case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+        case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+        case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+            rv = new LegacyDetailFragment(makeDetailLayout(cbase));
+            break;
+        default:
+            // TODO: here new detail views should be constructed in mvvm
+            // way.
+            rv = null;
+        }
+        return rv;
+    }
+
+
+    private DetailLayout makeDetailLayout(ChannelBase cbase) {
+        DetailLayout rv = null;
         Channel channel = null;
         if (cbase instanceof Channel) {
             channel = (Channel)cbase;
         }
 
-        if (mDetailLayout != null) {
-            switch (cbase.getFunc()) {
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
 
-                    if (!(mDetailLayout instanceof ChannelDetailRGBW))
-                        mDetailLayout = null;
-
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-
-                    if (!(mDetailLayout instanceof ChannelDetailRS))
-                        mDetailLayout = null;
-
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-                    if (channel != null && channel.getValue() != null) {
-
-                        if (channel.getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
-                            if (!(mDetailLayout instanceof ChannelDetailIC)) {
-                                mDetailLayout = null;
-                            }
-                        } else if (channel.getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
-                            if (!(mDetailLayout instanceof ChannelDetailEM)) {
-                                mDetailLayout = null;
-                            }
-                        } else {
-                            mDetailLayout = null;
-                        }
-                    }
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-
-                    // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-                        if (!(mDetailLayout instanceof ChannelDetailIC))
-                            mDetailLayout = null;
-                    } else {
-                        if (!(mDetailLayout instanceof ChannelDetailEM))
-                            mDetailLayout = null;
-                    }
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    if (!(mDetailLayout instanceof ChannelDetailTemperature)
-                            || mDetailLayout instanceof ChannelDetailTempHumidity)
-                        mDetailLayout = null;
-
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    if (!(mDetailLayout instanceof ChannelDetailTempHumidity))
-                        mDetailLayout = null;
-
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-
-                    if (!(mDetailLayout instanceof ChannelDetailThermostat))
-                        mDetailLayout = null;
-
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-
-                    if (!(mDetailLayout instanceof ChannelDetailThermostatHP))
-                        mDetailLayout = null;
-
-                    break;
-
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-                    if (!(mDetailLayout instanceof ChannelDetailDigiglass))
-                        mDetailLayout = null;
-                    break;
-            }
-
-        }
-
-        if (mDetailLayout == null) {
-            switch (cbase.getFunc()) {
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                    mDetailLayout = new ChannelDetailRGBW(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-                    mDetailLayout = new ChannelDetailRS(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-                    if (channel != null && channel.getValue() != null) {
-                        if (channel.getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
-                            mDetailLayout = new ChannelDetailIC(getContext(), this);
-                        } else if (channel.getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
-                            mDetailLayout = new ChannelDetailEM(getContext(), this);
-                        }
-                    }
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-                case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-
-                    // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
-                    if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-                        mDetailLayout = new ChannelDetailIC(getContext(), this);
-                    } else {
-                        mDetailLayout = new ChannelDetailEM(getContext(), this);
-                    }
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-                    mDetailLayout = new ChannelDetailTemperature(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                    mDetailLayout = new ChannelDetailTempHumidity(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-                    mDetailLayout = new ChannelDetailThermostat(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-                    mDetailLayout = new ChannelDetailThermostatHP(getContext(), this);
-                    break;
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-                case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-                    mDetailLayout = new ChannelDetailDigiglass(getContext(), this);
-                    break;
-            }
-
-            if (mDetailLayout != null) {
-
-                if (getParent() instanceof ViewGroup) {
-                    ((ViewGroup) getParent()).addView(mDetailLayout);
+        switch (cbase.getFunc()) {
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+            rv = new ChannelDetailRGBW(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+            rv = new ChannelDetailRS(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+        case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+        case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+            if (channel != null && channel.getValue() != null) {
+                if (channel.getValue().getSubValueType()
+                    == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
+                    rv = new ChannelDetailIC(getContext(), this);
+                } else if (channel.getValue().getSubValueType()
+                           == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
+                    rv = new ChannelDetailEM(getContext(), this);
                 }
-
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(getWidth(), getHeight());
-                lp.setMargins(getWidth(), 0, -getWidth(), 0);
-                mDetailLayout.setLayoutParams(lp);
-
             }
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+        case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
 
-
-            return mDetailLayout;
-
+            // TODO: Remove channel type checking in future versions. Check function instead of type. # 140-issue
+            if (cbase.getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
+                rv = new ChannelDetailIC(getContext(), this);
+            } else {
+                rv = new ChannelDetailEM(getContext(), this);
+            }
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+            rv = new ChannelDetailTemperature(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+            rv = new ChannelDetailTempHumidity(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+            rv = new ChannelDetailThermostat(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+            rv = new ChannelDetailThermostatHP(getContext(), this);
+            break;
+        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+            rv = new ChannelDetailDigiglass(getContext(), this);
+            break;
         }
-
-        return mDetailLayout;
+            
+      return rv;
     }
 
     @Override
@@ -382,8 +371,8 @@ public class ChannelListView extends ListView implements
             ((ViewGroup.MarginLayoutParams) lp).setMargins(margin, 0, -margin, 0);
             setLayoutParams(lp);
 
-            if (mDetailLayout != null)
-                mDetailLayout.setMargin(getWidth() + ((MarginLayoutParams) lp).leftMargin);
+            if (detailContainer != null)
+               detailContainer.setMargin(getWidth() + ((MarginLayoutParams) lp).leftMargin);
 
             return true;
         }
@@ -436,6 +425,7 @@ public class ChannelListView extends ListView implements
                         channelLayout = (ChannelLayout) view;
                     }
 
+
                     buttonSliding = false;
                     detailSliding = false;
                     detailTouchDown = false;
@@ -461,10 +451,10 @@ public class ChannelListView extends ListView implements
 
                                 cbase.AssignCursorData((Cursor) obj);
 
-                                if (getDetailLayout(cbase) != null) {
+                                if (getDetailContainer(cbase) != null) {
                                     detailTouchDown = true;
                                     rightButtonSlided100p = channelLayout.Slided() == 200;
-                                    getDetailLayout(cbase).setData(cbase);
+                                    getDetailContainer(cbase).getFragment().setChannelBase(cbase);
                                 }
                             }
                         }
@@ -522,7 +512,6 @@ public class ChannelListView extends ListView implements
         if (LastXtouch != -1
                 && (detailTouchDown || isDetailVisible())
                 && action == MotionEvent.ACTION_MOVE) {
-
             int delta = (int) (X - LastXtouch);
             int margin = getMargin();
 
@@ -545,16 +534,16 @@ public class ChannelListView extends ListView implements
 
                     int color = Color.WHITE;
 
-                    if (mDetailLayout.getBackground() instanceof ColorDrawable) {
-                        color = ((ColorDrawable) mDetailLayout.getBackground().mutate()).getColor();
+                    if (detailContainer.getContainerView().getBackground() instanceof ColorDrawable) {
+                        color = ((ColorDrawable) detailContainer.getContainerView().getBackground().mutate()).getColor();
                     }
 
                     if (channelLayout != null)
                         channelLayout.setBackgroundColor(color);
 
                     setVisibility(View.VISIBLE);
-                    mDetailLayout.setBackgroundColor(color);
-                    mDetailLayout.setVisibility(View.VISIBLE);
+                    detailContainer.getContainerView().setBackgroundColor(color);
+                    detailContainer.getContainerView().setVisibility(View.VISIBLE);
 
                 }
 
@@ -621,7 +610,7 @@ public class ChannelListView extends ListView implements
         final int margin = getMargin();
 
         if (detailAnim
-                || mDetailLayout == null)
+                || detailContainer == null)
             return;
 
         if ((margin == 0
@@ -672,7 +661,7 @@ public class ChannelListView extends ListView implements
             public void onAnimationStart(Animator animation) {
                 detailAnim = true;
                 setVisibility(View.VISIBLE);
-                mDetailLayout.setVisibility(View.VISIBLE);
+                detailContainer.getContainerView().setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -681,14 +670,14 @@ public class ChannelListView extends ListView implements
 
 
                 if (getMargin() != 0) {
-                    mDetailLayout.setVisibility(View.VISIBLE);
+                    detailContainer.getContainerView().setVisibility(View.VISIBLE);
                     setVisibility(View.INVISIBLE);
                     mDetailVisible = true;
 
                     onDetailShow();
 
                 } else {
-                    mDetailLayout.setVisibility(View.INVISIBLE);
+                    detailContainer.getContainerView().setVisibility(View.INVISIBLE);
                     setVisibility(View.VISIBLE);
                     mDetailVisible = false;
 
@@ -760,15 +749,15 @@ public class ChannelListView extends ListView implements
     }
 
     private void onDetailShow() {
-        mDetailLayout.onDetailShow();
+        detailContainer.onDetailShow();
 
         if (onDetailListener != null)
-            onDetailListener.onChannelDetailShow(mDetailLayout.getChannelBase());
+            onDetailListener.onChannelDetailShow(detailContainer.getChannelBase());
     }
 
     private void onDetailHide() {
-        mDetailLayout.onDetailHide();
-
+        detailContainer.onDetailHide();
+        destroyDetailContainer();
         if (onDetailListener != null)
             onDetailListener.onChannelDetailHide();
     }
@@ -925,19 +914,16 @@ public class ChannelListView extends ListView implements
         this.onSectionLayoutTouchListener = onSectionLayoutTouchListener;
     }
 
-    public boolean isDetailVisible() {
-        return mDetailVisible && mDetailLayout != null;
-    }
 
     public void onBackPressed() {
-        if (mDetailLayout.onBackPressed()) {
+        if (detailContainer.onBackPressed()) {
             hideDetail(true);
         }
     }
 
     public void hideDetail(boolean animated, boolean offlineReason) {
         if (isDetailVisible()
-                && mDetailLayout.detailWillHide(offlineReason))
+                && detailContainer.detailWillHide(offlineReason))
 
             if (animated) {
                 AnimateDetailSliding(true);
@@ -945,7 +931,7 @@ public class ChannelListView extends ListView implements
 
                 setMargin(0);
 
-                mDetailLayout.setVisibility(View.INVISIBLE);
+                detailContainer.getContainerView().setVisibility(View.INVISIBLE);
                 mDetailVisible = false;
                 setVisibility(View.VISIBLE);
 
@@ -960,7 +946,7 @@ public class ChannelListView extends ListView implements
     public ChannelBase detail_getChannel() {
 
         if (isDetailVisible()) {
-            return mDetailLayout.getChannelFromDatabase();
+            return detailContainer.getChannelFromDatabase();
         }
 
         return null;
@@ -971,7 +957,7 @@ public class ChannelListView extends ListView implements
     public int detail_getRemoteId() {
 
         if (isDetailVisible()) {
-            return mDetailLayout.getRemoteId();
+            return detailContainer.getRemoteId();
         }
 
         return 0;
@@ -979,7 +965,7 @@ public class ChannelListView extends ListView implements
 
     public void detail_OnChannelDataChanged() {
         if (isDetailVisible())
-            mDetailLayout.OnChannelDataChanged();
+            detailContainer.onChannelDataChanged();
     }
 
     public interface OnChannelButtonClickListener {
