@@ -81,7 +81,6 @@ public class ChannelListView extends ListView implements
     private boolean detailTouchDown;
     private boolean detailAnim;
     private boolean mDetailVisible;
-    //private DetailLayout mDetailLayout;
     private DetailContainer detailContainer;
     private Point mChannelStateIconTouchPoint;
 	private View _stealingEventsFromView;
