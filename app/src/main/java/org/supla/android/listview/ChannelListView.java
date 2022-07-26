@@ -42,6 +42,7 @@ import androidx.fragment.app.FragmentManager;
 import org.supla.android.channeldetail.DetailFragment;
 import org.supla.android.channeldetail.LegacyDetailFragment;
 import org.supla.android.channeldetail.DetailContainer;
+import org.supla.android.channeldetail.DetailFragmentFactory;
 import org.supla.android.ChannelDetailDigiglass;
 import org.supla.android.ChannelDetailEM;
 import org.supla.android.ChannelDetailIC;
@@ -176,7 +177,7 @@ public class ChannelListView extends ListView implements
 
 
     private DetailFragment makeDetailFragment(ChannelBase cbase) {
-        DetailFragment rv;
+        DetailFragment rv = null;
         
         switch(cbase.getFunc()) {
         case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
@@ -198,13 +199,16 @@ public class ChannelListView extends ListView implements
         case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-            rv = new LegacyDetailFragment(makeDetailLayout(cbase));
+            DetailLayout dl = makeDetailLayout(cbase);
+            if(dl != null)
+                rv = new LegacyDetailFragment(dl);
             break;
-        default:
-            // TODO: here new detail views should be constructed in mvvm
-            // way.
-            rv = null;
         }
+
+        if(rv == null) {
+            rv = new DetailFragmentFactory(getContext()).makeDetailFragment(cbase);
+        }
+        
         return rv;
     }
 

@@ -734,7 +734,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         {
             boolean lenabled = false;
             boolean renabled = false;
-            boolean dslider = false;
 
             switch (mFunc) {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
@@ -757,15 +756,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
                     lenabled = true;
                     renabled = true;
-
-                    if (cbase instanceof Channel && ((Channel)cbase).getValue() != null) {
-                        if (((Channel)cbase).getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
-                                || ((Channel)cbase).getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS ) {
-                            dslider = true;
-                        }
-                    }
 
                     break;
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
@@ -813,7 +803,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
                     break;
 
                 default:
@@ -824,7 +813,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             setLeftButtonEnabled(lenabled && cbase.getOnLine());
             setRightButtonEnabled(renabled && cbase.getOnLine());
-            setDetailSliderEnabled(dslider && cbase.getOnLine());
+            setDetailSliderEnabled(cbase.getOnLine());
 
 
         }

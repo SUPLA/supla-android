@@ -18,20 +18,14 @@ package org.supla.android.channeldetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import org.supla.android.db.ChannelBase
 
-abstract class DetailFragment: Fragment() {
+class ChannelDetailViewModel(var channel: ChannelBase): ViewModel() {
 
-    
-    abstract var channelBase: ChannelBase get set
-
-    abstract fun getChannelFromDatabase(): ChannelBase
-    abstract fun getRemoteId(): Int
-
-    abstract fun onBackPressed(): Boolean
-    abstract fun detailWillHide(offline: Boolean): Boolean
-    abstract fun onDetailShow()
-    abstract fun onDetailHide()
-    abstract fun onChannelDataChanged()
+    val title: String
+        get() {
+            val caption = channel.getCaption() 
+            return if(caption != null && caption.length > 0) caption else "unknown channel " + channel.getRemoteId()
+        }
 }

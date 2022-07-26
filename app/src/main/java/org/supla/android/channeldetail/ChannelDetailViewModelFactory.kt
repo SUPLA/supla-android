@@ -18,20 +18,17 @@ package org.supla.android.channeldetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import org.supla.android.db.ChannelBase
 
-abstract class DetailFragment: Fragment() {
+class ChannelDetailViewModelFactory(private val channel: ChannelBase): ViewModelProvider.Factory {
 
-    
-    abstract var channelBase: ChannelBase get set
-
-    abstract fun getChannelFromDatabase(): ChannelBase
-    abstract fun getRemoteId(): Int
-
-    abstract fun onBackPressed(): Boolean
-    abstract fun detailWillHide(offline: Boolean): Boolean
-    abstract fun onDetailShow()
-    abstract fun onDetailHide()
-    abstract fun onChannelDataChanged()
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(ChannelDetailViewModel::class.java)) {
+            return ChannelDetailViewModel(channel) as T
+        } else {
+            throw IllegalArgumentException("unsupported view model class")
+        }
+    }
 }

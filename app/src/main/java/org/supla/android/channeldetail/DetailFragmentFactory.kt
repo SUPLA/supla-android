@@ -1,5 +1,4 @@
 package org.supla.android.channeldetail
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,20 +17,14 @@ package org.supla.android.channeldetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.fragment.app.Fragment
+import android.content.Context
 import org.supla.android.db.ChannelBase
 
-abstract class DetailFragment: Fragment() {
+class DetailFragmentFactory(private val context: Context) {
+    fun makeDetailFragment(channel: ChannelBase): DetailFragment {
+        val fact = ChannelDetailViewModelFactory(channel)
+        val fragment = GenericDetailFragment(fact)
 
-    
-    abstract var channelBase: ChannelBase get set
-
-    abstract fun getChannelFromDatabase(): ChannelBase
-    abstract fun getRemoteId(): Int
-
-    abstract fun onBackPressed(): Boolean
-    abstract fun detailWillHide(offline: Boolean): Boolean
-    abstract fun onDetailShow()
-    abstract fun onDetailHide()
-    abstract fun onChannelDataChanged()
+        return fragment
+    }
 }
