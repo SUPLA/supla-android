@@ -1,14 +1,11 @@
 <resources>
 
-    <string name="feedback_title">Enviar un correo electrónico</string>
-    <string name="donate_title">Donar</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=es</string>
     <string name="forumpage_url">https://es-forum.supla.org/</string>
 
     <string name="version">versión</string>
 
-    <string name="feedback">Comentarios</string>
     <string name="about">Sobre el programa</string>
     <string name="settings">Ajustes</string>
 
@@ -49,10 +46,6 @@
     <string name="channel_caption_distancesensor">Sensor de distancia</string>
     <string name="channel_caption_windowopeningsensor">Sensor de apertura de ventanas</string>
     <string name="channel_caption_mailsensor">Sensor de correo</string>
-
-    <string name="rgb_brightness">Brillo</string>
-    <string name="rgb_color">Color</string>
-    <string name="rgb_state">Estado</string>
 
     <string name="channel_btn_open">Abrir</string>
     <string name="channel_btn_openclose">Abrir Cerrar</string>
@@ -116,7 +109,6 @@
     <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera para reconectar a la red WiFi Base!</string>
     <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera para completar la configuración del dispositivo!</string>
     <string name="wizard_scan_timeout">¡Se ha superado el tiempo de espera para completar la búsqueda de redes WiFi!</string>
-    <string name="device_registration_disabled">El registro de dispositivos de entrada/salida está actualmente deshabilitado. Para continuar vaya a la página %1$s y en la pestaña Mi SUPLA active la registro de dispositivos.</string>
     <string name="wizard_remember_passwd">Recordar la contraseña</string>
     <string name="wizard_wifi_error">¡La red WiFi está desactivada o no se puede leer su identificador o su nombre!</string>
     <string name="start">START</string>
@@ -125,7 +117,6 @@
     <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
     <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red WiFi que será la utilizada por el actuador para conectarse al servidor.</string>
     <string name="wizard_server_compat_error">¡El servidor al que ha conectado no es compatible con esta característica!</string>
-    <string name="wizard_step2_txt3">*)El actuador usará la red %1$s para conectarse al servidor.</string>
     <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pase al administrador de aplicaciones en los ajustes del sistema. A continuación, busque la aplicación %1$s y active todos los permisos que exija.</string>
     <string name="help">Ayuda</string>
     <string name="channel_caption_staircasetimer">Automático de escalera</string>
@@ -163,12 +154,10 @@
     <string name="hp_calendar_comfort">Confort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO en modo AUTO</string>
     <string name="hp_hour">h</string>
-    <string name="channel_func_impulsecounter">Contador de pulsos</string>
     <string name="meter_value">Lectura del contador</string>
     <string name="total_cost">Coste total</string>
     <string name="current_cost">Coste en el mes actual</string>
     <string name="current_consumption">Consumo en el mes actual</string>
-    <string name="impulses_count">Número de pulsos</string>
     <string name="minutes">Minutos</string>
     <string name="hours">Horas</string>
     <string name="days">Días</string>
@@ -192,8 +181,6 @@
     <string name="comparsion_dayday">Comparación día a día</string>
     <string name="comparsion_monthmonth">Comparación mes a mes</string>
     <string name="comparsion_yearyear">Comparación año a año</string>
-    <string name="hp_turn_on">Encender</string>
-    <string name="hp_turn_off">Apagar</string>
     <string name="hp_error_1">No hay agua</string>
     <string name="hp_error_2">Calentador quemado</string>
     <string name="hp_error_3">Error del sensor de temperatura del agua</string>

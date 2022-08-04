@@ -2,8 +2,6 @@
     <string name="confirm_button_text" translatable="false">OK</string>
     <string name="profiles_title" translatable="false">Konta</string>
     <string name="profile_name_label" translatable="false">NAZWA KONTA</string>
-    <string name="profile_set_as_default" translatable="false">Aktywne</string>
-    <string name="profile_activate_not_available" translatable="false">Żeby deaktywować to konto najpierw ustaw inne jako aktywne</string>
     <string name="form_cannot_delete_active_profile" translatable="false">Nie można usunąć aktywnego konta</string>
     <string name="delete_account">Usuń</string>
 
@@ -22,15 +20,12 @@
     <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
-    <string name="feedback_title">Wyślij email</string>
-    <string name="donate_title">Wesprzyj projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
     <string name="forumpage_url">https://forum.supla.org</string>
 
     <string name="version">wersja</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">O programie</string>
     <string name="settings">Ustawienia</string>
     <string name="add_device">Dodaj urządzenie</string>
@@ -77,10 +72,6 @@
     <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
     <string name="channel_caption_mailsensor">Czujnik poczty</string>
 
-    <string name="rgb_brightness">Jasność</string>
-    <string name="rgb_color">Kolor</string>
-    <string name="rgb_state">Stan</string>
-
     <string name="channel_btn_open">Otwórz</string>
     <string name="channel_btn_openclose">Otwórz Zamknij</string>
     <string name="channel_btn_on">Włącz</string>
@@ -101,7 +92,6 @@
     <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
-    <string name="cfg_label_profile_name">AKTYWNE KONTO</string>
     <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
 
     <string name="cfg_label_email_auth">Email</string>
@@ -138,15 +128,14 @@
     <string name="calibration">[Kalibracja]</string>
 
     <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
-    <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
     <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Sieć %1$s będzie wykorzystywana przez urządzenie wykonawcze do łączena się z serwerem.</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
     <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
@@ -203,8 +192,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Grzałka Home+</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
-    <string name="hp_turn_on">WŁĄCZ</string>
-    <string name="hp_turn_off">WYŁĄCZ</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -220,9 +207,7 @@
     <string name="total_cost">Łączny koszt</string>
     <string name="current_cost">Koszt w bieżącym miesiącu</string>
     <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
-    <string name="impulses_count">Ilość impulsów</string>
     <string name="meter_value">Stan licznika</string>
-    <string name="channel_func_impulsecounter">Licznik impulsów</string>
     <string name="minutes">Minuty</string>
     <string name="hours">Godziny</string>
     <string name="days">Dni</string>

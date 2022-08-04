@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Küldjön egy e-mailt</string>
-    <string name="donate_title">Támogassa a projektet</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">verzió</string>
 
-    <string name="feedback">Visszajelzés</string>
     <string name="about">Programról</string>
     <string name="settings">Beállítások</string>
     <string name="add_device">Eszköz hozzáadása</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Ablaknyitás-érzékelő</string>
     <string name="channel_caption_mailsensor">Levél érzékelő</string>
 
-    <string name="rgb_brightness">Fényerő</string>
-    <string name="rgb_color">Szín</string>
-    <string name="rgb_state">Állapot</string>
-
     <string name="channel_btn_open">Megnyitás</string>
     <string name="channel_btn_openclose">Nyitás / Bezárás</string>
     <string name="channel_btn_on">Bekapcsolás</string>
@@ -88,15 +81,14 @@
     <string name="calibration">[Kalibrálás]</string>
 
     <string name="add_wizard_is_not_available">A Hozzáadás varázsló csak akkor érhető el, ha a megadott e-mail cím alapján létrejött a kapcsolat a szerverrel! (A speciális beállítások letiltása a fiókkonfigurációban)</string>
-    <string name="device_registration_disabled">Az I / O eszköz regisztrációja jelenleg le van tiltva. A folytatáshoz lépjen a %1$s oldalra, és a "Saját SUPLA" lapon engedélyezze az eszközök hozzáadását.</string>
 
     <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
     <string name="wizard_step1_txt3">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
     <string name="next">Tovább</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) A(z) %1$s hálózatot a végrehajtó eszköz fogja használni a kiszolgálóhoz való csatlakozáshoz.</string>
     <string name="wizard_remember_passwd">Emlékezzen a jelszavamra</string>
 
     <string name="wizard_step3_txt1">Csatlakoztassa a végrehajtó eszközt a hálózathoz. Az eszköznek alapértelmezés szerint konfigurációs módban kell működnie, és az állapotjelző LED villogásával az alábbiak szerint kell jeleznie</string>
@@ -153,8 +145,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Fűtés Home+</string>
     <string name="hp_on">BEKAPCSOLVA</string>
     <string name="hp_off">KIKAPCSOLVA</string>
-    <string name="hp_turn_on">BEKAPCSOLÁS</string>
-    <string name="hp_turn_off">KIKAPCSOLÁS</string>
     <string name="hp_normal">NORMÁLIS</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBÓ</string>
@@ -170,9 +160,7 @@
     <string name="total_cost">Összköltség</string>
     <string name="current_cost">A folyó hó költsége</string>
     <string name="current_consumption">Fogyasztás a folyó hónapban</string>
-    <string name="impulses_count">Impulzusok száma</string>
     <string name="meter_value">Mérőóra leolvasás</string>
-    <string name="channel_func_impulsecounter">Impulzusszámláló</string>
     <string name="minutes">Perc</string>
     <string name="hours">Órák</string>
     <string name="days">Napok</string>

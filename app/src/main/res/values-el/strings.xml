@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Στείλτε ένα e-mail</string>
-    <string name="donate_title">Υποστηρίξτε το έργο</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">Η έκδοση</string>
 
-    <string name="feedback">Ανάδραση</string>
     <string name="about">Για το πρόγραμμα</string>
     <string name="settings">Ρυθμίσεις</string>
     <string name="add_device">Προσθήκη συσκευής</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Αισθητήρας ανοίγματος παραθύρου</string>
     <string name="channel_caption_mailsensor">Αισθητήρας ταχυδρομείου</string>
 
-    <string name="rgb_brightness">Φωτεινότητα</string>
-    <string name="rgb_color">Χρώμα</string>
-    <string name="rgb_state">Κατάσταση</string>
-
     <string name="channel_btn_open">Άνοιγμα</string>
     <string name="channel_btn_openclose">Άνοιγμα Κλείσιμο</string>
     <string name="channel_btn_on">Ενεργοποίηση</string>
@@ -88,15 +81,14 @@
     <string name="calibration">[Βαθμονόμηση]</string>
 
     <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
-    <string name="device_registration_disabled">Η εγγραφή συσκευών εισόδου/εξόδου είναι αυτή τη στιγμή απενεργοποιημένη. Για να συνεχίσετε, μεταβείτε στην ιστοσελίδα %1$s και στην καρτέλα "Η SUPLA μου" ενεργοποιήστε την προσθήκη συσκευών.</string>
 
     <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
     <string name="wizard_step1_txt3">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
     <string name="next">Επόμενο</string>
     <string name="start">ΕΝΑΡΞΗ</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Το δίκτυο %1$s θα χρησιμοποιηθεί από την εκτελεστική συσκευή για να συνδεθεί με τον διακομιστή.</string>
     <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 
     <string name="wizard_step3_txt1">Συνδέστε την εκτελεστική συσκευή σας με την παροχή ρεύματος. Η συσκευή έχει ως την προεπιλογή τη λειτουργία διαμόρφωσης και μας ειδοποιεί σχετικά με το να αναβοσβήνει ένα LED λαμπάκι της κατάστασης ως εξής</string>
@@ -153,8 +145,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Θερμαντήρας Home+</string>
     <string name="hp_on">ΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
     <string name="hp_off">ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
-    <string name="hp_turn_on">ΕΝΕΡΓΟΠΟΙΗΣΗ</string>
-    <string name="hp_turn_off">ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ</string>
     <string name="hp_normal">ΚΑΝΟΝΙΚΟ</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +160,7 @@
     <string name="total_cost">Συνολικό κόστος</string>
     <string name="current_cost">Το κόστος του τρέχοντος μήνα</string>
     <string name="current_consumption">Κατανάλωση τον τρέχοντα μήνα</string>
-    <string name="impulses_count">Αριθμός παλμών</string>
     <string name="meter_value">Κατάσταση του μετρητή</string>
-    <string name="channel_func_impulsecounter">Μετρητής παλμών</string>
     <string name="minutes">Λεπτά</string>
     <string name="hours">Ώρες</string>
     <string name="days">Ημέρες</string>

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="feedback_title">Odeslat email</string>
-    <string name="donate_title">Podporujte projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=cs</string>
     <string name="forumpage_url">https://cz-forum.supla.org/</string>
 
     <string name="version">verze</string>
-    <string name="feedback">Feedback</string>
     <string name="about">O programu</string>
     <string name="settings">Nastavení</string>
     <string name="add_device">Přidat zařízení</string>
@@ -47,9 +44,6 @@
     <string name="channel_caption_distancesensor">Snímač vzdálenosti</string>
     <string name="channel_caption_windowopeningsensor">Snímač otevření okna</string>
     <string name="channel_caption_mailsensor">Snímač pošty</string>
-    <string name="rgb_brightness">Jas</string>
-    <string name="rgb_color">Barva</string>
-    <string name="rgb_state">Stav</string>
     <string name="channel_btn_open">Otevřít</string>
     <string name="channel_btn_openclose">Otevřít Zavřít</string>
     <string name="channel_btn_on">Zapnout</string>
@@ -75,12 +69,10 @@
     <string name="rs_percent_caption">Procento uzavření</string>
     <string name="calibration">[Kalibrace]</string>
     <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
-    <string name="device_registration_disabled">Registrace I / O zařízení je momentálně zakázána. Chcete-li pokračovat, přejděte na stránku %1$s a na kartě Moje SUPLA povolte přidávání zařízení</string>
     <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
     <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
     <string name="next">Dále</string>
     <string name="start">START</string>
-    <string name="wizard_step2_txt3">*) Síť %1$s bude použita zařízením pro připojení k serveru.</string>
     <string name="wizard_remember_passwd">Zapamatujte si heslo</string>
     <string name="wizard_step3_txt1">Připojte výkonné zařízení k napájení. Přístroj by měl ve výchozím nastavení fungovat v konfiguračním režimu a signalizovat tak, že bliká stavová LED dioda následujícím způsobem</string>
     <string name="wizard_step3_txt2">Pokud zařízení nepracuje v konfiguračním režimu po zapnutí, držte stisknuté tlačítko <b>CONFIG</b> minimálně po dobu 5 sekund.</string>
@@ -140,12 +132,10 @@
     <string name="hp_calendar_comfort">Ideální teplota</string>
     <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
     <string name="hp_hour">h</string>
-    <string name="channel_func_impulsecounter">Počítadlo impulzů</string>
     <string name="meter_value">Stav měřiče</string>
     <string name="total_cost">Celková cena</string>
     <string name="current_cost">Cena za celý měsíc</string>
     <string name="current_consumption">Spotřeba v tomto měsíci</string>
-    <string name="impulses_count">Počet impulzů</string>
     <string name="minutes">Minuty</string>
     <string name="hours">Hodiny</string>
     <string name="days">Dny</string>
@@ -169,8 +159,6 @@
     <string name="comparsion_dayday">Mezidenní srovnání</string>
     <string name="comparsion_monthmonth">Meziměsíční srovnání</string>
     <string name="comparsion_yearyear">Meziroční srovnání</string>
-    <string name="hp_turn_on">Zapnout</string>
-    <string name="hp_turn_off">Vypnout</string>
     <string name="hp_error_1">Chybí voda</string>
     <string name="hp_error_2">Spálené topení</string>
     <string name="hp_error_3">Chyba snímače teploty vody</string>

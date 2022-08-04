@@ -87,7 +87,6 @@ class AuthItemViewModel @Inject constructor(
     private lateinit var _accessIDObserver: Observer<String>
     private lateinit var _accessIDPwdObserver: Observer<String>
     private lateinit var _advancedObserver: Observer<Boolean>
-    private lateinit var _activeObserver: Observer<Boolean>
 
     private lateinit var item: AuthProfileItem
 
@@ -138,15 +137,6 @@ class AuthItemViewModel @Inject constructor(
         }
         isAdvancedMode.observeForever(_advancedObserver)
 
-        isActive.value = item.isActive
-        _activeObserver = Observer {
-            if(it == false && item.isActive) {
-                _editAction.value = AuthItemEditAction.Alert(R.string.profile_set_as_default,
-                                                             R.string.profile_activate_not_available)
-                isActive.value = true
-            }
-        }
-        isActive.observeForever(_activeObserver)
     }
 
     override fun onCleared() {
@@ -156,7 +146,6 @@ class AuthItemViewModel @Inject constructor(
         accessID.removeObserver(_accessIDObserver)
         accessIDpwd.removeObserver(_accessIDPwdObserver)
         isAdvancedMode.removeObserver(_advancedObserver)
-        isActive.removeObserver(_activeObserver)
 
         super.onCleared()
     }

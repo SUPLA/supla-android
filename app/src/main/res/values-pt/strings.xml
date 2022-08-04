@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Envie um email</string>
-    <string name="donate_title">Doar</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pt</string>
 
     <string name="version">versão</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">Sobre o programa</string>
     <string name="settings">Configurações</string>
 
@@ -48,10 +45,6 @@
     <string name="channel_caption_distancesensor">Sensor de distância</string>
     <string name="channel_caption_windowopeningsensor">Sensor de abertura para uma janela</string>
     <string name="channel_caption_mailsensor">Sensor de correio</string>
-
-    <string name="rgb_brightness">Clareza</string>
-    <string name="rgb_color">Cor</string>
-    <string name="rgb_state">Estado</string>
 
     <string name="channel_btn_open">Abrir</string>
     <string name="channel_btn_openclose">Abrir Fechar</string>
@@ -115,7 +108,6 @@
     <string name="wizard_reconnect_timeout">O tempo-limite de volta para a rede básica WiFi foi excedido!</string>
     <string name="wizard_configure_timeout">O tempo-limite de configuração de um dispositivo foi excedido!</string>
     <string name="wizard_scan_timeout">O tempo-limite de pesquisa da rede WiFi foi excedido!</string>
-    <string name="device_registration_disabled">O registo de dispositivos de entrada/saída está atualmente desligado. Para continuar vá para a página %1$s e ligue adicionar dispositivos no marcador “Meu SUPLA”.</string>
     <string name="wizard_remember_passwd">Recordar a senha</string>
     <string name="wizard_wifi_error">A rede WiFi está desligada ou impossível ler o identificador ou o nome dela!</string>
     <string name="start">START</string>
@@ -124,7 +116,6 @@
     <string name="device_reg_request_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
     <string name="wizard_server_compat_error">O servidor com o qual se conectou não suporta esta função!</string>
     <string name="wizard_no_internetwifi">Antes de iniciar, conecte-se à Internet através da rede WiFi que também será utilizada por um atuador para se conectar ao servidor.</string>
-    <string name="wizard_step2_txt3">*) A rede %1$s será utilizada por atuadores para se conectarem ao servidor.</string>
     <string name="wizard_not_enought_permissions">A aplicação não dispõe de poderes suficientes. Vá para a gestão das aplicações nas configurações do sistema. A seguir, encontre a aplicação %1$s e ative todos os poderes requeridos por ela.</string>
     <string name="help">Ajuda</string>
     <string name="channel_caption_staircasetimer">Comutador de escada</string>
@@ -165,9 +156,7 @@
     <string name="total_cost">Custo total</string>
     <string name="current_cost">Custo no mês atual</string>
     <string name="current_consumption">Consumo no mês atual</string>
-    <string name="impulses_count">Número de pulsos</string>
     <string name="meter_value">Status do contador</string>
-    <string name="channel_func_impulsecounter">Contador de pulsos</string>
     <string name="minutes">Minutos</string>
     <string name="hours">Horas</string>
     <string name="days">Dias</string>
@@ -191,8 +180,6 @@
     <string name="comparsion_dayday">Comparação dia a dia</string>
     <string name="comparsion_monthmonth">Comparação mês a mês</string>
     <string name="comparsion_yearyear">Comparação ano a ano</string>
-    <string name="hp_turn_off">Desligar</string>
-    <string name="hp_turn_on">Ligar</string>
     <string name="hp_error_1">Falta de água</string>
     <string name="hp_error_2">Aquecedor estourado</string>
     <string name="hp_error_3">Erro do sensor da temperatura de água</string>
