@@ -452,11 +452,11 @@
     <string name="widget_configure_channel_label">Kanał dla widgetu</string>
     <string name="widget_configure_action_label">Akcja</string>
     <string name="widget_configure_name_label">Nazwa</string>
-    <string name="widget_configure_error">Konfiguracja przełącznika nie powiodła się…</string>
-    <string name="widget_configure_no_selection">Nie wybrano przełącznika</string>
-    <string name="widget_configure_no_channel">Brak dostępnych przełączników</string>
-    <string name="on_off_widget_description">Widżet pozwalający na zmianę ustawienia przełącznika bezpośrednio z ekranu głównego telefonu.</string>
-    <string name="single_widget_description">Widżet pozwalający na wykonanie pojedynczych operacji z ekranu głównego telefonu.</string>
+    <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
+    <string name="widget_configure_no_selection">Nie wybrano kanału</string>
+    <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
+    <string name="double_button_widget_description">Dwuprzyciskowy widżet</string>
+    <string name="single_button_widget_description">Jednoprzyciskowy widżet</string>
     <string name="widget_app_not_initialized">Proszę się zalogować!</string>
     <string name="widget_command_error">Błąd komunikacji!</string>
     <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
