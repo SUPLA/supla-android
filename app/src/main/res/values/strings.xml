@@ -112,10 +112,10 @@
     <string translatable="false" name="temp_unit">TEMPERATURE UNIT</string>
     <string translatable="false" name="advanced_settings">Advanced</string>
     <string translatable="false" name="create_account">Create</string>
-    <string translatable="false" name="delete_account">Remove</string>
-    <string translatable="false" name="delete_account_confirm_title">Remove account</string>
-    <string translatable="false" name="delete_account_confirm_message">Are you sure you want to remove the account?</string>
-    <string name="delete_account_confirm_message_with_widgets">Are you sure you want to remove the account? Confirmation will remove all account related widgets.</string>
+    <string translatable="false" name="delete_account">Delete</string>
+    <string translatable="false" name="delete_account_confirm_title">Delete account</string>
+    <string translatable="false" name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
+    <string name="delete_account_confirm_message_with_widgets">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->
