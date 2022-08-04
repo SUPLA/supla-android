@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="device_registration_disabled">Įv/iš įrenginių registracija dabar yra išjungta. Norėdami tęsti eikite į puslapį %1$s ir žymėje „Mano SUPLA” įjunkite įrenginių pridėjimą.</string>
-    <string name="feedback_title">Siųsti el. laišką</string>
-    <string name="donate_title">Paremti projektą</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=lt</string>
 
     <string name="version">versija</string>
-    <string name="feedback">Grįžtamasis ryšis</string>
     <string name="about">Apie programą</string>
     <string name="settings">Nustatymai</string>
     <string name="add_device">Pridėti įrenginį</string>
@@ -47,9 +43,6 @@
     <string name="channel_caption_distancesensor">Atstumo jutiklis</string>
     <string name="channel_caption_windowopeningsensor">Lango atidarymo jutiklis</string>
     <string name="channel_caption_mailsensor">Pašto jutiklis</string>
-    <string name="rgb_brightness">Ryškumas</string>
-    <string name="rgb_color">Spalva</string>
-    <string name="rgb_state">Būsena</string>
     <string name="channel_btn_open">Atidaryti</string>
     <string name="channel_btn_openclose">Atidaryti Uždaryti</string>
     <string name="channel_btn_on">Įjungti</string>
@@ -79,7 +72,6 @@
     <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>
     <string name="next">Toliau</string>
     <string name="start">STARTAS</string>
-    <string name="wizard_step2_txt3">*) %1$s tinklą naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
     <string name="wizard_remember_passwd">Išsaugoti slaptažodį</string>
     <string name="wizard_step3_txt1">Savo vykdomąjį įrenginį prijunkite prie maitinimo šaltinio. Įrenginys standartiškai turi veikti konfigūracijos režime, signalizuojant tai statuso diodo mirksėjimu šiuo būdu</string>
     <string name="wizard_step3_txt2">minimum 5 sekund. Jei įrenginys įjungus maitinimą neveikia konfigūracijos režimu, palaikykite paspaustą mygtuką <b>CONFIG</b> bent 5 sekundes.</string>
@@ -142,9 +134,7 @@
     <string name="total_cost">Bendra kaina</string>
     <string name="current_cost">Kaina einamąjį mėnesį</string>
     <string name="current_consumption">Suvartojimas einamąjį mėnesį</string>
-    <string name="impulses_count">Impulsų kiekis</string>
     <string name="meter_value">Skaitiklio būsena</string>
-    <string name="channel_func_impulsecounter">Impulsų skaitiklis</string>
     <string name="minutes">Minutės</string>
     <string name="hours">Valandos</string>
     <string name="days">Dienos</string>
@@ -168,8 +158,6 @@
     <string name="comparsion_dayday">Palyginimas diena prie dienos</string>
     <string name="comparsion_monthmonth">Palyginimas mėnuo prie mėnesio</string>
     <string name="comparsion_yearyear">Palyginimas metai prie metų</string>
-    <string name="hp_turn_on">Įjungti</string>
-    <string name="hp_turn_off">Išjunk</string>
     <string name="channel_caption_pressuresensor">Slėgio jutiklis</string>
     <string name="channel_caption_rainsensor">Kritulių matavimas</string>
     <string name="channel_caption_weightsensor">Svoris</string>

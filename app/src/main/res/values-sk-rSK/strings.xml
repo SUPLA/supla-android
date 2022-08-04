@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Zaslať e-mail</string>
-    <string name="donate_title">Podporiť projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=sk</string>
 
     <string name="version">verzia</string>
 
-    <string name="feedback">Spätná väzba</string>
     <string name="about">O programe</string>
     <string name="settings">Nastavenia</string>
     <string name="add_device">Pridať zariadenie</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Snímač otvorenia okna</string>
     <string name="channel_caption_mailsensor">Snímač pošty</string>
 
-    <string name="rgb_brightness">Jas</string>
-    <string name="rgb_color">Farba</string>
-    <string name="rgb_state">Stav</string>
-
     <string name="channel_btn_open">Otvoriť</string>
     <string name="channel_btn_openclose">Otvoriť Zatvoriť</string>
     <string name="channel_btn_on">Zapnúť</string>
@@ -101,15 +94,14 @@
     <string name="calibration">[Kalibrácia]</string>
 
     <string name="add_wizard_is_not_available">Sprievodca pridávaním je dostupný len po nadviazaní spojenia so serverom na základe zadanej e-mailovej adresy! (Vypnite pokročilé možnosti v nastavení svojho účtu)</string>
-    <string name="device_registration_disabled">Registrácia I / O zariadení je momentálne vypnutá. Ak chcete pokračovať, prejdite na stránku %1$s a v záložke „Moja SUPLA“ zapnite pridávanie zariadení.</string>
 
     <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
     <string name="wizard_step1_txt3">Pokračujte stlačením <b>Ďalej</b>.</string>
     <string name="next">Ďalej</string>
     <string name="start">ŠTART</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Sieť %1$s bude používať vykonávacie zariadenie na pripojenie k serveru.</string>
     <string name="wizard_remember_passwd">Zapamätať si heslo</string>
 
     <string name="wizard_step3_txt1">Pripojte vaše vykonávacie zariadenie k el. napätiu. Zariadenie musí byť predvolene spustené v konfiguračnom režime, čo signalizuje blikanie kontrolky stavu nasledujúcim spôsobom</string>
@@ -181,9 +173,7 @@
     <string name="total_cost">Celkové náklady</string>
     <string name="current_cost">Náklady v aktuálnom mesiaci</string>
     <string name="current_consumption">Spotreba v aktuálnom mesiaci</string>
-    <string name="impulses_count">Počet impulzov</string>
     <string name="meter_value">Stav počítadla</string>
-    <string name="channel_func_impulsecounter">Počítadlo impulzov</string>
     <string name="minutes">Minúty</string>
     <string name="hours">Hodiny</string>
     <string name="days">Dni</string>
@@ -207,8 +197,6 @@
     <string name="comparsion_dayday">Porovnanie deň po dni</string>
     <string name="comparsion_monthmonth">Porovnanie mesiac po mesiaci</string>
     <string name="comparsion_yearyear">Porovnanie rok po rokuu</string>
-    <string name="hp_turn_off">Vypnúť</string>
-    <string name="hp_turn_on">Zapnúť</string>
     <string name="hp_error_1">Žiadna voda</string>
     <string name="hp_error_2">Zhorená špirála</string>
     <string name="hp_error_3">Chyba snímača teploty vody</string>

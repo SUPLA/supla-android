@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Stuur een email</string>
-    <string name="donate_title">Steun het project</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">wersie</string>
 
-    <string name="feedback">Terugkoppeling</string>
     <string name="about">Over het programma</string>
     <string name="settings">Instellingen</string>
     <string name="add_device">Apparaat toevoegen</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Raamopeningssensor</string>
     <string name="channel_caption_mailsensor">Postsensor</string>
 
-    <string name="rgb_brightness">Helderheid</string>
-    <string name="rgb_color">Kleur</string>
-    <string name="rgb_state">Status</string>
-
     <string name="channel_btn_open">Openen</string>
     <string name="channel_btn_openclose">Openen Sluiten</string>
     <string name="channel_btn_on">Zet in</string>
@@ -88,15 +81,14 @@
     <string name="calibration">[Kalibratie]</string>
 
     <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
-    <string name="device_registration_disabled">I / O-apparaatregistratie is momenteel uitgeschakeld. Ga door naar pagina %1$s en schakel op het tabblad "Mijn SUPLA" het toevoegen van apparaten in.</string>
 
     <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
     <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
     <string name="next">Doorgaan</string>
     <string name="start">OPSTARTEN</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Het %1$s-netwerk wordt door het uitvoerend apparaat gebruikt om verbinding te maken met de server.</string>
     <string name="wizard_remember_passwd">Wachtwoord onthouden</string>
 
     <string name="wizard_step3_txt1">Sluit uw uitvoerende apparaat aan op stroom. Het apparaat zou standaard in de configuratiemodus moeten werken, signalering door de status-LED als volgt te knipperen</string>
@@ -153,8 +145,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Verwarming Home +</string>
     <string name="hp_on">AAN</string>
     <string name="hp_off">UIT</string>
-    <string name="hp_turn_on">INSCHAKELEN</string>
-    <string name="hp_turn_off">UIT</string>
     <string name="hp_normal">NORMAAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +160,7 @@
     <string name="total_cost">Totale kosten</string>
     <string name="current_cost">De kosten van de huidige maand</string>
     <string name="current_consumption">Verbruik in de lopende maand</string>
-    <string name="impulses_count">Aantal pulsen</string>
     <string name="meter_value">Meterstand</string>
-    <string name="channel_func_impulsecounter">Pulsteller</string>
     <string name="minutes">Minuten</string>
     <string name="hours">Uren</string>
     <string name="days">Dagen</string>

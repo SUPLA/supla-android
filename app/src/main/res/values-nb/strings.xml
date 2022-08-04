@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Send e-post</string>
-    <string name="donate_title">Støtt prosjektet</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">versjon</string>
 
-    <string name="feedback">Tilbakemelding</string>
     <string name="about">Om programmet</string>
     <string name="settings">Innstillinger</string>
     <string name="add_device">Legg til enhet</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Vindusåpner sensor</string>
     <string name="channel_caption_mailsensor">Postsensor</string>
 
-    <string name="rgb_brightness">Lysstyrke</string>
-    <string name="rgb_color">Farge</string>
-    <string name="rgb_state">Tilstand</string>
-
     <string name="channel_btn_open">Åpne</string>
     <string name="channel_btn_openclose">Åpne Steng</string>
     <string name="channel_btn_on">På</string>
@@ -88,15 +81,14 @@
     <string name="calibration">[Kalibrering]</string>
 
     <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
-    <string name="device_registration_disabled">Registering av enheter inngang/utgang er for tiden skrudd av. For å fortsette, gå til nettsiden %1$s og i fanen ”Min SUPLA” skru på legg til enheter.</string>
 
     <string name="wizard_step1_txt1">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
     <string name="wizard_step1_txt3">For å fortsette trykk på <b>Videre</b>.</string>
     <string name="next">Videre</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Nettverket %1$s blir brukt av enheten for tilkobling til serveren.</string>
     <string name="wizard_remember_passwd">Husk passord</string>
 
     <string name="wizard_step3_txt1">Sett din aktuator til lading. Enheten bør jobbe i standard konfigurasjonsmodus, og signalisere det ved en LED-diode blinkende på denne måten</string>
@@ -153,8 +145,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Varmeapparat Home+</string>
     <string name="hp_on">PÅ</string>
     <string name="hp_off">AV</string>
-    <string name="hp_turn_on">SKRU PÅ</string>
-    <string name="hp_turn_off">SKRU AV</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +160,7 @@
     <string name="total_cost">Total kostnad</string>
     <string name="current_cost">Kostnad for gjeldende måned</string>
     <string name="current_consumption">Forbruk i gjeldende måned</string>
-    <string name="impulses_count">Antall impulser</string>
     <string name="meter_value">Meterlesing</string>
-    <string name="channel_func_impulsecounter">Impulsmåler</string>
     <string name="minutes">Minutter</string>
     <string name="hours">Time</string>
     <string name="days">Dager</string>

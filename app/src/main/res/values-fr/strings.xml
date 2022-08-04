@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Envoyer un e-mail</string>
-    <string name="donate_title">Faire un don</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=fr</string>
 
     <string name="version">version</string>
 
-    <string name="feedback">Retour d\u0027information</string>
     <string name="about">À propos de l\u0027application</string>
     <string name="settings">Paramètres</string>
 
@@ -48,10 +45,6 @@
     <string name="channel_caption_distancesensor">Capteur de distance</string>
     <string name="channel_caption_windowopeningsensor">Capteur d\'ouverture de fenêtre</string>
     <string name="channel_caption_mailsensor">Détecteur de courrier</string>
-
-    <string name="rgb_brightness">Luminosité</string>
-    <string name="rgb_color">Couleur</string>
-    <string name="rgb_state">Status</string>
 
     <string name="channel_btn_open">Ouvrir</string>
     <string name="channel_btn_openclose">Ouvrir Fermer</string>
@@ -115,7 +108,6 @@
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
     <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
-    <string name="device_registration_disabled">Enregistrement des dispositifs d\'entrée/sortie est actuellement désactivé. Pour continuer, allez à %1$s et activez l\'ajout de dispositifs dans l\'onglet Ma SUPLA.</string>
     <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
     <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
     <string name="start">DÉMARRER</string>
@@ -124,7 +116,6 @@
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Le serveur auquel vous êtes connecté ne prend pas en charge cette fonctionnalité!</string>
     <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
-    <string name="wizard_step2_txt3">*) Le réseau %1$s sera utilisé par vos actionneurs pour vous connecter au serveur.</string>
     <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
     <string name="help">Aide</string>
     <string name="channel_caption_staircasetimer">Minuterie d\'escalier</string>
@@ -165,9 +156,7 @@
     <string name="total_cost">Coût total</string>
     <string name="current_cost">Coût dans le mois courant</string>
     <string name="current_consumption">Consommation dans le mois courant</string>
-    <string name="impulses_count">Nombre d\'impulsions</string>
     <string name="meter_value">"Valeur du compteur"</string>
-    <string name="channel_func_impulsecounter">Compteur d\'impulsions</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Heures</string>
     <string name="days">Jours</string>
@@ -191,8 +180,6 @@
     <string name="comparsion_dayday">Comparaison jour par jour</string>
     <string name="comparsion_monthmonth">Comparaison mois par mois</string>
     <string name="comparsion_yearyear">Comparaison année par année</string>
-    <string name="hp_turn_off">Éteindre</string>
-    <string name="hp_turn_on">Allumer</string>
     <string name="hp_error_1">Manque d\'eau</string>
     <string name="hp_error_2">Chauffage brûlé</string>
     <string name="hp_error_3">Erreur du capteur de température de l\'eau</string>
