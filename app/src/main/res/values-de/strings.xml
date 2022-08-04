@@ -1,11 +1,7 @@
 <resources>
 
-    <string name="feedback_title">"Send email"</string>
-
-    <string name="feedback">Feedback</string>
     <string name="about">Über das Programm</string>
     <string name="settings">Einstellungen</string>
-    <string name="donate_title">Spenden</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=de</string>
     <string name="forumpage_url">https://de-forum.supla.org/</string>
@@ -49,10 +45,6 @@
     <string name="channel_caption_distancesensor">Abstandssensor</string>
     <string name="channel_caption_windowopeningsensor">Fensteröffnungssensor</string>
     <string name="channel_caption_mailsensor">Posteinwurferkennung</string>
-
-    <string name="rgb_brightness">Helligkeit</string>
-    <string name="rgb_color">Farbe</string>
-    <string name="rgb_state">Zustand</string>
 
     <string name="channel_btn_open">Öffnen</string>
     <string name="channel_btn_openclose">Öffnen Schließen</string>
@@ -110,7 +102,6 @@
     <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
     <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>
     <string name="wizard_scan_timeout">Für den Abschluss des Browsens des WiFi-Netzes wurde das Zeitlimit abgeschlossen!</string>
-    <string name="device_registration_disabled">Die Registrierung der Ein-/Ausgabegeräte ist momentan deaktiviert. Um fortzusetzen, kommen Sie zur Website %1$s und im Bereich Meine SUPLA aktivieren Sie die Funktion Geräte hinzufügen.</string>
     <string name="wizard_remember_passwd">Passwort speichern</string>
     <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
     <string name="start">START</string>
@@ -119,7 +110,6 @@
     <string name="device_reg_request_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
     <string name="wizard_server_compat_error">Der Server, mit dem eine Verbindung herstellen wurde, unterstützt diese Funktion nicht!</string>
     <string name="wizard_no_internetwifi">Bevor Sie beginnen, stellen Sie eine Verbindung zum Internet über ein WiFi-Netzwerk her, das auch vom Ausführungsgerät verwendet wird, um eine Verbindung zum Server herzustellen.</string>
-    <string name="wizard_step2_txt3">*) Das %1$s -Netzwerk wird von den Ausführungsgeräten verwendet, um eine Verbindung zum Server herzustellen.</string>
     <string name="wizard_not_enought_permissions">Die Anwendung verfügt nicht über ausreichende Berechtigungen. Gehen Sie zur Anwendungsverwaltung in Systemeinstellungen über. Suchen Sie dann die %1$s -Anwendung und aktivieren Sie alle Berechtigungen, die sie erfordert.</string>
     <string name="help">Hilfe</string>
     <string name="channel_caption_staircasetimer">Treppenlichtsensor</string>
@@ -145,8 +135,6 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">EINGESCHALTET</string>
     <string name="hp_off">AUSGESCHALTET</string>
-    <string name="hp_turn_on">EINSCHALTEN</string>
-    <string name="hp_turn_off">AUSSCHALTEN</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -162,9 +150,7 @@
     <string name="total_cost">Gesamtkosten</string>
     <string name="current_cost">Die Kosten im laufenden Monat</string>
     <string name="current_consumption">Verbrauch im laufenden Monat</string>
-    <string name="impulses_count">Anzahl der Impulse</string>
     <string name="meter_value">Zählerstand</string>
-    <string name="channel_func_impulsecounter">Impulszähler</string>
     <string name="minutes">Minuten</string>
     <string name="hours">Stunden</string>
     <string name="days">Tage</string>

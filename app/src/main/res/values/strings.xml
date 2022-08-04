@@ -24,16 +24,11 @@
     <string name="homepage_url" translatable="false">https://www.supla.org</string>
     <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
     <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
-    <string name="feedback_email" translatable="false">feedback@supla.org</string>
-    <string name="feedback_subject" translatable="false">SUPLA for Android feedback</string>
-    <string name="feedback_title">Send email</string>
-    <string name="donate_title">Donate</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=en</string>
 
     <string name="version">version</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">About</string>
     <string name="settings">Settings</string>
     <string name="add_device">Add I/O device</string>
@@ -88,10 +83,6 @@
     <string name="channel_caption_thermostat">Thermostat</string>
     <string name="channel_caption_thermostat_hp_homeplus">Home+ Heater</string>
 
-    <string name="rgb_brightness">Brightness</string>
-    <string name="rgb_color">Color</string>
-    <string name="rgb_state">State</string>
-
     <string name="channel_btn_open">Open</string>
     <string name="channel_btn_openclose">Open Close</string>
     <string name="channel_btn_on">On</string>
@@ -109,7 +100,6 @@
     <string translatable="false" name="access_id">ACCESS IDENTIFIER</string>
     <string translatable="false" name="password">PASSWORD</string>
     <string translatable="false" name="email">E-MAIL ADDRESS</string>
-    <string translatable="false" name="temp_unit">TEMPERATURE UNIT</string>
     <string translatable="false" name="advanced_settings">Advanced</string>
     <string translatable="false" name="create_account">Create</string>
     <string translatable="false" name="delete_account">Remove</string>
@@ -119,7 +109,6 @@
 
     <!-- Configuration screen, profile name of current profile
 	 (editable) -->
-    <string translatable="false" name="cfg_label_profile_name">CURRENT ACCOUNT</string>
     <string translatable="false" name="cfg_profile_active_indicator">active</string>
     <!-- default name for a profile (usually assigned for initial
 	 account or when migrating settings from previous version of
@@ -148,15 +137,14 @@
     <string name="calibration">[Calibration]</string>
 
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
-    <string name="device_registration_disabled">I/O Device registration is currently off.  To continue go to „My SUPLA” at  %1$s and enable the Device Add Button.</string>
 
     <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) %1$s network will be used by I/O devices to connect with server.</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
     <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
@@ -180,7 +168,6 @@
     <string name="wizard_iodev_data">Device parameters</string>
     <string name="wizard_iodev_name">Name</string>
     <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
-    <string name="wizard_iodev_guid" translatable="false">GUID</string>
     <string name="wizard_iodev_mac" translatable="false">MAC</string>
     <string name="wizard_iodev_laststate">Previous state</string>
 
@@ -206,8 +193,6 @@
     <string name="em_phase3">Phase 3</string>
     <string name="hp_on">ON</string>
     <string name="hp_off">OFF</string>
-    <string name="hp_turn_on">Turn ON</string>
-    <string name="hp_turn_off">Turn OFF</string>
     <string name="hp_normal">MANUAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -221,12 +206,10 @@
     <string name="hp_calendar_eco">Lower</string>
     <string name="hp_cfg_temp_eco">Lower temperature in AUTO mode</string>
     <string name="hp_hour">h</string>
-    <string name="channel_func_impulsecounter">Impulse counter</string>
     <string name="meter_value">Meter value</string>
     <string name="total_cost">Total cost</string>
     <string name="current_cost">The cost in the current month</string>
     <string name="current_consumption">Consumption in the current month</string>
-    <string name="impulses_count">Impulses count</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Hours</string>
     <string name="days">Days</string>

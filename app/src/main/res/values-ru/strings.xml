@@ -1,14 +1,11 @@
 <resources>
 
-    <string name="feedback_title">Написать отзыв</string>
-    <string name="donate_title">Donate</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=ru</string>
     <string name="forumpage_url">https://ru-forum.supla.org/</string>
 
     <string name="version">версия</string>
 
-    <string name="feedback">Отзыв</string>
     <string name="about">О программе</string>
     <string name="settings">Установки</string>
 
@@ -49,10 +46,6 @@
     <string name="channel_caption_distancesensor">датчик расстояния</string>
     <string name="channel_caption_windowopeningsensor">Датчик открытия окна</string>
     <string name="channel_caption_mailsensor">Сигнализатор наличия почты</string>
-
-    <string name="rgb_brightness">Яркость</string>
-    <string name="rgb_color">Цвет</string>
-    <string name="rgb_state">Cостояние</string>
 
     <string name="channel_btn_open">Открыть</string>
     <string name="channel_btn_openclose">Открыть Закрыть</string>
@@ -121,7 +114,6 @@
     <string name="wizard_reconnect_timeout">Превышено время ожидания возврата в основную сеть wi-fi!</string>
     <string name="wizard_configure_timeout">Превышено время ожидания завершения конфигурации устройства!</string>
     <string name="wizard_scan_timeout">Превышено время ожидания завершения поиска сети wi-fi!</string>
-    <string name="device_registration_disabled">Регистрация устройств ввода/вывода в настоящее время отключена. Для продолжения перейдите на сайт %1$s и во вкладке ”Моя SUPLA” включите добавление устройств.</string>
     <string name="wizard_remember_passwd">Запомнить пароль</string>
     <string name="wizard_wifi_error">Сеть wi-fi отключена или не удается определить ее идентификатор или имя!</string>
     <string name="start">START</string>
@@ -130,7 +122,6 @@
     <string name="device_reg_request_timeout">Превышено время ожидания информации о доступности регистрации устройств!</string>
     <string name="wizard_server_compat_error">Сервер, к которому вы подключены, не поддерживает эту функцию!</string>
     <string name="wizard_no_internetwifi">Прежде, чем начать, установите соединение с Интернетом через сеть WiFi, которая также будет использоваться через устройство ввода/вывода для подключения к серверу.</string>
-    <string name="wizard_step2_txt3">*) Сеть %1$s будет использоваться через устройства ввода/вывода для подключения к серверу.</string>
     <string name="wizard_not_enought_permissions">Приложение не имеет достаточных разрешений. Перейдите в управление приложениями в системных настройках. Затем найдите приложение %1$s и включите все необходимые для него разрешения.</string>
     <string name="help">Помощь</string>
     <string name="channel_caption_staircasetimer">Лестничный автомат</string>
@@ -169,9 +160,7 @@
     <string name="total_cost">Общая стоимость</string>
     <string name="current_cost">Стоимость в текущем месяце</string>
     <string name="current_consumption">Потребление в текущем месяце</string>
-    <string name="impulses_count">Количество импульсов</string>
     <string name="meter_value">Состояние счетчика</string>
-    <string name="channel_func_impulsecounter">Счётчик импульсов</string>
     <string name="minutes">Минуты</string>
     <string name="hours">Часы</string>
     <string name="days">Дни</string>
@@ -197,8 +186,6 @@
     <string name="comparsion_yearyear">Сравнение в год к году</string>
     <string name="channel_caption_thermostat">Термостат</string>
     <string name="channel_caption_thermostat_hp_homeplus">Дом + обогреватель</string>
-    <string name="hp_turn_on">Включи</string>
-    <string name="hp_turn_off">Выключи</string>
     <string name="hp_error_1">Нет Воды</string>
     <string name="hp_error_2">Сгоревший нагреватель</string>
     <string name="hp_error_3">Ошибка датчика температуры воды</string>

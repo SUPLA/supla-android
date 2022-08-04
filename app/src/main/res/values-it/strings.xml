@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
 
-    <string name="feedback_title">Invia un’email</string>
-    <string name="donate_title">Donazione</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=it</string>
 
     <string name="version">versione</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">Info</string>
     <string name="settings">Impostazioni</string>
 
@@ -49,10 +46,6 @@
     <string name="channel_caption_distancesensor">Sensore di distanza</string>
     <string name="channel_caption_windowopeningsensor">Sensore di apertura finestra</string>
     <string name="channel_caption_mailsensor">Rilevatore di posta</string>
-
-    <string name="rgb_brightness">Luminosità</string>
-    <string name="rgb_color">Colore</string>
-    <string name="rgb_state">Stato</string>
 
     <string name="channel_btn_open">Apri</string>
     <string name="channel_btn_openclose">Apri Chiudi</string>
@@ -116,7 +109,6 @@
     <string name="wizard_reconnect_timeout">Il tempo di attesa per il ritorno alla rete basilare WiFi è stato superato!</string>
     <string name="wizard_configure_timeout">Il tempo di attesa per la terminazione della configurazione del dispositivo è stato superato!</string>
     <string name="wizard_scan_timeout">Il tempo di attesa per la ricerca nella rete WiFi è stato superato!</string>
-    <string name="device_registration_disabled">La registrazione dei dispositivi di input/output è attualmente disabilitata. Per continuare vai sulla pagina %1$s e abilita la funzione per aggiungere i dispositivi nella sezione ”Mio SUPLA”.</string>
     <string name="wizard_remember_passwd">Ricorda la password</string>
     <string name="start">START</string>
     <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>
@@ -125,7 +117,6 @@
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Il server, con il quale è stata stabilita la connessione, non supporta questa funzione!</string>
     <string name="wizard_no_internetwifi">Prima di iniziare, collegati all’Internet tramite la rete WiFi che verrà utilizzata anche dal dispositivo di I/O per la connessione con il server.</string>
-    <string name="wizard_step2_txt3">*) La rete %1$s verrà utilizzata dai dispositivi di input/output per la connessione con il server.</string>
     <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
     <string name="help">Aiuto</string>
     <string name="channel_caption_staircasetimer">Temporizzatore luce scale</string>
@@ -163,12 +154,10 @@
     <string name="hp_calendar_comfort">Comfort</string>
     <string name="hp_cfg_temp_eco">Temperatura ECO in modalità AUTO</string>
     <string name="hp_hour">h</string>
-    <string name="channel_func_impulsecounter">Contatore di impulsi</string>
     <string name="meter_value">Lettura del contatore</string>
     <string name="total_cost">Costo totale</string>
     <string name="current_cost">Costo del mese corrente</string>
     <string name="current_consumption">Consumo del mese corrente</string>
-    <string name="impulses_count">Numero di impulsi</string>
     <string name="minutes">Minuti</string>
     <string name="hours">Ore</string>
     <string name="days">Giorni</string>
@@ -192,8 +181,6 @@
     <string name="comparsion_dayday">Confronto giorno a giorno</string>
     <string name="comparsion_monthmonth">Confronto mese a mese</string>
     <string name="comparsion_yearyear">Confronto anno ad anno</string>
-    <string name="hp_turn_off">Spegnere</string>
-    <string name="hp_turn_on">Accendere</string>
     <string name="hp_error_1">Mancanza d’acqua</string>
     <string name="hp_error_2">Resistenza bruciata</string>
     <string name="hp_error_3">Errore del sensore di temperatura dell’acqua</string>
@@ -412,7 +399,6 @@
     <string name="motor_problem">Problema al motore / Arresto inaspettato.</string>
     <string name="confirm_button_text">OK</string>
     <string name="dont_have_account_yet">Non hai ancora un account Supla?</string>
-    <string name="cfg_label_profile_name">PROFILO CORRENTE</string>
     <string name="cfg_label_email_auth">Email</string>
     <string name="cfg_label_access_id_auth">ID di accesso</string>
     <string name="cfg_channel_height">Altezza canale</string>
@@ -441,6 +427,5 @@
     <string name="rs_display_mode_opening">Apertura</string>
     <string name="rs_display_mode_closing">Chiusura</string>
     <string name="cfg_checkbox_server_auto" translatable="false">Auto</string>
-    <string name="temp_unit" translatable="false">UNITÀ DI TEMPERATURA</string>
 
 </resources>

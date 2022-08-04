@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Pošljite e-sporočilo</string>
-    <string name="donate_title">Podprite projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">različica</string>
 
-    <string name="feedback">Povratne informacije</string>
     <string name="about">O programu</string>
     <string name="settings">Nastavitve</string>
     <string name="add_device">Dodajte napravo</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Senzor odprtja oken</string>
     <string name="channel_caption_mailsensor">Senzor pošte</string>
 
-    <string name="rgb_brightness">Svetlost</string>
-    <string name="rgb_color">Barva</string>
-    <string name="rgb_state">Stanje</string>
-
     <string name="channel_btn_open">Odprite</string>
     <string name="channel_btn_openclose">Odprite Zaprite</string>
     <string name="channel_btn_on">Vklopite</string>
@@ -88,15 +81,14 @@
     <string name="calibration">[Kalibracija]</string>
 
     <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
-    <string name="device_registration_disabled">Registracija naprav je trenutno izklopljena. Za nadaljevanje pojdite na stran %1$s in v zavihku "Moja SUPLA" omogočite dodajanje naprav.</string>
 
     <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
     <string name="wizard_step1_txt3">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
     <string name="next">Naprej</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Izvršilna naprava bo za povezovanje s strežnikom uporabila omrežje %1$s.</string>
     <string name="wizard_remember_passwd">Shranite geslo</string>
 
     <string name="wizard_step3_txt1">Priključite svojo izvršno napravo na napajanje. Naprava naj bi privzeto delovala v konfiguracijskem načinu in to signalizirala z utripanjem LED diode na naslednji način</string>
@@ -153,8 +145,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Gralec Home+</string>
     <string name="hp_on">VKLJUČENO</string>
     <string name="hp_off">IZKLJUČENO</string>
-    <string name="hp_turn_on">VKLJUČITE</string>
-    <string name="hp_turn_off">IZKLJUČITE</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +160,7 @@
     <string name="total_cost">Skupni stroški</string>
     <string name="current_cost">Stroški v tekočem mesecu</string>
     <string name="current_consumption">Poraba v tekočem mesecu</string>
-    <string name="impulses_count">Število impulzov</string>
     <string name="meter_value">Stanje števca</string>
-    <string name="channel_func_impulsecounter">Števec impulzov</string>
     <string name="minutes">Minute</string>
     <string name="hours">Ure</string>
     <string name="days">Dni</string>
