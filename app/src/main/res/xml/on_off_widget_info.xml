@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="org.supla.android.widget.onoff.configuration.OnOffWidgetConfigurationActivity"
-    android:description="@string/on_off_widget_description"
+    android:description="@string/double_button_widget_description"
     android:initialKeyguardLayout="@layout/on_off_widget"
     android:initialLayout="@layout/on_off_widget"
     android:minWidth="80dp"

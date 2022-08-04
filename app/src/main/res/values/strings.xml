@@ -434,8 +434,8 @@
     <string translatable="false" name="widget_configure_error">Could not configure channel…</string>
     <string translatable="false" name="widget_configure_no_selection">No channel selected</string>
     <string translatable="false" name="widget_configure_no_channel">No channels available</string>
-    <string translatable="false" name="on_off_widget_description">Widget which simplifies the usage of on/off operations.</string>
-    <string translatable="false" name="single_widget_description">Widget which simplifies the usage of single operations.</string>
+    <string translatable="false" name="double_button_widget_description">Double-button widget.</string>
+    <string translatable="false" name="single_button_widget_description">Single-button widget.</string>
     <string translatable="false" name="widget_app_not_initialized">Please login first!</string>
     <string translatable="false" name="widget_command_error">Communication failure!</string>
     <string translatable="false" name="widget_command_no_connection">No internet connection!</string>
