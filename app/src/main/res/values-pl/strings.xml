@@ -455,8 +455,8 @@
     <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
     <string name="widget_configure_no_selection">Nie wybrano kanału</string>
     <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
-    <string name="double_button_widget_description">Dwuprzyciskowy widżet</string>
-    <string name="single_button_widget_description">Jednoprzyciskowy widżet</string>
+    <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
+    <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
     <string name="widget_app_not_initialized">Proszę się zalogować!</string>
     <string name="widget_command_error">Błąd komunikacji!</string>
     <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
