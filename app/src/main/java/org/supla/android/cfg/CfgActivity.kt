@@ -58,6 +58,7 @@ class CfgActivity: AppCompatActivity() {
         get() = binding.navToolbar
 
     override fun onCreate(sis: Bundle?) {
+        super.onCreate(sis)
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
@@ -71,7 +72,6 @@ class CfgActivity: AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        super.onCreate(sis)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
