@@ -8,25 +8,25 @@ class SuplaSceneState(
 ) {
     var startedAt: Date? = null
         private set
-    var estamitedEndDate: Date? = null
+    var estimatedEndDate: Date? = null
         private set
     val initiatorId: Int
     val initiatorName: String
     val isEol: Boolean
     val isDuringExecution: Boolean
         get() {
-            if (startedAt != null && estamitedEndDate != null) {
+            if (startedAt != null && estimatedEndDate != null) {
                 val now = Date()
                 return (startedAt!!.compareTo(now) <= 0
-                        && estamitedEndDate!!.compareTo(now) > 0)
+                        && estimatedEndDate!!.compareTo(now) > 0)
             }
             return false
         }
     val millisecondsLeft: Long
         get() {
-            if (estamitedEndDate != null) {
+            if (estimatedEndDate != null) {
                 val now = Date()
-                val diff = estamitedEndDate!!.getTime() - now.time
+                val diff = estimatedEndDate!!.getTime() - now.time
                 if (diff > 0) {
                     return diff
                 }
@@ -37,10 +37,10 @@ class SuplaSceneState(
     init {
         if (millisecondsFromStart > 0 || millisecondsLeft > 0) {
             startedAt = Date(System.currentTimeMillis() - millisecondsFromStart)
-            estamitedEndDate = Date(System.currentTimeMillis() + millisecondsLeft)
+            estimatedEndDate = Date(System.currentTimeMillis() + millisecondsLeft)
         } else {
             startedAt = null
-            estamitedEndDate = null
+            estimatedEndDate = null
         }
 
         this.initiatorId = initiatorId

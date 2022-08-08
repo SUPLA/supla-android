@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.supla.android.SuplaApp
 import org.supla.android.Preferences
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
@@ -15,6 +16,8 @@ import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.lib.SuplaClientMessageHandler
+import org.supla.android.scenes.SceneController
 import javax.inject.Singleton
 
 @Module
@@ -56,4 +59,14 @@ class ApplicationModule {
     @Singleton
     fun provideAppWidgetManager(@ApplicationContext context: Context) =
             AppWidgetManager.getInstance(context)
+
+    @Provides
+    @Singleton
+    fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
+        SuplaClientMessageHandler.getGlobalInstance()
+
+    @Provides
+    @Singleton
+    fun provideSceneController(): SceneController =
+        SuplaApp.getApp().getSuplaClient()
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="confirm_button_text">OK</string>
     <string name="profiles_title">Konta</string>
@@ -497,4 +498,10 @@
     <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
     <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
     <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
+    <string name="navbar_channels">Kanały</string>
+    <string name="navbar_groups">Grupy</string>
+    <string name="navbar_scenes">Sceny</string>
+    <string name="btn_execute">Wykonaj</string>
+    <string name="btn_abort">Przerwij</string>
+    <string name="scene_name">Nazwa sceny</string>
 </resources>

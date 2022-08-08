@@ -1,22 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/channel_cell"
     tools:context=".MainActivity">
+ 
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:id="@+id/coordinator"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-
-    <org.supla.android.listview.ChannelListView
-        android:id="@+id/channelsListView"
+    <RelativeLayout
+        android:id="@+id/inner_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <org.supla.android.listview.ChannelListView
-        android:id="@+id/channelGroupListView"
+      <org.supla.android.listview.ChannelListView
+          android:id="@+id/channelsListView"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent" />
+
+      <org.supla.android.listview.ChannelListView
+          android:id="@+id/channelGroupListView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
+          android:visibility="gone" />
+
+      <androidx.fragment.app.FragmentContainerView
+          android:id="@+id/scenesView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
+          android:visibility="invisible">
+        <fragment
+            android:name="org.supla.android.scenes.ScenesFragment"
+            android:id="@+id/scenesFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+      </androidx.fragment.app.FragmentContainerView>
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottombar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        android:layout_gravity="bottom">
+      <com.google.android.material.bottomnavigation.BottomNavigationView
+          android:id="@+id/bottomnavbar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/supla_green"
+          android:layout_gravity="start"
+          app:menu="@menu/bottom_dashboard"
+          app:itemIconTint="@drawable/bottom_nav_bar_selector"
+          app:itemTextColor="@drawable/bottom_nav_bar_selector"
+          app:labelVisibilityMode="labeled"
+          />
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

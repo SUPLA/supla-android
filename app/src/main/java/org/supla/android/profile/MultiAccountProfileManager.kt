@@ -41,13 +41,17 @@ class MultiAccountProfileManager(
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
-        val forceActivate: Boolean
+        var forceActivate: Boolean
         if(profile.id == PROFILE_ID_NEW) {
             profile.id = repo.createNamedProfile(profile.name)
             forceActivate = profile.isActive
         } else if(profile.isActive) {
             val prev = getProfile(profile.id)
             forceActivate = profile.isActive && !(prev?.isActive?:false)
+
+            if(prev != null && prev.authInfoChanged(profile)) {
+                forceActivate = true
+            }
         } else {
             forceActivate = false
         }

@@ -387,8 +387,10 @@ public class BaseActivity extends FragmentActivity implements SuplaClientMessage
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ResourcesCompat.getColor(getResources(),
-                    colorId, null));
+            int color = ResourcesCompat.getColor(getResources(),
+                    colorId, null);
+            window.setStatusBarColor(color);
+            window.setNavigationBarColor(color);
         }
     }
 
