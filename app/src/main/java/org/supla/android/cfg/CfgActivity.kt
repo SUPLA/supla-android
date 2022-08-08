@@ -21,6 +21,9 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Build
+import android.view.WindowManager
+import androidx.core.content.res.ResourcesCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -35,12 +38,11 @@ import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
-import org.supla.android.ui.BaseActivity
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CfgActivity: BaseActivity() {
+class CfgActivity: AppCompatActivity() {
 
     companion object {
         const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
@@ -52,7 +54,7 @@ class CfgActivity: BaseActivity() {
     private lateinit var binding: ActivityCfgBinding
     private var shouldShowBack = false
 
-    override val navToolbar: AppBar
+    val navToolbar: AppBar
         get() = binding.navToolbar
 
     override fun onCreate(sis: Bundle?) {
@@ -71,6 +73,14 @@ class CfgActivity: BaseActivity() {
 
         super.onCreate(sis)
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ResourcesCompat.getColor(resources,
+                    R.color.splash_bg, null)
+        }
+
+        setSupportActionBar(navToolbar)
 
         navCoordinator.navAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
