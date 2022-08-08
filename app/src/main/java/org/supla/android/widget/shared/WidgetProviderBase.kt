@@ -24,6 +24,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.Trace
+import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.profile.INVALID_PROFILE_ID
 import org.supla.android.widget.INVALID_CHANNEL_ID
 import org.supla.android.widget.RemoveWidgetsWorker
@@ -32,6 +33,9 @@ import org.supla.android.widget.WidgetPreferences
 
 private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
 
+/**
+ * IMPORTANT: Always when adding new widget, please adapt [getAllWidgetIds].
+ */
 abstract class WidgetProviderBase : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
