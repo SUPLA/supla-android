@@ -27,6 +27,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import androidx.multidex.MultiDexApplication;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import org.supla.android.cfg.CfgRepository;
 import org.supla.android.cfg.PrefsCfgRepositoryImpl;
@@ -81,6 +82,8 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
         profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
 
 		SuplaFormatter.sharedFormatter();
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     public static void Vibrate(Context context) {

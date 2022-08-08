@@ -513,4 +513,8 @@
     <string translatable="false" name="rs_display_mode_opening">Opening</string>
     <string translatable="false" name="rs_display_mode_closing">Closing</string>
     <string translatable="false" name="status_accessid_inactive">Access Identifier inactive</string>
+
+    <string translatable="false" name="navbar_channels">Channels</string>
+    <string translatable="false" name="navbar_groups">Groups</string>
+    <string translatable="false" name="navbar_scenes">Scenes</string>
 </resources>

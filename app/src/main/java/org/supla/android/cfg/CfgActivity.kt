@@ -20,11 +20,8 @@ package org.supla.android.cfg
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -38,11 +35,12 @@ import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
+import org.supla.android.ui.BaseActivity
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CfgActivity: AppCompatActivity() {
+class CfgActivity: BaseActivity() {
 
     companion object {
         const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
@@ -54,8 +52,10 @@ class CfgActivity: AppCompatActivity() {
     private lateinit var binding: ActivityCfgBinding
     private var shouldShowBack = false
 
+    override val navToolbar: AppBar
+        get() = binding.navToolbar
+
     override fun onCreate(sis: Bundle?) {
-        super.onCreate(sis)
 
         SuplaApp.getApp().initTypefaceCollection(this)
 
@@ -68,25 +68,20 @@ class CfgActivity: AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        val navToolbar: AppBar = binding.navToolbar
+
+        super.onCreate(sis)
 
 
         navCoordinator.navAction.observe(this) {
             it?.let { handleNavigationDirective(it) }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ResourcesCompat.getColor(resources,
-                    R.color.splash_bg, null)
-        }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val navInflater = navController.navInflater
         val graph = navInflater.inflate(R.navigation.nav_graph)
 
-        setSupportActionBar(navToolbar)
+//        setSupportActionBar(navToolbar)
         /* FIXME: this workaround is to be removed when navigation controller
            is implemented in entire app. */
         val action = intent.action

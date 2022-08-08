@@ -3,6 +3,9 @@
     <!-- new color definitions start here -->
     <color name="supla_green">#12a71e</color>
 
+    <color name="item_selected">#ffffff</color>
+    <color name="item_unselected">#dadbdc</color>
+
     <color name="supla_background_light">#F5F6F7</color>
     <color name="supla_text_light">#000000</color>
     <!-- new color definitions end here -->

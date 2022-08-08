@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <data>
+    <import type="android.view.View" />
+    <variable name="viewModel"
+              type="org.supla.android.scenes.SceneListItemViewModel"
+              />
+  </data>
+
+  <RelativeLayout
+      android:background="@color/cell_bg_new"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/channel_layout_height">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/sceneIcon"
+        android:layout_width="@dimen/scene_img_width"
+        android:layout_height="@dimen/scene_img_height"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/scene_img_top_margin"
+        android:src="@drawable/coffee"
+        />
+    <TextView
+        android:id="@+id/sceneLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="@{viewModel.sceneName}"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="4dp">
+      <TextView
+          android:id="@+id/timerView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="12:34:56" />
+      <Button
+          android:id="@+id/onOffButton"
+          android:layout_width="@dimen/min_tap_size"
+          android:layout_height="@dimen/min_tap_size"
+          android:background="@drawable/on_off_inset" />
+    </LinearLayout>
+  </RelativeLayout>
+</layout>

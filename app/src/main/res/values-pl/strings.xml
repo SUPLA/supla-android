@@ -500,4 +500,7 @@
     <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
     <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
     <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
+    <string name="navbar_channels">Kanały</string>
+    <string name="navbar_groups">Grupy</string>
+    <string name="navbar_scenes">Sceny</string>
 </resources>

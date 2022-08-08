@@ -66,4 +66,9 @@
     <dimen name="cell_right_margin_small">12dp</dimen>
 
     <dimen name="widget_configuration_radius">9dp</dimen>
+    <dimen name="scene_label_left_margin">22dp</dimen>
+    <dimen name="scene_img_top_margin">23dp</dimen>
+    <dimen name="scene_img_width">60dp</dimen>
+    <dimen name="scene_img_height">60dp</dimen>
+    <dimen name="min_tap_size">48dp</dimen> <!-- Google recommendation -->
 </resources>

@@ -58,7 +58,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private MenuItemsLayout mMenuItemsLayout;
     private ViewGroup Content;
     private Button MenuButton;
-    private Button GroupButton;
     private Button ProfileButton;
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
@@ -125,7 +124,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         CurrentActivity = this;
 
         getMenuBarLayout();
-        updateProfileButtonVisibility();
+        updateProfileButtonVisibility(this instanceof MainActivity);
     }
 
     @Override
@@ -137,11 +136,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void updateProfileButtonVisibility() {
-        int visible = GroupButton.getVisibility();
+    private void updateProfileButtonVisibility(boolean visible) {
         
-        if(profileManager.getAllProfiles().size() > 1) {
-            ProfileButton.setVisibility(visible);
+        if(profileManager.getAllProfiles().size() > 1 && visible) {
+            ProfileButton.setVisibility(View.VISIBLE);
         } else {
             ProfileButton.setVisibility(View.GONE);
         }
@@ -190,14 +188,17 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuButton.setVisibility(View.GONE);
             MenuButton.setOnClickListener(this);
 
+            /*
             GroupButton = findViewById(R.id.groupbutton);
             GroupButton.setVisibility(View.GONE);
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(0);
+            */
 
             ProfileButton = findViewById(R.id.profilebutton);
             ProfileButton.setVisibility(View.GONE);
             ProfileButton.setOnClickListener(this);
+
         }
 
         return MenuBarLayout;
@@ -264,8 +265,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         setBtnBackground(MenuButton, R.drawable.menu);
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(0));
-        GroupButton.setVisibility(View.VISIBLE);
-        updateProfileButtonVisibility();
+        updateProfileButtonVisibility(true);
         title.setVisibility(View.VISIBLE);
         detailTitle.setVisibility(View.INVISIBLE);
     }
@@ -275,14 +275,12 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         setBtnBackground(MenuButton, R.drawable.back);
         MenuButton.setVisibility(View.VISIBLE);
         MenuButton.setTag(Integer.valueOf(1));
-        GroupButton.setVisibility(View.GONE);
         ProfileButton.setVisibility(View.GONE);
     }
 
     public void hideMenuButton() {
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
-        GroupButton.setVisibility(View.GONE);
         ProfileButton.setVisibility(View.GONE);
     }
 
@@ -291,9 +289,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
         detailTitle.setText(txt);
         title.setVisibility(View.INVISIBLE);
         detailTitle.setVisibility(View.VISIBLE);
-    }
-
-    protected void onGroupButtonTouch(boolean On) {
     }
 
     public boolean menuIsVisible() {
@@ -481,20 +476,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             else
                 showMenu(true);
 
-        } else if (v == GroupButton) {
-
-            int img;
-
-            if (GroupButton.getTag() == Integer.valueOf(0)) {
-                GroupButton.setTag(1);
-                img = R.drawable.groupon;
-            } else {
-                GroupButton.setTag(0);
-                img = R.drawable.groupoff;
-            }
-
-            setBtnBackground(GroupButton, img);
-            onGroupButtonTouch(img == R.drawable.groupon);
         } else if(v == ProfileButton) {
             showProfileSelector();
         } else {

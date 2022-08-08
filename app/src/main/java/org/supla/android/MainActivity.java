@@ -18,7 +18,7 @@ syays GNU General Public License for more details.
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
+import androidx.fragment.app.FragmentManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -30,10 +30,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -50,6 +55,7 @@ import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.scenes.ScenesFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,12 +66,14 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         ChannelListView.OnSectionLayoutTouchListener,
         SuplaRestApiClientTask.IAsyncResults,
         ChannelListView.OnChannelButtonClickListener, ChannelListView.OnCaptionLongClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        NavigationBarView.OnItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ChannelListView channelLV;
     private ChannelListView cgroupLV;
+    private View scenesView;
     private ListViewCursorAdapter channelListViewCursorAdapter;
     private ListViewCursorAdapter cgroupListViewCursorAdapter;
     private DownloadUserIcons downloadUserIcons = null;
@@ -76,6 +84,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private ImageView notif_img;
     private TextView notif_text;
     private ChannelStatePopup channelStatePopup;
+    private BottomNavigationView bottomNavigation;
 
     // Used in reordering. The initial position of taken item is saved here.
     private Integer dragInitialPosition;
@@ -90,6 +99,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         notif_nrunnable = null;
 
         setContentView(R.layout.activity_main);
+
+        bottomNavigation = (BottomNavigationView)findViewById(R.id.bottomnavbar);
+        bottomNavigation.setOnItemSelectedListener(this);
+        android.view.ViewGroup menuView = (android.view.ViewGroup)bottomNavigation.getChildAt(0);
+        for (int i = 0; i < menuView.getChildCount(); i++) {
+            ((BottomNavigationItemView)menuView.getChildAt(i)).setChecked(i != 0);
+        }//        bottomNavigation.setBackground(null);
 
         NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);
@@ -114,6 +130,8 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         cgroupLV = findViewById(R.id.channelGroupListView);
         cgroupLV.setOnChannelButtonTouchListener(this);
         cgroupLV.setOnDetailListener(this);
+
+        scenesView = findViewById(R.id.scenesView);
 
         MeasurementsDbHelper.getInstance(this); // For upgrade purposes
 
@@ -529,18 +547,6 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         }
     }
 
-    @Override
-    protected void onGroupButtonTouch(boolean On) {
-        if(menuIsVisible() || channelLV.isDetailSliding() ||
-           cgroupLV.isDetailSliding()) return;
-        if (On) {
-            channelLV.setVisibility(View.GONE);
-            cgroupLV.setVisibility(View.VISIBLE);
-        } else {
-            channelLV.setVisibility(View.VISIBLE);
-            cgroupLV.setVisibility(View.GONE);
-        }
-    }
 
     private void ShowValveAlertDialog(final int channelId, final Context context) {
 
@@ -753,10 +759,48 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         super.onProfileChanged();
         resetListViews();
         runDownloadTask();
+        if(scenesView.getVisibility() == View.VISIBLE) {
+            reloadScenes();
+        }
     }
 
     private interface Reorder {
         void doReorder(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem);
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item) {
+        if(menuIsVisible() || channelLV.isDetailSliding() ||
+           cgroupLV.isDetailSliding()) return false;
+
+        int scenesVisible = View.GONE, groupsVisible = View.GONE,
+            channelsVisible = View.GONE;
+        
+        switch(item.getItemId()) {
+            case R.id.channels_item:
+                channelsVisible = View.VISIBLE;
+                break;
+            case R.id.groups_item:
+                groupsVisible = View.VISIBLE;
+                break;
+            case R.id.scenes_item:
+                scenesVisible = View.VISIBLE;
+                break;
+        }
+
+        channelLV.setVisibility(channelsVisible);
+        cgroupLV.setVisibility(groupsVisible);
+        if(scenesVisible == View.VISIBLE) {
+            reloadScenes();
+        }
+        scenesView.setVisibility(scenesVisible);
+        
+        return true;
+    }
+
+    private void reloadScenes() {
+        FragmentManager fmgr = getSupportFragmentManager();
+        ScenesFragment sf = (ScenesFragment)fmgr.findFragmentById(R.id.scenesFragment);
+        sf.reload();
     }
 }
 
