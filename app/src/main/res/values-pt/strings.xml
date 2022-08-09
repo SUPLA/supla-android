@@ -365,4 +365,105 @@
     <string name="zwave_welcome_message" >Bem-vindo ao assistente de configuração de ponte z-wave. Ele permitirá que conecte os seus dispositivos z-Wave ao Supla. Clique em “próximo” para continuar.</string>
     <string name="zwave_welcome_title" >Assistente z-wave</string>
    <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet" translatable="false">Ainda não tem uma conta Supla Cloud?</string>
+    <string name="dont_have_account_yet" translatable="false">Ainda não tem uma conta Supla Cloud?</string>
+   <string name="profiles_title" translatable="false">Conta</string>
+   <string name="profile_name_label" translatable="false">NOME DA CONTA</string>
+   <string name="profile_name_label" translatable="false">NOME DA CONTA</string>
+   <string name="form_cannot_delete_active_profile" translatable="false">Incapaz de apagar uma conta ativa</string>
+   <string name="profile_default_name" translatable="false">Predefinição</string>
+   <string name="profile_select_active" translatable="false">Selecione uma conta ativa</string>
+   <string name="profile_act_info" translatable="false">"Toque aqui para fazer login "</string>
+   <string name="form_error" translatable="false">Erro</string>
+   <string name="form_profile_name_missing" translatable="false">Introduza um nome de conta</string>
+   <string name="form_profile_required_data_missing" translatable="false">Complete os restantes dados</string>
+   <string name="form_profile_duplicate" translatable="false">Já existe uma conta com esse nome</string>
+   <string name="add_account" translatable="false">Adicionar conta</string>
+   <string name="edit_account" translatable="false">Editar Conta</string>
+   <string name="delete_account" translatable="false">Eliminar</string>
+   <string name="delete_account_confirm_message" translatable="false">Tem a certeza de que quer eliminar a sua conta?</string>
+   <string name="delete_account_confirm_message_with_widgets">Tem a certeza de que quer eliminar a sua conta? A confirmação significará que os widgets associados serão eliminados.</string>
+   <string name="cfg_label_access_id_auth" translatable="false">Identificador</string>
+   <string name="cfg_channel_height" translatable="false">Altura do canal</string>
+   <string name="cfg_temperature_unit" translatable="false">Unidade de temperatura</string>
+   <string name="cfg_button_autohide" translatable="false">Ocultar automaticamente botões</string>
+   <string name="profile" translatable="false">A sua conta</string>
+   <string name="profile_plural" translatable="false">As suas contas</string>
+   <string name="menubar_appsettings" translatable="false">Configurações</string>
+   <string name="rs_percent_caption_open" translatable="false">Percentagem de abertura</string>
+   <string name="em_chart_all_phases" translatable="false">Fase 1+2+3</string>
+   <string name="widget_configure_title" translatable="false">Configuração do Widget</string>
+   <string name="widget_configure_profile_label" translatable="false">Conta</string>
+   <string name="widget_configure_channel_label" translatable="false">Canal para widget</string>
+   <string name="widget_configure_action_label" translatable="false">Acção</string>
+   <string name="widget_configure_name_label" translatable="false">Nome</string>
+   <string name="widget_configure_error" translatable="false">A configuração do canal falhou...</string>
+   <string name="widget_configure_no_selection" translatable="false">Canal não selecionado</string>
+   <string name="widget_configure_no_channel" translatable="false">Não há canais disponíveis</string>
+   <string name="double_button_widget_description" translatable="false">"Widget de dois botões "</string>
+   <string name="single_button_widget_description" translatable="false">"Widget de um botão "</string>
+   <string name="widget_app_not_initialized" translatable="false">Por favor, faça o login!</string>
+   <string name="widget_command_error" translatable="false">Erro de comunicação!</string>
+   <string name="widget_command_no_connection" translatable="false">Sem ligação à internet!</string>
+   <string name="widget_command_started" translatable="false">Feito</string>
+   <string name="widget_removed_label" translatable="false">Canal Eliminado</string>
+   <string name="channel_caption_roofwindowopeningsensor" translatable="false">Sensor de abertura da janela do telhado</string>
+   <string name="channel_caption_roofwindow" translatable="false">Janela do telhado</string>
+   <string name="channel_func_controllingtheroofwindow" translatable="false">Abrir e fechar a janela do telhado</string>
+   <string name="channel_func_opensensor_roofwindow" translatable="false">Sensor de abertura da janela do telhado</string>
+   <string name="event_openedclosedtheroofwindow" translatable="false">aberto / fechou a janela do telhado</string>
+   <string name="status_led" translatable="false">LED de estado</string>
+   <string name="info_led_on" translatable="false">O LED acende-se se estiver ligado ao servidor.</string>
+   <string name="info_led_off" translatable="false">O LED não é aceso se for estabelecida uma ligação ao servidor.</string>
+   <string name="info_led_alwaysoff" translatable="false">O LED está sempre desligado, a menos que o dispositivo esteja no modo de configuração wi-fi (modo AP).</string>
+   <string name="input" translatable="false">Entrada</string>
+   <string name="monostable" translatable="false">Monostáveis</string>
+   <string name="bistable" translatable="false">Monostáveis</string>
+   <string name="wizard_iodev_connect_failed" translatable="false">Uma tentativa de estabelecer uma ligação Wi-Fi ao actuador falhou.</string>
+   <string name="diw_cfg_info_oprange" translatable="false">Ajuste o intervalo de dimmer definindo os níveis mínimos e máximos de luminosidade. Os valores mínimos e máximos podem ser definidos movendo os deslizadores localizados em ambos os lados da roda.</string>
+   <string name="diw_cfg_info_in_options" translatable="false">Opções de entrada</string>
+   <string name="dgf_too_long_operation_warning" translatable="false">"As secções do vidro são expostas por mais de 20 horas, o que pode afetar negativamente a sua vida útil. Recomenda-se cobrir todas as secções durante um mínimo de 4 horas para as regenerar. "</string>
+   <string name="diw_cfg_info_mono_option" translatable="false">"Esta opção altera o comportamento da entrada à qual o botão monostable está ligado. Quando esta opção é desativada, o dimmer para o processo de iluminação quando o nível máximo de luminosidade é atingido e, em caso de escurecimento, quando atinge o nível mínimo. Ativar esta opção irá levá-lo ao nível mínimo imediatamente após atingindo o brilho máximo e, no caso de escurecimento até ao valor máximo, logo que o minumum seja atingido. O escurecimento/escurecimento continuará enquanto o botão for premido. "</string>
+   <string name="diw_cfg_info_bi_option" translatable="false">"Esta opção altera o comportamento do dimmer quando a iluminação é ligada utilizando o botão bistable. Quando esta opção estiver ativada, o dimmer definirá o nível máximo de luminosidade assim que a iluminação estiver ligada. Quando a opção estiver desligada, o dimmer definirá o nível de luminosidade lembrado antes de desligar a iluminação.  "</string>
+   <string name="dgf_planned_regeneration_in_progress" translatable="false">A regeneração planeada está em curso.</string>
+   <string name="dgf_regeneration_after20h" translatable="false">A regeneração iniciará  após 20 horas de trabalho.</string>
+   <string name="incorrect_email_or_password" translatable="false">Erro de morada de emailou de palavra passe</string>
+   <string name="channel_name" translatable="false">Nome do canal</string>
+   <string name="location_name" translatable="false">Nome da localização</string>
+   <string name="overcurrent_warning" translatable="false">A potência foi desligada quando o limiar definido de corrente admissível foi ultrapassado.</string>
+   <string name="overcurrent_question" translatable="false">A potência foi desligada quando o limiar definido de corrente admissível foi ultrapassado. Tem certeza que quer ligar a energia?</string>
+   <string name="recalibration_question" translatable="false">Tem certeza que quer começar a calibrar?</string>
+   <string name="calibration_failed" translatable="false">A calibração falhou.</string>
+   <string name="calibration_lost" translatable="false">A calibração perdeu-se.</string>
+   <string name="motor_problem" translatable="false">Problema do motor / Paragem inesperada.</string>
+   <string name="lastconnectionresetcause_unknown" translatable="false">0: desconhecido</string>
+   <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: sem resposta do servidor</string>
+   <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: perda da ligação WiFi</string>
+   <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: perda da ligação WiFi</string>
+   <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: Reiniciar a ligação ao servidor</string>
+   <string name="basic_profile_warning" translatable="false">"Modo não disponível "</string>
+   <string name="basic_config_unavailable" translatable="false">"Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor. "</string>
+   <string name="basic_config_unavailable" translatable="false">"Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor. "</string>
+   <string name="add_device_warning" translatable="false">O Assistente de Adicionar dispositivo automático não está disponível no modo de autenticação do Access ID. Os dispositivos podem então ser adicionados manualmente.</string>
+   <string name="show_channel_info" translatable="false">"Mostrar Botõesⓘ "</string>
+   <string name="add_device_needs_cloud_title" translatable="false">Configuração do dispositivo</string>
+   <string name="add_device_needs_cloud_message" translatable="false">Este dispositivo não tem quaisquer canais visíveis na aplicação. Para completar a configuração, vá a cloud.supla.org</string>
+   <string name="add_device_needs_cloud_message" translatable="false">Este dispositivo não tem quaisquer canais visíveis na aplicação. Para completar a configuração, vá a cloud.supla.org</string>
+   <string name="add_device_needs_cloud_dismiss" translatable="false">Compreendo</string>
+   <string name="add_device_needs_cloud_dismiss" translatable="false">Compreendo</string>
+   <string name="add_device_needs_cloud_go" translatable="false">Ir para a CLOUD</string>
+   <string name="associeted_with_at_error" translatable="false">"Não é possível alterar a função do canal associado ao gatilho de ação. "</string>
+   <string name="associeted_with_at_error" translatable="false">"Não é possível alterar a função do canal associado ao gatilho de ação. "</string>
+   <string name="location_ordering" translatable="false">Ordem de localização</string>
+   <string name="location_ordering" translatable="false">Ordem de localização</string>
+   <string name="rs_display_mode_opening" translatable="false">Aberto</string>
+   <string name="rs_display_mode_closing" translatable="false">Encerramentos</string>
+   <string name="rs_display_mode_closing" translatable="false">Encerramentos</string>
+   <string name="status_accessid_inactive" translatable="false">"Acesso ID inativo "</string>
+    <string name="wizard_done_explentations" translatable="false">"Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede WiFi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance. "</string>
+    <string name="delete_account_confirm_title" translatable="false">Apagar Conta</string>
+    <string name="delete_account_confirm_title" translatable="false">Apagar Conta</string>
+    <string name="em_chart_phase_n" translatable="false">Fase %d</string>
+    <string name="rs_display_mode" translatable="false">Persianas %</string>
+    <string name="rs_display_mode" translatable="false">"Persianas "</string>
 </resources>
