@@ -366,7 +366,6 @@
     <string name="zwave_welcome_title" >Z-wave wizard</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet" translatable="false">Heeft u nog geen Supla Cloud account?</string>
-    <string name="dont_have_account_yet" translatable="false">Heeft u nog geen Supla Cloud account?</string>
     <string name="profiles_title" translatable="false">Rekeningen</string>
     <string name="profile_name_label" translatable="false">Naam rekening</string>
     <string name="form_cannot_delete_active_profile" translatable="false">Actief account kan niet worden verwijderd</string>
@@ -402,22 +401,17 @@
     <string name="widget_configure_no_selection" translatable="false">Geen kanaal geselecteerd</string>
     <string name="widget_configure_no_channel" translatable="false">Geen kanalen beschikbaar</string>
     <string name="double_button_widget_description" translatable="false">"Widget met twee knoppen "</string>
-    <string name="double_button_widget_description" translatable="false">"Widget met twee knoppen "</string>
-    <string name="single_button_widget_description" translatable="false">"Widget met één knop "</string>
     <string name="single_button_widget_description" translatable="false">"Widget met één knop "</string>
     <string name="widget_app_not_initialized" translatable="false">Log alsjeblieft in!</string>
     <string name="widget_command_error" translatable="false">Communicatie fout!</string>
-    <string name="widget_command_error" translatable="false">Communicatie fout!</string>
     <string name="widget_command_no_connection" translatable="false">Geen internetverbinding!</string>
     <string name="widget_command_started" translatable="false">Uitgevoerd</string>
-    <string name="widget_removed_label" translatable="false">Kanaal verwijderd</string>
     <string name="widget_removed_label" translatable="false">Kanaal verwijderd</string>
     <string name="channel_caption_roofwindowopeningsensor" translatable="false">Dakraam openingssensor</string>
     <string name="channel_caption_roofwindow" translatable="false">Dakraam</string>
     <string name="channel_func_controllingtheroofwindow" translatable="false">Openen en sluiten van het dakvenster</string>
     <string name="channel_func_opensensor_roofwindow" translatable="false">Dakraam openingssensor</string>
     <string name="event_openedclosedtheroofwindow" translatable="false">het dakvenster werd geopend/gesloten door</string>
-    <string name="status_led" translatable="false">Status-LED</string>
     <string name="status_led" translatable="false">Status-LED</string>
     <string name="info_led_on" translatable="false">De LED licht op als een verbinding met de server tot stand is gebracht.</string>
     <string name="info_led_off" translatable="false">De LED licht niet op als er een verbinding met de server tot stand is gebracht.</string>
@@ -454,16 +448,11 @@
     <string name="add_device_needs_cloud_title" translatable="false">Configuratie apparaat</string>
     <string name="add_device_needs_cloud_message" translatable="false">Dit apparaat heeft geen kanalen die zichtbaar zijn in de applicatie. Om de configuratie te voltooien, ga naar cloud.supla.org</string>
     <string name="add_device_needs_cloud_dismiss" translatable="false">Ik begrijp het.</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">Ik begrijp het.</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Ga naar CLOUD</string>
     <string name="add_device_needs_cloud_go" translatable="false">Ga naar CLOUD</string>
     <string name="associeted_with_at_error" translatable="false">De functie van het kanaal dat met de actietrigger is geassocieerd, kan niet worden gewijzigd.</string>
-    <string name="associeted_with_at_error" translatable="false">De functie van het kanaal dat met de actietrigger is geassocieerd, kan niet worden gewijzigd.</string>
-    <string name="location_ordering" translatable="false">Volgorde van plaats</string>
     <string name="location_ordering" translatable="false">Volgorde van plaats</string>
     <string name="rs_display_mode" translatable="false">Jaloezieën %</string>
     <string name="rs_display_mode_opening" translatable="false">Openingen</string>
     <string name="rs_display_mode_closing" translatable="false">Sluitingen</string>
-    <string name="status_accessid_inactive" translatable="false">Toegangs ID inactief</string>
     <string name="status_accessid_inactive" translatable="false">Toegangs ID inactief</string>
 </resources>
