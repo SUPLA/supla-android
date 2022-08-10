@@ -393,70 +393,50 @@
     <string name="em_chart_phase_n" translatable="false">Fase %d</string>
     <string name="em_chart_all_phases" translatable="false">Fase 1 + 2 + 3</string>
     <string name="widget_configure_title" translatable="false">Widget-konfigurasjon</string>
-    <string name="widget_configure_title" translatable="false">Widget-konfigurasjon</string>
-    <string name="widget_configure_profile_label" translatable="false">Konto</string>
     <string name="widget_configure_profile_label" translatable="false">Konto</string>
     <string name="widget_configure_channel_label" translatable="false">Kanal for widgeten</string>
     <string name="widget_configure_action_label" translatable="false">Handling</string>
-    <string name="widget_configure_name_label" translatable="false">Navn</string>
     <string name="widget_configure_name_label" translatable="false">Navn</string>
     <string name="widget_configure_error" translatable="false">Kanalkonfigurasjon mislyktes ...</string>
     <string name="widget_configure_no_selection" translatable="false">Ingen kanal er valgt</string>
     <string name="widget_configure_no_channel" translatable="false">Ingen tilgjengelige kanaler</string>
     <string name="double_button_widget_description" translatable="false">To-knapps widget</string>
-    <string name="double_button_widget_description" translatable="false">To-knapps widget</string>
     <string name="single_button_widget_description" translatable="false">En-knapps widget</string>
     <string name="widget_app_not_initialized" translatable="false">Vennligst logg inn!</string>
     <string name="widget_command_error" translatable="false">Kommunikasjonsfeil!</string>
-    <string name="widget_command_error" translatable="false">Kommunikasjonsfeil!</string>
     <string name="widget_command_no_connection" translatable="false">Ingen internettforbindelse!</string>
     <string name="widget_command_started" translatable="false">Ferdig</string>
-    <string name="widget_command_started" translatable="false">Ferdig</string>
     <string name="widget_removed_label" translatable="false">Kanal fjernet</string>
-    <string name="widget_removed_label" translatable="false">Kanal fjernet</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Sensor for åpning av takvinfu</string>
     <string name="channel_caption_roofwindowopeningsensor" translatable="false">Sensor for åpning av takvinfu</string>
     <string name="channel_caption_roofwindow" translatable="false">Takvindu</string>
     <string name="channel_func_controllingtheroofwindow" translatable="false">Takvindu åpning og lukking</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Takvindu åpning og lukking</string>
     <string name="channel_func_opensensor_roofwindow" translatable="false">Sensor for åpning av takvinfu</string>
     <string name="event_openedclosedtheroofwindow" translatable="false">åpnet / lukket takvinduet</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">åpnet / lukket takvinduet</string>
-    <string name="status_led" translatable="false">Status LED</string>
     <string name="status_led" translatable="false">Status LED</string>
     <string name="info_led_on" translatable="false">LED-en lyser når tilkoblingen til serveren er etablert.</string>
     <string name="info_led_off" translatable="false">LED-en lyser ikke når forbindelsen med serveren er etablert.</string>
     <string name="info_led_alwaysoff" translatable="false">Lysdioden er alltid av, med mindre enheten er i wifi-konfigurasjonsmodus (AP-modus).</string>
     <string name="input" translatable="false">Inngang</string>
-    <string name="input" translatable="false">Inngang</string>
     <string name="monostable" translatable="false">Monostabil</string>
     <string name="bistable" translatable="false">Bistabil</string>
     <string name="wizard_iodev_connect_failed" translatable="false">Forsøket på å etablere en WiFi-tilkobling med den utøvende enheten mislyktes.</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">Forsøket på å etablere en WiFi-tilkobling med den utøvende enheten mislyktes.</string>
     <string name="diw_cfg_info_oprange" translatable="false">Juster dimmerens arbeidsområde ved å stille inn minimum og maksimum lysstyrkenivå. Minimums- og maksimumsverdien kan stilles inn ved å flytte glidebryterne på begge sider av hjulet.</string>
     <string name="diw_cfg_info_in_options" translatable="false">Inngangsalternativer</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Inngangsalternativer</string>
     <string name="diw_cfg_info_mono_option" translatable="false">Dette alternativet endrer oppførselen til inngangen som den monostabile knappen er koblet til. Hvis alternativet er deaktivert, stopper dimmeren lysingsprosessen når det maksimale lysstyrkenivået er nådd, og ved dimming når det når minimumsnivået. Aktivering av dette alternativet vil bytte til minimumsnivået så snart maksimal lysstyrke er nådd, og ved dimming til maksimumsverdien, så snart minimum er nådd. Lysningen / dimmingen fortsetter så lenge knappen holdes nede.</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">Alternativet endrer oppførselen til dimmeren når belysningen slås på med den bistabile knappen. Hvis alternativet er aktivert, vil dimmeren stille inn maksimalt lysstyrkenivå rett etter at lyset er slått på. Hvis alternativet er deaktivert, vil dimmeren stille inn lysstyrkenivået som er lagret før du slår av belysningen.</string>
     <string name="diw_cfg_info_bi_option" translatable="false">Alternativet endrer oppførselen til dimmeren når belysningen slås på med den bistabile knappen. Hvis alternativet er aktivert, vil dimmeren stille inn maksimalt lysstyrkenivå rett etter at lyset er slått på. Hvis alternativet er deaktivert, vil dimmeren stille inn lysstyrkenivået som er lagret før du slår av belysningen.</string>
     <string name="dgf_too_long_operation_warning" translatable="false">Glasspartiene er eksponert i mer enn 20 timer, noe som kan ha negativ innvirkning på levetiden. Det anbefales å dekke alle seksjoner i minimum 4 timer for å regenerere dem.</string>
     <string name="dgf_planned_regeneration_in_progress" translatable="false">Planlagt regenerering pågår.</string>
     <string name="dgf_regeneration_after20h" translatable="false">Regenerering pågår, startet etter 20 timers drift.</string>
     <string name="wizard_done_explentations" translatable="false">Hvis enheten ikke vises i applikasjonen, gjenta denne tilleggsprosedyren igjen og les \"Forrige status\" vist ovenfor. Den inneholder informasjon som gjør det mulig å finne ut hvorfor enheten ikke klarte å koble til serveren. Meldingen \"SSID not found\" betyr at det angitte navnet på 2,4 GHz WiFi-nettverket ikke ble funnet eller at nettverket er utenfor rekkevidde.</string>
     <string name="incorrect_email_or_password" translatable="false">Feil e-postadresse eller passord</string>
-    <string name="incorrect_email_or_password" translatable="false">Feil e-postadresse eller passord</string>
     <string name="channel_name" translatable="false">Kanalnavn</string>
-    <string name="channel_name" translatable="false">Kanalnavn</string>
-    <string name="location_name" translatable="false">Stedsnavn</string>
     <string name="location_name" translatable="false">Stedsnavn</string>
     <string name="overcurrent_warning" translatable="false">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet.</string>
-    <string name="overcurrent_question" translatable="false">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet. Er du sikker på at du vil slå på?</string>
     <string name="overcurrent_question" translatable="false">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet. Er du sikker på at du vil slå på?</string>
     <string name="recalibration_question" translatable="false">Er du sikker på at du vil starte kalibrering?</string>
     <string name="calibration_failed" translatable="false">Kalibrering mislyktes.</string>
     <string name="calibration_lost" translatable="false">Kalibrering tapt.</string>
     <string name="motor_problem" translatable="false">Motorproblem / Uventet stopp.</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: ukjent</string>
     <string name="lastconnectionresetcause_unknown" translatable="false">0: ukjent</string>
     <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: ingen respons fra serveren</string>
     <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Mistet WiFi-tilkobling</string>
@@ -465,8 +445,6 @@
     <string name="basic_config_unavailable" translatable="false">Før du slår av avansert modus, vennligst velg e-postautentisering med automatisk serveroppdagelse.</string>
     <string name="add_device_warning" translatable="false">Veiviseren for automatisk tillegging  enheter er ikke tilgjengelig i ID-tilgangsautentiseringsmodus. Enheter kan deretter legges til manuelt.</string>
     <string name="show_channel_info" translatable="false">Vis ⓘ-knappen</string>
-    <string name="show_channel_info" translatable="false">Vis ⓘ-knappen</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Enhetskonfigurasjon</string>
     <string name="add_device_needs_cloud_title" translatable="false">Enhetskonfigurasjon</string>
     <string name="add_device_needs_cloud_message" translatable="false">Denne enheten har ingen synlige kanaler i appen. Gå til cloud.supla.org for å fullføre konfigurasjonen</string>
     <string name="add_device_needs_cloud_dismiss" translatable="false">Jeg forstår</string>
