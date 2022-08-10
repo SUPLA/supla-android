@@ -365,4 +365,142 @@
     <string name="zwave_waiting_for_add" >Čakanje na dodajanje naprave v omrežje z-wave.</string>
     <string name="zwave_waiting_for_add_timeout" >Potekel je čas čakanja na dodajanje naprave v omrežje z-wave.</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet" translatable="false">Nimate še računa v Supla Cloud?</string>
+    <string name="profiles_title" translatable="false">Računi</string>
+    <string name="profile_name_label" translatable="false">IME RAČUNA</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Aktivnega računa ni mogoče izbrisati</string>
+    <string name="profile_default_name" translatable="false">Privzeti</string>
+    <string name="profile_select_active" translatable="false">Izberite aktivni račun</string>
+    <string name="profile_select_active" translatable="false">Izberite aktivni račun</string>
+    <string name="profile_act_info" translatable="false">Dotaknite se računa za prijavo</string>
+    <string name="form_error" translatable="false">Napaka</string>
+    <string name="form_error" translatable="false">Napaka</string>
+    <string name="form_profile_name_missing" translatable="false">Vnesite ime računa</string>
+    <string name="form_profile_name_missing" translatable="false">Vnesite ime računa</string>
+    <string name="form_profile_required_data_missing" translatable="false">Izpolnite zahtevane podatke</string>
+    <string name="form_profile_duplicate" translatable="false">Račun s takšim imenom že obstaja</string>
+    <string name="add_account" translatable="false">Dodajte račun</string>
+    <string name="edit_account" translatable="false">Uredite račun</string>
+    <string name="edit_account" translatable="false">Uredite račun</string>
+    <string name="delete_account" translatable="false">Izbišite</string>
+    <string name="delete_account_confirm_title" translatable="false">Izbrišite račun</string>
+    <string name="delete_account_confirm_message" translatable="false">Ali ste prepričani, da želite izbrisati račun?</string>
+    <string name="delete_account_confirm_message_with_widgets">"Ali ste prepričani, da želite izbrisati račun? S potrdilom boste odstranili povezane pripomočke.  "</string>
+    <string name="delete_account_confirm_message_with_widgets">"Ali ste prepričani, da želite izbrisati račun? S potrdilom boste odstranili povezane pripomočke.  "</string>
+    <string name="cfg_label_access_id_auth" translatable="false">Identifikator</string>
+    <string name="cfg_channel_height" translatable="false">Višina kanala</string>
+    <string name="cfg_temperature_unit" translatable="false">Enota temperature</string>
+    <string name="cfg_button_autohide" translatable="false">Samodejno skrivanje gumbov</string>
+    <string name="profile" translatable="false">Vaš račun</string>
+    <string name="profile" translatable="false">Vaš račun</string>
+    <string name="profile_plural" translatable="false">Vaši računi</string>
+    <string name="menubar_appsettings" translatable="false">Nastavitve</string>
+    <string name="menubar_appsettings" translatable="false">Nastavitve</string>
+    <string name="rs_percent_caption_open" translatable="false">Odstotek odpiranja</string>
+    <string name="em_chart_phase_n" translatable="false">Faza %d</string>
+    <string name="em_chart_phase_n" translatable="false">Faza %d</string>
+    <string name="em_chart_all_phases" translatable="false">Faza 1+2+3</string>
+    <string name="em_chart_all_phases" translatable="false">Faza 1+2+3</string>
+    <string name="widget_configure_title" translatable="false">Konfiguracija pripomočka</string>
+    <string name="widget_configure_title" translatable="false">Konfiguracija pripomočka</string>
+    <string name="widget_configure_profile_label" translatable="false">Račun</string>
+    <string name="widget_configure_channel_label" translatable="false">Kanal za pripomoček</string>
+    <string name="widget_configure_channel_label" translatable="false">Kanal za pripomoček</string>
+    <string name="widget_configure_action_label" translatable="false">Dejanje</string>
+    <string name="widget_configure_name_label" translatable="false">Ime</string>
+    <string name="widget_configure_name_label" translatable="false">Ime</string>
+    <string name="widget_configure_error" translatable="false">Konfiguracija kanala ni uspela…</string>
+    <string name="widget_configure_no_selection" translatable="false">Kanal ni bil izbran</string>
+    <string name="widget_configure_no_selection" translatable="false">Kanal ni bil izbran</string>
+    <string name="widget_configure_no_channel" translatable="false">Na voljo ni nobenega kanala</string>
+    <string name="widget_configure_no_channel" translatable="false">Na voljo ni nobenega kanala</string>
+    <string name="double_button_widget_description" translatable="false">Pripomoček z dvema gumboma</string>
+    <string name="double_button_widget_description" translatable="false">Pripomoček z dvema gumboma</string>
+    <string name="single_button_widget_description" translatable="false">Pripomoček z enim gumbom</string>
+    <string name="widget_app_not_initialized" translatable="false">Prijavite se!</string>
+    <string name="widget_command_error" translatable="false">Komunikacijska napaka!</string>
+    <string name="widget_command_error" translatable="false">Komunikacijska napaka!</string>
+    <string name="widget_command_no_connection" translatable="false">Ni internetne povezave!</string>
+    <string name="widget_command_started" translatable="false">Izvedeno</string>
+    <string name="widget_removed_label" translatable="false">Kanal izbrisan</string>
+    <string name="widget_removed_label" translatable="false">Kanal izbrisan</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Senzor odprtja strešnega okna</string>
+    <string name="channel_caption_roofwindow" translatable="false">Strešno okno</string>
+    <string name="channel_caption_roofwindow" translatable="false">Strešno okno</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Odpiranje in zapiranje strešnega okna</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor odprtja strešnega okna</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor odprtja strešnega okna</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">Odprl / zaprl je strešno okno</string>
+    <string name="status_led" translatable="false">Status LED diode</string>
+    <string name="status_led" translatable="false">Status LED diode</string>
+    <string name="info_led_on" translatable="false">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
+    <string name="info_led_on" translatable="false">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
+    <string name="info_led_off" translatable="false">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
+    <string name="info_led_off" translatable="false">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
+    <string name="info_led_alwaysoff" translatable="false">"Dioda je vedno izklopljena, razen če naprava deluje v načinu wifi konfiguracije (Način AP). "</string>
+    <string name="input" translatable="false">Vhod</string>
+    <string name="input" translatable="false">Vhod</string>
+    <string name="monostable" translatable="false">Monostabilni</string>
+    <string name="bistable" translatable="false">Bistabilni</string>
+    <string name="bistable" translatable="false">Bistabilni</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">Poskus vzpostavitve WiFi povezave z izvršno napravo ni uspel.</string>
+    <string name="diw_cfg_info_oprange" translatable="false">"Delovanje zatemnitve prilagodite tako, da nastavite najmanjšo in največjo raven svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh kolesa. "</string>
+    <string name="diw_cfg_info_in_options" translatable="false">Možnosti vhoda</string>
+    <string name="diw_cfg_info_in_options" translatable="false">Možnosti vhoda</string>
+    <string name="diw_cfg_info_mono_option" translatable="false">Možnost spremeni obnašanje vhoda, na katerega je priključen monostabilni gumb. Če je možnost onemogočena, zatemnilnik ustavi osvetljevanje, ko je dosežena najvišja raven svetlosti, v primeru zatemnitve pa, ko doseže minimalno stopnjo. Če omogočite to možnost, se preklopi na minimalno raven takoj, ko je dosežena največja raven svetlosti, v primeru zatemnitve na največjo vrednost pa takoj, ko je dosežena najmanjša. Osvetljevanje/zatemnitev se bo nadaljevalo do takrat ko je gumb pritisnjen.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">Možnost spremeni obnašanje zatemnilnika, ko se osvetlitev vklopi z bistabilnim gumbom. Če je možnost omogočena, zatemnilnik nastavi najvišjo stopnjo svetlosti takoj po vklopu osvetlitve. Če je možnost onemogočena, bo zatemnilnik pred izklopom osvetlitve nastavil shranjeno raven svetlosti.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">Možnost spremeni obnašanje zatemnilnika, ko se osvetlitev vklopi z bistabilnim gumbom. Če je možnost omogočena, zatemnilnik nastavi najvišjo stopnjo svetlosti takoj po vklopu osvetlitve. Če je možnost onemogočena, bo zatemnilnik pred izklopom osvetlitve nastavil shranjeno raven svetlosti.</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Stekleni deli so izpostavljeni več kot 20 ur, kar lahko negativno vpliva na njihovo življenjsko dobo. Priporočljivo je, da vse dele prekrijete za najmanj 4 ure, da se obnovijo.</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Stekleni deli so izpostavljeni več kot 20 ur, kar lahko negativno vpliva na njihovo življenjsko dobo. Priporočljivo je, da vse dele prekrijete za najmanj 4 ure, da se obnovijo.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">"Načrtovana obnova je v teku. "</string>
+    <string name="dgf_regeneration_after20h" translatable="false">Obnova je v teku po 20 urah dela.</string>
+    <string name="wizard_done_explentations" translatable="false">Če se naprava ne prikaže v aplikaciji, ponovite ta postopek dodajanja še enkrat in preberite \"Prejšnje stanje\", prikazano zgoraj. Vsebuje informacije, na podlagi katerih je mogoče ugotoviti, zakaj naprava ni vzpostavila povezave s strežnikom. Sporočilo »SSID not found« pomeni, da vnesenega imena 2,4 GHz WiFi omrežja ni bilo mogoče najti ali pa je omrežje izven dosega.</string>
+    <string name="incorrect_email_or_password" translatable="false">Napačen e-naslov ali geslo</string>
+    <string name="incorrect_email_or_password" translatable="false">Napačen e-naslov ali geslo</string>
+    <string name="channel_name" translatable="false">Ime kanala</string>
+    <string name="location_name" translatable="false">Ime lokacije</string>
+    <string name="location_name" translatable="false">Ime lokacije</string>
+    <string name="overcurrent_warning" translatable="false">"Napeljava je bila onemogočena po prekoračitvi nastavljenega praga dovoljenega električnega toka. "</string>
+    <string name="overcurrent_warning" translatable="false">"Napeljava je bila onemogočena po prekoračitvi nastavljenega praga dovoljenega električnega toka. "</string>
+    <string name="overcurrent_question" translatable="false">Napajanje je bilo izključeno po prekoračitvi nastavljenega praga dovoljenega električnega toka. Ste prepričani, da želite vključiti napajanje?</string>
+    <string name="overcurrent_question" translatable="false">Napajanje je bilo izključeno po prekoračitvi nastavljenega praga dovoljenega električnega toka. Ste prepričani, da želite vključiti napajanje?</string>
+    <string name="recalibration_question" translatable="false">Ali ste prepričani, da želite začeti umerjanje?</string>
+    <string name="recalibration_question" translatable="false">Ali ste prepričani, da želite začeti umerjanje?</string>
+    <string name="calibration_failed" translatable="false">Umerjanje ni bilo uspešno.</string>
+    <string name="calibration_failed" translatable="false">Umerjanje ni bilo uspešno.</string>
+    <string name="calibration_lost" translatable="false">"Umerjanje je bilo izgubljeno.  "</string>
+    <string name="calibration_lost" translatable="false">"Umerjanje je bilo izgubljeno.  "</string>
+    <string name="motor_problem" translatable="false">Težava z motorjem / Nepričakovana zaustavitev.</string>
+    <string name="motor_problem" translatable="false">Težava z motorjem / Nepričakovana zaustavitev.</string>
+    <string name="lastconnectionresetcause_unknown" translatable="false">0: neznan</string>
+    <string name="lastconnectionresetcause_unknown" translatable="false">0: neznan</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: ni odgovora strežnika</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: ni odgovora strežnika</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: izguba WiFi povezave</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: izguba WiFi povezave</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: ponovni zagon povezave s strežnikom</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: ponovni zagon povezave s strežnikom</string>
+    <string name="basic_profile_warning" translatable="false">Način ni na voljo</string>
+    <string name="basic_profile_warning" translatable="false">Način ni na voljo</string>
+    <string name="basic_config_unavailable" translatable="false">Preden izključite napredni način izberite email avtentifikacijo s samodejnim zaznavanjem strežnika.</string>
+    <string name="add_device_warning" translatable="false">Čarovnik za samodejno dodajanje naprave ni na voljo v načinu avtentifijacije z identifikatorjem dostopa. Medtem je mogoče naprave dodati ročno.</string>
+    <string name="add_device_warning" translatable="false">Čarovnik za samodejno dodajanje naprave ni na voljo v načinu avtentifijacije z identifikatorjem dostopa. Medtem je mogoče naprave dodati ročno.</string>
+    <string name="show_channel_info" translatable="false">Prikaži gumb ⓘ</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Konfiguracija naprave</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Konfiguracija naprave</string>
+    <string name="add_device_needs_cloud_message" translatable="false">"Ta naprava nima nobenih drugih kanalov, vidnih v aplikacji. Če želite dokončati konfiguracijo, pojdite na cloud.supla.org "</string>
+    <string name="add_device_needs_cloud_message" translatable="false">"Ta naprava nima nobenih drugih kanalov, vidnih v aplikacji. Če želite dokončati konfiguracijo, pojdite na cloud.supla.org "</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Razumem</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Razumem</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Pojdite na CLOUD</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Pojdite na CLOUD</string>
+    <string name="associeted_with_at_error" translatable="false">Ni mogoče spremeniti fukcije kanala povezanega s sprožilcem dejanja</string>
+    <string name="associeted_with_at_error" translatable="false">Ni mogoče spremeniti fukcije kanala povezanega s sprožilcem dejanja</string>
+    <string name="location_ordering" translatable="false">Zaporedje lokacije</string>
+    <string name="rs_display_mode" translatable="false">Rolete %</string>
+    <string name="rs_display_mode" translatable="false">Rolete %</string>
+    <string name="rs_display_mode_opening" translatable="false">Odpiranja</string>
+    <string name="rs_display_mode_opening" translatable="false">Odpiranja</string>
+    <string name="rs_display_mode_closing" translatable="false">Zapiranja</string>
+    <string name="status_accessid_inactive" translatable="false">Identifikator dostopa ni aktiven</string>
 </resources>
