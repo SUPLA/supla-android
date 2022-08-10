@@ -390,44 +390,32 @@
     <string name="form_profile_required_data_missing" translatable="false">Vyplň požadované údaje</string>
     <string name="form_profile_duplicate" translatable="false">Účet s týmto názvom už existuje</string>
     <string name="add_account" translatable="false">Pridať účet</string>
-    <string name="add_account" translatable="false">Pridať účet</string>
     <string name="edit_account" translatable="false">Upraviť účet</string>
     <string name="delete_account" translatable="false">Odstrániť</string>
     <string name="delete_account_confirm_title" translatable="false">Odstrániť účet</string>
-    <string name="delete_account_confirm_title" translatable="false">Odstrániť účet</string>
    <string name="delete_account_confirm_message" translatable="false">Naozaj chcete odstrániť účet?</string>
    <string name="delete_account_confirm_message_with_widgets">Naozaj chcete odstrániť účet? Potvrdenie znamená aj odstránenie súvisiacich widgetov.</string>
-   <string name="delete_account_confirm_message_with_widgets">Naozaj chcete odstrániť účet? Potvrdenie znamená aj odstránenie súvisiacich widgetov.</string>
    <string name="cfg_label_access_id_auth" translatable="false">Identifikátor</string>
-   <string name="cfg_label_access_id_auth" translatable="false">Identifikátor</string>
-   <string name="cfg_channel_height" translatable="false">Výška kanála</string>
    <string name="cfg_channel_height" translatable="false">Výška kanála</string>
    <string name="cfg_temperature_unit" translatable="false">Jednotka teploty</string>
    <string name="cfg_button_autohide" translatable="false">Automatické schovanie tlačidiel</string>
    <string name="profile" translatable="false">Váš účet</string>
    <string name="profile_plural" translatable="false">Vaše účty</string>
    <string name="menubar_appsettings" translatable="false">Nastavenie</string>
-   <string name="menubar_appsettings" translatable="false">Nastavenie</string>
    <string name="rs_percent_caption_open" translatable="false">Percento otvorenia</string>
    <string name="em_chart_phase_n" translatable="false">Fáza %d</string>
    <string name="em_chart_all_phases" translatable="false">Fáza 1+2+3</string>
-   <string name="em_chart_all_phases" translatable="false">Fáza 1+2+3</string>
    <string name="widget_configure_title" translatable="false">Konfigurácia widgetu</string>
-   <string name="widget_configure_title" translatable="false">Konfigurácia widgetu</string>
-   <string name="widget_configure_profile_label" translatable="false">Účet</string>
    <string name="widget_configure_profile_label" translatable="false">Účet</string>
    <string name="widget_configure_channel_label" translatable="false">Kanál pre widget</string>
    <string name="widget_configure_action_label" translatable="false">Činnosť</string>
    <string name="widget_configure_name_label" translatable="false">Názov</string>
-   <string name="widget_configure_error" translatable="false">Konfigurácia kanála zlyhala…</string>
    <string name="widget_configure_error" translatable="false">Konfigurácia kanála zlyhala…</string>
    <string name="widget_configure_no_selection" translatable="false">Nie je vybratý žiadny kanál</string>
    <string name="widget_configure_no_channel" translatable="false">Žiadne dostupné kanály</string>
    <string name="double_button_widget_description" translatable="false">Widget s dvomi tlačidlami</string>
    <string name="single_button_widget_description" translatable="false">Widget s jedným tlačidlom</string>
    <string name="widget_app_not_initialized" translatable="false">Prihláste sa prosím!</string>
-   <string name="widget_app_not_initialized" translatable="false">Prihláste sa prosím!</string>
-   <string name="widget_command_error" translatable="false">Chyba v komunikácii!</string>
    <string name="widget_command_error" translatable="false">Chyba v komunikácii!</string>
    <string name="widget_command_no_connection" translatable="false">Žiadne internetové pripojenie!</string>
    <string name="widget_command_started" translatable="false">Hotovo</string>
@@ -435,81 +423,49 @@
    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Senzor otvárania strešného okna</string>
    <string name="channel_caption_roofwindow" translatable="false">Strešné okno</string>
    <string name="channel_func_controllingtheroofwindow" translatable="false">Otváranie a zatváranie strešného okna</string>
-   <string name="channel_func_controllingtheroofwindow" translatable="false">Otváranie a zatváranie strešného okna</string>
-   <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor otvárania strešného okna</string>
    <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor otvárania strešného okna</string>
    <string name="event_openedclosedtheroofwindow" translatable="false">otvoril/zatvoril strešné okno</string>
-   <string name="event_openedclosedtheroofwindow" translatable="false">otvoril/zatvoril strešné okno</string>
    <string name="status_led" translatable="false">Dióda statusu</string>
-   <string name="status_led" translatable="false">Dióda statusu</string>
-   <string name="info_led_on" translatable="false">Kontrolka LED sa rozsvieti, keď sa vytvorí spojenie so serverom.</string>
    <string name="info_led_on" translatable="false">Kontrolka LED sa rozsvieti, keď sa vytvorí spojenie so serverom.</string>
    <string name="info_led_off" translatable="false">Kontrolka LED prestane svietiť, keď sa vytvorí spojenie so serverom.</string>
    <string name="info_led_alwaysoff" translatable="false">Kontrolka je vždy vypnutá, pokiaľ nie je zariadenie v režime konfigurácie wifi (Režim AP).</string>
    <string name="input" translatable="false">Vstup</string>
-   <string name="input" translatable="false">Vstup</string>
    <string name="monostable" translatable="false">Monostabilný</string>
-   <string name="monostable" translatable="false">Monostabilný</string>
-   <string name="bistable" translatable="false">Bistabilný</string>
    <string name="bistable" translatable="false">Bistabilný</string>
    <string name="wizard_iodev_connect_failed" translatable="false">Pokus o vytvorenie pripojenia WiFi s vykonávacím zariadením zlyhal.</string>
    <string name="diw_cfg_info_oprange" translatable="false">Prispôsobte tiež rozsah činnosti stmievača nastavením minimálnej a maximálnej úrovne jasu. Minimálnu a maximálnu hodnotu môžete nastaviť presunutím bežcov umiestnených na oboch stranách kolieska.</string>
    <string name="diw_cfg_info_in_options" translatable="false">Možnosti vstupu</string>
-   <string name="diw_cfg_info_in_options" translatable="false">Možnosti vstupu</string>
    <string name="diw_cfg_info_mono_option" translatable="false">Táto možnosť mení správanie vstupu, ku ktorému je pripojené monostabilné tlačidlo. Ak je táto možnosť vypnutá, stmievač zastaví proces rozjasňovania pri dosiahnutí maximálnej úrovne jasu a v prípade stmievania, keď dosiahne minimálnu úroveň. Zapnutím tejto možnosti sa prepne na minimálnu úroveň hneď po dosiahnutí maximálneho jasu a v prípade stmievania na maximálnu hodnotu hneď po dosiahnutí minima. Rozjasňovanie/stmievanie bude pokračovať, kým bude stlačené tlačidlo.</string>
    <string name="diw_cfg_info_bi_option" translatable="false">Táto možnosť mení správanie stmievača pri zapnutí osvetlenia pomocou bistabilného tlačidla. Ak je možnosť zapnutá, stmievač nastaví maximálnu úroveň jasu hneď po zapnutí osvetlenia. Ak je možnosť vypnutá, stmievač nastaví úroveň jasu uloženú pred vypnutím osvetlenia.</string>
    <string name="dgf_too_long_operation_warning" translatable="false">Zasklenie je odhalené viac ako 20 hodín, čo môže mať negatívny vplyv na jeho životnosť. Odporúča sa všetky úseky pokryť minimálne 4 hodiny, aby sa zregenerovali.</string>
-   <string name="dgf_too_long_operation_warning" translatable="false">Zasklenie je odhalené viac ako 20 hodín, čo môže mať negatívny vplyv na jeho životnosť. Odporúča sa všetky úseky pokryť minimálne 4 hodiny, aby sa zregenerovali.</string>
    <string name="dgf_planned_regeneration_in_progress" translatable="false">Prebieha plánovaná regenerácia.</string>
-   <string name="dgf_planned_regeneration_in_progress" translatable="false">Prebieha plánovaná regenerácia.</string>
-   <string name="dgf_regeneration_after20h" translatable="false">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
    <string name="dgf_regeneration_after20h" translatable="false">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
    <string name="wizard_done_explentations" translatable="false">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie \\\"SSID not found\\\" znamená, že zadaný názov WiFi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
    <string name="incorrect_email_or_password" translatable="false">Nesprávna e-mailová adresa alebo heslo</string>
-   <string name="incorrect_email_or_password" translatable="false">Nesprávna e-mailová adresa alebo heslo</string>
-   <string name="channel_name" translatable="false">Názov kanála</string>
    <string name="channel_name" translatable="false">Názov kanála</string>
    <string name="location_name" translatable="false">Názov miesta</string>
-   <string name="location_name" translatable="false">Názov miesta</string>
-   <string name="overcurrent_warning" translatable="false">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu.</string>
    <string name="overcurrent_warning" translatable="false">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu.</string>
    <string name="overcurrent_question" translatable="false">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu. Naozaj chcete zapnúť napájanie?</string>
    <string name="recalibration_question" translatable="false">Naozaj chcete spustiť kalibráciu?</string>
-   <string name="recalibration_question" translatable="false">Naozaj chcete spustiť kalibráciu?</string>
-   <string name="calibration_failed" translatable="false">Kalibrácia zlyhala.</string>
    <string name="calibration_failed" translatable="false">Kalibrácia zlyhala.</string>
    <string name="calibration_lost" translatable="false">Kalibrácia bola odstránená.</string>
    <string name="motor_problem" translatable="false">Problém s motorom / Neočakávané zastavenie.</string>
    <string name="lastconnectionresetcause_unknown" translatable="false">0: neznámy</string>
    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: žiadna odpoveď zo servera</string>
-   <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: žiadna odpoveď zo servera</string>
-   <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: stratené WiFi pripojenie</string>
    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: stratené WiFi pripojenie</string>
    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: obnovenie pripojenia k serveru</string>
-   <string name="basic_profile_warning" translatable="false">Režim je nedostupný</string>
    <string name="basic_profile_warning" translatable="false">Režim je nedostupný</string>
    <string name="basic_config_unavailable" translatable="false">Pred vypnutím pokročilého režimu vyberte overenie e-mailu s automatickou detekciou servera.</string>
    <string name="add_device_warning" translatable="false">Sprievodca automatického pridávania zariadení nie je dostupný v režime overenia identifikátorom prístupu. Zariadenia vtedy môžeš pridať manuálne.</string>
    <string name="show_channel_info" translatable="false">Zobrazovať tlačidlo ⓘ</string>
-   <string name="show_channel_info" translatable="false">Zobrazovať tlačidlo ⓘ</string>
-   <string name="add_device_needs_cloud_title" translatable="false">Konfigurácia zariadenia</string>
    <string name="add_device_needs_cloud_title" translatable="false">Konfigurácia zariadenia</string>
    <string name="add_device_needs_cloud_message" translatable="false">Toto zariadenie nemá v aplikácii žiadne viditeľné kanály. Ak chceš dokončiť konfiguráciu, prejdi na stránku cloud.supla.org</string>
-   <string name="add_device_needs_cloud_message" translatable="false">Toto zariadenie nemá v aplikácii žiadne viditeľné kanály. Ak chceš dokončiť konfiguráciu, prejdi na stránku cloud.supla.org</string>
-   <string name="add_device_needs_cloud_dismiss" translatable="false">Rozumiem</string>
    <string name="add_device_needs_cloud_dismiss" translatable="false">Rozumiem</string>
    <string name="add_device_needs_cloud_go" translatable="false">Prejsť na CLOUD</string>
-   <string name="add_device_needs_cloud_go" translatable="false">Prejsť na CLOUD</string>
-   <string name="associeted_with_at_error" translatable="false">Funkciu kanála spojeného so spúšťačom akcie nemožno zmeniť.</string>
    <string name="associeted_with_at_error" translatable="false">Funkciu kanála spojeného so spúšťačom akcie nemožno zmeniť.</string>
    <string name="location_ordering" translatable="false">Poradie miest</string>
-   <string name="location_ordering" translatable="false">Poradie miest</string>
-   <string name="rs_display_mode" translatable="false">Rolety %</string>
    <string name="rs_display_mode" translatable="false">Rolety %</string>
    <string name="rs_display_mode_opening" translatable="false">Otvorenia</string>
-   <string name="rs_display_mode_opening" translatable="false">Otvorenia</string>
    <string name="rs_display_mode_closing" translatable="false">Zatvorenia</string>
-   <string name="rs_display_mode_closing" translatable="false">Zatvorenia</string>
-   <string name="status_accessid_inactive" translatable="false">Prístupový identifikátor nie je aktívny</string>
    <string name="status_accessid_inactive" translatable="false">Prístupový identifikátor nie je aktívny</string>
 </resources>
