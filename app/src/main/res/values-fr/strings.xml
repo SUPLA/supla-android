@@ -366,8 +366,6 @@
    <string name="zwave_waiting_for_add_timeout">Le temps d\'attente pour l\'ajout de l\'appareil au réseau z-wave a expiré.</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet" translatable="false">Vous n\'avez pas encore de compte Supla Cloud ?</string>
-    <string name="dont_have_account_yet" translatable="false">Vous n\'avez pas encore de compte Supla Cloud ?</string>
-   <string name="profiles_title" translatable="false">Comptes</string>
    <string name="profiles_title" translatable="false">Comptes</string>
    <string name="profile_name_label" translatable="false">NOM DU COMPTE</string>
    <string name="form_cannot_delete_active_profile" translatable="false">Impossible de supprimer le compte actif</string>
@@ -392,55 +390,35 @@
    <string name="profile_plural" translatable="false">Vos comptes</string>
    <string name="menubar_appsettings" translatable="false">Paramètres</string>
    <string name="rs_percent_caption_open" translatable="false">Pourcentage d\'ouverture</string>
-   <string name="rs_percent_caption_open" translatable="false">Pourcentage d\'ouverture</string>
-   <string name="em_chart_phase_n" translatable="false">Phase %d</string>
    <string name="em_chart_phase_n" translatable="false">Phase %d</string>
    <string name="em_chart_all_phases" translatable="false">Phase 1+2+3</string>
    <string name="widget_configure_title" translatable="false">Configuration du widget</string>
-   <string name="widget_configure_title" translatable="false">Configuration du widget</string>
-   <string name="widget_configure_profile_label" translatable="false">Compte</string>
    <string name="widget_configure_profile_label" translatable="false">Compte</string>
    <string name="widget_configure_channel_label" translatable="false">Canal pour le widget</string>
-   <string name="widget_configure_channel_label" translatable="false">Canal pour le widget</string>
    <string name="widget_configure_action_label" translatable="false">Action</string>
-   <string name="widget_configure_action_label" translatable="false">Action</string>
-   <string name="widget_configure_name_label" translatable="false">Nom</string>
    <string name="widget_configure_name_label" translatable="false">Nom</string>
    <string name="widget_configure_error" translatable="false">La configuration du canal a échoué...</string>
    <string name="widget_configure_no_selection" translatable="false">Aucun canal sélectionné</string>
    <string name="widget_configure_no_channel" translatable="false">Aucun canal disponible</string>
    <string name="double_button_widget_description" translatable="false">"Widget à deux boutons "</string>
-   <string name="double_button_widget_description" translatable="false">"Widget à deux boutons "</string>
-   <string name="single_button_widget_description" translatable="false">"Widget à un bouton "</string>
    <string name="single_button_widget_description" translatable="false">"Widget à un bouton "</string>
    <string name="widget_app_not_initialized" translatable="false">Veuillez vous connecter !</string>
-   <string name="widget_app_not_initialized" translatable="false">Veuillez vous connecter !</string>
    <string name="widget_command_error" translatable="false">Erreur de communication !</string>
-   <string name="widget_command_error" translatable="false">Erreur de communication !</string>
-   <string name="widget_command_no_connection" translatable="false">Pas de connexion internet !</string>
    <string name="widget_command_no_connection" translatable="false">Pas de connexion internet !</string>
    <string name="widget_command_started" translatable="false">Réalisé</string>
    <string name="widget_removed_label" translatable="false">Canal supprimé</string>
-   <string name="widget_removed_label" translatable="false">Canal supprimé</string>
    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Capteur de fenêtre de toit ouverte</string>
-   <string name="channel_caption_roofwindowopeningsensor" translatable="false">Capteur de fenêtre de toit ouverte</string>
-   <string name="channel_caption_roofwindow" translatable="false">Fenêtre de toit</string>
    <string name="channel_caption_roofwindow" translatable="false">Fenêtre de toit</string>
    <string name="channel_func_controllingtheroofwindow" translatable="false">Ouverture et fermeture de la fenêtre de toit</string>
    <string name="channel_func_opensensor_roofwindow" translatable="false">Capteur de fenêtre de toit ouverte</string>
-   <string name="channel_func_opensensor_roofwindow" translatable="false">Capteur de fenêtre de toit ouverte</string>
-   <string name="event_openedclosedtheroofwindow" translatable="false">a ouvert/fermé la fenêtre de toit</string>
    <string name="event_openedclosedtheroofwindow" translatable="false">a ouvert/fermé la fenêtre de toit</string>
    <string name="status_led" translatable="false">LED de statut</string>
    <string name="info_led_on" translatable="false">La LED est allumée si une connexion au serveur a été établie.</string>
    <string name="info_led_off" translatable="false">LED non allumée si une connexion au serveur a été établie.</string>
-   <string name="info_led_off" translatable="false">LED non allumée si une connexion au serveur a été établie.</string>
-   <string name="info_led_alwaysoff" translatable="false">La LED est toujours éteinte, sauf si l\'appareil est en mode de configuration wifi (mode AP).</string>
    <string name="info_led_alwaysoff" translatable="false">La LED est toujours éteinte, sauf si l\'appareil est en mode de configuration wifi (mode AP).</string>
    <string name="input" translatable="false">Entrée</string>
    <string name="monostable" translatable="false">Monostable</string>
    <string name="bistable" translatable="false">Bistable</string>
-   <string name="wizard_iodev_connect_failed" translatable="false">Une tentative d\'établir une connexion WiFi avec le dispositif déclencher a échoué.</string>
    <string name="wizard_iodev_connect_failed" translatable="false">Une tentative d\'établir une connexion WiFi avec le dispositif déclencher a échoué.</string>
    <string name="diw_cfg_info_oprange" translatable="false">Ajustez la plage de fonctionnement du variateur en réglant les niveaux de luminosité minimum et maximum. Les valeurs minimales et maximales peuvent être définies en déplaçant les curseurs situés de part et d\'autre de la roue.</string>
    <string name="diw_cfg_info_in_options" translatable="false">Options d\'entrée</string>
@@ -448,46 +426,33 @@
    <string name="diw_cfg_info_bi_option" translatable="false">"Cette option modifie le comportement du variateur lorsque l'éclairage est allumé à l'aide du bouton bistable. Lorsque l'option est activée, le variateur règle le niveau de luminosité maximal dès que l'éclairage est allumé. Lorsque l'option est désactivée, le variateur fixe le niveau de luminosité mémorisé avant que l'éclairage ne soit éteint. "</string>
    <string name="dgf_too_long_operation_warning" translatable="false">Des sections du verre sont exposées pendant plus de 20 heures, ce qui peut affecter leur durée de vie. Il est conseillé de couvrir toutes les sections pendant un minimum de 4 heures pour la régénération.</string>
    <string name="dgf_planned_regeneration_in_progress" translatable="false">Régénération programmée en cours.</string>
-   <string name="dgf_planned_regeneration_in_progress" translatable="false">Régénération programmée en cours.</string>
-   <string name="dgf_regeneration_after20h" translatable="false">Régénération initiée après 20h de fonctionnement en cours.</string>
    <string name="dgf_regeneration_after20h" translatable="false">Régénération initiée après 20h de fonctionnement en cours.</string>
    <string name="wizard_done_explentations" translatable="false">Si l\'appareil n\'apparaît pas dans l\'application, répétez à nouveau cette procédure d\'ajout et lisez le « Statut précédent » indiqué ci-dessus. Il contient des informations permettant de déterminer pourquoi l\'appareil ne s\'est pas connecté au serveur. Le message « SSID non trouvé » signifie que le nom du réseau WiFi 2,4 GHz saisi n\'a pas été trouvé ou que le réseau est hors de portée.</string>
    <string name="incorrect_email_or_password" translatable="false">Adresse e-mail ou mot de passe incorrect(e)</string>
    <string name="channel_name" translatable="false">Nom du canal</string>
    <string name="location_name" translatable="false">Nom de la localisation</string>
-   <string name="location_name" translatable="false">Nom de la localisation</string>
-   <string name="overcurrent_warning" translatable="false">L\'alimentation a été coupée après avoir dépassé le seuil de limite de courant fixé.</string>
    <string name="overcurrent_warning" translatable="false">L\'alimentation a été coupée après avoir dépassé le seuil de limite de courant fixé.</string>
    <string name="overcurrent_question" translatable="false">L\'alimentation a été coupée lorsque la limite de courant fixée a été dépassée. Êtes-vous sûr de vouloir mettre l\'appareil sous tension ?</string>
-   <string name="recalibration_question" translatable="false">Êtes-vous sûr de vouloir commencer le calibrage ?</string>
    <string name="recalibration_question" translatable="false">Êtes-vous sûr de vouloir commencer le calibrage ?</string>
    <string name="calibration_failed" translatable="false">Le calibrage a échoué.</string>
    <string name="calibration_lost" translatable="false">Le calibrage a été perdu.</string>
    <string name="motor_problem" translatable="false">Problème de moteur / Arrêt inattendu.</string>
-   <string name="motor_problem" translatable="false">Problème de moteur / Arrêt inattendu.</string>
-   <string name="lastconnectionresetcause_unknown" translatable="false">0 : inconnu</string>
    <string name="lastconnectionresetcause_unknown" translatable="false">0 : inconnu</string>
    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1 : aucune réponse du serveur</string>
    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2 : perte de la connexion WiFi</string>
    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3 : réinitialisation de la connexion avec le serveur</string>
    <string name="basic_profile_warning" translatable="false">Mode non disponible</string>
-   <string name="basic_profile_warning" translatable="false">Mode non disponible</string>
-   <string name="basic_config_unavailable" translatable="false">Sélectionnez l\'authentification par courriel avec détection automatique du serveur avant de désactiver le mode avancé.</string>
    <string name="basic_config_unavailable" translatable="false">Sélectionnez l\'authentification par courriel avec détection automatique du serveur avant de désactiver le mode avancé.</string>
    <string name="add_device_warning" translatable="false">L\'assistant d\'ajout automatique de périphérique n\'est pas disponible en mode d\'authentification Access ID. Les dispositifs peuvent ensuite être ajoutés manuellement.</string>
    <string name="show_channel_info" translatable="false">Afficher le bouton ⓘ</string>
    <string name="add_device_needs_cloud_title" translatable="false">Configuration du dispositif</string>
    <string name="add_device_needs_cloud_message" translatable="false">Ce dispositif n\'a pas de canaux visibles dans l\'application. Pour terminer la configuration, allez sur cloud.supla.org</string>
-   <string name="add_device_needs_cloud_message" translatable="false">Ce dispositif n\'a pas de canaux visibles dans l\'application. Pour terminer la configuration, allez sur cloud.supla.org</string>
-   <string name="add_device_needs_cloud_dismiss" translatable="false">Je comprends.</string>
    <string name="add_device_needs_cloud_dismiss" translatable="false">Je comprends.</string>
    <string name="add_device_needs_cloud_go" translatable="false">Aller à CLOUD</string>
    <string name="associeted_with_at_error" translatable="false">La fonction de canal associée au déclencheur d\'action ne peut pas être modifiée.</string>
    <string name="location_ordering" translatable="false">Ordre de localisation</string>
    <string name="rs_display_mode" translatable="false">Stores de fenêtre %</string>
-   <string name="rs_display_mode" translatable="false">Stores de fenêtre %</string>
    <string name="rs_display_mode_opening" translatable="false">Ouvertures</string>
-   <string name="rs_display_mode_closing" translatable="false">Fermetures</string>
    <string name="rs_display_mode_closing" translatable="false">Fermetures</string>
    <string name="status_accessid_inactive" translatable="false">ID d\'accès inactif</string>
 </resources>
