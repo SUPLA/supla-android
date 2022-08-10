@@ -365,4 +365,127 @@
     <string name="zwave_welcome_message">Καλώς ορίσατε στον οδηγό ρύθμισης γέφυρας κύματος Ζ. Θα σας επιτρέψει να συνδέσετε τις συσκευές του κύματος Ζ με τη Supla. Κάντε κλικ στο «Επόμενο» για να συνεχίσετε.</string>
     <string name="zwave_welcome_title">Οδηγός κύματος Ζ</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet" translatable="false">Δεν έχετε ακόμα λογαριασμό στο Supla Cloud;</string>
+    <string name="dont_have_account_yet" translatable="false">Δεν έχετε ακόμα λογαριασμό στο Supla Cloud;</string>
+    <string name="profile_name_label" translatable="false">ΟΝΟΜΑ ΛΟΓΑΡΙΑΣΜΟΥ</string>
+    <string name="profiles_title" translatable="false">Λογαριασμοί</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Δεν είναι δυνατή η διαγραφή ενός ενεργού λογαριασμού</string>
+    <string name="profile_default_name" translatable="false">Προεπιλογή</string>
+    <string name="profile_select_active" translatable="false">Επιλέξτε έναν ενεργό λογαριασμό</string>
+    <string name="profile_select_active" translatable="false">Επιλέξτε έναν ενεργό λογαριασμό</string>
+    <string name="profile_act_info" translatable="false">Πατήστε τον λογαριασμό σας για να συνδεθείτε</string>
+    <string name="form_error" translatable="false">Λάθος</string>
+    <string name="form_error" translatable="false">Λάθος</string>
+    <string name="form_profile_name_missing" translatable="false">Εισαγάγετε ένα όνομα λογαριασμού</string>
+    <string name="form_profile_required_data_missing" translatable="false">Συμπληρώστε τα απαιτούμενα δεδομένα</string>
+    <string name="form_profile_required_data_missing" translatable="false">Συμπληρώστε τα απαιτούμενα δεδομένα</string>
+    <string name="form_profile_duplicate" translatable="false">Υπάρχει ήδη ένας λογαριασμός με αυτό το όνομα</string>
+    <string name="form_profile_duplicate" translatable="false">Υπάρχει ήδη ένας λογαριασμός με αυτό το όνομα</string>
+    <string name="add_account" translatable="false">Προσθήκη λογαριασμού</string>
+    <string name="edit_account" translatable="false">Επεξεργασία λογαριασμού</string>
+    <string name="edit_account" translatable="false">Επεξεργασία λογαριασμού</string>
+    <string name="delete_account" translatable="false">Αφαιρώ</string>
+    <string name="delete_account" translatable="false">Αφαιρώ</string>
+    <string name="delete_account_confirm_title" translatable="false">Διαγραφή λογαριασμού</string>
+    <string name="delete_account_confirm_title" translatable="false">Διαγραφή λογαριασμού</string>
+    <string name="delete_account_confirm_message" translatable="false">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας;</string>
+    <string name="delete_account_confirm_message_with_widgets">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Η επιβεβαίωση θα σημαίνει την κατάργηση των σχετικών γραφικών στοιχείων.</string>
+    <string name="cfg_label_access_id_auth" translatable="false">Αναγνωριστικό</string>
+    <string name="cfg_channel_height" translatable="false">Ύψος καναλιού</string>
+    <string name="cfg_temperature_unit" translatable="false">Μονάδα θερμοκρασίας</string>
+    <string name="cfg_button_autohide" translatable="false">Αυτόματη απόκρυψη κουμπιών</string>
+    <string name="profile" translatable="false">Ο λογαριασμός σας</string>
+    <string name="profile_plural" translatable="false">Οι λογαριασμοί σας</string>
+    <string name="menubar_appsettings" translatable="false">Ρυθμίσεις</string>
+    <string name="rs_percent_caption_open" translatable="false">Ποσοστό ανοίγματος</string>
+    <string name="em_chart_phase_n" translatable="false">Στάδιο %d</string>
+    <string name="em_chart_all_phases" translatable="false">Στάδιο 1+2+3</string>
+    <string name="em_chart_all_phases" translatable="false">Στάδιο 1+2+3</string>
+    <string name="widget_configure_title" translatable="false">Διαμόρφωση γραφικού στοιχείου</string>
+    <string name="widget_configure_title" translatable="false">Διαμόρφωση γραφικού στοιχείου</string>
+    <string name="widget_configure_profile_label" translatable="false">Λογαριασμός</string>
+    <string name="widget_configure_profile_label" translatable="false">Λογαριασμός</string>
+    <string name="widget_configure_channel_label" translatable="false">Κανάλι για γραφικό στοιχείο</string>
+    <string name="widget_configure_channel_label" translatable="false">Κανάλι για γραφικό στοιχείο</string>
+    <string name="widget_configure_action_label" translatable="false">Ενέργεια</string>
+    <string name="widget_configure_name_label" translatable="false">Όνομα</string>
+    <string name="widget_configure_error" translatable="false">Η ρύθμιση του καναλιού απέτυχε...</string>
+    <string name="widget_configure_no_selection" translatable="false">Το κανάλι δεν είναι επιλεγμένο</string>
+    <string name="widget_configure_no_selection" translatable="false">Το κανάλι δεν είναι επιλεγμένο</string>
+    <string name="widget_configure_no_channel" translatable="false">Δεν υπάρχουν διαθέσιμα κανάλια</string>
+    <string name="widget_configure_no_channel" translatable="false">Δεν υπάρχουν διαθέσιμα κανάλια</string>
+    <string name="double_button_widget_description" translatable="false">"Γραφικό στοιχείο δύο κουμπιών "</string>
+    <string name="single_button_widget_description" translatable="false">"Γραφικό στοιχείο με ένα κουμπί "</string>
+    <string name="widget_app_not_initialized" translatable="false">Παρακαλώ συνδεθείτε!</string>
+    <string name="widget_app_not_initialized" translatable="false">Παρακαλώ συνδεθείτε!</string>
+    <string name="widget_command_error" translatable="false">Επικοινωνιακό λάθος!</string>
+    <string name="widget_command_error" translatable="false">Επικοινωνιακό λάθος!</string>
+    <string name="widget_command_no_connection" translatable="false">Δεν υπάρχει σύνδεση στο διαδίκτυο!</string>
+    <string name="widget_command_no_connection" translatable="false">Δεν υπάρχει σύνδεση στο διαδίκτυο!</string>
+    <string name="widget_command_started" translatable="false">Καμωμένος</string>
+    <string name="widget_command_started" translatable="false">Καμωμένος</string>
+    <string name="widget_removed_label" translatable="false">Το κανάλι διαγράφηκε</string>
+    <string name="widget_removed_label" translatable="false">Το κανάλι διαγράφηκε</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Αισθητήρας ανοίγματος παραθύρου οροφής</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Αισθητήρας ανοίγματος παραθύρου οροφής</string>
+    <string name="channel_caption_roofwindow" translatable="false">Παράθυρο οροφής</string>
+    <string name="channel_caption_roofwindow" translatable="false">Παράθυρο οροφής</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Άνοιγμα και κλείσιμο του παραθύρου οροφής</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Άνοιγμα και κλείσιμο του παραθύρου οροφής</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Αισθητήρας ανοίγματος παραθύρου οροφής</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">άνοιξε / έκλεισε το παράθυρο της οροφής</string>
+    <string name="status_led" translatable="false">Ενδεικτική λυχνία κατάστασης</string>
+    <string name="status_led" translatable="false">Ενδεικτική λυχνία κατάστασης</string>
+    <string name="info_led_on" translatable="false">Η λυχνία LED ανάβει εάν είστε συνδεδεμένοι στο διακομιστή.</string>
+    <string name="info_led_on" translatable="false">Η λυχνία LED ανάβει εάν είστε συνδεδεμένοι στο διακομιστή.</string>
+    <string name="info_led_off" translatable="false">Η λυχνία LED δεν ανάβει εάν δημιουργηθεί σύνδεση με το διακομιστή.</string>
+    <string name="info_led_alwaysoff" translatable="false">Η λυχνία LED είναι πάντα σβηστή, εκτός εάν η συσκευή βρίσκεται σε λειτουργία διαμόρφωσης Wifi (λειτουργία AP).</string>
+    <string name="info_led_alwaysoff" translatable="false">Η λυχνία LED είναι πάντα σβηστή, εκτός εάν η συσκευή βρίσκεται σε λειτουργία διαμόρφωσης Wifi (λειτουργία AP).</string>
+    <string name="input" translatable="false">Είσοδος</string>
+    <string name="monostable" translatable="false">Μονόσταχτο</string>
+    <string name="bistable" translatable="false">Διστακτικό</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">Μια προσπάθεια δημιουργίας σύνδεσης WiFi στον ενεργοποιητή απέτυχε.</string>
+    <string name="diw_cfg_info_oprange" translatable="false">Ρυθμίστε το εύρος ροοστάτη ρυθμίζοντας τα ελάχιστα και μέγιστα επίπεδα φωτεινότητας. Οι ελάχιστες και μέγιστες τιμές μπορούν να ρυθμιστούν μετακινώντας τα ρυθμιστικά που βρίσκονται και στις δύο πλευρές του τροχού.</string>
+    <string name="diw_cfg_info_in_options" translatable="false">Επιλογές εισαγωγής</string>
+    <string name="diw_cfg_info_mono_option" translatable="false">Αυτή η επιλογή αλλάζει τη συμπεριφορά της εισόδου στην οποία είναι συνδεδεμένο το κουμπί monostable. Όταν αυτή η επιλογή είναι απενεργοποιημένη, ο ροοστάτης σταματά τη διαδικασία φωτεινότητας όταν επιτευχθεί το μέγιστο επίπεδο φωτεινότητας και, σε περίπτωση μείωσης της έντασης, όταν φτάσει στο ελάχιστο επίπεδο. Η ενεργοποίηση αυτής της επιλογής θα μετακινηθεί στο ελάχιστο επίπεδο μόλις επιτευχθεί η μέγιστη φωτεινότητα και, σε περίπτωση μείωσης της έντασης στη μέγιστη τιμή, μόλις επιτευχθεί το ελάχιστο. Η λεύκανση/εξασθένιση θα συνεχιστεί όσο πατάτε το κουμπί.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">"Αυτή η επιλογή αλλάζει τη συμπεριφορά του ροοστάτη όταν ο φωτισμός είναι ενεργοποιημένος χρησιμοποιώντας το κουμπί bistable. Όταν είναι ενεργοποιημένη αυτή η επιλογή, ο ροοστάτης θα ρυθμίσει το μέγιστο επίπεδο φωτεινότητας μόλις ενεργοποιηθεί ο φωτισμός. Όταν η επιλογή είναι απενεργοποιημένη, ο ροοστάτης θα ρυθμίσει το επίπεδο φωτεινότητας που θυμάται πριν απενεργοποιήσει τον φωτισμό. "</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Τμήματα του γυαλιού εκτίθενται για περισσότερο από 20 ώρες, γεγονός που μπορεί να επηρεάσει αρνητικά τη διάρκεια ζωής τους. Συνιστάται η κάλυψη όλων των τμημάτων για τουλάχιστον 4 ώρες προκειμένου να αναγεννηθούν.</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Τμήματα του γυαλιού εκτίθενται για περισσότερο από 20 ώρες, γεγονός που μπορεί να επηρεάσει αρνητικά τη διάρκεια ζωής τους. Συνιστάται η κάλυψη όλων των τμημάτων για τουλάχιστον 4 ώρες προκειμένου να αναγεννηθούν.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Η προγραμματισμένη αναγέννηση βρίσκεται σε εξέλιξη.</string>
+    <string name="dgf_regeneration_after20h" translatable="false">Η αναγέννηση βρίσκεται σε εξέλιξη μετά από 20 ώρες εργασίας.</string>
+    <string name="wizard_done_explentations" translatable="false">Εάν η συσκευή σας δεν εμφανίζεται στην εφαρμογή, επαναλάβετε αυτήν τη διαδικασία προσθήκης ξανά και διαβάστε την ενότητα \"Προηγούμενη κατάσταση\" που εμφανίζεται παραπάνω. Περιέχει πληροφορίες για να προσδιορίσετε γιατί η συσκευή δεν συνδέθηκε στο διακομιστή. Το μήνυμα \"Το SSID δεν βρέθηκε\" σημαίνει ότι το όνομα δικτύου WiFi 2,4 GHz που εισαγάγατε δεν βρέθηκε ή το δίκτυο είναι εκτός εμβέλειας.</string>
+    <string name="channel_name" translatable="false">Όνομα καναλιού</string>
+    <string name="incorrect_email_or_password" translatable="false">Λάθος διεύθυνση ηλεκτρονικού ταχυδρομείου ή κωδικός πρόσβασης</string>
+    <string name="location_name" translatable="false">Όνομα τοποθεσίας</string>
+    <string name="location_name" translatable="false">Όνομα τοποθεσίας</string>
+    <string name="overcurrent_warning" translatable="false">Η παροχή ρεύματος απενεργοποιήθηκε όταν ξεπεράστηκε το καθορισμένο όριο επιτρεπόμενου ρεύματος.</string>
+    <string name="overcurrent_warning" translatable="false">Η παροχή ρεύματος απενεργοποιήθηκε όταν ξεπεράστηκε το καθορισμένο όριο επιτρεπόμενου ρεύματος.</string>
+    <string name="overcurrent_question" translatable="false">Η παροχή ρεύματος απενεργοποιήθηκε όταν ξεπεράστηκε το καθορισμένο όριο επιτρεπόμενου ρεύματος. Είστε βέβαιοι ότι θέλετε να ενεργοποιήσετε την παροχή ρεύματος;</string>
+    <string name="recalibration_question" translatable="false">Είστε βέβαιοι ότι θέλετε να ξεκινήσετε τη βαθμονόμηση;</string>
+    <string name="recalibration_question" translatable="false">Είστε βέβαιοι ότι θέλετε να ξεκινήσετε τη βαθμονόμηση;</string>
+    <string name="calibration_failed" translatable="false">Η βαθμονόμηση απέτυχε.</string>
+    <string name="calibration_failed" translatable="false">Η βαθμονόμηση απέτυχε.</string>
+    <string name="calibration_lost" translatable="false">Η βαθμονόμηση έχει χαθεί.</string>
+    <string name="motor_problem" translatable="false">Πρόβλημα κινητήρα / Απροσδόκητη διακοπή.</string>
+    <string name="lastconnectionresetcause_unknown" translatable="false">0: άγνωστο</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: δεν υπάρχει απόκριση διακομιστή</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: απώλεια σύνδεσης WiFi</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: απώλεια σύνδεσης WiFi</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: επαναφέρετε τη σύνδεση με τον διακομιστή</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: επαναφέρετε τη σύνδεση με τον διακομιστή</string>
+    <string name="basic_profile_warning" translatable="false">Η λειτουργία δεν είναι διαθέσιμη</string>
+    <string name="basic_config_unavailable" translatable="false">Πριν απενεργοποιήσετε την λειτουργία για προχωρημένους, επιλέξτε έλεγχος ταυτότητας μέσω ηλεκτρονικού ταχυδρομείου με αυτόματο εντοπισμό διακομιστή.</string>
+    <string name="add_device_warning" translatable="false">Ο Οδηγός αυτόματης προσθήκης συσκευής δεν είναι διαθέσιμος στη λειτουργία ελέγχου ταυτότητας με αναγνωριστικό πρόσβασης. Στη συνέχεια, οι συσκευές μπορούν να προστεθούν χειροκίνητα.</string>
+    <string name="show_channel_info" translatable="false">Εμφάνιση κουμπιού  ⓘ</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Διαμόρφωση συσκευής</string>
+    <string name="add_device_needs_cloud_message" translatable="false">Αυτή η συσκευή δεν έχει ορατά κανάλια στην εφαρμογή. Για να ολοκληρώσετε τη ρύθμιση, μεταβείτε στο cloud.supla.org</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Καταλαβαίνω</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Μεταβείτε στο CLOUD</string>
+    <string name="associeted_with_at_error" translatable="false">Δεν μπορείτε να αλλάξετε τη λειτουργία του καναλιού που σχετίζεται με το έναυσμα ενέργειας.</string>
+    <string name="location_ordering" translatable="false">Σειρά τοποθεσιών</string>
+    <string name="location_ordering" translatable="false">Σειρά τοποθεσιών</string>
+    <string name="rs_display_mode" translatable="false">Ρολά %</string>
+    <string name="rs_display_mode_opening" translatable="false">Άνοιγμα</string>
+    <string name="rs_display_mode_closing" translatable="false">Κλείσιμο</string>
+    <string name="status_accessid_inactive" translatable="false">Ανενεργό αναγνωριστικό πρόσβασης</string>
 </resources>
