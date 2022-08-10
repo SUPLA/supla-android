@@ -374,22 +374,17 @@
     <string name="widget_command_started">Gemacht</string>
     <string name="widget_removed_label">Kanal gelöscht</string>
     <string name="dont_have_account_yet" translatable="false">Haben Sie noch kein Konto bei Supla Cloud?</string>
-    <string name="dont_have_account_yet" translatable="false">Haben Sie noch kein Konto bei Supla Cloud?</string>
     <string name="profiles_title" translatable="false">Kontos</string>
     <string name="profile_name_label" translatable="false">BEZEICHNUNG DES KONTOS</string>
     <string name="form_cannot_delete_active_profile" translatable="false">Aktives Konto kann nicht gelöscht werden</string>
     <string name="profile_default_name" translatable="false">Standardmäßig</string>
-    <string name="profile_default_name" translatable="false">Standardmäßig</string>
     <string name="profile_select_active" translatable="false">Aktives Konto wählen</string>
     <string name="profile_act_info" translatable="false">Konto antippen, um sich anzumelden</string>
-    <string name="profile_act_info" translatable="false">Konto antippen, um sich anzumelden</string>
-    <string name="form_error" translatable="false">Fehler</string>
     <string name="form_error" translatable="false">Fehler</string>
     <string name="form_profile_name_missing" translatable="false">Kontoname angeben</string>
     <string name="form_profile_required_data_missing" translatable="false">Erforderliche Angaben vervollständigen</string>
     <string name="form_profile_duplicate" translatable="false">Es gibt schon ein Konto mit diesem Namen</string>
     <string name="add_account" translatable="false">Konto hinzufügen</string>
-    <string name="edit_account" translatable="false">Konto bearbeiten</string>
     <string name="edit_account" translatable="false">Konto bearbeiten</string>
     <string name="delete_account" translatable="false">Löschen</string>
     <string name="delete_account_confirm_title" translatable="false">Konto löschen</string>
@@ -408,7 +403,6 @@
     <string name="double_button_widget_description" translatable="false">Zweitasten-Widget</string>
     <string name="single_button_widget_description" translatable="false">Eintasten-Widget</string>
     <string name="channel_caption_roofwindowopeningsensor" translatable="false">Dachfenster-Öffnungssensor</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Dachfenster-Öffnungssensor</string>
     <string name="channel_caption_roofwindow" translatable="false">Dachfenster</string>
     <string name="channel_func_controllingtheroofwindow" translatable="false">Öffnen und Schließen des Dachfensters</string>
     <string name="channel_func_opensensor_roofwindow" translatable="false">Dachfenster-Öffnungssensor</string>
@@ -419,9 +413,7 @@
     <string name="info_led_alwaysoff" translatable="false">"Diode immer abgeschaltet, es sei dass das Gerät im WiFi-Konfigurationsmodus (AP-Modus) arbeitet. "</string>
     <string name="input" translatable="false">Eingang</string>
     <string name="monostable" translatable="false">Monostabil</string>
-    <string name="monostable" translatable="false">Monostabil</string>
     <string name="bistable" translatable="false">Bistabil</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">"Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos. "</string>
     <string name="wizard_iodev_connect_failed" translatable="false">"Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos. "</string>
     <string name="diw_cfg_info_oprange" translatable="false">"Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.  "</string>
     <string name="diw_cfg_info_in_options" translatable="false">Eingangsoptionen</string>
@@ -434,40 +426,28 @@
     <string name="incorrect_email_or_password" translatable="false">Falsche E-Mail-Adresse oder Kennwort</string>
     <string name="channel_name" translatable="false">Name des Kanals</string>
     <string name="location_name" translatable="false">Name der Lokalisierung</string>
-    <string name="location_name" translatable="false">Name der Lokalisierung</string>
     <string name="overcurrent_warning" translatable="false">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
-    <string name="overcurrent_question" translatable="false">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
     <string name="overcurrent_question" translatable="false">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
     <string name="recalibration_question" translatable="false">Wollen Sie wirklich die Kalibrierung beginnen?</string>
     <string name="calibration_failed" translatable="false">Kalibrierung ist nicht gelungen.</string>
-    <string name="calibration_failed" translatable="false">Kalibrierung ist nicht gelungen.</string>
-    <string name="calibration_lost" translatable="false">Kalibrierung wurde verloren.</string>
     <string name="calibration_lost" translatable="false">Kalibrierung wurde verloren.</string>
     <string name="motor_problem" translatable="false">Problem mit dem Motor / Unerwartetes Anhalten</string>
     <string name="lastconnectionresetcause_unknown" translatable="false">0: unbekannt</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: unbekannt</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: keine Serverantwort</string>
     <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: keine Serverantwort</string>
     <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Unterbrechung der WiFi-Verbindung</string>
     <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: Zurücksetzung der Verbindung mit dem Server</string>
     <string name="basic_profile_warning" translatable="false">Modus nicht verfügbar</string>
-    <string name="basic_profile_warning" translatable="false">Modus nicht verfügbar</string>
-    <string name="basic_config_unavailable" translatable="false">Vor Ausschaltung des fortgeschrittenen Modus wählen Sie die E-Mail-Authentifizierung mit automatischer Erkennung des Servers</string>
     <string name="basic_config_unavailable" translatable="false">Vor Ausschaltung des fortgeschrittenen Modus wählen Sie die E-Mail-Authentifizierung mit automatischer Erkennung des Servers</string>
     <string name="add_device_warning" translatable="false">Der Assistent automatischer Hinzufügung der Geräte ist im Modus der Authentifizierung durch die Zugriffskennung nicht verfügbar. Die Geräte können manuell hinzugefügt werden.</string>
     <string name="show_channel_info" translatable="false">Taste ⓘ zeigen</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Konfiguration des Geräts</string>
     <string name="add_device_needs_cloud_title" translatable="false">Konfiguration des Geräts</string>
     <string name="add_device_needs_cloud_message" translatable="false">"Dieses Gerät hat keine in der App sichtbaren Kanäle. Um die Konfiguration abzuschließen, gehen Sie zum cloud.supla.org "</string>
     <string name="add_device_needs_cloud_dismiss" translatable="false">Verstehe</string>
     <string name="add_device_needs_cloud_go" translatable="false">Zur CLOUD gehen</string>
     <string name="associeted_with_at_error" translatable="false">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
-    <string name="associeted_with_at_error" translatable="false">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
     <string name="location_ordering" translatable="false">Lokalisierungsreihenfolge</string>
     <string name="rs_display_mode" translatable="false">Rollläden %</string>
     <string name="rs_display_mode_opening" translatable="false">Öffnungen</string>
-    <string name="rs_display_mode_opening" translatable="false">Öffnungen</string>
     <string name="rs_display_mode_closing" translatable="false">"Schließungen "</string>
-    <string name="status_accessid_inactive" translatable="false">"Zugriffskennung nicht aktiv "</string>
     <string name="status_accessid_inactive" translatable="false">"Zugriffskennung nicht aktiv "</string>
 </resources>
