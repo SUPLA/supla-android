@@ -372,10 +372,8 @@
     <string name="zwave_welcome_title" >Мастер z-wave</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet" translatable="false">У вас еще нет учётной записи в Supla Cloud?</string>
-    <string name="dont_have_account_yet" translatable="false">У вас еще нет учётной записи в Supla Cloud?</string>
    <string name="profiles_title" translatable="false">Учётные записи</string>
     <string name="profile_name_label" translatable="false">НАЗВАНИЕ УЧЁТНОЙ ЗАПИСИ</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Активная учётная запись не может быть удалена</string>
     <string name="form_cannot_delete_active_profile" translatable="false">Активная учётная запись не может быть удалена</string>
     <string name="profile_default_name" translatable="false">По умолчанию</string>
     <string name="profile_select_active" translatable="false">Выберите активную учетную запись</string>
@@ -389,10 +387,8 @@
     <string name="delete_account" translatable="false">Удалить</string>
     <string name="delete_account_confirm_title" translatable="false">Удалить учётную запись</string>
     <string name="delete_account_confirm_message" translatable="false">Вы уверены, что хотите удалить учётную запись?</string>
-    <string name="delete_account_confirm_message" translatable="false">Вы уверены, что хотите удалить учётную запись?</string>
     <string name="delete_account_confirm_message_with_widgets">Вы уверены, что хотите удалить учётную запись? При подтверждении связанные виджеты будут удалены.</string>
     <string name="cfg_label_access_id_auth" translatable="false">Идентификатор</string>
-    <string name="cfg_channel_height" translatable="false">Высота канала</string>
     <string name="cfg_channel_height" translatable="false">Высота канала</string>
     <string name="cfg_temperature_unit" translatable="false">Единица измерения температуры</string>
     <string name="cfg_button_autohide" translatable="false">Автоматическое скрытие кнопок</string>
@@ -404,7 +400,6 @@
     <string name="em_chart_all_phases" translatable="false">Фаза 1+2+3</string>
     <string name="widget_configure_title" translatable="false">Конфигурация виджета</string>
     <string name="widget_configure_profile_label" translatable="false">Учётная запись</string>
-    <string name="widget_configure_channel_label" translatable="false">Канал для виджета</string>
     <string name="widget_configure_channel_label" translatable="false">Канал для виджета</string>
     <string name="widget_configure_action_label" translatable="false">Действие</string>
     <string name="widget_configure_name_label" translatable="false">Название</string>
@@ -423,10 +418,7 @@
     <string name="channel_func_controllingtheroofwindow" translatable="false">Открытые и закрытие окна крыши</string>
     <string name="channel_func_opensensor_roofwindow" translatable="false">Датчик открытия окна крыши</string>
     <string name="event_openedclosedtheroofwindow" translatable="false">открыл/закрыл окно крыши</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">открыл/закрыл окно крыши</string>
     <string name="status_led" translatable="false">Светодиод статуса</string>
-    <string name="status_led" translatable="false">Светодиод статуса</string>
-    <string name="info_led_on" translatable="false">Светодиод LED загорается, когда соединение с сервером установлено.</string>
     <string name="info_led_on" translatable="false">Светодиод LED загорается, когда соединение с сервером установлено.</string>
     <string name="info_led_off" translatable="false">Светодиод LED не загорается, когда соединение с сервером установлено.</string>
     <string name="info_led_alwaysoff" translatable="false">Светодиод всегда выключен, если только устройство не находится в режиме настройки Wi-Fi (Режим AP).</string>
@@ -435,7 +427,6 @@
     <string name="bistable" translatable="false">Бистабильный</string>
     <string name="wizard_iodev_connect_failed" translatable="false">Попытка установить Wi-Fi соединение с исполнительным устройством не удалась.</string>
     <string name="diw_cfg_info_oprange" translatable="false">Отрегулируйте рабочий диапазон диммера, установив минимальный и максимальный уровень яркости. Минимальный и максимальный уровень можно установить, перемещая ползунки с обеих сторон колеса.</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Параметры входа</string>
     <string name="diw_cfg_info_in_options" translatable="false">Параметры входа</string>
     <string name="diw_cfg_info_mono_option" translatable="false">Эта опция изменяет поведение входа, к которому подключена моностабильная кнопка. Если опция отключена, диммер останавливает процесс повышения яркости при достижении максимального уровня яркости, а в случае диммера — при достижении минимального уровня. Включение этой опции приведет к переключению на минимальный уровень, как только будет достигнута максимальная яркость, а в случае диммера - на максимальное значение, как только будет достигнут минимум. Увеличение/уменьшение яркости будет продолжаться до тех пор, пока нажата кнопка.</string>
     <string name="diw_cfg_info_bi_option" translatable="false">Опция изменяет поведение диммера при включении освещения с помощью бистабильной кнопки. Если опция включена, диммер установит максимальный уровень яркости сразу после включения освещения. Если опция отключена, диммер установит уровень яркости, сохраненный перед выключением освещения.</string>
@@ -447,43 +438,27 @@
     <string name="channel_name" translatable="false">Название канала</string>
     <string name="location_name" translatable="false">Название локализации</string>
     <string name="overcurrent_warning" translatable="false">Питание отключено после превышения установленного порога допустимого тока.</string>
-    <string name="overcurrent_warning" translatable="false">Питание отключено после превышения установленного порога допустимого тока.</string>
-    <string name="overcurrent_question" translatable="false">Питание отключено после превышения установленного порога допустимого тока. Вы уверены, что хотите включить питание?</string>
     <string name="overcurrent_question" translatable="false">Питание отключено после превышения установленного порога допустимого тока. Вы уверены, что хотите включить питание?</string>
     <string name="recalibration_question" translatable="false">Вы уверены, что хотите начать калибровку?</string>
     <string name="calibration_failed" translatable="false">Калибровка не удалась.</string>
-    <string name="calibration_failed" translatable="false">Калибровка не удалась.</string>
-    <string name="calibration_lost" translatable="false">Калибровка потеряна.</string>
     <string name="calibration_lost" translatable="false">Калибровка потеряна.</string>
     <string name="motor_problem" translatable="false">Проблема с двигателем / Неожиданная остановка.</string>
-    <string name="motor_problem" translatable="false">Проблема с двигателем / Неожиданная остановка.</string>
     <string name="lastconnectionresetcause_unknown" translatable="false">0: неизвестно</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: неизвестно</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: нет ответа от сервера</string>
     <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: нет ответа от сервера</string>
     <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: потеряно соединение Wi-Fi</string>
     <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: сброс соединения с сервером</string>
     <string name="basic_profile_warning" translatable="false">Режим недоступен</string>
-    <string name="basic_profile_warning" translatable="false">Режим недоступен</string>
-    <string name="basic_config_unavailable" translatable="false">Перед отключением расширенного режима выберите аутентификацию email с автоматическим определением сервера.</string>
     <string name="basic_config_unavailable" translatable="false">Перед отключением расширенного режима выберите аутентификацию email с автоматическим определением сервера.</string>
     <string name="add_device_warning" translatable="false">Мастер автоматического добавления устройств недоступен в режиме аутентификации идентификатором доступа. В этом случае устройства можно добавить вручную.</string>
-    <string name="add_device_warning" translatable="false">Мастер автоматического добавления устройств недоступен в режиме аутентификации идентификатором доступа. В этом случае устройства можно добавить вручную.</string>
-    <string name="show_channel_info" translatable="false">Показать кнопку ⓘ</string>
     <string name="show_channel_info" translatable="false">Показать кнопку ⓘ</string>
     <string name="add_device_needs_cloud_title" translatable="false">Конфигурация устройства</string>
     <string name="add_device_needs_cloud_message" translatable="false">На этом устройстве нет каналов, видимых в приложении. Чтобы завершить настройку, перейдите на сайт cloud.supla.org</string>
     <string name="add_device_needs_cloud_dismiss" translatable="false">Я понимаю</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">Я понимаю</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Перейти к CLOUD</string>
     <string name="add_device_needs_cloud_go" translatable="false">Перейти к CLOUD</string>
     <string name="associeted_with_at_error" translatable="false">Функция канала, связанного с триггером действия, не может быть изменена.</string>
     <string name="location_ordering" translatable="false">Порядок локализации</string>
     <string name="rs_display_mode" translatable="false">Роллеты %</string>
-    <string name="rs_display_mode" translatable="false">Роллеты %</string>
     <string name="rs_display_mode_opening" translatable="false">Открытия</string>
-    <string name="rs_display_mode_opening" translatable="false">Открытия</string>
-    <string name="rs_display_mode_closing" translatable="false">Закрытия</string>
     <string name="rs_display_mode_closing" translatable="false">Закрытия</string>
     <string name="status_accessid_inactive" translatable="false">Идентификатор доступа неактивен</string>
 </resources>
