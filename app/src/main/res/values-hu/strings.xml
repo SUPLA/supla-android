@@ -365,4 +365,121 @@
     <string name="zwave_welcome_message">Üdvözöljük a z-wave híd telepítővarázslójában, ami lehetővé teszi a z-wave eszközök csatlakoztatását a Supla-hoz. Kattintson a \"Tovább\" gombra a folytatáshoz.</string>
     <string name="zwave_welcome_title">Z-wave varázsló</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet" translatable="false">Nincs még fiókja a Supla Cloud-ban?</string>
+    <string name="profiles_title" translatable="false">Számlái</string>
+    <string name="profiles_title" translatable="false">Számlái</string>
+    <string name="profile_name_label" translatable="false">FIÓK NEVE</string>
+    <string name="profile_name_label" translatable="false">FIÓK NEVE</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Nem lehet törölni aktív fiókot</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Nem lehet törölni aktív fiókot</string>
+    <string name="profile_default_name" translatable="false">Alapértelmezett</string>
+    <string name="profile_select_active" translatable="false">Válassza az aktív fiókot</string>
+    <string name="profile_select_active" translatable="false">Válassza az aktív fiókot</string>
+    <string name="profile_act_info" translatable="false">Érintse meg a fiókot a belépéshez</string>
+    <string name="profile_act_info" translatable="false">Érintse meg a fiókot a belépéshez</string>
+    <string name="form_error" translatable="false">Hiba</string>
+    <string name="form_error" translatable="false">Hiba</string>
+    <string name="form_profile_name_missing" translatable="false">Adja meg a fiók nevet</string>
+    <string name="form_profile_required_data_missing" translatable="false">Egészítse ki a szükséges adatokat</string>
+    <string name="form_profile_required_data_missing" translatable="false">Egészítse ki a szükséges adatokat</string>
+    <string name="form_profile_duplicate" translatable="false">Már létezik egy fiók ezzel a névvel</string>
+    <string name="add_account" translatable="false">Fiók hozzáadása</string>
+    <string name="edit_account" translatable="false">Fiók módosítása</string>
+    <string name="delete_account" translatable="false">Törlés</string>
+    <string name="delete_account_confirm_title" translatable="false">Törölje a fiókot</string>
+    <string name="delete_account_confirm_message" translatable="false">Biztosan törölni akarja a fiókot?</string>
+    <string name="delete_account_confirm_message_with_widgets">Biztosan törölni akarja a fiókot? A megerősítés a kapcsolódó widgetek eltávolítását jelenti.</string>
+    <string name="cfg_label_access_id_auth" translatable="false">Azonosító</string>
+    <string name="cfg_channel_height" translatable="false">Csatorna magassága</string>
+    <string name="cfg_channel_height" translatable="false">Csatorna magassága</string>
+    <string name="cfg_temperature_unit" translatable="false">Hőmérsékleti egység</string>
+    <string name="cfg_button_autohide" translatable="false">Billentyűk automatikus eltakarása</string>
+    <string name="profile" translatable="false">A fiókja</string>
+    <string name="profile_plural" translatable="false">A fiókjai</string>
+    <string name="menubar_appsettings" translatable="false">Beállítások</string>
+    <string name="rs_percent_caption_open" translatable="false">Nyitás százaléka</string>
+    <string name="em_chart_phase_n" translatable="false">Fázis %d</string>
+    <string name="em_chart_all_phases" translatable="false">Fázis 1+2+3</string>
+    <string name="widget_configure_title" translatable="false">Widget konfiguráció</string>
+    <string name="widget_configure_profile_label" translatable="false">Fiók</string>
+    <string name="widget_configure_channel_label" translatable="false">Widget csatorna</string>
+    <string name="widget_configure_action_label" translatable="false">Akció</string>
+    <string name="widget_configure_name_label" translatable="false">Név</string>
+    <string name="widget_configure_error" translatable="false">A csatorna konfiguráció sikertelen...</string>
+    <string name="widget_configure_no_selection" translatable="false">Nincs kiválasztott csatorna</string>
+    <string name="widget_configure_no_channel" translatable="false">Nincs elérhető csatorna</string>
+    <string name="double_button_widget_description" translatable="false">Kétgombos widget</string>
+    <string name="single_button_widget_description" translatable="false">Egygombos widget</string>
+    <string name="widget_app_not_initialized" translatable="false">Kérjük jelentkezzen be!</string>
+    <string name="widget_command_error" translatable="false">Kommunikációs hiba!</string>
+    <string name="widget_command_no_connection" translatable="false">Nincs internetkapcsolat!</string>
+    <string name="widget_command_started" translatable="false">Kész</string>
+    <string name="widget_removed_label" translatable="false">Csatorna törölve</string>
+    <string name="widget_removed_label" translatable="false">Csatorna törölve</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">A tetőablak nyitás érzékelő</string>
+    <string name="channel_caption_roofwindow" translatable="false">"Tetőablak "</string>
+    <string name="channel_caption_roofwindow" translatable="false">"Tetőablak "</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">A tetőablak nyitás érzékelő</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">"A tetőablak nyitása/bezárása "</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">"A tetőablak nyitása/bezárása "</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">Kinyitotta/bezárta a tetőablakot</string>
+    <string name="status_led" translatable="false">LED állapot</string>
+    <string name="info_led_on" translatable="false">A LED világít, ha létrejött a kapcsolat a szerverrel.</string>
+    <string name="info_led_off" translatable="false">A LED nem világít, ha létrejött a kapcsolat a szerverrel.</string>
+    <string name="info_led_alwaysoff" translatable="false">A LED mindig ki van kapcsolva, kivéve, ha az eszköz wifi konfigurációs módban dolgozik (AP mód) van.</string>
+    <string name="input" translatable="false">Bemenet</string>
+    <string name="monostable" translatable="false">Monostabil</string>
+    <string name="monostable" translatable="false">Monostabil</string>
+    <string name="bistable" translatable="false">Bistabil</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">A Wi-Fi-kapcsolat létrehozására tett kísérlet a műveleti eszközzel meghiúsult.</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">A Wi-Fi-kapcsolat létrehozására tett kísérlet a műveleti eszközzel meghiúsult.</string>
+    <string name="diw_cfg_info_oprange" translatable="false">Állítsa be a sötétítő teljesítménytartományát a minimális és maximális fényerővel. A minimális és maximális értékeket a kerék mindkét oldalán elhelyezett csúszkák mozgatásával állíthatja be.</string>
+    <string name="diw_cfg_info_in_options" translatable="false">" Belépési lehetőségek "</string>
+    <string name="diw_cfg_info_in_options" translatable="false">" Belépési lehetőségek "</string>
+    <string name="diw_cfg_info_mono_option" translatable="false">Ez az opció megváltoztatja a bemenet viselkedését, amelyhez a monostabil gomb csatlakozik. Ha az opciót kikapcsolták, a sötétítő leállítja a világítási folyamatot, amikor a maximális fényerő szintet érjük el, és sötétítés esetén, amikor a minimális szintet érjük el. Ennek a beállításnak a bekapcsolása a maximális fényerő elérésekor a minimálisra, sötétedés esetén pedig a maximálisra vált, miután elérte a minimum értéket. A világítás/sötétedés addig tart, amíg megnyomja a gombot.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">Ez az opció megváltoztatja a sötétítő viselkedését, ha a világítás be van kapcsolva a bistabilis gombbal. Ha az opció be van kapcsolva, a sötétítő rögtön beállítja a maximális fényerőt a világítás bekapcsolásakor. Ha a beállítás ki van kapcsolva, a sötétítő beállítja a kikapcsolás előtt elmentett fényerő szintjét.</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Az üvegszekciók több mint 20 órán át lefedetlenek, ez negatívan befolyásolhatja az élettartamukat. Javasoljuk, hogy az összes szekciót legalább 4 órán át takarja el a helyreállítás érdekében.</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Az üvegszekciók több mint 20 órán át lefedetlenek, ez negatívan befolyásolhatja az élettartamukat. Javasoljuk, hogy az összes szekciót legalább 4 órán át takarja el a helyreállítás érdekében.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Tervezett helyreállítás folyamatban.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Tervezett helyreállítás folyamatban.</string>
+    <string name="dgf_regeneration_after20h" translatable="false">20 üzemóra után kezdődő helyreállítás folyamatban.</string>
+    <string name="wizard_done_explentations" translatable="false">Ha a készülék nem jelenik meg az alkalmazásban, ismételje meg ezt az eljárást, és olvassa el a fenti „Előző állapotot”. Ez azt jelzi, hogy a készülék miért nem csatlakozott a szerverhez. Az \"SSID not found\" üzenet azt jelenti, hogy a megadott 2,4 GHz-es WiFi nevet nem találták meg, vagy a hálózat nem érhető el.</string>
+    <string name="incorrect_email_or_password" translatable="false">Hibás email cím vagy jelszó</string>
+    <string name="incorrect_email_or_password" translatable="false">Hibás email cím vagy jelszó</string>
+    <string name="channel_name" translatable="false">Csatorna neve</string>
+    <string name="location_name" translatable="false">Helyszín neve</string>
+    <string name="overcurrent_warning" translatable="false">Az áramellátás a megengedett áramerősség beállított küszöbértékének túllépése után kikapcsolt.</string>
+    <string name="overcurrent_question" translatable="false">Az áramellátás a megengedett áramerősség beállított küszöbértékének túllépése után kikapcsolt. Biztos benne, hogy be akarja kapcsolni az áramellátást?</string>
+    <string name="recalibration_question" translatable="false">Biztosan el akarja kezdeni a kalibrálást?</string>
+    <string name="recalibration_question" translatable="false">Biztosan el akarja kezdeni a kalibrálást?</string>
+    <string name="calibration_failed" translatable="false">Kalibrálás sikertelen.</string>
+    <string name="calibration_failed" translatable="false">Kalibrálás sikertelen.</string>
+    <string name="calibration_lost" translatable="false">Kalibrálás elveszett.</string>
+    <string name="motor_problem" translatable="false">Motorhiba / Váratlan leállás.</string>
+    <string name="motor_problem" translatable="false">Motorhiba / Váratlan leállás.</string>
+    <string name="lastconnectionresetcause_unknown" translatable="false">0: ismeretlen</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: szerver válasz hiánya</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: szerver válasz hiánya</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: WiFi kapcsolat elvesztése</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: WiFi kapcsolat elvesztése</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: szerver kapcsolat visszaállítása</string>
+    <string name="basic_profile_warning" translatable="false">Ez a mód elérhetetlen</string>
+    <string name="basic_profile_warning" translatable="false">Ez a mód elérhetetlen</string>
+    <string name="basic_config_unavailable" translatable="false">A haladó üzemmód kikapcsolódása előtt válassza az email hitelesítést automatikus szerver felderítéssel</string>
+    <string name="basic_config_unavailable" translatable="false">A haladó üzemmód kikapcsolódása előtt válassza az email hitelesítést automatikus szerver felderítéssel</string>
+    <string name="add_device_warning" translatable="false">Automatikus eszköz hozzáadása varázsló nem érhető el a hozzáférési azonosításával történő hitelesítési módban. Az eszközökkel kézi hozzáadása ilyenkor lehetséges.</string>
+    <string name="add_device_warning" translatable="false">Automatikus eszköz hozzáadása varázsló nem érhető el a hozzáférési azonosításával történő hitelesítési módban. Az eszközökkel kézi hozzáadása ilyenkor lehetséges.</string>
+    <string name="show_channel_info" translatable="false">Billentyű mutatásaⓘ</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Eszköz konfigurálás</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Eszköz konfigurálás</string>
+    <string name="add_device_needs_cloud_message" translatable="false">Ennek az eszköznek egyetlen csatornája sem látható az alkalmazásban. A konfiguráció befejezéséhez lépjen a cloud.supla.org oldalra</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Értem</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Tovább a CLOUD-ra</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Tovább a CLOUD-ra</string>
+    <string name="associeted_with_at_error" translatable="false">Nem módosíthatja az eseményindítóhoz társított csatorna funkciót.</string>
+    <string name="location_ordering" translatable="false">Helyszínek sorrendje</string>
+    <string name="rs_display_mode" translatable="false">Redőnyök%</string>
+    <string name="rs_display_mode_opening" translatable="false">Kinyitások</string>
+    <string name="rs_display_mode_closing" translatable="false">Bezárások</string>
+    <string name="status_accessid_inactive" translatable="false">"A hozzáférési azonosító inaktív "</string>
 </resources>
