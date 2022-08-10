@@ -365,4 +365,105 @@
     <string name="zwave_welcome_message" >Welkom bij de installatiewizard van de Z-wave brug. Hiermee kunt u uw Z-wave apparaten met Supla verbinden. Klik op \'volgende\' om door te gaan.</string>
     <string name="zwave_welcome_title" >Z-wave wizard</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet" translatable="false">Heeft u nog geen Supla Cloud account?</string>
+    <string name="dont_have_account_yet" translatable="false">Heeft u nog geen Supla Cloud account?</string>
+    <string name="profiles_title" translatable="false">Rekeningen</string>
+    <string name="profile_name_label" translatable="false">Naam rekening</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Actief account kan niet worden verwijderd</string>
+    <string name="profile_default_name" translatable="false">Standaard</string>
+    <string name="profile_select_active" translatable="false">Selecteer actieve rekening</string>
+    <string name="profile_act_info" translatable="false">Tik op uw account om in te loggen</string>
+    <string name="form_error" translatable="false">Fout</string>
+    <string name="form_profile_name_missing" translatable="false">Voer de naam van uw rekening in</string>
+    <string name="form_profile_required_data_missing" translatable="false">Vul de vereiste gegevens in</string>
+    <string name="form_profile_duplicate" translatable="false">Er is al een rekening met deze naam</string>
+    <string name="add_account" translatable="false">Rekening toevoegen</string>
+    <string name="edit_account" translatable="false">Rekening bewerken</string>
+    <string name="delete_account" translatable="false">Delete</string>
+    <string name="delete_account_confirm_title" translatable="false">Account verwijderen</string>
+    <string name="delete_account_confirm_message" translatable="false">Weet u zeker dat u uw rekening wilt verwijderen?</string>
+    <string name="delete_account_confirm_message_with_widgets">Weet u zeker dat u uw rekening wilt verwijderen? Bevestiging zal betekenen dat de bijbehorende widgets worden verwijderd.</string>
+    <string name="cfg_label_access_id_auth" translatable="false">Identifier</string>
+    <string name="cfg_channel_height" translatable="false">Kanaalhoogte</string>
+    <string name="cfg_temperature_unit" translatable="false">Temperatuur eenheid</string>
+    <string name="cfg_button_autohide" translatable="false">Automatisch verbergen van knoppen</string>
+    <string name="profile" translatable="false">Uw rekening</string>
+    <string name="profile_plural" translatable="false">Uw rekeningen</string>
+    <string name="menubar_appsettings" translatable="false">Voorkeuren</string>
+    <string name="rs_percent_caption_open" translatable="false">Openingspercentage</string>
+    <string name="em_chart_phase_n" translatable="false">Fase %d</string>
+    <string name="em_chart_all_phases" translatable="false">Fase 1+2+3</string>
+    <string name="widget_configure_title" translatable="false">Widget configuratie</string>
+    <string name="widget_configure_profile_label" translatable="false">Rekening</string>
+    <string name="widget_configure_channel_label" translatable="false">Kanaal voor de widget</string>
+    <string name="widget_configure_action_label" translatable="false">Actie</string>
+    <string name="widget_configure_name_label" translatable="false">Naam</string>
+    <string name="widget_configure_error" translatable="false">Kanaal configuratie mislukt...</string>
+    <string name="widget_configure_no_selection" translatable="false">Geen kanaal geselecteerd</string>
+    <string name="widget_configure_no_channel" translatable="false">Geen kanalen beschikbaar</string>
+    <string name="double_button_widget_description" translatable="false">"Widget met twee knoppen "</string>
+    <string name="double_button_widget_description" translatable="false">"Widget met twee knoppen "</string>
+    <string name="single_button_widget_description" translatable="false">"Widget met één knop "</string>
+    <string name="single_button_widget_description" translatable="false">"Widget met één knop "</string>
+    <string name="widget_app_not_initialized" translatable="false">Log alsjeblieft in!</string>
+    <string name="widget_command_error" translatable="false">Communicatie fout!</string>
+    <string name="widget_command_error" translatable="false">Communicatie fout!</string>
+    <string name="widget_command_no_connection" translatable="false">Geen internetverbinding!</string>
+    <string name="widget_command_started" translatable="false">Uitgevoerd</string>
+    <string name="widget_removed_label" translatable="false">Kanaal verwijderd</string>
+    <string name="widget_removed_label" translatable="false">Kanaal verwijderd</string>
+    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Dakraam openingssensor</string>
+    <string name="channel_caption_roofwindow" translatable="false">Dakraam</string>
+    <string name="channel_func_controllingtheroofwindow" translatable="false">Openen en sluiten van het dakvenster</string>
+    <string name="channel_func_opensensor_roofwindow" translatable="false">Dakraam openingssensor</string>
+    <string name="event_openedclosedtheroofwindow" translatable="false">het dakvenster werd geopend/gesloten door</string>
+    <string name="status_led" translatable="false">Status-LED</string>
+    <string name="status_led" translatable="false">Status-LED</string>
+    <string name="info_led_on" translatable="false">De LED licht op als een verbinding met de server tot stand is gebracht.</string>
+    <string name="info_led_off" translatable="false">De LED licht niet op als er een verbinding met de server tot stand is gebracht.</string>
+    <string name="info_led_alwaysoff" translatable="false">Licht altijd uit, tenzij het apparaat zich in wifi-configuratiemodus (AP-modus) bevindt.</string>
+    <string name="input" translatable="false">Ingang</string>
+    <string name="monostable" translatable="false">Mono-stabiel</string>
+    <string name="bistable" translatable="false">Bi-stabiel</string>
+    <string name="wizard_iodev_connect_failed" translatable="false">Een poging om een WiFi verbinding met de uitvoerende te maken is mislukt.</string>
+    <string name="diw_cfg_info_oprange" translatable="false">Stel het werkingsbereik van de dimmer in door een minimum- en maximumhelderheidsniveau in te stellen. De minimum- en maximumwaarde kunnen worden ingesteld door de schuifregelaars aan weerszijden van het wiel te verplaatsen.</string>
+    <string name="diw_cfg_info_in_options" translatable="false">Ingangsopties</string>
+    <string name="diw_cfg_info_mono_option" translatable="false">Deze optie wijzigt het gedrag van de ingang waarop de mono-stabiele knop is aangesloten. Als de optie uit staat, stopt de dimmer met lichter worden als het maximum helderheidsniveau is bereikt, en met dimmen als het minimum helderheidsniveau is bereikt. Als de optie is ingeschakeld, schakelt de dimmer naar het minimumniveau zodra het maximale helderheidsniveau is bereikt en, in het geval van dimmen, naar de maximale waarde zodra het minumum is bereikt. Het oplichten/afvlakken gaat door zolang de toets wordt ingedrukt.</string>
+    <string name="diw_cfg_info_bi_option" translatable="false">"Deze optie wijzigt het gedrag van de dimmer wanneer de verlichting wordt ingeschakeld met de bi-stabiele knop. Als de optie is ingeschakeld, zal de dimmer het maximale helderheidsniveau instellen zodra de verlichting wordt ingeschakeld. Als de optie uit staat, stelt de dimmer het helderheidsniveau in dat is opgeslagen voordat de verlichting werd uitgeschakeld. "</string>
+    <string name="dgf_too_long_operation_warning" translatable="false">Beglazingssecties worden meer dan 20 uur blootgesteld, wat hun levensduur nadelig kan beïnvloeden. Aanbevolen wordt alle secties minimaal 4 uur af te dekken om ze te laten regenereren.</string>
+    <string name="dgf_planned_regeneration_in_progress" translatable="false">Geplande regeneratie is aan de gang.</string>
+    <string name="dgf_regeneration_after20h" translatable="false">De regeneratie die na 20h in werking is gesteld, is aan de gang.</string>
+    <string name="wizard_done_explentations" translatable="false">Als het toestel niet in de toepassing verschijnt, herhaalt u deze toevoegingsprocedure nogmaals en leest u de hierboven getoonde \"Vorige status\". Dit bevat informatie om te bepalen waarom het toestel geen verbinding maakte met de server. De melding \"SSID niet gevonden\" betekent dat de ingevoerde 2,4 GHz WiFi-netwerknaam niet is gevonden of dat het netwerk buiten bereik is.</string>
+    <string name="incorrect_email_or_password" translatable="false">Onjuist e-mailadres of wachtwoord</string>
+    <string name="channel_name" translatable="false">Naam kanaal</string>
+    <string name="location_name" translatable="false">Naam van de plaats</string>
+    <string name="overcurrent_warning" translatable="false">De stroomvoorziening werd uitgeschakeld toen de ingestelde stroomlimiet werd overschreden.</string>
+    <string name="overcurrent_question" translatable="false">De stroomvoorziening werd uitgeschakeld toen de ingestelde stroomlimiet werd overschreden. Weet je zeker dat je de stroom aan wilt zetten ?</string>
+    <string name="recalibration_question" translatable="false">Weet je zeker dat je met het ijken wilt beginnen?</string>
+    <string name="calibration_failed" translatable="false">De ijking is mislukt.</string>
+    <string name="calibration_lost" translatable="false">De ijking is verloren gegaan.</string>
+    <string name="motor_problem" translatable="false">Motorprobleem / Onverwachte stilstand.</string>
+    <string name="lastconnectionresetcause_unknown" translatable="false">0: onbekend</string>
+    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: geen antwoord van de server</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: verlies van WiFi verbinding</string>
+    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: Reset de verbinding met de server</string>
+    <string name="basic_profile_warning" translatable="false">Modus niet beschikbaar</string>
+    <string name="basic_config_unavailable" translatable="false">Voordat u de geavanceerde modus uitschakelt, selecteert u e-mailauthenticatie met automatische serverdetectie.</string>
+    <string name="add_device_warning" translatable="false">De wizard voor het automatisch toevoegen van apparaten is niet beschikbaar in de Access ID-authenticatiemodus. In dit geval kunnen de toestellen handmatig worden toegevoegd.</string>
+    <string name="show_channel_info" translatable="false">Toon knop ⓘ</string>
+    <string name="add_device_needs_cloud_title" translatable="false">Configuratie apparaat</string>
+    <string name="add_device_needs_cloud_message" translatable="false">Dit apparaat heeft geen kanalen die zichtbaar zijn in de applicatie. Om de configuratie te voltooien, ga naar cloud.supla.org</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Ik begrijp het.</string>
+    <string name="add_device_needs_cloud_dismiss" translatable="false">Ik begrijp het.</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Ga naar CLOUD</string>
+    <string name="add_device_needs_cloud_go" translatable="false">Ga naar CLOUD</string>
+    <string name="associeted_with_at_error" translatable="false">De functie van het kanaal dat met de actietrigger is geassocieerd, kan niet worden gewijzigd.</string>
+    <string name="associeted_with_at_error" translatable="false">De functie van het kanaal dat met de actietrigger is geassocieerd, kan niet worden gewijzigd.</string>
+    <string name="location_ordering" translatable="false">Volgorde van plaats</string>
+    <string name="location_ordering" translatable="false">Volgorde van plaats</string>
+    <string name="rs_display_mode" translatable="false">Jaloezieën %</string>
+    <string name="rs_display_mode_opening" translatable="false">Openingen</string>
+    <string name="rs_display_mode_closing" translatable="false">Sluitingen</string>
+    <string name="status_accessid_inactive" translatable="false">Toegangs ID inactief</string>
+    <string name="status_accessid_inactive" translatable="false">Toegangs ID inactief</string>
 </resources>
