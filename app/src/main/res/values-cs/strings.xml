@@ -346,8 +346,6 @@
     <string name="zwave_welcome_title">Průvodce konfigurace z-wave</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet" translatable="false">Nemáte ještě účet Supla Cloud?</string>
-    <string name="dont_have_account_yet" translatable="false">Nemáte ještě účet Supla Cloud?</string>
-    <string name="profiles_title" translatable="false">Účty</string>
     <string name="profiles_title" translatable="false">Účty</string>
     <string name="profile_name_label" translatable="false">NÁZEV ÚČTU</string>
     <string name="form_cannot_delete_active_profile" translatable="false">Nelze odstranit aktivní účet</string>
@@ -360,7 +358,6 @@
     <string name="form_profile_duplicate" translatable="false">Účet s tímto názvem již existuje</string>
     <string name="add_account" translatable="false">Přidat účet</string>
     <string name="edit_account" translatable="false">Upravit účet</string>
-    <string name="edit_account" translatable="false">Upravit účet</string>
     <string name="delete_account" translatable="false">Odstranit</string>
     <string name="delete_account_confirm_title" translatable="false">Odstranit účet</string>
     <string name="delete_account_confirm_message" translatable="false">Opravdu chcete svůj účet odstranit?</string>
@@ -371,15 +368,11 @@
     <string name="cfg_button_autohide" translatable="false">Automatické skrývání tlačítek</string>
     <string name="profile" translatable="false">Váš účet</string>
     <string name="profile_plural" translatable="false">Vaše účty</string>
-    <string name="profile_plural" translatable="false">Vaše účty</string>
-    <string name="menubar_appsettings" translatable="false">Nastavení</string>
     <string name="menubar_appsettings" translatable="false">Nastavení</string>
     <string name="rs_percent_caption_open" translatable="false">Procento otevření</string>
     <string name="em_chart_phase_n" translatable="false">Fáze %d</string>
     <string name="em_chart_all_phases" translatable="false">Fáze 1+2+3</string>
-    <string name="em_chart_all_phases" translatable="false">Fáze 1+2+3</string>
     <string name="widget_configure_title" translatable="false">Nastavení widgetu</string>
-    <string name="widget_configure_profile_label" translatable="false">Účet</string>
     <string name="widget_configure_profile_label" translatable="false">Účet</string>
     <string name="widget_configure_channel_label" translatable="false">Kanál pro widget</string>
     <string name="widget_configure_action_label" translatable="false">Akce</string>
@@ -388,72 +381,49 @@
     <string name="widget_configure_no_selection" translatable="false">Není vybrán žádný kanál</string>
     <string name="widget_configure_no_channel" translatable="false">Nejsou k dispozici žádné kanály</string>
     <string name="double_button_widget_description" translatable="false">"Widget se dvěma tlačítky "</string>
-    <string name="double_button_widget_description" translatable="false">"Widget se dvěma tlačítky "</string>
     <string name="single_button_widget_description" translatable="false">"Widget s jedním tlačítkem "</string>
     <string name="widget_app_not_initialized" translatable="false">Přihlaste se!</string>
-    <string name="widget_app_not_initialized" translatable="false">Přihlaste se!</string>
-    <string name="widget_command_error" translatable="false">Chyba komunikace!</string>
     <string name="widget_command_error" translatable="false">Chyba komunikace!</string>
     <string name="widget_command_no_connection" translatable="false">Žádné připojení k internetu!</string>
     <string name="widget_command_started" translatable="false">Hotovo</string>
     <string name="widget_removed_label" translatable="false">Kanál byl odstraněn</string>
-    <string name="widget_removed_label" translatable="false">Kanál byl odstraněn</string>
     <string name="channel_caption_roofwindowopeningsensor" translatable="false">Senzor otevření střešního okna</string>
     <string name="channel_caption_roofwindow" translatable="false">Střešní okno</string>
     <string name="channel_func_controllingtheroofwindow" translatable="false">Otevírání a zavírání střešního okna</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Otevírání a zavírání střešního okna</string>
-    <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor otevření střešního okna</string>
     <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor otevření střešního okna</string>
     <string name="event_openedclosedtheroofwindow" translatable="false">otevření / zavření střešní okno</string>
     <string name="status_led" translatable="false">Stavová kontrolka</string>
     <string name="info_led_on" translatable="false">Pokud bylo navázáno spojení se serverem, kontrolka LED svítí.</string>
-    <string name="info_led_on" translatable="false">Pokud bylo navázáno spojení se serverem, kontrolka LED svítí.</string>
-    <string name="info_led_off" translatable="false">Pokud bylo navázáno spojení se serverem, kontrolka LED nesvítí.</string>
     <string name="info_led_off" translatable="false">Pokud bylo navázáno spojení se serverem, kontrolka LED nesvítí.</string>
     <string name="info_led_alwaysoff" translatable="false">LED dioda je vždy vypnutá, pokud zařízení není v režimu nastavení wifi (režim AP).</string>
     <string name="input" translatable="false">Vstup</string>
     <string name="monostable" translatable="false">Monostabilní</string>
-    <string name="monostable" translatable="false">Monostabilní</string>
     <string name="bistable" translatable="false">Bistabilní</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">Pokus o navázání připojení WiFi se zařízením provádějícím činnosti se nezdařil.</string>
     <string name="wizard_iodev_connect_failed" translatable="false">Pokus o navázání připojení WiFi se zařízením provádějícím činnosti se nezdařil.</string>
     <string name="diw_cfg_info_oprange" translatable="false">Vybráním minimální nebo maximální úrovně jasu, můžete upravit provozní rozsah stmívače. Minimální a maximální hodnotu můžete nastavit přesouváním posuvníku umístěného na obou stranách kolečka.</string>
     <string name="diw_cfg_info_in_options" translatable="false">Možnosti vstupu</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Možnosti vstupu</string>
     <string name="diw_cfg_info_mono_option" translatable="false">Tato volba mění chování vstupu, ke kterému je připojeno monostabilní tlačítko. Pokud je tato možnost vypnutá, stmívač přestane zesvětlovat, když dosáhne maximální úrovně jasu, a stmívat, když dosáhne minimální úrovně. Pokud je tato možnost zapnutá, přepne se stmívač na minimální úroveň, jakmile je dosaženo maximální úrovně jasu, a v případě stmívání na maximální hodnotu a to hned po dosažení minima. Rozjasňování/stmívání bude pokračovat, dokud bude tlačítko stisknuté.</string>
-    <string name="diw_cfg_info_mono_option" translatable="false">Tato volba mění chování vstupu, ke kterému je připojeno monostabilní tlačítko. Pokud je tato možnost vypnutá, stmívač přestane zesvětlovat, když dosáhne maximální úrovně jasu, a stmívat, když dosáhne minimální úrovně. Pokud je tato možnost zapnutá, přepne se stmívač na minimální úroveň, jakmile je dosaženo maximální úrovně jasu, a v případě stmívání na maximální hodnotu a to hned po dosažení minima. Rozjasňování/stmívání bude pokračovat, dokud bude tlačítko stisknuté.</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">"Tato možnost mění chování stmívače při zapnutí osvětlení pomocí bistabilního tlačítka. Pokud je tato možnost zapnutá, stmívač nastaví maximální úroveň jasu a to hned po zapnutí osvětlení. Pokud je tato možnost zapnutá, stmívač nastaví zapamatovanou úroveň jasu před vypnutím osvětlení. "</string>
     <string name="diw_cfg_info_bi_option" translatable="false">"Tato možnost mění chování stmívače při zapnutí osvětlení pomocí bistabilního tlačítka. Pokud je tato možnost zapnutá, stmívač nastaví maximální úroveň jasu a to hned po zapnutí osvětlení. Pokud je tato možnost zapnutá, stmívač nastaví zapamatovanou úroveň jasu před vypnutím osvětlení. "</string>
     <string name="dgf_too_long_operation_warning" translatable="false">Části skla jsou vystaveny světlu déle než 20 hodin, což může ovlivnit jejich životnost. Pro jejich obnovu se doporučuje zakrýt všechny části na minimálně 4 hodiny.</string>
     <string name="dgf_planned_regeneration_in_progress" translatable="false">Probíhá plánovaná obnova.</string>
     <string name="dgf_regeneration_after20h" translatable="false">Obnova byla zahájena po 20h provozní činnosti.</string>
     <string name="wizard_done_explentations" translatable="false">Pokud se zařízení v aplikaci nezobrazí, zopakujte tento postup přidání znovu a přečtěte si výše uvedený \"Předchozí stav\". Obsahuje informace, díky nímž lze zjistit, proč se zařízení nepřipojilo k serveru. Zpráva  \"SSID not found“ znamená, že zadaný název sítě WiFi 2,4 GHz nebyl nalezen nebo je síť mimo dosah.</string>
-    <string name="wizard_done_explentations" translatable="false">Pokud se zařízení v aplikaci nezobrazí, zopakujte tento postup přidání znovu a přečtěte si výše uvedený \"Předchozí stav\". Obsahuje informace, díky nímž lze zjistit, proč se zařízení nepřipojilo k serveru. Zpráva  \"SSID not found“ znamená, že zadaný název sítě WiFi 2,4 GHz nebyl nalezen nebo je síť mimo dosah.</string>
     <string name="incorrect_email_or_password" translatable="false">Nesprávná e-mailová adresa nebo heslo</string>
     <string name="channel_name" translatable="false">Název kanálu</string>
-    <string name="channel_name" translatable="false">Název kanálu</string>
-    <string name="location_name" translatable="false">Název umístění</string>
     <string name="location_name" translatable="false">Název umístění</string>
     <string name="overcurrent_warning" translatable="false">Při překročení nastaveného proudového limitu došlo k vypnutí napájení.</string>
     <string name="overcurrent_question" translatable="false">Při překročení nastaveného proudového limitu došlo k vypnutí napájení. Jste si jisti, že chcete zapnout napájení?</string>
     <string name="recalibration_question" translatable="false">Určitě chcete začít s kalibrací?</string>
     <string name="calibration_failed" translatable="false">Kalibrace se nezdařila.</string>
-    <string name="calibration_failed" translatable="false">Kalibrace se nezdařila.</string>
     <string name="calibration_lost" translatable="false">Kalibrace byla zrušena.</string>
     <string name="motor_problem" translatable="false">Problém s motorem / Neočekávané zastavení.</string>
-    <string name="motor_problem" translatable="false">Problém s motorem / Neočekávané zastavení.</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: neznámý</string>
     <string name="lastconnectionresetcause_unknown" translatable="false">0: neznámý</string>
     <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: žádná odpověď serveru</string>
     <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">"2: ztráta WiFi připojení "</string>
     <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: restart připojení k serveru</string>
-    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: restart připojení k serveru</string>
     <string name="basic_profile_warning" translatable="false">Režim není k dispozici</string>
-    <string name="basic_profile_warning" translatable="false">Režim není k dispozici</string>
-    <string name="basic_config_unavailable" translatable="false">Před vypnutím rozšířeného režimu vyberte možnost ověřování e-mailu s automatickou detekcí serveru.</string>
     <string name="basic_config_unavailable" translatable="false">Před vypnutím rozšířeného režimu vyberte možnost ověřování e-mailu s automatickou detekcí serveru.</string>
     <string name="add_device_warning" translatable="false">Průvodce automatickým přidáním zařízení není k dispozici v režimu ověřování identifikátoru přístupu. Zařízení mohou pak být přidávány ručně.</string>
-    <string name="show_channel_info" translatable="false">Zobrazovat tlačítko ⓘ</string>
     <string name="show_channel_info" translatable="false">Zobrazovat tlačítko ⓘ</string>
     <string name="add_device_needs_cloud_title" translatable="false">Nastavení zařízení</string>
     <string name="add_device_needs_cloud_message" translatable="false">Toto zařízení nezobrazuje žádné kanály. Pro dokončení konfigurace přejděte na cloud.supla.org</string>
@@ -463,7 +433,6 @@
     <string name="location_ordering" translatable="false">Pořadí dle umístění</string>
     <string name="rs_display_mode" translatable="false">Rolety %</string>
     <string name="rs_display_mode_opening" translatable="false">Otevření</string>
-    <string name="rs_display_mode_closing" translatable="false">Zavření</string>
     <string name="rs_display_mode_closing" translatable="false">Zavření</string>
     <string name="status_accessid_inactive" translatable="false">Identifikátor přístupu není aktivní</string>
 </resources>
