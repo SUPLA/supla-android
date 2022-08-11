@@ -21,6 +21,7 @@
 
       <org.supla.android.listview.ChannelListView
           android:id="@+id/channelsListView"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
           android:layout_width="match_parent"
           android:layout_height="match_parent" />
 
@@ -28,12 +29,14 @@
           android:id="@+id/channelGroupListView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
           android:visibility="gone" />
 
       <androidx.fragment.app.FragmentContainerView
           android:id="@+id/scenesView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:paddingBottom="@dimen/design_bottom_navigation_height"
           android:visibility="gone">
         <fragment
             android:name="org.supla.android.scenes.ScenesFragment"
