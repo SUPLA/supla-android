@@ -366,9 +366,7 @@
     <string name="zwave_welcome_title" >Assistente z-wave</string>
    <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet" translatable="false">Ainda não tem uma conta Supla Cloud?</string>
-    <string name="dont_have_account_yet" translatable="false">Ainda não tem uma conta Supla Cloud?</string>
    <string name="profiles_title" translatable="false">Conta</string>
-   <string name="profile_name_label" translatable="false">NOME DA CONTA</string>
    <string name="profile_name_label" translatable="false">NOME DA CONTA</string>
    <string name="form_cannot_delete_active_profile" translatable="false">Incapaz de apagar uma conta ativa</string>
    <string name="profile_default_name" translatable="false">Predefinição</string>
@@ -439,31 +437,22 @@
    <string name="lastconnectionresetcause_unknown" translatable="false">0: desconhecido</string>
    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: sem resposta do servidor</string>
    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: perda da ligação WiFi</string>
-   <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: perda da ligação WiFi</string>
    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: Reiniciar a ligação ao servidor</string>
    <string name="basic_profile_warning" translatable="false">"Modo não disponível "</string>
-   <string name="basic_config_unavailable" translatable="false">"Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor. "</string>
    <string name="basic_config_unavailable" translatable="false">"Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor. "</string>
    <string name="add_device_warning" translatable="false">O Assistente de Adicionar dispositivo automático não está disponível no modo de autenticação do Access ID. Os dispositivos podem então ser adicionados manualmente.</string>
    <string name="show_channel_info" translatable="false">"Mostrar Botõesⓘ "</string>
    <string name="add_device_needs_cloud_title" translatable="false">Configuração do dispositivo</string>
    <string name="add_device_needs_cloud_message" translatable="false">Este dispositivo não tem quaisquer canais visíveis na aplicação. Para completar a configuração, vá a cloud.supla.org</string>
-   <string name="add_device_needs_cloud_message" translatable="false">Este dispositivo não tem quaisquer canais visíveis na aplicação. Para completar a configuração, vá a cloud.supla.org</string>
-   <string name="add_device_needs_cloud_dismiss" translatable="false">Compreendo</string>
    <string name="add_device_needs_cloud_dismiss" translatable="false">Compreendo</string>
    <string name="add_device_needs_cloud_go" translatable="false">Ir para a CLOUD</string>
    <string name="associeted_with_at_error" translatable="false">"Não é possível alterar a função do canal associado ao gatilho de ação. "</string>
-   <string name="associeted_with_at_error" translatable="false">"Não é possível alterar a função do canal associado ao gatilho de ação. "</string>
-   <string name="location_ordering" translatable="false">Ordem de localização</string>
    <string name="location_ordering" translatable="false">Ordem de localização</string>
    <string name="rs_display_mode_opening" translatable="false">Aberto</string>
-   <string name="rs_display_mode_closing" translatable="false">Encerramentos</string>
    <string name="rs_display_mode_closing" translatable="false">Encerramentos</string>
    <string name="status_accessid_inactive" translatable="false">"Acesso ID inativo "</string>
     <string name="wizard_done_explentations" translatable="false">"Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede WiFi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance. "</string>
     <string name="delete_account_confirm_title" translatable="false">Apagar Conta</string>
-    <string name="delete_account_confirm_title" translatable="false">Apagar Conta</string>
     <string name="em_chart_phase_n" translatable="false">Fase %d</string>
     <string name="rs_display_mode" translatable="false">Persianas %</string>
-    <string name="rs_display_mode" translatable="false">"Persianas "</string>
 </resources>
