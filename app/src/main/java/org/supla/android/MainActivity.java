@@ -85,6 +85,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     private TextView notif_text;
     private ChannelStatePopup channelStatePopup;
     private BottomNavigationView bottomNavigation;
+    private View bottomBar;
 
     // Used in reordering. The initial position of taken item is saved here.
     private Integer dragInitialPosition;
@@ -102,6 +103,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
 
         bottomNavigation = (BottomNavigationView)findViewById(R.id.bottomnavbar);
         bottomNavigation.setOnItemSelectedListener(this);
+        bottomBar = findViewById(R.id.bottombar);
         android.view.ViewGroup menuView = (android.view.ViewGroup)bottomNavigation.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
             ((BottomNavigationItemView)menuView.getChildAt(i)).setChecked(i != 0);
@@ -655,11 +657,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         setMenubarDetailTitle(channel.getNotEmptyCaption(this));
         showBackButton();
         dismissProfileSelector();
+        bottomBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onChannelDetailHide() {
         showMenuButton();
+        bottomBar.setVisibility(View.VISIBLE);
     }
 
     public void onSectionClick(ChannelListView clv, String caption, int locationId) {
