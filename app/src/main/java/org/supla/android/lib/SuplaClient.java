@@ -986,7 +986,7 @@ public class SuplaClient extends Thread {
     private void sceneStateUpdate(SuplaSceneState state) {
         Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
                 + " startedAt: " + state.getStartedAt()
-                + " estamitedEndDate: " + state.getEstamitedEndDate()
+                + " estimatedEndDate: " + state.getEstimatedEndDate()
                 + " isDuringExecution: " + state.isDuringExecution()
                 + " initiatorId: " + state.getInitiatorId()
                 + " initiatorName: " + state.getInitiatorName()
