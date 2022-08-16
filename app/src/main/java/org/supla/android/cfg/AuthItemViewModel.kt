@@ -137,6 +137,7 @@ class AuthItemViewModel @Inject constructor(
         }
         isAdvancedMode.observeForever(_advancedObserver)
 
+        isActive.value = item.isActive
     }
 
     override fun onCleared() {
