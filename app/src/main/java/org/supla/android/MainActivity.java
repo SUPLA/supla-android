@@ -107,7 +107,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         android.view.ViewGroup menuView = (android.view.ViewGroup)bottomNavigation.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
             ((BottomNavigationItemView)menuView.getChildAt(i)).setChecked(i != 0);
-        }//        bottomNavigation.setBackground(null);
+        }
 
         NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
         NotificationView.setVisibility(View.GONE);

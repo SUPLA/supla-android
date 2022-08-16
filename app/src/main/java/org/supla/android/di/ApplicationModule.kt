@@ -15,6 +15,7 @@ import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.lib.SuplaClientMessageHandler
 import javax.inject.Singleton
 
 @Module
@@ -56,4 +57,9 @@ class ApplicationModule {
     @Singleton
     fun provideAppWidgetManager(@ApplicationContext context: Context) =
             AppWidgetManager.getInstance(context)
+
+    @Provides
+    @Singleton
+    fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
+        SuplaClientMessageHandler.getGlobalInstance()
 }

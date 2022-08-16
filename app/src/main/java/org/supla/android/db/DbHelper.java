@@ -33,11 +33,14 @@ import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
+import org.supla.android.data.source.DefaultSceneRepository;
 import org.supla.android.data.source.UserIconRepository;
+import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.di.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
@@ -59,7 +62,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 24;
+    public static final int DATABASE_VERSION = 25;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -68,6 +71,7 @@ public class DbHelper extends BaseDbHelper {
     private final ChannelRepository channelRepository;
     private final ColorListRepository colorListRepository;
     private final UserIconRepository userIconRepository;
+    private final SceneRepository sceneRepository;
 
     private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
@@ -78,6 +82,8 @@ public class DbHelper extends BaseDbHelper {
                 new ColorListDao(this));
         this.userIconRepository = new DefaultUserIconRepository(
                 new UserIconDao(this), new ImageCacheProvider());
+        this.sceneRepository = new DefaultSceneRepository(
+                new SceneDao(this));
     }
 
 
@@ -103,6 +109,10 @@ public class DbHelper extends BaseDbHelper {
         return result;
     }
 
+    public SceneRepository getSceneRepository() {
+        return sceneRepository;
+    }
+
     @Override
     protected String getDatabaseNameForLog() {
         return DATABASE_NAME;
@@ -123,6 +133,33 @@ public class DbHelper extends BaseDbHelper {
         execSQL(db, SQL_CREATE_LOCATION_TABLE);
         createIndex(db, SuplaContract.LocationEntry.TABLE_NAME,
                 SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID);
+    }
+
+    private void createSceneTable(SQLiteDatabase db) {
+        final String SQL_CREATE_SCENE_TABLE = "CREATE TABLE "
+            + SuplaContract.SceneEntry.TABLE_NAME + " (" +
+            SuplaContract.SceneEntry._ID + " INTEGER PRIMARY KEY, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_SCENEID + " INTEGER NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID + " INTEGER NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_ALTICON + " INTEGER NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " INTEGER NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " TEXT NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT + " TEXT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE + " TEXT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID + " INTEGER NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME + " TEXT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + " INTEGER NOT NULL, " +
+            SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " TEXT NULL)";
+
+        execSQL(db, SQL_CREATE_SCENE_TABLE);
+        createIndex(db, SuplaContract.SceneEntry.TABLE_NAME,
+                    SuplaContract.SceneEntry.COLUMN_NAME_SCENEID);
+        createIndex(db, SuplaContract.SceneEntry.TABLE_NAME,
+                    SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID);
+        createIndex(db, SuplaContract.SceneEntry.TABLE_NAME,
+                    SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID);
+        
+
     }
 
     private void createChannelTable(SQLiteDatabase db) {
@@ -399,6 +436,7 @@ public class DbHelper extends BaseDbHelper {
         upgradeToV22(db);
         upgradeToV23(db);
         upgradeToV24(db);
+        upgradeToV25(db);
 
         // Create views at the end
         createChannelView(db);
@@ -632,6 +670,10 @@ public class DbHelper extends BaseDbHelper {
                 + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")");
     }
 
+    private void upgradeToV25(SQLiteDatabase db) {
+        createSceneTable(db);
+    }
+
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -703,6 +745,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 23:
                         upgradeToV24(db);
+                        break;
+                    case 24:
+                        upgradeToV25(db);
                         break;
                 }
             }

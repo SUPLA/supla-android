@@ -188,13 +188,6 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             MenuButton.setVisibility(View.GONE);
             MenuButton.setOnClickListener(this);
 
-            /*
-            GroupButton = findViewById(R.id.groupbutton);
-            GroupButton.setVisibility(View.GONE);
-            GroupButton.setOnClickListener(this);
-            GroupButton.setTag(0);
-            */
-
             ProfileButton = findViewById(R.id.profilebutton);
             ProfileButton.setVisibility(View.GONE);
             ProfileButton.setOnClickListener(this);

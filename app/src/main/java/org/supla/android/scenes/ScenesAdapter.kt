@@ -22,12 +22,34 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import org.supla.android.db.Scene
 import org.supla.android.databinding.SceneListItemBinding
+import org.supla.android.Trace
 import org.supla.android.R
 
-class ScenesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScenesAdapter(private val scenesVM: ScenesViewModel): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
+
+    private var scenes: List<Scene> = emptyList()
+
+    init {
+    }
+
+    override fun onAttachedToRecyclerView(v: RecyclerView) {
+        super.onAttachedToRecyclerView(v)
+        val ctx = v.context
+        Trace.d("SUPLA", "before check $ctx")
+        if(ctx is LifecycleOwner) {
+            Trace.d("SUPLA", "observing scenes")
+            scenesVM.scenes.observe(ctx) {
+                Trace.d("SUPLA", "scenes updated")
+                setScenes(it)
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -45,11 +67,17 @@ class ScenesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return 1
+        return scenes.map { it.locationId }.distinct().count() +
+            scenes.count()
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    private fun setScenes(scenes: List<Scene>) {
+        this.scenes = scenes
+        notifyDataSetChanged()
     }
 
     inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :

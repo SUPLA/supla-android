@@ -51,6 +51,7 @@ public class SuplaClientMsg {
     public final static int onZWaveWakeUpSettingsReport = 28;
     public final static int onZWaveSetWakeUpTimeResult = 29;
     public final static int onLocationCaptionSetResult = 30;
+    public final static int onSceneStateChanged = 31;
     private Object Sender;
     private int Type;
     private SuplaVersionError VersionError;
@@ -65,6 +66,7 @@ public class SuplaClientMsg {
     private int ChannelId;
     private int ChannelGroupId;
     private int LocationId;
+    private int SceneId;
     private boolean Success;
     private int Code;
     private int Command;
@@ -83,6 +85,7 @@ public class SuplaClientMsg {
         Sender = sender;
         ChannelId = 0;
         ChannelGroupId = 0;
+        SceneId = 0;
     }
 
     public Object getSender() {
@@ -147,6 +150,14 @@ public class SuplaClientMsg {
 
     public void setChannelGroupId(int channelGroupId) {
         ChannelGroupId = channelGroupId;
+    }
+
+    public void setSceneId(int sceneId) {
+        SceneId = sceneId;
+    }
+
+    public int getSceneId() {
+        return SceneId;
     }
 
     public SuplaRegistrationEnabled getRegistrationEnabled() {

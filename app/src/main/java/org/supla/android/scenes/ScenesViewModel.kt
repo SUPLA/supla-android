@@ -19,18 +19,45 @@ package org.supla.android.scenes
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
+import org.supla.android.db.Scene
+import org.supla.android.db.DbHelper
+import org.supla.android.lib.SuplaClientMessageHandler
+import org.supla.android.lib.SuplaClientMsg
 
 @HiltViewModel
 class ScenesViewModel @Inject constructor(
-    private val profileManager: ProfileManager
-): ViewModel() {
+    private val messageHandler: SuplaClientMessageHandler,
+    private val dbHelper: DbHelper
+): ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
-    val scenesAdapter = ScenesAdapter()
+    private var _scenes = MutableLiveData<List<Scene>>(emptyList())
+    private val _sceneRepo = dbHelper.sceneRepository
+    val scenes: LiveData<List<Scene>> = _scenes
+
+    val scenesAdapter = ScenesAdapter(this)
+
+    init {
+        messageHandler.registerMessageListener(this)
+    }
+
+    override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
+        if(msg.type == SuplaClientMsg.onSceneStateChanged) {
+            android.util.Log.i("SUPLA", "scene state changed")
+        }
+    }
 
     fun reload() {
         android.util.Log.i("SUPLA", "scenes reload")
+        _scenes.value = _sceneRepo.getAllProfileScenes()
     }
+
+    override protected fun onCleared() {
+        messageHandler.unregisterMessageListener(this)
+    }
+
 }

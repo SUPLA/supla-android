@@ -38,6 +38,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.data.source.SceneRepository;
 import org.supla.android.widget.WidgetVisibilityHandler;
 
 import java.io.BufferedReader;
@@ -975,22 +976,32 @@ public class SuplaClient extends Thread {
     }
 
     private void sceneUpdate(SuplaScene scene) {
-        Trace.d(log_tag, "Scene id:" + scene.getId()
-                + " locationId: " + scene.getLocationId()
-                + " altIcon:" + scene.getAltIcon()
-                + " userIcon:" + scene.getUserIcon()
-                + " caption: " + scene.getCaption()
-                + " EOL: " + scene.isEol());
+        SceneRepository sr = DbH.getSceneRepository();
+        if(sr.updateSuplaScene(scene)) {
+            Trace.d(log_tag, "Scene id:" + scene.getId()
+                    + " locationId: " + scene.getLocationId()
+                    + " altIcon:" + scene.getAltIcon()
+                    + " userIcon:" + scene.getUserIcon()
+                    + " caption: " + scene.getCaption()
+                    + " EOL: " + scene.isEol());
+        }
+        // TODO: consider message broadcast after EOL.
     }
 
     private void sceneStateUpdate(SuplaSceneState state) {
-        Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
-                + " startedAt: " + state.getStartedAt()
-                + " estimatedEndDate: " + state.getEstimatedEndDate()
-                + " isDuringExecution: " + state.isDuringExecution()
-                + " initiatorId: " + state.getInitiatorId()
-                + " initiatorName: " + state.getInitiatorName()
-                + " EOL: " + state.isEol());
+        SceneRepository sr = DbH.getSceneRepository();
+        if(sr.updateSuplaSceneState(state)) {
+            Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
+                    + " startedAt: " + state.getStartedAt()
+                    + " estimatedEndDate: " + state.getEstimatedEndDate()
+                    + " isDuringExecution: " + state.isDuringExecution()
+                    + " initiatorId: " + state.getInitiatorId()
+                    + " initiatorName: " + state.getInitiatorName()
+                    + " EOL: " + state.isEol());
+            SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneStateChanged);
+            msg.setSceneId(state.getSceneId());
+            sendMessage(msg);
+        }        
     }
 
     private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
