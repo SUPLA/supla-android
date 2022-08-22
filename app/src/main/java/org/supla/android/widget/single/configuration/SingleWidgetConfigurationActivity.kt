@@ -45,8 +45,9 @@ class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupChannelsSpinner()
         setupProfilesSpinner()
+        setupTypeSelection()
+        setupItemsSpinner()
         setupActionsSpinner()
         setContentView(binding.root)
 
@@ -54,7 +55,13 @@ class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activi
         observeCancellation()
     }
 
-    private fun setupChannelsSpinner() {
+    private fun setupTypeSelection() {
+        binding.widgetSingleCommon.widgetSingleConfigureType.setOnPositionChangedListener {
+            viewModel.changeType(ItemType.values()[it])
+        }
+    }
+
+    private fun setupItemsSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
         binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
         binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =

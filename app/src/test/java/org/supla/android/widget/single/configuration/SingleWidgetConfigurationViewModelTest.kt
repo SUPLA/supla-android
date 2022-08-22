@@ -19,34 +19,44 @@ package org.supla.android.widget.single.configuration
 
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
+import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBase() {
     @get:Rule
     val testInstantTaskExecutorRule: TestRule = InstantTaskExecutorRule()
+
+    private val testDispatcher = StandardTestDispatcher()
+
+    @Mock
+    private lateinit var dispatchers: CoroutineDispatchers
 
     @Mock
     private lateinit var preferences: Preferences
@@ -60,68 +70,136 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     @Mock
     private lateinit var channelRepository: ChannelRepository
 
-    @Test
-    fun `should load only channels with gate function`() = runBlocking {
-        // given
-        val cursor: Cursor = mockCursorChannels(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SUPLA_CHANNELFNC_ALARM)
-        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
-        whenever(preferences.configIsSet()).thenReturn(true)
+    @Before
+    fun setUp() {
+        whenever(dispatchers.io()).thenReturn(testDispatcher)
+        Dispatchers.setMain(testDispatcher)
+    }
 
-        val profile = mock<AuthProfileItem>()
-        whenever(profile.id).thenReturn(1)
-        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
-
-        // when
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
-        val channels = viewModel.channelsList.getOrAwaitValue()
-
-        // then
-        assertThat(channels.size, `is`(1))
-        Mockito.verifyNoInteractions(widgetPreferences)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
     }
 
     @Test
-    fun `should load all channels with switch function`() = runBlocking {
+    fun `should load only channels with gate function`() = runTest {
         // given
+        val profileId = 123L
+        val cursor: Cursor = mockCursorChannels(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SUPLA_CHANNELFNC_ALARM)
+        whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
+        whenever(preferences.configIsSet()).thenReturn(true)
+
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(profileId)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
+        // when
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
+        advanceUntilIdle()
+        val channels = viewModel.itemsList.getOrAwaitValue()
+
+        // then
+        assertThat(channels.size, `is`(1))
+        verify(channelRepository).getAllProfileChannels(profileId)
+        verify(profileManager).getCurrentProfile()
+        verify(profileManager).getAllProfiles()
+        verify(dispatchers).io()
+        verify(preferences).configIsSet()
+        verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
+        verifyNoInteractions(widgetPreferences)
+    }
+
+    @Test
+    fun `should load channel groups with gate function`() = runTest {
+        // given
+        val profileId = 123L
+        val cursor: Cursor = mockCursorChannels(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SUPLA_CHANNELFNC_ALARM)
+        whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(cursor)
+        val channelsCursor: Cursor = mockCursorChannels(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, SUPLA_CHANNELFNC_ALARM)
+        whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(channelsCursor)
+        whenever(preferences.configIsSet()).thenReturn(true)
+
+        val profile = mock<AuthProfileItem>()
+        whenever(profile.id).thenReturn(profileId)
+        whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+
+        // when
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
+        advanceUntilIdle()
+        viewModel.changeType(ItemType.GROUP)
+        advanceUntilIdle()
+        val channels = viewModel.itemsList.getOrAwaitValue()
+
+        // then
+        assertThat(channels.size, `is`(1))
+        verify(channelRepository).getAllProfileChannels(profileId)
+        verify(channelRepository).getAllProfileChannelGroups(profileId)
+        verify(profileManager).getCurrentProfile()
+        verify(profileManager).getAllProfiles()
+        verify(dispatchers, times(2)).io()
+        verify(preferences).configIsSet()
+        verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
+        verifyNoInteractions(widgetPreferences)
+    }
+
+    @Test
+    fun `should load all channels with switch function`() = runTest {
+        // given
+        val profileId = 123L
         val cursor: Cursor = mockCursorChannels(
                 SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
                 SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
                 SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
                 SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK)
-        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
         val profile = mock<AuthProfileItem>()
-        whenever(profile.id).thenReturn(1)
+        whenever(profile.id).thenReturn(profileId)
         whenever(profileManager.getCurrentProfile()).thenReturn(profile)
 
         // when
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
-        val channels = viewModel.channelsList.getOrAwaitValue()
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
+        advanceUntilIdle()
+        val channels = viewModel.itemsList.getOrAwaitValue()
 
         // then
         assertThat(channels.size, `is`(4))
-        Mockito.verifyNoInteractions(widgetPreferences)
+        verify(channelRepository).getAllProfileChannels(profileId)
+        verify(profileManager).getCurrentProfile()
+        verify(profileManager).getAllProfiles()
+        verify(dispatchers).io()
+        verify(preferences).configIsSet()
+        verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
+        verifyNoInteractions(widgetPreferences)
     }
 
     @Test
-    fun `should provide empty list of channels if no channel available`() = runBlocking {
+    fun `should provide empty list of channels if no channel available`() = runTest {
         // given
+        val profileId = 123L
         val cursor: Cursor = mockCursorChannels()
-        whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
+        whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
         whenever(preferences.configIsSet()).thenReturn(true)
 
         val profile = mock<AuthProfileItem>()
-        whenever(profile.id).thenReturn(1)
+        whenever(profile.id).thenReturn(profileId)
         whenever(profileManager.getCurrentProfile()).thenReturn(profile)
 
         // when
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
-        val channels = viewModel.channelsList.getOrAwaitValue()
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
+        advanceUntilIdle()
+        val channels = viewModel.itemsList.getOrAwaitValue()
 
         // then
         assertThat(channels.size, `is`(0))
-        Mockito.verifyNoInteractions(widgetPreferences)
+        verify(channelRepository).getAllProfileChannels(profileId)
+        verify(profileManager).getCurrentProfile()
+        verify(profileManager).getAllProfiles()
+        verify(dispatchers).io()
+        verify(preferences).configIsSet()
+        verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
+        verifyNoInteractions(widgetPreferences)
     }
 
     @Test
@@ -131,7 +209,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         channel.func = SUPLA_CHANNELFNC_LIGHTSWITCH
 
         // when
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
         viewModel.changeChannel(channel)
 
         // then
@@ -148,7 +226,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 
         // when
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
         viewModel.changeChannel(channel)
 
         // then
@@ -163,7 +241,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         // given
         val channel = Channel()
         channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
         viewModel.changeChannel(channel)
 
         // when
@@ -180,7 +258,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
         // given
         val channel = Channel()
         channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository)
+        val viewModel = SingleWidgetConfigurationViewModel(preferences, widgetPreferences, profileManager, channelRepository, dispatchers)
         viewModel.changeChannel(channel)
 
         // when

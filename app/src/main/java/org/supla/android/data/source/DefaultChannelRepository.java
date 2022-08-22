@@ -380,6 +380,11 @@ public class DefaultChannelRepository implements ChannelRepository {
                         + profileId + ") ");
     }
 
+    @Override
+    public Cursor getAllProfileChannelGroups(Long profileId) {
+        return channelDao.getAllChannelGroupsForProfileId(profileId);
+    }
+
     private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {
         List<Long> orderedItems = getSortedChannelIdsForLocation(firstItemLocationId);
 

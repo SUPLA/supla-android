@@ -54,12 +54,12 @@ class OnOffWidget : WidgetProviderBase() {
         // Construct the RemoteViews object
         val views = buildWidget(context, widgetId)
         if (configuration != null && isWidgetValid(configuration)) {
-            views.setTextViewText(R.id.on_off_widget_channel_name, configuration.channelCaption)
+            views.setTextViewText(R.id.on_off_widget_channel_name, configuration.itemCaption)
 
             val channel = Channel()
-            channel.func = configuration.channelFunction
+            channel.func = configuration.itemFunction
 
-            val activeValue = getActiveValue(configuration.channelFunction)
+            val activeValue = getActiveValue(configuration.itemFunction)
             views.setImageViewBitmap(R.id.on_off_widget_turn_on_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue)))
             views.setImageViewBitmap(R.id.on_off_widget_turn_off_button, ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0)))
 

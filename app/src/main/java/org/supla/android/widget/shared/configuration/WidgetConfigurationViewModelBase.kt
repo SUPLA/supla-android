@@ -21,13 +21,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
+import org.supla.android.db.ChannelGroup
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetConfiguration
@@ -38,7 +40,8 @@ abstract class WidgetConfigurationViewModelBase(
         private val preferences: Preferences,
         private val widgetPreferences: WidgetPreferences,
         private val profileManager: ProfileManager,
-        private val channelRepository: ChannelRepository
+        private val channelRepository: ChannelRepository,
+        private val dispatchers: CoroutineDispatchers
 ) : ViewModel() {
     private val _userLoggedIn = MutableLiveData<Boolean>()
     val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -46,20 +49,20 @@ abstract class WidgetConfigurationViewModelBase(
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _confirmationResult = MutableLiveData<Result<Channel>>()
-    val confirmationResult: LiveData<Result<Channel>> = _confirmationResult
+    private val _confirmationResult = MutableLiveData<Result<ChannelBase>>()
+    val confirmationResult: LiveData<Result<ChannelBase>> = _confirmationResult
 
     private val _profilesList = MutableLiveData<List<AuthProfileItem>>()
     val profilesList: LiveData<List<AuthProfileItem>> = _profilesList
 
-    private val _channelsList = MutableLiveData<List<Channel>>()
-    val channelsList: LiveData<List<Channel>> = _channelsList
+    private val _itemsList = MutableLiveData<List<ChannelBase>>()
+    val itemsList: LiveData<List<ChannelBase>> = _itemsList
 
-    private val _actionsList = MutableLiveData<List<WidgetAction>>()
-    val actionsList: LiveData<List<WidgetAction>> = _actionsList
+    private val _itemsType = MutableLiveData(ItemType.CHANNEL)
+    val itemsType: LiveData<ItemType> = _itemsType
 
     var selectedProfile: AuthProfileItem? = null
-    var selectedChannel: Channel? = null
+    var selectedItem: ChannelBase? = null
     var selectedAction: WidgetAction? = null
     var widgetId: Int? = null
     var displayName: String? = null
@@ -74,15 +77,19 @@ abstract class WidgetConfigurationViewModelBase(
             widgetId == null -> {
                 _confirmationResult.value = Result.failure(InvalidParameterException())
             }
-            selectedChannel == null -> {
+            selectedItem == null -> {
                 _confirmationResult.value = Result.failure(NoItemSelectedException())
             }
             displayName == null || displayName?.isBlank() == true -> {
                 _confirmationResult.value = Result.failure(EmptyDisplayNameException())
             }
             else -> {
-                setWidgetConfiguration(widgetId!!, selectedChannel!!.channelId, displayName!!, selectedChannel!!.func, selectedChannel!!.color)
-                _confirmationResult.value = Result.success(selectedChannel!!)
+                val itemType = itemsType.value ?: ItemType.CHANNEL
+                val itemId = if (itemType.isChannel()) (selectedItem as Channel).channelId else (selectedItem as ChannelGroup).groupId
+                val color = if (itemType.isChannel()) (selectedItem as Channel).color else 0
+
+                setWidgetConfiguration(widgetId!!, itemId, itemType, displayName!!, selectedItem!!.func, color)
+                _confirmationResult.value = Result.success(selectedItem!!)
             }
         }
     }
@@ -95,43 +102,44 @@ abstract class WidgetConfigurationViewModelBase(
         if (profile == null) {
             return // nothing to do
         }
-        _dataLoading.value = true
         selectedProfile = profile
+
+        reloadItems()
+    }
+
+    fun changeType(type: ItemType) {
+        _itemsType.value = type
+        reloadItems()
+    }
+
+    open fun changeChannel(channel: ChannelBase?) {
+        selectedItem = channel
+    }
+
+    protected abstract fun filterItems(channelBase: ChannelBase): Boolean
+
+    private fun reloadItems() {
+        _dataLoading.value = true
         changeChannel(null)
         displayName = null
 
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                loadChannels()
+            withContext(dispatchers.io()) {
+                loadItems()
                 _dataLoading.postValue(false)
             }
         }
     }
 
-    fun changeChannel(channel: Channel?) {
-        selectedChannel = channel
-        updateActions()
-    }
-
-    protected abstract fun filterChannels(channel: Channel): Boolean
-
-    protected open fun updateActions() {
-        // Default empty, can be overridden.
-    }
-
-    protected fun postActions(actions: List<WidgetAction>) {
-        _actionsList.postValue(actions)
-    }
-
     private fun triggerDataLoad() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(dispatchers.io()) {
                 val configSet = preferences.configIsSet()
                 if (configSet) {
                     _profilesList.postValue(profileManager.getAllProfiles())
                     selectedProfile = profileManager.getCurrentProfile()
 
-                    loadChannels()
+                    loadItems()
                 }
 
                 _dataLoading.postValue(false)
@@ -140,11 +148,15 @@ abstract class WidgetConfigurationViewModelBase(
         }
     }
 
-    private fun loadChannels() {
-        val switches = getAllChannels().filter { filterChannels(it) }
-        _channelsList.postValue(switches)
-        if (switches.isNotEmpty()) {
-            selectedChannel = switches[0]
+    private fun loadItems() {
+        val items: List<ChannelBase> = if (itemsType.value == ItemType.CHANNEL) {
+            getAllChannels().filter { filterItems(it) }
+        } else {
+            getAllChannelGroups().filter { filterItems(it) }
+        }
+        _itemsList.postValue(items)
+        if (items.isNotEmpty()) {
+            selectedItem = items[0]
         }
     }
 
@@ -166,11 +178,31 @@ abstract class WidgetConfigurationViewModelBase(
         }
     }
 
-    private fun setWidgetConfiguration(widgetId: Int, channelId: Int, channelName: String,
+    private fun getAllChannelGroups(): List<ChannelGroup> {
+        channelRepository.getAllProfileChannelGroups(selectedProfile?.id).use { cursor ->
+            val channelGroups = mutableListOf<ChannelGroup>()
+            if (!cursor.moveToFirst()) {
+                return channelGroups
+            }
+
+            do {
+                val channelGroup = ChannelGroup()
+                channelGroup.AssignCursorData(cursor)
+                channelGroups.add(channelGroup)
+            } while (cursor.moveToNext())
+
+            // As the widgets are stateless it is possible that user creates many widgets for the same channel id
+            return channelGroups
+        }
+    }
+
+    private fun setWidgetConfiguration(widgetId: Int, itemId: Int,
+                                       itemType: ItemType, itemName: String,
                                        channelFunction: Int, channelColor: Int) {
         val configuration = WidgetConfiguration(
-                channelId,
-                channelName,
+                itemId,
+                itemType,
+                itemName,
                 channelFunction,
                 channelColor,
                 selectedProfile!!.id,
@@ -180,25 +212,44 @@ abstract class WidgetConfigurationViewModelBase(
     }
 }
 
+enum class ItemType(val id: Int) {
+    CHANNEL(0), GROUP(1);
+
+    fun getIntValue() = id
+
+    fun isChannel() = this == CHANNEL
+
+    fun isGroup() = this == GROUP
+
+    companion object {
+        fun fromInt(value: Int): ItemType? =
+                if (value < 0 || value >= values().size) {
+                    null
+                } else {
+                    values()[value]
+                }
+    }
+}
+
 class NoItemSelectedException : RuntimeException()
 
 class EmptyDisplayNameException : RuntimeException()
 
-internal fun Channel.isSwitch() =
+internal fun ChannelBase.isSwitch() =
         func == SUPLA_CHANNELFNC_LIGHTSWITCH
                 || func == SUPLA_CHANNELFNC_DIMMER
                 || func == SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
                 || func == SUPLA_CHANNELFNC_RGBLIGHTING
                 || func == SUPLA_CHANNELFNC_POWERSWITCH
 
-internal fun Channel.isRollerShutter() =
+internal fun ChannelBase.isRollerShutter() =
         func == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
                 || func == SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 
-internal fun Channel.isGateController() =
+internal fun ChannelBase.isGateController() =
         func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
                 || func == SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 
-internal fun Channel.isDoorLock() =
+internal fun ChannelBase.isDoorLock() =
         func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
-            || func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+                || func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK

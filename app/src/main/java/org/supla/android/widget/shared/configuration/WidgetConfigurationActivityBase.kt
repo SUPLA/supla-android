@@ -28,7 +28,7 @@ import androidx.fragment.app.FragmentActivity
 import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
 
 abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
@@ -56,11 +56,11 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {
-            viewModel().selectedChannel = null
+            viewModel().selectedItem = null
         }
     }
 
-    protected fun channelItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<Channel>) = object : AdapterView.OnItemSelectedListener {
+    protected fun channelItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<ChannelBase>) = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             viewModel().changeChannel(adapter.getItem(position))
             updateSwitchName()
@@ -107,7 +107,7 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
     private fun getSelectedChannelCaption(): String {
         val maxLength = getNameMaxLength()
-        val caption = viewModel().selectedChannel?.getNotEmptyCaption(this)
+        val caption = viewModel().selectedItem?.getNotEmptyCaption(this)
                 ?: ""
         return if (caption.length > maxLength) {
             caption.substring(0, maxLength)

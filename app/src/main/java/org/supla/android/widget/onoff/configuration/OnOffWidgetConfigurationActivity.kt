@@ -26,6 +26,7 @@ import org.supla.android.R
 import org.supla.android.databinding.ActivityOnOffWidgetConfigurationBinding
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.onoff.intent
+import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetConfigurationActivityBase
 import org.supla.android.widget.shared.configuration.WidgetConfigurationChannelsSpinnerAdapter
 import org.supla.android.widget.shared.configuration.WidgetConfigurationProfilesSpinnerAdapter
@@ -45,18 +46,25 @@ class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<Activit
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupSwitchesSpinner()
         setupProfilesSpinner()
+        setupTypeSelection()
+        setupItemsSpinner()
         setContentView(binding.root)
 
         observeSelectionConfirmation()
         observeCancellation()
     }
 
-    private fun setupSwitchesSpinner() {
+    private fun setupTypeSelection() {
+        binding.widgetOnOffCommon.widgetOnOffConfigureType.setOnPositionChangedListener {
+            viewModel.changeType(ItemType.values()[it])
+        }
+    }
+
+    private fun setupItemsSpinner() {
         val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffCommon.widgetOnOffConfigureSwitches.adapter = adapter
-        binding.widgetOnOffCommon.widgetOnOffConfigureSwitches.onItemSelectedListener =
+        binding.widgetOnOffCommon.widgetOnOffConfigureItems.adapter = adapter
+        binding.widgetOnOffCommon.widgetOnOffConfigureItems.onItemSelectedListener =
                 channelItemSelectedListener(adapter)
     }
 

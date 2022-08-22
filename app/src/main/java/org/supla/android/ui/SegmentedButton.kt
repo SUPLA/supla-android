@@ -24,50 +24,44 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.view.View
 import android.view.Gravity
-import android.os.Build
-import android.content.res.TypedArray
 
 import org.supla.android.SuplaApp
 import org.supla.android.R
 
 @SuppressWarnings("ResourceType")
 class SegmentedButton @JvmOverloads constructor(
-    ctx: Context, attrs: AttributeSet? = null,
+    ctx: Context,
+    attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ): FrameLayout(ctx, attrs, defStyleAttr) {
-    
-    private val elevation: Float
+
+    private val segmentedButtonElevation: Float
 
     init {
-        val attrsArray = intArrayOf(android.R.attr.src,
-                                    android.R.attr.text);
+        val attrsArray = intArrayOf(android.R.attr.src, android.R.attr.text)
         val ta = ctx.obtainStyledAttributes(attrs, attrsArray)
         val drawable = ta.getDrawable(0)
-        val innerView: View
-        if(drawable != null) {
-            val imgView = ImageView(ctx, attrs, defStyleAttr)
-            innerView = imgView
+        val innerView = if(drawable != null) {
+            ImageView(ctx, attrs, defStyleAttr)
         } else {
-            val txtView = TextView(ctx, attrs, defStyleAttr)
-            txtView.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular())
-            txtView.setText(ta.getString(1))
-            txtView.setGravity(Gravity.CENTER)
-            innerView = txtView
+            TextView(ctx, attrs, defStyleAttr).apply {
+                typeface = SuplaApp.getApp().typefaceOpenSansRegular
+                text = ta.getString(1)
+                gravity = Gravity.CENTER
+            }
         }
+        ta.recycle()
 
-        val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                          FrameLayout.LayoutParams.MATCH_PARENT,
-                                          Gravity.CENTER)
+        val lp = LayoutParams(LayoutParams.MATCH_PARENT,
+                              LayoutParams.MATCH_PARENT,
+                              Gravity.CENTER)
         addView(innerView, 0, lp)
 
-        elevation = ctx.getResources().getDimensionPixelSize(R.dimen.segmented_button_elevation).toFloat()
+        segmentedButtonElevation = ctx.resources.getDimensionPixelSize(R.dimen.segmented_button_elevation).toFloat()
     }
 
     override fun setSelected(sel: Boolean) {
         super.setSelected(sel)
-
-        if(Build.VERSION.SDK_INT >= 21) {
-            setElevation(if(sel) elevation else 0f)
-        }
+        elevation = if(sel) segmentedButtonElevation else 0f
     }
 }

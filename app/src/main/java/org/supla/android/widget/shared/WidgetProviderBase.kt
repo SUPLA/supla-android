@@ -75,7 +75,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
         configuration.profileId != INVALID_PROFILE_ID &&
-        configuration.channelId != INVALID_CHANNEL_ID
+        configuration.itemId != INVALID_CHANNEL_ID
 
 internal fun getWorkId(widgetIds: IntArray): String {
     return if (widgetIds.size != 1) {

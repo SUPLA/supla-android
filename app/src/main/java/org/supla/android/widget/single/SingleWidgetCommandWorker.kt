@@ -42,12 +42,12 @@ class SingleWidgetCommandWorker(
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
     override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
-        when (configuration.channelFunction) {
+        when (configuration.itemFunction) {
             SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
             SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
             SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
             SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
-                suplaClient.open(configuration.channelId, 1)
+                suplaClient.open(configuration.itemId, 1)
             }
             else -> {
                 val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||

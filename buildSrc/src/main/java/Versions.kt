@@ -9,7 +9,7 @@ object Versions {
     const val Hilt = "2.40.1"
     const val Multidex = "2.0.1"
     const val AndroidChart = "v3.0.3"
-    const val Coroutines = "1.3.9"
+    const val Coroutines = "1.6.4"
     const val GoogleMaterial = "1.0.0"
 
     const val Spotless = "6.10.0"

@@ -21,6 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
+import org.supla.android.db.ChannelGroup
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
@@ -33,15 +36,17 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
         preferences: Preferences,
         widgetPreferences: WidgetPreferences,
         profileManager: ProfileManager,
-        channelRepository: ChannelRepository
+        channelRepository: ChannelRepository,
+        dispatchers: CoroutineDispatchers
 ) : WidgetConfigurationViewModelBase(
         preferences,
         widgetPreferences,
         profileManager,
-        channelRepository
+        channelRepository,
+        dispatchers
 ) {
-    override fun filterChannels(channel: Channel): Boolean {
-        return channel.isSwitch() || channel.isRollerShutter()
+    override fun filterItems(channelBase: ChannelBase): Boolean {
+        return channelBase.isSwitch() || channelBase.isRollerShutter()
     }
 
 }

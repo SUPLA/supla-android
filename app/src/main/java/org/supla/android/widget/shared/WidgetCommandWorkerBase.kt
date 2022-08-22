@@ -91,23 +91,22 @@ abstract class WidgetCommandWorkerBase(
             configuration: WidgetConfiguration,
             suplaClient: SuplaClient,
             turnOnOrClose: Boolean): Result {
-        when (configuration.channelFunction) {
+        when (configuration.itemFunction) {
             SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
             SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> {
-                suplaClient.turnOnOff(
-                        applicationContext,
-                        turnOnOrClose,
-                        configuration.channelId,
-                        false,
-                        configuration.channelFunction,
-                        false)
+                val turnOnOff = if (turnOnOrClose) 1 else 0
+                suplaClient.open(
+                        configuration.itemId,
+                        configuration.itemType.isGroup(),
+                        turnOnOff)
             }
             SuplaConst.SUPLA_CHANNELFNC_DIMMER,
             SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
             SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> {
                 val brightness = getBrightness(turnOnOrClose)
                 suplaClient.setRGBW(
-                        configuration.channelId,
+                        configuration.itemId,
+                        configuration.itemType.isGroup(),
                         configuration.channelColor,
                         brightness,
                         brightness,
@@ -116,7 +115,8 @@ abstract class WidgetCommandWorkerBase(
             SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
             SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
                 suplaClient.open(
-                        configuration.channelId,
+                        configuration.itemId,
+                        configuration.itemType.isGroup(),
                         getOpenOrClose(turnOnOrClose))
             }
         }

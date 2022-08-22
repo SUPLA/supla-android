@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:background="@drawable/background_widget_configuration_button"
-            android:enabled="@{viewmodel.channelsList.size() > 0}"
+            android:enabled="@{viewmodel.itemsList.size() > 0}"
             android:onClick="@{() -> viewmodel.confirmSelection()}"
             android:text="@string/ok"
             android:textColor="#FFFFFF"

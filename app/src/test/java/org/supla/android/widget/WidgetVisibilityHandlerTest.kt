@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.profile.INVALID_PROFILE_ID
+import org.supla.android.widget.shared.configuration.ItemType
 
 @RunWith(MockitoJUnitRunner::class)
 class WidgetVisibilityHandlerTest {
@@ -58,7 +59,7 @@ class WidgetVisibilityHandlerTest {
         val channelId = 234
         val profileId = 345L
 
-        val widgetConfiguration = WidgetConfiguration(channelId, null, 0, 0, profileId, true, -1)
+        val widgetConfiguration = WidgetConfiguration(channelId, ItemType.CHANNEL, null, 0, 0, profileId, true, -1)
         whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
 
         every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf(widgetId)

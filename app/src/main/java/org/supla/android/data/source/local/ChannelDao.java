@@ -290,6 +290,11 @@ public class ChannelDao extends BaseDao {
         return getChannelListCursor(orderBY, where);
     }
 
+    public Cursor getAllChannelGroupsForProfileId(Long profileId) {
+        return getChannelGroupListCursor(
+                "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
+    }
+
     public Cursor getChannelGroupListCursor() {
         return getChannelGroupListCursor(null);
     }

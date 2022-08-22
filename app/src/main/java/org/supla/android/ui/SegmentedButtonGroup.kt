@@ -40,9 +40,9 @@ class SegmentedButtonGroup @JvmOverloads constructor(
             }
             _idx = value
 
-            for(i in 0..getChildCount()-1) {
+            for(i in 0 until childCount) {
                 val v = getChildAt(i)
-                v.setSelected(_idx == i)
+                v.isSelected = _idx == i
             }
 
             _listener?.invoke(_idx)
@@ -50,10 +50,10 @@ class SegmentedButtonGroup @JvmOverloads constructor(
     
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         super.addView(child, index, params)
-        child.setClickable(true)
-        val pos = if(index >= 0) index else getChildCount()-1
-        child.setSelected(pos == _idx)
-        child.setOnClickListener() {
+        child.isClickable = true
+        val pos = if(index >= 0) index else childCount -1
+        child.isSelected = pos == _idx
+        child.setOnClickListener {
             position = pos
         }
     }

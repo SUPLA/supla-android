@@ -449,12 +449,17 @@
 
     <string name="widget_configure_title">Konfiguracja widżetu</string>
     <string name="widget_configure_profile_label">Konto</string>
+    <string name="widget_configure_type_label">Widżet dla:</string>
+    <string name="widget_configure_type_channel_label">Kanału</string>
+    <string name="widget_configure_type_group_label">Grupy</string>
     <string name="widget_configure_channel_label">Kanał dla widgetu</string>
+    <string name="widget_configure_group_label">Grupa dla widgetu</string>
     <string name="widget_configure_action_label">Akcja</string>
     <string name="widget_configure_name_label">Nazwa</string>
     <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
     <string name="widget_configure_no_selection">Nie wybrano kanału</string>
     <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
+    <string name="widget_configure_no_group">Brak dostępnych grup</string>
     <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
     <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
     <string name="widget_app_not_initialized">Proszę się zalogować!</string>

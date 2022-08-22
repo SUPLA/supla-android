@@ -55,13 +55,13 @@ class SingleWidget : WidgetProviderBase() {
         // Construct the RemoteViews object
         val views = buildWidget(context, widgetId)
         if (configuration != null && isWidgetValid(configuration)) {
-            views.setTextViewText(R.id.single_widget_channel_name, configuration.channelCaption)
+            views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
             val channel = Channel()
-            channel.func = configuration.channelFunction
+            channel.func = configuration.itemFunction
 
             val active = if (turnOnOrClose(configuration)) {
-                getActiveValue(configuration.channelFunction)
+                getActiveValue(configuration.itemFunction)
             } else {
                 0
             }

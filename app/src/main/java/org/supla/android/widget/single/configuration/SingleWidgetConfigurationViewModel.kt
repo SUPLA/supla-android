@@ -17,10 +17,13 @@ package org.supla.android.widget.single.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.*
@@ -31,31 +34,42 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         preferences: Preferences,
         widgetPreferences: WidgetPreferences,
         profileManager: ProfileManager,
-        channelRepository: ChannelRepository
+        channelRepository: ChannelRepository,
+        dispatchers: CoroutineDispatchers
 ) : WidgetConfigurationViewModelBase(
         preferences,
         widgetPreferences,
         profileManager,
-        channelRepository
+        channelRepository,
+        dispatchers
 ) {
-    override fun filterChannels(channel: Channel): Boolean {
-        return channel.isGateController()
-                || channel.isDoorLock()
-                || channel.isSwitch()
-                || channel.isRollerShutter()
+
+    private val _actionsList = MutableLiveData<List<WidgetAction>>()
+    val actionsList: LiveData<List<WidgetAction>> = _actionsList
+
+    override fun filterItems(channelBase: ChannelBase): Boolean {
+        return channelBase.isGateController()
+                || channelBase.isDoorLock()
+                || channelBase.isSwitch()
+                || channelBase.isRollerShutter()
     }
 
-    override fun updateActions() {
-        if (selectedChannel?.isSwitch() == true) {
-            postActions(listOf(
+    override fun changeChannel(channel: ChannelBase?) {
+        super.changeChannel(channel)
+        updateActions()
+    }
+
+    private fun updateActions() {
+        if (selectedItem?.isSwitch() == true) {
+            _actionsList.postValue(listOf(
                     WidgetAction.TURN_ON,
                     WidgetAction.TURN_OFF))
-        } else if (selectedChannel?.isRollerShutter() == true) {
-            postActions(listOf(
+        } else if (selectedItem?.isRollerShutter() == true) {
+            _actionsList.postValue(listOf(
                     WidgetAction.MOVE_UP,
                     WidgetAction.MOVE_DOWN))
         } else {
-            postActions(listOf())
+            _actionsList.postValue(listOf())
         }
     }
 }

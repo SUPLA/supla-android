@@ -1051,6 +1051,20 @@ public class DefaultChannelRepositoryTest {
         assertSame(cursor, returned);
     }
 
+    @Test
+    public void shouldGetAllGroupsForProfile() {
+        // given
+        long profileId = 123L;
+        Cursor cursor = mock(Cursor.class);
+        when(channelDao.getAllChannelGroupsForProfileId(profileId)).thenReturn(cursor);
+
+        // when
+        Cursor returned = defaultChannelRepository.getAllProfileChannelGroups(profileId);
+
+        // then
+        assertSame(cursor, returned);
+    }
+
     private void assertChannel(Channel channel, int id, int locationId, String caption, int func, int flags,
                                int altIcon, int userIcon, int deviceId, int type, int protocolVersion,
                                short manufacturerId, short productId, int visible, int position, int valueAsLong) {
