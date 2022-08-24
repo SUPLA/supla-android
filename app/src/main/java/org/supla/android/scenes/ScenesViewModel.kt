@@ -26,23 +26,29 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.db.Scene
 import org.supla.android.db.DbHelper
+import org.supla.android.data.source.local.LocationDao
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMsg
 
 @HiltViewModel
 class ScenesViewModel @Inject constructor(
     private val messageHandler: SuplaClientMessageHandler,
-    private val dbHelper: DbHelper
+    private val dbHelper: DbHelper,
+    private val scController: SceneController
 ): ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
     private var _scenes = MutableLiveData<List<Scene>>(emptyList())
     private val _sceneRepo = dbHelper.sceneRepository
     val scenes: LiveData<List<Scene>> = _scenes
 
-    val scenesAdapter = ScenesAdapter(this)
+    val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper))
 
     init {
         messageHandler.registerMessageListener(this)
+    }
+
+    fun onLocationStateChanged() {
+        reload()
     }
 
     override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {

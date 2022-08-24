@@ -34,6 +34,7 @@ public class Location extends DbItem {
     private int collapsed; // 0 - channels visible
     // 0x1 - channels collapsed
     // 0x2 - channel groups collapsed
+    // 0x4 - scenes collapsed
     private SortingType sorting;
     private int sortOrder;
     private long profileId;

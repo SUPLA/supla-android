@@ -22,53 +22,79 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.databinding.Observable
+import org.supla.android.data.source.local.LocationDao
 import org.supla.android.db.Scene
+import org.supla.android.db.Location
 import org.supla.android.databinding.SceneListItemBinding
+import org.supla.android.databinding.LocationListItemBinding
 import org.supla.android.Trace
 import org.supla.android.R
 
-class ScenesAdapter(private val scenesVM: ScenesViewModel): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScenesAdapter(private val scenesVM: ScenesViewModel,
+                    private val locationDao: LocationDao): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
+    inner class Section(var location: Location,
+                        var scenes: List<Scene> = emptyList())
 
-    private var scenes: List<Scene> = emptyList()
+    data class Path(val sectionIdx: Int, var sceneIdx: Int? = null)
 
-    init {
+    private var _sections: List<Section> = emptyList()
+    private var _vTypes: List<Int> = emptyList()
+    private var _paths: List<Path> = emptyList()
+
+    private val _scenesObserver: Observer<List<Scene>> = Observer {
+        setScenes(it)
     }
+
 
     override fun onAttachedToRecyclerView(v: RecyclerView) {
         super.onAttachedToRecyclerView(v)
-        val ctx = v.context
-        Trace.d("SUPLA", "before check $ctx")
-        if(ctx is LifecycleOwner) {
-            Trace.d("SUPLA", "observing scenes")
-            scenesVM.scenes.observe(ctx) {
-                Trace.d("SUPLA", "scenes updated")
-                setScenes(it)
-            }
-        }
+        
+        scenesVM.scenes.observeForever(_scenesObserver)
+    }
+
+    override fun onDetachedFromRecyclerView(v: RecyclerView) {
+        scenesVM.scenes.removeObserver(_scenesObserver)
+
+        super.onDetachedFromRecyclerView(v)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = SceneListItemBinding.inflate(inflater, parent, false)
-        binding.viewModel = SceneListItemViewModel()
-        return SceneListItemViewHolder(binding)
+        return when(viewType) {
+            R.layout.scene_list_item -> SceneListItemViewHolder(SceneListItemBinding.inflate(inflater, parent, false))
+            R.layout.location_list_item -> LocationListItemViewHolder(LocationListItemBinding.inflate(inflater, parent, false))
+            else -> throw IllegalArgumentException("unsupported view type $viewType")
+        }
     }
 
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
                                   pos: Int) {
-        if(vh is SceneListItemViewHolder) {
-            val vm = SceneListItemViewModel()
-            vh.binding.viewModel = vm
+        when(vh) {
+            is SceneListItemViewHolder -> vh.binding.viewModel = SceneListItemViewModel(getScene(pos))
+            is LocationListItemViewHolder -> {
+                val vm = LocationListItemViewModel(locationDao, getLocation(pos))
+                vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                                                    override fun onPropertyChanged(sender: Observable, pid:Int) {
+                                                        scenesVM.onLocationStateChanged() 
+                                                    }
+                                                })
+                vh.binding.viewModel = vm
+            }
         }
     }
 
+    override fun getItemViewType(pos: Int): Int {
+        return _vTypes[pos]
+    }
+
     override fun getItemCount(): Int {
-        return scenes.map { it.locationId }.distinct().count() +
-            scenes.count()
+        val ic =  _sections.map { it.scenes.count() + 1 }.reduce { a, v -> a + v }
+        return ic
     }
 
     override fun getItemId(position: Int): Long {
@@ -76,10 +102,53 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel): RecyclerView.Adapter
     }
 
     private fun setScenes(scenes: List<Scene>) {
-        this.scenes = scenes
+        val secs = mutableListOf<Section>()
+        val vTypes = mutableListOf<Int>()
+        val paths = mutableListOf<Path>()
+        
+        var loc: Location? = null
+        var locScenes: MutableList<Scene> = mutableListOf<Scene>()
+        var i = 0
+        var lc = -1
+        while(i < scenes.count()) {
+            if(loc == null) {
+                loc = locationDao.getLocation(scenes[i].locationId)
+                vTypes.add(R.layout.location_list_item)
+                paths.add(Path(++lc))
+            }
+
+            if(loc!!.getCollapsed() and 0x4 == 0) {
+                paths.add(Path(lc, locScenes.count()))
+                locScenes.add(scenes[i])
+                vTypes.add(R.layout.scene_list_item)
+            }
+            i++
+            if(i == scenes.count() ||
+               scenes[i].locationId != loc.locationId) {
+                secs.add(Section(loc, locScenes))
+                locScenes = mutableListOf<Scene>()
+                loc = null
+            }
+        }
+
+        _sections = secs
+        _vTypes = vTypes
+        _paths = paths
+
         notifyDataSetChanged()
     }
 
+    private fun getLocation(pos: Int): Location {
+        return _sections[_paths[pos].sectionIdx].location
+    }
+
+    private fun getScene(pos: Int): Scene {
+        val path = _paths[pos]
+        return _sections[path.sectionIdx].scenes[path.sceneIdx!!]
+    }
+
     inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+    inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

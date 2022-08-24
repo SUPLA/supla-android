@@ -40,7 +40,7 @@ import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.widget.WidgetVisibilityHandler;
-
+import org.supla.android.scenes.SceneController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,7 +52,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 @SuppressWarnings("unused")
-public class SuplaClient extends Thread {
+public class SuplaClient extends Thread implements SceneController {
     private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
     private static final String log_tag = "SuplaClientThread";
     private static final Object st_lck = new Object();
@@ -1407,5 +1407,15 @@ public class SuplaClient extends Thread {
     private byte[] decrypted(byte[] payload) {
         String key = Preferences.getDeviceID(_context);
         return Encryption.decryptDataWithNullOnException(payload, key);
+    }
+
+    public void startScene(int sceneId) {
+        // TODO: implement
+        Trace.d(log_tag, "unimplemented start scene " + sceneId);
+    }
+
+    public void stopScene(int sceneId) {
+        // TODO: implement
+        Trace.d(log_tag, "unimplemented stop scene " + sceneId);        
     }
 }

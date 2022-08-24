@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/scene_img_top_margin"
-        android:src="@drawable/coffee"
+        app:suplaImage="@{viewModel.sceneIcon}"
         />
     <TextView
         android:id="@+id/sceneLabel"
@@ -44,9 +44,10 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:text="12:34:56" />
+          android:text="@{viewModel.timeSinceStart}" />
       <Button
           android:id="@+id/onOffButton"
+          android:onClick="@{ () -> viewModel.startStopScene() }"
           android:layout_width="@dimen/min_tap_size"
           android:layout_height="@dimen/min_tap_size"
           android:background="@drawable/on_off_inset" />
