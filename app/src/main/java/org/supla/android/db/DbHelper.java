@@ -162,6 +162,33 @@ public class DbHelper extends BaseDbHelper {
 
     }
 
+    private void createSceneView(SQLiteDatabase db) {
+        final String SQL = "CREATE VIEW " +
+            SuplaContract.SceneViewEntry.VIEW_NAME + " AS " +
+            "SELECT S." + SuplaContract.SceneEntry._ID + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_SCENEID + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_ALTICON + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + ", " +
+            "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " AS  " + SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + ", " +
+            "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + " AS " + SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
+            "L." + SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE + " AS " + SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_VISIBLE +            
+            " FROM " + SuplaContract.SceneEntry.TABLE_NAME + " S"  +
+            " JOIN " + SuplaContract.LocationEntry.TABLE_NAME + " L ON (" +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID + " = L." + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID + " AND " +
+            "S." + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = L." + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID +
+            ")";
+
+        execSQL(db, SQL);
+    }
+
     private void createChannelTable(SQLiteDatabase db) {
 
         final String SQL_CREATE_CHANNEL_TABLE = "CREATE TABLE "
@@ -672,6 +699,7 @@ public class DbHelper extends BaseDbHelper {
 
     private void upgradeToV25(SQLiteDatabase db) {
         createSceneTable(db);
+        createSceneView(db);
     }
 
 

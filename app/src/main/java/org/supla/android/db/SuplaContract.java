@@ -117,6 +117,31 @@ public class SuplaContract {
             SceneEntry.COLUMN_NAME_PROFILEID                        // 11
         };
     }
+    public static abstract class SceneViewEntry implements BaseColumns {
+        public static final String VIEW_NAME = "scene_view";
+
+        public static final String COLUMN_NAME_LOCATION_NAME = "location_name";
+        public static final String COLUMN_NAME_LOCATION_SORT_ORDER = "location_sort_order";
+        public static final String COLUMN_NAME_LOCATION_VISIBLE = "location_visible";
+        
+        public static final String[] ALL_COLUMNS = {
+            SceneEntry._ID,                                         // 0
+            SceneEntry.COLUMN_NAME_SCENEID,                         // 1
+            SceneEntry.COLUMN_NAME_LOCATIONID,                      // 2
+            SceneEntry.COLUMN_NAME_ALTICON,                         // 3
+            SceneEntry.COLUMN_NAME_USERICON,                        // 4
+            SceneEntry.COLUMN_NAME_CAPTION,                         // 5
+            SceneEntry.COLUMN_NAME_STARTED_AT,                      // 6
+            SceneEntry.COLUMN_NAME_EST_END_DATE,                    // 7
+            SceneEntry.COLUMN_NAME_INITIATOR_ID,                    // 8
+            SceneEntry.COLUMN_NAME_INITIATOR_NAME,                  // 9
+            SceneEntry.COLUMN_NAME_SORT_ORDER,                      // 10
+            SceneEntry.COLUMN_NAME_PROFILEID,                       // 11
+            SceneViewEntry.COLUMN_NAME_LOCATION_NAME,               // 12
+            SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER,         // 13
+            SceneViewEntry.COLUMN_NAME_LOCATION_VISIBLE             // 14
+        };
+    }
 
     public static abstract class AuthProfileEntry implements BaseColumns {
 

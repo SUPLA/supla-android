@@ -26,7 +26,8 @@ import org.supla.android.images.ImageId
 import org.supla.android.R
 import org.supla.android.Trace
 
-class SceneListItemViewModel(private val scene: Scene) {
+class SceneListItemViewModel(val scene: Scene,
+                             private val controller: SceneController) {
 
     val sceneName: String
         get() = scene.caption
@@ -48,10 +49,15 @@ class SceneListItemViewModel(private val scene: Scene) {
 
     val timeSinceStart: String = computeTimeSinceStart()
 
-    private val TAG = "Scene"
+    private val TAG = "supla"
 
     fun startStopScene() {
         Trace.d(TAG, "start stop scene")
+        if(scene.startedAt == null) {
+            controller.startScene(scene.sceneId)
+        } else {
+            controller.stopScene(scene.sceneId)
+        }
     }
 
     private fun computeTimeSinceStart(): String {

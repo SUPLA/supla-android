@@ -39,13 +39,19 @@ public class SceneDao(dap: DatabaseAccessProvider): BaseDao(dap) {
 
     fun sceneCursor(): Cursor {
         return read {
-            it.query(SuplaContract.SceneEntry.TABLE_NAME,
-                     SuplaContract.SceneEntry.ALL_COLUMNS, 
-                     null /* selection */, 
-                     null /* selectionArgs */, 
+            it.query(SuplaContract.SceneViewEntry.VIEW_NAME,
+                     SuplaContract.SceneViewEntry.ALL_COLUMNS, 
+                     SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = ? " /* selection */, 
+                     arrayOf(getCachedProfileId().toString()) /* selectionArgs */, 
                      null /* groupBy */, 
                      null /* having */,
-                     SuplaContract.SceneEntry.COLUMN_NAME_CAPTION /* order by */,
+                     /* order by - begin */
+                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
+                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + " COLLATE LOCALIZED, " +
+                     SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
+                     SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
+                     SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
+                     /* order by - end */,
                      null /* limit */)
         }
     }

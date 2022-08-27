@@ -20,6 +20,7 @@ package org.supla.android.scenes
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.DragEvent
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -47,7 +48,16 @@ class ScenesFragment: Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, 
                                           R.layout.fragment_scenes,
-                                          container, false)
+                                         container, false)
+        binding.root.setOnDragListener(object: View.OnDragListener {
+                                           override fun onDrag(v: View, ev: DragEvent): Boolean {
+                                               return when(ev.getAction()) {
+                                                   DragEvent.ACTION_DRAG_STARTED -> true
+                                                   else -> true
+                                               }
+                                           }
+        })
+
         binding.lifecycleOwner = requireActivity()
         binding.viewModel = scenesVM
         return binding.root

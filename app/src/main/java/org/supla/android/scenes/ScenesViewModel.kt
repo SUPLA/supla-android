@@ -41,7 +41,8 @@ class ScenesViewModel @Inject constructor(
     private val _sceneRepo = dbHelper.sceneRepository
     val scenes: LiveData<List<Scene>> = _scenes
 
-    val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper))
+    val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper),
+                                      scController)
 
     init {
         messageHandler.registerMessageListener(this)

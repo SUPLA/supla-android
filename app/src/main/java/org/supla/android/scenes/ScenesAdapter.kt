@@ -22,8 +22,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.DragEvent
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.databinding.Observable
 import org.supla.android.data.source.local.LocationDao
 import org.supla.android.db.Scene
@@ -34,7 +36,8 @@ import org.supla.android.Trace
 import org.supla.android.R
 
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
-                    private val locationDao: LocationDao): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    private val locationDao: LocationDao,
+                    private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
     inner class Section(var location: Location,
                         var scenes: List<Scene> = emptyList())
@@ -49,11 +52,17 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         setScenes(it)
     }
 
+    private val _reorderingCallback = ScenesReorderingCallback()
+    private val _touchHelper = ItemTouchHelper(_reorderingCallback)
+
+    private val TAG = "supla"
+
 
     override fun onAttachedToRecyclerView(v: RecyclerView) {
         super.onAttachedToRecyclerView(v)
         
         scenesVM.scenes.observeForever(_scenesObserver)
+        _touchHelper.attachToRecyclerView(v)
     }
 
     override fun onDetachedFromRecyclerView(v: RecyclerView) {
@@ -66,7 +75,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                     viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when(viewType) {
-            R.layout.scene_list_item -> SceneListItemViewHolder(SceneListItemBinding.inflate(inflater, parent, false))
+            R.layout.scene_list_item -> {
+                val binding = SceneListItemBinding.inflate(inflater, parent, false)
+                SceneListItemViewHolder(binding)
+            }
             R.layout.location_list_item -> LocationListItemViewHolder(LocationListItemBinding.inflate(inflater, parent, false))
             else -> throw IllegalArgumentException("unsupported view type $viewType")
         }
@@ -75,7 +87,15 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
                                   pos: Int) {
         when(vh) {
-            is SceneListItemViewHolder -> vh.binding.viewModel = SceneListItemViewModel(getScene(pos))
+            is SceneListItemViewHolder -> {
+                vh.binding.viewModel = SceneListItemViewModel(getScene(pos), sceneController)
+                vh.itemView.setOnLongClickListener({ v ->
+                   Trace.d(TAG, "gonna trigger drag of $v")
+               _touchHelper.startDrag(vh)
+               true
+                    })
+
+            }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
                 vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
@@ -111,6 +131,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         var i = 0
         var lc = -1
         while(i < scenes.count()) {
+            Trace.d(TAG, "looking at scene ${scenes[i]}")
             if(loc == null) {
                 loc = locationDao.getLocation(scenes[i].locationId)
                 vTypes.add(R.layout.location_list_item)
@@ -151,4 +172,26 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         RecyclerView.ViewHolder(binding.root)
     inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
+
+    inner class ScenesReorderingCallback:  ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+        
+
+        override fun onMove(recyclerView: RecyclerView,
+                            viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder): Boolean {
+            if(viewHolder is SceneListItemViewHolder &&
+               target is SceneListItemViewHolder) {
+                Trace.d(TAG, "gonna drop ${viewHolder.binding.viewModel!!.scene} to ${target.binding.viewModel!!.scene}")
+                return true
+            } else {
+                // drop target type not compatible
+                return false
+            }
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, 
+                              direction: Int) {
+            // no-op
+        }
+    }
 }
