@@ -49,15 +49,6 @@ class ScenesFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater, 
                                           R.layout.fragment_scenes,
                                          container, false)
-        binding.root.setOnDragListener(object: View.OnDragListener {
-                                           override fun onDrag(v: View, ev: DragEvent): Boolean {
-                                               return when(ev.getAction()) {
-                                                   DragEvent.ACTION_DRAG_STARTED -> true
-                                                   else -> true
-                                               }
-                                           }
-        })
-
         binding.lifecycleOwner = requireActivity()
         binding.viewModel = scenesVM
         return binding.root

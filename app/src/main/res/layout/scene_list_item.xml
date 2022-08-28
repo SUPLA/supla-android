@@ -52,5 +52,11 @@
           android:layout_height="@dimen/min_tap_size"
           android:background="@drawable/on_off_inset" />
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_separator_thickness"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/list_separator_bg" />
   </RelativeLayout>
 </layout>

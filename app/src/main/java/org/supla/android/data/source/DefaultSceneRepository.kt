@@ -50,6 +50,10 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
         return rv
     }
 
+    override fun updateScene(scene: Scene): Boolean {
+        return dao.updateScene(scene)
+    }
+
     override fun updateSuplaScene(suplaScene: SuplaScene): Boolean {
         val scene = dao.getSceneByRemoteId(suplaScene.id)
 

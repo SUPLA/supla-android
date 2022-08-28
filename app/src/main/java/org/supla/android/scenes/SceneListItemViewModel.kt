@@ -39,7 +39,6 @@ class SceneListItemViewModel(val scene: Scene,
         } else if(scene.altIcon > 0) {
             return ImageId(scene.altIcon, 1)
         } else {
-            Trace.d(TAG, "returning coffee")
             return ImageId(R.drawable.coffee_black)
         }
     }

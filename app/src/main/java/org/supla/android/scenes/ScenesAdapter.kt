@@ -40,7 +40,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                     private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
     inner class Section(var location: Location,
-                        var scenes: List<Scene> = emptyList())
+                        var scenes: MutableList<Scene> = mutableListOf())
 
     data class Path(val sectionIdx: Int, var sceneIdx: Int? = null)
 
@@ -89,12 +89,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         when(vh) {
             is SceneListItemViewHolder -> {
                 vh.binding.viewModel = SceneListItemViewModel(getScene(pos), sceneController)
-                vh.itemView.setOnLongClickListener({ v ->
-                   Trace.d(TAG, "gonna trigger drag of $v")
-               _touchHelper.startDrag(vh)
-               true
-                    })
-
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
@@ -131,7 +125,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         var i = 0
         var lc = -1
         while(i < scenes.count()) {
-            Trace.d(TAG, "looking at scene ${scenes[i]}")
             if(loc == null) {
                 loc = locationDao.getLocation(scenes[i].locationId)
                 vTypes.add(R.layout.location_list_item)
@@ -168,21 +161,78 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         return _sections[path.sectionIdx].scenes[path.sceneIdx!!]
     }
 
+    private fun swapScenes(src: Scene, dst: Scene) {
+        var offset = 1
+        for(sec in _sections) {
+            var si:Int? = null
+            var di:Int? = null
+            for(i in 0..sec.scenes.count()-1) {
+                if(sec.scenes[i] == src) {
+                    si = i
+                }
+
+                if(sec.scenes[i] == dst) {
+                    di = i
+                }
+
+                if(si != null && di != null) break
+            }
+
+            if(si != null && di != null) {
+                var delta = 0
+                if(si > di) {
+                    delta = -1
+                } else if(si < di) {
+                    delta = 1
+                }
+                var i = si
+
+                while(i != di) {
+                    val tmp = sec.scenes[i]
+                    sec.scenes[i] = sec.scenes[i + delta]
+                    sec.scenes[i + delta] = tmp
+                    notifyItemMoved(offset + i, offset + i + delta)
+                    i += delta
+                }
+                return
+            }
+            offset += sec.scenes.count() + 1
+        }
+    }
+
     inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
     inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     inner class ScenesReorderingCallback:  ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-        
+
+        override fun getMovementFlags(recyclerView: RecyclerView,
+                                      viewHolder: RecyclerView.ViewHolder): Int {
+            return if(viewHolder is SceneListItemViewHolder) super.getMovementFlags(recyclerView, viewHolder) else 0
+        }
+
+        override fun clearView(reyclerView: RecyclerView,
+                               viewHolder: RecyclerView.ViewHolder) {
+            scenesVM.onSceneOrderUpdate(_sections.map { it.scenes }.flatten())
+        }
+                                      
 
         override fun onMove(recyclerView: RecyclerView,
                             viewHolder: RecyclerView.ViewHolder,
                             target: RecyclerView.ViewHolder): Boolean {
             if(viewHolder is SceneListItemViewHolder &&
                target is SceneListItemViewHolder) {
-                Trace.d(TAG, "gonna drop ${viewHolder.binding.viewModel!!.scene} to ${target.binding.viewModel!!.scene}")
-                return true
+                val srcScene = viewHolder.binding.viewModel!!.scene
+                val dstScene = target.binding.viewModel!!.scene
+                if(srcScene.locationId == dstScene.locationId) {
+                    swapScenes(srcScene, dstScene)
+                    return true
+                } else {
+                    // reorder is only supported without the same location
+                    return false
+                }
+                
             } else {
                 // drop target type not compatible
                 return false

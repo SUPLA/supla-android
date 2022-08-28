@@ -45,19 +45,19 @@ data class Scene(var profileId: Long = 0,
         altIcon = cur.getInt(3)
         userIcon = cur.getInt(4)
         caption = cur.getString(5)
-        sortOrder = cur.getInt(6)
+        if(!cur.isNull(6)) {
+            startedAt = dateFromString(cur.getString(6))
+        }
         if(!cur.isNull(7)) {
-            startedAt = dateFromString(cur.getString(7))
+            estimatedEndDate = dateFromString(cur.getString(7))
         }
         if(!cur.isNull(8)) {
-            estimatedEndDate = dateFromString(cur.getString(8))
+            initiatorId = cur.getInt(8)
         }
         if(!cur.isNull(9)) {
-            initiatorId = cur.getInt(9)
+            initiatorName = cur.getString(9)
         }
-        if(!cur.isNull(10)) {
-            initiatorName = cur.getString(10)
-        }
+        sortOrder = cur.getInt(10)
         profileId = cur.getLong(11)
     }
 

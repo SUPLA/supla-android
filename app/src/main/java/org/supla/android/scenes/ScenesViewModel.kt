@@ -52,14 +52,22 @@ class ScenesViewModel @Inject constructor(
         reload()
     }
 
+    fun onSceneOrderUpdate(scenes: List<Scene>) {
+        var si = 0
+        for(s in scenes) {
+            s.sortOrder = si++
+            _sceneRepo.updateScene(s)
+        }
+        reload()
+    }
+
     override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
         if(msg.type == SuplaClientMsg.onSceneStateChanged) {
-            android.util.Log.i("SUPLA", "scene state changed")
+            reload()
         }
     }
 
     fun reload() {
-        android.util.Log.i("SUPLA", "scenes reload")
         _scenes.value = _sceneRepo.getAllProfileScenes()
     }
 
