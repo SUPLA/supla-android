@@ -22,7 +22,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
 import android.view.DragEvent
+import android.util.TypedValue
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -33,6 +35,8 @@ import org.supla.android.db.Location
 import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.databinding.LocationListItemBinding
 import org.supla.android.Trace
+import org.supla.android.Preferences
+import org.supla.android.SuplaApp
 import org.supla.android.R
 
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
@@ -47,6 +51,8 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     private var _sections: List<Section> = emptyList()
     private var _vTypes: List<Int> = emptyList()
     private var _paths: List<Path> = emptyList()
+    private lateinit var _context: Context
+    private var _parentView: RecyclerView? = null
 
     private val _scenesObserver: Observer<List<Scene>> = Observer {
         setScenes(it)
@@ -63,11 +69,13 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         
         scenesVM.scenes.observeForever(_scenesObserver)
         _touchHelper.attachToRecyclerView(v)
+        _context = v.context
+        _parentView = v
     }
 
     override fun onDetachedFromRecyclerView(v: RecyclerView) {
         scenesVM.scenes.removeObserver(_scenesObserver)
-
+        _parentView = null
         super.onDetachedFromRecyclerView(v)
     }
 
@@ -77,9 +85,14 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         return when(viewType) {
             R.layout.scene_list_item -> {
                 val binding = SceneListItemBinding.inflate(inflater, parent, false)
-                SceneListItemViewHolder(binding)
+                configureListItem(binding)
+                SceneListItemViewHolder(binding)                
             }
-            R.layout.location_list_item -> LocationListItemViewHolder(LocationListItemBinding.inflate(inflater, parent, false))
+            R.layout.location_list_item -> {
+                val binding = LocationListItemBinding.inflate(inflater, parent, false)
+                binding.tvSectionCaption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
+                LocationListItemViewHolder(binding)
+            }
             else -> throw IllegalArgumentException("unsupported view type $viewType")
         }
     }
@@ -113,6 +126,61 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    private fun configureListItem(binding: SceneListItemBinding) {
+        val scaleFactor = (Preferences(_context).channelHeight + 0.0) / 100.0
+        val height = (_context.resources.getDimensionPixelSize(R.dimen.channel_layout_height).toFloat() * scaleFactor).toInt()
+        val lp = LayoutParams(LayoutParams.MATCH_PARENT, height)
+        binding.root.setLayoutParams(lp)
+        binding.sceneLabel.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold())
+        arrayOf(binding.timerView, binding.initiatorView).forEach {
+            it.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular())
+        }
+
+        val imglp = binding.sceneIcon.getLayoutParams()
+        imglp.height = (_context.resources.getDimensionPixelSize(R.dimen.scene_img_height).toFloat() * scaleFactor).toInt()
+        imglp.width = (_context.resources.getDimensionPixelSize(R.dimen.scene_img_width).toFloat() * scaleFactor).toInt() 
+        binding.sceneIcon.setLayoutParams(imglp)
+
+        val btnlp = binding.onOffButton.getLayoutParams()
+        var btnH = _context.resources.getDimensionPixelSize(R.dimen.min_tap_size).toFloat()
+        var btnW = _context.resources.getDimensionPixelSize(R.dimen.min_tap_size).toFloat()
+
+        if(scaleFactor >= 1) {
+            btnH *= scaleFactor.toFloat()
+            btnW *= scaleFactor.toFloat()
+        }
+        binding.onOffButton.setLayoutParams(btnlp)
+
+        var textSize = _context.resources.getDimension(R.dimen.channel_caption_text_size).toFloat()
+        if(scaleFactor >= 1) {
+            val lbllp = binding.sceneLabel.getLayoutParams() as ViewGroup.MarginLayoutParams
+            lbllp.topMargin = (_context.resources.getDimensionPixelSize(R.dimen.form_label_dist).toFloat() * scaleFactor).toInt()
+            binding.sceneLabel.setLayoutParams(lbllp)
+
+            textSize *= scaleFactor.toFloat()
+        }
+        arrayOf(binding.timerView, binding.initiatorView, 
+                binding.sceneLabel).forEach {
+            it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        }
+
+        if(scaleFactor < 1) {
+            arrayOf(binding.timerContainer, binding.initiatorContainer).forEach {
+                val lp = it.getLayoutParams() as ViewGroup.MarginLayoutParams
+                lp.topMargin = (_context.resources.getDimensionPixelSize(R.dimen.scene_controls_top_margin).toFloat() * scaleFactor).toInt()
+                it.setLayoutParams(lp)
+            }
+        }
+    }
+
+    fun invalidateAll() {
+        val parent = _parentView
+        if(parent != null) {
+            parent.setAdapter(null)
+            parent.setAdapter(this)
+        }
     }
 
     private fun setScenes(scenes: List<Scene>) {

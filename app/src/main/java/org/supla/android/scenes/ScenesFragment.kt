@@ -63,4 +63,8 @@ class ScenesFragment: Fragment() {
     fun reload() {
         scenesVM.reload()
     }
+
+    fun reset() {
+        scenesVM.reset()
+    }
 }

@@ -303,6 +303,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
 
+        reloadScenes();
     }
 
     @Override
@@ -755,6 +756,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                be rebuilt with new layout. */
             channelListViewCursorAdapter = null;
             cgroupListViewCursorAdapter = null;
+            resetScenes();
         }
     }
 
@@ -801,10 +803,17 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
         return true;
     }
 
-    private void reloadScenes() {
+    ScenesFragment scenesFragment() {
         FragmentManager fmgr = getSupportFragmentManager();
-        ScenesFragment sf = (ScenesFragment)fmgr.findFragmentById(R.id.scenesFragment);
-        sf.reload();
+        return (ScenesFragment)fmgr.findFragmentById(R.id.scenesFragment);
+    }
+
+    private void reloadScenes() {
+        scenesFragment().reload();
+    }
+
+    private void resetScenes() {
+        scenesFragment().reset();
     }
 }
 

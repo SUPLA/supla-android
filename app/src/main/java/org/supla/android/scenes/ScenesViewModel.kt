@@ -71,6 +71,10 @@ class ScenesViewModel @Inject constructor(
         _scenes.value = _sceneRepo.getAllProfileScenes()
     }
 
+    fun reset() {
+        scenesAdapter.invalidateAll()
+    }
+
     override protected fun onCleared() {
         messageHandler.unregisterMessageListener(this)
     }
