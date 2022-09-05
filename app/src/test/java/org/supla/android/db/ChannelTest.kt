@@ -55,7 +55,8 @@ class ChannelTest: TestCase() {
         ch.value = chval
 
         assertEquals(ref, ch.temp)
-        assertEquals("23.0°C", ch.humanReadableValue)
+        val expectedReadable = String.format("%.1f", ref) + "°C" // Depends from locale it may be 23.0 or 23,0
+        assertEquals(expectedReadable, ch.humanReadableValue)
     }
 
     @Test
@@ -75,7 +76,8 @@ class ChannelTest: TestCase() {
         ch.value = chval
 
         assertEquals(ref.toDouble(), ch.temp)
-        assertEquals("13.0°C", ch.humanReadableValue)
+        val expectedReadable = String.format("%.1f", ref.toDouble()) + "°C" // Depends from locale it may be 13.0 or 13,0
+        assertEquals(expectedReadable, ch.humanReadableValue)
     }
 
     @Test
@@ -93,6 +95,7 @@ class ChannelTest: TestCase() {
         ch.value = chval
 
         assertEquals(73.4, ch.temp)
-        assertEquals("73.4°F", ch.humanReadableValue)
+        val expectedReadable = String.format("%.1f", 73.4) + "°F" // Depends from locale it may be 73.4 or 73,4
+        assertEquals(expectedReadable, ch.humanReadableValue)
     }
 }

@@ -296,7 +296,9 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getChannelGroupListCursor() {
-        return getChannelGroupListCursor(null);
+        String profileId = SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID;
+        String where = "G." + profileId + " = " + getCachedProfileId();
+        return getChannelGroupListCursor(where);
     }
 
     public boolean isZWaveBridgeChannelAvailable() {
@@ -361,7 +363,10 @@ public class ChannelDao extends BaseDao {
     }
 
     public Cursor getSortedChannelGroupIdsForLocationCursor(int locationId) {
-        return getChannelGroupListCursor("G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+        String where = "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                + " = " + getCachedProfileId() + " AND G." +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId;
+        return getChannelGroupListCursor(where);
     }
 
     public void updateChannelsOrder(List<Long> reorderedIds, int locationId) {
@@ -474,7 +479,10 @@ public class ChannelDao extends BaseDao {
 
     @SuppressLint("Range")
     public int getChannelGroupLastPositionInLocation(int locationId) {
-        Cursor cursor = getChannelGroupListCursor("G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+        String where = "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                + " = " + getCachedProfileId() + " AND G." +
+                SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID + " = " + locationId;
+        Cursor cursor = getChannelGroupListCursor(where);
         if (!cursor.moveToFirst()) {
             throw new NoSuchElementException();
         }
@@ -619,7 +627,6 @@ public class ChannelDao extends BaseDao {
                     + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = I."
                     + SuplaContract .UserIconsEntry.COLUMN_NAME_PROFILEID + ")"
                     + " WHERE G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE + " > 0"
-                    + " AND G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + getCachedProfileId()
                     + localWhere
                     + " ORDER BY " + "L." + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER + ", "
                     + "L." + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, "
