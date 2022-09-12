@@ -153,7 +153,6 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
     public final static int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
     public final static int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
-    public final static int SUPLA_CHANNEL_FLAG_POSSIBLE_SLEEP_MODE = 0x04000000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
