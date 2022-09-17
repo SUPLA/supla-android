@@ -1,4 +1,4 @@
-object Dependencies {
+object Deps {
 
     const val Kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.Kotlin}"
     const val Multidex = "androidx.multidex:multidex:${Versions.Multidex}"

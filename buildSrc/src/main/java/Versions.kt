@@ -37,7 +37,7 @@ object Versions {
         const val Robolectric = "4.6"
         const val JUnit = "4.13.1"
         const val Hamcrest = "1.3"
-        const val Coroutines = "1.6.4"
+        const val Coroutines = "1.3.2"
         const val Mockk = "1.12.4"
 
         object Mockito {
