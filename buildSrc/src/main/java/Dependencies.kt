@@ -9,6 +9,8 @@ object Dependencies {
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
     const val AndroidBuildTools = "com.android.tools.build:gradle:7.2.1"
 
+    const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
+
     object Hilt {
         const val Hilt = "com.google.dagger:hilt-android:${Versions.Hilt}"
         const val Kapt = "com.google.dagger:hilt-android-compiler:${Versions.Hilt}"

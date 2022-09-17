@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.diffplug.spotless")
     kotlin("android")
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
@@ -134,4 +135,28 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+}
+
+spotless {
+    ratchetFrom("origin/develop")
+
+    java {
+        target(fileTree("dir" to "src", "include" to "**/*.java"))
+
+        googleJavaFormat("1.15.0")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    kotlin {
+        target(fileTree("dir" to "src", "include" to "**/*.kt"))
+        ktlint(Versions.KtLint).editorConfigOverride(mapOf(
+                "disabled_rules" to "no-wildcard-imports",
+                "max_line_length" to "100"
+        ))
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
 }

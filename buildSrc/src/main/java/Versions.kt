@@ -12,6 +12,9 @@ object Versions {
     const val Coroutines = "1.3.9"
     const val GoogleMaterial = "1.0.0"
 
+    const val Spotless = "6.10.0"
+    const val KtLint = "0.46.1"
+
     object Androidx {
         const val Fragment = "1.4.1"
         const val Lifecycle = "2.4.1"
