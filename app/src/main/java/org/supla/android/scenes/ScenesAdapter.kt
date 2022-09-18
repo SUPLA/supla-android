@@ -25,10 +25,16 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.DragEvent
 import android.util.TypedValue
+import android.os.CountDownTimer
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.databinding.Observable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import org.supla.android.data.source.local.LocationDao
 import org.supla.android.db.Scene
 import org.supla.android.db.Location
@@ -41,6 +47,7 @@ import org.supla.android.R
 
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
                     private val locationDao: LocationDao,
+                    private val viewModelScope: CoroutineScope,
                     private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
     inner class Section(var location: Location,
@@ -60,6 +67,8 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
     private val _reorderingCallback = ScenesReorderingCallback()
     private val _touchHelper = ItemTouchHelper(_reorderingCallback)
+    private val _timerTicks =  MutableSharedFlow<Unit>()
+    private var _timer: CountDownTimer? = null
 
     private val TAG = "supla"
 
@@ -71,9 +80,27 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         _touchHelper.attachToRecyclerView(v)
         _context = v.context
         _parentView = v
+        setupTimer()
     }
 
+
+    private fun setupTimer() {
+        _timer = object : CountDownTimer(1000, 1000) {
+            override fun onTick(unused: Long) {}
+            override fun onFinish() {
+                viewModelScope.launch {
+                    _timerTicks.emit(Unit)
+                }
+                setupTimer()
+            }
+        }
+        _timer?.start()
+    }
+
+
     override fun onDetachedFromRecyclerView(v: RecyclerView) {
+        _timer?.cancel()
+        _timer = null
         scenesVM.scenes.removeObserver(_scenesObserver)
         _parentView = null
         super.onDetachedFromRecyclerView(v)
@@ -101,7 +128,15 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                   pos: Int) {
         when(vh) {
             is SceneListItemViewHolder -> {
-                vh.binding.viewModel = SceneListItemViewModel(getScene(pos), sceneController)
+                val vm = SceneListItemViewModel(getScene(pos), sceneController,
+                                                viewModelScope,
+                                                _timerTicks.asSharedFlow())
+                vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                                                    override fun onPropertyChanged(sender: Observable, pid: Int) {
+                                                        notifyItemChanged(pos)
+                                                    }
+                                                })
+                vh.binding.viewModel = vm
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))

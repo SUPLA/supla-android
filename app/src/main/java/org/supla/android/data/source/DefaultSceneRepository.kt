@@ -58,6 +58,7 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
         val scene = dao.getSceneByRemoteId(suplaScene.id)
 
         if(scene == null) {
+            Trace.d(TAG, "scene ${suplaScene.id} not found")
             val newScene = Scene()
             newScene.assign(suplaScene)
             return dao.insertScene(newScene)
@@ -87,7 +88,7 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
             // no change in data
             return false
         } else {
-            return true
+            return dao.updateScene(cloned)
         }
     }
 }

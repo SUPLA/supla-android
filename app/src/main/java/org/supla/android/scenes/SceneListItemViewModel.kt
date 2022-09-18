@@ -18,16 +18,23 @@ package org.supla.android.scenes
  */
 
 import androidx.databinding.Bindable
+import androidx.databinding.BaseObservable
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import org.supla.android.db.Scene
 import org.supla.android.images.ImageId
 import org.supla.android.R
+import org.supla.android.BR
 import org.supla.android.Trace
 
 class SceneListItemViewModel(val scene: Scene,
-                             private val controller: SceneController) {
+                             private val controller: SceneController,
+                             private val viewModelScope: CoroutineScope,
+                             private val clockSource: SharedFlow<Unit>): BaseObservable() {
 
     val sceneName: String
         get() = scene.caption
@@ -46,9 +53,42 @@ class SceneListItemViewModel(val scene: Scene,
     val sceneInitiator: String?
         get() = scene.initiatorName
 
-    val timeSinceStart: String = computeTimeSinceStart()
+    private val UNKNOWN_TIME = "--:--:--"
+    private var _timeSinceStart = UNKNOWN_TIME
+    var timeSinceStart: String
+      @Bindable get() = _timeSinceStart
+      set(value) {
+          if(_timeSinceStart != value) {
+              _timeSinceStart = value
+              notifyPropertyChanged(BR.timeSinceStart)
+          }
+      }
 
     private val TAG = "supla"
+    private var _executing = false
+
+    init {
+        val sst = scene.startedAt
+        val now = Date()
+        timeSinceStart = computeTimeSinceStart(now)
+        if(sst != null && sst < now) {
+            val eet = scene.estimatedEndDate
+            if(eet == null || eet > now) {
+                _executing = true
+            }
+        }
+
+        viewModelScope.launch {
+            clockSource.collect {
+                val now = Date()
+                timeSinceStart = computeTimeSinceStart(now)
+                val eet = scene.estimatedEndDate
+                if(eet != null && eet < now && _executing) {
+                    _executing = false
+                }
+            }
+        }
+    }
 
     fun startStopScene() {
         Trace.d(TAG, "start stop scene")
@@ -59,14 +99,30 @@ class SceneListItemViewModel(val scene: Scene,
         }
     }
 
-    private fun computeTimeSinceStart(): String {
-        val std = scene.startedAt
-        if(std != null) {
-            val res = Date(Date().time - std.time) 
-            val fmt = SimpleDateFormat("HH:mm:ss")
-            return fmt.format(res)!!
+    private fun formatMillis(v: Long): String {
+        var r = v
+        var k: Long = 0
+        var rv = ""
+        k = r / 3600000
+        rv += String.format("%02d:", k)
+        r -= k * 3600000
+        k = r / 60000
+        rv += String.format("%02d:", k)
+        r -= k * 60000
+        rv += String.format("%02d", r / 1000)
+
+        return rv
+    }
+
+    private fun computeTimeSinceStart(now: Date): String {
+        val sst = scene.startedAt
+        val eet = scene.estimatedEndDate
+        if(sst != null && sst < now && (eet == null || eet.time > now.time)) {
+            val diff = now.time - sst.time
+            val rv = formatMillis(diff)
+            return rv
         } else {
-            return "--:--:--"
+            return UNKNOWN_TIME
         }
     }
 }

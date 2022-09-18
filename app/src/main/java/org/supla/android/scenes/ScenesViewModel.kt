@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
@@ -42,6 +43,7 @@ class ScenesViewModel @Inject constructor(
     val scenes: LiveData<List<Scene>> = _scenes
 
     val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper),
+                                      viewModelScope,
                                       scController)
 
     init {

@@ -75,7 +75,7 @@
           android:layout_gravity="center"
           android:textSize="14dp"
           android:textColor="@color/label_grey"
-          android:text="{viewModel.sceneInitiatorName}" />
+          android:text="@{viewModel.sceneInitiator}" />
     </FrameLayout>
     <View
         android:layout_width="match_parent"
