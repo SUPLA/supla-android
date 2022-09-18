@@ -91,4 +91,8 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
             return dao.updateScene(cloned)
         }
     }
+
+    override fun getSceneUserIconIds(): List<Int> {
+        return getAllProfileScenes().flatMap { listOf(it.altIcon, it.userIcon) }
+    }
 }

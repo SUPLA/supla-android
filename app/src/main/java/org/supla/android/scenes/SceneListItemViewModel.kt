@@ -39,15 +39,31 @@ class SceneListItemViewModel(val scene: Scene,
     val sceneName: String
         get() = scene.caption
 
+    private val standardIcons = listOf(R.drawable.scene0, R.drawable.scene1,
+                                       R.drawable.scene2, R.drawable.scene3,
+                                       R.drawable.scene4, R.drawable.scene5,
+                                       R.drawable.scene6, R.drawable.scene7,
+                                       R.drawable.scene8, R.drawable.scene9,
+                                       R.drawable.scene10, R.drawable.scene11,
+                                       R.drawable.scene12, R.drawable.scene13,
+                                       R.drawable.scene14, R.drawable.scene15,
+                                       R.drawable.scene16, R.drawable.scene17,
+                                       R.drawable.scene18, R.drawable.scene19)
+
     val sceneIcon: ImageId 
         get() {
-        if(scene.userIcon > 0) {
-            return ImageId(scene.userIcon, 0)
-        } else if(scene.altIcon > 0) {
-            return ImageId(scene.altIcon, 1)
-        } else {
-            return ImageId(R.drawable.coffee_black)
-        }
+            Trace.d(TAG, "returning user icon for: $scene")
+            val iconId: Int
+            if(scene.altIcon > 0) {
+                iconId = scene.altIcon
+            } else {
+                iconId = scene.userIcon
+            }
+            if(iconId < standardIcons.size) {
+                return ImageId(standardIcons[iconId])
+            } else {
+                return ImageId(iconId, 0)
+            }
     }
 
     val sceneInitiator: String?

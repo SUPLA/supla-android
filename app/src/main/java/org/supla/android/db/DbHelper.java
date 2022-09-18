@@ -882,7 +882,10 @@ public class DbHelper extends BaseDbHelper {
     }
 
     public List<Integer> iconsToDownload() {
-        return channelRepository.getChannelUserIconIds();
+        List<Integer> rv = new java.util.LinkedList();
+        rv.addAll(channelRepository.getChannelUserIconIds());
+        rv.addAll(sceneRepository.getSceneUserIconIds());
+        return rv;
     }
 
     public boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
