@@ -1,20 +1,20 @@
 <resources>
     <string name="confirm_button_text" translatable="false">OK</string>
-    <string name="dont_have_account_yet" translatable="false">Don\'t have an account in Supla Cloud yet?</string>
+    <string name="dont_have_account_yet">Don\'t have an account in Supla Cloud yet?</string>
 
     <string name="app_name" translatable="false">SUPLA</string>
-    <string name="profiles_title" translatable="false">Accounts</string>
-    <string name="profile_name_label" translatable="false">ACCOUNT NAME</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Cannot remove active account</string>
-    <string name="profile_default_name" translatable="false">Default account</string>
-    <string name="profile_select_active" translatable="false">Select active account</string>
-    <string name="profile_act_info" translatable="false">Tap the account to log in.</string>
-    <string name="form_error" translatable="false">Error</string>
-    <string name="form_profile_name_missing" translatable="false">Account name is missing</string>
-    <string name="form_profile_required_data_missing" translatable="false">Required data is missing</string>
-    <string name="form_profile_duplicate" translatable="false">Account by that name already exists</string>
-    <string name="add_account" translatable="false">Add an account</string>
-<string name="edit_account" translatable="false"> Edit account</string>
+    <string name="profiles_title">Accounts</string>
+    <string name="profile_name_label">ACCOUNT NAME</string>
+    <string name="form_cannot_delete_active_profile">Cannot remove active account</string>
+    <string name="profile_default_name">Default account</string>
+    <string name="profile_select_active">Select active account</string>
+    <string name="profile_act_info">Tap the account to log in.</string>
+    <string name="form_error">Error</string>
+    <string name="form_profile_name_missing">Account name is missing</string>
+    <string name="form_profile_required_data_missing">Required data is missing</string>
+    <string name="form_profile_duplicate">Account by that name already exists</string>
+    <string name="add_account">Add an account</string>
+<string name="edit_account"> Edit account</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
     <string name="menubar_title" translatable="false">supla</string>
@@ -94,15 +94,15 @@
     <string name="event_poweronoff">turned the power ON/OFF</string>
     <string name="event_turnedthelightonoff">turned the light ON/OFF</string>
 
-    <string translatable="false" name="server_address">SERVER ADDRESS</string>
-    <string translatable="false" name="access_id">ACCESS IDENTIFIER</string>
-    <string translatable="false" name="password">PASSWORD</string>
-    <string translatable="false" name="email">E-MAIL ADDRESS</string>
-    <string translatable="false" name="advanced_settings">Advanced</string>
-    <string translatable="false" name="create_account">Create</string>
-    <string translatable="false" name="delete_account">Delete</string>
-    <string translatable="false" name="delete_account_confirm_title">Delete account</string>
-    <string translatable="false" name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
+    <string name="server_address">SERVER ADDRESS</string>
+    <string name="access_id">ACCESS IDENTIFIER</string>
+    <string name="password">PASSWORD</string>
+    <string name="email">E-MAIL ADDRESS</string>
+    <string name="advanced_settings">Advanced</string>
+    <string name="create_account">Create</string>
+    <string name="delete_account">Delete</string>
+    <string name="delete_account_confirm_title">Delete account</string>
+    <string name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
     <string name="delete_account_confirm_message_with_widgets">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
 
     <!-- Configuration screen, profile name of current profile
@@ -113,15 +113,15 @@
 	 the app. -->
 
     <string translatable="false" name="cfg_label_email_auth">Email</string>
-    <string translatable="false" name="cfg_label_access_id_auth">Access ID</string>
+    <string name="cfg_label_access_id_auth">Access ID</string>
     <string translatable="false" name="cfg_checkbox_server_auto">Auto</string>
-    <string translatable="false" name="cfg_channel_height">Channel height</string>
-    <string translatable="false" name="cfg_temperature_unit">Temperature unit</string>
-    <string translatable="false" name="cfg_button_autohide">Auto-hide buttons</string>
+    <string name="cfg_channel_height">Channel height</string>
+    <string name="cfg_temperature_unit">Temperature unit</string>
+    <string name="cfg_button_autohide">Auto-hide buttons</string>
 
-    <string translatable="false" name="profile">Your account</string>
-    <string translatable="false" name="profile_plural">Your accounts</string>
-    <string translatable="false" name="menubar_appsettings">App Settings</string>
+    <string name="profile">Your account</string>
+    <string name="profile_plural">Your accounts</string>
+    <string name="menubar_appsettings">App Settings</string>
 
     <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
 
@@ -131,7 +131,7 @@
     <string name="rate_no_thanks">No thanks</string>
 
     <string name="rs_percent_caption">Percentage of closing</string>
-    <string translatable="false"  name="rs_percent_caption_open">Percentage of opening</string>    
+    <string name="rs_percent_caption_open">Percentage of opening</string>
     <string name="calibration">[Calibration]</string>
 
     <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
@@ -226,8 +226,8 @@
     <string name="all_available_history">All available history</string>
     <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
     <string name="no_chart_data_available">No chart data available.</string>
-    <string name="em_chart_phase_n" translatable="false">Phase %d</string>
-    <string name="em_chart_all_phases" translatable="false">Phase 1+2+3</string>
+    <string name="em_chart_phase_n">Phase %d</string>
+    <string name="em_chart_all_phases">Phase 1+2+3</string>
     <string name="comparsion_minmin">Minute to minute comparison</string>
     <string name="comparsion_hourhour">Hour to hour comparison</string>
     <string name="comparsion_dayday">Day to day comparison</string>
@@ -426,72 +426,72 @@
     <string name="seconds">Seconds</string>
     <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
 
-    <string translatable="false" name="widget_configure_title">Widget Configuration</string>
-    <string translatable="false" name="widget_configure_profile_label">Account</string>
-    <string translatable="false" name="widget_configure_channel_label">Channel of widget</string>
-    <string translatable="false" name="widget_configure_action_label">Action</string>
-    <string translatable="false" name="widget_configure_name_label">Display name</string>
-    <string translatable="false" name="widget_configure_error">Could not configure channel…</string>
-    <string translatable="false" name="widget_configure_no_selection">No channel selected</string>
-    <string translatable="false" name="widget_configure_no_channel">No channels available</string>
-    <string translatable="false" name="double_button_widget_description">Double-button widget.</string>
-    <string translatable="false" name="single_button_widget_description">Single-button widget.</string>
-    <string translatable="false" name="widget_app_not_initialized">Please login first!</string>
-    <string translatable="false" name="widget_command_error">Communication failure!</string>
-    <string translatable="false" name="widget_command_no_connection">No internet connection!</string>
-    <string translatable="false" name="widget_command_started">Done</string>
-    <string translatable="false" name="widget_removed_label">Channel removed</string>
+    <string name="widget_configure_title">Widget Configuration</string>
+    <string name="widget_configure_profile_label">Account</string>
+    <string name="widget_configure_channel_label">Channel of widget</string>
+    <string name="widget_configure_action_label">Action</string>
+    <string name="widget_configure_name_label">Display name</string>
+    <string name="widget_configure_error">Could not configure channel…</string>
+    <string name="widget_configure_no_selection">No channel selected</string>
+    <string name="widget_configure_no_channel">No channels available</string>
+    <string name="double_button_widget_description">Double-button widget.</string>
+    <string name="single_button_widget_description">Single-button widget.</string>
+    <string name="widget_app_not_initialized">Please login first!</string>
+    <string name="widget_command_error">Communication failure!</string>
+    <string name="widget_command_no_connection">No internet connection!</string>
+    <string name="widget_command_started">Done</string>
+    <string name="widget_removed_label">Channel removed</string>
 
-    <string translatable="false" name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
-    <string translatable="false" name="channel_caption_roofwindow">Roof window</string>
-    <string translatable="false" name="channel_func_controllingtheroofwindow">Roof window operation</string>
-    <string translatable="false" name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
-    <string translatable="false" name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
+    <string name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
+    <string name="channel_caption_roofwindow">Roof window</string>
+    <string name="channel_func_controllingtheroofwindow">Roof window operation</string>
+    <string name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
+    <string name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
 
-    <string translatable="false" name="status_led">Status LED</string>
-    <string translatable="false" name="info_led_on">The LED is on if there is a connection to the server.</string>
-    <string translatable="false" name="info_led_off">The LED is off if there is a connection to the server.</string>
-    <string translatable="false" name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
-    <string translatable="false" name="input">Input</string>
-    <string translatable="false" name="monostable">Monostable</string>
-    <string translatable="false" name="bistable">Bistable</string>
-    <string translatable="false" name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
-    <string translatable="false" name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
-    <string translatable="false" name="diw_cfg_info_in_options">Input options</string>
-    <string translatable="false" name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
-    <string translatable="false" name="diw_cfg_info_bi_option">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
+    <string name="status_led">Status LED</string>
+    <string name="info_led_on">The LED is on if there is a connection to the server.</string>
+    <string name="info_led_off">The LED is off if there is a connection to the server.</string>
+    <string name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
+    <string name="input">Input</string>
+    <string name="monostable">Monostable</string>
+    <string name="bistable">Bistable</string>
+    <string name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
+    <string name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+    <string name="diw_cfg_info_in_options">Input options</string>
+    <string name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
+    <string name="diw_cfg_info_bi_option">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
     <string translatable="false" name="channel_caption_digiglass">Digiglass</string>
     <string translatable="false" name="channel_func_digiglass">Digiglass</string>
-    <string translatable="false" name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
-    <string translatable="false" name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
-    <string translatable="false" name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
-    <string translatable="false" name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4 GHz network is ether not in range or its name was incorrect.</string>
-    <string translatable="false" name="incorrect_email_or_password">Incorrect Email Address or Password</string>
-    <string translatable="false" name="channel_name">Channel name</string>
-    <string translatable="false" name="location_name">Location name</string>
+    <string name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
+    <string name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
+    <string name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
+    <string name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4 GHz network is ether not in range or its name was incorrect.</string>
+    <string name="incorrect_email_or_password">Incorrect Email Address or Password</string>
+    <string name="channel_name">Channel name</string>
+    <string name="location_name">Location name</string>
     <string translatable="false" name="str_default">Default</string>
-    <string translatable="false" name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
-    <string translatable="false" name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
-    <string translatable="false" name="recalibration_question">Are you sure you want to start calibration?</string>
-    <string translatable="false" name="calibration_failed">Calibration failed.</string>
-    <string translatable="false" name="calibration_lost">Calibration lost.</string>
-    <string translatable="false" name="motor_problem">Motor problem / Unexpected stop.</string>
-    <string translatable="false" name="lastconnectionresetcause_unknown">0: unknown</string>
-    <string translatable="false" name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
-    <string translatable="false" name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
-    <string translatable="false" name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
-    <string translatable="false" name="basic_profile_warning">Setting not available</string>
-    <string translatable="false" name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
-    <string translatable="false" name="add_device_warning">In Access ID authentication mode you won\'t be able to use automatic "Add device" wizard. However you will still be able to add it by manual "Add device" procedure.</string>
-    <string translatable="false" name="show_channel_info">Show ⓘ button</string>
-    <string translatable="false" name="add_device_needs_cloud_title">Device setup</string>
-    <string translatable="false" name="add_device_needs_cloud_message">This device does not have any channels visible in the application. To finish configuration go to cloud.supla.org</string>
-    <string translatable="false" name="add_device_needs_cloud_dismiss">I understand</string>
-    <string translatable="false" name="add_device_needs_cloud_go">Go to CLOUD</string>
-    <string translatable="false" name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
-    <string translatable="false" name="location_ordering">Location order</string>
-    <string translatable="false" name="rs_display_mode">Roller shutter %</string>
-    <string translatable="false" name="rs_display_mode_opening">Opening</string>
-    <string translatable="false" name="rs_display_mode_closing">Closing</string>
-    <string translatable="false" name="status_accessid_inactive">Access Identifier inactive</string>
+    <string name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
+    <string name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
+    <string name="recalibration_question">Are you sure you want to start calibration?</string>
+    <string name="calibration_failed">Calibration failed.</string>
+    <string name="calibration_lost">Calibration lost.</string>
+    <string name="motor_problem">Motor problem / Unexpected stop.</string>
+    <string name="lastconnectionresetcause_unknown">0: unknown</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
+    <string name="basic_profile_warning">Setting not available</string>
+    <string name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
+    <string name="add_device_warning">In Access ID authentication mode you won\'t be able to use automatic "Add device" wizard. However you will still be able to add it by manual "Add device" procedure.</string>
+    <string name="show_channel_info">Show ⓘ button</string>
+    <string name="add_device_needs_cloud_title">Device setup</string>
+    <string name="add_device_needs_cloud_message">This device does not have any channels visible in the application. To finish configuration go to cloud.supla.org</string>
+    <string name="add_device_needs_cloud_dismiss">I understand</string>
+    <string name="add_device_needs_cloud_go">Go to CLOUD</string>
+    <string name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
+    <string name="location_ordering">Location order</string>
+    <string name="rs_display_mode">Roller shutter %</string>
+    <string name="rs_display_mode_opening">Opening</string>
+    <string name="rs_display_mode_closing">Closing</string>
+    <string name="status_accessid_inactive">Access Identifier inactive</string>
 </resources>
