@@ -25,6 +25,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -36,6 +37,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.widget.WidgetVisibilityHandler;
@@ -182,6 +184,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetDfgTransparency(long _supla_client, int ChannelID, short mask,
                                                 short active_bits);
+
+    private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
     private void sendMessage(SuplaClientMsg msg) {
         if (canceled()) return;
@@ -722,6 +726,15 @@ public class SuplaClient extends Thread {
         } finally {
             unlockClientPtr();
         }
+    }
+
+    public boolean executeAction(@NotNull ActionParameters parameters) {
+      long _supla_client_ptr = lockClientPtr();
+      try {
+        return _supla_client_ptr != 0 && scExecuteAction(_supla_client_ptr, parameters);
+      } finally {
+        unlockClientPtr();
+      }
     }
 
     private void onVersionError(SuplaVersionError versionError) {
