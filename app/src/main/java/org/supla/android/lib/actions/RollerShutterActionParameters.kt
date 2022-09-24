@@ -17,9 +17,15 @@ package org.supla.android.lib.actions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class RgbwParameters : ActionParameters() {
-    val brightness: Short = 0
-    val colorBrightness: Short = 0
-    val color: Long = 0
-    val randomColor: Boolean = false
+class RollerShutterActionParameters : ActionParameters() {
+    var percentage: Short = 0
+        set(value) {
+            if (value > 100) {
+                field = 100
+            } else  if (value < 0) {
+                field = 0
+            } else {
+                field = value
+            }
+        }
 }
