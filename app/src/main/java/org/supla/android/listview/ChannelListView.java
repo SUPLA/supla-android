@@ -163,6 +163,9 @@ public class ChannelListView extends ListView implements
         fc.setLayoutParams(lp);
 
         DetailFragment df = makeDetailFragment(cbase);
+        if(df == null) {
+            return null;
+        }
 
         FragmentManager fmgr = getFragmentManager();
         fmgr.beginTransaction()
@@ -205,10 +208,6 @@ public class ChannelListView extends ListView implements
             break;
         }
 
-        if(rv == null) {
-            rv = new DetailFragmentFactory(getContext()).makeDetailFragment(cbase);
-        }
-        
         return rv;
     }
 
