@@ -17,38 +17,11 @@ package org.supla.android.lib.actions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class RgbwActionParameters : ActionParameters() {
-    var brightness: Short = -1 // -1 == Ignore
-        set(value) {
-            field = restrictBrightnessLevel(value)
-        }
+const val IGNORE_BRIGHTNESS = -1
+const val IGNORE_COLOR = 0
 
-    var colorBrightness: Short = -1 // -1 == Ignore
-        set(value) {
-            field = restrictBrightnessLevel(value)
-        }
-
-    var color: Long = 0 // 0 == Ignore
-        set(value) {
-            if (value < 0) {
-                field = 0
-            } else if (value > 0xFFFFFF) {
-                field = 0xFFFFFF
-            } else {
-                field = value
-            }
-        }
-    
-    var colorRandom: Boolean = false
-    var onOff: Boolean = false
-
-    private fun restrictBrightnessLevel(brightness: Short) : Short {
-        if (brightness > 100) {
-            return 100
-        } else if (brightness < -1) {
-            return -1
-        } else {
-            return brightness
-        }
-    }
-}
+class RgbwActionParameters(action: ActionId, subjectType: SubjectType, subjectId: Int,
+                           var brightness: Short, var colorBrightness: Short, var color: Long,
+                           var colorRandom: Boolean, var onOff: Boolean) :
+    ActionParameters(action, subjectType, subjectId) {
+ }

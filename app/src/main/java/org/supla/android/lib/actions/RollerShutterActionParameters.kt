@@ -17,15 +17,6 @@ package org.supla.android.lib.actions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class RollerShutterActionParameters : ActionParameters() {
-    var percentage: Short = 0
-        set(value) {
-            if (value > 100) {
-                field = 100
-            } else  if (value < 0) {
-                field = 0
-            } else {
-                field = value
-            }
-        }
-}
+class RollerShutterActionParameters(action: ActionId, subjectType: SubjectType,
+                                    subjectId: Int, var percentage: Short)
+    : ActionParameters(action, subjectType, subjectId)
