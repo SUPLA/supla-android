@@ -19,7 +19,7 @@ package org.supla.android.profile
 
 import org.supla.android.db.DbItem
 
-data class AuthInfo(var emailAuth: Boolean, 
+data class AuthInfo(var emailAuth: Boolean,
                     var serverAutoDetect: Boolean,
                     var serverForEmail: String = "",
                     var serverForAccessID: String = "",
@@ -33,21 +33,21 @@ data class AuthInfo(var emailAuth: Boolean,
     /**
      Returns server used for current authentication method
      */
-    val serverForCurrentAuthMethod: String 
+    val serverForCurrentAuthMethod: String
         get() = if(emailAuth) serverForEmail else serverForAccessID
 
     /**
      A flag indicating if current authentication settings
      are complete (but not necessarily correct).
      */
-    val isAuthDataComplete: Boolean 
+    val isAuthDataComplete: Boolean
         get() {
-            if(emailAuth) {
-                return !emailAddress.isEmpty() &&
-                (serverAutoDetect || !serverForCurrentAuthMethod.isEmpty())
+            return if(emailAuth) {
+                emailAddress.isNotEmpty() &&
+                        (serverAutoDetect || serverForCurrentAuthMethod.isNotEmpty())
             } else {
-                return !serverForCurrentAuthMethod.isEmpty() &&
-                    accessID > 0 && !accessIDpwd.isEmpty()
+                serverForCurrentAuthMethod.isNotEmpty() &&
+                        accessID > 0 && accessIDpwd.isNotEmpty()
             }
         }
 }
