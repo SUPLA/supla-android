@@ -1,4 +1,7 @@
 package org.supla.android.lib.actions
+
+import org.supla.android.tools.UsedFromNativeCode
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,8 +23,8 @@ package org.supla.android.lib.actions
 const val IGNORE_BRIGHTNESS = -1
 const val IGNORE_COLOR = 0
 
+@UsedFromNativeCode
 class RgbwActionParameters(action: ActionId, subjectType: SubjectType, subjectId: Int,
                            var brightness: Short, var colorBrightness: Short, var color: Long,
                            var colorRandom: Boolean, var onOff: Boolean) :
-    ActionParameters(action, subjectType, subjectId) {
- }
+    ActionParameters(action, subjectType, subjectId)

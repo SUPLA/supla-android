@@ -1,4 +1,7 @@
 package org.supla.android.lib.actions
+
+import org.supla.android.tools.UsedFromNativeCode
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,6 +20,7 @@ package org.supla.android.lib.actions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@UsedFromNativeCode
 class RollerShutterActionParameters(action: ActionId, subjectType: SubjectType,
                                     subjectId: Int, var percentage: Short)
     : ActionParameters(action, subjectType, subjectId)

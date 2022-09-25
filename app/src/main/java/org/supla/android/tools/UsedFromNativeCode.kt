@@ -18,6 +18,9 @@ package org.supla.android.tools
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD,
+  AnnotationTarget.CLASS,
+  AnnotationTarget.PROPERTY
+)
 @Retention(AnnotationRetention.SOURCE)
 annotation class UsedFromNativeCode
