@@ -17,6 +17,8 @@ package org.supla.android.lib.singlecall
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Looper
+import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.lib.actions.ActionParameters
@@ -39,6 +41,10 @@ class SingleCall private constructor(
     @Throws(NoSuchProfileException::class, ConnectionException::class, ResultException::class)
     @WorkerThread
     fun executeAction(parameters: ActionParameters) {
+        if (Looper.getMainLooper().isCurrentThread) {
+            throw NetworkOnMainThreadException()
+        }
+
         val profile = profileRepository.getProfile(profileId)
             ?: throw NoSuchProfileException(profileId)
 
