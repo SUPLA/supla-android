@@ -17,33 +17,31 @@ package org.supla.android.lib.actions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-open class ActionParameters {
-    companion object {
-        const val ACTION_OPEN = 10
-        const val ACTION_CLOSE = 20
-        const val ACTION_SHUT = 30
-        const val ACTION_REVEAL = 40
-        const val ACTION_REVEAL_PARTIALLY = 50
-        const val ACTION_SHUT_PARTIALLY = 51
-        const val ACTION_TURN_ON = 60
-        const val ACTION_TURN_OFF = 70
-        const val ACTION_SET_RGBW_PARAMETERS = 80
-        const val ACTION_OPEN_CLOSE = 90
-        const val ACTION_STOP = 100
-        const val ACTION_TOGGLE = 110
-        const val ACTION_UP_OR_STOP = 140
-        const val ACTION_DOWN_OR_STOP = 150
-        const val ACTION_STEP_BY_STEP = 160
-        const val ACTION_EXECUTE = 3000
-        const val ACTION_INTERRUPT = 3001
-        const val ACTION_INTERRUPT_AND_EXECUTE = 3002
+open class ActionParameters(var action: ActionId, var subjectType: SubjectType, var subjectId: Int)
 
-        const val SUBJECT_TYPE_UNKNOWN = 0
-        const val SUBJECT_TYPE_CHANNEL = 1
-        const val SUBJECT_TYPE_CHANNEL_GROUP = 2
-        const val SUBJECT_TYPE_SCENE = 3
-    }
-    var action: Int = 0
-    var subjectType: Int = SUBJECT_TYPE_UNKNOWN
-    var subjectId: Int = 0
+enum class SubjectType(val value: Int) {
+    CHANNEL(1),
+    GROUP(2),
+    SCENE(3)
+}
+
+enum class ActionId(val value: Int) {
+    OPEN(10),
+    CLOSE(20),
+    SHUT(30),
+    REVEAL(40),
+    REVEAL_PARTIALLY(50),
+    SHUT_PARTIALLY(51),
+    TURN_ON(60),
+    TURN_OFF(70),
+    SET_RGBW_PARAMETERS(80),
+    OPEN_CLOSE(90),
+    STOP(100),
+    TOGGLE(110),
+    UP_OR_STOP(140),
+    DOWN_OR_STOP(150),
+    STEP_BY_STEP(160),
+    EXECUTE(3000),
+    INTERRUPT(3001),
+    INTERRUPT_AND_EXECUTE(3002),
 }
