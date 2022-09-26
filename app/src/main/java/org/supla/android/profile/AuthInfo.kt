@@ -17,8 +17,12 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.DbItem
+import android.content.Context
+import org.supla.android.Encryption
+import org.supla.android.Preferences
+import org.supla.android.tools.UsedFromNativeCode
 
+@UsedFromNativeCode
 data class AuthInfo(var emailAuth: Boolean,
                     var serverAutoDetect: Boolean,
                     var serverForEmail: String = "",
@@ -50,4 +54,17 @@ data class AuthInfo(var emailAuth: Boolean,
                         accessID > 0 && accessIDpwd.isNotEmpty()
             }
         }
+
+  private fun decrypt(payload: ByteArray, context: Context): ByteArray? {
+    val key = Preferences.getDeviceID(context)
+    return Encryption.decryptDataWithNullOnException(payload, key)
+  }
+
+  fun getDecryptedGuid(context: Context): ByteArray? {
+    return decrypt(guid, context);
+  }
+
+  fun getDecryptedAuthKey(context: Context): ByteArray? {
+    return decrypt(authKey, context);
+  }
 }

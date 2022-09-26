@@ -746,7 +746,6 @@ public class SuplaClient extends Thread {
 
         AuthInfo info = profileManager.getCurrentAuthInfo();
 
-
         if (versionError.RemoteVersion >= 7
                 && versionError.Version > versionError.RemoteVersion
                 && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
@@ -1336,8 +1335,8 @@ public class SuplaClient extends Thread {
 
 
                     cfg.Host = info.getServerForCurrentAuthMethod();
-                    cfg.clientGUID = decrypted(info.getGuid());
-                    cfg.AuthKey = decrypted(info.getAuthKey());
+                    cfg.clientGUID = info.getDecryptedGuid(_context);
+                    cfg.AuthKey = info.getDecryptedAuthKey(_context);
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
@@ -1404,10 +1403,5 @@ public class SuplaClient extends Thread {
 
     private boolean shouldAutodiscoverHost() {
         return profileManager.getCurrentAuthInfo().getServerAutoDetect();
-    }
-
-    private byte[] decrypted(byte[] payload) {
-        String key = Preferences.getDeviceID(_context);
-        return Encryption.decryptDataWithNullOnException(payload, key);
     }
 }
