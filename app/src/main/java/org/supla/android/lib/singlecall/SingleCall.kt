@@ -17,6 +17,7 @@ package org.supla.android.lib.singlecall
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
@@ -34,9 +35,12 @@ import javax.inject.Singleton
  */
 
 class SingleCall private constructor(
+    var context: Context,
     var profileId: Long,
     var profileRepository: ProfileRepository) {
-    private external fun executeAction(authInfo: AuthInfo, parameters: ActionParameters)
+    private external fun executeAction(context: Context, authInfo: AuthInfo,
+                                       parameters: ActionParameters)
+
 
     @Throws(NoSuchProfileException::class, ConnectionException::class, ResultException::class)
     @WorkerThread
@@ -48,12 +52,13 @@ class SingleCall private constructor(
         val profile = profileRepository.getProfile(profileId)
             ?: throw NoSuchProfileException(profileId)
 
-        executeAction(profile.authInfo, parameters)
+        executeAction(context, profile.authInfo, parameters)
     }
 
     @Singleton
     class Provider @Inject constructor(private val profileRepository: ProfileRepository) {
-        fun provide(profileId: Long) : SingleCall = SingleCall(profileId, profileRepository)
+        fun provide(context: Context, profileId: Long) :
+          SingleCall = SingleCall(context, profileId, profileRepository)
     }
 
     companion object {
