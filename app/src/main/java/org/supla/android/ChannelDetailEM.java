@@ -125,6 +125,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private int slaveLastSelectedIdx = -1;
     private int slaveNumItems = -1;
     private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
+    private boolean mArrowsVisible = false;
 
     @Inject
     ProfileIdHolder profileIdHolder;
@@ -494,8 +495,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvTotalCost.setText(String.format("%.2f " + em.getCurrency(), em.getTotalCost()));
             tvCurrentCost.setText(String.format("%.2f " + em.getCurrency(),
                     currentCost));
-            ivDirection.setVisibility((em.getMeasuredValues()
-                    & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0 ? VISIBLE : INVISIBLE);
+            mArrowsVisible = (em.getMeasuredValues()
+                              & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0;
+            ivDirection.setVisibility(mArrowsVisible ? VISIBLE : INVISIBLE);
 
             Button btn = null;
             switch (phase) {
@@ -692,10 +694,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     @Override
     public void onDetailShow() {
         super.onDetailShow();
-
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
-        ivDirection.setVisibility(INVISIBLE);
+        ivDirection.setVisibility(mArrowsVisible ? VISIBLE : INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
 
