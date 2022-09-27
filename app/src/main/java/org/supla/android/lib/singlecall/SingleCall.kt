@@ -31,7 +31,7 @@ import javax.inject.Singleton
 /**
  * Class designed to making request, without the need to change active profile.
  * Each call creates a separate connection to the server that is closed upon receipt of the result.
- * Used mainly in widget's workers.
+ * Used mainly in widget's workers. Single calls are supported by the protocol version> = 19
  */
 
 class SingleCall private constructor(
@@ -42,7 +42,7 @@ class SingleCall private constructor(
                                        parameters: ActionParameters)
 
 
-    @Throws(NoSuchProfileException::class, ConnectionException::class, ResultException::class)
+    @Throws(NoSuchProfileException::class, ResultException::class)
     @WorkerThread
     fun executeAction(parameters: ActionParameters) {
         if (Looper.getMainLooper().isCurrentThread) {

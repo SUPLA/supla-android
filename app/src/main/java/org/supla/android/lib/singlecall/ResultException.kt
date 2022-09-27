@@ -22,7 +22,9 @@ import org.supla.android.tools.UsedFromNativeCode
 
 /**
  * Possible codes:
- * SUPLA_RESULT_VERSION_ERROR
+ * SUPLA_RESULT_VERSION_ERROR - It applies when the protocol version is beyond the range
+ * accepted by the server.
+ *
  * SUPLA_RESULT_HOST_NOT_FOUND
  * SUPLA_RESULT_CANT_CONNECT_TO_HOST
  * SUPLA_RESULT_RESPONSE_TIMEOUT
@@ -42,5 +44,5 @@ import org.supla.android.tools.UsedFromNativeCode
  */
 
 @UsedFromNativeCode
-class ResultException(message: String, val code: Int) : Exception(message)
+class ResultException(val result: Int) : Exception("The server returned a result number $result")
 
