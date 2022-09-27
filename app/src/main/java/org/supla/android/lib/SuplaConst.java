@@ -70,6 +70,8 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE = 29;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_ACTION_TRIGGER = 30;
     public final static int SUPLA_RESULTCODE_ACCESSID_INACTIVE = 31;
+    public final static int SUPLA_RESULTCODE_SUBJECT_NOT_FOUND = 34;
+    public final static int SUPLA_RESULTCODE_INCORRECT_PARAMETERS = 35;
     public final static int SUPLA_RESULTCODE_CLIENT_NOT_EXISTS = 36;
     public final static int SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE = 38;
 
