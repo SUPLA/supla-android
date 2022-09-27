@@ -779,7 +779,7 @@ public class SuplaClient extends Thread {
         msg.setConnError(connError);
         sendMessage(msg);
 
-        if (connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
+        if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
             cancel();
         }
     }
@@ -1357,7 +1357,7 @@ public class SuplaClient extends Thread {
 
                             if (cfg.Host.isEmpty()) {
                                 onConnError(new SuplaConnError(
-                                        SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
+                                        SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
                             } else {
                                 info.setServerForEmail(cfg.Host);
                                 profileManager.updateCurrentAuthInfo(info);
