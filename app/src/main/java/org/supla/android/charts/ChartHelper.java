@@ -779,7 +779,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         mct = prefs.getChartType(func, 0, -1);
         sct = prefs.getChartType(func, 1, -1);
         if(mct < 0) mct = 0;
-        if(sct < 0) sct = 0;
+        
         master.setSelection(mct);
         slaveReload.run();
         
