@@ -22,6 +22,7 @@ import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.profile.AuthInfo
 import org.supla.android.profile.NoSuchProfileException
@@ -38,21 +39,33 @@ class SingleCall private constructor(
     var context: Context,
     var profileId: Long,
     var profileRepository: ProfileRepository) {
+
     private external fun executeAction(context: Context, authInfo: AuthInfo,
                                        parameters: ActionParameters)
+    private external fun getChannelValue(context: Context,
+                                         authInfo: AuthInfo,
+                                         channelId: Int) : ChannelValue;
 
-
-    @Throws(NoSuchProfileException::class, ResultException::class)
-    @WorkerThread
-    fun executeAction(parameters: ActionParameters) {
+    @Throws(NoSuchProfileException::class)
+    private fun getProfile() : AuthProfileItem {
         if (Looper.getMainLooper().isCurrentThread) {
             throw NetworkOnMainThreadException()
         }
 
-        val profile = profileRepository.getProfile(profileId)
+        return profileRepository.getProfile(profileId)
             ?: throw NoSuchProfileException(profileId)
+    }
 
-        executeAction(context, profile.authInfo, parameters)
+    @WorkerThread
+    @Throws(NoSuchProfileException::class, ResultException::class)
+    fun executeAction(parameters: ActionParameters) {
+        executeAction(context, getProfile().authInfo, parameters)
+    }
+
+    @WorkerThread
+    @Throws(NoSuchProfileException::class, ResultException::class)
+    fun getChannelValue(channelId: Int) : ChannelValue {
+        return getChannelValue(context, getProfile().authInfo, channelId);
     }
 
     @Singleton
