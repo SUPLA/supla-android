@@ -22,4 +22,4 @@ import org.supla.android.tools.UsedFromNativeCode
 
 @UsedFromNativeCode
 class RollerShutterPosition(channelId: Int,
-                            val percentage: Int) : ChannelValue()
+                            val percentage: Int?, val isCalibrating: Boolean) : ChannelValue()

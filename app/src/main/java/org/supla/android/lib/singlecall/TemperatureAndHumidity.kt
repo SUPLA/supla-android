@@ -21,5 +21,5 @@ import org.supla.android.tools.UsedFromNativeCode
  */
 
 @UsedFromNativeCode
-class TemperatureAndHumidity(val temperature: Double,
-                             val humidity: Double) : ChannelValue()
+class TemperatureAndHumidity(val temperature: Double?,
+                             val humidity: Double?) : ChannelValue()
