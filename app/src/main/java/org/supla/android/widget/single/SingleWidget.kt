@@ -51,90 +51,103 @@ private const val ACTION_PRESSED = "ACTION_PRESSED"
  */
 class SingleWidget : WidgetProviderBase() {
 
-    override fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int, configuration: WidgetConfiguration?) {
-        // Construct the RemoteViews object
-        val views = buildWidget(context, widgetId)
-        if (configuration != null && isWidgetValid(configuration)) {
-            views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
+  override fun updateAppWidget(
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    widgetId: Int,
+    configuration: WidgetConfiguration?
+  ) {
+    // Construct the RemoteViews object
+    val views = buildWidget(context, widgetId)
+    if (configuration != null && isWidgetValid(configuration)) {
+      views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
-            val channel = Channel()
-            channel.func = configuration.itemFunction
+      val channel = Channel()
+      channel.func = configuration.itemFunction
 
-            val active = if (turnOnOrClose(configuration)) {
-                getActiveValue(configuration.itemFunction)
-            } else {
-                0
-            }
+      val active = if (turnOnOrClose(configuration)) {
+        getActiveValue(configuration.itemFunction)
+      } else {
+        0
+      }
 
-            views.setImageViewBitmap(
-                    R.id.single_widget_button,
-                    ImageCache.getBitmap(
-                            context,
-                            channel.getImageIdx(
-                                    ChannelBase.WhichOne.First,
-                                    active)))
+      views.setImageViewBitmap(
+        R.id.single_widget_button,
+        ImageCache.getBitmap(
+          context,
+          channel.getImageIdx(
+            ChannelBase.WhichOne.First,
+            active
+          )
+        )
+      )
 
-            views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
-            views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
-        } else {
-            views.setViewVisibility(R.id.single_widget_button, View.GONE)
-            views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
-        }
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(widgetId, views)
+      views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+      views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
+    } else {
+      views.setViewVisibility(R.id.single_widget_button, View.GONE)
+      views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
     }
+    // Instruct the widget manager to update the widget
+    appWidgetManager.updateAppWidget(widgetId, views)
+  }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        super.onReceive(context, intent)
-        Trace.i(TAG, "Got intent with action: " + intent?.action)
+  override fun onReceive(context: Context?, intent: Intent?) {
+    super.onReceive(context, intent)
+    Trace.i(TAG, "Got intent with action: " + intent?.action)
 
-        if (intent?.action == ACTION_PRESSED) {
-            val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                    ?: IntArray(0)
-            val inputData = Data.Builder()
-                    .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
-                    .build()
+    if (intent?.action == ACTION_PRESSED) {
+      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+        ?: IntArray(0)
+      val inputData = Data.Builder()
+        .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
+        .build()
 
-            val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
-                    .setInputData(inputData)
-                    .build()
+      val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
+        .setInputData(inputData)
+        .build()
 
-            // Work for widget ID is unique, so no other worker for the same ID will be started
-            WorkManager.getInstance().enqueueUniqueWork(
-                    getWorkId(widgetIds),
-                    ExistingWorkPolicy.KEEP,
-                    removeWidgetsWork)
-        }
+      // Work for widget ID is unique, so no other worker for the same ID will be started
+      WorkManager.getInstance().enqueueUniqueWork(
+        getWorkId(widgetIds),
+        ExistingWorkPolicy.KEEP,
+        removeWidgetsWork
+      )
     }
+  }
 
-    companion object {
-        private val TAG = SingleWidget::javaClass.name
-    }
+  companion object {
+    private val TAG = SingleWidget::javaClass.name
+  }
 }
 
-
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
-    val views = RemoteViews(context.packageName, R.layout.single_widget)
-    val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
-    views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
+  val views = RemoteViews(context.packageName, R.layout.single_widget)
+  val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
+  views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
 
-    return views
+  return views
 }
 
 internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int): PendingIntent {
-    return PendingIntent.getBroadcast(context, widgetId, intent(context, intentAction, widgetId), PendingIntent.FLAG_UPDATE_CURRENT)
+  return PendingIntent.getBroadcast(
+    context,
+    widgetId,
+    intent(context, intentAction, widgetId),
+    PendingIntent.FLAG_UPDATE_CURRENT
+  )
 }
 
 internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
-    return configuration.actionId == WidgetAction.TURN_ON.actionId
-            || configuration.actionId == WidgetAction.MOVE_DOWN.actionId
+  return configuration.actionId == WidgetAction.TURN_ON.actionId ||
+    configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
-    Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
-    return Intent(context, SingleWidget::class.java).apply {
-        action = intentAction
-        flags = Intent.FLAG_RECEIVER_FOREGROUND
-        putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
-    }
+  Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
+  return Intent(context, SingleWidget::class.java).apply {
+    action = intentAction
+    flags = Intent.FLAG_RECEIVER_FOREGROUND
+    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+  }
 }

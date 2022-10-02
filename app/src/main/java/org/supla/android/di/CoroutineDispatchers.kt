@@ -8,7 +8,7 @@ import javax.inject.Singleton
 @Singleton
 class CoroutineDispatchers @Inject constructor() {
 
-    fun io(): CoroutineDispatcher = Dispatchers.IO
+  fun io(): CoroutineDispatcher = Dispatchers.IO
 
-    fun main(): CoroutineDispatcher = Dispatchers.Main
+  fun main(): CoroutineDispatcher = Dispatchers.Main
 }

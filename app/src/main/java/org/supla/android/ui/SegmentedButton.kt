@@ -19,49 +19,51 @@ package org.supla.android.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import android.view.View
-import android.view.Gravity
-
-import org.supla.android.SuplaApp
 import org.supla.android.R
+import org.supla.android.SuplaApp
 
 @SuppressWarnings("ResourceType")
 class SegmentedButton @JvmOverloads constructor(
-    ctx: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-): FrameLayout(ctx, attrs, defStyleAttr) {
+  ctx: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0
+) : FrameLayout(ctx, attrs, defStyleAttr) {
 
-    private val segmentedButtonElevation: Float
+  private val segmentedButtonElevation: Float
 
-    init {
-        val attrsArray = intArrayOf(android.R.attr.src, android.R.attr.text)
-        val ta = ctx.obtainStyledAttributes(attrs, attrsArray)
-        val drawable = ta.getDrawable(0)
-        val innerView = if(drawable != null) {
-            ImageView(ctx, attrs, defStyleAttr)
-        } else {
-            TextView(ctx, attrs, defStyleAttr).apply {
-                typeface = SuplaApp.getApp().typefaceOpenSansRegular
-                text = ta.getString(1)
-                gravity = Gravity.CENTER
-            }
-        }
-        ta.recycle()
-
-        val lp = LayoutParams(LayoutParams.MATCH_PARENT,
-                              LayoutParams.MATCH_PARENT,
-                              Gravity.CENTER)
-        addView(innerView, 0, lp)
-
-        segmentedButtonElevation = ctx.resources.getDimensionPixelSize(R.dimen.segmented_button_elevation).toFloat()
+  init {
+    val attrsArray = intArrayOf(android.R.attr.src, android.R.attr.text)
+    val ta = ctx.obtainStyledAttributes(attrs, attrsArray)
+    val drawable = ta.getDrawable(0)
+    val innerView = if (drawable != null) {
+      ImageView(ctx, attrs, defStyleAttr)
+    } else {
+      TextView(ctx, attrs, defStyleAttr).apply {
+        typeface = SuplaApp.getApp().typefaceOpenSansRegular
+        text = ta.getString(1)
+        gravity = Gravity.CENTER
+      }
     }
+    ta.recycle()
 
-    override fun setSelected(sel: Boolean) {
-        super.setSelected(sel)
-        elevation = if(sel) segmentedButtonElevation else 0f
-    }
+    val lp = LayoutParams(
+      LayoutParams.MATCH_PARENT,
+      LayoutParams.MATCH_PARENT,
+      Gravity.CENTER
+    )
+    addView(innerView, 0, lp)
+
+    segmentedButtonElevation = ctx.resources.getDimensionPixelSize(
+      R.dimen.segmented_button_elevation
+    ).toFloat()
+  }
+
+  override fun setSelected(sel: Boolean) {
+    super.setSelected(sel)
+    elevation = if (sel) segmentedButtonElevation else 0f
+  }
 }

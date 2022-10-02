@@ -36,72 +36,75 @@ import javax.inject.Inject
  * Activity which displays a list of available switches during the on-off widget configuration.
  */
 @AndroidEntryPoint
-class OnOffWidgetConfigurationActivity : WidgetConfigurationActivityBase<ActivityOnOffWidgetConfigurationBinding>() {
+class OnOffWidgetConfigurationActivity :
+  WidgetConfigurationActivityBase<ActivityOnOffWidgetConfigurationBinding>() {
 
-    @Inject
-    lateinit var widgetPreferences: WidgetPreferences
+  @Inject
+  lateinit var widgetPreferences: WidgetPreferences
 
-    private val viewModel: OnOffWidgetConfigurationViewModel by viewModels()
+  private val viewModel: OnOffWidgetConfigurationViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        setupProfilesSpinner()
-        setupTypeSelection()
-        setupItemsSpinner()
-        setContentView(binding.root)
+    setupProfilesSpinner()
+    setupTypeSelection()
+    setupItemsSpinner()
+    setContentView(binding.root)
 
-        observeSelectionConfirmation()
-        observeCancellation()
+    observeSelectionConfirmation()
+    observeCancellation()
+  }
+
+  private fun setupTypeSelection() {
+    binding.widgetOnOffCommon.widgetOnOffConfigureType.setOnPositionChangedListener {
+      viewModel.changeType(ItemType.values()[it])
+    }
+  }
+
+  private fun setupItemsSpinner() {
+    val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
+    binding.widgetOnOffCommon.widgetOnOffConfigureItems.adapter = adapter
+    binding.widgetOnOffCommon.widgetOnOffConfigureItems.onItemSelectedListener =
+      channelItemSelectedListener(adapter)
+  }
+
+  private fun setupProfilesSpinner() {
+    val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
+    binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.adapter = adapter
+    binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.onItemSelectedListener =
+      profileItemSelectedListener(adapter)
+  }
+
+  override fun updateSwitchDisplayName(caption: String) {
+    binding.widgetOnOffCommon.widgetOnOffConfigureName.setText(caption)
+  }
+
+  override fun onWidgetNameError() {
+    binding.widgetOnOffCommon.widgetOnOffConfigureName.background =
+      ContextCompat.getDrawable(
+        this,
+        R.drawable.rounded_edittext_err
+      )
+  }
+
+  private fun observeCancellation() {
+    binding.widgetOnOffCommon.widgetOnOffConfigureClose.setOnClickListener {
+      // user's just closing the window, nothing to do..
+      finish()
+    }
+  }
+
+  override fun viewModel() = viewModel
+
+  override fun bind() = ActivityOnOffWidgetConfigurationBinding
+    .inflate(layoutInflater).apply {
+      viewmodel = viewModel
+      lifecycleOwner = this@OnOffWidgetConfigurationActivity
     }
 
-    private fun setupTypeSelection() {
-        binding.widgetOnOffCommon.widgetOnOffConfigureType.setOnPositionChangedListener {
-            viewModel.changeType(ItemType.values()[it])
-        }
-    }
+  override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
+    intent(context, intentAction, widgetId)
 
-    private fun setupItemsSpinner() {
-        val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffCommon.widgetOnOffConfigureItems.adapter = adapter
-        binding.widgetOnOffCommon.widgetOnOffConfigureItems.onItemSelectedListener =
-                channelItemSelectedListener(adapter)
-    }
-
-    private fun setupProfilesSpinner() {
-        val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
-        binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.adapter = adapter
-        binding.widgetOnOffCommon.widgetOnOffConfigureProfiles.onItemSelectedListener =
-                profileItemSelectedListener(adapter)
-    }
-
-    override fun updateSwitchDisplayName(caption: String) {
-        binding.widgetOnOffCommon.widgetOnOffConfigureName.setText(caption)
-    }
-
-    override fun onWidgetNameError() {
-        binding.widgetOnOffCommon.widgetOnOffConfigureName.background =
-                ContextCompat.getDrawable(this,
-                        R.drawable.rounded_edittext_err)
-    }
-
-    private fun observeCancellation() {
-        binding.widgetOnOffCommon.widgetOnOffConfigureClose.setOnClickListener {
-            // user's just closing the window, nothing to do..
-            finish()
-        }
-    }
-
-    override fun viewModel() = viewModel
-
-    override fun bind() = ActivityOnOffWidgetConfigurationBinding
-            .inflate(layoutInflater).apply {
-                viewmodel = viewModel
-                lifecycleOwner = this@OnOffWidgetConfigurationActivity
-            }
-
-    override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
-            intent(context, intentAction, widgetId)
-
-    override fun getNameMaxLength() = resources.getInteger(R.integer.on_off_widget_name_max_length)
+  override fun getNameMaxLength() = resources.getInteger(R.integer.on_off_widget_name_max_length)
 }

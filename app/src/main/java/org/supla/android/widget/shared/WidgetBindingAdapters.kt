@@ -29,30 +29,30 @@ import org.supla.android.widget.shared.configuration.WidgetConfigurationProfiles
 
 @BindingAdapter("visibility")
 fun setViewVisibility(view: View, isVisible: Boolean) {
-    if (isVisible) {
-        view.visibility = View.VISIBLE
-    } else {
-        view.visibility = View.GONE
-    }
+  if (isVisible) {
+    view.visibility = View.VISIBLE
+  } else {
+    view.visibility = View.GONE
+  }
 }
 
 @BindingAdapter("channels")
 fun setSpinnerChannels(spinner: Spinner, items: List<ChannelBase>?) {
-    items?.let {
-        (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
-    }
+  items?.let {
+    (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
+  }
 }
 
 @BindingAdapter("profiles")
 fun setSpinnerProfiles(spinner: Spinner, items: List<AuthProfileItem>?) {
-    items?.let {
-        (spinner.adapter as WidgetConfigurationProfilesSpinnerAdapter).postItems(it)
-    }
+  items?.let {
+    (spinner.adapter as WidgetConfigurationProfilesSpinnerAdapter).postItems(it)
+  }
 }
 
 @BindingAdapter("actions")
 fun setSpinnerActions(spinner: Spinner, items: List<WidgetAction>?) {
-    items?.let {
-        (spinner.adapter as WidgetConfigurationActionsSpinnerAdapter).postItems(it)
-    }
+  items?.let {
+    (spinner.adapter as WidgetConfigurationActionsSpinnerAdapter).postItems(it)
+  }
 }

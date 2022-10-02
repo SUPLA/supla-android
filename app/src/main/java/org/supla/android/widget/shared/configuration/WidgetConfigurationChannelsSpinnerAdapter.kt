@@ -21,12 +21,12 @@ import android.content.Context
 import org.supla.android.db.ChannelBase
 
 class WidgetConfigurationChannelsSpinnerAdapter(
-        context: Context,
-        objects: MutableList<ChannelBase>
+  context: Context,
+  objects: MutableList<ChannelBase>
 ) : WidgetConfigurationSpinnerBase<ChannelBase>(context, objects) {
 
-    override fun getItemText(item: ChannelBase): String =
-            item.getNotEmptyCaption(context)
+  override fun getItemText(item: ChannelBase): String =
+    item.getNotEmptyCaption(context)
 
-    override fun getItemId(position: Int): Long = getItem(position)?.id!!
+  override fun getItemId(position: Int): Long = getItem(position)?.id!!
 }

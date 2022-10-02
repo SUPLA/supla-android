@@ -31,45 +31,51 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SingleWidgetConfigurationViewModel @Inject constructor(
-        preferences: Preferences,
-        widgetPreferences: WidgetPreferences,
-        profileManager: ProfileManager,
-        channelRepository: ChannelRepository,
-        dispatchers: CoroutineDispatchers
+  preferences: Preferences,
+  widgetPreferences: WidgetPreferences,
+  profileManager: ProfileManager,
+  channelRepository: ChannelRepository,
+  dispatchers: CoroutineDispatchers
 ) : WidgetConfigurationViewModelBase(
-        preferences,
-        widgetPreferences,
-        profileManager,
-        channelRepository,
-        dispatchers
+  preferences,
+  widgetPreferences,
+  profileManager,
+  channelRepository,
+  dispatchers
 ) {
 
-    private val _actionsList = MutableLiveData<List<WidgetAction>>()
-    val actionsList: LiveData<List<WidgetAction>> = _actionsList
+  private val _actionsList = MutableLiveData<List<WidgetAction>>()
+  val actionsList: LiveData<List<WidgetAction>> = _actionsList
 
-    override fun filterItems(channelBase: ChannelBase): Boolean {
-        return channelBase.isGateController()
-                || channelBase.isDoorLock()
-                || channelBase.isSwitch()
-                || channelBase.isRollerShutter()
-    }
+  override fun filterItems(channelBase: ChannelBase): Boolean {
+    return channelBase.isGateController() ||
+      channelBase.isDoorLock() ||
+      channelBase.isSwitch() ||
+      channelBase.isRollerShutter()
+  }
 
-    override fun changeChannel(channel: ChannelBase?) {
-        super.changeChannel(channel)
-        updateActions()
-    }
+  override fun changeChannel(channel: ChannelBase?) {
+    super.changeChannel(channel)
+    updateActions()
+  }
 
-    private fun updateActions() {
-        if (selectedItem?.isSwitch() == true) {
-            _actionsList.postValue(listOf(
-                    WidgetAction.TURN_ON,
-                    WidgetAction.TURN_OFF))
-        } else if (selectedItem?.isRollerShutter() == true) {
-            _actionsList.postValue(listOf(
-                    WidgetAction.MOVE_UP,
-                    WidgetAction.MOVE_DOWN))
-        } else {
-            _actionsList.postValue(listOf())
-        }
+  private fun updateActions() {
+    if (selectedItem?.isSwitch() == true) {
+      _actionsList.postValue(
+        listOf(
+          WidgetAction.TURN_ON,
+          WidgetAction.TURN_OFF
+        )
+      )
+    } else if (selectedItem?.isRollerShutter() == true) {
+      _actionsList.postValue(
+        listOf(
+          WidgetAction.MOVE_UP,
+          WidgetAction.MOVE_DOWN
+        )
+      )
+    } else {
+      _actionsList.postValue(listOf())
     }
+  }
 }

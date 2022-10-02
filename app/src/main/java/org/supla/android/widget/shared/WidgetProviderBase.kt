@@ -38,53 +38,59 @@ private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
  */
 abstract class WidgetProviderBase : AppWidgetProvider() {
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        Trace.i(TAG, "Updating widgets with ids: " + appWidgetIds.toReadableString())
+  override fun onUpdate(
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    appWidgetIds: IntArray
+  ) {
+    Trace.i(TAG, "Updating widgets with ids: " + appWidgetIds.toReadableString())
 
-        val preferences = WidgetPreferences(context)
-        // There may be multiple widgets active, so update all of them
-        for (appWidgetId in appWidgetIds) {
-            val configuration = preferences.getWidgetConfiguration(appWidgetId)
-            updateAppWidget(context, appWidgetManager, appWidgetId, configuration)
-        }
+    val preferences = WidgetPreferences(context)
+    // There may be multiple widgets active, so update all of them
+    for (appWidgetId in appWidgetIds) {
+      val configuration = preferences.getWidgetConfiguration(appWidgetId)
+      updateAppWidget(context, appWidgetManager, appWidgetId, configuration)
     }
+  }
 
-    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
-        if (appWidgetIds == null) {
-            return
-        }
-        Trace.i(TAG, "Deleting widgets with ids: " + appWidgetIds.toReadableString())
-
-        val removeWidgetsWork = OneTimeWorkRequestBuilder<RemoveWidgetsWorker>()
-                .setInputData(Data.Builder().putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds).build())
-                .build()
-        WorkManager.getInstance().enqueue(removeWidgetsWork)
+  override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+    if (appWidgetIds == null) {
+      return
     }
+    Trace.i(TAG, "Deleting widgets with ids: " + appWidgetIds.toReadableString())
 
-    abstract fun updateAppWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            widgetId: Int,
-            configuration: WidgetConfiguration?
-    )
+    val removeWidgetsWork = OneTimeWorkRequestBuilder<RemoveWidgetsWorker>()
+      .setInputData(
+        Data.Builder().putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds).build()
+      )
+      .build()
+    WorkManager.getInstance().enqueue(removeWidgetsWork)
+  }
 
-    companion object {
-        private val TAG = WidgetProviderBase::javaClass.name
-    }
+  abstract fun updateAppWidget(
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    widgetId: Int,
+    configuration: WidgetConfiguration?
+  )
+
+  companion object {
+    private val TAG = WidgetProviderBase::javaClass.name
+  }
 }
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
-        configuration.profileId != INVALID_PROFILE_ID &&
-        configuration.itemId != INVALID_CHANNEL_ID
+  configuration.profileId != INVALID_PROFILE_ID &&
+  configuration.itemId != INVALID_CHANNEL_ID
 
 internal fun getWorkId(widgetIds: IntArray): String {
-    return if (widgetIds.size != 1) {
-        WORK_ID_PREFIX
-    } else {
-        WORK_ID_PREFIX + widgetIds[0]
-    }
+  return if (widgetIds.size != 1) {
+    WORK_ID_PREFIX
+  } else {
+    WORK_ID_PREFIX + widgetIds[0]
+  }
 }
 
 fun IntArray.toReadableString(): String {
-    return this.map { it.toString() }.reduce { acc, string -> "$acc $string" }
+  return this.map { it.toString() }.reduce { acc, string -> "$acc $string" }
 }

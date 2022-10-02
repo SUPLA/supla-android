@@ -39,156 +39,163 @@ import org.supla.android.widget.onoff.ARG_TURN_ON
 private const val MAX_WAIT_TIME = 3000 // in ms
 
 abstract class WidgetCommandWorkerBase(
-        appContext: Context,
-        workerParams: WorkerParameters
+  appContext: Context,
+  workerParams: WorkerParameters
 ) : Worker(appContext, workerParams) {
 
-    val handler = Handler(Looper.getMainLooper())
-    val preferences = WidgetPreferences(appContext)
-    val profileManager = getProfileManager()
+  val handler = Handler(Looper.getMainLooper())
+  val preferences = WidgetPreferences(appContext)
+  val profileManager = getProfileManager()
 
-    override fun doWork(): Result {
-        val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-        if (widgetIds == null || widgetIds.size != 1) {
-            showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
-            return Result.failure()
-        }
-        val widgetId = widgetIds[0]
+  override fun doWork(): Result {
+    val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+    if (widgetIds == null || widgetIds.size != 1) {
+      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
+      return Result.failure()
+    }
+    val widgetId = widgetIds[0]
 
-        if (!isNetworkAvailable()) {
-            showToast(R.string.widget_command_no_connection, Toast.LENGTH_LONG)
-            return Result.failure()
-        }
-
-        val configuration = preferences.getWidgetConfiguration(widgetId)
-        if (configuration == null) {
-            showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
-            return Result.failure()
-        }
-
-        val suplaClient = getSuplaClient(configuration.profileId)
-        if (suplaClient == null) {
-            showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
-            return Result.failure()
-        }
-
-        showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
-        SuplaApp.Vibrate(applicationContext)
-
-        return perform(configuration, suplaClient)
+    if (!isNetworkAvailable()) {
+      showToast(R.string.widget_command_no_connection, Toast.LENGTH_LONG)
+      return Result.failure()
     }
 
-    protected open fun perform(
-            configuration: WidgetConfiguration,
-            suplaClient: SuplaClient
-    ): Result = performCommon(
-            configuration,
-            suplaClient,
-            inputData.getBoolean(ARG_TURN_ON, false)
-    )
-
-    protected fun performCommon(
-            configuration: WidgetConfiguration,
-            suplaClient: SuplaClient,
-            turnOnOrClose: Boolean): Result {
-        when (configuration.itemFunction) {
-            SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-            SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> {
-                val turnOnOff = if (turnOnOrClose) 1 else 0
-                suplaClient.open(
-                        configuration.itemId,
-                        configuration.itemType.isGroup(),
-                        turnOnOff)
-            }
-            SuplaConst.SUPLA_CHANNELFNC_DIMMER,
-            SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-            SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> {
-                val brightness = getBrightness(turnOnOrClose)
-                suplaClient.setRGBW(
-                        configuration.itemId,
-                        configuration.itemType.isGroup(),
-                        configuration.channelColor,
-                        brightness,
-                        brightness,
-                        true)
-            }
-            SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-            SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
-                suplaClient.open(
-                        configuration.itemId,
-                        configuration.itemType.isGroup(),
-                        getOpenOrClose(turnOnOrClose))
-            }
-        }
-        return Result.success()
+    val configuration = preferences.getWidgetConfiguration(widgetId)
+    if (configuration == null) {
+      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
+      return Result.failure()
     }
 
-    private fun getSuplaClient(profileId: Long): SuplaClient? {
-        val suplaApp = if (applicationContext is SuplaApp) {
-            (applicationContext as SuplaApp)
-        } else {
-            SuplaApp.getApp()
-        }
-
-        // before change check if profile exist to avoid changing id to not existing one.
-        profileManager.getAllProfiles().firstOrNull { it.id == profileId }
-                ?: return null
-        profileManager.activateProfile(profileId)
-
-        if (suplaApp.suplaClient == null) {
-            suplaApp.SuplaClientInitIfNeed(applicationContext)
-        }
-
-        val startTime = System.currentTimeMillis()
-        while (!suplaApp.suplaClient.registered()) {
-            Thread.sleep(100)
-
-            if (System.currentTimeMillis() - startTime >= MAX_WAIT_TIME) {
-                // Time for connection is up, give up and show error.
-                return null
-            }
-        }
-        return suplaApp.suplaClient
+    val suplaClient = getSuplaClient(configuration.profileId)
+    if (suplaClient == null) {
+      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
+      return Result.failure()
     }
 
-    private fun showToast(stringId: Int, length: Int) {
-        handler.post {
-            Toast.makeText(applicationContext, stringId, length).show()
-        }
+    showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
+    SuplaApp.Vibrate(applicationContext)
+
+    return perform(configuration, suplaClient)
+  }
+
+  protected open fun perform(
+    configuration: WidgetConfiguration,
+    suplaClient: SuplaClient
+  ): Result = performCommon(
+    configuration,
+    suplaClient,
+    inputData.getBoolean(ARG_TURN_ON, false)
+  )
+
+  protected fun performCommon(
+    configuration: WidgetConfiguration,
+    suplaClient: SuplaClient,
+    turnOnOrClose: Boolean
+  ): Result {
+    when (configuration.itemFunction) {
+      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> {
+        val turnOnOff = if (turnOnOrClose) 1 else 0
+        suplaClient.open(
+          configuration.itemId,
+          configuration.itemType.isGroup(),
+          turnOnOff
+        )
+      }
+      SuplaConst.SUPLA_CHANNELFNC_DIMMER,
+      SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> {
+        val brightness = getBrightness(turnOnOrClose)
+        suplaClient.setRGBW(
+          configuration.itemId,
+          configuration.itemType.isGroup(),
+          configuration.channelColor,
+          brightness,
+          brightness,
+          true
+        )
+      }
+      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
+        suplaClient.open(
+          configuration.itemId,
+          configuration.itemType.isGroup(),
+          getOpenOrClose(turnOnOrClose)
+        )
+      }
+    }
+    return Result.success()
+  }
+
+  private fun getSuplaClient(profileId: Long): SuplaClient? {
+    val suplaApp = if (applicationContext is SuplaApp) {
+      (applicationContext as SuplaApp)
+    } else {
+      SuplaApp.getApp()
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val nw = connectivityManager.activeNetwork ?: return false
-            val actNw = connectivityManager.getNetworkCapabilities(nw)
-                    ?: return false
-            return when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true //for other device how are able to connect with Ethernet
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true //for check internet over Bluetooth
-                else -> false
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            val nwInfo = connectivityManager.activeNetworkInfo ?: return false
-            @Suppress("DEPRECATION")
-            return nwInfo.isConnected
-        }
+    // before change check if profile exist to avoid changing id to not existing one.
+    profileManager.getAllProfiles().firstOrNull { it.id == profileId }
+      ?: return null
+    profileManager.activateProfile(profileId)
+
+    if (suplaApp.suplaClient == null) {
+      suplaApp.SuplaClientInitIfNeed(applicationContext)
     }
 
-    private fun getBrightness(turnOnOrClose: Boolean): Int =
-            if (turnOnOrClose) {
-                100
-            } else {
-                0
-            }
+    val startTime = System.currentTimeMillis()
+    while (!suplaApp.suplaClient.registered()) {
+      Thread.sleep(100)
 
-    private fun getOpenOrClose(turnOnOrClose: Boolean): Int =
-            if (turnOnOrClose) {
-                SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE
-            } else {
-                SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN
-            }
+      if (System.currentTimeMillis() - startTime >= MAX_WAIT_TIME) {
+        // Time for connection is up, give up and show error.
+        return null
+      }
+    }
+    return suplaApp.suplaClient
+  }
+
+  private fun showToast(stringId: Int, length: Int) {
+    handler.post {
+      Toast.makeText(applicationContext, stringId, length).show()
+    }
+  }
+
+  private fun isNetworkAvailable(): Boolean {
+    val connectivityManager =
+      applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      val nw = connectivityManager.activeNetwork ?: return false
+      val actNw = connectivityManager.getNetworkCapabilities(nw)
+        ?: return false
+      return when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        // for other device how are able to connect with Ethernet
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        // for check internet over Bluetooths
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+        else -> false
+      }
+    } else {
+      @Suppress("DEPRECATION")
+      val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+      @Suppress("DEPRECATION")
+      return nwInfo.isConnected
+    }
+  }
+
+  private fun getBrightness(turnOnOrClose: Boolean): Int =
+    if (turnOnOrClose) {
+      100
+    } else {
+      0
+    }
+
+  private fun getOpenOrClose(turnOnOrClose: Boolean): Int =
+    if (turnOnOrClose) {
+      SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE
+    } else {
+      SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN
+    }
 }
