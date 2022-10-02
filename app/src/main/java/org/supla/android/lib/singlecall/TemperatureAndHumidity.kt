@@ -21,5 +21,12 @@ import org.supla.android.tools.UsedFromNativeCode
  */
 
 @UsedFromNativeCode
+
+/*
+The variable temperature is null if the value is below -273 which is considered a sensor error.
+The humidity variable is null if the values are below 0 or above 100 which is
+considered a sensor error.
+ */
+
 class TemperatureAndHumidity(val temperature: Double?,
                              val humidity: Double?) : ChannelValue()

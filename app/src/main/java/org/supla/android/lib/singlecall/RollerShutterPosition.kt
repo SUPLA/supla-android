@@ -20,6 +20,10 @@ import org.supla.android.tools.UsedFromNativeCode
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*
+Percentage is null if the position is out of range or the roler is being calibrated
+*/
+
 @UsedFromNativeCode
 class RollerShutterPosition(channelId: Int,
                             val percentage: Int?, val isCalibrating: Boolean) : ChannelValue()
