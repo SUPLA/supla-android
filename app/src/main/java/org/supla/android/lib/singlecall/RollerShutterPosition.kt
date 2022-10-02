@@ -25,5 +25,4 @@ Percentage is null if the position is out of range or the roler is being calibra
 */
 
 @UsedFromNativeCode
-class RollerShutterPosition(channelId: Int,
-                            val percentage: Int?, val isCalibrating: Boolean) : ChannelValue()
+class RollerShutterPosition(val percentage: Int?, val isCalibrating: Boolean) : ChannelValue()
