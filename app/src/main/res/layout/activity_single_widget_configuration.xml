@@ -25,7 +25,7 @@
             android:text="@string/widget_configure_title"
             android:textColor="@color/widget_text"
             android:textSize="34sp"
-            app:layout_constraintTop_toBottomOf="@id/widget_single_configure_close" />
+            app:layout_constraintTop_toBottomOf="@+id/widget_single_configure_close" />
 
         <include
             android:id="@+id/widget_single_common"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:background="@drawable/background_widget_configuration_button"
-            android:enabled="@{viewmodel.channelsList.size() > 0}"
+            android:enabled="@{viewmodel.itemsList.size() > 0}"
             android:onClick="@{() -> viewmodel.confirmSelection()}"
             android:text="@string/ok"
             android:textColor="#FFFFFF"
