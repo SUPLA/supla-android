@@ -35,84 +35,94 @@ import javax.inject.Inject
  * Activity which displays a list of available switches during the on-off widget configuration.
  */
 @AndroidEntryPoint
-class SingleWidgetConfigurationActivity : WidgetConfigurationActivityBase<ActivitySingleWidgetConfigurationBinding>() {
+class SingleWidgetConfigurationActivity :
+  WidgetConfigurationActivityBase<ActivitySingleWidgetConfigurationBinding>() {
 
-    @Inject
-    lateinit var widgetPreferences: WidgetPreferences
+  @Inject
+  lateinit var widgetPreferences: WidgetPreferences
 
-    private val viewModel: SingleWidgetConfigurationViewModel by viewModels()
+  private val viewModel: SingleWidgetConfigurationViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        setupChannelsSpinner()
-        setupProfilesSpinner()
-        setupActionsSpinner()
-        setContentView(binding.root)
+    setupProfilesSpinner()
+    setupTypeSelection()
+    setupItemsSpinner()
+    setupActionsSpinner()
+    setContentView(binding.root)
 
-        observeSelectionConfirmation()
-        observeCancellation()
+    observeSelectionConfirmation()
+    observeCancellation()
+  }
+
+  private fun setupTypeSelection() {
+    binding.widgetSingleCommon.widgetSingleConfigureType.setOnPositionChangedListener {
+      viewModel.changeType(ItemType.values()[it])
+    }
+  }
+
+  private fun setupItemsSpinner() {
+    val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
+    binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
+    binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =
+      channelItemSelectedListener(adapter)
+  }
+
+  private fun setupProfilesSpinner() {
+    val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
+    binding.widgetSingleCommon.widgetSingleConfigureProfiles.adapter = adapter
+    binding.widgetSingleCommon.widgetSingleConfigureProfiles.onItemSelectedListener =
+      profileItemSelectedListener(adapter)
+  }
+
+  private fun setupActionsSpinner() {
+    val adapter = WidgetConfigurationActionsSpinnerAdapter(this, mutableListOf())
+    binding.widgetSingleCommon.widgetSingleConfigureActions.adapter = adapter
+    binding.widgetSingleCommon.widgetSingleConfigureActions.onItemSelectedListener =
+      actionItemSelectedListener(adapter)
+  }
+
+  private fun actionItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<WidgetAction>) =
+    object : AdapterView.OnItemSelectedListener {
+      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        viewModel().selectedAction = adapter.getItem(position)
+      }
+
+      override fun onNothingSelected(p0: AdapterView<*>?) {
+        viewModel().selectedAction = null
+      }
     }
 
-    private fun setupChannelsSpinner() {
-        val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
-        binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
-        binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =
-                channelItemSelectedListener(adapter)
+  override fun updateSwitchDisplayName(caption: String) {
+    binding.widgetSingleCommon.widgetSingleConfigureName.setText(caption)
+  }
+
+  override fun onWidgetNameError() {
+    binding.widgetSingleCommon.widgetSingleConfigureName.background =
+      ContextCompat.getDrawable(
+        this,
+        R.drawable.rounded_edittext_err
+      )
+  }
+
+  private fun observeCancellation() {
+    binding.widgetSingleCommon.widgetSingleConfigureClose.setOnClickListener {
+      // user's just closing the window, nothing to do..
+      finish()
+    }
+  }
+
+  override fun viewModel() = viewModel
+
+  override fun bind() = ActivitySingleWidgetConfigurationBinding
+    .inflate(layoutInflater).apply {
+      viewmodel = viewModel
+      lifecycleOwner = this@SingleWidgetConfigurationActivity
     }
 
-    private fun setupProfilesSpinner() {
-        val adapter = WidgetConfigurationProfilesSpinnerAdapter(this, mutableListOf())
-        binding.widgetSingleCommon.widgetSingleConfigureProfiles.adapter = adapter
-        binding.widgetSingleCommon.widgetSingleConfigureProfiles.onItemSelectedListener =
-                profileItemSelectedListener(adapter)
-    }
+  override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
+    intent(context, intentAction, widgetId)
 
-    private fun setupActionsSpinner() {
-        val adapter = WidgetConfigurationActionsSpinnerAdapter(this, mutableListOf())
-        binding.widgetSingleCommon.widgetSingleConfigureActions.adapter = adapter
-        binding.widgetSingleCommon.widgetSingleConfigureActions.onItemSelectedListener =
-                actionItemSelectedListener(adapter)
-    }
-
-    private fun actionItemSelectedListener(adapter: WidgetConfigurationSpinnerBase<WidgetAction>) =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    viewModel().selectedAction = adapter.getItem(position)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    viewModel().selectedAction = null
-                }
-            }
-
-    override fun updateSwitchDisplayName(caption: String) {
-        binding.widgetSingleCommon.widgetSingleConfigureName.setText(caption)
-    }
-
-    override fun onWidgetNameError() {
-        binding.widgetSingleCommon.widgetSingleConfigureName.background =
-                ContextCompat.getDrawable(this,
-                        R.drawable.rounded_edittext_err)
-    }
-
-    private fun observeCancellation() {
-        binding.widgetSingleCommon.widgetSingleConfigureClose.setOnClickListener {
-            // user's just closing the window, nothing to do..
-            finish()
-        }
-    }
-
-    override fun viewModel() = viewModel
-
-    override fun bind() = ActivitySingleWidgetConfigurationBinding
-            .inflate(layoutInflater).apply {
-                viewmodel = viewModel
-                lifecycleOwner = this@SingleWidgetConfigurationActivity
-            }
-
-    override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
-            intent(context, intentAction, widgetId)
-
-    override fun getNameMaxLength() = resources.getInteger(R.integer.single_widget_name_max_length)
+  override fun getNameMaxLength() = resources.getInteger(R.integer.single_widget_name_max_length)
 }

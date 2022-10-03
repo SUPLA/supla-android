@@ -105,4 +105,9 @@
     <style name="SegmentedButton">
       <item name="android:background">@drawable/segmented_button_background</item>
     </style>
+    <style name="SegmentedButton.Texted">
+      <item name="android:layout_margin">8dp</item>
+      <item name="android:padding">4dp</item>
+      <item name="android:textSize">16sp</item>
+    </style>
 </resources>

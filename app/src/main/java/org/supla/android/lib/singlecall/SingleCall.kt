@@ -36,47 +36,54 @@ import javax.inject.Singleton
  */
 
 class SingleCall private constructor(
-    var context: Context,
-    var profileId: Long,
-    var profileRepository: ProfileRepository) {
+  var context: Context,
+  var profileId: Long,
+  var profileRepository: ProfileRepository
+) {
 
-    private external fun executeAction(context: Context, authInfo: AuthInfo,
-                                       parameters: ActionParameters)
-    private external fun getChannelValue(context: Context,
-                                         authInfo: AuthInfo,
-                                         channelId: Int) : ChannelValue;
+  private external fun executeAction(
+    context: Context,
+    authInfo: AuthInfo,
+    parameters: ActionParameters
+  )
 
-    @Throws(NoSuchProfileException::class)
-    private fun getProfile() : AuthProfileItem {
-        if (Looper.getMainLooper().isCurrentThread) {
-            throw NetworkOnMainThreadException()
-        }
+  private external fun getChannelValue(
+    context: Context,
+    authInfo: AuthInfo,
+    channelId: Int
+  ): ChannelValue
 
-        return profileRepository.getProfile(profileId)
-            ?: throw NoSuchProfileException(profileId)
+  @Throws(NoSuchProfileException::class)
+  private fun getProfile(): AuthProfileItem {
+    if (Thread.currentThread().equals(Looper.getMainLooper().thread)) {
+      throw NetworkOnMainThreadException()
     }
 
-    @WorkerThread
-    @Throws(NoSuchProfileException::class, ResultException::class)
-    fun executeAction(parameters: ActionParameters) {
-        executeAction(context, getProfile().authInfo, parameters)
-    }
+    return profileRepository.getProfile(profileId)
+      ?: throw NoSuchProfileException(profileId)
+  }
 
-    @WorkerThread
-    @Throws(NoSuchProfileException::class, ResultException::class)
-    fun getChannelValue(channelId: Int) : ChannelValue {
-        return getChannelValue(context, getProfile().authInfo, channelId);
-    }
+  @WorkerThread
+  @Throws(NoSuchProfileException::class, ResultException::class)
+  fun executeAction(parameters: ActionParameters) {
+    executeAction(context, getProfile().authInfo, parameters)
+  }
 
-    @Singleton
-    class Provider @Inject constructor(private val profileRepository: ProfileRepository) {
-        fun provide(context: Context, profileId: Long) :
-          SingleCall = SingleCall(context, profileId, profileRepository)
-    }
+  @WorkerThread
+  @Throws(NoSuchProfileException::class, ResultException::class)
+  fun getChannelValue(channelId: Int): ChannelValue {
+    return getChannelValue(context, getProfile().authInfo, channelId)
+  }
 
-    companion object {
-        init {
-            System.loadLibrary("suplaclient")
-        }
+  @Singleton
+  class Provider @Inject constructor(private val profileRepository: ProfileRepository) {
+    fun provide(context: Context, profileId: Long):
+      SingleCall = SingleCall(context, profileId, profileRepository)
+  }
+
+  companion object {
+    init {
+      System.loadLibrary("suplaclient")
     }
+  }
 }

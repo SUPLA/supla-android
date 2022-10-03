@@ -26,7 +26,6 @@ import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.WidgetAction
 
-
 /**
  * Worker which is implemented for turning on/off switches. It supports following channel functions:
  * light switch [SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH],
@@ -37,24 +36,24 @@ import org.supla.android.widget.shared.configuration.WidgetAction
  * It supports also opening and closing of roller shutters
  */
 class SingleWidgetCommandWorker(
-        appContext: Context,
-        workerParams: WorkerParameters
+  appContext: Context,
+  workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
-    override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
-        when (configuration.channelFunction) {
-            SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-            SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-            SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-            SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
-                suplaClient.open(configuration.channelId, 1)
-            }
-            else -> {
-                val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
-                        configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-                return performCommon(configuration, suplaClient, turnOnOrClose)
-            }
-        }
-        return Result.success()
+  override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
+    when (configuration.itemFunction) {
+      SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
+        suplaClient.open(configuration.itemId, 1)
+      }
+      else -> {
+        val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
+          configuration.actionId == WidgetAction.MOVE_DOWN.actionId
+        return performCommon(configuration, suplaClient, turnOnOrClose)
+      }
     }
+    return Result.success()
+  }
 }
