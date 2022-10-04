@@ -25,6 +25,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -36,6 +37,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.data.source.SceneRepository;
@@ -183,6 +185,8 @@ public class SuplaClient extends Thread implements SceneController {
 
     private native boolean scSetDfgTransparency(long _supla_client, int ChannelID, short mask,
                                                 short active_bits);
+
+    private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
     private void sendMessage(SuplaClientMsg msg) {
         if (canceled()) return;
@@ -725,6 +729,15 @@ public class SuplaClient extends Thread implements SceneController {
         }
     }
 
+    public boolean executeAction(@NotNull ActionParameters parameters) {
+      long _supla_client_ptr = lockClientPtr();
+      try {
+        return _supla_client_ptr != 0 && scExecuteAction(_supla_client_ptr, parameters);
+      } finally {
+        unlockClientPtr();
+      }
+    }
+
     private void onVersionError(SuplaVersionError versionError) {
         Trace.d(log_tag, Integer.valueOf(versionError.Version).toString() + ","
                 + Integer.valueOf(versionError.RemoteVersionMin).toString() + ","
@@ -733,7 +746,6 @@ public class SuplaClient extends Thread implements SceneController {
         regTryCounter = 0;
 
         AuthInfo info = profileManager.getCurrentAuthInfo();
-
 
         if (versionError.RemoteVersion >= 7
                 && versionError.Version > versionError.RemoteVersion
@@ -768,7 +780,7 @@ public class SuplaClient extends Thread implements SceneController {
         msg.setConnError(connError);
         sendMessage(msg);
 
-        if (connError.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND) {
+        if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
             cancel();
         }
     }
@@ -1334,8 +1346,8 @@ public class SuplaClient extends Thread implements SceneController {
 
 
                     cfg.Host = info.getServerForCurrentAuthMethod();
-                    cfg.clientGUID = decrypted(info.getGuid());
-                    cfg.AuthKey = decrypted(info.getAuthKey());
+                    cfg.clientGUID = info.getDecryptedGuid(_context);
+                    cfg.AuthKey = info.getDecryptedAuthKey(_context);
                     cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
                     cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
@@ -1356,7 +1368,7 @@ public class SuplaClient extends Thread implements SceneController {
 
                             if (cfg.Host.isEmpty()) {
                                 onConnError(new SuplaConnError(
-                                        SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND));
+                                        SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
                             } else {
                                 info.setServerForEmail(cfg.Host);
                                 profileManager.updateCurrentAuthInfo(info);
@@ -1402,11 +1414,6 @@ public class SuplaClient extends Thread implements SceneController {
 
     private boolean shouldAutodiscoverHost() {
         return profileManager.getCurrentAuthInfo().getServerAutoDetect();
-    }
-
-    private byte[] decrypted(byte[] payload) {
-        String key = Preferences.getDeviceID(_context);
-        return Encryption.decryptDataWithNullOnException(payload, key);
     }
 
     public void startScene(int sceneId) {

@@ -1,25 +1,26 @@
 package org.supla.android.data.source;
 
 /*
- Copyright (C) AC SOFTWARE SP. Z O.O.
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import android.database.Cursor;
-
+import io.reactivex.rxjava3.core.Completable;
+import java.util.List;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelValue;
@@ -31,64 +32,63 @@ import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
 
-import java.util.List;
-
-import io.reactivex.rxjava3.core.Completable;
-
 public interface ChannelRepository {
-    Channel getChannel(int channelId);
+  Channel getChannel(int channelId);
 
-    ChannelValue getChannelValue(int channelId);
+  ChannelValue getChannelValue(int channelId);
 
-    ChannelGroup getChannelGroup(int groupId);
+  ChannelGroup getChannelGroup(int groupId);
 
-    boolean updateChannel(SuplaChannel suplaChannel);
+  boolean updateChannel(SuplaChannel suplaChannel);
 
-    void updateChannel(Channel channel);
+  void updateChannel(Channel channel);
 
-    boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
+  boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
 
-    boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
+  boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
 
-    boolean updateChannelExtendedValue(SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
+  boolean updateChannelExtendedValue(
+      SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
-    boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
+  boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
 
-    List<Integer> updateAllChannelGroups();
+  List<Integer> updateAllChannelGroups();
 
-    int getChannelCount();
+  int getChannelCount();
 
-    boolean setChannelsVisible(int visible, int whereVisible);
+  boolean setChannelsVisible(int visible, int whereVisible);
 
-    boolean setChannelGroupsVisible(int visible, int whereVisible);
+  boolean setChannelGroupsVisible(int visible, int whereVisible);
 
-    boolean setChannelGroupRelationsVisible(int visible, int whereVisible);
+  boolean setChannelGroupRelationsVisible(int visible, int whereVisible);
 
-    boolean setChannelsOffline();
+  boolean setChannelsOffline();
 
-    Cursor getChannelListCursorForGroup(int groupId);
+  Cursor getChannelListCursorForGroup(int groupId);
 
-    Cursor getChannelListCursorWithDefaultOrder();
+  Cursor getChannelListCursorWithDefaultOrder();
 
-    Cursor getChannelGroupListCursor();
+  Cursor getChannelGroupListCursor();
 
-    boolean isZWaveBridgeChannelAvailable();
+  boolean isZWaveBridgeChannelAvailable();
 
-    List<Channel> getZWaveBridgeChannels();
+  List<Channel> getZWaveBridgeChannels();
 
-    List<Integer> getChannelUserIconIds();
+  List<Integer> getChannelUserIconIds();
 
-    Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
+  Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
 
-    Completable reorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId);
+  Completable reorderChannelGroups(Long firstItemId, int firstItemLocationId, Long secondItemId);
 
-    // Location looks rather as a channel location, that's why here
+  // Location looks rather as a channel location, that's why here
 
-    Location getLocation(int locationId);
+  Location getLocation(int locationId);
 
-    boolean updateLocation(SuplaLocation suplaLocation);
+  boolean updateLocation(SuplaLocation suplaLocation);
 
-    void updateLocation(Location location);
+  void updateLocation(Location location);
 
-    Cursor getAllProfileChannels(Long profileId);
+  Cursor getAllProfileChannels(Long profileId);
+
+  Cursor getAllProfileChannelGroups(Long profileId);
 }

@@ -62,7 +62,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 25;
+    public static final int DATABASE_VERSION = 26;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -463,7 +463,8 @@ public class DbHelper extends BaseDbHelper {
         upgradeToV22(db);
         upgradeToV23(db);
         upgradeToV24(db);
-        upgradeToV25(db);
+        // Do not call upgradeToV25(db) here
+        upgradeToV26(db);
 
         // Create views at the end
         createChannelView(db);
@@ -697,11 +698,19 @@ public class DbHelper extends BaseDbHelper {
                 + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ")");
     }
 
+
     private void upgradeToV25(SQLiteDatabase db) {
+        // Related to:
+        // https://github.com/SUPLA/supla-core/commit/2a2f2cec89e4e20a49d37e4e89306cf178dd1d05
+        execSQL(db, "UPDATE " + SuplaContract.AuthProfileEntry.TABLE_NAME + " "
+                 + "SET " + SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY + " = "
+                 + SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID );
+    }
+
+    private void upgradeToV26(SQLiteDatabase db) {
         createSceneTable(db);
         createSceneView(db);
     }
-
 
     private void dropViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
@@ -776,6 +785,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 24:
                         upgradeToV25(db);
+                        break;
+                    case 25:
+                        upgradeToV26(db);
                         break;
                 }
             }

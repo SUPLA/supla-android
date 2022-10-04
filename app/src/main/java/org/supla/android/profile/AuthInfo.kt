@@ -17,9 +17,13 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.DbItem
+import android.content.Context
+import org.supla.android.Encryption
+import org.supla.android.Preferences
+import org.supla.android.tools.UsedFromNativeCode
 
-data class AuthInfo(var emailAuth: Boolean, 
+@UsedFromNativeCode
+data class AuthInfo(var emailAuth: Boolean,
                     var serverAutoDetect: Boolean,
                     var serverForEmail: String = "",
                     var serverForAccessID: String = "",
@@ -33,21 +37,34 @@ data class AuthInfo(var emailAuth: Boolean,
     /**
      Returns server used for current authentication method
      */
-    val serverForCurrentAuthMethod: String 
+    val serverForCurrentAuthMethod: String
         get() = if(emailAuth) serverForEmail else serverForAccessID
 
     /**
      A flag indicating if current authentication settings
      are complete (but not necessarily correct).
      */
-    val isAuthDataComplete: Boolean 
+    val isAuthDataComplete: Boolean
         get() {
-            if(emailAuth) {
-                return !emailAddress.isEmpty() &&
-                (serverAutoDetect || !serverForCurrentAuthMethod.isEmpty())
+            return if(emailAuth) {
+                emailAddress.isNotEmpty() &&
+                        (serverAutoDetect || serverForCurrentAuthMethod.isNotEmpty())
             } else {
-                return !serverForCurrentAuthMethod.isEmpty() &&
-                    accessID > 0 && !accessIDpwd.isEmpty()
+                serverForCurrentAuthMethod.isNotEmpty() &&
+                        accessID > 0 && accessIDpwd.isNotEmpty()
             }
         }
+
+  private fun decrypt(payload: ByteArray, context: Context): ByteArray? {
+    val key = Preferences.getDeviceID(context)
+    return Encryption.decryptDataWithNullOnException(payload, key)
+  }
+
+  fun getDecryptedGuid(context: Context): ByteArray? {
+    return decrypt(guid, context);
+  }
+
+  fun getDecryptedAuthKey(context: Context): ByteArray? {
+    return decrypt(authKey, context);
+  }
 }

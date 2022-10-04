@@ -7,6 +7,8 @@
         <variable
             name="viewmodel"
             type="org.supla.android.widget.single.configuration.SingleWidgetConfigurationViewModel" />
+
+        <import type="org.supla.android.widget.shared.configuration.ItemType" />
     </data>
 
     <merge>
@@ -61,13 +63,51 @@
                 app:visibility="@{!viewmodel.dataLoading &amp;&amp; viewmodel.profilesList.size() > 1}" />
 
             <TextView
+                android:id="@+id/widget_single_configure_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="19dp"
+                android:gravity="center"
+                android:text="@string/widget_configure_type_label"
+                android:textAllCaps="true"
+                android:textColor="@color/label_grey"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                app:visibility="@{!viewmodel.dataLoading}" />
+
+            <org.supla.android.ui.SegmentedButtonGroup
+                android:id="@+id/widget_single_configure_type"
+                style="@style/SegmentedButtonGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="4dp"
+                app:visibility="@{!viewmodel.dataLoading}">
+
+                <org.supla.android.ui.SegmentedButton
+                    style="@style/SegmentedButton.Texted"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/widget_configure_type_channel_label" />
+
+                <org.supla.android.ui.SegmentedButton
+                    style="@style/SegmentedButton.Texted"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/widget_configure_type_group_label" />
+            </org.supla.android.ui.SegmentedButtonGroup>
+
+            <TextView
                 android:id="@+id/widget_single_configure_channel_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="19dp"
                 android:gravity="center"
-                android:text="@string/widget_configure_channel_label"
+                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_channel_label : @string/widget_configure_group_label}"
                 android:textAllCaps="true"
                 android:textColor="@color/label_grey"
                 android:textSize="12sp"
@@ -82,8 +122,8 @@
                 android:layout_marginVertical="4dp"
                 android:background="@drawable/background_widget_configuration_spinner"
                 android:padding="4dp"
-                app:channels="@{viewmodel.channelsList}"
-                app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.channelsList.size() > 0}" />
+                app:channels="@{viewmodel.itemsList}"
+                app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() > 0}" />
 
             <TextView
                 android:id="@+id/widget_single_configure_no_channel"
@@ -92,10 +132,10 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
                 android:gravity="center"
-                android:text="@string/widget_configure_no_channel"
+                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_no_channel : @string/widget_configure_no_group }"
                 android:textColor="@color/widget_text"
                 android:textSize="16sp"
-                app:visibility="@{viewmodel.channelsList.size() == 0}" />
+                app:visibility="@{viewmodel.itemsList.size() == 0}" />
 
         </LinearLayout>
 

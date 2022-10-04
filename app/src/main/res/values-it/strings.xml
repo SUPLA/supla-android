@@ -427,5 +427,40 @@
     <string name="rs_display_mode_opening">Apertura</string>
     <string name="rs_display_mode_closing">Chiusura</string>
     <string name="cfg_checkbox_server_auto" translatable="false">Auto</string>
+    <string name="profiles_title" translatable="false">Account</string>
+    <string name="profile_name_label" translatable="false">NOME ACCOUNT</string>
+    <string name="form_cannot_delete_active_profile" translatable="false">Non è possibile rimuovere l\'account attivo</string>
+    <string name="profile_select_active" translatable="false">Seleziona l’account attivo</string>
+    <string name="profile_act_info" translatable="false">Seleziona l’account per effettuare il log in.</string>
+    <string name="form_error" translatable="false">Errore</string>
+    <string name="form_profile_name_missing" translatable="false">Manca il nome dell’account</string>
+    <string name="form_profile_required_data_missing" translatable="false">Informazioni richieste mancanti</string>
+    <string name="form_profile_duplicate" translatable="false">Un account con lo stesso nome è già esistente</string>
+    <string name="add_account" translatable="false">Aggiungi un account</string>
+    <string name="edit_account" translatable="false">Modifica account</string>
+    <string name="delete_account_confirm_title" translatable="false">Rimuovi account</string>
+    <string name="delete_account_confirm_message" translatable="false">Confermi di voler rimuovere l’account?</string>
+    <string name="delete_account" translatable="false">Rimuovi</string>
+    <string name="delete_account_confirm_message_with_widgets">Sei sicuro di voler rimuovere l\'account? Se confermi verranno rimossi tutti i widget relativi alll\'account</string>
+    <string name="profile_plural" translatable="false">Il tuo account</string>
+    <string name="em_chart_phase_n" translatable="false">Fase %d</string>
+    <string name="em_chart_all_phases" translatable="false">Fase 1+2+3</string>
+    <string name="widget_configure_title" translatable="false">Configurazione del widget</string>
+    <string name="widget_configure_profile_label" translatable="false">Account</string>
+    <string name="widget_configure_channel_label" translatable="false">Canale del widget</string>
+    <string name="widget_configure_action_label" translatable="false">Azione</string>
+    <string name="widget_configure_name_label" translatable="false">Nome</string>
+    <string name="widget_configure_error" translatable="false">Non è possibile configurare il canale</string>
+    <string name="widget_configure_no_selection" translatable="false">Nessun canale selezionato</string>
+    <string name="widget_configure_no_channel" translatable="false">Nessun canale disponibile</string>
+    <string name="double_button_widget_description" translatable="false">Widget doppio</string>
+    <string name="single_button_widget_description" translatable="false">Widget singolo</string>
+    <string name="widget_app_not_initialized" translatable="false">Effettuare il login!</string>
+    <string name="widget_command_error" translatable="false">Errore di comunicazione!</string>
+    <string name="widget_command_no_connection" translatable="false">Connessione internet assente!</string>
+    <string name="widget_command_started" translatable="false">Fatto</string>
+    <string name="widget_removed_label" translatable="false">Canale rimosso</string>
+    <string name="status_accessid_inactive" translatable="false">Identificatore dell’accesso non attivo</string>
+    <string name="profile_default_name" translatable="false">Default</string>
 
 </resources>

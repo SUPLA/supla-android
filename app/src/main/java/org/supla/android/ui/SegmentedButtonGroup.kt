@@ -23,42 +23,42 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 
-
 class SegmentedButtonGroup @JvmOverloads constructor(
-        ctx: Context, attrs: AttributeSet? = null,
-            defStyleAttr: Int = 0
-): LinearLayout(ctx, attrs, defStyleAttr) {
+  ctx: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0
+) : LinearLayout(ctx, attrs, defStyleAttr) {
 
-    private var _idx = 0
-    private var _listener: ((Int)->Unit)? = null
+  private var _idx = 0
+  private var _listener: ((Int) -> Unit)? = null
 
-    var position: Int
-        get() = _idx
-        set(value) {
-            if(_idx == value) {
-                return
-            }
-            _idx = value
+  var position: Int
+    get() = _idx
+    set(value) {
+      if (_idx == value) {
+        return
+      }
+      _idx = value
 
-            for(i in 0..getChildCount()-1) {
-                val v = getChildAt(i)
-                v.setSelected(_idx == i)
-            }
+      for (i in 0 until childCount) {
+        val v = getChildAt(i)
+        v.isSelected = _idx == i
+      }
 
-            _listener?.invoke(_idx)
-        }
-    
-    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
-        super.addView(child, index, params)
-        child.setClickable(true)
-        val pos = if(index >= 0) index else getChildCount()-1
-        child.setSelected(pos == _idx)
-        child.setOnClickListener() {
-            position = pos
-        }
+      _listener?.invoke(_idx)
     }
 
-    fun setOnPositionChangedListener(listener: ((Int)->Unit)?) {
-        _listener = listener
+  override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
+    super.addView(child, index, params)
+    child.isClickable = true
+    val pos = if (index >= 0) index else childCount - 1
+    child.isSelected = pos == _idx
+    child.setOnClickListener {
+      position = pos
     }
+  }
+
+  fun setOnPositionChangedListener(listener: ((Int) -> Unit)?) {
+    _listener = listener
+  }
 }

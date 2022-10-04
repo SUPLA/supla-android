@@ -29,50 +29,62 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.profile.INVALID_PROFILE_ID
+import org.supla.android.widget.shared.configuration.ItemType
 
 @RunWith(MockitoJUnitRunner::class)
 class WidgetVisibilityHandlerTest {
 
-    @Mock
-    private lateinit var context: Context
+  @Mock
+  private lateinit var context: Context
 
-    @Mock
-    private lateinit var appWidgetManager: AppWidgetManager
+  @Mock
+  private lateinit var appWidgetManager: AppWidgetManager
 
-    @Mock
-    private lateinit var widgetPreferences: WidgetPreferences
+  @Mock
+  private lateinit var widgetPreferences: WidgetPreferences
 
-    private lateinit var handler: WidgetVisibilityHandler
+  private lateinit var handler: WidgetVisibilityHandler
 
-    @Before
-    fun setUp() {
-        mockkStatic("org.supla.android.extensions.WidgetExtensionsKt")
-        every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf()
-        handler = WidgetVisibilityHandler(context, appWidgetManager, widgetPreferences)
-    }
+  @Before
+  fun setUp() {
+    mockkStatic("org.supla.android.extensions.WidgetExtensionsKt")
+    every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf()
+    handler = WidgetVisibilityHandler(context, appWidgetManager, widgetPreferences)
+  }
 
-    @Test
-    fun `should not observe widget when owned profile removed`() {
-        // given
-        val widgetId = 123
-        val channelId = 234
-        val profileId = 345L
+  @Test
+  fun `should not observe widget when owned profile removed`() {
+    // given
+    val widgetId = 123
+    val channelId = 234
+    val profileId = 345L
 
-        val widgetConfiguration = WidgetConfiguration(channelId, null, 0, 0, profileId, true, -1)
-        whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
+    val widgetConfiguration = WidgetConfiguration(
+      channelId,
+      ItemType.CHANNEL,
+      null,
+      0,
+      0,
+      profileId,
+      true,
+      -1
+    )
+    whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
 
-        every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf(widgetId)
-        handler = WidgetVisibilityHandler(context, appWidgetManager, widgetPreferences)
+    every { appWidgetManager.getAllWidgetIds(context) } returns intArrayOf(widgetId)
+    handler = WidgetVisibilityHandler(context, appWidgetManager, widgetPreferences)
 
-        // when
-        handler.onProfileRemoved(profileId)
+    // when
+    handler.onProfileRemoved(profileId)
 
-        // then
-        verify(widgetPreferences).getWidgetConfiguration(widgetId)
-        verify(widgetPreferences).setWidgetConfiguration(eq(widgetId),
-                argThat { conf -> conf.profileId == INVALID_PROFILE_ID })
-        verify(context).sendBroadcast(any())
-        verifyNoMoreInteractions(widgetPreferences, context)
-        verifyZeroInteractions(appWidgetManager)
-    }
+    // then
+    verify(widgetPreferences).getWidgetConfiguration(widgetId)
+    verify(widgetPreferences).setWidgetConfiguration(
+      eq(widgetId),
+      argThat { conf -> conf.profileId == INVALID_PROFILE_ID }
+    )
+    verify(context).sendBroadcast(any())
+    verifyNoMoreInteractions(widgetPreferences, context)
+    verifyZeroInteractions(appWidgetManager)
+  }
 }

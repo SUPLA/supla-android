@@ -33,6 +33,13 @@ public class SuplaConst {
     public final static int SUPLA_EMAIL_MAXSIZE = 256;
     public final static int SUPLA_PASSWORD_MAXSIZE = 64;
     public final static int SUPLA_CHANNELVALUE_SIZE = 8;
+
+    public final static int SUPLA_RESULT_RESPONSE_TIMEOUT = -8;
+    public final static int SUPLA_RESULT_CANT_CONNECT_TO_HOST = -7;
+    public final static int SUPLA_RESULT_HOST_NOT_FOUND = -6;
+    public final static int SUPLA_RESULT_VERSION_ERROR = -1;
+
+    // SUPLA_RESULTCODE_ are sent in TSuplaDataPacket.data
     public final static int SUPLA_RESULTCODE_NONE = 0;
     public final static int SUPLA_RESULTCODE_UNSUPORTED = 1;
     public final static int SUPLA_RESULTCODE_FALSE = 2;
@@ -48,8 +55,6 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED = 12;
     public final static int SUPLA_RESULTCODE_DEVICE_LIMITEXCEEDED = 13;
     public final static int SUPLA_RESULTCODE_GUID_ERROR = 14;
-    public final static int SUPLA_RESULTCODE_HOSTNOTFOUND = 15;
-    public final static int SUPLA_RESULTCODE_CANTCONNECTTOHOST = 16;
     public final static int SUPLA_RESULTCODE_REGISTRATION_DISABLED = 17;
     public final static int SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED = 18;
     public final static int SUPLA_RESULTCODE_AUTHKEY_ERROR = 19;
@@ -65,6 +70,10 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_SCENE = 29;
     public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_ACTION_TRIGGER = 30;
     public final static int SUPLA_RESULTCODE_ACCESSID_INACTIVE = 31;
+    public final static int SUPLA_RESULTCODE_SUBJECT_NOT_FOUND = 34;
+    public final static int SUPLA_RESULTCODE_INCORRECT_PARAMETERS = 35;
+    public final static int SUPLA_RESULTCODE_CLIENT_NOT_EXISTS = 36;
+    public final static int SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE = 38;
 
     public final static int SUPLA_CHANNELFNC_NONE = 0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK = 10;
@@ -153,7 +162,6 @@ public class SuplaConst {
     public final static int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
     public final static int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
     public final static int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
-    public final static int SUPLA_CHANNEL_FLAG_POSSIBLE_SLEEP_MODE = 0x04000000;
 
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
