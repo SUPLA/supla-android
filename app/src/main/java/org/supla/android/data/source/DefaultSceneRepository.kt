@@ -20,7 +20,6 @@ package org.supla.android.data.source
  */
 
 import android.database.Cursor
-import org.supla.android.Trace
 import org.supla.android.db.Scene
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
@@ -28,11 +27,6 @@ import org.supla.android.data.source.local.SceneDao
 
 public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository {
 
-    private val TAG = DefaultSceneRepository::class.java.simpleName
-
-    override fun getScene(id: Int): Scene? {
-        TODO()
-    }
 
     override fun getAllProfileScenes(): List<Scene> {
         var rv = mutableListOf<Scene>()
@@ -58,7 +52,6 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
         val scene = dao.getSceneByRemoteId(suplaScene.id)
 
         if(scene == null) {
-            Trace.d(TAG, "scene ${suplaScene.id} not found")
             val newScene = Scene()
             newScene.assign(suplaScene)
             return dao.insertScene(newScene)
@@ -78,7 +71,6 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
     override fun updateSuplaSceneState(state: SuplaSceneState): Boolean {
         val scene = dao.getSceneByRemoteId(state.sceneId)
         if(scene == null) { 
-           Trace.w(TAG, "scene not found for id ${state.sceneId}")
            return false 
         }
 

@@ -52,7 +52,6 @@ class SceneListItemViewModel(val scene: Scene,
 
     val sceneIcon: ImageId 
         get() {
-            Trace.d(TAG, "returning user icon for: $scene")
             val iconId: Int
             if(scene.altIcon > 0) {
                 iconId = scene.altIcon
@@ -80,7 +79,6 @@ class SceneListItemViewModel(val scene: Scene,
           }
       }
 
-    private val TAG = "supla"
     private var _executing = false
 
     init {
@@ -107,8 +105,9 @@ class SceneListItemViewModel(val scene: Scene,
     }
 
     fun startStopScene() {
-        Trace.d(TAG, "start stop scene")
-        if(scene.startedAt == null) {
+        if(scene.startedAt == null || 
+           (scene.estimatedEndDate != null &&
+            scene.estimatedEndDate!!.compareTo(Date()) < 0)) {
             controller.startScene(scene.sceneId)
         } else {
             controller.stopScene(scene.sceneId)

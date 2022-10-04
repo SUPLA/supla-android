@@ -38,6 +38,8 @@ import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.actions.ActionParameters;
+import org.supla.android.lib.actions.SubjectType;
+import org.supla.android.lib.actions.ActionId;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.data.source.SceneRepository;
@@ -1417,12 +1419,20 @@ public class SuplaClient extends Thread implements SceneController {
     }
 
     public void startScene(int sceneId) {
-        // TODO: implement
-        Trace.d(log_tag, "unimplemented start scene " + sceneId);
+        ActionParameters params = new ActionParameters(ActionId.EXECUTE,
+                                                       SubjectType.SCENE,
+                                                       sceneId);
+        if(!executeAction(params)) {
+            Trace.w(log_tag, "Failed to start scene " + sceneId);
+        }
     }
 
     public void stopScene(int sceneId) {
-        // TODO: implement
-        Trace.d(log_tag, "unimplemented stop scene " + sceneId);        
+        ActionParameters params = new ActionParameters(ActionId.INTERRUPT,
+                                                       SubjectType.SCENE,
+                                                       sceneId);
+        if(!executeAction(params)) {
+            Trace.w(log_tag, "Failed to interrupt scene " + sceneId);
+        }
     }
 }
