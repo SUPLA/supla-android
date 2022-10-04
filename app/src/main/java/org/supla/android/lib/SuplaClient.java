@@ -154,6 +154,8 @@ public class SuplaClient extends Thread {
 
     private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
 
+    private native boolean scSetSceneCaption(long _supla_client, int SceneID, String Caption);
+
     private native boolean scReconnectAllClients(long _supla_client);
 
     private native boolean scSetRegistrationEnabled(long _supla_client,
@@ -560,6 +562,16 @@ public class SuplaClient extends Thread {
         try {
             return _supla_client_ptr != 0
                     && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setSceneCaption(int SceneID, String Caption) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
         } finally {
             unlockClientPtr();
         }
@@ -1115,6 +1127,15 @@ public class SuplaClient extends Thread {
         msg.setCode(ResultCode);
         msg.setText(Caption);
         msg.setLocationId(LocationID);
+        sendMessage(msg);
+    }
+
+    private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+            SuplaClientMsg.onSceneCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setSceneId(SceneID);
         sendMessage(msg);
     }
 
