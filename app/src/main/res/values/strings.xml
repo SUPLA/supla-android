@@ -444,6 +444,9 @@
     <string name="widget_app_not_initialized">Please login first!</string>
     <string name="widget_command_error">Communication failure!</string>
     <string name="widget_command_no_connection">No internet connection!</string>
+    <string translatable="false" name="widget_command_offline">Device offline!</string>
+    <string translatable="false" name="widget_command_not_available">Device not reachable!</string>
+    <string translatable="false" name="widget_command_credentials">Open app &amp; relogin!</string>
     <string name="widget_command_started">Done</string>
     <string name="widget_removed_label">Channel removed</string>
 

@@ -29,23 +29,26 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.extensions.getProfileManager
-import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.SuplaConst
+import org.supla.android.Trace
+import org.supla.android.extensions.getSingleCallProvider
+import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.RgbwActionParameters
+import org.supla.android.lib.actions.SubjectType
+import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.onoff.ARG_TURN_ON
-
-private const val MAX_WAIT_TIME = 3000 // in ms
 
 abstract class WidgetCommandWorkerBase(
   appContext: Context,
   workerParams: WorkerParameters
 ) : Worker(appContext, workerParams) {
 
-  val handler = Handler(Looper.getMainLooper())
-  val preferences = WidgetPreferences(appContext)
-  val profileManager = getProfileManager()
+  private val handler = Handler(Looper.getMainLooper())
+  private val preferences = WidgetPreferences(appContext)
+  private val singleCallProvider = getSingleCallProvider()
 
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -66,93 +69,100 @@ abstract class WidgetCommandWorkerBase(
       return Result.failure()
     }
 
-    val suplaClient = getSuplaClient(configuration.profileId)
-    if (suplaClient == null) {
-      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
-      return Result.failure()
-    }
-
-    showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
     SuplaApp.Vibrate(applicationContext)
 
-    return perform(configuration, suplaClient)
+    return perform(configuration)
   }
 
   protected open fun perform(
-    configuration: WidgetConfiguration,
-    suplaClient: SuplaClient
+    configuration: WidgetConfiguration
   ): Result = performCommon(
     configuration,
-    suplaClient,
     inputData.getBoolean(ARG_TURN_ON, false)
   )
 
   protected fun performCommon(
     configuration: WidgetConfiguration,
-    suplaClient: SuplaClient,
     turnOnOrClose: Boolean
   ): Result {
     when (configuration.itemFunction) {
-      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> {
-        val turnOnOff = if (turnOnOrClose) 1 else 0
-        suplaClient.open(
-          configuration.itemId,
-          configuration.itemType.isGroup(),
-          turnOnOff
-        )
-      }
-      SuplaConst.SUPLA_CHANNELFNC_DIMMER,
-      SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-      SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> {
-        val brightness = getBrightness(turnOnOrClose)
-        suplaClient.setRGBW(
-          configuration.itemId,
-          configuration.itemType.isGroup(),
-          configuration.channelColor,
-          brightness,
-          brightness,
-          true
-        )
-      }
-      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> {
-        suplaClient.open(
-          configuration.itemId,
-          configuration.itemType.isGroup(),
-          getOpenOrClose(turnOnOrClose)
-        )
-      }
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SUPLA_CHANNELFNC_POWERSWITCH ->
+        callAction(configuration, if (turnOnOrClose) ActionId.TURN_ON else ActionId.TURN_OFF)
+      SUPLA_CHANNELFNC_DIMMER,
+      SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      SUPLA_CHANNELFNC_RGBLIGHTING -> callRgbwAction(configuration, turnOnOrClose)
+      SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
+        callAction(configuration, if (turnOnOrClose) ActionId.SHUT else ActionId.REVEAL)
     }
     return Result.success()
   }
 
-  private fun getSuplaClient(profileId: Long): SuplaClient? {
-    val suplaApp = if (applicationContext is SuplaApp) {
-      (applicationContext as SuplaApp)
-    } else {
-      SuplaApp.getApp()
-    }
+  protected fun callAction(configuration: WidgetConfiguration, action: ActionId) {
+    val type = if (configuration.itemType.isGroup()) SubjectType.GROUP else SubjectType.CHANNEL
+    callAction(configuration, ActionParameters(action, type, configuration.itemId))
+  }
 
-    // before change check if profile exist to avoid changing id to not existing one.
-    profileManager.getAllProfiles().firstOrNull { it.id == profileId }
-      ?: return null
-    profileManager.activateProfile(profileId)
+  private fun callRgbwAction(configuration: WidgetConfiguration, turnOnOrClose: Boolean) {
+    val brightness = getBrightness(turnOnOrClose)
+    callAction(
+      configuration,
+      RgbwActionParameters(
+        ActionId.SET_RGBW_PARAMETERS,
+        if (configuration.itemType.isGroup()) SubjectType.GROUP else SubjectType.CHANNEL,
+        configuration.itemId,
+        brightness,
+        brightness,
+        configuration.channelColor.toLong(),
+        colorRandom = false,
+        onOff = true
+      )
+    )
+  }
 
-    if (suplaApp.suplaClient == null) {
-      suplaApp.SuplaClientInitIfNeed(applicationContext)
-    }
-
-    val startTime = System.currentTimeMillis()
-    while (!suplaApp.suplaClient.registered()) {
-      Thread.sleep(100)
-
-      if (System.currentTimeMillis() - startTime >= MAX_WAIT_TIME) {
-        // Time for connection is up, give up and show error.
-        return null
+  private fun callAction(configuration: WidgetConfiguration, parameters: ActionParameters) {
+    try {
+      singleCallProvider.provide(applicationContext, configuration.profileId)
+        .executeAction(parameters)
+      showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
+    } catch (ex: ResultException) {
+      Trace.e(WidgetCommandWorkerBase::javaClass.name, "Could not perform action", ex)
+      when (ex.result) {
+        SUPLA_RESULT_VERSION_ERROR,
+        SUPLA_RESULTCODE_FALSE,
+        SUPLA_RESULTCODE_GUID_ERROR,
+        SUPLA_RESULTCODE_INCORRECT_PARAMETERS -> showToast(
+          R.string.widget_command_error,
+          Toast.LENGTH_SHORT
+        )
+        SUPLA_RESULT_HOST_NOT_FOUND,
+        SUPLA_RESULT_CANT_CONNECT_TO_HOST,
+        SUPLA_RESULT_RESPONSE_TIMEOUT -> showToast(
+          R.string.widget_command_no_connection,
+          Toast.LENGTH_LONG
+        )
+        SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> showToast(
+          R.string.widget_command_offline,
+          Toast.LENGTH_LONG
+        )
+        SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
+        SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE,
+        SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> showToast(
+          R.string.widget_command_not_available,
+          Toast.LENGTH_LONG
+        )
+        SUPLA_RESULTCODE_AUTHKEY_ERROR,
+        SUPLA_RESULTCODE_BAD_CREDENTIALS,
+        SUPLA_RESULTCODE_CLIENT_DISABLED,
+        SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
+        SUPLA_RESULTCODE_ACCESSID_DISABLED,
+        SUPLA_RESULTCODE_ACCESSID_INACTIVE -> showToast(
+          R.string.widget_command_no_connection,
+          Toast.LENGTH_LONG
+        )
       }
     }
-    return suplaApp.suplaClient
   }
 
   private fun showToast(stringId: Int, length: Int) {
@@ -171,7 +181,7 @@ abstract class WidgetCommandWorkerBase(
       return when {
         actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
         actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-        // for other device how are able to connect with Ethernet
+        // for other device which are able to connect with Ethernet
         actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
         // for check internet over Bluetooths
         actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
@@ -185,17 +195,10 @@ abstract class WidgetCommandWorkerBase(
     }
   }
 
-  private fun getBrightness(turnOnOrClose: Boolean): Int =
+  private fun getBrightness(turnOnOrClose: Boolean): Short =
     if (turnOnOrClose) {
       100
     } else {
       0
-    }
-
-  private fun getOpenOrClose(turnOnOrClose: Boolean): Int =
-    if (turnOnOrClose) {
-      SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE
-    } else {
-      SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN
     }
 }

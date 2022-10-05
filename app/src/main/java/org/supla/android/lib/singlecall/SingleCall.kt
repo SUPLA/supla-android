@@ -77,8 +77,8 @@ class SingleCall private constructor(
 
   @Singleton
   class Provider @Inject constructor(private val profileRepository: ProfileRepository) {
-    fun provide(context: Context, profileId: Long):
-      SingleCall = SingleCall(context, profileId, profileRepository)
+    fun provide(context: Context, profileId: Long) =
+      SingleCall(context, profileId, profileRepository)
   }
 
   companion object {
