@@ -86,7 +86,8 @@ class CfgActivity: AppCompatActivity() {
             it?.let { handleNavigationDirective(it) }
         }
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+            as NavHostFragment
         val navController = navHostFragment.navController
         val navInflater = navController.navInflater
         val graph = navInflater.inflate(R.navigation.nav_graph)

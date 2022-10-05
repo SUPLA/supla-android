@@ -47,7 +47,8 @@ public class SceneDao(dap: DatabaseAccessProvider): BaseDao(dap) {
                      null /* having */,
                      /* order by - begin */
                      SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
-                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + " COLLATE LOCALIZED, " +
+                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + 
+                     " COLLATE LOCALIZED, " +
                      SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
                      SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
                      SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
