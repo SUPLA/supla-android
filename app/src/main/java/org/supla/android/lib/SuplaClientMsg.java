@@ -21,64 +21,64 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 @SuppressWarnings("unused")
 public class SuplaClientMsg {
 
-  public static final int onDataChanged = 1;
-  public static final int onConnecting = 2;
-  public static final int onRegistered = 3;
-  public static final int onRegistering = 4;
-  public static final int onRegisterError = 5;
-  public static final int onDisconnected = 6;
-  public static final int onConnected = 7;
-  public static final int onVersionError = 8;
-  public static final int onEvent = 9;
-  public static final int onConnError = 10;
-  public static final int onRegistrationEnabled = 11;
-  public static final int onOAuthTokenRequestResult = 12;
-  public static final int onCalCfgResult = 13;
-  public static final int onSuperuserAuthorizationResult = 14;
-  public static final int onChannelState = 15;
-  public static final int onChannelBasicCfg = 16;
-  public static final int onChannelFunctionSetResult = 17;
-  public static final int onChannelCaptionSetResult = 18;
-  public static final int onClientsReconnectResult = 19;
-  public static final int onSetRegistrationEnabledResult = 20;
-  public static final int onZWaveResetAndClearResult = 21;
-  public static final int onZWaveAddNodeResult = 22;
-  public static final int onZWaveRemoveNodeResult = 23;
-  public static final int onZWaveGetNodeListResult = 24;
-  public static final int onZWaveGetAssignedNodeIdResult = 25;
-  public static final int onZWaveAssignNodeIdResult = 26;
-  public static final int onCalCfgProgressReport = 27;
-  public static final int onZWaveWakeUpSettingsReport = 28;
-  public static final int onZWaveSetWakeUpTimeResult = 29;
-  public static final int onLocationCaptionSetResult = 30;
-  public static final int onSceneStateChanged = 31;
-  private Object Sender;
-  private int Type;
-  private SuplaVersionError VersionError;
-  private SuplaRegisterResult RegisterResult;
-  private SuplaRegisterError RegisterError;
-  private SuplaConnError ConnError;
-  private SuplaEvent Event;
-  private SuplaRegistrationEnabled RegistrationEnabled;
-  private SuplaOAuthToken OAuthToken;
-  private SuplaChannelState ChannelState;
-  private SuplaChannelBasicCfg ChannelBasicCfg;
-  private int ChannelId;
-  private int ChannelGroupId;
-  private int LocationId;
-  private int SceneId;
-  private boolean Success;
-  private int Code;
-  private int Command;
-  private int Result;
-  private byte[] data;
-  private int Func;
-  private short NodeId;
-  private ZWaveNode Node;
-  private String Text;
-  private short Progress;
-  private boolean ExtendedValue;
-  private ZWaveWakeUpSettings WakeUpSettings;
+    public final static int onDataChanged = 1;
+    public final static int onConnecting = 2;
+    public final static int onRegistered = 3;
+    public final static int onRegistering = 4;
+    public final static int onRegisterError = 5;
+    public final static int onDisconnected = 6;
+    public final static int onConnected = 7;
+    public final static int onVersionError = 8;
+    public final static int onEvent = 9;
+    public final static int onConnError = 10;
+    public final static int onRegistrationEnabled = 11;
+    public final static int onOAuthTokenRequestResult = 12;
+    public final static int onCalCfgResult = 13;
+    public final static int onSuperuserAuthorizationResult = 14;
+    public final static int onChannelState = 15;
+    public final static int onChannelBasicCfg = 16;
+    public final static int onChannelFunctionSetResult = 17;
+    public final static int onChannelCaptionSetResult = 18;
+    public final static int onClientsReconnectResult = 19;
+    public final static int onSetRegistrationEnabledResult = 20;
+    public final static int onZWaveResetAndClearResult = 21;
+    public final static int onZWaveAddNodeResult = 22;
+    public final static int onZWaveRemoveNodeResult = 23;
+    public final static int onZWaveGetNodeListResult = 24;
+    public final static int onZWaveGetAssignedNodeIdResult = 25;
+    public final static int onZWaveAssignNodeIdResult = 26;
+    public final static int onCalCfgProgressReport = 27;
+    public final static int onZWaveWakeUpSettingsReport = 28;
+    public final static int onZWaveSetWakeUpTimeResult = 29;
+    public final static int onLocationCaptionSetResult = 30;
+    public final static int onSceneCaptionSetResult = 31;
+    private Object Sender;
+    private int Type;
+    private SuplaVersionError VersionError;
+    private SuplaRegisterResult RegisterResult;
+    private SuplaRegisterError RegisterError;
+    private SuplaConnError ConnError;
+    private SuplaEvent Event;
+    private SuplaRegistrationEnabled RegistrationEnabled;
+    private SuplaOAuthToken OAuthToken;
+    private SuplaChannelState ChannelState;
+    private SuplaChannelBasicCfg ChannelBasicCfg;
+    private int ChannelId;
+    private int ChannelGroupId;
+    private int LocationId;
+    private int SceneId;
+    private boolean Success;
+    private int Code;
+    private int Command;
+    private int Result;
+    private byte[] data;
+    private int Func;
+    private short NodeId;
+    private ZWaveNode Node;
+    private String Text;
+    private short Progress;
+    private boolean ExtendedValue;
+    private ZWaveWakeUpSettings WakeUpSettings;
 
   public SuplaClientMsg(Object sender, int type) {
     Type = type;
@@ -285,15 +285,15 @@ public class SuplaClientMsg {
     return WakeUpSettings;
   }
 
-  public void setWakeUpSettings(ZWaveWakeUpSettings wakeUpSettings) {
-    WakeUpSettings = wakeUpSettings;
-  }
+    public void setLocationId(int locationId) {
+        LocationId = locationId;
+    }
 
-  public int getLocationId() {
-    return LocationId;
-  }
+    public int getSceneId() {
+        return SceneId;
+    }
 
-  public void setLocationId(int locationId) {
-    LocationId = locationId;
-  }
+    public void setSceneId(int sceneId) {
+        SceneId = sceneId;
+    }
 }

@@ -235,7 +235,161 @@ public class SuplaClient extends Thread implements SceneController {
         }
       }
 
-      if (!freed) {
+        return result;
+    }
+
+    public native void cfgInit(SuplaCfg cfg);
+
+    private native long scInit(SuplaCfg cfg);
+
+    private native void scFree(long _supla_client);
+
+    private native int scGetId(long _supla_client);
+
+    private native boolean scConnect(long _supla_client);
+
+    private native boolean scConnected(long _supla_client);
+
+    private native boolean scRegistered(long _supla_client);
+
+    private native void scDisconnect(long _supla_client);
+
+    private native boolean scIterate(long _supla_client, int wait_usec);
+
+    private native boolean scOpen(long _supla_client, int ID, int Group, int Open);
+
+    private native boolean scTimerArm(long _supla_client, int ChannelID, int On, int DurationMS);
+
+    private native boolean scSetRGBW(long _supla_client, int ID, int Group,
+                                     int Color, int ColorBrightness, int Brightness,
+                                     int TurnOnOff);
+
+    private native boolean scGetRegistrationEnabled(long _supla_client);
+
+    private native int scGetProtoVersion(long _supla_client);
+
+    private native int scGetMaxProtoVersion(long _supla_client);
+
+    private native boolean scOAuthTokenRequest(long _supla_client);
+
+    private native boolean scDeviceCalCfgRequest(long _supla_client, int ID, int Group,
+                                                 int Command, int DataType, byte[] Data);
+
+    private native boolean scDeviceCalCfgCancelAllCommands(long _supla_client,
+                                                           int DeviceID);
+
+    private native boolean scThermostatScheduleCfgRequest(long _supla_client, int ID, int Group,
+                                                          SuplaThermostatScheduleCfg cfg);
+
+    private native boolean scSuperUserAuthorizationRequest(long _supla_client,
+                                                           String email, String password);
+
+    private native boolean scGetSuperUserAuthorizationResult(long _supla_client);
+
+    private native boolean scGetChannelState(long _supla_client, int ChannelID);
+
+    private native boolean scGetChannelBasicCfg(long _supla_client, int ChannelID);
+
+    private native boolean scSetChannelFunction(long _supla_client, int ChannelID, int Function);
+
+    private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
+
+    private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
+
+    private native boolean scSetSceneCaption(long _supla_client, int SceneID, String Caption);
+
+    private native boolean scReconnectAllClients(long _supla_client);
+
+    private native boolean scSetRegistrationEnabled(long _supla_client,
+                                                    int ioDeviceRegTimeSec, int clientRegTimeSec);
+
+    private native boolean scReconnectDevice(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveConfigModeActive(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveResetAndClear(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveAddNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveRemoveNode(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveGetNodeList(long _supla_client, int DeviceID);
+
+    private native boolean scZWaveGetAssignedNodeId(long _supla_client, int ChannelID);
+
+    private native boolean scZWaveAssignNodeId(long _supla_client, int ChannelID, short NodeId);
+
+    private native boolean scZWaveGetWakeUpSettings(long _supla_client, int ChannelID);
+
+    private native boolean scZWaveSetWakeUpTime(long _supla_client, int ChannelID, int Time);
+
+    private native boolean scSetLightsourceLifespan(long _supla_client, int ChannelID, boolean
+            resetCounter, boolean setTime, int lifeSpan);
+
+    private native boolean scSetDfgTransparency(long _supla_client, int ChannelID, short mask,
+                                                short active_bits);
+
+    private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
+
+    private void sendMessage(SuplaClientMsg msg) {
+        if (canceled()) return;
+        SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
+    }
+
+    private void init(SuplaCfg cfg) {
+        synchronized (sc_lck) {
+            if (_supla_client_ptr == 0) {
+                _supla_client_ptr_counter = 0;
+                _supla_client_ptr = scInit(cfg);
+            }
+        }
+    }
+
+    private long lockClientPtr() {
+        long result = 0;
+        synchronized (sc_lck) {
+            if (_supla_client_ptr != 0) {
+                _supla_client_ptr_counter++;
+                result = _supla_client_ptr;
+            }
+        }
+        return result;
+    }
+
+    private void unlockClientPtr() {
+        synchronized (sc_lck) {
+            if (_supla_client_ptr != 0
+                    && _supla_client_ptr_counter > 0) {
+                _supla_client_ptr_counter--;
+            }
+        }
+    }
+
+    private void free() {
+        boolean freed = false;
+
+        while (!freed) {
+
+            synchronized (sc_lck) {
+                if (_supla_client_ptr != 0
+                        && _supla_client_ptr_counter == 0) {
+                    scFree(_supla_client_ptr);
+                    _supla_client_ptr = 0;
+                    freed = true;
+                }
+            }
+
+            if (!freed) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+    }
+
+    public int getClientId() {
+        long _supla_client_ptr = lockClientPtr();
         try {
           Thread.sleep(100);
         } catch (InterruptedException ignored) {
@@ -259,7 +413,470 @@ public class SuplaClient extends Thread implements SceneController {
     NetworkInfo activeNetworkInfo =
         connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
 
-    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+    private boolean connected() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scConnected(_supla_client_ptr);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean registered() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scRegistered(_supla_client_ptr);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    private void disconnect() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scDisconnect(_supla_client_ptr);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    private boolean iterate() {
+        return _supla_client_ptr != 0 && scIterate(_supla_client_ptr, 100000);
+    }
+
+    public boolean open(int ID, boolean Group, int Open) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scOpen(_supla_client_ptr, ID, Group ? 1 : 0, Open);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean timerArm(int ChannelID, boolean On, int DurationMS) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scTimerArm(_supla_client_ptr,
+                    ChannelID, On ? 1 : 0, DurationMS);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean open(int ChannelID, int Open) {
+        return open(ChannelID, false, Open);
+    }
+
+    public boolean setRGBW(int ID, boolean Group, int Color, int ColorBrightness, int Brightness,
+                           boolean TurnOnOff) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetRGBW(_supla_client_ptr, ID, Group ? 1 : 0, Color,
+                    ColorBrightness, Brightness, TurnOnOff ? 1 : 0);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setRGBW(int ChannelID, int Color, int ColorBrightness, int Brightness,
+                           boolean TurnOnOff) {
+        return setRGBW(ChannelID, false, Color, ColorBrightness, Brightness, TurnOnOff);
+    }
+
+    public void getRegistrationEnabled() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scGetRegistrationEnabled(_supla_client_ptr);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public int getProtoVersion() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 ? scGetProtoVersion(_supla_client_ptr) : 0;
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public int getMaxProtoVersion() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 ? scGetMaxProtoVersion(_supla_client_ptr) : 0;
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public void oAuthTokenRequest() {
+        if (canceled() || !registered()) {
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        if (now - lastTokenRequest <= 5000) {
+            Trace.d(log_tag, "Token already requested: "
+                    + (now - lastTokenRequest));
+            return;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0 && scOAuthTokenRequest(_supla_client_ptr)) {
+                lastTokenRequest = now;
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean turnOnOff(Context context, boolean turnOn,
+                             int remoteId, boolean group, int channelFunc, boolean vibrate) {
+        if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+                || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
+            if (turnOn) {
+                DbHelper helper = DbHelper.getInstance(context);
+                if (helper == null) {
+                    return false;
+                }
+                Channel channel = helper.getChannel(remoteId);
+                if (channel == null) {
+                    return false;
+                }
+                if (!channel.getValue().hiValue()
+                        && channel.getValue().overcurrentRelayOff()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(android.R.string.dialog_alert_title);
+                    builder.setMessage(R.string.overcurrent_question);
+
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        dialog.dismiss();
+
+                        if (vibrate) {
+                            SuplaApp.Vibrate(context);
+                        }
+                        open(remoteId, group, 1);
+                    });
+
+                    builder.setNeutralButton(R.string.no,
+                            (dialog, id) -> dialog.cancel());
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    return true;
+                }
+            }
+
+            if (vibrate) {
+                SuplaApp.Vibrate(context);
+            }
+            open(remoteId, group, turnOn ? 1 : 0);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void superUserAuthorizationRequest(String email, String password) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scSuperUserAuthorizationRequest(_supla_client_ptr, email, password);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public void getSuperUserAuthorizationResult() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            if (_supla_client_ptr != 0) {
+                scGetSuperUserAuthorizationResult(_supla_client_ptr);
+            }
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean isSuperUserAuthorized() {
+        boolean result = false;
+        synchronized (sc_lck) {
+            result = superUserAuthorized;
+        }
+        return result;
+    }
+
+    public boolean deviceCalCfgRequest(int ID, boolean Group, int Command,
+                                       int DataType, byte[] Data) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scDeviceCalCfgRequest(_supla_client_ptr,
+                    ID, Group ? 1 : 0, Command, DataType, Data);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean deviceCalCfgRequest(int ChannelID, int Command, int DataType, byte[] Data) {
+        return deviceCalCfgRequest(ChannelID, false, Command, DataType, Data);
+    }
+
+    public boolean thermostatScheduleCfgRequest(int ID, boolean Group,
+                                                SuplaThermostatScheduleCfg cfg) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scThermostatScheduleCfgRequest(_supla_client_ptr,
+                    ID, Group ? 1 : 0, cfg);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean deviceCalCfgCancelAllCommands(int DeviceID) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scDeviceCalCfgCancelAllCommands(_supla_client_ptr,
+                    DeviceID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean thermostatScheduleCfgRequest(int ChannelID, SuplaThermostatScheduleCfg cfg) {
+        return thermostatScheduleCfgRequest(ChannelID, false, cfg);
+    }
+
+    public boolean getChannelState(int ChannelID) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scGetChannelState(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean getChannelBasicCfg(int ChannelID) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0 && scGetChannelBasicCfg(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setChannelFunction(int ChannelID, int Function) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetChannelFunction(_supla_client_ptr, ChannelID, Function);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setChannelCaption(int ChannelID, String Caption) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setLocationCaption(int LocationID, String Caption) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setSceneCaption(int SceneID, String Caption) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetDfgTransparency(_supla_client_ptr, ChannelID, mask, active_bits);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean reconnectAllClients() {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scReconnectAllClients(_supla_client_ptr);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setRegistrationEnabled(int ioDeviceRegTimeSec, int clientRegTimeSec) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetRegistrationEnabled(_supla_client_ptr,
+                    ioDeviceRegTimeSec, clientRegTimeSec);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean reconnectDevice(int DeviceId) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scReconnectDevice(_supla_client_ptr, DeviceId);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveConfigModeActive(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveConfigModeActive(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveResetAndClear(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveResetAndClear(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveAddNode(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveAddNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveRemoveNode(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveRemoveNode(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetNodeList(Integer DeviceID) {
+        if (DeviceID == null) {
+            return false;
+        }
+
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetNodeList(_supla_client_ptr, DeviceID.intValue());
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetAssignedNodeId(int ChannelID) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetAssignedNodeId(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveAssignNodeId(int ChannelID, short NodeId) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveAssignNodeId(_supla_client_ptr, ChannelID, NodeId);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveGetWakeUpSettings(int ChannelID) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveGetWakeUpSettings(_supla_client_ptr, ChannelID);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean zwaveSetWakeUpTime(int ChannelID, int Time) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scZWaveSetWakeUpTime(_supla_client_ptr, ChannelID, Time);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean setLightsourceLifespan(int ChannelID, boolean resetCounter,
+                                          boolean setTime, int lifeSpan) {
+        long _supla_client_ptr = lockClientPtr();
+        try {
+            return _supla_client_ptr != 0
+                    && scSetLightsourceLifespan(_supla_client_ptr, ChannelID,
+                    resetCounter, setTime, lifeSpan);
+        } finally {
+            unlockClientPtr();
+        }
+    }
+
+    public boolean executeAction(@NotNull ActionParameters parameters) {
       long _supla_client_ptr = lockClientPtr();
       try {
         return _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
@@ -1281,7 +1898,501 @@ public class SuplaClient extends Thread implements SceneController {
           json.append(line);
         }
 
-        JSONTokener tokener = new JSONTokener(json.toString());
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onVersionError);
+        msg.setVersionError(versionError);
+        sendMessage(msg);
+
+        cancel();
+    }
+
+    private void onConnecting() {
+        Trace.d(log_tag, "Connecting");
+
+        sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnecting));
+    }
+
+    private void onConnError(SuplaConnError connError) {
+
+        Trace.d(log_tag, connError.codeToString(_context));
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onConnError);
+        msg.setConnError(connError);
+        sendMessage(msg);
+
+        if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
+            cancel();
+        }
+    }
+
+    private void onConnected() {
+        Trace.d(log_tag, "connected");
+        DbH = DbHelper.getInstance(_context);
+
+        sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnected));
+    }
+
+    private void onDisconnected() {
+
+        sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onDisconnected));
+    }
+
+    private void onRegistering() {
+        Trace.d(log_tag, "Registering");
+
+        regTryCounter++;
+        sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onRegistering));
+    }
+
+    private void onRegistered(SuplaRegisterResult registerResult) {
+
+        Trace.d(log_tag, "registered");
+
+        regTryCounter = 0;
+        AuthInfo info = profileManager.getCurrentAuthInfo();
+
+        if (getMaxProtoVersion() > 0
+                && info.getPreferredProtocolVersion() < getMaxProtoVersion()
+                && registerResult.Version > info.getPreferredProtocolVersion()
+                && registerResult.Version <= getMaxProtoVersion()) {
+            info.setPreferredProtocolVersion(registerResult.Version);
+            profileManager.updateCurrentAuthInfo(info);
+        }
+
+        _client_id = registerResult.ClientID;
+
+        Trace.d(log_tag, "Protocol Version="
+                + registerResult.Version);
+        Trace.d(log_tag, "registerResult.ChannelCount="
+                + registerResult.ChannelCount);
+        Trace.d(log_tag, "registerResult.ChannelGroupCount="
+                + registerResult.ChannelGroupCount);
+
+        if (registerResult.ChannelCount == 0
+                && DbH.setChannelsVisible(0, 2)) {
+
+            onDataChanged();
+        }
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
+        msg.setRegisterResult(registerResult);
+        sendMessage(msg);
+    }
+
+    private void onRegisterError(SuplaRegisterError registerError) {
+        Trace.d(log_tag, registerError.codeToString(_context));
+
+        regTryCounter = 0;
+        synchronized (st_lck) {
+            lastRegisterError = registerError;
+        }
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegisterError);
+        msg.setRegisterError(registerError);
+        sendMessage(msg);
+
+        cancel();
+    }
+
+    private void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
+
+        Trace.d(log_tag, "onRegistrationEnabled");
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistrationEnabled);
+        msg.setRegistrationEnabled(registrationEnabled);
+        sendMessage(msg);
+
+    }
+
+    private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
+
+        Trace.d(log_tag, "SuplaMinVersionRequired - CallType: "
+                + minVersionRequired.CallType + " MinVersion: "
+                + minVersionRequired.MinVersion);
+
+    }
+
+    private void locationUpdate(SuplaLocation location) {
+        Trace.d(log_tag, "Location " + Integer.toString(location.Id) + " " + location.Caption);
+
+        if (DbH.updateLocation(location)) {
+            Trace.d(log_tag, "Location updated");
+            onDataChanged();
+        }
+
+    }
+
+    private boolean isChannelExcluded(SuplaChannel channel) {
+        // For partner applications
+        return false;
+    }
+
+    private void channelUpdate(SuplaChannel channel) {
+
+        boolean _DataChanged = false;
+
+        Trace.d(log_tag, "Channel Function" + channel.Func
+                + "  channel ID: " + channel.Id
+                + " channel Location ID: " + channel.LocationID
+                + " OnLine: " + channel.OnLine
+                + " AltIcon: " + channel.AltIcon
+                + " UserIcon: " + channel.UserIcon
+                + " Flags: " + channel.Flags);
+
+        // Update channel value before update the channel
+        if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
+            _DataChanged = true;
+        }
+
+        if (!isChannelExcluded(channel)
+                && DbH.updateChannel(channel)) {
+            _DataChanged = true;
+        }
+
+        if (channel.EOL
+                && DbH.setChannelsVisible(0, 2)) {
+            _DataChanged = true;
+        }
+
+        if (_DataChanged) {
+            Trace.d(log_tag, "Channel updated");
+            onDataChanged(channel.Id, 0);
+        }
+
+    }
+
+    private void onChannelGroupValueChanged() {
+        List<Integer> groupIds = DbH.updateChannelGroups();
+        for (int groupId : groupIds) {
+            onDataChanged(0, groupId);
+        }
+    }
+
+    private void channelGroupUpdate(SuplaChannelGroup channel_group) {
+
+        boolean _DataChanged = false;
+
+        Trace.d(log_tag, "Channel Group Function "
+                + channel_group.Func + "  group ID: "
+                + channel_group.Id + " group Location ID: "
+                + channel_group.LocationID + " AltIcon: "
+                + channel_group.AltIcon + " UserIcon: "
+                + channel_group.UserIcon);
+
+        if (DbH.updateChannelGroup(channel_group)) {
+            _DataChanged = true;
+        }
+
+        if (channel_group.EOL
+                && DbH.setChannelGroupsVisible(0, 2)) {
+            _DataChanged = true;
+        }
+
+        if (channel_group.EOL) {
+            onChannelGroupValueChanged();
+        }
+
+        if (_DataChanged) {
+            Trace.d(log_tag, "Channel Group updated");
+            onDataChanged(0, channel_group.Id);
+        }
+
+    }
+
+    private void channelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
+
+        boolean _DataChanged = false;
+
+        Trace.d(log_tag, "Channel Group Relation group ID: "
+                + channelgroup_relation.ChannelGroupID
+                + " channel ID: " + channelgroup_relation.ChannelID);
+
+        if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
+            _DataChanged = true;
+        }
+
+        if (channelgroup_relation.EOL
+                && DbH.setChannelGroupRelationsVisible(0, 2)) {
+            _DataChanged = true;
+        }
+
+        if (channelgroup_relation.EOL) {
+            onChannelGroupValueChanged();
+        }
+
+        if (_DataChanged) {
+            Trace.d(log_tag, "Channel Group Relation updated");
+            onDataChanged(0, channelgroup_relation.ChannelGroupID);
+        }
+
+    }
+
+    private void sceneUpdate(SuplaScene scene) {
+        Trace.d(log_tag, "Scene id:" + scene.getId()
+                + " locationId: " + scene.getLocationId()
+                + " altIcon:" + scene.getAltIcon()
+                + " userIcon:" + scene.getUserIcon()
+                + " caption: " + scene.getCaption()
+                + " EOL: " + scene.isEol());
+    }
+
+    private void sceneStateUpdate(SuplaSceneState state) {
+        Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
+                + " startedAt: " + state.getStartedAt()
+                + " estamitedEndDate: " + state.getEstamitedEndDate()
+                + " isDuringExecution: " + state.isDuringExecution()
+                + " initiatorId: " + state.getInitiatorId()
+                + " initiatorName: " + state.getInitiatorName()
+                + " EOL: " + state.isEol());
+    }
+
+    private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
+
+        if (DbH.updateChannelValue(channelValueUpdate)) {
+
+            Trace.d(log_tag, "Channel id" + channelValueUpdate.Id
+                    + " sub_value type: " + channelValueUpdate.Value.SubValueType
+                    + " value updated" + " OnLine: " + channelValueUpdate.OnLine
+                    + " value[0]: " + channelValueUpdate.Value.Value[0]);
+            onDataChanged(channelValueUpdate.Id, 0);
+        }
+
+        if (channelValueUpdate.EOL) {
+            onChannelGroupValueChanged();
+        }
+    }
+
+    private void channelExtendedValueUpdate(SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
+        if (DbH.updateChannelExtendedValue(channelExtendedValueUpdate.Value,
+                channelExtendedValueUpdate.Id)) {
+            onDataChanged(channelExtendedValueUpdate.Id, 0, true);
+        }
+    }
+
+    private void onEvent(SuplaEvent event) {
+        Trace.d(log_tag, "Event");
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onEvent);
+        event.Owner = event.SenderID == _client_id;
+        msg.setEvent(event);
+        sendMessage(msg);
+    }
+
+    private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
+        Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
+
+        if (token != null && token.getUrl() == null) {
+            AuthInfo info = profileManager.getCurrentAuthInfo();
+            try {
+                token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
+            } catch (MalformedURLException ignored) {
+            }
+        }
+
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onOAuthTokenRequestResult);
+        msg.setOAuthToken(token);
+        sendMessage(msg);
+    }
+
+    private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onCalCfgResult);
+        msg.setChannelId(ChannelId);
+        msg.setCommand(Command);
+        msg.setResult(Result);
+        msg.setData(Data);
+        sendMessage(msg);
+    }
+
+    private void onDeviceCalCfgProgressReport(int ChannelId, int Command, short Progress) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onCalCfgProgressReport);
+        msg.setChannelId(ChannelId);
+        msg.setCommand(Command);
+        msg.setProgress(Progress);
+        sendMessage(msg);
+    }
+
+    private void onDeviceCalCfgDebugString(String str) {
+        Trace.d("CalCfgDebugString", str);
+    }
+
+    private void onChannelState(SuplaChannelState state) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelState);
+        msg.setChannelState(state);
+        sendMessage(msg);
+    }
+
+    private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelBasicCfg);
+        msg.setChannelBasicCfg(cfg);
+        sendMessage(msg);
+    }
+
+    private void onChannelFunctionSetResult(int ChannelID, int Func, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelFunctionSetResult);
+        msg.setCode(ResultCode);
+        msg.setFunc(Func);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onChannelCaptionSetResult(int ChannelID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onChannelCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setChannelId(ChannelID);
+        sendMessage(msg);
+    }
+
+    private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onLocationCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setLocationId(LocationID);
+        sendMessage(msg);
+    }
+
+    private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+            SuplaClientMsg.onSceneCaptionSetResult);
+        msg.setCode(ResultCode);
+        msg.setText(Caption);
+        msg.setSceneId(SceneID);
+        sendMessage(msg);
+    }
+
+    private void onClientsReconnectResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onClientsReconnectResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
+    }
+
+    private void onSetRegistrationEnabledResult(int ResultCode) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSetRegistrationEnabledResult);
+        msg.setCode(ResultCode);
+        sendMessage(msg);
+    }
+
+    private void onSuperUserAuthorizationResult(boolean authorized, int code) {
+        synchronized (sc_lck) {
+            superUserAuthorized = authorized && code == SuplaConst.SUPLA_RESULTCODE_AUTHORIZED;
+        }
+
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onSuperuserAuthorizationResult);
+        msg.setSuccess(authorized);
+        msg.setCode(code);
+        sendMessage(msg);
+    }
+
+    private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue) {
+
+        SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
+        msg.setChannelId(ChannelId);
+        msg.setChannelGroupId(GroupId);
+        msg.setExtendedValue(extendedValue);
+
+        sendMessage(msg);
+
+    }
+
+    private void onDataChanged(int ChannelId, int GroupId) {
+        onDataChanged(ChannelId, GroupId, false);
+    }
+
+    private void onDataChanged() {
+        onDataChanged(0, 0, false);
+    }
+
+    private void onZWaveResetAndClearResult(int result) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveResetAndClearResult);
+        msg.setResult(result);
+        sendMessage(msg);
+    }
+
+    private void onZWaveAddNodeResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAddNodeResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveRemoveNodeResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveRemoveNodeResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetNodeListResult(int result, ZWaveNode node) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetNodeListResult);
+        msg.setResult(result);
+        msg.setNode(node);
+        sendMessage(msg);
+    }
+
+    private void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveGetAssignedNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveAssignNodeIdResult(int result, short nodeId) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveAssignNodeIdResult);
+        msg.setResult(result);
+        msg.setNodeId(nodeId);
+        sendMessage(msg);
+    }
+
+    private void onZWaveWakeUpSettingsReport(int result, ZWaveWakeUpSettings settings) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveWakeUpSettingsReport);
+        msg.setResult(result);
+        msg.setWakeUpSettings(settings);
+        sendMessage(msg);
+    }
+
+    private void onZWaveSetWakeUpTimeResult(int result) {
+        SuplaClientMsg msg = new SuplaClientMsg(this,
+                SuplaClientMsg.onZWaveSetWakeUpTimeResult);
+        msg.setResult(result);
+        sendMessage(msg);
+    }
+
+    public synchronized boolean canceled() {
+        return _canceled;
+    }
+
+    public synchronized void cancel() {
+        _canceled = true;
+    }
+
+    private String autodiscoverGetHost(String email) {
+
+        String result = "";
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("autodiscover.supla.org")
+                .appendPath("users")
+                .appendPath(email);
+
+        URL url;
         try {
           JSONObject jsonResult = new JSONObject(tokener);
           if (jsonResult.getString("email").equals(email)) {
