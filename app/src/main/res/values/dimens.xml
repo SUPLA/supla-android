@@ -72,4 +72,5 @@
     <dimen name="scene_img_width">60dp</dimen>
     <dimen name="scene_img_height">60dp</dimen>
     <dimen name="min_tap_size">48dp</dimen> <!-- Google recommendation -->
+    <dimen name="scene_drag_offset">12dp</dimen>
 </resources>

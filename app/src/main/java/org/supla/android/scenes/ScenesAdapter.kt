@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.DragEvent
+import android.graphics.Rect
+import android.graphics.Canvas
 import android.util.TypedValue
 import android.os.CountDownTimer
 import androidx.lifecycle.Observer
@@ -112,8 +114,9 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         return when(viewType) {
             R.layout.scene_list_item -> {
                 val binding = SceneListItemBinding.inflate(inflater, parent, false)
-                configureListItem(binding)
-                SceneListItemViewHolder(binding)                
+                val holder = SceneListItemViewHolder(binding)
+                configureListItem(binding, holder)
+                holder
             }
             R.layout.location_list_item -> {
                 val binding = LocationListItemBinding.inflate(inflater, parent, false)
@@ -135,7 +138,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                                     override fun onPropertyChanged(sender: Observable, pid: Int) {
                                                         notifyItemChanged(pos)
                                                     }
-                                                })
+                })
                 vh.binding.viewModel = vm
             }
             is LocationListItemViewHolder -> {
@@ -144,7 +147,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                                     override fun onPropertyChanged(sender: Observable, pid:Int) {
                                                         scenesVM.onLocationStateChanged() 
                                                     }
-                                                })
+                })
                 vh.binding.viewModel = vm
             }
         }
@@ -163,11 +166,13 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         return position.toLong()
     }
 
-    private fun configureListItem(binding: SceneListItemBinding) {
+    private fun configureListItem(binding: SceneListItemBinding, viewHolder: RecyclerView.ViewHolder) {
         val scaleFactor = (Preferences(_context).channelHeight + 0.0) / 100.0
         val height = (_context.resources.getDimensionPixelSize(R.dimen.channel_layout_height).toFloat() * scaleFactor).toInt()
         val lp = LayoutParams(LayoutParams.MATCH_PARENT, height)
-        binding.root.setLayoutParams(lp)
+        val view = binding.root
+        view.setLayoutParams(lp)
+
         binding.sceneLabel.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold())
         arrayOf(binding.timerView, binding.initiatorView).forEach {
             it.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular())
@@ -310,6 +315,8 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
     inner class ScenesReorderingCallback:  ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
+        private var dragging = false
+
         override fun getMovementFlags(recyclerView: RecyclerView,
                                       viewHolder: RecyclerView.ViewHolder): Int {
             return if(viewHolder is SceneListItemViewHolder) super.getMovementFlags(recyclerView, viewHolder) else 0
@@ -317,15 +324,15 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
         override fun clearView(reyclerView: RecyclerView,
                                viewHolder: RecyclerView.ViewHolder) {
+            dragging = false
             scenesVM.onSceneOrderUpdate(_sections.map { it.scenes }.flatten())
         }
-                                      
+        
 
         override fun onMove(recyclerView: RecyclerView,
                             viewHolder: RecyclerView.ViewHolder,
                             target: RecyclerView.ViewHolder): Boolean {
-            if(viewHolder is SceneListItemViewHolder &&
-               target is SceneListItemViewHolder) {
+            if(viewHolder is SceneListItemViewHolder && target is SceneListItemViewHolder) {
                 val srcScene = viewHolder.binding.viewModel!!.scene
                 val dstScene = target.binding.viewModel!!.scene
                 if(srcScene.locationId == dstScene.locationId) {
@@ -341,10 +348,23 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                 return false
             }
         }
-
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, 
                               direction: Int) {
             // no-op
         }
-    }
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, 
+                                 viewHolder: RecyclerView.ViewHolder,
+                                 dX: Float, dY: Float, actionState: Int,
+                                 isActive: Boolean) {
+            if(dragging) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY,
+                                  actionState, isActive)
+            } else {
+                val offset = _context.resources.getDimensionPixelSize(R.dimen.scene_drag_offset).toFloat()
+                dragging = true
+                super.onChildDraw(c, recyclerView, viewHolder, dX - offset, dY + offset,
+                                  actionState, isActive)
+            }
+        }
+    }    
 }
