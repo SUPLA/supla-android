@@ -714,6 +714,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
                 if (cgroupLV != null) {
                     cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
                 }
+                scenesFragment().reload();
             }
             downloadUserIcons = null;
         }
@@ -813,7 +814,7 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     }
 
     private void resetScenes() {
-        scenesFragment().reset();
+      scenesFragment().reset();
     }
 }
 
