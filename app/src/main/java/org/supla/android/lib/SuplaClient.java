@@ -37,9 +37,13 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.data.source.SceneRepository;
+import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
+import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.scenes.SceneController;
 import org.supla.android.widget.WidgetVisibilityHandler;
 
 import java.io.BufferedReader;
@@ -53,7 +57,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 @SuppressWarnings("unused")
-public class SuplaClient extends Thread {
+public class SuplaClient extends Thread implements SceneController {
     private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
     private static final String log_tag = "SuplaClientThread";
     private static final Object st_lck = new Object();
@@ -998,24 +1002,53 @@ public class SuplaClient extends Thread {
 
     }
 
-    private void sceneUpdate(SuplaScene scene) {
-        Trace.d(log_tag, "Scene id:" + scene.getId()
-                + " locationId: " + scene.getLocationId()
-                + " altIcon:" + scene.getAltIcon()
-                + " userIcon:" + scene.getUserIcon()
-                + " caption: " + scene.getCaption()
-                + " EOL: " + scene.isEol());
+  
+  private void sceneUpdate(SuplaScene scene) {
+    SceneRepository sr = DbH.getSceneRepository();
+    if (sr.updateSuplaScene(scene)) {
+      Trace.d(
+          log_tag,
+          "Scene id:"
+              + scene.getId()
+              + " locationId: "
+              + scene.getLocationId()
+              + " altIcon:"
+              + scene.getAltIcon()
+              + " userIcon:"
+              + scene.getUserIcon()
+              + " caption: "
+              + scene.getCaption()
+              + " EOL: "
+              + scene.isEol());
     }
+    // TODO: consider message broadcast after EOL.
+  }
 
-    private void sceneStateUpdate(SuplaSceneState state) {
-        Trace.d(log_tag, "Scene State sceneId:" + state.getSceneId()
-                + " startedAt: " + state.getStartedAt()
-                + " estamitedEndDate: " + state.getEstamitedEndDate()
-                + " isDuringExecution: " + state.isDuringExecution()
-                + " initiatorId: " + state.getInitiatorId()
-                + " initiatorName: " + state.getInitiatorName()
-                + " EOL: " + state.isEol());
+  private void sceneStateUpdate(SuplaSceneState state) {
+    SceneRepository sr = DbH.getSceneRepository();
+    if (sr.updateSuplaSceneState(state)) {
+      Trace.d(
+          log_tag,
+          "Scene State sceneId:"
+              + state.getSceneId()
+              + " startedAt: "
+              + state.getStartedAt()
+              + " estimatedEndDate: "
+              + state.getEstimatedEndDate()
+              + " isDuringExecution: "
+              + state.isDuringExecution()
+              + " initiatorId: "
+              + state.getInitiatorId()
+              + " initiatorName: "
+              + state.getInitiatorName()
+              + " EOL: "
+              + state.isEol());
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneStateChanged);
+      msg.setSceneId(state.getSceneId());
+      sendMessage(msg);
     }
+  }
+
 
     private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
@@ -1425,4 +1458,18 @@ public class SuplaClient extends Thread {
     private boolean shouldAutodiscoverHost() {
         return profileManager.getCurrentAuthInfo().getServerAutoDetect();
     }
+
+    public void startScene(int sceneId) {
+    ActionParameters params = new ActionParameters(ActionId.EXECUTE, SubjectType.SCENE, sceneId);
+    if (!executeAction(params)) {
+      Trace.w(log_tag, "Failed to start scene " + sceneId);
+    }
+  }
+
+  public void stopScene(int sceneId) {
+    ActionParameters params = new ActionParameters(ActionId.INTERRUPT, SubjectType.SCENE, sceneId);
+    if (!executeAction(params)) {
+      Trace.w(log_tag, "Failed to interrupt scene " + sceneId);
+    }
+  }
 }

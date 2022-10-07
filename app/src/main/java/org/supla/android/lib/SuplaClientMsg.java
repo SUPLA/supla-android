@@ -52,6 +52,7 @@ public class SuplaClientMsg {
     public final static int onZWaveSetWakeUpTimeResult = 29;
     public final static int onLocationCaptionSetResult = 30;
     public final static int onSceneCaptionSetResult = 31;
+    public final static int onSceneStateChanged = 32;
     private Object Sender;
     private int Type;
     private SuplaVersionError VersionError;
