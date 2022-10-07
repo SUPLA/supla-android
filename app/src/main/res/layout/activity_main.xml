@@ -37,7 +37,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:paddingBottom="@dimen/design_bottom_navigation_height"
-          android:visibility="gone">
+          android:visibility="invisible">
         <fragment
             android:name="org.supla.android.scenes.ScenesFragment"
             android:id="@+id/scenesFragment"

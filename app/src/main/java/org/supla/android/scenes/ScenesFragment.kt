@@ -51,12 +51,12 @@ class ScenesFragment: Fragment() {
                                          container, false)
         binding.lifecycleOwner = requireActivity()
         binding.viewModel = scenesVM
+        scenesVM.reload()
         return binding.root
     }
-
+ 
     override fun onResume() {
         super.onResume()
-        scenesVM.reload()
     }
 
 

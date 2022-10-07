@@ -715,6 +715,8 @@ public class MainActivity extends NavigationActivity
         if (cgroupLV != null) {
           cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
+
+        reloadScenes();
       }
       downloadUserIcons = null;
     }
