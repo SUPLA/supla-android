@@ -25,58 +25,58 @@ import org.supla.android.Trace
 
 public class SceneDao(dap: DatabaseAccessProvider): BaseDao(dap) {
 
-    private val TAG = SceneDao::class.java.simpleName
+  private val TAG = SceneDao::class.java.simpleName
 
 
-    fun getSceneByRemoteId(remoteId: Int): Scene? {
-        return getItem( { Scene() },
-                        SuplaContract.SceneEntry.ALL_COLUMNS,
-                        SuplaContract.SceneEntry.TABLE_NAME,
-                        key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
-                        key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID,
-                            getCachedProfileId()) )
+  fun getSceneByRemoteId(remoteId: Int): Scene? {
+    return getItem( { Scene() },
+                    SuplaContract.SceneEntry.ALL_COLUMNS,
+                    SuplaContract.SceneEntry.TABLE_NAME,
+                    key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
+                    key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID,
+                        getCachedProfileId()) )
+  }
+
+  fun sceneCursor(): Cursor {
+    return read {
+      it.query(SuplaContract.SceneViewEntry.VIEW_NAME,
+               SuplaContract.SceneViewEntry.ALL_COLUMNS, 
+               SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = ? " /* selection */, 
+               arrayOf(getCachedProfileId().toString()) /* selectionArgs */, 
+               null /* groupBy */, 
+               null /* having */,
+               /* order by - begin */
+               SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
+               SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + 
+               " COLLATE LOCALIZED, " +
+               SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
+               SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
+               SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
+               /* order by - end */,
+               null /* limit */)
     }
+  }
 
-    fun sceneCursor(): Cursor {
-        return read {
-            it.query(SuplaContract.SceneViewEntry.VIEW_NAME,
-                     SuplaContract.SceneViewEntry.ALL_COLUMNS, 
-                     SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = ? " /* selection */, 
-                     arrayOf(getCachedProfileId().toString()) /* selectionArgs */, 
-                     null /* groupBy */, 
-                     null /* having */,
-                     /* order by - begin */
-                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
-                     SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + 
-                     " COLLATE LOCALIZED, " +
-                     SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
-                     SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
-                     SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
-                     /* order by - end */,
-                     null /* limit */)
-        }
+  fun updateScene(scene: Scene): Boolean {
+    return try {
+      update(scene, SuplaContract.SceneEntry.TABLE_NAME, 
+             key(SuplaContract.SceneEntry._ID, scene.id))
+      true
+    } catch(e: Exception) {
+      Trace.w(TAG, "updateScene", e)
+      false
     }
+  }
 
-    fun updateScene(scene: Scene): Boolean {
-        return try {
-            update(scene, SuplaContract.SceneEntry.TABLE_NAME, 
-                   key(SuplaContract.SceneEntry._ID, scene.id))
-            true
-        } catch(e: Exception) {
-            Trace.w(TAG, "updateScene", e)
-            false
-        }
+  fun insertScene(scene: Scene): Boolean {
+    return try {
+      insert(scene.copy(profileId = getCachedProfileId()), 
+             SuplaContract.SceneEntry.TABLE_NAME)
+      true
+    } catch(e: Exception) {
+      Trace.w(TAG, "insertScene", e)
+      false
     }
-
-    fun insertScene(scene: Scene): Boolean {
-        return try {
-                     insert(scene.copy(profileId = getCachedProfileId()), 
-                            SuplaContract.SceneEntry.TABLE_NAME)
-                     true
-        } catch(e: Exception) {
-            Trace.w(TAG, "insertScene", e)
-            false
-        }
-    }
-        
+  }
+  
 }
