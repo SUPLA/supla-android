@@ -794,9 +794,6 @@ public class MainActivity extends NavigationActivity
 
     channelLV.setVisibility(channelsVisible);
     cgroupLV.setVisibility(groupsVisible);
-    if (scenesVisible == View.VISIBLE) {
-      reloadScenes();
-    }
     scenesView.setVisibility(scenesVisible);
 
     return true;
