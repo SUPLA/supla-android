@@ -231,7 +231,7 @@ abstract class WidgetConfigurationViewModelBase(
 }
 
 enum class ItemType(val id: Int) {
-  CHANNEL(0), GROUP(1);
+  CHANNEL(0), GROUP(1), SCENE(2);
 
   fun getIntValue() = id
 

@@ -403,7 +403,6 @@
     <string name="double_button_widget_description" translatable="false">To-knapps widget</string>
     <string name="single_button_widget_description" translatable="false">En-knapps widget</string>
     <string name="widget_app_not_initialized" translatable="false">Vennligst logg inn!</string>
-    <string name="widget_command_error" translatable="false">Kommunikasjonsfeil!</string>
     <string name="widget_command_no_connection" translatable="false">Ingen internettforbindelse!</string>
     <string name="widget_command_started" translatable="false">Ferdig</string>
     <string name="widget_removed_label" translatable="false">Kanal fjernet</string>

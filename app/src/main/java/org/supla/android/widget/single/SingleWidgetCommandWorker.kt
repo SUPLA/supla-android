@@ -41,19 +41,28 @@ class SingleWidgetCommandWorker(
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
   override fun perform(configuration: WidgetConfiguration): Result {
+    val action = WidgetAction.fromId(configuration.actionId)
+
     when (configuration.itemFunction) {
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
       SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
-        callAction(configuration, ActionId.OPEN)
+      SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SUPLA_CHANNELFNC_POWERSWITCH -> {
+        if (action == null) {
+          return callCommon(configuration)
+        }
+        callAction(configuration, action.suplaAction)
       }
-      else -> {
-        val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
-          configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-        return performCommon(configuration, turnOnOrClose)
-      }
+      else -> return callCommon(configuration)
     }
     return Result.success()
+  }
+
+  private fun callCommon(configuration: WidgetConfiguration): Result {
+    val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
+      configuration.actionId == WidgetAction.MOVE_DOWN.actionId
+    return performCommon(configuration, turnOnOrClose)
   }
 }

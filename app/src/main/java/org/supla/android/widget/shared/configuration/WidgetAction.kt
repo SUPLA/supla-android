@@ -18,13 +18,22 @@ package org.supla.android.widget.shared.configuration
  */
 
 import org.supla.android.R
+import org.supla.android.lib.actions.ActionId
 
 enum class WidgetAction(
-        val actionId: Long,
-        val text: Int
+  val actionId: Long,
+  val text: Int,
+  val suplaAction: ActionId
 ) {
-    TURN_ON(1, R.string.channel_btn_on),
-    TURN_OFF(2, R.string.channel_btn_off),
-    MOVE_UP(3, R.string.channel_btn_open),
-    MOVE_DOWN(4, R.string.channel_btn_close),
+  TURN_ON(1, R.string.channel_btn_on, ActionId.TURN_ON),
+  TURN_OFF(2, R.string.channel_btn_off, ActionId.TURN_OFF),
+  MOVE_UP(3, R.string.channel_btn_open, ActionId.REVEAL),
+  MOVE_DOWN(4, R.string.channel_btn_close, ActionId.SHUT),
+  TOGGLE(5, R.string.widget_action_toggle, ActionId.TOGGLE);
+
+  companion object {
+    fun fromId(actionId: Long?): WidgetAction? {
+      return values().firstOrNull { it.actionId == actionId }
+    }
+  }
 }

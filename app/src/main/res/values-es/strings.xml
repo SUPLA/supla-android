@@ -404,7 +404,6 @@
     <string name="double_button_widget_description" translatable="false">Widget de dos botones</string>
     <string name="single_button_widget_description" translatable="false">Widget de un botón</string>
     <string name="widget_app_not_initialized" translatable="false">¡Por favor Iniciar sesión!</string>
-    <string name="widget_command_error" translatable="false">¡Error de comunicación!</string>
     <string name="widget_command_no_connection" translatable="false">¡Sin conexión a Internet!</string>
     <string name="widget_command_started" translatable="false">Hecho</string>
     <string name="widget_removed_label" translatable="false">Canal eliminado</string>

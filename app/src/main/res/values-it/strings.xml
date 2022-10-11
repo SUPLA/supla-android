@@ -456,7 +456,6 @@
     <string name="double_button_widget_description" translatable="false">Widget doppio</string>
     <string name="single_button_widget_description" translatable="false">Widget singolo</string>
     <string name="widget_app_not_initialized" translatable="false">Effettuare il login!</string>
-    <string name="widget_command_error" translatable="false">Errore di comunicazione!</string>
     <string name="widget_command_no_connection" translatable="false">Connessione internet assente!</string>
     <string name="widget_command_started" translatable="false">Fatto</string>
     <string name="widget_removed_label" translatable="false">Canale rimosso</string>

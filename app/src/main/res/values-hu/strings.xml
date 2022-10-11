@@ -403,7 +403,6 @@
     <string name="double_button_widget_description" translatable="false">Kétgombos widget</string>
     <string name="single_button_widget_description" translatable="false">Egygombos widget</string>
     <string name="widget_app_not_initialized" translatable="false">Kérjük jelentkezzen be!</string>
-    <string name="widget_command_error" translatable="false">Kommunikációs hiba!</string>
     <string name="widget_command_no_connection" translatable="false">Nincs internetkapcsolat!</string>
     <string name="widget_command_started" translatable="false">Kész</string>
     <string name="widget_removed_label" translatable="false">Csatorna törölve</string>

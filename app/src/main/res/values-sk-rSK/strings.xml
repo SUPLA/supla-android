@@ -416,7 +416,6 @@
    <string name="double_button_widget_description" translatable="false">Widget s dvomi tlačidlami</string>
    <string name="single_button_widget_description" translatable="false">Widget s jedným tlačidlom</string>
    <string name="widget_app_not_initialized" translatable="false">Prihláste sa prosím!</string>
-   <string name="widget_command_error" translatable="false">Chyba v komunikácii!</string>
    <string name="widget_command_no_connection" translatable="false">Žiadne internetové pripojenie!</string>
    <string name="widget_command_started" translatable="false">Hotovo</string>
    <string name="widget_removed_label" translatable="false">Kanál bol odstránený</string>

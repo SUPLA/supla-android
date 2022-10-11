@@ -40,6 +40,9 @@ import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.onoff.ARG_TURN_ON
+import org.supla.android.widget.shared.configuration.ItemType
+
+private const val INTERNAL_ERROR = -10
 
 abstract class WidgetCommandWorkerBase(
   appContext: Context,
@@ -53,7 +56,13 @@ abstract class WidgetCommandWorkerBase(
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
     if (widgetIds == null || widgetIds.size != 1) {
-      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
+      showToast(
+        applicationContext.resources.getString(
+          R.string.widget_command_error,
+          INTERNAL_ERROR
+        ),
+        Toast.LENGTH_LONG
+      )
       return Result.failure()
     }
     val widgetId = widgetIds[0]
@@ -65,7 +74,13 @@ abstract class WidgetCommandWorkerBase(
 
     val configuration = preferences.getWidgetConfiguration(widgetId)
     if (configuration == null) {
-      showToast(R.string.widget_command_error, Toast.LENGTH_LONG)
+      showToast(
+        applicationContext.resources.getString(
+          R.string.widget_command_error,
+          INTERNAL_ERROR
+        ),
+        Toast.LENGTH_LONG
+      )
       return Result.failure()
     }
 
@@ -132,42 +147,75 @@ abstract class WidgetCommandWorkerBase(
         SUPLA_RESULT_VERSION_ERROR,
         SUPLA_RESULTCODE_FALSE,
         SUPLA_RESULTCODE_GUID_ERROR,
-        SUPLA_RESULTCODE_INCORRECT_PARAMETERS -> showToast(
-          R.string.widget_command_error,
+        SUPLA_RESULTCODE_INCORRECT_PARAMETERS,
+        SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE,
+        SUPLA_RESULTCODE_AUTHKEY_ERROR -> showToast(
+          applicationContext.resources.getString(R.string.widget_command_error, ex.result),
           Toast.LENGTH_SHORT
         )
         SUPLA_RESULT_HOST_NOT_FOUND,
         SUPLA_RESULT_CANT_CONNECT_TO_HOST,
         SUPLA_RESULT_RESPONSE_TIMEOUT -> showToast(
-          R.string.widget_command_no_connection,
+          applicationContext.resources.getString(
+            R.string.widget_command_connection_failure,
+            ex.result
+          ),
           Toast.LENGTH_LONG
         )
-        SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> showToast(
-          R.string.widget_command_offline,
-          Toast.LENGTH_LONG
-        )
+        SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> showOfflineToast(configuration)
+        SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> showNotFoundToast(configuration)
         SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
-        SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE,
-        SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> showToast(
-          R.string.widget_command_not_available,
-          Toast.LENGTH_LONG
-        )
-        SUPLA_RESULTCODE_AUTHKEY_ERROR,
         SUPLA_RESULTCODE_BAD_CREDENTIALS,
         SUPLA_RESULTCODE_CLIENT_DISABLED,
         SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED,
         SUPLA_RESULTCODE_ACCESSID_DISABLED,
         SUPLA_RESULTCODE_ACCESSID_INACTIVE -> showToast(
-          R.string.widget_command_no_connection,
+          applicationContext.resources.getString(R.string.widget_command_no_access, ex.result),
           Toast.LENGTH_LONG
         )
+        else -> showToast(
+          applicationContext.resources.getString(R.string.widget_command_error, ex.result),
+          Toast.LENGTH_SHORT
+        )
       }
+    }
+  }
+
+  private fun showNotFoundToast(configuration: WidgetConfiguration) {
+    val message = applicationContext.resources.getString(
+      R.string.widget_command_subject_unavailable,
+      getItemTypeText(configuration).replaceFirstChar { it.uppercase() }
+    )
+
+    showToast(message, Toast.LENGTH_LONG)
+  }
+
+  private fun showOfflineToast(configuration: WidgetConfiguration) {
+    val message = applicationContext.resources.getString(
+      R.string.widget_command_subject_offline,
+      getItemTypeText(configuration).replaceFirstChar { it.uppercase() }
+    )
+
+    showToast(message, Toast.LENGTH_LONG)
+  }
+
+  private fun getItemTypeText(configuration: WidgetConfiguration): String {
+    return when (configuration.itemType) {
+      ItemType.CHANNEL -> applicationContext.resources.getString(R.string.widget_channel)
+      ItemType.GROUP -> applicationContext.resources.getString(R.string.widget_group)
+      ItemType.SCENE -> applicationContext.resources.getString(R.string.widget_scene)
     }
   }
 
   private fun showToast(stringId: Int, length: Int) {
     handler.post {
       Toast.makeText(applicationContext, stringId, length).show()
+    }
+  }
+
+  private fun showToast(message: String, length: Int) {
+    handler.post {
+      Toast.makeText(applicationContext, message, length).show()
     }
   }
 

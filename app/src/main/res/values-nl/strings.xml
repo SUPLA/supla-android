@@ -403,7 +403,6 @@
     <string name="double_button_widget_description" translatable="false">"Widget met twee knoppen "</string>
     <string name="single_button_widget_description" translatable="false">"Widget met één knop "</string>
     <string name="widget_app_not_initialized" translatable="false">Log alsjeblieft in!</string>
-    <string name="widget_command_error" translatable="false">Communicatie fout!</string>
     <string name="widget_command_no_connection" translatable="false">Geen internetverbinding!</string>
     <string name="widget_command_started" translatable="false">Uitgevoerd</string>
     <string name="widget_removed_label" translatable="false">Kanaal verwijderd</string>

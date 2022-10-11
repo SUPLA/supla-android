@@ -463,10 +463,17 @@
     <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
     <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
     <string name="widget_app_not_initialized">Proszę się zalogować!</string>
-    <string name="widget_command_error">Błąd komunikacji!</string>
     <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
+    <string name="widget_command_error">Wystąpił błąd! (kod: %1$i)</string>
+    <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$i)</string>
+    <string name="widget_command_subject_offline">%1$s jest offline!</string>
+    <string name="widget_command_subject_unavailable">%1$s nie istnieje!</string>
+    <string name="widget_command_no_access">Brak dostępu! (code: %1$i)</string>
     <string name="widget_command_started">Wykonano</string>
     <string name="widget_removed_label">Kanał usunięty</string>
+    <string name="widget_group">grupa</string>
+    <string name="widget_scene">scena</string>
+    <string name="widget_action_toggle">Przełącz</string>
 
     <string translatable="false" name="lastconnectionresetcause_unknown">0: nieznany</string>
     <string translatable="false"

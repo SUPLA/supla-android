@@ -403,7 +403,6 @@
    <string name="double_button_widget_description" translatable="false">"Widget à deux boutons "</string>
    <string name="single_button_widget_description" translatable="false">"Widget à un bouton "</string>
    <string name="widget_app_not_initialized" translatable="false">Veuillez vous connecter !</string>
-   <string name="widget_command_error" translatable="false">Erreur de communication !</string>
    <string name="widget_command_no_connection" translatable="false">Pas de connexion internet !</string>
    <string name="widget_command_started" translatable="false">Réalisé</string>
    <string name="widget_removed_label" translatable="false">Canal supprimé</string>

@@ -374,7 +374,6 @@
     <string name="widget_configure_no_channel">Kein Schalter verfügbar</string>
     <string name="widget_configure_no_group">Keine Gruppe verfügbar</string>
     <string name="widget_app_not_initialized">Bitte sich zuerst anmelden!</string>
-    <string name="widget_command_error">Kommunikationsfehler!</string>
     <string name="widget_command_no_connection">Keine Internetverbindung!</string>
     <string name="widget_command_started">Gemacht</string>
     <string name="widget_removed_label">Kanal gelöscht</string>

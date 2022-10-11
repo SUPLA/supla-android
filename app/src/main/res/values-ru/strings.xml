@@ -409,7 +409,6 @@
     <string name="double_button_widget_description" translatable="false">Виджет с двумя кнопками</string>
     <string name="single_button_widget_description" translatable="false">Виджет с одной кнопкой</string>
     <string name="widget_app_not_initialized" translatable="false">Пожалуйста, войдите!</string>
-    <string name="widget_command_error" translatable="false">Ошибка связи!</string>
     <string name="widget_command_no_connection" translatable="false">Нет соединения с интернетом!</string>
     <string name="widget_command_started" translatable="false">Выполнено</string>
     <string name="widget_removed_label" translatable="false">Канал удалён</string>
