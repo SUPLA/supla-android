@@ -19,9 +19,9 @@ package org.supla.android.widget.single
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.WidgetAction
@@ -40,18 +40,18 @@ class SingleWidgetCommandWorker(
   workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
-  override fun perform(configuration: WidgetConfiguration, suplaClient: SuplaClient): Result {
+  override fun perform(configuration: WidgetConfiguration): Result {
     when (configuration.itemFunction) {
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
       SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> {
-        suplaClient.open(configuration.itemId, 1)
+        callAction(configuration, ActionId.OPEN)
       }
       else -> {
         val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
           configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-        return performCommon(configuration, suplaClient, turnOnOrClose)
+        return performCommon(configuration, turnOnOrClose)
       }
     }
     return Result.success()
