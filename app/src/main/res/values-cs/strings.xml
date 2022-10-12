@@ -383,7 +383,6 @@
     <string name="double_button_widget_description" translatable="false">"Widget se dvěma tlačítky "</string>
     <string name="single_button_widget_description" translatable="false">"Widget s jedním tlačítkem "</string>
     <string name="widget_app_not_initialized" translatable="false">Přihlaste se!</string>
-    <string name="widget_command_error" translatable="false">Chyba komunikace!</string>
     <string name="widget_command_no_connection" translatable="false">Žádné připojení k internetu!</string>
     <string name="widget_command_started" translatable="false">Hotovo</string>
     <string name="widget_removed_label" translatable="false">Kanál byl odstraněn</string>

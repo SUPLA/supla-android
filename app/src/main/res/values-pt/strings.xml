@@ -401,7 +401,6 @@
    <string name="double_button_widget_description" translatable="false">"Widget de dois botões "</string>
    <string name="single_button_widget_description" translatable="false">"Widget de um botão "</string>
    <string name="widget_app_not_initialized" translatable="false">Por favor, faça o login!</string>
-   <string name="widget_command_error" translatable="false">Erro de comunicação!</string>
    <string name="widget_command_no_connection" translatable="false">Sem ligação à internet!</string>
    <string name="widget_command_started" translatable="false">Feito</string>
    <string name="widget_removed_label" translatable="false">Canal Eliminado</string>

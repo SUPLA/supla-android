@@ -381,7 +381,6 @@
     <string name="double_button_widget_description" translatable="false">Dviejų mygtukų valdiklis</string>
     <string name="single_button_widget_description" translatable="false">Vieno mygtuko valdiklis</string>
     <string name="widget_app_not_initialized" translatable="false">Prašome prisijungti!</string>
-    <string name="widget_command_error" translatable="false">Prisijungimo klaida!</string>
     <string name="widget_command_no_connection" translatable="false">Nėra interneto ryšio!</string>
     <string name="widget_command_started" translatable="false">Atlikta</string>
     <string name="widget_removed_label" translatable="false">Kanalas pašalintas</string>

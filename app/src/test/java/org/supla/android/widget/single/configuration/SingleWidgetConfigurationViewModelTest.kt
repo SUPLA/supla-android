@@ -254,9 +254,10 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
-    assertThat(actionsList.size, `is`(2))
+    assertThat(actionsList.size, `is`(3))
     assertThat(actionsList[0], `is`(WidgetAction.TURN_ON))
     assertThat(actionsList[1], `is`(WidgetAction.TURN_OFF))
+    assertThat(actionsList[2], `is`(WidgetAction.TOGGLE))
   }
 
   @Test

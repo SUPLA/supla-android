@@ -64,7 +64,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
       _actionsList.postValue(
         listOf(
           WidgetAction.TURN_ON,
-          WidgetAction.TURN_OFF
+          WidgetAction.TURN_OFF,
+          WidgetAction.TOGGLE
         )
       )
     } else if (selectedItem?.isRollerShutter() == true) {
