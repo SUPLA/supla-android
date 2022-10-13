@@ -108,6 +108,19 @@ data class Scene(var profileId: Long = 0,
         return rv
     }
 
+    fun isExecuting(): Boolean {
+        val sst = startedAt
+        val now = Date()
+//        val timeSinceStart = computeTimeSinceStart(now)
+        if(sst != null && sst < now) {
+            val eet = estimatedEndDate
+            if(eet == null || eet > now) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun dateFromString(str: String): Date {
         val fmt = DateFormat.getDateTimeInstance()
         return fmt.parse(str)!!
@@ -116,5 +129,32 @@ data class Scene(var profileId: Long = 0,
     private fun dateToString(date: Date): String {
         val fmt = DateFormat.getDateTimeInstance()
         return fmt.format(date)
+    }
+
+    private fun formatMillis(v: Long): String {
+        var r = v
+        var k: Long = 0
+        var rv = ""
+        k = r / 3600000
+        rv += String.format("%02d:", k)
+        r -= k * 3600000
+        k = r / 60000
+        rv += String.format("%02d:", k)
+        r -= k * 60000
+        rv += String.format("%02d", r / 1000)
+
+        return rv
+    }
+
+    private fun computeTimeSinceStart(now: Date): String? {
+        val sst = startedAt
+        val eet = estimatedEndDate
+        if(sst != null && sst < now && (eet == null || eet.time > now.time)) {
+            val diff = now.time - sst.time
+            val rv = formatMillis(diff)
+            return rv
+        } else {
+            return null
+        }
     }
 }

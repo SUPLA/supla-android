@@ -27,7 +27,6 @@ import android.view.DragEvent
 import android.graphics.Rect
 import android.graphics.Canvas
 import android.util.TypedValue
-import android.os.CountDownTimer
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -50,7 +49,8 @@ import org.supla.android.R
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
                     private val locationDao: LocationDao,
                     private val viewModelScope: CoroutineScope,
-                    private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+                    SceneLayout.Listener {
     
     inner class Section(var location: Location,
                         var scenes: MutableList<Scene> = mutableListOf())
@@ -62,6 +62,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     private var _paths: List<Path> = emptyList()
     private lateinit var _context: Context
     private var _parentView: RecyclerView? = null
+    private var _slidedScene: SceneLayout? = null
 
     private val _scenesObserver: Observer<List<Scene>> = Observer {
         setScenes(it)
@@ -69,8 +70,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
     private val _reorderingCallback = ScenesReorderingCallback()
     private val _touchHelper = ItemTouchHelper(_reorderingCallback)
-    private val _timerTicks =  MutableSharedFlow<Unit>()
-    private var _timer: CountDownTimer? = null
 
     private val TAG = "supla"
 
@@ -82,27 +81,11 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         _touchHelper.attachToRecyclerView(v)
         _context = v.context
         _parentView = v
-        setupTimer()
     }
 
-
-    private fun setupTimer() {
-        _timer = object : CountDownTimer(1000, 1000) {
-            override fun onTick(unused: Long) {}
-            override fun onFinish() {
-                viewModelScope.launch {
-                    _timerTicks.emit(Unit)
-                }
-                setupTimer()
-            }
-        }
-        _timer?.start()
-    }
 
 
     override fun onDetachedFromRecyclerView(v: RecyclerView) {
-        _timer?.cancel()
-        _timer = null
         scenesVM.scenes.removeObserver(_scenesObserver)
         _parentView = null
         super.onDetachedFromRecyclerView(v)
@@ -131,15 +114,11 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                   pos: Int) {
         when(vh) {
             is SceneListItemViewHolder -> {
-                val vm = SceneListItemViewModel(getScene(pos), sceneController,
-                                                viewModelScope,
-                                                _timerTicks.asSharedFlow())
-                vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-                                                    override fun onPropertyChanged(sender: Observable, pid: Int) {
-                                                        notifyItemChanged(pos)
-                                                    }
-                })
-                vh.binding.viewModel = vm
+                val scene = getScene(pos)
+                vh.scene = scene
+                vh.binding.sceneLayout.tag = scene.id
+                vh.binding.sceneLayout.setSceneListener(this)
+                vh.binding.sceneLayout.setScene(getScene(pos))
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
@@ -167,52 +146,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     private fun configureListItem(binding: SceneListItemBinding, viewHolder: RecyclerView.ViewHolder) {
-        val scaleFactor = (Preferences(_context).channelHeight + 0.0) / 100.0
-        val height = (_context.resources.getDimensionPixelSize(R.dimen.channel_layout_height).toFloat() * scaleFactor).toInt()
-        val lp = LayoutParams(LayoutParams.MATCH_PARENT, height)
-        val view = binding.root
-        view.setLayoutParams(lp)
-
-        binding.sceneLabel.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold())
-        arrayOf(binding.timerView, binding.initiatorView).forEach {
-            it.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular())
-        }
-
-        val imglp = binding.sceneIcon.getLayoutParams()
-        imglp.height = (_context.resources.getDimensionPixelSize(R.dimen.scene_img_height).toFloat() * scaleFactor).toInt()
-        imglp.width = (_context.resources.getDimensionPixelSize(R.dimen.scene_img_width).toFloat() * scaleFactor).toInt() 
-        binding.sceneIcon.setLayoutParams(imglp)
-
-        val btnlp = binding.onOffButton.getLayoutParams()
-        var btnH = _context.resources.getDimensionPixelSize(R.dimen.min_tap_size).toFloat()
-        var btnW = _context.resources.getDimensionPixelSize(R.dimen.min_tap_size).toFloat()
-
-        if(scaleFactor >= 1) {
-            btnH *= scaleFactor.toFloat()
-            btnW *= scaleFactor.toFloat()
-        }
-        binding.onOffButton.setLayoutParams(btnlp)
-
-        var textSize = _context.resources.getDimension(R.dimen.channel_caption_text_size).toFloat()
-        if(scaleFactor >= 1) {
-            val lbllp = binding.sceneLabel.getLayoutParams() as ViewGroup.MarginLayoutParams
-            lbllp.topMargin = (_context.resources.getDimensionPixelSize(R.dimen.form_label_dist).toFloat() * scaleFactor).toInt()
-            binding.sceneLabel.setLayoutParams(lbllp)
-
-            textSize *= scaleFactor.toFloat()
-        }
-        arrayOf(binding.timerView, binding.initiatorView, 
-                binding.sceneLabel).forEach {
-            it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-        }
-
-        if(scaleFactor < 1) {
-            arrayOf(binding.timerContainer, binding.initiatorContainer).forEach {
-                val lp = it.getLayoutParams() as ViewGroup.MarginLayoutParams
-                lp.topMargin = (_context.resources.getDimensionPixelSize(R.dimen.scene_controls_top_margin).toFloat() * scaleFactor).toInt()
-                it.setLayoutParams(lp)
-            }
-        }
     }
 
     fun invalidateAll() {
@@ -309,7 +242,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+            var scene: Scene? = null
+    }
+
     inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -333,8 +269,8 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                             viewHolder: RecyclerView.ViewHolder,
                             target: RecyclerView.ViewHolder): Boolean {
             if(viewHolder is SceneListItemViewHolder && target is SceneListItemViewHolder) {
-                val srcScene = viewHolder.binding.viewModel!!.scene
-                val dstScene = target.binding.viewModel!!.scene
+                val srcScene = viewHolder.scene!!
+                val dstScene = target.scene!!
                 if(srcScene.locationId == dstScene.locationId) {
                     swapScenes(srcScene, dstScene)
                     return true
@@ -367,4 +303,23 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             }
         }
     }    
+
+    override fun onLeftButtonClick(sl: SceneLayout) {
+        val tag = sl.tag as Long
+        sceneController.stopScene(tag.toInt())
+    }
+    override fun onRightButtonClick(sl: SceneLayout) {
+        val tag = sl.tag as Long
+        sceneController.startScene(tag.toInt())
+    }
+    
+    override fun onMove(sl: SceneLayout) {
+        if(sl != _slidedScene) {
+            _slidedScene?.AnimateToRestingPosition(true)
+        }
+    }
+
+    override fun onButtonSlide(sl: SceneLayout) {
+        _slidedScene = sl
+    }
 }
