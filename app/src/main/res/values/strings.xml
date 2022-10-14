@@ -503,4 +503,6 @@
     <string translatable="false" name="navbar_channels">Channels</string>
     <string translatable="false" name="navbar_groups">Groups</string>
     <string translatable="false" name="navbar_scenes">Scenes</string>
+    <string translatable="false" name="btn_execute">Execute</string>
+    <string translatable="false" name="btn_abort">Abort</string>
 </resources>

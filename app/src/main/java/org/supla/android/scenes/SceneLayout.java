@@ -667,8 +667,8 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     imgl.setImage(imgId);
 
 
-    setRightBtnText(getResources().getString(R.string.channel_btn_on));
-    setLeftBtnText(getResources().getString(R.string.channel_btn_off));
+    setRightBtnText(getResources().getString(R.string.btn_execute));
+    setLeftBtnText(getResources().getString(R.string.btn_abort));
 
     SuplaChannelStatus.ShapeType state;
 
