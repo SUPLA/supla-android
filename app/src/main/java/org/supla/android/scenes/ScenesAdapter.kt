@@ -137,8 +137,8 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     override fun getItemCount(): Int {
-        val ic =  _sections.map { it.scenes.count() + 1 }.reduce { a, v -> a + v }
-        return ic
+        return if(_sections.isEmpty()) 0 else _sections.map { 
+          it.scenes.count() + 1 }.reduce { a, v -> a + v }
     }
 
     override fun getItemId(position: Int): Long {
