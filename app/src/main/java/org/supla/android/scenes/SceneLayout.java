@@ -154,7 +154,9 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     sceneDurationTimer = newTimerView(context);
     content.addView(sceneDurationTimer);
     RelativeLayout.LayoutParams sdlp = new RelativeLayout
-      .LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+      .LayoutParams((int)getResources().getDimension(R.dimen.channel_imgtext_width),
+                    (int)(getResources().getDimension(R.dimen.default_text_size)
+                    * 1.5));
     sdlp.addRule(RelativeLayout.ABOVE, right_onlineStatus.getId());
     sdlp.addRule(RelativeLayout.ALIGN_RIGHT, right_onlineStatus.getId());
     sdlp.setMargins(0, 0, 0,
@@ -247,7 +249,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                    getResources().getDimension(R.dimen.default_text_size));
     tv.setTextColor(getResources().getColor(R.color.label_grey));
-    tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+    tv.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
 
     return tv;
   }
