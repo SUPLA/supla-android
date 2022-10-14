@@ -116,7 +116,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             is SceneListItemViewHolder -> {
                 val scene = getScene(pos)
                 vh.scene = scene
-                vh.binding.sceneLayout.tag = scene.id
+                vh.binding.sceneLayout.tag = scene.sceneId
                 vh.binding.sceneLayout.setSceneListener(this)
                 vh.binding.sceneLayout.setScene(getScene(pos))
             }
@@ -305,12 +305,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }    
 
     override fun onLeftButtonClick(sl: SceneLayout) {
-        val tag = sl.tag as Long
-        sceneController.stopScene(tag.toInt())
+        sceneController.stopScene(sl.tag as Int)
     }
     override fun onRightButtonClick(sl: SceneLayout) {
-        val tag = sl.tag as Long
-        sceneController.startScene(tag.toInt())
+        sceneController.startScene(sl.tag as Int)
     }
     
     override fun onMove(sl: SceneLayout) {
