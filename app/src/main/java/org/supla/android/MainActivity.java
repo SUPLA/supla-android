@@ -395,6 +395,7 @@ public class MainActivity extends NavigationActivity
   @Override
   protected void onRegisteredMsg() {
     runDownloadTask();
+    resetListViews();
   }
 
   @Override
