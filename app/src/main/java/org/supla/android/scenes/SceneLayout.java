@@ -375,6 +375,20 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     }
   }
 
+  public void cloneSlide(SceneLayout other) {
+    int offset = other.content.getLeft();
+    if(offset == 0) {
+      return;
+    }
+
+    uiThreadHandler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          Slide(offset);
+        }
+      }, 50);
+  }
+
   public float percentOfSliding() {
     if (content.getLeft() < 0)
       return right_btn.getWidth() > 0 ?
@@ -423,15 +437,15 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   private void onActionBtnTouchUpDown(boolean up, View v) {
     if(up) {
+      if(prefs.isButtonAutohide()) {
+        AnimateToRestingPosition(true);
+      }
       if(v == left_btn) {
         listener.onLeftButtonClick(this);
       } else {
         listener.onRightButtonClick(this);
       }
 
-      if(prefs.isButtonAutohide()) {
-        AnimateToRestingPosition(true);
-      }
     }
   }
 
