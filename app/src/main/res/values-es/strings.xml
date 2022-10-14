@@ -366,93 +366,93 @@
     <string name="zwave_welcome_message">Bienvenido al asistente de configuración del puente z-wave. Le permitirá conectar sus dispositivos Z-Wave a Supla. Haga clic en „Siguiente” para continuar.</string>
     <string name="zwave_welcome_title">Asistente z-wave</string>
    <string name="hp_calendar_eco">ECO</string>
-    <string name="dont_have_account_yet" translatable="false">¿Todavía no tienes una cuenta Supla Cloud?</string>
-   <string name="profiles_title" translatable="false">Cuentas</string>
-   <string name="profile_name_label" translatable="false">NOMBRE DE LA CUENTA</string>
-   <string name="form_cannot_delete_active_profile" translatable="false">Una cuenta activa no se puede eliminar</string>
-   <string name="profile_default_name" translatable="false">Defecto</string>
-   <string name="profile_select_active" translatable="false">Seleccionar una cuenta activa</string>
-   <string name="profile_act_info" translatable="false">Toca la cuenta para iniciar sesión</string>
-   <string name="form_error" translatable="false">Error</string>
-   <string name="form_profile_name_missing" translatable="false">Introducir el nombre de cuenta</string>
-   <string name="form_profile_required_data_missing" translatable="false">Completar los datos requeridos</string>
-   <string name="form_profile_duplicate" translatable="false">La cuenta con este nombre ya existe</string>
-   <string name="add_account" translatable="false">Dñadir cuenta</string>
-   <string name="edit_account" translatable="false">Editar cuenta</string>
-   <string name="delete_account" translatable="false">Borrar</string>
-   <string name="delete_account_confirm_title" translatable="false">Borrar cuenta</string>
-   <string name="delete_account_confirm_message" translatable="false">¿Estás seguro de que deseas eliminar la cuenta?</string>
+    <string name="dont_have_account_yet">¿Todavía no tienes una cuenta Supla Cloud?</string>
+   <string name="profiles_title">Cuentas</string>
+   <string name="profile_name_label">NOMBRE DE LA CUENTA</string>
+   <string name="form_cannot_delete_active_profile">Una cuenta activa no se puede eliminar</string>
+   <string name="profile_default_name">Defecto</string>
+   <string name="profile_select_active">Seleccionar una cuenta activa</string>
+   <string name="profile_act_info">Toca la cuenta para iniciar sesión</string>
+   <string name="form_error">Error</string>
+   <string name="form_profile_name_missing">Introducir el nombre de cuenta</string>
+   <string name="form_profile_required_data_missing">Completar los datos requeridos</string>
+   <string name="form_profile_duplicate">La cuenta con este nombre ya existe</string>
+   <string name="add_account">Dñadir cuenta</string>
+   <string name="edit_account">Editar cuenta</string>
+   <string name="delete_account">Borrar</string>
+   <string name="delete_account_confirm_title">Borrar cuenta</string>
+   <string name="delete_account_confirm_message">¿Estás seguro de que deseas eliminar la cuenta?</string>
     <string name="delete_account_confirm_message_with_widgets">¿Estás seguro de que deseas eliminar la cuenta? La confirmación eliminará los widgets relacionados.</string>
-    <string name="cfg_label_access_id_auth" translatable="false">Identificación</string>
-    <string name="cfg_channel_height" translatable="false">Altura del canal</string>
-    <string name="cfg_temperature_unit" translatable="false">Unidad de temperatura</string>
-    <string name="cfg_button_autohide" translatable="false">Ocultación automática de botones</string>
-    <string name="profile" translatable="false">Tu cuenta</string>
-    <string name="profile_plural" translatable="false">Tus cuentas</string>
-    <string name="menubar_appsettings" translatable="false">Configuración</string>
-    <string name="rs_percent_caption_open" translatable="false">Porcentaje de apertura</string>
-    <string name="em_chart_phase_n" translatable="false">Fase %d</string>
-    <string name="em_chart_all_phases" translatable="false">Fase 1 + 2 + 3</string>
-    <string name="widget_configure_title" translatable="false">Configuración de widgets</string>
-    <string name="widget_configure_profile_label" translatable="false">Cuenta</string>
-    <string name="widget_configure_channel_label" translatable="false">Canal para el widget</string>
-    <string name="widget_configure_action_label" translatable="false">Acción</string>
-    <string name="widget_configure_name_label" translatable="false">Nombre</string>
-    <string name="widget_configure_error" translatable="false">La configuración del canal falló...</string>
-    <string name="widget_configure_no_selection" translatable="false">Ningún canal seleccionado</string>
-    <string name="widget_configure_no_channel" translatable="false">No hay canales disponibles</string>
-    <string name="double_button_widget_description" translatable="false">Widget de dos botones</string>
-    <string name="single_button_widget_description" translatable="false">Widget de un botón</string>
-    <string name="widget_app_not_initialized" translatable="false">¡Por favor Iniciar sesión!</string>
-    <string name="widget_command_no_connection" translatable="false">¡Sin conexión a Internet!</string>
-    <string name="widget_command_started" translatable="false">Hecho</string>
-    <string name="widget_removed_label" translatable="false">Canal eliminado</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Sensor de apertura de la ventana de techo</string>
-    <string name="channel_caption_roofwindow" translatable="false">Ventana de techo</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Apertura y cierre de la ventana de techo</string>
-    <string name="channel_func_opensensor_roofwindow" translatable="false">Sensor de apertura de la ventana de techo</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">abrió / cerró la ventana de techo</string>
-    <string name="status_led" translatable="false">LED de estado</string>
-    <string name="info_led_on" translatable="false">El LED se enciende cuando se establece la conexión con el servidor.</string>
-    <string name="info_led_off" translatable="false">El LED no se enciende cuando se establece la conexión con el servidor.</string>
-    <string name="info_led_alwaysoff" translatable="false">El LED siempre está apagado, a menos que el dispositivo esté en modo de configuración wifi (modo AP).</string>
-    <string name="input" translatable="false">Entrada</string>
-    <string name="monostable" translatable="false">Monoestable</string>
-    <string name="bistable" translatable="false">Biestable</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">El intento de establecer una conexión WiFi con el dispositivo ejecutivo ha fallado.</string>
-    <string name="diw_cfg_info_oprange" translatable="false">Ajustar el rango de trabajo del atenuador configurando el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo los controles deslizantes a ambos lados de la rueda.</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Opciones de entrada</string>
-    <string name="diw_cfg_info_mono_option" translatable="false">Esta opción cambia el comportamiento de la entrada a la que está conectado el botón monoestable. Si la opción está desactivada, el dimmer detiene el proceso de aclarado cuando se alcanza el nivel máximo de brillo, y en el caso de atenuación, cuando alcanza el nivel mínimo. Encender esta opción cambiará al nivel mínimo tan pronto como se alcance el brillo máximo, y en el caso de atenuar al valor máximo, tan pronto como se alcance el mínimo. El brillo/atenuación continuará mientras se presione el botón.</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">La opción cambia el comportamiento del dimmer cuando se enciende la iluminación mediante el botón biestable. Si la opción está habilitada, el atenuador establecerá el nivel máximo de brillo justo después de encender la iluminación. Si la opción está desactivada, el dimmer fijará el nivel de luminosidad memorizado antes de apagar la iluminación.</string>
-    <string name="dgf_too_long_operation_warning" translatable="false">Las secciones de vidrio están expuestas durante más de 20 horas, lo que puede tener un impacto negativo en su vida útil. Se recomienda cubrir todas las secciones durante un mínimo de 4 horas para regenerarlas.</string>
-    <string name="dgf_planned_regeneration_in_progress" translatable="false">La regeneración planificada está en curso.</string>
-    <string name="dgf_regeneration_after20h" translatable="false">La regeneración está en curso, iniciada después de 20 horas de funcionamiento.</string>
-    <string name="wizard_done_explentations" translatable="false">Si el dispositivo no aparece en la aplicación, repite este procedimiento de adición nuevamente y lee el \"Estado anterior\" que se muestra arriba. Contiene información que permite determinar por qué el dispositivo no pudo conectarse al servidor. El mensaje \"SSID no encontrado\" significa que no se encontró el nombre ingresado de la red WiFi de 2,4 GHz o que la red está fuera del alcance.</string>
-    <string name="incorrect_email_or_password" translatable="false">Dirección de correo electrónico o contraseña incorrecta</string>
-    <string name="channel_name" translatable="false">Nombre del canal</string>
-    <string name="location_name" translatable="false">Nombre del lugar</string>
-    <string name="overcurrent_warning" translatable="false">La alimentación se apagó después de que se excedió el umbral establecido de la corriente permitida.</string>
-    <string name="overcurrent_question" translatable="false">La alimentación se apagó después de que se excedió el umbral establecido de la corriente permitida. ¿Estás seguro de que deseas encenderlo?</string>
-    <string name="recalibration_question" translatable="false">¿Está seguro de que desea iniciar la calibración?</string>
-    <string name="calibration_failed" translatable="false">La calibración falló.</string>
-    <string name="calibration_lost" translatable="false">Calibración perdida.</string>
-    <string name="motor_problem" translatable="false">Problema de motor / Parada inesperada.</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: desconocido</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: sin respuesta del servidor</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Conexión WiFi perdida</string>
-    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: restablecimiento de la conexión del servidor</string>
-    <string name="basic_profile_warning" translatable="false">Modo no disponible</string>
-    <string name="basic_config_unavailable" translatable="false">Antes de desactivar el modo avanzado, seleccionar autenticación de correo electrónico con detección automática de servidor.</string>
-    <string name="add_device_warning" translatable="false">El asistente para agregar dispositivos automáticamente no está disponible en el modo de autenticación de acceso de ID. Luego, los dispositivos se pueden agregar manualmente.</string>
-    <string name="show_channel_info" translatable="false">Mostrar botón ⓘ</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Configuración del dispositivo</string>
-    <string name="add_device_needs_cloud_message" translatable="false">Este dispositivo no tiene ningún canal visible en la aplicación. Ir a cloud.supla.org para completar la configuración</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">entiendo</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Ir a CLOUD</string>
-    <string name="associeted_with_at_error" translatable="false">La función del canal asociado con el disparador de acción no se puede cambiar.</string>
-    <string name="location_ordering" translatable="false">El orden del lugar</string>
-    <string name="rs_display_mode" translatable="false">Persianas enrollables %</string>
-    <string name="rs_display_mode_opening" translatable="false">Aperturas</string>
-    <string name="rs_display_mode_closing" translatable="false">Cierres</string>
-    <string name="status_accessid_inactive" translatable="false">Identificación de acceso inactiva</string>
+    <string name="cfg_label_access_id_auth">Identificación</string>
+    <string name="cfg_channel_height">Altura del canal</string>
+    <string name="cfg_temperature_unit">Unidad de temperatura</string>
+    <string name="cfg_button_autohide">Ocultación automática de botones</string>
+    <string name="profile">Tu cuenta</string>
+    <string name="profile_plural">Tus cuentas</string>
+    <string name="menubar_appsettings">Configuración</string>
+    <string name="rs_percent_caption_open">Porcentaje de apertura</string>
+    <string name="em_chart_phase_n">Fase %d</string>
+    <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
+    <string name="widget_configure_title">Configuración de widgets</string>
+    <string name="widget_configure_profile_label">Cuenta</string>
+    <string name="widget_configure_channel_label">Canal para el widget</string>
+    <string name="widget_configure_action_label">Acción</string>
+    <string name="widget_configure_name_label">Nombre</string>
+    <string name="widget_configure_error">La configuración del canal falló...</string>
+    <string name="widget_configure_no_selection">Ningún canal seleccionado</string>
+    <string name="widget_configure_no_channel">No hay canales disponibles</string>
+    <string name="double_button_widget_description">Widget de dos botones</string>
+    <string name="single_button_widget_description">Widget de un botón</string>
+    <string name="widget_app_not_initialized">¡Por favor Iniciar sesión!</string>
+    <string name="widget_command_no_connection">¡Sin conexión a Internet!</string>
+    <string name="widget_command_started">Hecho</string>
+    <string name="widget_removed_label">Canal eliminado</string>
+    <string name="channel_caption_roofwindowopeningsensor">Sensor de apertura de la ventana de techo</string>
+    <string name="channel_caption_roofwindow">Ventana de techo</string>
+    <string name="channel_func_controllingtheroofwindow">Apertura y cierre de la ventana de techo</string>
+    <string name="channel_func_opensensor_roofwindow">Sensor de apertura de la ventana de techo</string>
+    <string name="event_openedclosedtheroofwindow">abrió / cerró la ventana de techo</string>
+    <string name="status_led">LED de estado</string>
+    <string name="info_led_on">El LED se enciende cuando se establece la conexión con el servidor.</string>
+    <string name="info_led_off">El LED no se enciende cuando se establece la conexión con el servidor.</string>
+    <string name="info_led_alwaysoff">El LED siempre está apagado, a menos que el dispositivo esté en modo de configuración wifi (modo AP).</string>
+    <string name="input">Entrada</string>
+    <string name="monostable">Monoestable</string>
+    <string name="bistable">Biestable</string>
+    <string name="wizard_iodev_connect_failed">El intento de establecer una conexión WiFi con el dispositivo ejecutivo ha fallado.</string>
+    <string name="diw_cfg_info_oprange">Ajustar el rango de trabajo del atenuador configurando el nivel de brillo mínimo y máximo. El valor mínimo y máximo se puede establecer moviendo los controles deslizantes a ambos lados de la rueda.</string>
+    <string name="diw_cfg_info_in_options">Opciones de entrada</string>
+    <string name="diw_cfg_info_mono_option">Esta opción cambia el comportamiento de la entrada a la que está conectado el botón monoestable. Si la opción está desactivada, el dimmer detiene el proceso de aclarado cuando se alcanza el nivel máximo de brillo, y en el caso de atenuación, cuando alcanza el nivel mínimo. Encender esta opción cambiará al nivel mínimo tan pronto como se alcance el brillo máximo, y en el caso de atenuar al valor máximo, tan pronto como se alcance el mínimo. El brillo/atenuación continuará mientras se presione el botón.</string>
+    <string name="diw_cfg_info_bi_option">La opción cambia el comportamiento del dimmer cuando se enciende la iluminación mediante el botón biestable. Si la opción está habilitada, el atenuador establecerá el nivel máximo de brillo justo después de encender la iluminación. Si la opción está desactivada, el dimmer fijará el nivel de luminosidad memorizado antes de apagar la iluminación.</string>
+    <string name="dgf_too_long_operation_warning">Las secciones de vidrio están expuestas durante más de 20 horas, lo que puede tener un impacto negativo en su vida útil. Se recomienda cubrir todas las secciones durante un mínimo de 4 horas para regenerarlas.</string>
+    <string name="dgf_planned_regeneration_in_progress">La regeneración planificada está en curso.</string>
+    <string name="dgf_regeneration_after20h">La regeneración está en curso, iniciada después de 20 horas de funcionamiento.</string>
+    <string name="wizard_done_explentations">Si el dispositivo no aparece en la aplicación, repite este procedimiento de adición nuevamente y lee el \"Estado anterior\" que se muestra arriba. Contiene información que permite determinar por qué el dispositivo no pudo conectarse al servidor. El mensaje \"SSID no encontrado\" significa que no se encontró el nombre ingresado de la red WiFi de 2,4 GHz o que la red está fuera del alcance.</string>
+    <string name="incorrect_email_or_password">Dirección de correo electrónico o contraseña incorrecta</string>
+    <string name="channel_name">Nombre del canal</string>
+    <string name="location_name">Nombre del lugar</string>
+    <string name="overcurrent_warning">La alimentación se apagó después de que se excedió el umbral establecido de la corriente permitida.</string>
+    <string name="overcurrent_question">La alimentación se apagó después de que se excedió el umbral establecido de la corriente permitida. ¿Estás seguro de que deseas encenderlo?</string>
+    <string name="recalibration_question">¿Está seguro de que desea iniciar la calibración?</string>
+    <string name="calibration_failed">La calibración falló.</string>
+    <string name="calibration_lost">Calibración perdida.</string>
+    <string name="motor_problem">Problema de motor / Parada inesperada.</string>
+    <string name="lastconnectionresetcause_unknown">0: desconocido</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: sin respuesta del servidor</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: Conexión WiFi perdida</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: restablecimiento de la conexión del servidor</string>
+    <string name="basic_profile_warning">Modo no disponible</string>
+    <string name="basic_config_unavailable">Antes de desactivar el modo avanzado, seleccionar autenticación de correo electrónico con detección automática de servidor.</string>
+    <string name="add_device_warning">El asistente para agregar dispositivos automáticamente no está disponible en el modo de autenticación de acceso de ID. Luego, los dispositivos se pueden agregar manualmente.</string>
+    <string name="show_channel_info">Mostrar botón ⓘ</string>
+    <string name="add_device_needs_cloud_title">Configuración del dispositivo</string>
+    <string name="add_device_needs_cloud_message">Este dispositivo no tiene ningún canal visible en la aplicación. Ir a cloud.supla.org para completar la configuración</string>
+    <string name="add_device_needs_cloud_dismiss">entiendo</string>
+    <string name="add_device_needs_cloud_go">Ir a CLOUD</string>
+    <string name="associeted_with_at_error">La función del canal asociado con el disparador de acción no se puede cambiar.</string>
+    <string name="location_ordering">El orden del lugar</string>
+    <string name="rs_display_mode">Persianas enrollables %</string>
+    <string name="rs_display_mode_opening">Aperturas</string>
+    <string name="rs_display_mode_closing">Cierres</string>
+    <string name="status_accessid_inactive">Identificación de acceso inactiva</string>
 </resources>

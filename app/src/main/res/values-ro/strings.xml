@@ -365,93 +365,93 @@
     <string name="zwave_welcome_message" >Bine aţi venit la creatorul de configurare a podului Z-Wave. Acesta vă va permite să conectați dispozitivele Z-Wave la Supla. Faceți clic pe „Mai departe” pentru a continua.</string>
     <string name="zwave_welcome_title" >Creator Z-Wave</string>
     <string name="hp_calendar_eco">ECO</string>
-    <string name="dont_have_account_yet" translatable="false">Nu ai încă cont pe Supla Cloud?</string>
-    <string name="profiles_title" translatable="false">Conturi</string>
-    <string name="profile_name_label" translatable="false">DENUMIRE CONT</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Un contact activ nu poate fi șters</string>
-    <string name="profile_default_name" translatable="false">Implicit</string>
-    <string name="profile_select_active" translatable="false">Selectează un cont activ</string>
-    <string name="profile_act_info" translatable="false">Atinge contul pentru a te conecta</string>
-    <string name="form_error" translatable="false">Eroare</string>
-    <string name="form_profile_name_missing" translatable="false">Trebuie introdusă denumirea contului</string>
-    <string name="form_profile_required_data_missing" translatable="false">Completează datele  solicitate</string>
-    <string name="form_profile_duplicate" translatable="false">Există deja un con cu această denumire</string>
-    <string name="add_account" translatable="false">Adaugă cont</string>
-    <string name="edit_account" translatable="false">Editează contul</string>
-    <string name="delete_account" translatable="false">Șterge</string>
-    <string name="delete_account_confirm_title" translatable="false">Șterge cont</string>
-    <string name="delete_account_confirm_message" translatable="false">Sigur dorești să ștergi contul?</string>
+    <string name="dont_have_account_yet">Nu ai încă cont pe Supla Cloud?</string>
+    <string name="profiles_title">Conturi</string>
+    <string name="profile_name_label">DENUMIRE CONT</string>
+    <string name="form_cannot_delete_active_profile">Un contact activ nu poate fi șters</string>
+    <string name="profile_default_name">Implicit</string>
+    <string name="profile_select_active">Selectează un cont activ</string>
+    <string name="profile_act_info">Atinge contul pentru a te conecta</string>
+    <string name="form_error">Eroare</string>
+    <string name="form_profile_name_missing">Trebuie introdusă denumirea contului</string>
+    <string name="form_profile_required_data_missing">Completează datele  solicitate</string>
+    <string name="form_profile_duplicate">Există deja un con cu această denumire</string>
+    <string name="add_account">Adaugă cont</string>
+    <string name="edit_account">Editează contul</string>
+    <string name="delete_account">Șterge</string>
+    <string name="delete_account_confirm_title">Șterge cont</string>
+    <string name="delete_account_confirm_message">Sigur dorești să ștergi contul?</string>
     <string name="delete_account_confirm_message_with_widgets">"Sigur dorești să ștergi contul? Confirmarea va elimina widget-urile  asociate. "</string>
-    <string name="cfg_label_access_id_auth" translatable="false">Identificator</string>
-    <string name="cfg_channel_height" translatable="false">Înălțimea canalului</string>
-    <string name="cfg_temperature_unit" translatable="false">Unitate de temperatură</string>
-    <string name="cfg_button_autohide" translatable="false">Ascunderea automată a butoanelor</string>
-    <string name="profile" translatable="false">Contul tău</string>
-    <string name="profile_plural" translatable="false">Conturile Tale</string>
-    <string name="menubar_appsettings" translatable="false">Setări</string>
-    <string name="rs_percent_caption_open" translatable="false">Procent de deschidere</string>
-    <string name="em_chart_phase_n" translatable="false">Faza %d</string>
-    <string name="em_chart_all_phases" translatable="false">Faza 1 + 2 + 3</string>
-    <string name="widget_configure_title" translatable="false">Configurare widget</string>
-    <string name="widget_configure_profile_label" translatable="false">Cont</string>
-    <string name="widget_configure_channel_label" translatable="false">Canalpentruwidget</string>
-    <string name="widget_configure_action_label" translatable="false">Acțiune</string>
-    <string name="widget_configure_name_label" translatable="false">Denumire</string>
-    <string name="widget_configure_error" translatable="false">Configurarea canalului a eșuat...</string>
-    <string name="widget_configure_no_selection" translatable="false">Nu a fost selectat canalul</string>
-    <string name="widget_configure_no_channel" translatable="false">Nu există canale disponibile</string>
-    <string name="double_button_widget_description" translatable="false">Widget cu două butoane</string>
-    <string name="single_button_widget_description" translatable="false">Widget cu un singur buton</string>
-    <string name="widget_app_not_initialized" translatable="false">Vă rugăm să te conectezi!</string>
-    <string name="widget_command_no_connection" translatable="false">Lipsă conexiune la internet!</string>
-    <string name="widget_command_started" translatable="false">Realizat</string>
-    <string name="widget_removed_label" translatable="false">Canal șters</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Senzor deschidere fereastră de mansardă</string>
-    <string name="channel_caption_roofwindow" translatable="false">Fereastra de mansardă</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Deschidere și închidere fereastră de mansardă</string>
-    <string name="channel_func_opensensor_roofwindow" translatable="false">Senzor deschidere fereastră de mansardă</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">a deschis/a închis fereastra de mansardă</string>
-    <string name="status_led" translatable="false">LED de stare</string>
-    <string name="info_led_on" translatable="false">Dioda LED se aprinde când  se stabilește conexiunea cu serverul.</string>
-    <string name="info_led_off" translatable="false">Dioda LED nu se aprinde când se stabilește conexiunea cu serverul.</string>
-    <string name="info_led_alwaysoff" translatable="false">Dioda LED este întotdeauna stinsă, cu excepția cazului în care dispozitivul este în modul de configurare wifi (mod AP).</string>
-    <string name="input" translatable="false">Intrare</string>
-    <string name="monostable" translatable="false">Monostabil</string>
-    <string name="bistable" translatable="false">Bistabil</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">Încercarea de a stabili o conexiune WiFi cu dispozitivul executiv a eșuat.</string>
-    <string name="diw_cfg_info_oprange" translatable="false">Reglează intervalul de lucru al dimmer-ului setând nivelul minim și  maxim de luminozitate. Valoarea minimă și maximă poate fi setată prin mișcarea glisoarelor de pe ambele părți ale roții.</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Opțiuni de intrare</string>
-    <string name="diw_cfg_info_mono_option" translatable="false">Această opțiune modifică comportamentul  intrării la care este conectat butonul monostabil. Dacă opțiunea este dezactivată, dimmer-ul oprește procesul de luminozitate atunci când atinge nivelul maxim de luminozitate, iar în cazul dimmării, când atinge nivelul minim. Activarea acestei opțiuni va trece la nivelul minim de îndată ce luminozitatea maximă este atinsă, iar în cazul diminuării la valoarea maximă, imediat ce este atins minimul. Iluminarea / estomparea va continua atâta timp cât butonul este apăsat.</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">Opțiunea modifică comportamentul dimmer-ului atunci când iluminarea este aprinsă folosind butonul bistabil. Dacă opțiunea este activată, dimmer-ul va seta nivelul maxim de luminozitate imediat după aprinderea luminii. Dacă opțiunea este dezactivată, dimmer-ul va seta nivelul de luminozitate memorat înainte de stingerea iluminării.</string>
-    <string name="dgf_too_long_operation_warning" translatable="false">Secțiunile de sticlă sunt expuse mai mult de 20 de ore, ceea ce poate avea un impact negativ asupra longevității lor. Se recomandă acoperirea tuturor secțiunilor minim 4 ore pentru regenerarea acestora.</string>
-    <string name="dgf_planned_regeneration_in_progress" translatable="false">Regenerarea planificată este în curs.</string>
-    <string name="dgf_regeneration_after20h" translatable="false">Regenerarea este în desfășurare, inițiată după 20 de ore de funcționare.</string>
-    <string name="wizard_done_explentations" translatable="false">Dacă dispozitivul nu apare în aplicație, repeta această procedură de adăugare din nou și citiți „Starea anterioară” prezentată mai sus. Conține informație care face posibilă determinarea motivului pentru care dispozitivul nu a reușit să se conecteze la server. Mesajul „SSID not found” înseamnă că denumirea introdusă a rețelei WiFi de 2,4 GHz nu a fost  găsită sau rețeaua este în afara razei de acțiune.</string>
-    <string name="incorrect_email_or_password" translatable="false">Adresă de e-mail sau parolă greșită</string>
-    <string name="channel_name" translatable="false">Denumirea canalului</string>
-    <string name="location_name" translatable="false">Denumirea locației</string>
-    <string name="overcurrent_warning" translatable="false">Alimentarea a fost oprită după depăşirea pragului stabilit de intensitate admisibilă a curentului.</string>
-    <string name="overcurrent_question" translatable="false">Alimentarea a fost oprită după depășirea pragului setat al intensității curentului admisibil. Ești sigur că vrei să pornești alimentarea?</string>
-    <string name="recalibration_question" translatable="false">Sigur vrei să începi calibrarea?</string>
-    <string name="calibration_failed" translatable="false">Calibrare a eșuat.</string>
-    <string name="calibration_lost" translatable="false">Calibrare pierdută.</string>
-    <string name="motor_problem" translatable="false">Problemă cu motorul / Oprire  neașteptată.</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: necunoscut</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: nici un răspuns de la server</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: conexiunea WiFi pierdută</string>
-    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: resetarea conexiunii la server</string>
-    <string name="basic_profile_warning" translatable="false">Mod indisponibil</string>
-    <string name="basic_config_unavailable" translatable="false">Înainte de dezactivarea modului avansat, vă rugăm să selectați autentificarea e-mailului cu  detectarea automată a serverului.</string>
-    <string name="add_device_warning" translatable="false">Asistentul de adăugare automată a dispozitivului nu este disponibil în modul de autentificare cu identificator de acces. Dispozitivele pot fi apoi adăugate manual.</string>
-    <string name="show_channel_info" translatable="false">Afișează butonulⓘ</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Configurarea dispozitivului</string>
-    <string name="add_device_needs_cloud_message" translatable="false">"Acest dispozitiv nu are niciun canal vizibil în aplicație. Pentru a finaliza configurarea accesează cloud.supra.org "</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">Înțeleg</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Accesează CLOUD</string>
-    <string name="associeted_with_at_error" translatable="false">Nu poate fi modificată funcția canalului asociat cu declanșatorul acțiunii.</string>
-    <string name="location_ordering" translatable="false">Ordine alocației</string>
-    <string name="rs_display_mode" translatable="false">Rolete %</string>
-    <string name="rs_display_mode_opening" translatable="false">Deschidere</string>
-    <string name="rs_display_mode_closing" translatable="false">Închidere</string>
-    <string name="status_accessid_inactive" translatable="false">Identificator de acces inactiv</string>
+    <string name="cfg_label_access_id_auth">Identificator</string>
+    <string name="cfg_channel_height">Înălțimea canalului</string>
+    <string name="cfg_temperature_unit">Unitate de temperatură</string>
+    <string name="cfg_button_autohide">Ascunderea automată a butoanelor</string>
+    <string name="profile">Contul tău</string>
+    <string name="profile_plural">Conturile Tale</string>
+    <string name="menubar_appsettings">Setări</string>
+    <string name="rs_percent_caption_open">Procent de deschidere</string>
+    <string name="em_chart_phase_n">Faza %d</string>
+    <string name="em_chart_all_phases">Faza 1 + 2 + 3</string>
+    <string name="widget_configure_title">Configurare widget</string>
+    <string name="widget_configure_profile_label">Cont</string>
+    <string name="widget_configure_channel_label">Canalpentruwidget</string>
+    <string name="widget_configure_action_label">Acțiune</string>
+    <string name="widget_configure_name_label">Denumire</string>
+    <string name="widget_configure_error">Configurarea canalului a eșuat...</string>
+    <string name="widget_configure_no_selection">Nu a fost selectat canalul</string>
+    <string name="widget_configure_no_channel">Nu există canale disponibile</string>
+    <string name="double_button_widget_description">Widget cu două butoane</string>
+    <string name="single_button_widget_description">Widget cu un singur buton</string>
+    <string name="widget_app_not_initialized">Vă rugăm să te conectezi!</string>
+    <string name="widget_command_no_connection">Lipsă conexiune la internet!</string>
+    <string name="widget_command_started">Realizat</string>
+    <string name="widget_removed_label">Canal șters</string>
+    <string name="channel_caption_roofwindowopeningsensor">Senzor deschidere fereastră de mansardă</string>
+    <string name="channel_caption_roofwindow">Fereastra de mansardă</string>
+    <string name="channel_func_controllingtheroofwindow">Deschidere și închidere fereastră de mansardă</string>
+    <string name="channel_func_opensensor_roofwindow">Senzor deschidere fereastră de mansardă</string>
+    <string name="event_openedclosedtheroofwindow">a deschis/a închis fereastra de mansardă</string>
+    <string name="status_led">LED de stare</string>
+    <string name="info_led_on">Dioda LED se aprinde când  se stabilește conexiunea cu serverul.</string>
+    <string name="info_led_off">Dioda LED nu se aprinde când se stabilește conexiunea cu serverul.</string>
+    <string name="info_led_alwaysoff">Dioda LED este întotdeauna stinsă, cu excepția cazului în care dispozitivul este în modul de configurare wifi (mod AP).</string>
+    <string name="input">Intrare</string>
+    <string name="monostable">Monostabil</string>
+    <string name="bistable">Bistabil</string>
+    <string name="wizard_iodev_connect_failed">Încercarea de a stabili o conexiune WiFi cu dispozitivul executiv a eșuat.</string>
+    <string name="diw_cfg_info_oprange">Reglează intervalul de lucru al dimmer-ului setând nivelul minim și  maxim de luminozitate. Valoarea minimă și maximă poate fi setată prin mișcarea glisoarelor de pe ambele părți ale roții.</string>
+    <string name="diw_cfg_info_in_options">Opțiuni de intrare</string>
+    <string name="diw_cfg_info_mono_option">Această opțiune modifică comportamentul  intrării la care este conectat butonul monostabil. Dacă opțiunea este dezactivată, dimmer-ul oprește procesul de luminozitate atunci când atinge nivelul maxim de luminozitate, iar în cazul dimmării, când atinge nivelul minim. Activarea acestei opțiuni va trece la nivelul minim de îndată ce luminozitatea maximă este atinsă, iar în cazul diminuării la valoarea maximă, imediat ce este atins minimul. Iluminarea / estomparea va continua atâta timp cât butonul este apăsat.</string>
+    <string name="diw_cfg_info_bi_option">Opțiunea modifică comportamentul dimmer-ului atunci când iluminarea este aprinsă folosind butonul bistabil. Dacă opțiunea este activată, dimmer-ul va seta nivelul maxim de luminozitate imediat după aprinderea luminii. Dacă opțiunea este dezactivată, dimmer-ul va seta nivelul de luminozitate memorat înainte de stingerea iluminării.</string>
+    <string name="dgf_too_long_operation_warning">Secțiunile de sticlă sunt expuse mai mult de 20 de ore, ceea ce poate avea un impact negativ asupra longevității lor. Se recomandă acoperirea tuturor secțiunilor minim 4 ore pentru regenerarea acestora.</string>
+    <string name="dgf_planned_regeneration_in_progress">Regenerarea planificată este în curs.</string>
+    <string name="dgf_regeneration_after20h">Regenerarea este în desfășurare, inițiată după 20 de ore de funcționare.</string>
+    <string name="wizard_done_explentations">Dacă dispozitivul nu apare în aplicație, repeta această procedură de adăugare din nou și citiți „Starea anterioară” prezentată mai sus. Conține informație care face posibilă determinarea motivului pentru care dispozitivul nu a reușit să se conecteze la server. Mesajul „SSID not found” înseamnă că denumirea introdusă a rețelei WiFi de 2,4 GHz nu a fost  găsită sau rețeaua este în afara razei de acțiune.</string>
+    <string name="incorrect_email_or_password">Adresă de e-mail sau parolă greșită</string>
+    <string name="channel_name">Denumirea canalului</string>
+    <string name="location_name">Denumirea locației</string>
+    <string name="overcurrent_warning">Alimentarea a fost oprită după depăşirea pragului stabilit de intensitate admisibilă a curentului.</string>
+    <string name="overcurrent_question">Alimentarea a fost oprită după depășirea pragului setat al intensității curentului admisibil. Ești sigur că vrei să pornești alimentarea?</string>
+    <string name="recalibration_question">Sigur vrei să începi calibrarea?</string>
+    <string name="calibration_failed">Calibrare a eșuat.</string>
+    <string name="calibration_lost">Calibrare pierdută.</string>
+    <string name="motor_problem">Problemă cu motorul / Oprire  neașteptată.</string>
+    <string name="lastconnectionresetcause_unknown">0: necunoscut</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: nici un răspuns de la server</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: conexiunea WiFi pierdută</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: resetarea conexiunii la server</string>
+    <string name="basic_profile_warning">Mod indisponibil</string>
+    <string name="basic_config_unavailable">Înainte de dezactivarea modului avansat, vă rugăm să selectați autentificarea e-mailului cu  detectarea automată a serverului.</string>
+    <string name="add_device_warning">Asistentul de adăugare automată a dispozitivului nu este disponibil în modul de autentificare cu identificator de acces. Dispozitivele pot fi apoi adăugate manual.</string>
+    <string name="show_channel_info">Afișează butonulⓘ</string>
+    <string name="add_device_needs_cloud_title">Configurarea dispozitivului</string>
+    <string name="add_device_needs_cloud_message">"Acest dispozitiv nu are niciun canal vizibil în aplicație. Pentru a finaliza configurarea accesează cloud.supra.org "</string>
+    <string name="add_device_needs_cloud_dismiss">Înțeleg</string>
+    <string name="add_device_needs_cloud_go">Accesează CLOUD</string>
+    <string name="associeted_with_at_error">Nu poate fi modificată funcția canalului asociat cu declanșatorul acțiunii.</string>
+    <string name="location_ordering">Ordine alocației</string>
+    <string name="rs_display_mode">Rolete %</string>
+    <string name="rs_display_mode_opening">Deschidere</string>
+    <string name="rs_display_mode_closing">Închidere</string>
+    <string name="status_accessid_inactive">Identificator de acces inactiv</string>
 </resources>

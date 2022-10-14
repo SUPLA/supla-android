@@ -343,93 +343,93 @@
     <string name="zwave_welcome_message">Sveiki atvykę į z-wave tilto konfigūravimo vedlį. Jis leis Jums prijungti turimus z-wave įrenginius prie Supla. Norėdami tęsti, spustelėkite „Toliau“.</string>
     <string name="zwave_welcome_title">Z-wave vedlys</string>
     <string name="hp_calendar_eco">ECO</string>
-    <string name="dont_have_account_yet" translatable="false">Dar neturite paskyros Supla Cloud?</string>
-    <string name="profiles_title" translatable="false">Paskyros</string>
-    <string name="profile_name_label" translatable="false">PASKYROS PAVADINIMAS</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Aktyvios paskyros negalima pašalinti</string>
-    <string name="profile_default_name" translatable="false">Numatyta</string>
-    <string name="profile_select_active" translatable="false">Pasirinkite aktyvią paskyrą</string>
-    <string name="profile_act_info" translatable="false">Spustelėkite ant paskyros, kad prisijungtumėte</string>
-    <string name="form_error" translatable="false">Klaida</string>
-    <string name="form_profile_name_missing" translatable="false">Įveskite paskyros pavadinimą</string>
-    <string name="form_profile_required_data_missing" translatable="false">Užpildykite privalomus duomenis</string>
-    <string name="form_profile_duplicate" translatable="false">Paskyra su tokiu pavadinimu jau yra</string>
-    <string name="add_account" translatable="false">Pridėti paskyrą</string>
-    <string name="edit_account" translatable="false">Koreguoti paskyrą</string>
-    <string name="delete_account" translatable="false">Pašalinti</string>
-    <string name="delete_account_confirm_title" translatable="false">Pašalinti paskyrą</string>
-    <string name="delete_account_confirm_message" translatable="false">Ar tikrai norite pašalinti paskyrą?</string>
+    <string name="dont_have_account_yet">Dar neturite paskyros Supla Cloud?</string>
+    <string name="profiles_title">Paskyros</string>
+    <string name="profile_name_label">PASKYROS PAVADINIMAS</string>
+    <string name="form_cannot_delete_active_profile">Aktyvios paskyros negalima pašalinti</string>
+    <string name="profile_default_name">Numatyta</string>
+    <string name="profile_select_active">Pasirinkite aktyvią paskyrą</string>
+    <string name="profile_act_info">Spustelėkite ant paskyros, kad prisijungtumėte</string>
+    <string name="form_error">Klaida</string>
+    <string name="form_profile_name_missing">Įveskite paskyros pavadinimą</string>
+    <string name="form_profile_required_data_missing">Užpildykite privalomus duomenis</string>
+    <string name="form_profile_duplicate">Paskyra su tokiu pavadinimu jau yra</string>
+    <string name="add_account">Pridėti paskyrą</string>
+    <string name="edit_account">Koreguoti paskyrą</string>
+    <string name="delete_account">Pašalinti</string>
+    <string name="delete_account_confirm_title">Pašalinti paskyrą</string>
+    <string name="delete_account_confirm_message">Ar tikrai norite pašalinti paskyrą?</string>
     <string name="delete_account_confirm_message_with_widgets">Ar tikrai norite pašalinti paskyrą? Patvirtinus bus pašalinti susiję valdikliai.</string>
-    <string name="cfg_label_access_id_auth" translatable="false">Identifikatorius</string>
-    <string name="cfg_channel_height" translatable="false">Kanalo aukštis</string>
-    <string name="cfg_temperature_unit" translatable="false">Temperatūros vienetas</string>
-    <string name="cfg_button_autohide" translatable="false">Automatinis mygtukų slėpimas</string>
-    <string name="profile" translatable="false">Jūsų paskyra</string>
-    <string name="profile_plural" translatable="false">Jūsų paskyros</string>
-    <string name="menubar_appsettings" translatable="false">Nustatymai</string>
-    <string name="rs_percent_caption_open" translatable="false">Atidarymo procentas</string>
-    <string name="em_chart_phase_n" translatable="false">%d fazė</string>
-    <string name="em_chart_all_phases" translatable="false">1+2+3 fazė</string>
-    <string name="widget_configure_title" translatable="false">Valdiklio konfigūravimas</string>
-    <string name="widget_configure_profile_label" translatable="false">Paskyra</string>
-    <string name="widget_configure_channel_label" translatable="false">Valdiklio kanalas</string>
-    <string name="widget_configure_action_label" translatable="false">Veiksmas</string>
-    <string name="widget_configure_name_label" translatable="false">Pavadinimas</string>
-    <string name="widget_configure_error" translatable="false">Kanalo konfigūravimas nepavyko...</string>
-    <string name="widget_configure_no_selection" translatable="false">Nepasirinktas kanalas</string>
-    <string name="widget_configure_no_channel" translatable="false">Nėra pasiekiamų kanalų</string>
-    <string name="double_button_widget_description" translatable="false">Dviejų mygtukų valdiklis</string>
-    <string name="single_button_widget_description" translatable="false">Vieno mygtuko valdiklis</string>
-    <string name="widget_app_not_initialized" translatable="false">Prašome prisijungti!</string>
-    <string name="widget_command_no_connection" translatable="false">Nėra interneto ryšio!</string>
-    <string name="widget_command_started" translatable="false">Atlikta</string>
-    <string name="widget_removed_label" translatable="false">Kanalas pašalintas</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Stoglangio atidarymo jutiklis</string>
-    <string name="channel_caption_roofwindow" translatable="false">Stoglangis</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Stoglangio atidarymas ir uždarymas</string>
-    <string name="channel_func_opensensor_roofwindow" translatable="false">Stoglangio atidarymo jutiklis</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">atidarė / uždarė stoglangį</string>
-    <string name="status_led" translatable="false">Statuso diodas</string>
-    <string name="info_led_on" translatable="false">Užmezgus ryšį su serveriu LED diodas šviečia.</string>
-    <string name="info_led_off" translatable="false">Užmezgus ryšį su serveriu LED diodas nešviečia.</string>
-    <string name="info_led_alwaysoff" translatable="false">Diodas visada yra išjungtas, nebent įrenginys veikia Wi-Fi konfigūravimo režimu (AP režimas).</string>
-    <string name="input" translatable="false">Įėjimas</string>
-    <string name="monostable" translatable="false">Monostabilus</string>
-    <string name="bistable" translatable="false">Bistabilus</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">Bandymas užmegzti Wi-Fi ryšį su vykdomuoju įrenginiu baigėsi nesėkmingai.</string>
-    <string name="diw_cfg_info_oprange" translatable="false">Pritaikykite šviesos srauto veikimo diapazoną nustatydami minimalų ir maksimalų ryškumo lygį. Minimalią ir maksimalią vertes galima nustatyti judinant slankiklius, kurie yra abiejose rato pusėse.</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Įvesties parinktys</string>
-    <string name="diw_cfg_info_mono_option" translatable="false">Ši parinktis keičia įvesties, prie kurios prijungtas monostabilus mygtukas, veikimą. Tuo atveju, kai parinktis išjungta, šviesos srautas sustabdo šviesinimo procesą, kai pasiekią maksimalų ryškumo lygį, o pritemdymo atveju – kai pasiekia minimalų lygį. Jei ši parinktis bus įjungta, pasiekus maksimalų ryškumą iš karto bus pereita į minimalų lygį, o pritemdymo atveju – pasiekus minimumą iš karto bus pereita į maksimalią vertę. Apšvietimo didinimas/pritemdymas tęsis tol, kol bus paspaustas mygtukas.</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">Ši parinktis pakeičia šviesos srauto veikimą, jei apšvietimas bus įjungtas naudojant bistabilų mygtuką. Jei parinktis įjungta, šviesos srautas iš karto po apšvietimo įjungimo nustatys maksimalų ryškumo lygį. Jei ši parinktis yra išjungta, šviesos srautas ryškumo lygį nustatys tokį, koks buvo išsaugotas prieš išjungiant apšvietimą.</string>
-    <string name="dgf_too_long_operation_warning" translatable="false">Stiklo sekcijos atidengtos virš 20 valandų, kas gali neigiamai įtakoti jų tarnavimo laiką. Rekomenduojama uždengti visas sekcijas bent 4 valandoms regeneravimui.</string>
-    <string name="dgf_planned_regeneration_in_progress" translatable="false">Vyksta suplanuotas regeneravimas.</string>
-    <string name="dgf_regeneration_after20h" translatable="false">Vyksta regeneravimas, kuris paleidžiamas po 20 darbo valandų.</string>
-    <string name="wizard_done_explentations" translatable="false">Jei įrenginys nebus matomas programoje, pakartokite šią pridėjimo procedūrą dar kartą ir nuskaitykite žemiau matomą „Ankstesnį statusą“. Jame yra informacija, kuri leidžia nustatyti, kodėl įrenginys neprisijungė prie serverio. Pranešimas “SSID not found“ reiškia, kad įvestas Wi-Fi 2,4 GHz tinklo pavadinimas nebuvo rastas arba tinklas neprieinamas.</string>
-    <string name="incorrect_email_or_password" translatable="false">Neteisingas el. pašto adresas arba slaptažodis</string>
-    <string name="channel_name" translatable="false">Kanalo pavadinimas</string>
-    <string name="location_name" translatable="false">Vietos pavadinimas</string>
-    <string name="overcurrent_warning" translatable="false">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą.</string>
-    <string name="overcurrent_question" translatable="false">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą. Ar tikrai norite įjungti maitinimą?</string>
-    <string name="recalibration_question" translatable="false">Ar tikrai norite pradėti kalibravimą?</string>
-    <string name="calibration_failed" translatable="false">Kalibravimas nepavyko.</string>
-    <string name="calibration_lost" translatable="false">Kalibravimas buvo prarastas.</string>
-    <string name="motor_problem" translatable="false">Variklio problema / Netikėtas sustojimas.</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: nežinoma</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: serveris neatsako</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: prarastas Wi-Fi ryšys</string>
-    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: ryšys su serveriu nustatomas iš nauja</string>
-    <string name="basic_profile_warning" translatable="false">Režimas nepasiekiamas</string>
-    <string name="basic_config_unavailable" translatable="false">Prieš išjungdami išplėstinį režimą, pasirinkite autentifikavimą el. paštu su automatiniu serverio aptikimu.</string>
-    <string name="add_device_warning" translatable="false">Automatinio įrenginių pridėjimo vedlys neprieinamas prieigos autentifikavimo režime. Tokiu atveju įrenginius galima pridėti rankiniu būdu.</string>
-    <string name="show_channel_info" translatable="false">Rodyti mygtuką ⓘ</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Įrenginio konfigūravimas</string>
-    <string name="add_device_needs_cloud_message" translatable="false">Šiame įrenginyje nėra jokių programoje matomų kanalų. Norėdami užbaigti konfigūravimą, pereikite į cloud.supla.org</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">Suprantu</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Pereiti į CLOUD</string>
-    <string name="associeted_with_at_error" translatable="false">Susieto su veiksmo paleidikliu kanalo funkcijų negalima pakeisti.</string>
-    <string name="location_ordering" translatable="false">Vietų eiliškumas</string>
-    <string name="rs_display_mode" translatable="false">Roletai %</string>
-    <string name="rs_display_mode_opening" translatable="false">Atidarymo</string>
-    <string name="rs_display_mode_closing" translatable="false">Uždarymo</string>
-    <string name="status_accessid_inactive" translatable="false">Prieigos identifikatorius neaktyvus</string>
+    <string name="cfg_label_access_id_auth">Identifikatorius</string>
+    <string name="cfg_channel_height">Kanalo aukštis</string>
+    <string name="cfg_temperature_unit">Temperatūros vienetas</string>
+    <string name="cfg_button_autohide">Automatinis mygtukų slėpimas</string>
+    <string name="profile">Jūsų paskyra</string>
+    <string name="profile_plural">Jūsų paskyros</string>
+    <string name="menubar_appsettings">Nustatymai</string>
+    <string name="rs_percent_caption_open">Atidarymo procentas</string>
+    <string name="em_chart_phase_n">%d fazė</string>
+    <string name="em_chart_all_phases">1+2+3 fazė</string>
+    <string name="widget_configure_title">Valdiklio konfigūravimas</string>
+    <string name="widget_configure_profile_label">Paskyra</string>
+    <string name="widget_configure_channel_label">Valdiklio kanalas</string>
+    <string name="widget_configure_action_label">Veiksmas</string>
+    <string name="widget_configure_name_label">Pavadinimas</string>
+    <string name="widget_configure_error">Kanalo konfigūravimas nepavyko...</string>
+    <string name="widget_configure_no_selection">Nepasirinktas kanalas</string>
+    <string name="widget_configure_no_channel">Nėra pasiekiamų kanalų</string>
+    <string name="double_button_widget_description">Dviejų mygtukų valdiklis</string>
+    <string name="single_button_widget_description">Vieno mygtuko valdiklis</string>
+    <string name="widget_app_not_initialized">Prašome prisijungti!</string>
+    <string name="widget_command_no_connection">Nėra interneto ryšio!</string>
+    <string name="widget_command_started">Atlikta</string>
+    <string name="widget_removed_label">Kanalas pašalintas</string>
+    <string name="channel_caption_roofwindowopeningsensor">Stoglangio atidarymo jutiklis</string>
+    <string name="channel_caption_roofwindow">Stoglangis</string>
+    <string name="channel_func_controllingtheroofwindow">Stoglangio atidarymas ir uždarymas</string>
+    <string name="channel_func_opensensor_roofwindow">Stoglangio atidarymo jutiklis</string>
+    <string name="event_openedclosedtheroofwindow">atidarė / uždarė stoglangį</string>
+    <string name="status_led">Statuso diodas</string>
+    <string name="info_led_on">Užmezgus ryšį su serveriu LED diodas šviečia.</string>
+    <string name="info_led_off">Užmezgus ryšį su serveriu LED diodas nešviečia.</string>
+    <string name="info_led_alwaysoff">Diodas visada yra išjungtas, nebent įrenginys veikia Wi-Fi konfigūravimo režimu (AP režimas).</string>
+    <string name="input">Įėjimas</string>
+    <string name="monostable">Monostabilus</string>
+    <string name="bistable">Bistabilus</string>
+    <string name="wizard_iodev_connect_failed">Bandymas užmegzti Wi-Fi ryšį su vykdomuoju įrenginiu baigėsi nesėkmingai.</string>
+    <string name="diw_cfg_info_oprange">Pritaikykite šviesos srauto veikimo diapazoną nustatydami minimalų ir maksimalų ryškumo lygį. Minimalią ir maksimalią vertes galima nustatyti judinant slankiklius, kurie yra abiejose rato pusėse.</string>
+    <string name="diw_cfg_info_in_options">Įvesties parinktys</string>
+    <string name="diw_cfg_info_mono_option">Ši parinktis keičia įvesties, prie kurios prijungtas monostabilus mygtukas, veikimą. Tuo atveju, kai parinktis išjungta, šviesos srautas sustabdo šviesinimo procesą, kai pasiekią maksimalų ryškumo lygį, o pritemdymo atveju – kai pasiekia minimalų lygį. Jei ši parinktis bus įjungta, pasiekus maksimalų ryškumą iš karto bus pereita į minimalų lygį, o pritemdymo atveju – pasiekus minimumą iš karto bus pereita į maksimalią vertę. Apšvietimo didinimas/pritemdymas tęsis tol, kol bus paspaustas mygtukas.</string>
+    <string name="diw_cfg_info_bi_option">Ši parinktis pakeičia šviesos srauto veikimą, jei apšvietimas bus įjungtas naudojant bistabilų mygtuką. Jei parinktis įjungta, šviesos srautas iš karto po apšvietimo įjungimo nustatys maksimalų ryškumo lygį. Jei ši parinktis yra išjungta, šviesos srautas ryškumo lygį nustatys tokį, koks buvo išsaugotas prieš išjungiant apšvietimą.</string>
+    <string name="dgf_too_long_operation_warning">Stiklo sekcijos atidengtos virš 20 valandų, kas gali neigiamai įtakoti jų tarnavimo laiką. Rekomenduojama uždengti visas sekcijas bent 4 valandoms regeneravimui.</string>
+    <string name="dgf_planned_regeneration_in_progress">Vyksta suplanuotas regeneravimas.</string>
+    <string name="dgf_regeneration_after20h">Vyksta regeneravimas, kuris paleidžiamas po 20 darbo valandų.</string>
+    <string name="wizard_done_explentations">Jei įrenginys nebus matomas programoje, pakartokite šią pridėjimo procedūrą dar kartą ir nuskaitykite žemiau matomą „Ankstesnį statusą“. Jame yra informacija, kuri leidžia nustatyti, kodėl įrenginys neprisijungė prie serverio. Pranešimas “SSID not found“ reiškia, kad įvestas Wi-Fi 2,4 GHz tinklo pavadinimas nebuvo rastas arba tinklas neprieinamas.</string>
+    <string name="incorrect_email_or_password">Neteisingas el. pašto adresas arba slaptažodis</string>
+    <string name="channel_name">Kanalo pavadinimas</string>
+    <string name="location_name">Vietos pavadinimas</string>
+    <string name="overcurrent_warning">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą.</string>
+    <string name="overcurrent_question">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą. Ar tikrai norite įjungti maitinimą?</string>
+    <string name="recalibration_question">Ar tikrai norite pradėti kalibravimą?</string>
+    <string name="calibration_failed">Kalibravimas nepavyko.</string>
+    <string name="calibration_lost">Kalibravimas buvo prarastas.</string>
+    <string name="motor_problem">Variklio problema / Netikėtas sustojimas.</string>
+    <string name="lastconnectionresetcause_unknown">0: nežinoma</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: serveris neatsako</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: prarastas Wi-Fi ryšys</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: ryšys su serveriu nustatomas iš nauja</string>
+    <string name="basic_profile_warning">Režimas nepasiekiamas</string>
+    <string name="basic_config_unavailable">Prieš išjungdami išplėstinį režimą, pasirinkite autentifikavimą el. paštu su automatiniu serverio aptikimu.</string>
+    <string name="add_device_warning">Automatinio įrenginių pridėjimo vedlys neprieinamas prieigos autentifikavimo režime. Tokiu atveju įrenginius galima pridėti rankiniu būdu.</string>
+    <string name="show_channel_info">Rodyti mygtuką ⓘ</string>
+    <string name="add_device_needs_cloud_title">Įrenginio konfigūravimas</string>
+    <string name="add_device_needs_cloud_message">Šiame įrenginyje nėra jokių programoje matomų kanalų. Norėdami užbaigti konfigūravimą, pereikite į cloud.supla.org</string>
+    <string name="add_device_needs_cloud_dismiss">Suprantu</string>
+    <string name="add_device_needs_cloud_go">Pereiti į CLOUD</string>
+    <string name="associeted_with_at_error">Susieto su veiksmo paleidikliu kanalo funkcijų negalima pakeisti.</string>
+    <string name="location_ordering">Vietų eiliškumas</string>
+    <string name="rs_display_mode">Roletai %</string>
+    <string name="rs_display_mode_opening">Atidarymo</string>
+    <string name="rs_display_mode_closing">Uždarymo</string>
+    <string name="status_accessid_inactive">Prieigos identifikatorius neaktyvus</string>
 </resources>

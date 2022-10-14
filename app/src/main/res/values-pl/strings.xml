@@ -1,23 +1,23 @@
 <resources>
-    <string name="confirm_button_text" translatable="false">OK</string>
-    <string name="profiles_title" translatable="false">Konta</string>
-    <string name="profile_name_label" translatable="false">NAZWA KONTA</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Nie można usunąć aktywnego konta</string>
+    <string name="confirm_button_text">OK</string>
+    <string name="profiles_title">Konta</string>
+    <string name="profile_name_label">NAZWA KONTA</string>
+    <string name="form_cannot_delete_active_profile">Nie można usunąć aktywnego konta</string>
     <string name="delete_account">Usuń</string>
 
     <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
     <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto?</string>
     <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
-    <string name="profile_default_name" translatable="false">Domyślne</string>
-    <string name="profile_select_active" translatable="false">Aktywne konto</string>
+    <string name="profile_default_name">Domyślne</string>
+    <string name="profile_select_active">Aktywne konto</string>
     <string name="profile_act_info">Dotknij konta aby się zalogować</string>
-    <string name="form_error" translatable="false">Błąd</string>
-    <string name="form_profile_name_missing" translatable="false">Podaj nazwę konta</string>
-    <string name="form_profile_required_data_missing" translatable="false">Uzupełnij wymagane dane</string>
+    <string name="form_error">Błąd</string>
+    <string name="form_profile_name_missing">Podaj nazwę konta</string>
+    <string name="form_profile_required_data_missing">Uzupełnij wymagane dane</string>
     <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
     <string name="add_account">Dodaj konto</string>
     <string name="edit_account">Edytuj konto</string>
-    <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
+    <string name="dont_have_account_yet">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>

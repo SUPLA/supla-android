@@ -377,81 +377,81 @@
     <string name="widget_command_no_connection">Keine Internetverbindung!</string>
     <string name="widget_command_started">Gemacht</string>
     <string name="widget_removed_label">Kanal gelöscht</string>
-    <string name="dont_have_account_yet" translatable="false">Haben Sie noch kein Konto bei Supla Cloud?</string>
-    <string name="profiles_title" translatable="false">Kontos</string>
-    <string name="profile_name_label" translatable="false">BEZEICHNUNG DES KONTOS</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Aktives Konto kann nicht gelöscht werden</string>
-    <string name="profile_default_name" translatable="false">Standardmäßig</string>
-    <string name="profile_select_active" translatable="false">Aktives Konto wählen</string>
-    <string name="profile_act_info" translatable="false">Konto antippen, um sich anzumelden</string>
-    <string name="form_error" translatable="false">Fehler</string>
-    <string name="form_profile_name_missing" translatable="false">Kontoname angeben</string>
-    <string name="form_profile_required_data_missing" translatable="false">Erforderliche Angaben vervollständigen</string>
-    <string name="form_profile_duplicate" translatable="false">Es gibt schon ein Konto mit diesem Namen</string>
-    <string name="add_account" translatable="false">Konto hinzufügen</string>
-    <string name="edit_account" translatable="false">Konto bearbeiten</string>
-    <string name="delete_account" translatable="false">Löschen</string>
-    <string name="delete_account_confirm_title" translatable="false">Konto löschen</string>
-    <string name="delete_account_confirm_message" translatable="false">Möchten Sie wirklich das Konto löschen?</string>
+    <string name="dont_have_account_yet">Haben Sie noch kein Konto bei Supla Cloud?</string>
+    <string name="profiles_title">Kontos</string>
+    <string name="profile_name_label">BEZEICHNUNG DES KONTOS</string>
+    <string name="form_cannot_delete_active_profile">Aktives Konto kann nicht gelöscht werden</string>
+    <string name="profile_default_name">Standardmäßig</string>
+    <string name="profile_select_active">Aktives Konto wählen</string>
+    <string name="profile_act_info">Konto antippen, um sich anzumelden</string>
+    <string name="form_error">Fehler</string>
+    <string name="form_profile_name_missing">Kontoname angeben</string>
+    <string name="form_profile_required_data_missing">Erforderliche Angaben vervollständigen</string>
+    <string name="form_profile_duplicate">Es gibt schon ein Konto mit diesem Namen</string>
+    <string name="add_account">Konto hinzufügen</string>
+    <string name="edit_account">Konto bearbeiten</string>
+    <string name="delete_account">Löschen</string>
+    <string name="delete_account_confirm_title">Konto löschen</string>
+    <string name="delete_account_confirm_message">Möchten Sie wirklich das Konto löschen?</string>
     <string name="delete_account_confirm_message_with_widgets">Möchten Sie wirklich das Konto löschen? Bestätigung wird Löschung verbundener Widgets bedeuten.</string>
-    <string name="cfg_label_access_id_auth" translatable="false">Kennung</string>
-    <string name="cfg_channel_height" translatable="false">Höhe des Kanals</string>
-    <string name="cfg_temperature_unit" translatable="false">Temperatureinheit</string>
-    <string name="cfg_button_autohide" translatable="false">Automatische Ausblendung der Tasten</string>
-    <string name="profile" translatable="false">Ihr Konto</string>
-    <string name="profile_plural" translatable="false">Ihre Kontos</string>
-    <string name="menubar_appsettings" translatable="false">Einstellungen</string>
-    <string name="rs_percent_caption_open" translatable="false">Prozentsatz der Öffnung</string>
-    <string name="em_chart_phase_n" translatable="false">Phase %d</string>
-    <string name="em_chart_all_phases" translatable="false">Phase 1+2+3</string>
-    <string name="double_button_widget_description" translatable="false">Zweitasten-Widget</string>
-    <string name="single_button_widget_description" translatable="false">Eintasten-Widget</string>
-    <string name="channel_caption_roofwindowopeningsensor" translatable="false">Dachfenster-Öffnungssensor</string>
-    <string name="channel_caption_roofwindow" translatable="false">Dachfenster</string>
-    <string name="channel_func_controllingtheroofwindow" translatable="false">Öffnen und Schließen des Dachfensters</string>
-    <string name="channel_func_opensensor_roofwindow" translatable="false">Dachfenster-Öffnungssensor</string>
-    <string name="event_openedclosedtheroofwindow" translatable="false">"Öffnete / schloss das Dachfenster "</string>
-    <string name="status_led" translatable="false">Zustandsdiode</string>
-    <string name="info_led_on" translatable="false">Diode LED leuchtet, wenn Verbindung mit dem Server hergestellt wurde.</string>
-    <string name="info_led_off" translatable="false">Diode LED leuchtet nicht, wenn keine Verbindung mit dem Server hergestellt wurde.</string>
-    <string name="info_led_alwaysoff" translatable="false">"Diode immer abgeschaltet, es sei dass das Gerät im WiFi-Konfigurationsmodus (AP-Modus) arbeitet. "</string>
-    <string name="input" translatable="false">Eingang</string>
-    <string name="monostable" translatable="false">Monostabil</string>
-    <string name="bistable" translatable="false">Bistabil</string>
-    <string name="wizard_iodev_connect_failed" translatable="false">"Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos. "</string>
-    <string name="diw_cfg_info_oprange" translatable="false">"Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.  "</string>
-    <string name="diw_cfg_info_in_options" translatable="false">Eingangsoptionen</string>
-    <string name="diw_cfg_info_mono_option" translatable="false">"Die Option ändert das Verhalten des Eingangs, an den die monostabile Taste angeschlossen ist. Wenn die Option abgeschaltet ist, stoppt der Helligkeitsregler den Aufhellungsprozess beim Erreichen der höchsten Helligkeit und bei der Verdunkelung beim Erreichen des Mindestniveaus. Einschaltung dieser Option verursacht Übergang zum Mindestniveau gleich nach dem Erreichen maximaler Helligkeit und bei der Verdunkelung – nach dem Erreichen des Minimums. Aufhellung/Verdunkelung wird so lange dauern, wie die Taste gedrückt wird.  "</string>
-    <string name="diw_cfg_info_bi_option" translatable="false">Die Option ändert das Verhalten des Helligkeitsreglers beim Einschalten der Beleuchtung mit Hilfe der bistabilen Taste. Wenn die Option eingeschaltet ist, wird der Helligkeitsregler das maximale Niveau gleich nach der Einschaltung der Beleuchtung einstellen. Wenn die Option abgeschaltet ist, wird der Helligkeitsregler das vor dem Abschalten der Beleuchtung gespeicherte Helligkeitsniveau einstellen.</string>
-    <string name="dgf_too_long_operation_warning" translatable="false">Die Scheibensektionen sind über 20 h aufgedeckt, was negativ ihre Lebensdauer beeinflussen kann. Verdeckung aller Sektionen für mind. 4 h zu ihrer Regeneration ist empfohlen.</string>
-    <string name="dgf_planned_regeneration_in_progress" translatable="false">Geplante Regeneration läuft.</string>
-    <string name="dgf_regeneration_after20h" translatable="false">Es läuft die nach 20 Betriebsstunden begonnene Regeneration.</string>
-    <string name="wizard_done_explentations" translatable="false">Wenn das Gerät nicht in der App erscheint, wiederholen Sie dieses Hinzufügungsverfahren noch einmal und lesen Sie „Bisheriger Status“, das oben zu sehen ist, ab. Er enthält eine Information, warum das Gerät sich nicht mit dem Server verbunden hat. Meldung „SSID not found“ bedeutet, dass der eingeführte Name des WiFi-Netzwerks 2,4 GHz nicht gefunden wurde oder dieses Netzwerk sich außerhalb der Reichweite befindet.</string>
-    <string name="incorrect_email_or_password" translatable="false">Falsche E-Mail-Adresse oder Kennwort</string>
-    <string name="channel_name" translatable="false">Name des Kanals</string>
-    <string name="location_name" translatable="false">Name der Lokalisierung</string>
-    <string name="overcurrent_warning" translatable="false">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
-    <string name="overcurrent_question" translatable="false">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
-    <string name="recalibration_question" translatable="false">Wollen Sie wirklich die Kalibrierung beginnen?</string>
-    <string name="calibration_failed" translatable="false">Kalibrierung ist nicht gelungen.</string>
-    <string name="calibration_lost" translatable="false">Kalibrierung wurde verloren.</string>
-    <string name="motor_problem" translatable="false">Problem mit dem Motor / Unerwartetes Anhalten</string>
-    <string name="lastconnectionresetcause_unknown" translatable="false">0: unbekannt</string>
-    <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: keine Serverantwort</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Unterbrechung der WiFi-Verbindung</string>
-    <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: Zurücksetzung der Verbindung mit dem Server</string>
-    <string name="basic_profile_warning" translatable="false">Modus nicht verfügbar</string>
-    <string name="basic_config_unavailable" translatable="false">Vor Ausschaltung des fortgeschrittenen Modus wählen Sie die E-Mail-Authentifizierung mit automatischer Erkennung des Servers</string>
-    <string name="add_device_warning" translatable="false">Der Assistent automatischer Hinzufügung der Geräte ist im Modus der Authentifizierung durch die Zugriffskennung nicht verfügbar. Die Geräte können manuell hinzugefügt werden.</string>
-    <string name="show_channel_info" translatable="false">Taste ⓘ zeigen</string>
-    <string name="add_device_needs_cloud_title" translatable="false">Konfiguration des Geräts</string>
-    <string name="add_device_needs_cloud_message" translatable="false">"Dieses Gerät hat keine in der App sichtbaren Kanäle. Um die Konfiguration abzuschließen, gehen Sie zum cloud.supla.org "</string>
-    <string name="add_device_needs_cloud_dismiss" translatable="false">Verstehe</string>
-    <string name="add_device_needs_cloud_go" translatable="false">Zur CLOUD gehen</string>
-    <string name="associeted_with_at_error" translatable="false">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
-    <string name="location_ordering" translatable="false">Lokalisierungsreihenfolge</string>
-    <string name="rs_display_mode" translatable="false">Rollläden %</string>
-    <string name="rs_display_mode_opening" translatable="false">Öffnungen</string>
-    <string name="rs_display_mode_closing" translatable="false">"Schließungen "</string>
-    <string name="status_accessid_inactive" translatable="false">"Zugriffskennung nicht aktiv "</string>
+    <string name="cfg_label_access_id_auth">Kennung</string>
+    <string name="cfg_channel_height">Höhe des Kanals</string>
+    <string name="cfg_temperature_unit">Temperatureinheit</string>
+    <string name="cfg_button_autohide">Automatische Ausblendung der Tasten</string>
+    <string name="profile">Ihr Konto</string>
+    <string name="profile_plural">Ihre Kontos</string>
+    <string name="menubar_appsettings">Einstellungen</string>
+    <string name="rs_percent_caption_open">Prozentsatz der Öffnung</string>
+    <string name="em_chart_phase_n">Phase %d</string>
+    <string name="em_chart_all_phases">Phase 1+2+3</string>
+    <string name="double_button_widget_description">Zweitasten-Widget</string>
+    <string name="single_button_widget_description">Eintasten-Widget</string>
+    <string name="channel_caption_roofwindowopeningsensor">Dachfenster-Öffnungssensor</string>
+    <string name="channel_caption_roofwindow">Dachfenster</string>
+    <string name="channel_func_controllingtheroofwindow">Öffnen und Schließen des Dachfensters</string>
+    <string name="channel_func_opensensor_roofwindow">Dachfenster-Öffnungssensor</string>
+    <string name="event_openedclosedtheroofwindow">"Öffnete / schloss das Dachfenster "</string>
+    <string name="status_led">Zustandsdiode</string>
+    <string name="info_led_on">Diode LED leuchtet, wenn Verbindung mit dem Server hergestellt wurde.</string>
+    <string name="info_led_off">Diode LED leuchtet nicht, wenn keine Verbindung mit dem Server hergestellt wurde.</string>
+    <string name="info_led_alwaysoff">"Diode immer abgeschaltet, es sei dass das Gerät im WiFi-Konfigurationsmodus (AP-Modus) arbeitet. "</string>
+    <string name="input">Eingang</string>
+    <string name="monostable">Monostabil</string>
+    <string name="bistable">Bistabil</string>
+    <string name="wizard_iodev_connect_failed">"Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos. "</string>
+    <string name="diw_cfg_info_oprange">"Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.  "</string>
+    <string name="diw_cfg_info_in_options">Eingangsoptionen</string>
+    <string name="diw_cfg_info_mono_option">"Die Option ändert das Verhalten des Eingangs, an den die monostabile Taste angeschlossen ist. Wenn die Option abgeschaltet ist, stoppt der Helligkeitsregler den Aufhellungsprozess beim Erreichen der höchsten Helligkeit und bei der Verdunkelung beim Erreichen des Mindestniveaus. Einschaltung dieser Option verursacht Übergang zum Mindestniveau gleich nach dem Erreichen maximaler Helligkeit und bei der Verdunkelung – nach dem Erreichen des Minimums. Aufhellung/Verdunkelung wird so lange dauern, wie die Taste gedrückt wird.  "</string>
+    <string name="diw_cfg_info_bi_option">Die Option ändert das Verhalten des Helligkeitsreglers beim Einschalten der Beleuchtung mit Hilfe der bistabilen Taste. Wenn die Option eingeschaltet ist, wird der Helligkeitsregler das maximale Niveau gleich nach der Einschaltung der Beleuchtung einstellen. Wenn die Option abgeschaltet ist, wird der Helligkeitsregler das vor dem Abschalten der Beleuchtung gespeicherte Helligkeitsniveau einstellen.</string>
+    <string name="dgf_too_long_operation_warning">Die Scheibensektionen sind über 20 h aufgedeckt, was negativ ihre Lebensdauer beeinflussen kann. Verdeckung aller Sektionen für mind. 4 h zu ihrer Regeneration ist empfohlen.</string>
+    <string name="dgf_planned_regeneration_in_progress">Geplante Regeneration läuft.</string>
+    <string name="dgf_regeneration_after20h">Es läuft die nach 20 Betriebsstunden begonnene Regeneration.</string>
+    <string name="wizard_done_explentations">Wenn das Gerät nicht in der App erscheint, wiederholen Sie dieses Hinzufügungsverfahren noch einmal und lesen Sie „Bisheriger Status“, das oben zu sehen ist, ab. Er enthält eine Information, warum das Gerät sich nicht mit dem Server verbunden hat. Meldung „SSID not found“ bedeutet, dass der eingeführte Name des WiFi-Netzwerks 2,4 GHz nicht gefunden wurde oder dieses Netzwerk sich außerhalb der Reichweite befindet.</string>
+    <string name="incorrect_email_or_password">Falsche E-Mail-Adresse oder Kennwort</string>
+    <string name="channel_name">Name des Kanals</string>
+    <string name="location_name">Name der Lokalisierung</string>
+    <string name="overcurrent_warning">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
+    <string name="overcurrent_question">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
+    <string name="recalibration_question">Wollen Sie wirklich die Kalibrierung beginnen?</string>
+    <string name="calibration_failed">Kalibrierung ist nicht gelungen.</string>
+    <string name="calibration_lost">Kalibrierung wurde verloren.</string>
+    <string name="motor_problem">Problem mit dem Motor / Unerwartetes Anhalten</string>
+    <string name="lastconnectionresetcause_unknown">0: unbekannt</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: keine Serverantwort</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: Unterbrechung der WiFi-Verbindung</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: Zurücksetzung der Verbindung mit dem Server</string>
+    <string name="basic_profile_warning">Modus nicht verfügbar</string>
+    <string name="basic_config_unavailable">Vor Ausschaltung des fortgeschrittenen Modus wählen Sie die E-Mail-Authentifizierung mit automatischer Erkennung des Servers</string>
+    <string name="add_device_warning">Der Assistent automatischer Hinzufügung der Geräte ist im Modus der Authentifizierung durch die Zugriffskennung nicht verfügbar. Die Geräte können manuell hinzugefügt werden.</string>
+    <string name="show_channel_info">Taste ⓘ zeigen</string>
+    <string name="add_device_needs_cloud_title">Konfiguration des Geräts</string>
+    <string name="add_device_needs_cloud_message">"Dieses Gerät hat keine in der App sichtbaren Kanäle. Um die Konfiguration abzuschließen, gehen Sie zum cloud.supla.org "</string>
+    <string name="add_device_needs_cloud_dismiss">Verstehe</string>
+    <string name="add_device_needs_cloud_go">Zur CLOUD gehen</string>
+    <string name="associeted_with_at_error">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
+    <string name="location_ordering">Lokalisierungsreihenfolge</string>
+    <string name="rs_display_mode">Rollläden %</string>
+    <string name="rs_display_mode_opening">Öffnungen</string>
+    <string name="rs_display_mode_closing">"Schließungen "</string>
+    <string name="status_accessid_inactive">"Zugriffskennung nicht aktiv "</string>
 </resources>
