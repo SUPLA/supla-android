@@ -264,7 +264,7 @@
     <string name="slider">Posuvník</string>
     <string name="soft_ver">Verze softwaru.</string>
     <string name="time_exceeded">Časový limit překročen. Zkuste to znovu.</string>
-    <string name="uptime">"Provozní doba "</string>
+    <string name="uptime">Provozní doba</string>
     <string name="uv_warning1">Životnost UV zářivky je %1$s. Naplánujte si její výměnu.</string>
     <string name="uv_warning2">Životnost UV zářivky je %1$s. Vyměňte zářivku.</string>
     <string name="vector_balance_days">Vektorová rovnováha - Dny</string>
@@ -295,7 +295,7 @@
     <string name="vl_dimmer_info_txt4">Stmívač si pamatuje úrovně jasu ještě před samotným vypnutím osvětlení.</string>
     <string name="vl_dimmer_info_txt5">Stisknutím tlačítka nastavení můžete upravit jednotlivé parametry stmívače.</string>
     <string name="wake_up_frequency">Četnost probuzení uzlu</string>
-    <string name="wakeup_info">"*) Zadané nastavení bude použito při nejbližším probuzení uzlu. "</string>
+    <string name="wakeup_info">*) Zadané nastavení bude použito při nejbližším probuzení uzlu.</string>
     <string name="wheel">Kolečko</string>
     <string name="wifi_rssi">Wifi RSSl</string>
     <string name="wifi_signal_strength">Síla signálu WiFi</string>
@@ -342,7 +342,7 @@
     <string name="zwave_offline">Off-line?</string>
     <string name="zwave_waiting_for_reset_timeout">Vypršel časový limit při čekání na restart sítě z-wave.</string>
     <string name="zwave_waiting_for_resposne_timeout">Vypršel časový limit při čekání na odpověď můstku z-wave.</string>
-    <string name="zwave_welcome_message">"Vítejte v průvodci konfigurace můstku z-wave. Umožní Vám připojení zařízení z-wave se Suplou. Pro pokračování stiskněte \"Další\" "</string>
+    <string name="zwave_welcome_message">Vítejte v průvodci konfigurace můstku z-wave. Umožní Vám připojení zařízení z-wave se Suplou. Pro pokračování stiskněte \"Další\"</string>
     <string name="zwave_welcome_title">Průvodce konfigurace z-wave</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="dont_have_account_yet">Nemáte ještě účet Supla Cloud?</string>
@@ -380,8 +380,8 @@
     <string name="widget_configure_error">Nastavení kanálu se nezdařilo...</string>
     <string name="widget_configure_no_selection">Není vybrán žádný kanál</string>
     <string name="widget_configure_no_channel">Nejsou k dispozici žádné kanály</string>
-    <string name="double_button_widget_description">"Widget se dvěma tlačítky "</string>
-    <string name="single_button_widget_description">"Widget s jedním tlačítkem "</string>
+    <string name="double_button_widget_description">Widget se dvěma tlačítky</string>
+    <string name="single_button_widget_description">Widget s jedním tlačítkem</string>
     <string name="widget_app_not_initialized">Přihlaste se!</string>
     <string name="widget_command_no_connection">Žádné připojení k internetu!</string>
     <string name="widget_command_started">Hotovo</string>
@@ -418,7 +418,7 @@
     <string name="motor_problem">Problém s motorem / Neočekávané zastavení.</string>
     <string name="lastconnectionresetcause_unknown">0: neznámý</string>
     <string name="lastconnectionresetcause_activity_timeout">1: žádná odpověď serveru</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost">"2: ztráta WiFi připojení "</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: ztráta WiFi připojení</string>
     <string name="lastconnectionresetcause_server_connection_lost">3: restart připojení k serveru</string>
     <string name="basic_profile_warning">Režim není k dispozici</string>
     <string name="basic_config_unavailable">Před vypnutím rozšířeného režimu vyberte možnost ověřování e-mailu s automatickou detekcí serveru.</string>

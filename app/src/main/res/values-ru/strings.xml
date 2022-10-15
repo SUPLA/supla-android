@@ -40,7 +40,7 @@
     <string name="channel_caption_humidity">Влажность</string>
     <string name="channel_caption_humidityandtemperature">Температура и влажность</string>
     <string name="channel_caption_dimmer">Диммер</string>
-    <string name="channel_caption_rgblighting">Контроллер освещения RGB  </string>
+    <string name="channel_caption_rgblighting">Контроллер освещения RGB</string>
     <string name="channel_caption_dimmerandrgblighting">Диммер и контроллер освещения RGB</string>
     <string name="channel_caption_depthsensor">датчик глубины</string>
     <string name="channel_caption_distancesensor">датчик расстояния</string>
@@ -82,7 +82,7 @@
  Если к программе не приложена копия GNU General Public License\n
  отправте запрос по адресу: Free Software Foundation, Inc., 59\n
  Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Знаете ли вы, что Supla - это открытый и бесплатный проект, разрабатываемый сообществом? Если вам нравится это приложение, найдите минуту, чтобы его оценить. Спасибо за вашу поддержку!</string>
     <string name="rate_now">Оценить сейчас</string>
@@ -125,7 +125,7 @@
     <string name="wizard_not_enought_permissions">Приложение не имеет достаточных разрешений. Перейдите в управление приложениями в системных настройках. Затем найдите приложение %1$s и включите все необходимые для него разрешения.</string>
     <string name="help">Помощь</string>
     <string name="channel_caption_staircasetimer">Лестничный автомат</string>
-    <string name="channel_caption_electricitymeter">"Счётчик электроэнергии"</string>
+    <string name="channel_caption_electricitymeter">Счётчик электроэнергии</string>
     <string name="channel_caption_gasmeter">Счётчик газа</string>
     <string name="channel_caption_watermeter">Счётчик воды</string>
     <string name="em_total_forward_avtive_energy">Продвижение активной энергии</string>

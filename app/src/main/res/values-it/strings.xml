@@ -55,10 +55,10 @@
     <string name="event_openedthegateway">ha aperto il cancello</string>
     <string name="event_openedclosedthegate">ha aperto/chiuso il cancello</string>
     <string name="event_openedclosedthegatedoors">ha aperto/chiuso il cancello per garage</string>
-    <string name="event_openedthedoor">ha aperto la porta </string>
+    <string name="event_openedthedoor">ha aperto la porta</string>
     <string name="event_openedcloserollershutter">ha aperto/chiuso avvolgibili</string>
     <string name="event_poweronoff">ha acceso/spento la corrente</string>
-    <string name="event_turnedthelightonoff">ha acceso/spento la luce </string>
+    <string name="event_turnedthelightonoff">ha acceso/spento la luce</string>
 
     <string name="server_address">INDIRIZZO DEL SERVER</string>
     <string name="access_id">IDENTIFICATORE DELL’ACCESSO</string>
@@ -78,7 +78,7 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Sapevate che Supla è un progetto aperto e gratuito sviluppato dalla comunità? Se questa applicazione vi piace, vi preghiamo di valutarla. Grazie per il vostro sostegno!</string>
     <string name="rate_now">Valuta adesso</string>
@@ -390,7 +390,7 @@
     <string name="channel_caption_roofwindow">Lucernario</string>
     <string name="channel_func_controllingtheroofwindow">Funzionamento Lucernario</string>
     <string name="event_openedclosedtheroofwindow">apri/chiudi lucernario</string>
-    <string name="dgf_too_long_operation_warning">"Le sezioni di vetro sono esposte per più di 20 ore, questo può influire negativamente sulla loro durata. Si consiglia di coprire tutte le sezioni per un minimo di 4 ore per rigenerarle. "</string>
+    <string name="dgf_too_long_operation_warning">Le sezioni di vetro sono esposte per più di 20 ore, questo può influire negativamente sulla loro durata. Si consiglia di coprire tutte le sezioni per un minimo di 4 ore per rigenerarle.</string>
     <string name="dgf_planned_regeneration_in_progress">Rigenerazione pianificata in corso.</string>
     <string name="dgf_regeneration_after20h">Rigenerazione avviata dopo 20 ore di funzionamento in corso.</string>
     <string name="recalibration_question">Confermi di voler avviare la calibrazione?</string>

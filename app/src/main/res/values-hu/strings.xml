@@ -71,7 +71,7 @@
     <string name="advanced_settings">Speciális beállítások</string>
     <string name="create_account"><u> Fiók létrehozása </u></string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
     <string name="rate_msg">Tudtad, hogy Supla egy nyitott és ingyenes közösségi projekt? Ha tetszik ez az alkalmazás, kérjük, szánj egy percet az értékelésére. Köszönöm a tamogatásod!</string>
     <string name="rate_now">Értékelje most</string>
@@ -407,9 +407,9 @@
     <string name="widget_command_started">Kész</string>
     <string name="widget_removed_label">Csatorna törölve</string>
     <string name="channel_caption_roofwindowopeningsensor">A tetőablak nyitás érzékelő</string>
-    <string name="channel_caption_roofwindow">"Tetőablak "</string>
+    <string name="channel_caption_roofwindow">Tetőablak </string>
     <string name="channel_func_opensensor_roofwindow">A tetőablak nyitás érzékelő</string>
-    <string name="channel_func_controllingtheroofwindow">"A tetőablak nyitása/bezárása "</string>
+    <string name="channel_func_controllingtheroofwindow">A tetőablak nyitása/bezárása </string>
     <string name="event_openedclosedtheroofwindow">Kinyitotta/bezárta a tetőablakot</string>
     <string name="status_led">LED állapot</string>
     <string name="info_led_on">A LED világít, ha létrejött a kapcsolat a szerverrel.</string>
@@ -420,7 +420,7 @@
     <string name="bistable">Bistabil</string>
     <string name="wizard_iodev_connect_failed">A Wi-Fi-kapcsolat létrehozására tett kísérlet a műveleti eszközzel meghiúsult.</string>
     <string name="diw_cfg_info_oprange">Állítsa be a sötétítő teljesítménytartományát a minimális és maximális fényerővel. A minimális és maximális értékeket a kerék mindkét oldalán elhelyezett csúszkák mozgatásával állíthatja be.</string>
-    <string name="diw_cfg_info_in_options">" Belépési lehetőségek "</string>
+    <string name="diw_cfg_info_in_options">Belépési lehetőségek</string>
     <string name="diw_cfg_info_mono_option">Ez az opció megváltoztatja a bemenet viselkedését, amelyhez a monostabil gomb csatlakozik. Ha az opciót kikapcsolták, a sötétítő leállítja a világítási folyamatot, amikor a maximális fényerő szintet érjük el, és sötétítés esetén, amikor a minimális szintet érjük el. Ennek a beállításnak a bekapcsolása a maximális fényerő elérésekor a minimálisra, sötétedés esetén pedig a maximálisra vált, miután elérte a minimum értéket. A világítás/sötétedés addig tart, amíg megnyomja a gombot.</string>
     <string name="diw_cfg_info_bi_option">Ez az opció megváltoztatja a sötétítő viselkedését, ha a világítás be van kapcsolva a bistabilis gombbal. Ha az opció be van kapcsolva, a sötétítő rögtön beállítja a maximális fényerőt a világítás bekapcsolásakor. Ha a beállítás ki van kapcsolva, a sötétítő beállítja a kikapcsolás előtt elmentett fényerő szintjét.</string>
     <string name="dgf_too_long_operation_warning">Az üvegszekciók több mint 20 órán át lefedetlenek, ez negatívan befolyásolhatja az élettartamukat. Javasoljuk, hogy az összes szekciót legalább 4 órán át takarja el a helyreállítás érdekében.</string>
@@ -453,5 +453,5 @@
     <string name="rs_display_mode">Redőnyök%</string>
     <string name="rs_display_mode_opening">Kinyitások</string>
     <string name="rs_display_mode_closing">Bezárások</string>
-    <string name="status_accessid_inactive">"A hozzáférési azonosító inaktív "</string>
+    <string name="status_accessid_inactive">A hozzáférési azonosító inaktív </string>
 </resources>

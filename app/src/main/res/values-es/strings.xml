@@ -78,7 +78,7 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">¿Sabías que Supla es un proyecto comunitario abierto y gratuito? Si te gusta esta aplicación, toma un momento para calificarla. ¡Gracias por tu apoyo!</string>
     <string name="rate_now">Evalúa ahora</string>
@@ -279,7 +279,7 @@
     <string name="restoring_default_settings">Se están restaurando los ajustes predeterminados</string>
     <string name="save_without_saving">¿Está seguro de que quiere salir sin guardar?</string>
     <string name="seconds">Segundos</string>
-    <string name="slider">" Barra"</string>
+    <string name="slider">Barra</string>
     <string name="soft_ver">Versión</string>
     <string name="time_exceeded">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
     <string name="uptime">Tiempo de trabajo</string>

@@ -77,7 +77,7 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Sabia que Supla é um projeto aberto e gratuito desenvolvido pela comunidade? Se gosta desta aplicação, gaste um minuto a avaliá-la. Obrigado pelo seu apoio!</string>
     <string name="rate_now">Avalie agora</string>
@@ -371,7 +371,7 @@
    <string name="form_cannot_delete_active_profile">Incapaz de apagar uma conta ativa</string>
    <string name="profile_default_name">Predefinição</string>
    <string name="profile_select_active">Selecione uma conta ativa</string>
-   <string name="profile_act_info">"Toque aqui para fazer login "</string>
+   <string name="profile_act_info">Toque aqui para fazer login</string>
    <string name="form_error">Erro</string>
    <string name="form_profile_name_missing">Introduza um nome de conta</string>
    <string name="form_profile_required_data_missing">Complete os restantes dados</string>
@@ -398,8 +398,8 @@
    <string name="widget_configure_error">A configuração do canal falhou...</string>
    <string name="widget_configure_no_selection">Canal não selecionado</string>
    <string name="widget_configure_no_channel">Não há canais disponíveis</string>
-   <string name="double_button_widget_description">"Widget de dois botões "</string>
-   <string name="single_button_widget_description">"Widget de um botão "</string>
+   <string name="double_button_widget_description">Widget de dois botões</string>
+   <string name="single_button_widget_description">Widget de um botão</string>
    <string name="widget_app_not_initialized">Por favor, faça o login!</string>
    <string name="widget_command_no_connection">Sem ligação à internet!</string>
    <string name="widget_command_started">Feito</string>
@@ -419,9 +419,9 @@
    <string name="wizard_iodev_connect_failed">Uma tentativa de estabelecer uma ligação Wi-Fi ao actuador falhou.</string>
    <string name="diw_cfg_info_oprange">Ajuste o intervalo de dimmer definindo os níveis mínimos e máximos de luminosidade. Os valores mínimos e máximos podem ser definidos movendo os deslizadores localizados em ambos os lados da roda.</string>
    <string name="diw_cfg_info_in_options">Opções de entrada</string>
-   <string name="dgf_too_long_operation_warning">"As secções do vidro são expostas por mais de 20 horas, o que pode afetar negativamente a sua vida útil. Recomenda-se cobrir todas as secções durante um mínimo de 4 horas para as regenerar. "</string>
-   <string name="diw_cfg_info_mono_option">"Esta opção altera o comportamento da entrada à qual o botão monostable está ligado. Quando esta opção é desativada, o dimmer para o processo de iluminação quando o nível máximo de luminosidade é atingido e, em caso de escurecimento, quando atinge o nível mínimo. Ativar esta opção irá levá-lo ao nível mínimo imediatamente após atingindo o brilho máximo e, no caso de escurecimento até ao valor máximo, logo que o minumum seja atingido. O escurecimento/escurecimento continuará enquanto o botão for premido. "</string>
-   <string name="diw_cfg_info_bi_option">"Esta opção altera o comportamento do dimmer quando a iluminação é ligada utilizando o botão bistable. Quando esta opção estiver ativada, o dimmer definirá o nível máximo de luminosidade assim que a iluminação estiver ligada. Quando a opção estiver desligada, o dimmer definirá o nível de luminosidade lembrado antes de desligar a iluminação.  "</string>
+   <string name="dgf_too_long_operation_warning">As secções do vidro são expostas por mais de 20 horas, o que pode afetar negativamente a sua vida útil. Recomenda-se cobrir todas as secções durante um mínimo de 4 horas para as regenerar.</string>
+   <string name="diw_cfg_info_mono_option">Esta opção altera o comportamento da entrada à qual o botão monostable está ligado. Quando esta opção é desativada, o dimmer para o processo de iluminação quando o nível máximo de luminosidade é atingido e, em caso de escurecimento, quando atinge o nível mínimo. Ativar esta opção irá levá-lo ao nível mínimo imediatamente após atingindo o brilho máximo e, no caso de escurecimento até ao valor máximo, logo que o minumum seja atingido. O escurecimento/escurecimento continuará enquanto o botão for premido.</string>
+   <string name="diw_cfg_info_bi_option">Esta opção altera o comportamento do dimmer quando a iluminação é ligada utilizando o botão bistable. Quando esta opção estiver ativada, o dimmer definirá o nível máximo de luminosidade assim que a iluminação estiver ligada. Quando a opção estiver desligada, o dimmer definirá o nível de luminosidade lembrado antes de desligar a iluminação. </string>
    <string name="dgf_planned_regeneration_in_progress">A regeneração planeada está em curso.</string>
    <string name="dgf_regeneration_after20h">A regeneração iniciará  após 20 horas de trabalho.</string>
    <string name="incorrect_email_or_password">Erro de morada de emailou de palavra passe</string>
@@ -437,20 +437,20 @@
    <string name="lastconnectionresetcause_activity_timeout">1: sem resposta do servidor</string>
    <string name="lastconnectionresetcause_wifi_connection_lost">2: perda da ligação WiFi</string>
    <string name="lastconnectionresetcause_server_connection_lost">3: Reiniciar a ligação ao servidor</string>
-   <string name="basic_profile_warning">"Modo não disponível "</string>
-   <string name="basic_config_unavailable">"Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor. "</string>
+   <string name="basic_profile_warning">Modo não disponível</string>
+   <string name="basic_config_unavailable">Antes de desativar o modo avançado, selecione a autenticação de e-mail com deteção automática do servidor.</string>
    <string name="add_device_warning">O Assistente de Adicionar dispositivo automático não está disponível no modo de autenticação do Access ID. Os dispositivos podem então ser adicionados manualmente.</string>
-   <string name="show_channel_info">"Mostrar Botõesⓘ "</string>
+   <string name="show_channel_info">Mostrar Botõesⓘ</string>
    <string name="add_device_needs_cloud_title">Configuração do dispositivo</string>
    <string name="add_device_needs_cloud_message">Este dispositivo não tem quaisquer canais visíveis na aplicação. Para completar a configuração, vá a cloud.supla.org</string>
    <string name="add_device_needs_cloud_dismiss">Compreendo</string>
    <string name="add_device_needs_cloud_go">Ir para a CLOUD</string>
-   <string name="associeted_with_at_error">"Não é possível alterar a função do canal associado ao gatilho de ação. "</string>
+   <string name="associeted_with_at_error">Não é possível alterar a função do canal associado ao gatilho de ação.</string>
    <string name="location_ordering">Ordem de localização</string>
    <string name="rs_display_mode_opening">Aberto</string>
    <string name="rs_display_mode_closing">Encerramentos</string>
-   <string name="status_accessid_inactive">"Acesso ID inativo "</string>
-    <string name="wizard_done_explentations">"Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede WiFi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance. "</string>
+   <string name="status_accessid_inactive">Acesso ID inativo</string>
+    <string name="wizard_done_explentations">Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede WiFi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance.</string>
     <string name="delete_account_confirm_title">Apagar Conta</string>
     <string name="em_chart_phase_n">Fase %d</string>
     <string name="rs_display_mode">Persianas %</string>

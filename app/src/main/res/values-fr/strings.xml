@@ -77,7 +77,7 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Saviez-vous que Supla est un projet ouvert et gratuit développé par la communauté ? Si vous aimez cette application, veuillez prendre un moment pour la noter. Merci pour votre soutien !</string>
     <string name="rate_now">Évaluer maintenant</string>
@@ -156,7 +156,7 @@
     <string name="total_cost">Coût total</string>
     <string name="current_cost">Coût dans le mois courant</string>
     <string name="current_consumption">Consommation dans le mois courant</string>
-    <string name="meter_value">"Valeur du compteur"</string>
+    <string name="meter_value">Valeur du compteur</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Heures</string>
     <string name="days">Jours</string>
@@ -400,8 +400,8 @@
    <string name="widget_configure_error">La configuration du canal a échoué...</string>
    <string name="widget_configure_no_selection">Aucun canal sélectionné</string>
    <string name="widget_configure_no_channel">Aucun canal disponible</string>
-   <string name="double_button_widget_description">"Widget à deux boutons "</string>
-   <string name="single_button_widget_description">"Widget à un bouton "</string>
+   <string name="double_button_widget_description">Widget à deux boutons</string>
+   <string name="single_button_widget_description">Widget à un bouton</string>
    <string name="widget_app_not_initialized">Veuillez vous connecter !</string>
    <string name="widget_command_no_connection">Pas de connexion internet !</string>
    <string name="widget_command_started">Réalisé</string>
@@ -422,7 +422,7 @@
    <string name="diw_cfg_info_oprange">Ajustez la plage de fonctionnement du variateur en réglant les niveaux de luminosité minimum et maximum. Les valeurs minimales et maximales peuvent être définies en déplaçant les curseurs situés de part et d\'autre de la roue.</string>
    <string name="diw_cfg_info_in_options">Options d\'entrée</string>
    <string name="diw_cfg_info_mono_option">Cette option modifie le comportement de l\'entrée à laquelle le bouton monostable est connecté. Lorsque l\'option est désactivée, le variateur cessera d\'éclairer lorsqu\'il atteindra le niveau de luminosité maximal et d\'atténuer lorsqu\'il atteindra le niveau minimal. Si l\'option est activée, le variateur passe au niveau minimum dès que le niveau de luminosité maximum est atteint et, dans le cas d\'une gradation, à la valeur maximum dès que le minimum est atteint. L\'éclaircissement ou l\'atténuation se poursuit tant que le bouton est enfoncé.</string>
-   <string name="diw_cfg_info_bi_option">"Cette option modifie le comportement du variateur lorsque l'éclairage est allumé à l'aide du bouton bistable. Lorsque l'option est activée, le variateur règle le niveau de luminosité maximal dès que l'éclairage est allumé. Lorsque l'option est désactivée, le variateur fixe le niveau de luminosité mémorisé avant que l'éclairage ne soit éteint. "</string>
+   <string name="diw_cfg_info_bi_option">Cette option modifie le comportement du variateur lorsque l\'éclairage est allumé à l\'aide du bouton bistable. Lorsque l\'option est activée, le variateur règle le niveau de luminosité maximal dès que l\'éclairage est allumé. Lorsque l\'option est désactivée, le variateur fixe le niveau de luminosité mémorisé avant que l\'éclairage ne soit éteint.</string>
    <string name="dgf_too_long_operation_warning">Des sections du verre sont exposées pendant plus de 20 heures, ce qui peut affecter leur durée de vie. Il est conseillé de couvrir toutes les sections pendant un minimum de 4 heures pour la régénération.</string>
    <string name="dgf_planned_regeneration_in_progress">Régénération programmée en cours.</string>
    <string name="dgf_regeneration_after20h">Régénération initiée après 20h de fonctionnement en cours.</string>

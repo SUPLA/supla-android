@@ -70,7 +70,7 @@
  Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
 
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Wusstest Du, dass Supla ein offenes und kostenloses Gemeinschaftsprojekt ist? Wenn Dir diese App gefällt, nimm Dir bitte einen Moment Zeit, um sie zu bewerten. Danke für Deine Unterstützung!</string>
     <string name="rate_now">Bewerten</string>
@@ -266,7 +266,7 @@
     <string name="light_source_lifespan_hours">Lebensdauer der Lichtquelle (Stunden)</string>
     <string name="light_source_operatingtime">Betriebszeit der Lichtquelle</string>
     <string name="lightsource_warning">Lebensdauer der Lichtquelle beträgt %1$s</string>
-    <string name="mode_change_in_progress">"Modus wird geändert "</string>
+    <string name="mode_change_in_progress">Modus wird geändert</string>
     <string name="no">Nein</string>
     <string name="reset_lightsource_usage_counter">Verbrauchszähler der Lichtquelle zurücksetzen</string>
     <string name="restore_question">Sind Sie sicher, dass Sie die Voreinstellungen wiederherstellen möchten?</string>
@@ -277,8 +277,8 @@
     <string name="soft_ver">Softwareversion</string>
     <string name="time_exceeded">Die Zeit wurde überschritten. Versuchen Sie es noch einmal.</string>
     <string name="uptime">Betriebszeit</string>
-    <string name="uv_warning1">"Lebensdauer des UV-Strahlers beträgt %1$s  Planen Sie den Austausch. "</string>
-    <string name="uv_warning2">"Lebensdauer des UV-Strahlers beträgt %1$s. Den Strahler austauschen. "</string>
+    <string name="uv_warning1">Lebensdauer des UV-Strahlers beträgt %1$s  Planen Sie den Austausch.</string>
+    <string name="uv_warning2">Lebensdauer des UV-Strahlers beträgt %1$s. Den Strahler austauschen.</string>
     <string name="valve_open_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren. Sind Sie sicher, dass Sie das Ventil über die App öffnen möchten ?!</string>
     <string name="valve_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren.</string>
     <string name="vector_balance_days">Vektorgleichgewicht - Tage</string>
@@ -317,7 +317,7 @@
     <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
     <string name="wizard_step2_txt1">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
     <string name="zwave_add_device">Gerät hinzufügen</string>
-    <string name="zwave_before_search_message">"Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann. "</string>
+    <string name="zwave_before_search_message">Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann.</string>
     <string name="zwave_before_search_title">Es dauert eine Weile</string>
     <string name="zwave_bridge_offline">Die Z-Wave-Brücke reagiert nicht.</string>
     <string name="zwave_button_press_timeout">Die Wartezeit auf Drücken der Schaltfläche wurde überschritten.</string>
@@ -325,14 +325,14 @@
     <string name="zwave_device">Z-Wave-Gerät</string>
     <string name="zwave_device_communication_error">Es ist ein Kommunikationsproblem mit dem Z-Wave-Gerät aufgetreten. Stellen Sie sicher, dass sich das Z-Wave-Gerät im Gateway-Bereich befindet.</string>
     <string name="zwave_dialog_channel_detail_message">Unten finden Sie die Details des ausgewählten Kanals. Bestimmen Sie den Zweck, indem Sie die entsprechende Funktion auswählen.</string>
-    <string name="zwave_done">"Fertig! Jetzt können Sie den Konfigurationsvorgang beenden, indem Sie auf die Schaltfläche \"OK\" klicken oder Sie können Zurück drücken, um einen anderen Kanal zu konfigurieren oder die aktuellen Einstellungen zu ändern. "</string>
+    <string name="zwave_done">Fertig! Jetzt können Sie den Konfigurationsvorgang beenden, indem Sie auf die Schaltfläche \"OK\" klicken oder Sie können Zurück drücken, um einen anderen Kanal zu konfigurieren oder die aktuellen Einstellungen zu ändern.</string>
     <string name="zwave_error_assign_node_id_timeout">Die Wartezeit auf das Zuweisen des Z-Wave-Geräts dem Kanal wurde überschritten.</string>
     <string name="zwave_error_caption_change_error">Kanalsignatur konnte nicht geändert werden. Code %1$s</string>
     <string name="zwave_error_common_message">Drücken Sie Zurück, um zum vorherigen Schritt zurückzukehren oder \"Beenden\", um den Vorgang abzuschließen.</string>
     <string name="zwave_error_function_change_error">Kanalfunktion konnte nicht geändert werden. Code %1$s</string>
     <string name="zwave_error_get_assigned_node_id_timeout">Die Wartezeit auf die dem Z-Wave-Gerät zugewiesene ID wurde überschritten</string>
     <string name="zwave_error_get_basic_cfg_timeout">Die Wartezeit auf Daten der grundlegenden Kanalkonfiguration wurde überschritten</string>
-    <string name="zwave_error_get_node_list_timeout">"Die Wartezeit auf Liste der Z-Wave-Geräte wurde überschritten "</string>
+    <string name="zwave_error_get_node_list_timeout">Die Wartezeit auf Liste der Z-Wave-Geräte wurde überschritten</string>
     <string name="zwave_error_set_caption_timeout">Die Wartezeit auf Änderung der Kanalsignatur wurde überschritten</string>
     <string name="zwave_error_set_function_timeout">Die Wartezeit auf Änderung der Kanalfunktion wurde überschritten</string>
     <string name="zwave_error_slave_mode">Diese Funktion ist nicht verfügbar, wenn die Brücke in einem untergeordneten Modus betrieben wird.</string>
@@ -347,15 +347,15 @@
     <string name="zwave_select_channel">Wählen Sie die Z-Wave-Brücke und dann den Kanal aus, den Sie konfigurieren möchten.</string>
     <string name="zwave_select_node">Wählen Sie das Z-Wave-Gerät aus, das seitens Supla an den Kanal gebunden werden soll.</string>
     <string name="zwave_supla_channel">Kanal</string>
-    <string name="zwave_unexpected_answer">"Unerwartete Brückenreaktion. Code: %1$s "</string>
-    <string name="zwave_used">"Zugewiesen: "</string>
+    <string name="zwave_unexpected_answer">Unerwartete Brückenreaktion. Code: %1$s</string>
+    <string name="zwave_used">Zugewiesen:</string>
     <string name="zwave_waiting_for_add">Es wird auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk gewartet.</string>
     <string name="zwave_waiting_for_add_timeout">Die Wartezeit auf das Hinzufügen des Geräts zum Z-Wave-Netzwerk wurde überschritten.</string>
     <string name="zwave_waiting_for_button_press">Es wird auf das Drücken der Schaltfläche auf einem Z-Wave-Gerät gewartet.</string>
     <string name="zwave_waiting_for_reset">Es wird auf die Bestätigung des Zurücksetzens des Z-Wave-Netzwerks sowie auf das Löschen der Einstellungen gewartet.</string>
     <string name="zwave_waiting_for_reset_timeout">Die Wartezeit auf das Zurücksetzen des Z-Wave-netzwerk wurde überschritten.</string>
     <string name="zwave_waiting_for_resposne_timeout">Die Wartezeit auf das Reagieren der Z-Wave-Brücke wurde überschritten.</string>
-    <string name="zwave_welcome_message">"Willkommen beim Setup-Assistenten für die Z-Wave-Brücke. Damit können Sie Ihre Z-Wave-Geräte an Supla anschließen. Klicken Sie „Weiter”, um fortzufahren. "</string>
+    <string name="zwave_welcome_message">Willkommen beim Setup-Assistenten für die Z-Wave-Brücke. Damit können Sie Ihre Z-Wave-Geräte an Supla anschließen. Klicken Sie „Weiter”, um fortzufahren.</string>
     <string name="zwave_welcome_title">Z-Wave-Assistent</string>
     <string name="zwave_offline">Offline ?</string>
    <string name="hp_calendar_eco">ECO</string>
@@ -410,18 +410,18 @@
     <string name="channel_caption_roofwindow">Dachfenster</string>
     <string name="channel_func_controllingtheroofwindow">Öffnen und Schließen des Dachfensters</string>
     <string name="channel_func_opensensor_roofwindow">Dachfenster-Öffnungssensor</string>
-    <string name="event_openedclosedtheroofwindow">"Öffnete / schloss das Dachfenster "</string>
+    <string name="event_openedclosedtheroofwindow">Öffnete / schloss das Dachfenster</string>
     <string name="status_led">Zustandsdiode</string>
     <string name="info_led_on">Diode LED leuchtet, wenn Verbindung mit dem Server hergestellt wurde.</string>
     <string name="info_led_off">Diode LED leuchtet nicht, wenn keine Verbindung mit dem Server hergestellt wurde.</string>
-    <string name="info_led_alwaysoff">"Diode immer abgeschaltet, es sei dass das Gerät im WiFi-Konfigurationsmodus (AP-Modus) arbeitet. "</string>
+    <string name="info_led_alwaysoff">Diode immer abgeschaltet, es sei dass das Gerät im WiFi-Konfigurationsmodus (AP-Modus) arbeitet.</string>
     <string name="input">Eingang</string>
     <string name="monostable">Monostabil</string>
     <string name="bistable">Bistabil</string>
-    <string name="wizard_iodev_connect_failed">"Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos. "</string>
-    <string name="diw_cfg_info_oprange">"Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.  "</string>
+    <string name="wizard_iodev_connect_failed">Der Versuch der Herstellung des WiFi-Kontakts mit dem Ausführungsgerät endete erfolglos.</string>
+    <string name="diw_cfg_info_oprange">Passen Sie den Arbeitsbereich des Helligkeitsreglers durch Einstellung des minimalen und maximalen Helligkeitsniveaus an. Der Mindest- und Höchstwert kann man durch Verschiebung der Schieberregler an beiden Seiten des Rads.</string>
     <string name="diw_cfg_info_in_options">Eingangsoptionen</string>
-    <string name="diw_cfg_info_mono_option">"Die Option ändert das Verhalten des Eingangs, an den die monostabile Taste angeschlossen ist. Wenn die Option abgeschaltet ist, stoppt der Helligkeitsregler den Aufhellungsprozess beim Erreichen der höchsten Helligkeit und bei der Verdunkelung beim Erreichen des Mindestniveaus. Einschaltung dieser Option verursacht Übergang zum Mindestniveau gleich nach dem Erreichen maximaler Helligkeit und bei der Verdunkelung – nach dem Erreichen des Minimums. Aufhellung/Verdunkelung wird so lange dauern, wie die Taste gedrückt wird.  "</string>
+    <string name="diw_cfg_info_mono_option">Die Option ändert das Verhalten des Eingangs, an den die monostabile Taste angeschlossen ist. Wenn die Option abgeschaltet ist, stoppt der Helligkeitsregler den Aufhellungsprozess beim Erreichen der höchsten Helligkeit und bei der Verdunkelung beim Erreichen des Mindestniveaus. Einschaltung dieser Option verursacht Übergang zum Mindestniveau gleich nach dem Erreichen maximaler Helligkeit und bei der Verdunkelung – nach dem Erreichen des Minimums. Aufhellung/Verdunkelung wird so lange dauern, wie die Taste gedrückt wird.</string>
     <string name="diw_cfg_info_bi_option">Die Option ändert das Verhalten des Helligkeitsreglers beim Einschalten der Beleuchtung mit Hilfe der bistabilen Taste. Wenn die Option eingeschaltet ist, wird der Helligkeitsregler das maximale Niveau gleich nach der Einschaltung der Beleuchtung einstellen. Wenn die Option abgeschaltet ist, wird der Helligkeitsregler das vor dem Abschalten der Beleuchtung gespeicherte Helligkeitsniveau einstellen.</string>
     <string name="dgf_too_long_operation_warning">Die Scheibensektionen sind über 20 h aufgedeckt, was negativ ihre Lebensdauer beeinflussen kann. Verdeckung aller Sektionen für mind. 4 h zu ihrer Regeneration ist empfohlen.</string>
     <string name="dgf_planned_regeneration_in_progress">Geplante Regeneration läuft.</string>
@@ -445,13 +445,13 @@
     <string name="add_device_warning">Der Assistent automatischer Hinzufügung der Geräte ist im Modus der Authentifizierung durch die Zugriffskennung nicht verfügbar. Die Geräte können manuell hinzugefügt werden.</string>
     <string name="show_channel_info">Taste ⓘ zeigen</string>
     <string name="add_device_needs_cloud_title">Konfiguration des Geräts</string>
-    <string name="add_device_needs_cloud_message">"Dieses Gerät hat keine in der App sichtbaren Kanäle. Um die Konfiguration abzuschließen, gehen Sie zum cloud.supla.org "</string>
+    <string name="add_device_needs_cloud_message">Dieses Gerät hat keine in der App sichtbaren Kanäle. Um die Konfiguration abzuschließen, gehen Sie zum cloud.supla.org</string>
     <string name="add_device_needs_cloud_dismiss">Verstehe</string>
     <string name="add_device_needs_cloud_go">Zur CLOUD gehen</string>
     <string name="associeted_with_at_error">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
     <string name="location_ordering">Lokalisierungsreihenfolge</string>
     <string name="rs_display_mode">Rollläden %</string>
     <string name="rs_display_mode_opening">Öffnungen</string>
-    <string name="rs_display_mode_closing">"Schließungen "</string>
-    <string name="status_accessid_inactive">"Zugriffskennung nicht aktiv "</string>
+    <string name="rs_display_mode_closing">Schließungen</string>
+    <string name="status_accessid_inactive">Zugriffskennung nicht aktiv</string>
 </resources>

@@ -71,7 +71,7 @@
     <string name="advanced_settings">Geavanceerde instellingen</string>
     <string name="create_account"><u>Account maken</u></string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
     <string name="rate_msg">Wist u dat Supla een open en gratis project is, ontwikkeld door de gemeenschap? Als deze app je bevalt, neem dan even de tijd om haar te beoordelen. Dank u voor uw steun!</string>
     <string name="rate_now">Beoordeel het nu</string>
@@ -400,8 +400,8 @@
     <string name="widget_configure_error">Kanaal configuratie mislukt...</string>
     <string name="widget_configure_no_selection">Geen kanaal geselecteerd</string>
     <string name="widget_configure_no_channel">Geen kanalen beschikbaar</string>
-    <string name="double_button_widget_description">"Widget met twee knoppen "</string>
-    <string name="single_button_widget_description">"Widget met één knop "</string>
+    <string name="double_button_widget_description">Widget met twee knoppen</string>
+    <string name="single_button_widget_description">Widget met één knop</string>
     <string name="widget_app_not_initialized">Log alsjeblieft in!</string>
     <string name="widget_command_no_connection">Geen internetverbinding!</string>
     <string name="widget_command_started">Uitgevoerd</string>
@@ -422,7 +422,7 @@
     <string name="diw_cfg_info_oprange">Stel het werkingsbereik van de dimmer in door een minimum- en maximumhelderheidsniveau in te stellen. De minimum- en maximumwaarde kunnen worden ingesteld door de schuifregelaars aan weerszijden van het wiel te verplaatsen.</string>
     <string name="diw_cfg_info_in_options">Ingangsopties</string>
     <string name="diw_cfg_info_mono_option">Deze optie wijzigt het gedrag van de ingang waarop de mono-stabiele knop is aangesloten. Als de optie uit staat, stopt de dimmer met lichter worden als het maximum helderheidsniveau is bereikt, en met dimmen als het minimum helderheidsniveau is bereikt. Als de optie is ingeschakeld, schakelt de dimmer naar het minimumniveau zodra het maximale helderheidsniveau is bereikt en, in het geval van dimmen, naar de maximale waarde zodra het minumum is bereikt. Het oplichten/afvlakken gaat door zolang de toets wordt ingedrukt.</string>
-    <string name="diw_cfg_info_bi_option">"Deze optie wijzigt het gedrag van de dimmer wanneer de verlichting wordt ingeschakeld met de bi-stabiele knop. Als de optie is ingeschakeld, zal de dimmer het maximale helderheidsniveau instellen zodra de verlichting wordt ingeschakeld. Als de optie uit staat, stelt de dimmer het helderheidsniveau in dat is opgeslagen voordat de verlichting werd uitgeschakeld. "</string>
+    <string name="diw_cfg_info_bi_option">Deze optie wijzigt het gedrag van de dimmer wanneer de verlichting wordt ingeschakeld met de bi-stabiele knop. Als de optie is ingeschakeld, zal de dimmer het maximale helderheidsniveau instellen zodra de verlichting wordt ingeschakeld. Als de optie uit staat, stelt de dimmer het helderheidsniveau in dat is opgeslagen voordat de verlichting werd uitgeschakeld.</string>
     <string name="dgf_too_long_operation_warning">Beglazingssecties worden meer dan 20 uur blootgesteld, wat hun levensduur nadelig kan beïnvloeden. Aanbevolen wordt alle secties minimaal 4 uur af te dekken om ze te laten regenereren.</string>
     <string name="dgf_planned_regeneration_in_progress">Geplande regeneratie is aan de gang.</string>
     <string name="dgf_regeneration_after20h">De regeneratie die na 20h in werking is gesteld, is aan de gang.</string>

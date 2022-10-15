@@ -84,7 +84,7 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
     <string name="rate_msg">Viete, že Supla je otvorený a bezplatný projekt, rozvíjaný komunitou? Ak sa Ti táto aplikácia páči, venuj chvíľu jej ohodnoteniu. Ďakujeme za Tvoju podporu!</string>
     <string name="rate_now">Ohodnotiť teraz</string>
@@ -252,7 +252,7 @@
     <string name="aritmetic_balance_minutes" >Aritmetická bilancia – minúty</string>
     <string name="aritmetic_balance_months" >Aritmetická bilancia – mesiace</string>
     <string name="aritmetic_balance_years" >Aritmetická bilancia – roky</string>
-    <string name="associeted_with_scene_error" >"Nedá sa zmeniť funkcia kanálu, ktorý je spojený so scénou. "</string>
+    <string name="associeted_with_scene_error">Nedá sa zmeniť funkcia kanálu, ktorý je spojený so scénou.</string>
     <string name="battery_health" >Životnosť batérií</string>
     <string name="battery_level" >Úroveň batérie</string>
     <string name="battery_powered" >Napájanie batériou</string>
@@ -293,10 +293,10 @@
     <string name="seconds" >Sekundy</string>
     <string name="slider" >Bežec</string>
     <string name="soft_ver" >Verzia programu</string>
-    <string name="time_exceeded" >"Došlo k prekročeniu lehoty. Skús znova. "</string>
+    <string name="time_exceeded">Došlo k prekročeniu lehoty. Skús znova.</string>
     <string name="uptime" >Prevádzkový čas</string>
-    <string name="uv_warning1" >"Životnosť UV žiariča je %1$s. Naplánuj jeho výmenu. "</string>
-    <string name="uv_warning2" >"Životnosť UV žiariča je %1$s. Vymeň žiarič. "</string>
+    <string name="uv_warning1">Životnosť UV žiariča je %1$s. Naplánuj jeho výmenu.</string>
+    <string name="uv_warning2">Životnosť UV žiariča je %1$s. Vymeň žiarič.</string>
     <string name="valve_open_warning" >Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne. Naozaj chceš otvoriť ventil pomocou aplikácie?!</string>
     <string name="valve_warning" >Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne.</string>
     <string name="vector_balance_days" >Vektorová bilancia – dni</string>
@@ -316,10 +316,10 @@
     <string name="vl_dimmer_cfg_info_txt1" >Režim stmievania / Rozsah činnosti</string>
     <string name="vl_dimmer_cfg_info_txt2" >Prispôsob výkon stmievania LED osvetlenia výberom vhodného režimu. Prispôsob tiež rozsah činnosti stmievača nastavením minimálnej a maximálnej úrovne jasu. Minimálnu a maximálnu hodnotu môžeš nastaviť presunutím bežcov umiestnených na oboch stranách kolieska.</string>
     <string name="vl_dimmer_cfg_info_txt3" >Režim 1: Stmievanie dobežnou hranou (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4" >"Režim 2: Stmievanie nábežnou hranou "</string>
+    <string name="vl_dimmer_cfg_info_txt4" >Režim 2: Stmievanie nábežnou hranou</string>
     <string name="vl_dimmer_cfg_info_txt5" >Režim 3: Stmievanie dobežnou hranou (Alternatívne)</string>
     <string name="vl_dimmer_cfg_info_txt6" >Zosilnenie</string>
-    <string name="vl_dimmer_cfg_info_txt7" >"Táto funkcia pomáha zapínať LED osvetlenie pri zapamätanej nízkej úrovni jasu, čo zaistí začiatočné zvýšenie (zosilnenie) úrovne jasu.  Presunutím tmavosivého bežca okolo kolieska môžeš zvýšiť alebo znížiť úroveň zosilnenia označenú zelenou líniou. Počas zapínania osvetlenia sa zvýši (zosilní) úroveň jasu na zadanú hodnotu a následne sa vráti na úroveň zapamätanú pred vypnutím osvetlenia. "</string>
+    <string name="vl_dimmer_cfg_info_txt7" >Táto funkcia pomáha zapínať LED osvetlenie pri zapamätanej nízkej úrovni jasu, čo zaistí začiatočné zvýšenie (zosilnenie) úrovne jasu.  Presunutím tmavosivého bežca okolo kolieska môžeš zvýšiť alebo znížiť úroveň zosilnenia označenú zelenou líniou. Počas zapínania osvetlenia sa zvýši (zosilní) úroveň jasu na zadanú hodnotu a následne sa vráti na úroveň zapamätanú pred vypnutím osvetlenia.</string>
     <string name="vl_dimmer_cfg_info_txt8" >Viac informácií vo veci stmievača nájdeš na</string>
     <string name="vl_dimmer_info_txt1" >Ovládanie stmievača</string>
     <string name="vl_dimmer_info_txt2" >Pre zmenu úrovne jasu presuň prstom indikátor nachádzajúci sa na bežcovi alebo koliesku jasu.</string>
@@ -331,8 +331,8 @@
     <string name="wheel" >Koliesko</string>
     <string name="wifi_rssi" >WiFi RSSI</string>
     <string name="wifi_signal_strength" >Intenzita WiFi signálu</string>
-    <string name="wifi_throttling" >"Kvôli limitom skenovania WiFi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas. "</string>
-    <string name="wizard_step1_txt2" >"Uisti sa, že mobilné dáta sú počas pridávania zariadení vypnuté. V opačnom prípade sa pridávanie nemusí podariť. "</string>
+    <string name="wifi_throttling" >Kvôli limitom skenovania WiFi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas.</string>
+    <string name="wizard_step1_txt2" >Uisti sa, že mobilné dáta sú počas pridávania zariadení vypnuté. V opačnom prípade sa pridávanie nemusí podariť.</string>
     <string name="yes" >Áno</string>
     <string name="z_wave" >Most z-wave</string>
     <string name="zwave_add_device" >Pridaj zariadenie</string>
@@ -343,7 +343,7 @@
     <string name="zwave_change_wake_up_settings" >Môžeš tiež zmeniť nastavenia budenia stlačením nižšie umiestnenej ikony.</string>
     <string name="zwave_device" >Zariadenie z-wave</string>
     <string name="zwave_device_communication_error" >Vyskytol sa problém s komunikáciou so zariadením z-wave. Uisti sa, že zariadenie z-wave je v dosahu brány.</string>
-    <string name="zwave_dialog_channel_detail_message" >"Nižšie sa nachádzajú podrobné údaje vybraného kanálu. Definuj jeho určenie výberom zodpovedajúcej funkcie. "</string>
+    <string name="zwave_dialog_channel_detail_message" >Nižšie sa nachádzajú podrobné údaje vybraného kanálu. Definuj jeho určenie výberom zodpovedajúcej funkcie.</string>
     <string name="zwave_done" >Hotovo! Teraz môžeš ukončiť proces konfigurácie stlačením tlačidla „OK“ alebo môžeš stlačiť tlačidlo pre krok späť pre konfigurácie ďalšieho kanálu alebo zmenu doterajších nastavení.</string>
     <string name="zwave_error_assign_node_id_timeout" >Bola prekročená lehota čakania na priradenie zariadenia z-wave ku kanálu.</string>
     <string name="zwave_error_caption_change_error" >Zmena podpisu kanálu neúspešná. Kód %1$s</string>
@@ -375,7 +375,7 @@
     <string name="zwave_waiting_for_reset" >Čakanie na potvrdenie reštartovania siete z-wave a odstránenia nastavení</string>
     <string name="zwave_waiting_for_reset_timeout" >Bola prekročená lehota čakania na reštart siete z-wave.</string>
     <string name="zwave_waiting_for_resposne_timeout" >Bola prekročená lehota čakania na odpoveď z mosta z-wave.</string>
-    <string name="zwave_welcome_message" >"Vitaj v sprievodcovi konfiguráciou mostu z-wave. Umožní Ti pripojiť z-wave zariadenia, ktorými disponuješ, k Supli. Pre pokračovanie stlač „Ďalej“. "</string>
+    <string name="zwave_welcome_message" >Vitaj v sprievodcovi konfiguráciou mostu z-wave. Umožní Ti pripojiť z-wave zariadenia, ktorými disponuješ, k Supli. Pre pokračovanie stlač „Ďalej“.</string>
     <string name="zwave_welcome_title" >Sprievodca z-wave</string>
     <string name="hp_calendar_eco">ECO</string>
     <string name="profiles_title">Účty</string>

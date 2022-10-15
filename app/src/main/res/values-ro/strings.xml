@@ -71,7 +71,7 @@
     <string name="advanced_settings">Setări avansate</string>
     <string name="create_account"><u>Creează cont</u></string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
     <string name="rate_msg">Știați că Supla este un proiect deschis și gratuit care este dezvoltat de către comunitate? Dacă vă place această aplicație, vă rugăm să-i acordați un moment pentru a o evalua. Mulțumim.</string>
     <string name="rate_now">Evaluează acum</string>
@@ -254,7 +254,7 @@
     <string name="channel_number" >Numărul canalului</string>
     <string name="connection_reset_cause" >Motivul pentru repornirea conexiunii</string>
     <string name="connection_time" >Timp de conectare</string>
-    <string name="device" >"Dispozitiv "</string>
+    <string name="device">Dispozitiv</string>
     <string name="device_id" >Id-ul dispozitivului</string>
     <string name="device_name" >Denumire dispozitivului</string>
     <string name="do_you_want_to_save" >Doriţi să salvaţi setările?</string>
@@ -381,7 +381,7 @@
     <string name="delete_account">Șterge</string>
     <string name="delete_account_confirm_title">Șterge cont</string>
     <string name="delete_account_confirm_message">Sigur dorești să ștergi contul?</string>
-    <string name="delete_account_confirm_message_with_widgets">"Sigur dorești să ștergi contul? Confirmarea va elimina widget-urile  asociate. "</string>
+    <string name="delete_account_confirm_message_with_widgets">Sigur dorești să ștergi contul? Confirmarea va elimina widget-urile  asociate.</string>
     <string name="cfg_label_access_id_auth">Identificator</string>
     <string name="cfg_channel_height">Înălțimea canalului</string>
     <string name="cfg_temperature_unit">Unitate de temperatură</string>
@@ -445,7 +445,7 @@
     <string name="add_device_warning">Asistentul de adăugare automată a dispozitivului nu este disponibil în modul de autentificare cu identificator de acces. Dispozitivele pot fi apoi adăugate manual.</string>
     <string name="show_channel_info">Afișează butonulⓘ</string>
     <string name="add_device_needs_cloud_title">Configurarea dispozitivului</string>
-    <string name="add_device_needs_cloud_message">"Acest dispozitiv nu are niciun canal vizibil în aplicație. Pentru a finaliza configurarea accesează cloud.supra.org "</string>
+    <string name="add_device_needs_cloud_message">Acest dispozitiv nu are niciun canal vizibil în aplicație. Pentru a finaliza configurarea accesează cloud.supra.org</string>
     <string name="add_device_needs_cloud_dismiss">Înțeleg</string>
     <string name="add_device_needs_cloud_go">Accesează CLOUD</string>
     <string name="associeted_with_at_error">Nu poate fi modificată funcția canalului asociat cu declanșatorul acțiunii.</string>
