@@ -16,7 +16,7 @@
     <string name="add_account">Add an account</string>
 <string name="edit_account"> Edit account</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
-    <string name="slogan" translatable="false">"YOUR HOME CONNECTED"</string>
+    <string name="slogan" translatable="false">YOUR HOME CONNECTED</string>
     <string name="menubar_title" translatable="false">supla</string>
     <string name="homepage" translatable="false">www.supla.org</string>
     <string name="homepage_url" translatable="false">https://www.supla.org</string>
@@ -123,7 +123,7 @@
     <string name="profile_plural">Your accounts</string>
     <string name="menubar_appsettings">App Settings</string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
     <string name="rate_msg">Did you know that Supla is an open, free project developed by the community? If you like the app, spend a moment on rating it. Thank you for your support!</string>
     <string name="rate_now">Rate Now</string>
