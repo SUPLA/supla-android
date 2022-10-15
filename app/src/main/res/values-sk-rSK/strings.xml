@@ -439,7 +439,7 @@
    <string name="dgf_too_long_operation_warning">Zasklenie je odhalené viac ako 20 hodín, čo môže mať negatívny vplyv na jeho životnosť. Odporúča sa všetky úseky pokryť minimálne 4 hodiny, aby sa zregenerovali.</string>
    <string name="dgf_planned_regeneration_in_progress">Prebieha plánovaná regenerácia.</string>
    <string name="dgf_regeneration_after20h">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
-   <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie \\\"SSID not found\\\" znamená, že zadaný názov WiFi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
+   <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie “SSID Not Found” znamená, že zadaný názov WiFi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
    <string name="incorrect_email_or_password">Nesprávna e-mailová adresa alebo heslo</string>
    <string name="channel_name">Názov kanála</string>
    <string name="location_name">Názov miesta</string>
