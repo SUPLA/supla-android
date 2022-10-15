@@ -14,7 +14,7 @@
     <string name="form_profile_required_data_missing">Required data is missing</string>
     <string name="form_profile_duplicate">Account by that name already exists</string>
     <string name="add_account">Add an account</string>
-<string name="edit_account"> Edit account</string>
+    <string name="edit_account">Edit account</string>
     <string name="supla_cloud" translatable="false">Supla Cloud</string>
     <string name="slogan" translatable="false">YOUR HOME CONNECTED</string>
     <string name="menubar_title" translatable="false">supla</string>
