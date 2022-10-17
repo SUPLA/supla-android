@@ -18,10 +18,14 @@ package org.supla.android.scenes
  */
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import java.util.Date
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
@@ -40,13 +44,20 @@ class ScenesViewModel @Inject constructor(
 
     private var _scenes = MutableLiveData<List<Scene>>(emptyList())
     private val _sceneRepo = dbHelper.sceneRepository
+    private var _deferredRefreshTimer: CountDownTimer? = null
+    private val _minRefreshIntervalMillis: Long = 200
+    private var _lastRefresh: Long = 0
+
     val scenes: LiveData<List<Scene>> = _scenes
 
     val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper),
                                       viewModelScope,
                                       scController)
 
+    private val uiThreadHandler = Handler(Looper.getMainLooper())
+
     init {
+
         messageHandler.registerMessageListener(this)
     }
 
@@ -63,9 +74,28 @@ class ScenesViewModel @Inject constructor(
         reload()
     }
 
+    private fun reloadIfNeeded() {
+        val curTimeMillis = Date().getTime()
+        if(curTimeMillis > _lastRefresh + _minRefreshIntervalMillis) {
+            _deferredRefreshTimer?.cancel()
+            _lastRefresh = curTimeMillis
+            reload()
+        } else {
+            val delay = _lastRefresh + _minRefreshIntervalMillis - curTimeMillis 
+            _deferredRefreshTimer = object: CountDownTimer(delay, delay) {
+                override fun onTick(millis: Long) {}
+                override fun onFinish()  {
+                    uiThreadHandler.post {
+                        reload()
+                    }
+                }
+            }.start()
+        }
+    }
+
     override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
         if(msg.type == SuplaClientMsg.onSceneStateChanged) {
-            reload()
+            reloadIfNeeded()
         }
     }
 
