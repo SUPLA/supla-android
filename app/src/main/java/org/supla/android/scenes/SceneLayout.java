@@ -909,7 +909,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
       buttonSliding = false;
       return true;
     } else if(action == MotionEvent.ACTION_MOVE) {
-      if(!Sliding() && deltaY >= deltaX) {
+      if(!Sliding() && deltaY >= deltaX * 1.1f) {
         return super.onTouchEvent(ev);
       }
 
