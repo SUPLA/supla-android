@@ -119,10 +119,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                 vh.binding.sceneLayout.tag = scene.sceneId
                 vh.binding.sceneLayout.setSceneListener(this)
                 vh.binding.sceneLayout.setScene(getScene(pos))
-                if(_slidedScene != null && _slidedScene!!.tag == scene.sceneId) {
-                    vh.binding.sceneLayout.cloneSlide(_slidedScene)
-                    _slidedScene = vh.binding.sceneLayout
-                }
+
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
@@ -190,11 +187,27 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             }
         }
 
+        val oldPaths = _paths
+        val oldSecs = _sections
         _sections = secs
         _vTypes = vTypes
         _paths = paths
 
-        notifyDataSetChanged()
+        if(oldSecs == null || _paths.size != oldPaths.size) {
+            notifyDataSetChanged()
+        } else {
+            var pos = 0
+            for(p in _paths) {
+                if(p.sceneIdx != null) {
+                    val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
+                    val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
+                    if(a != b) {
+                        notifyItemChanged(pos)
+                    }
+                }
+                pos += 1
+            }
+        }
     }
 
     private fun getLocation(pos: Int): Location {

@@ -708,6 +708,9 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
                 @Override
                 public void run() {
                   sceneDurationTimer.setText(TIMER_INACTIVE);
+                  SuplaChannelStatus.ShapeType state = SuplaChannelStatus.ShapeType.Ring;
+                  left_onlineStatus.setShapeType(state);
+                  right_onlineStatus.setShapeType(state);
                 }
               });
           }
@@ -873,25 +876,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     }
   }
 
-  private boolean iconTouched(int x, int y, ImageView icon) {
-    if (icon.getVisibility() == VISIBLE) {
-      Rect rect1 = new Rect();
-      Rect rect2 = new Rect();
-
-      getHitRect(rect1);
-      icon.getHitRect(rect2);
-
-      rect2.left += rect1.left;
-      rect2.right += rect1.left;
-      rect2.top += rect1.top;
-      rect2.bottom += rect1.top;
-
-      return rect2.contains(x, y);
-    }
-
-    return false;
-  }
-
 
 
   @Override
@@ -906,7 +890,8 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     if(action == MotionEvent.ACTION_DOWN) {
       LastXtouch = X;
       LastYtouch = Y;
-      buttonSliding = false;
+      int sld = Slided();
+      buttonSliding = (sld == 1) || (sld == 2);
       return true;
     } else if(action == MotionEvent.ACTION_MOVE) {
       if(!Sliding() && deltaY >= deltaX * 1.1f) {
@@ -915,7 +900,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
       if(X != LastXtouch) {
         Slide((int)(X - LastXtouch));
-        buttonSliding = true;
         listener.onMove(this);
       }
       LastXtouch = X;
@@ -924,7 +908,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
         return true;
       }
     } else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-      AnimateToRestingPosition(!buttonSliding);
+      AnimateToRestingPosition(buttonSliding);
     }
     return super.onTouchEvent(ev);
   }
