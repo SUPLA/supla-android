@@ -1472,4 +1472,11 @@ public class SuplaClient extends Thread implements SceneController {
       Trace.w(log_tag, "Failed to interrupt scene " + sceneId);
     }
   }
+
+  public void renameScene(int sceneId, String newName) {
+    if(!setSceneCaption(sceneId, newName)) {
+      Trace.w(log_tag, "Failed to rename scene " + sceneId);
+    }
+      
+  }
 }

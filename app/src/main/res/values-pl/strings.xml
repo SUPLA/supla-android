@@ -496,5 +496,5 @@
     <string name="navbar_scenes">Sceny</string>
     <string name="btn_execute">Wykonaj</string>
     <string name="btn_abort">Przerwij</string>
-
+    <string name="scene_name">Nazwa sceny</string>
 </resources>

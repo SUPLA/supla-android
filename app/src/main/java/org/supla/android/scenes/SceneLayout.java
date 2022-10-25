@@ -33,6 +33,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,9 +91,18 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   private Listener listener;
   private final String TIMER_INACTIVE = "--:--:--";
 
+  private long _stealingStartTime;
+  private int _stealingGiveBackTolerance;
+	private View _stealingEventsFromView;
+  private SceneLayout _stealingEventsVictim;
+  private final static int _stealingGiveBackToleranceMax = 12;
+	private final static long _longPressMillis = 400;
+
+
   public interface Listener {
     void onLeftButtonClick(SceneLayout l);
     void onRightButtonClick(SceneLayout l);
+    void onCaptionLongPress(SceneLayout l);
     void onButtonSlide(SceneLayout l);
     void onMove(SceneLayout l);
   }
@@ -750,6 +760,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   @Override
   public boolean onLongClick(View v) {
+    listener.onCaptionLongPress(this);
     return true;
   }
 
@@ -877,6 +888,59 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   }
 
 
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    int action = ev.getAction();
+    int X = (int)ev.getRawX();
+    int Y = (int)ev.getRawY();
+
+		View tapView = null;
+		ViewGroup vg = this;
+		boolean stop;
+
+		do {
+			stop = true;
+			int chldn = vg.getChildCount();
+			for(int i = 0; i < chldn; i++) {
+				View chld = vg.getChildAt(i);
+				if(chld.getVisibility() != View.VISIBLE) continue;
+				int[] loc = new int[2];
+				chld.getLocationOnScreen(loc);
+				if(X > loc[0] && X <= loc[0] + chld.getWidth() &&
+				   Y > loc[1] && Y <= loc[1] + chld.getHeight()) {
+          if(chld instanceof CaptionView) {
+						tapView = chld;
+						stop = true;
+					}
+					break;
+				}
+			}
+		} while(!stop);
+
+		if(tapView == null) return super.onInterceptTouchEvent(ev);
+		if(tapView == _stealingEventsFromView) return true;
+		if(action == MotionEvent.ACTION_DOWN && _stealingEventsFromView == null) {
+			_stealingEventsVictim = this;
+			_stealingEventsFromView = tapView;
+			_stealingStartTime = ev.getEventTime();
+      _stealingGiveBackTolerance = _stealingGiveBackToleranceMax;
+			return true;
+		} 
+		return super.onInterceptTouchEvent(ev);
+  }
+
+	private void stopStealingEvents() {
+		_stealingEventsVictim = null;
+		_stealingEventsFromView = null;
+	}
+
+  private void triggerOnLongPressIfNeeded(MotionEvent ev) {
+    if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
+       _stealingEventsVictim != null) {
+      _stealingEventsVictim.onLongClick(_stealingEventsFromView);
+      stopStealingEvents();
+    }
+  }
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {

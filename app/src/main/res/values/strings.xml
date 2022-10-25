@@ -505,4 +505,5 @@
     <string translatable="false" name="navbar_scenes">Scenes</string>
     <string translatable="false" name="btn_execute">Execute</string>
     <string translatable="false" name="btn_abort">Abort</string>
+    <string translatable="false" name="scene_name">Scene name</string>
 </resources>

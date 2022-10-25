@@ -21,4 +21,5 @@ interface SceneController {
 
     fun startScene(sceneId: Int)
     fun stopScene(sceneId: Int)
+    fun renameScene(sceneId: Int, newName: String)
 }

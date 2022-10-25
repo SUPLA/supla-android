@@ -27,6 +27,7 @@ public interface SceneRepository {
 
     fun getAllProfileScenes(): List<Scene>
     fun getSceneUserIconIds(): List<Int>
+    fun getScene(id: Int): Scene?
     fun updateScene(scene: Scene): Boolean
     fun updateSuplaScene(suplaScene: SuplaScene): Boolean
     fun updateSuplaSceneState(suplaScene: SuplaSceneState): Boolean

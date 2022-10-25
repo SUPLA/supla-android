@@ -340,4 +340,16 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     override fun onButtonSlide(sl: SceneLayout) {
         _slidedScene = sl
     }
+
+    override fun onCaptionLongPress(sl: SceneLayout) {
+        val sceneId = sl.tag as Int
+        SuplaApp.Vibrate(_context)
+        val editor = SceneCaptionEditor(_context)
+        editor.listener = object: SceneCaptionEditor.Listener {
+            override fun onCaptionChange() {
+                scenesVM.reload()
+            }
+        }
+        editor.edit(sceneId)
+    }
 }
