@@ -312,10 +312,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                                  viewHolder: RecyclerView.ViewHolder,
                                  dX: Float, dY: Float, actionState: Int,
                                  isActive: Boolean) {
-            if(dragging) {
+            if(dragging || !isActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY,
                                   actionState, isActive)
-            } else {
+            } else if(isActive) {
                 val offset = _context.resources.getDimensionPixelSize(R.dimen.scene_drag_offset).toFloat()
                 dragging = true
                 super.onChildDraw(c, recyclerView, viewHolder, dX - offset, dY + offset,
