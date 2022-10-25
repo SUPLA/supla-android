@@ -119,7 +119,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                 vh.binding.sceneLayout.tag = scene.sceneId
                 vh.binding.sceneLayout.setSceneListener(this)
                 vh.binding.sceneLayout.setScene(getScene(pos))
-
+                if(_slidedScene != null && _slidedScene!!.tag == scene.sceneId) {
+                    vh.binding.sceneLayout.cloneSlide(_slidedScene)
+                    _slidedScene = vh.binding.sceneLayout
+                }
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
