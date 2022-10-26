@@ -338,6 +338,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     override fun onButtonSlide(sl: SceneLayout) {
+        _slidedScene?.AnimateToRestingPosition(true)
         _slidedScene = sl
     }
 
