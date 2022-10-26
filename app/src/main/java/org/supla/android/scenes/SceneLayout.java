@@ -88,14 +88,14 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   private Preferences prefs;
   private float LastXtouch = -1;
   private float LastYtouch = -1;
+  private float OrigX = -1;
   private Listener listener;
   private final String TIMER_INACTIVE = "--:--:--";
 
   private long _stealingStartTime;
-  private int _stealingGiveBackTolerance;
+  private int _stealingGiveBackTolerance = 12;
 	private View _stealingEventsFromView;
   private SceneLayout _stealingEventsVictim;
-  private final static int _stealingGiveBackToleranceMax = 12;
 	private final static long _longPressMillis = 400;
 
 
@@ -923,7 +923,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 			_stealingEventsVictim = this;
 			_stealingEventsFromView = tapView;
 			_stealingStartTime = ev.getEventTime();
-      _stealingGiveBackTolerance = _stealingGiveBackToleranceMax;
 			return true;
 		} 
 		return super.onInterceptTouchEvent(ev);
@@ -952,12 +951,22 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     float deltaX = Math.abs(X - LastXtouch);
 
     if(action == MotionEvent.ACTION_DOWN) {
+      OrigX = X;
+      triggerOnLongPressIfNeeded(ev);
       LastXtouch = X;
       LastYtouch = Y;
       int sld = Slided();
       buttonSliding = (sld == 1) || (sld == 2);
       return true;
     } else if(action == MotionEvent.ACTION_MOVE) {
+      if(_stealingEventsVictim != null) {
+        if(Math.abs(OrigX - X) > _stealingGiveBackTolerance) {
+          stopStealingEvents();
+        } else {
+          triggerOnLongPressIfNeeded(ev);
+          return true;
+        }
+      }
       if(!Sliding() && deltaY >= deltaX * 1.1f) {
         return super.onTouchEvent(ev);
       }
