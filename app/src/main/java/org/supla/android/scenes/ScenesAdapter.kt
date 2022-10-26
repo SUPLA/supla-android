@@ -275,6 +275,9 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
         override fun getMovementFlags(recyclerView: RecyclerView,
                                       viewHolder: RecyclerView.ViewHolder): Int {
+            if(_slidedScene?.Slided() ?: 0 != 0) {
+                return 0
+            }
             return if(viewHolder is SceneListItemViewHolder) super.getMovementFlags(recyclerView, viewHolder) else 0
         }
 

@@ -71,7 +71,7 @@ class ScenesViewModel @Inject constructor(
             s.sortOrder = si++
             _sceneRepo.updateScene(s)
         }
-        reload()
+        reset()
     }
 
     private fun reloadIfNeeded() {
