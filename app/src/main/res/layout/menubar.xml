@@ -68,7 +68,7 @@
           android:layout_marginLeft="10dp"
           android:layout_width="45dp"
           android:layout_height="45dp"
-          android:background="@drawable/profile"
+          android:background="@drawable/account"
           android:clickable="true" />
           
     </LinearLayout>
