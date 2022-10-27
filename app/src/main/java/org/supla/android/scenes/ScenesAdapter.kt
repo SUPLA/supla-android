@@ -201,13 +201,20 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         } else {
             var pos = 0
             for(p in _paths) {
-                if(p.sceneIdx != null) {
-                    val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
-                    val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
-                    if(a != b) {
-                        notifyItemChanged(pos)
+                if(oldSecs[p.sectionIdx].scenes.size ==
+                       _sections[p.sectionIdx].scenes.size) {
+                    if(p.sceneIdx != null) {
+                        val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
+                        val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
+                        if(a != b) {
+                            notifyItemChanged(pos)
+                        }
                     }
+                } else {
+                    notifyDataSetChanged()
+                    return
                 }
+                
                 pos += 1
             }
         }
