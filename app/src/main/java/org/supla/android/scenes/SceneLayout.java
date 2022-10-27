@@ -18,16 +18,13 @@ package org.supla.android.scenes;
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.util.Date;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -39,21 +36,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.core.widget.TextViewCompat;
-import androidx.appcompat.widget.AppCompatTextView;
+import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import java.util.Date;
+import javax.inject.Inject;
+import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
-import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
-import org.supla.android.Preferences;
 import org.supla.android.db.Scene;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.listview.LineView;
 
+@AndroidEntryPoint
 public class SceneLayout extends LinearLayout implements View.OnLongClickListener {
 
+
+  @Inject
+  SceneEventsManager eventsManager;
 
   private boolean buttonSliding = false;
   private RelativeLayout content;
@@ -80,11 +83,9 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   private boolean RightButtonEnabled;
   private boolean LeftButtonEnabled;
-  private boolean DetailSliderEnabled;
 
   private float heightScaleFactor = 1f;
-  private boolean shouldUpdateChannelStateLayout;
-    
+
   private Preferences prefs;
   private float LastXtouch = -1;
   private float LastYtouch = -1;
@@ -98,6 +99,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   private SceneLayout _stealingEventsVictim;
 	private final static long _longPressMillis = 400;
 
+  private Disposable sceneChangesDisposable = null;
 
   public interface Listener {
     void onLeftButtonClick(SceneLayout l);
@@ -123,8 +125,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
-
-    shouldUpdateChannelStateLayout = true;
 
     heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
     int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
@@ -208,18 +208,16 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     caption_text.setOnLongClickListener(this);
     channelIconContainer.addView(caption_text);
 
-    OnTouchListener tl = new View.OnTouchListener() {
-        public boolean onTouch(View v, MotionEvent event) {
-          int action = event.getAction();
+    OnTouchListener tl = (v, event) -> {
+      int action = event.getAction();
 
-          if (action == MotionEvent.ACTION_DOWN)
-            onActionBtnTouchDown(v);
-          else if (action == MotionEvent.ACTION_UP)
-            onActionBtnTouchUp(v);
+      if (action == MotionEvent.ACTION_DOWN)
+        onActionBtnTouchDown(v);
+      else if (action == MotionEvent.ACTION_UP)
+        onActionBtnTouchUp(v);
 
-          return true;
-        }
-      };
+      return true;
+    };
 
     left_btn.setOnTouchListener(tl);
     right_btn.setOnTouchListener(tl);
@@ -239,6 +237,18 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   public void setSceneListener(Listener l) {
     listener = l;
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+
+    if (sceneChangesDisposable != null && !sceneChangesDisposable.isDisposed()) {
+      sceneChangesDisposable.dispose();
+    }
+    if (sceneCountDown != null) {
+      sceneCountDown.cancel();
+    }
   }
 
   private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
@@ -299,42 +309,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     return lp;
   }
 
-  protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
-
-    int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
-
-    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
-    lp.leftMargin = margin;
-
-    lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
-
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
-    }
-
-    lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-    return lp;
-  }
-
-  protected RelativeLayout.LayoutParams getChannelWarningImageLayoutParams() {
-
-    int size = getResources().getDimensionPixelSize(R.dimen.channel_warning_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
-
-    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
-    lp.rightMargin = margin;
-
-    lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
-
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
-    }
-
-    lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-    return lp;
-  }
-
   protected SuplaChannelStatus newOnlineStatus(Context context, boolean right) {
 
     SuplaChannelStatus result = new SuplaChannelStatus(context);
@@ -377,26 +351,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     UpdateLeftBtn();
     UpdateRightBtn();
 
-  }
-
-  public void hideButtonImmediately() {
-    if (Slided() > 0) {
-      Slide(content.getLeft() * -1);
-    }
-  }
-
-  public void cloneSlide(SceneLayout other) {
-    int offset = other.content.getLeft();
-    if(offset == 0) {
-      return;
-    }
-
-    uiThreadHandler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          Slide(offset);
-        }
-      }, 50);
   }
 
   public float percentOfSliding() {
@@ -482,12 +436,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
       final View _v = v;
 
       final Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            _v.setBackgroundColor(getResources().getColor(R.color.channel_btn));
-          }
-        }, 200);
+      handler.postDelayed(() -> _v.setBackgroundColor(getResources().getColor(R.color.channel_btn)), 200);
 
     }
 
@@ -625,10 +574,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   }
 
-  public boolean getRightButtonEnabled() {
-    return RightButtonEnabled;
-  }
-
   private void setRightButtonEnabled(boolean rightButtonEnabled) {
 
     if (RightButtonEnabled != rightButtonEnabled) {
@@ -696,51 +641,60 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));
 
-    SuplaChannelStatus.ShapeType state;
-
-    if(scn.isExecuting()) {
-      Date ssd = scn.getStartedAt(), eed = scn.getEstimatedEndDate();
-      long sceneDuration = eed.getTime() - ssd.getTime();
-      sceneCountDown = new CountDownTimer(sceneDuration, 1000) {
-          private long duration = sceneDuration;
-          public void onTick(long millisUntilFinished) {
-            uiThreadHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                  duration -= 1000;
-                  sceneDurationTimer.setText(formatMillis(duration));
-                }
-              });
-          }
-          
-          public void onFinish() {
-            uiThreadHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                  sceneDurationTimer.setText(TIMER_INACTIVE);
-                  SuplaChannelStatus.ShapeType state = SuplaChannelStatus.ShapeType.Ring;
-                  left_onlineStatus.setShapeType(state);
-                  right_onlineStatus.setShapeType(state);
-                }
-              });
-          }
-        };
-      sceneCountDown.start();
-      state = SuplaChannelStatus.ShapeType.Dot;
-    } else {
-      state = SuplaChannelStatus.ShapeType.Ring;
-    }
-      
-
-    left_onlineStatus.setShapeType(state);
-    right_onlineStatus.setShapeType(state);
-
     setLeftButtonEnabled(true);
     setRightButtonEnabled(true);
 
 
     caption_text.setText(scn.getCaption());
 
+    observeStateChanges(scn);
+  }
+
+  private void observeStateChanges(Scene scene) {
+    sceneChangesDisposable = eventsManager
+        .observerScene(scene.getSceneId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(sceneState -> {
+          SuplaChannelStatus.ShapeType state;
+          if (sceneState.getActive()) {
+            startTimer(sceneState.getEndTime());
+            state = SuplaChannelStatus.ShapeType.Dot;
+          } else {
+            if (sceneCountDown != null) {
+              sceneCountDown.cancel();
+              setTimerInactive();
+            }
+            state = SuplaChannelStatus.ShapeType.Ring;
+          }
+          left_onlineStatus.setShapeType(state);
+          right_onlineStatus.setShapeType(state);
+        });
+  }
+
+  private void startTimer(Date end) {
+    long sceneDuration = end.getTime() - System.currentTimeMillis();
+    sceneCountDown = new CountDownTimer(sceneDuration, 1000) {
+      private long duration = sceneDuration;
+      public void onTick(long millisUntilFinished) {
+        uiThreadHandler.post(() -> {
+          duration -= 1000;
+          sceneDurationTimer.setText(formatMillis(duration));
+        });
+      }
+
+      public void onFinish() {
+        sceneCountDown = null;
+        uiThreadHandler.post(() -> setTimerInactive());
+      }
+    };
+    sceneCountDown.start();
+  }
+
+  private void setTimerInactive() {
+    sceneDurationTimer.setText(TIMER_INACTIVE);
+    SuplaChannelStatus.ShapeType state = SuplaChannelStatus.ShapeType.Ring;
+    left_onlineStatus.setShapeType(state);
+    right_onlineStatus.setShapeType(state);
   }
 
   private String formatMillis(long v) {
@@ -764,7 +718,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     return true;
   }
 
-  private class AnimParams {
+  private static class AnimParams {
     public int content_left;
     public int content_right;
     public int left_btn_rotation;
@@ -773,7 +727,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   }
 
 
-  class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
+  static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
 
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {

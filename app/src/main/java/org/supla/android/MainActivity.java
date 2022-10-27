@@ -757,7 +757,6 @@ public class MainActivity extends NavigationActivity
       be rebuilt with new layout. */
       channelListViewCursorAdapter = null;
       cgroupListViewCursorAdapter = null;
-      resetScenes();
     }
   }
 
@@ -808,7 +807,4 @@ public class MainActivity extends NavigationActivity
     scenesFragment().reload();
   }
 
-    private void resetScenes() {
-      scenesFragment().reset();
-    }
 }

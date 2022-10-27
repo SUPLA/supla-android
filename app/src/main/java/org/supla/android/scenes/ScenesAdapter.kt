@@ -19,36 +19,24 @@ package org.supla.android.scenes
 
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
-import android.view.DragEvent
-import android.graphics.Rect
 import android.graphics.Canvas
-import android.util.TypedValue
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.ItemTouchHelper
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.databinding.Observable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import org.supla.android.data.source.local.LocationDao
-import org.supla.android.db.Scene
-import org.supla.android.db.Location
-import org.supla.android.databinding.SceneListItemBinding
-import org.supla.android.databinding.LocationListItemBinding
-import org.supla.android.Trace
-import org.supla.android.Preferences
-import org.supla.android.SuplaApp
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.R
+import org.supla.android.SuplaApp
+import org.supla.android.data.source.local.LocationDao
+import org.supla.android.databinding.LocationListItemBinding
+import org.supla.android.databinding.SceneListItemBinding
+import org.supla.android.db.Location
+import org.supla.android.db.Scene
 
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
                     private val locationDao: LocationDao,
-                    private val viewModelScope: CoroutineScope,
                     private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>(),
                     SceneLayout.Listener {
     
@@ -70,9 +58,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
 
     private val _reorderingCallback = ScenesReorderingCallback()
     private val _touchHelper = ItemTouchHelper(_reorderingCallback)
-
-    private val TAG = "supla"
-
 
     override fun onAttachedToRecyclerView(v: RecyclerView) {
         super.onAttachedToRecyclerView(v)
@@ -98,7 +83,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             R.layout.scene_list_item -> {
                 val binding = SceneListItemBinding.inflate(inflater, parent, false)
                 val holder = SceneListItemViewHolder(binding)
-                configureListItem(binding, holder)
                 holder
             }
             R.layout.location_list_item -> {
@@ -119,10 +103,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                 vh.binding.sceneLayout.tag = scene.sceneId
                 vh.binding.sceneLayout.setSceneListener(this)
                 vh.binding.sceneLayout.setScene(getScene(pos))
-                if(_slidedScene != null && _slidedScene!!.tag == scene.sceneId) {
-                    vh.binding.sceneLayout.cloneSlide(_slidedScene)
-                    _slidedScene = vh.binding.sceneLayout
-                }
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
@@ -149,9 +129,6 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         return position.toLong()
     }
 
-    private fun configureListItem(binding: SceneListItemBinding, viewHolder: RecyclerView.ViewHolder) {
-    }
-
     fun invalidateAll() {
         val parent = _parentView
         if(parent != null) {
@@ -166,7 +143,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         val paths = mutableListOf<Path>()
         
         var loc: Location? = null
-        var locScenes: MutableList<Scene> = mutableListOf<Scene>()
+        var locScenes: MutableList<Scene> = mutableListOf()
         var i = 0
         var lc = -1
         while(i < scenes.count()) {
@@ -185,7 +162,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             if(i == scenes.count() ||
                scenes[i].locationId != loc.locationId) {
                 secs.add(Section(loc, locScenes))
-                locScenes = mutableListOf<Scene>()
+                locScenes = mutableListOf()
                 loc = null
             }
         }
@@ -196,7 +173,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         _vTypes = vTypes
         _paths = paths
 
-        if(oldSecs == null || _paths.size != oldPaths.size) {
+        if(_paths.size != oldPaths.size) {
             notifyDataSetChanged()
         } else {
             var pos = 0
@@ -234,12 +211,12 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         for(sec in _sections) {
             var si:Int? = null
             var di:Int? = null
-            for(i in 0..sec.scenes.count()-1) {
-                if(sec.scenes[i] == src) {
+            for(i in 0.until(sec.scenes.count())) {
+                if(sec.scenes[i].sceneId == src.sceneId) {
                     si = i
                 }
 
-                if(sec.scenes[i] == dst) {
+                if(sec.scenes[i].sceneId == dst.sceneId) {
                     di = i
                 }
 

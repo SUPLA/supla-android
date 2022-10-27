@@ -17,98 +17,93 @@ package org.supla.android.scenes
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.Date
-import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.profile.ProfileManager
-import org.supla.android.db.Scene
-import org.supla.android.db.DbHelper
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.supla.android.data.source.local.LocationDao
+import org.supla.android.db.DbHelper
+import org.supla.android.db.Scene
+import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMsg
+import javax.inject.Inject
 
 @HiltViewModel
 class ScenesViewModel @Inject constructor(
-    private val messageHandler: SuplaClientMessageHandler,
-    private val dbHelper: DbHelper,
-    private val scController: SceneController
-): ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
+  private val messageHandler: SuplaClientMessageHandler,
+  private val sceneEventsManager: SceneEventsManager,
+  private val dispatchers: CoroutineDispatchers,
+  dbHelper: DbHelper,
+  scController: SceneController
+) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
-    private var _scenes = MutableLiveData<List<Scene>>(emptyList())
-    private val _sceneRepo = dbHelper.sceneRepository
-    private var _deferredRefreshTimer: CountDownTimer? = null
-    private val _minRefreshIntervalMillis: Long = 200
-    private var _lastRefresh: Long = 0
+  private var _scenes = MutableLiveData<List<Scene>>(emptyList())
+  private val _sceneRepo = dbHelper.sceneRepository
 
-    val scenes: LiveData<List<Scene>> = _scenes
+  val scenes: LiveData<List<Scene>> = _scenes
 
-    val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper),
-                                      viewModelScope,
-                                      scController)
+  val scenesAdapter = ScenesAdapter(
+    this, LocationDao(dbHelper),
+    scController
+  )
 
-    private val uiThreadHandler = Handler(Looper.getMainLooper())
+  init {
+    viewModelScope.launch {
+      withContext(dispatchers.io()) {
+        // First initialize all scenes
+        val userScenes = _sceneRepo.getAllProfileScenes()
+        userScenes.stream().forEach { emitSceneStateChange(it) }
+        _scenes.postValue(userScenes)
 
-    init {
-
-        messageHandler.registerMessageListener(this)
+        // After that start observe
+        messageHandler.registerMessageListener(this@ScenesViewModel)
+      }
     }
+  }
 
-    fun onLocationStateChanged() {
-        reload()
+  fun onLocationStateChanged() {
+    reload()
+  }
+
+  fun onSceneOrderUpdate(scenes: List<Scene>) {
+    var si = 0
+    for (s in scenes) {
+      s.sortOrder = si++
+      _sceneRepo.updateScene(s)
     }
+    reload()
+  }
 
-    fun onSceneOrderUpdate(scenes: List<Scene>) {
-        var si = 0
-        for(s in scenes) {
-            s.sortOrder = si++
-            _sceneRepo.updateScene(s)
-        }
-        reset()
+  override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
+    if (msg.type == SuplaClientMsg.onSceneStateChanged) {
+      val scene = _sceneRepo.getScene(msg.sceneId) ?: return
+      emitSceneStateChange(scene)
     }
+  }
 
-    private fun reloadIfNeeded() {
-        val curTimeMillis = Date().getTime()
-        if(curTimeMillis > _lastRefresh + _minRefreshIntervalMillis) {
-            _deferredRefreshTimer?.cancel()
-            _lastRefresh = curTimeMillis
-            reload()
-        } else {
-            val delay = _lastRefresh + _minRefreshIntervalMillis - curTimeMillis 
-            _deferredRefreshTimer = object: CountDownTimer(delay, delay) {
-                override fun onTick(millis: Long) {}
-                override fun onFinish()  {
-                    uiThreadHandler.post {
-                        reload()
-                    }
-                }
-            }.start()
-        }
+  fun reload() {
+    viewModelScope.launch {
+      withContext(dispatchers.io()) {
+        // First initialize all scenes
+        val userScenes = _sceneRepo.getAllProfileScenes()
+        userScenes.stream().forEach { emitSceneStateChange(it) }
+        _scenes.postValue(userScenes)
+      }
     }
+  }
 
-    override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
-        if(msg.type == SuplaClientMsg.onSceneStateChanged) {
-            reloadIfNeeded()
-        }
-    }
+  override fun onCleared() {
+    messageHandler.unregisterMessageListener(this)
+  }
 
-    fun reload() {
-        _scenes.value = _sceneRepo.getAllProfileScenes()
-    }
-
-    fun reset() {
-        scenesAdapter.invalidateAll()
-    }
-
-    override protected fun onCleared() {
-        messageHandler.unregisterMessageListener(this)
-    }
-
+  private fun emitSceneStateChange(scene: Scene) {
+    sceneEventsManager.emitStateChange(
+      scene.sceneId,
+      SceneEventsManager.SceneState(scene.isExecuting(), scene.estimatedEndDate)
+    )
+  }
 }

@@ -20,51 +20,41 @@ package org.supla.android.scenes
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.DragEvent
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.databinding.DataBindingUtil
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.FragmentScenesBinding
 
 
 @AndroidEntryPoint
-class ScenesFragment: Fragment() {
+class ScenesFragment : Fragment() {
 
-    private lateinit var binding: FragmentScenesBinding
+  private lateinit var binding: FragmentScenesBinding
 
-    private val scenesVM: ScenesViewModel by viewModels()
+  private val scenesVM: ScenesViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View {
+    binding = DataBindingUtil.inflate(
+      inflater,
+      R.layout.fragment_scenes,
+      container, false
+    )
 
-    }
+    binding.lifecycleOwner = requireActivity()
+    binding.viewModel = scenesVM
+    scenesVM.reload()
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, 
-                                          R.layout.fragment_scenes,
-                                         container, false)
-        binding.lifecycleOwner = requireActivity()
-        binding.viewModel = scenesVM
-        scenesVM.reload()
-        return binding.root
-    }
- 
-    override fun onResume() {
-        super.onResume()
-    }
+    return binding.root
+  }
 
-
-    fun reload() {
-        scenesVM.reload()
-    }
-
-    fun reset() {
-        scenesVM.reset()
-    }
+  fun reload() {
+    scenesVM.reload()
+  }
 }

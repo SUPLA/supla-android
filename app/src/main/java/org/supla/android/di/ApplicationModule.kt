@@ -18,55 +18,59 @@ import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.WidgetVisibilityHandler
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.scenes.SceneController
+import org.supla.android.scenes.SceneEventsManager
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class ApplicationModule {
 
-    @Provides
-    @Singleton
-    fun provideProfileIdHolder() = ProfileIdHolder(null)
+  @Provides
+  @Singleton
+  fun provideProfileIdHolder() = ProfileIdHolder(null)
 
-    @Provides
-    @Singleton
-    fun provideProfileManager(
-            @ApplicationContext context: Context,
-            dbHelper: DbHelper,
-            profileRepository: ProfileRepository,
-            profileIdHolder: ProfileIdHolder,
-            widgetVisibilityHandler: WidgetVisibilityHandler): ProfileManager {
-        return MultiAccountProfileManager(
-                dbHelper,
-                Preferences.getDeviceID(context),
-                profileRepository,
-                profileIdHolder,
-                widgetVisibilityHandler
-        )
-    }
+  @Provides
+  @Singleton
+  fun provideProfileManager(
+    @ApplicationContext context: Context,
+    dbHelper: DbHelper,
+    profileRepository: ProfileRepository,
+    profileIdHolder: ProfileIdHolder,
+    widgetVisibilityHandler: WidgetVisibilityHandler,
+    sceneEventsManager: SceneEventsManager
+  ): ProfileManager {
+    return MultiAccountProfileManager(
+      dbHelper,
+      Preferences.getDeviceID(context),
+      profileRepository,
+      profileIdHolder,
+      widgetVisibilityHandler,
+      sceneEventsManager
+    )
+  }
 
-    @Provides
-    @Singleton
-    fun providePreferences(@ApplicationContext context: Context) =
-            Preferences(context)
+  @Provides
+  @Singleton
+  fun providePreferences(@ApplicationContext context: Context) =
+    Preferences(context)
 
-    @Provides
-    @Singleton
-    fun provideWidgetPreferences(@ApplicationContext context: Context) =
-            WidgetPreferences(context)
+  @Provides
+  @Singleton
+  fun provideWidgetPreferences(@ApplicationContext context: Context) =
+    WidgetPreferences(context)
 
-    @Provides
-    @Singleton
-    fun provideAppWidgetManager(@ApplicationContext context: Context) =
-            AppWidgetManager.getInstance(context)
+  @Provides
+  @Singleton
+  fun provideAppWidgetManager(@ApplicationContext context: Context) =
+    AppWidgetManager.getInstance(context)
 
-    @Provides
-    @Singleton
-    fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
-        SuplaClientMessageHandler.getGlobalInstance()
+  @Provides
+  @Singleton
+  fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
+    SuplaClientMessageHandler.getGlobalInstance()
 
-    @Provides
-    @Singleton
-    fun provideSceneController(): SceneController =
-        SuplaApp.getApp().getSuplaClient()
+  @Provides
+  @Singleton
+  fun provideSceneController(): SceneController =
+    SuplaApp.getApp().getSuplaClient()
 }

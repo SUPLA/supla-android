@@ -25,6 +25,7 @@ import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
+import org.supla.android.scenes.SceneEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
 import kotlin.random.Random
 
@@ -33,7 +34,8 @@ class MultiAccountProfileManager(
         private val deviceId: String,
         private val repo: ProfileRepository,
         private val profileIdHolder: ProfileIdHolder,
-        private val widgetVisibilityHandler: WidgetVisibilityHandler
+        private val widgetVisibilityHandler: WidgetVisibilityHandler,
+        private val sceneEventsManager: SceneEventsManager
 ) : ProfileManager {
 
     override fun getCurrentProfile(): AuthProfileItem {
@@ -107,6 +109,7 @@ class MultiAccountProfileManager(
             profileIdHolder.profileId = id
         }
         dbHelper.loadUserIconsIntoCache()
+        sceneEventsManager.cleanup()
         return true
     }
 
