@@ -25,10 +25,10 @@ import org.supla.android.profile.ProfileManager
 import org.supla.android.profile.ProfileIdNew
 import org.supla.android.db.AuthProfileItem
 
-class ProfilesViewModel(private val profileManager: ProfileManager)
-    : ViewModel(), EditableProfileItemViewModel.EditActionHandler {
+class ProfilesViewModel(private val profileManager: ProfileManager) : ViewModel(),
+    EditableProfileItemViewModel.EditActionHandler {
 
-    private val _uiState: MutableLiveData<ProfilesUiState> = 
+    private val _uiState: MutableLiveData<ProfilesUiState> =
         MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
     val uiState: LiveData<ProfilesUiState> = _uiState
     val profilesAdapter = ProfilesAdapter(this)
@@ -46,7 +46,7 @@ class ProfilesViewModel(private val profileManager: ProfileManager)
     }
 
     fun onActivateProfile(profileId: Long) {
-        if(profileManager.activateProfile(profileId, true)) {
+        if (profileManager.activateProfile(profileId, true)) {
             _uiState.value = ProfilesUiState.ProfileActivation(profileId)
         }
     }
@@ -55,11 +55,15 @@ class ProfilesViewModel(private val profileManager: ProfileManager)
         val profiles = profileManager.getAllProfiles()
         _uiState.value = ProfilesUiState.ListProfiles(profiles)
     }
+
+    fun getAmountOfProfiles(): Int {
+        return profileManager.getAllProfiles().size
+    }
 }
 
 sealed class ProfilesUiState {
-    data class ListProfiles(val profiles: List<AuthProfileItem>): ProfilesUiState()
-    data class EditProfile(val profileId: Long): ProfilesUiState()
-    data class ProfileActivation(val profileId: Long): ProfilesUiState()
+    data class ListProfiles(val profiles: List<AuthProfileItem>) : ProfilesUiState()
+    data class EditProfile(val profileId: Long) : ProfilesUiState()
+    data class ProfileActivation(val profileId: Long) : ProfilesUiState()
 }
 

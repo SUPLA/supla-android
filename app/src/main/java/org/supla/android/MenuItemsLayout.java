@@ -3,11 +3,15 @@ package org.supla.android;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
+import androidx.constraintlayout.motion.widget.Debug;
+
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 public class MenuItemsLayout extends LinearLayout implements View.OnClickListener {
@@ -28,7 +33,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     public static final int BTN_FREE_SPACE = 0x40;
     public static final int BTN_Z_WAVE = 0x80;
     public static final int BTN_CLOUD = 0x90;
-    public static final int BTN_PROFILE = 0x1000;
+    public static final int BTN_PROFILE = 0x100;
     public static final int BTN_ALL = 0xFFFF;
     ArrayList<Button> buttons = new ArrayList<>();
     private LinearLayout mMainButtonsAreaLayout = null;
@@ -130,7 +135,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     }
 
     private void addButton(int id, @DrawableRes int iconResId, @StringRes int textResId) {
-
+        Log.d("dupa", String.valueOf((availableButtons & id)));
         if ((availableButtons & id) == 0) {
             return;
         }
@@ -179,7 +184,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         btn.setPadding(0, 0, 0, padding);
         btn.setTransformationMethod(null);
         btn.setText(getResources().getString(textResId).toUpperCase());
-	    btn.setBackgroundColor(0);
+        btn.setBackgroundColor(0);
         btn.setTag(id);
         buttons.add(btn);
         ll.addView(btn);
@@ -205,7 +210,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     getResources().getDimension(R.dimen.menuitem_homepage_text_size));
             btn.setTextColor(Color.WHITE);
-	        btn.setBackgroundColor(0);
+            btn.setBackgroundColor(0);
             btn.setOnClickListener(this);
             btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
             mMainButtonsAreaLayout.addView(btn);
@@ -240,15 +245,16 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             return;
         }
 
-        boolean hasManyAccounts = 
-            SuplaApp.getApp().getProfileManager()
-            .getAllProfiles().size() > 1;
+        boolean hasManyAccounts =
+                SuplaApp.getApp().getProfileManager()
+                        .getAllProfiles().size() > 1;
 
         availableButtons = available;
         mMainButtonsAreaLayout.removeAllViews();
         buttons.clear();
 
-        addButton(BTN_PROFILE, R.drawable.profile, hasManyAccounts?R.string.profile_plural:R.string.profile);
+        addButton(BTN_CLOUD, R.drawable.menu_cloud, R.string.supla_cloud);
+        addButton(BTN_PROFILE, R.drawable.profile, hasManyAccounts ? R.string.profile_plural : R.string.profile);
         addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
         addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
         addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
@@ -256,7 +262,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         // Google Play Policy
         //addButton(BTN_DONATE, R.drawable.donate, R.string.donate_title);
         addButton(BTN_HELP, R.drawable.help, R.string.help);
-        addButton(BTN_CLOUD, R.drawable.menu_cloud, R.string.supla_cloud);
+
         addFooter();
 
     }
