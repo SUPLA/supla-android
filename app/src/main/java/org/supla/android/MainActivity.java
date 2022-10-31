@@ -35,7 +35,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.text.SimpleDateFormat;
@@ -84,7 +84,8 @@ public class MainActivity extends NavigationActivity
   private TextView notif_text;
   private ChannelStatePopup channelStatePopup;
   private BottomNavigationView bottomNavigation;
-  private View bottomBar;
+  private BottomAppBar bottomBar;
+  private boolean channelsOpened = true;
 
   // Used in reordering. The initial position of taken item is saved here.
   private Integer dragInitialPosition;
@@ -100,13 +101,9 @@ public class MainActivity extends NavigationActivity
 
     setContentView(R.layout.activity_main);
 
-    bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomnavbar);
+    bottomNavigation = findViewById(R.id.bottomnavbar);
     bottomNavigation.setOnItemSelectedListener(this);
     bottomBar = findViewById(R.id.bottombar);
-    android.view.ViewGroup menuView = (android.view.ViewGroup) bottomNavigation.getChildAt(0);
-    for (int i = 0; i < menuView.getChildCount(); i++) {
-      ((BottomNavigationItemView) menuView.getChildAt(i)).setChecked(i != 0);
-    }
 
     NotificationView = (RelativeLayout) Inflate(R.layout.notification, null);
     NotificationView.setVisibility(View.GONE);
@@ -648,11 +645,19 @@ public class MainActivity extends NavigationActivity
 
   @Override
   public void onBackPressed() {
-
-    if (channelLV.isDetailVisible()) {
+    if (menuIsVisible()) {
+      hideMenu(true);
+    } else if (channelLV.isDetailVisible()) {
       channelLV.onBackPressed();
     } else if (cgroupLV.isDetailVisible()) {
       cgroupLV.onBackPressed();
+    } else if (!channelsOpened) {
+      channelLV.setVisibility(View.VISIBLE);
+      cgroupLV.setVisibility(View.GONE);
+      scenesView.setVisibility(View.GONE);
+
+      channelsOpened = true;
+      bottomNavigation.getMenu().getItem(0).setChecked(true);
     } else {
       gotoMain();
     }
@@ -672,6 +677,7 @@ public class MainActivity extends NavigationActivity
     bottomBar.setVisibility(View.VISIBLE);
   }
 
+  @Override
   public void onSectionClick(ChannelListView clv, String caption, int locationId) {
 
     int _collapsed;
@@ -774,6 +780,7 @@ public class MainActivity extends NavigationActivity
     void doReorder(ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem);
   }
 
+  @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     if (menuIsVisible() || channelLV.isDetailSliding() || cgroupLV.isDetailSliding()) return false;
 
@@ -794,6 +801,8 @@ public class MainActivity extends NavigationActivity
     channelLV.setVisibility(channelsVisible);
     cgroupLV.setVisibility(groupsVisible);
     scenesView.setVisibility(scenesVisible);
+
+    channelsOpened = channelsVisible == View.VISIBLE;
 
     return true;
   }

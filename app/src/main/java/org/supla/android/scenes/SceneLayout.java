@@ -22,29 +22,34 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import java.util.Date;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
+import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Scene;
 import org.supla.android.images.ImageCache;
@@ -52,11 +57,27 @@ import org.supla.android.images.ImageId;
 import org.supla.android.listview.LineView;
 
 @AndroidEntryPoint
-public class SceneLayout extends LinearLayout implements View.OnLongClickListener {
+public class SceneLayout extends LinearLayout {
+
+  private static final int LONG_PRESS_TIME = 400; // Time in milliseconds
+  private static final int LONG_PRESS_TOLERANCE = 3; // Tolerance for movement when recognizing long press (in px)
+  private static final String TIMER_INACTIVE = "--:--:--";
 
 
   @Inject
   SceneEventsManager eventsManager;
+
+  // Temporary solution to disable moving in adapter when renaming
+  private final Handler longPressHandler = new Handler();
+  private final Runnable generalLongPressRunnable = () ->
+      provideSceneListenerForLongPressCallback().onLongPress(
+          provideViewHolderForLongPressCallback());
+  private final Runnable captionLongPressRunnable = () ->
+      provideSceneListenerForLongPressCallback().onCaptionLongPress(this);
+  private Callable<ViewHolder> viewHolderProvider;
+  private int initialX;
+  private int initialY;
+
 
   private boolean buttonSliding = false;
   private RelativeLayout content;
@@ -84,29 +105,27 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   private boolean RightButtonEnabled;
   private boolean LeftButtonEnabled;
 
-  private float heightScaleFactor = 1f;
-
   private Preferences prefs;
   private float LastXtouch = -1;
   private float LastYtouch = -1;
-  private float OrigX = -1;
   private Listener listener;
-  private final String TIMER_INACTIVE = "--:--:--";
 
-  private long _stealingStartTime;
-  private int _stealingGiveBackTolerance = 12;
-	private View _stealingEventsFromView;
-  private SceneLayout _stealingEventsVictim;
-	private final static long _longPressMillis = 400;
-
+  private int sceneId;
   private Disposable sceneChangesDisposable = null;
 
   public interface Listener {
+
     void onLeftButtonClick(SceneLayout l);
+
     void onRightButtonClick(SceneLayout l);
+
     void onCaptionLongPress(SceneLayout l);
+
     void onButtonSlide(SceneLayout l);
+
     void onMove(SceneLayout l);
+
+    void onLongPress(ViewHolder viewHolder);
   }
 
 
@@ -126,16 +145,18 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
 
-    heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
-    int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
+    float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
+    int channelHeight = (int) (
+        ((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
+            * heightScaleFactor);
 
     right_btn.setLayoutParams(new LayoutParams(
-                                               getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
     right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
     left_btn.setLayoutParams(new LayoutParams(
-                                              getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
     left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
@@ -164,21 +185,20 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     sceneDurationTimer = newTimerView(context);
     content.addView(sceneDurationTimer);
     RelativeLayout.LayoutParams sdlp = new RelativeLayout
-      .LayoutParams((int)getResources().getDimension(R.dimen.channel_imgtext_width),
-                    (int)(getResources().getDimension(R.dimen.default_text_size)
-                    * 1.5));
+        .LayoutParams((int) getResources().getDimension(R.dimen.channel_imgtext_width),
+        (int) (getResources().getDimension(R.dimen.default_text_size)
+            * 1.5));
     sdlp.addRule(RelativeLayout.ABOVE, right_onlineStatus.getId());
     sdlp.addRule(RelativeLayout.ALIGN_RIGHT, right_onlineStatus.getId());
     sdlp.setMargins(0, 0, 0,
-                    (int)getResources().getDimension(R.dimen.form_element_spacing));
+        (int) getResources().getDimension(R.dimen.form_element_spacing));
     sceneDurationTimer.setLayoutParams(sdlp);
     sceneDurationTimer.setText(TIMER_INACTIVE);
-                                                                       
 
     channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
     channelIconContainer
-      .setLayoutParams(getChannelIconContainerLayoutParams());
+        .setLayoutParams(getChannelIconContainerLayoutParams());
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
@@ -187,7 +207,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                                                                       dot_size / 2, dot_size * 2);
+          dot_size / 2, dot_size * 2);
 
       lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
       lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -205,23 +225,23 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     channelIconContainer.addView(imgl);
 
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
-    caption_text.setOnLongClickListener(this);
+    //caption_text.setOnLongClickListener(v -> listener.onCaptionLongPress(this));
     channelIconContainer.addView(caption_text);
 
     OnTouchListener tl = (v, event) -> {
       int action = event.getAction();
 
-      if (action == MotionEvent.ACTION_DOWN)
+      if (action == MotionEvent.ACTION_DOWN) {
         onActionBtnTouchDown(v);
-      else if (action == MotionEvent.ACTION_UP)
+      } else if (action == MotionEvent.ACTION_UP) {
         onActionBtnTouchUp(v);
+      }
 
       return true;
     };
 
     left_btn.setOnTouchListener(tl);
     right_btn.setOnTouchListener(tl);
-
   }
 
 
@@ -239,6 +259,10 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     listener = l;
   }
 
+  public void setViewHolderProvider(Callable<ViewHolder> provider) {
+    viewHolderProvider = provider;
+  }
+
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
@@ -251,11 +275,20 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     }
   }
 
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+
+    if (sceneChangesDisposable != null && sceneChangesDisposable.isDisposed()) {
+      observeStateChanges();
+    }
+  }
+
   private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
     RelativeLayout.LayoutParams lp;
 
     lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                         RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams.WRAP_CONTENT);
     lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
     return lp;
@@ -267,7 +300,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                   getResources().getDimension(R.dimen.default_text_size));
+        getResources().getDimension(R.dimen.default_text_size));
     tv.setTextColor(getResources().getColor(R.color.label_grey));
     tv.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
 
@@ -282,7 +315,7 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                   getResources().getDimension(R.dimen.channel_btn_text_size));
+        getResources().getDimension(R.dimen.channel_btn_text_size));
     tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
@@ -330,18 +363,22 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   public void Slide(int delta) {
 
-    if (Anim)
+    if (Anim) {
       return;
+    }
 
     if (!LeftButtonEnabled
-        && delta > 0 && content.getLeft() + delta > 0)
+        && delta > 0 && content.getLeft() + delta > 0) {
       delta = content.getLeft() * -1;
+    }
 
     if (!RightButtonEnabled
-        && delta < 0 && content.getLeft() + delta < 0)
+        && delta < 0 && content.getLeft() + delta < 0) {
       delta = content.getLeft() * -1;
+    }
 
-    content.layout(content.getLeft() + delta, content.getTop(), content.getWidth() + content.getLeft() + delta, content.getHeight());
+    content.layout(content.getLeft() + delta, content.getTop(),
+        content.getWidth() + content.getLeft() + delta, content.getHeight());
 
     int bcolor = getResources().getColor(R.color.channel_btn);
 
@@ -354,28 +391,32 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
   }
 
   public float percentOfSliding() {
-    if (content.getLeft() < 0)
+    if (content.getLeft() < 0) {
       return right_btn.getWidth() > 0 ?
-        content.getLeft() * -100f / right_btn.getWidth() : 0;
+          content.getLeft() * -100f / right_btn.getWidth() : 0;
+    }
 
     return left_btn.getWidth() > 0 ?
-      content.getLeft() * 100f / left_btn.getWidth() : 0;
+        content.getLeft() * 100f / left_btn.getWidth() : 0;
   }
 
   public boolean Sliding() {
-    return Anim ||  percentOfSliding() > 0;
+    return Anim || percentOfSliding() > 0;
   }
 
   public int Slided() {
 
-    if (Anim)
+    if (Anim) {
       return 10;
+    }
 
-    if (content.getLeft() > 0)
+    if (content.getLeft() > 0) {
       return content.getLeft() == right_btn.getWidth() ? 100 : 1;
+    }
 
-    if (content.getLeft() < 0)
-      return content.getLeft() == left_btn.getWidth()* -1 ? 200 : 2;
+    if (content.getLeft() < 0) {
+      return content.getLeft() == left_btn.getWidth() * -1 ? 200 : 2;
+    }
 
     return 0;
   }
@@ -384,27 +425,34 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
     float pr = content.getLeft() * 100 / left_btn.getWidth();
 
-    if (pr <= 0) pr = 0;
-    else if (pr > 100) pr = 100;
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
 
     left_btn.setRotationY(90 - 90 * pr / 100);
 
     int left = content.getLeft() / 2 - left_btn.getWidth() / 2;
     int right = left_btn.getWidth() + (content.getLeft() / 2 - left_btn.getWidth() / 2);
 
-    if (left > 0) left = 0;
-    if (right > left_btn.getWidth()) right = left_btn.getWidth();
+    if (left > 0) {
+      left = 0;
+    }
+    if (right > left_btn.getWidth()) {
+      right = left_btn.getWidth();
+    }
 
     left_btn.layout(left, 0, right, left_btn.getHeight());
 
   }
 
   private void onActionBtnTouchUpDown(boolean up, View v) {
-    if(up) {
-      if(prefs.isButtonAutohide()) {
+    if (up) {
+      if (prefs.isButtonAutohide()) {
         AnimateToRestingPosition(true);
       }
-      if(v == left_btn) {
+      if (v == left_btn) {
         listener.onLeftButtonClick(this);
       } else {
         listener.onRightButtonClick(this);
@@ -422,7 +470,6 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
       v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
     }
 
-
     onActionBtnTouchUpDown(false, v);
   }
 
@@ -436,38 +483,42 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
       final View _v = v;
 
       final Handler handler = new Handler();
-      handler.postDelayed(() -> _v.setBackgroundColor(getResources().getColor(R.color.channel_btn)), 200);
+      handler.postDelayed(() -> _v.setBackgroundColor(getResources().getColor(R.color.channel_btn)),
+          200);
 
     }
-
 
     onActionBtnTouchUpDown(true, v);
   }
 
   private void UpdateRightBtn() {
 
-    float pr = (content.getLeft() * -1) * 100 / right_btn.getWidth();
+    float pr = (content.getLeft() * -1) * 100 / (float) right_btn.getWidth();
 
-    if (pr <= 0) pr = 0;
-    else if (pr > 100) pr = 100;
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
 
     right_btn.setRotationY(-90 + 90 * pr / 100);
 
     int left = getWidth() + (content.getLeft() / 2 - right_btn.getWidth() / 2);
 
-    if (content.getLeft() * -1 > right_btn.getWidth())
+    if (content.getLeft() * -1 > right_btn.getWidth()) {
       left = getWidth() - right_btn.getWidth();
+    }
 
     right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
-
   }
 
   public void AnimateToRestingPosition(boolean start_pos) {
 
-    if (!start_pos
-        && Anim) return;
+    if (!start_pos && Anim) {
+      return;
+    }
 
-    if(!start_pos) {
+    if (!start_pos) {
       listener.onButtonSlide(this);
     }
 
@@ -491,7 +542,8 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
         btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 0f);
         btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), 0);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), params.content_left);
+        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(),
+            params.content_left);
 
       } else {
 
@@ -499,7 +551,8 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
         params.content_right = content.getWidth();
 
         btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 90f);
-        btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), left_btn.getWidth() / 2 * -1);
+        btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(),
+            left_btn.getWidth() / 2 * -1);
         content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
 
       }
@@ -513,8 +566,10 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
         params.content_right = getWidth() - right_btn.getWidth();
 
         btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), 0f);
-        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(), params.content_right);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), params.content_left);
+        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(),
+            params.content_right);
+        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(),
+            params.content_left);
 
       } else {
 
@@ -522,13 +577,13 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
         params.content_right = content.getWidth();
 
         btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), -90f);
-        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(), getWidth() + right_btn.getWidth() / 2);
+        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(),
+            getWidth() + right_btn.getWidth() / 2);
         content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
 
       }
 
     }
-
 
     if (content_animx != null) {
 
@@ -539,35 +594,35 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
       as.addListener(new Animator.AnimatorListener() {
 
 
-          @Override
-          public void onAnimationStart(Animator animation) {
-            Anim = true;
-          }
+        @Override
+        public void onAnimationStart(Animator animation) {
+          Anim = true;
+        }
 
-          @Override
-          public void onAnimationEnd(Animator animation) {
+        @Override
+        public void onAnimationEnd(Animator animation) {
 
-            content.setTranslationX(0);
-            content.layout(params.content_left, content.getTop(), params.content_right, getWidth());
+          content.setTranslationX(0);
+          content.layout(params.content_left, content.getTop(), params.content_right, getWidth());
 
-            left_btn.setTranslationX(0);
-            right_btn.setTranslationX(0);
-            UpdateLeftBtn();
-            UpdateRightBtn();
-            Anim = false;
+          left_btn.setTranslationX(0);
+          right_btn.setTranslationX(0);
+          UpdateLeftBtn();
+          UpdateRightBtn();
+          Anim = false;
 
-          }
+        }
 
-          @Override
-          public void onAnimationCancel(Animator animation) {
-            onAnimationEnd(animation);
-          }
+        @Override
+        public void onAnimationCancel(Animator animation) {
+          onAnimationEnd(animation);
+        }
 
-          @Override
-          public void onAnimationRepeat(Animator animation) {
+        @Override
+        public void onAnimationRepeat(Animator animation) {
 
-          }
-        });
+        }
+      });
 
       as.start();
     }
@@ -604,32 +659,33 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
     super.setBackgroundColor(color);
 
-    if (content != null)
+    if (content != null) {
       content.setBackgroundColor(color);
+    }
   }
 
-    
 
-  public void setScene(Scene scn) {
+  public void setScene(Scene scene) {
+    sceneId = scene.getSceneId();
     int[] standardIcons = {
-      R.drawable.scene0, R.drawable.scene1,
-      R.drawable.scene2, R.drawable.scene3,
-      R.drawable.scene4, R.drawable.scene5,
-      R.drawable.scene6, R.drawable.scene7,
-      R.drawable.scene8, R.drawable.scene9,
-      R.drawable.scene10, R.drawable.scene11,
-      R.drawable.scene12, R.drawable.scene13,
-      R.drawable.scene14, R.drawable.scene15,
-      R.drawable.scene16, R.drawable.scene17,
-      R.drawable.scene18, R.drawable.scene19 };
+        R.drawable.scene0, R.drawable.scene1,
+        R.drawable.scene2, R.drawable.scene3,
+        R.drawable.scene4, R.drawable.scene5,
+        R.drawable.scene6, R.drawable.scene7,
+        R.drawable.scene8, R.drawable.scene9,
+        R.drawable.scene10, R.drawable.scene11,
+        R.drawable.scene12, R.drawable.scene13,
+        R.drawable.scene14, R.drawable.scene15,
+        R.drawable.scene16, R.drawable.scene17,
+        R.drawable.scene18, R.drawable.scene19};
 
-    int iconId = scn.getAltIcon();
-    if(iconId == 0) {
-      iconId = scn.getUserIcon();
+    int iconId = scene.getAltIcon();
+    if (iconId == 0) {
+      iconId = scene.getUserIcon();
     }
-    
+
     ImageId imgId;
-    if(iconId < standardIcons.length) {
+    if (iconId < standardIcons.length) {
       imgId = new ImageId(standardIcons[iconId]);
     } else {
       imgId = new ImageId(iconId, 0);
@@ -637,44 +693,57 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
     imgl.setImage(imgId);
 
-
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));
 
     setLeftButtonEnabled(true);
     setRightButtonEnabled(true);
 
+    caption_text.setText(scene.getCaption());
+    setupSceneStatus(scene.isExecuting());
 
-    caption_text.setText(scn.getCaption());
-
-    observeStateChanges(scn);
+    observeStateChanges();
   }
 
-  private void observeStateChanges(Scene scene) {
+  private void observeStateChanges() {
     sceneChangesDisposable = eventsManager
-        .observerScene(scene.getSceneId())
+        .observerScene(sceneId)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(sceneState -> {
-          SuplaChannelStatus.ShapeType state;
-          if (sceneState.getActive()) {
+          if (sceneState.getExecuting()) {
             startTimer(sceneState.getEndTime());
-            state = SuplaChannelStatus.ShapeType.Dot;
           } else {
             if (sceneCountDown != null) {
               sceneCountDown.cancel();
               setTimerInactive();
             }
-            state = SuplaChannelStatus.ShapeType.Ring;
           }
-          left_onlineStatus.setShapeType(state);
-          right_onlineStatus.setShapeType(state);
+          setupSceneStatus(sceneState.getExecuting());
         });
   }
 
-  private void startTimer(Date end) {
+  private ShapeType getStatusShapeType(boolean sceneActive) {
+    if (sceneActive) {
+      return SuplaChannelStatus.ShapeType.Dot;
+    } else {
+      return SuplaChannelStatus.ShapeType.Ring;
+    }
+  }
+
+  private void setupSceneStatus(boolean sceneActive) {
+    ShapeType shapeType = getStatusShapeType(sceneActive);
+    left_onlineStatus.setShapeType(shapeType);
+    right_onlineStatus.setShapeType(shapeType);
+  }
+
+  private void startTimer(@Nullable Date end) {
+    if (end == null) {
+      return;
+    }
     long sceneDuration = end.getTime() - System.currentTimeMillis();
     sceneCountDown = new CountDownTimer(sceneDuration, 1000) {
       private long duration = sceneDuration;
+
       public void onTick(long millisUntilFinished) {
         uiThreadHandler.post(() -> {
           duration -= 1000;
@@ -712,13 +781,8 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     return sb.toString();
   }
 
-  @Override
-  public boolean onLongClick(View v) {
-    listener.onCaptionLongPress(this);
-    return true;
-  }
-
   private static class AnimParams {
+
     public int content_left;
     public int content_right;
     public int left_btn_rotation;
@@ -733,20 +797,23 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
       super(context);
       float textSize = getResources().getDimension(R.dimen.channel_caption_text_size);
-      if(heightScaleFactor > 1.0) textSize *= heightScaleFactor;
+      if (heightScaleFactor > 1.0) {
+        textSize *= heightScaleFactor;
+      }
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
       setTextColor(getResources().getColor(R.color.channel_caption_text));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                                                                       LayoutParams.WRAP_CONTENT);
+          LayoutParams.WRAP_CONTENT);
 
-      if (imgl_id != -1)
+      if (imgl_id != -1) {
         lp.addRule(RelativeLayout.BELOW, imgl_id);
+      }
 
-      lp.topMargin = (int)(getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
-                           * heightScaleFactor);
+      lp.topMargin = (int) (getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+          * heightScaleFactor);
       setLayoutParams(lp);
     }
 
@@ -754,146 +821,78 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
 
   private class ChannelImageLayout extends LinearLayout {
 
-    private ImageView Img1;
-    private ImageId Img1Id;
-
-    private float heightScaleFactor = 1f;
+    private final ImageView imageView;
+    private final float heightScaleFactor;
 
     public ChannelImageLayout(Context context, float heightScaleFactor) {
       super(context);
-
-
       this.heightScaleFactor = heightScaleFactor;
 
       setId(ViewHelper.generateViewId());
-      Img1 = newImageView(context);
+      imageView = newImageView(context);
 
       configureSubviews();
-      SetDimensions();
+      setDimensions();
     }
 
     private void configureSubviews() {
       removeAllViews();
       setOrientation(LinearLayout.HORIZONTAL);
-      addView(Img1);
+      addView(imageView);
     }
 
     private ImageView newImageView(Context context) {
+      ImageView imageView = new ImageView(context);
+      imageView.setId(ViewHelper.generateViewId());
+      imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
-      ImageView Img = new ImageView(context);
-      Img.setId(ViewHelper.generateViewId());
-      Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
-      return Img;
+      return imageView;
     }
 
     private int scaledDimension(int dim) {
-      return (int)(dim * heightScaleFactor);
+      return (int) (dim * heightScaleFactor);
     }
 
-
-    private void SetImgDimensions(ImageView Img, int width, int height) {
+    private void setImageDimensions(ImageView Img, int width, int height) {
       int sw = scaledDimension(width),
-        sh = scaledDimension(height);
+          sh = scaledDimension(height);
 
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(sw, sh);
-
 
       Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
       Img.setLayoutParams(lp);
 
     }
 
-    private void SetImgDimensions(ImageView Img) {
-      SetImgDimensions(Img,
-                       getResources().getDimensionPixelSize(R.dimen.channel_img_width),
-                       getResources().getDimensionPixelSize(R.dimen.channel_img_height));
-    }
-
-    private void SetDimensions() {
+    private void setDimensions() {
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-      int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height),
-        sh = scaledDimension(h);
+      int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
+      int sh = scaledDimension(h);
 
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                                                                       LayoutParams.WRAP_CONTENT, sh);
-            
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+          LayoutParams.WRAP_CONTENT, sh);
+
       lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
       lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            
+
       setLayoutParams(lp);
 
-      SetImgDimensions(Img1);
+      setImageDimensions(imageView,
+          getResources().getDimensionPixelSize(R.dimen.channel_img_width),
+          getResources().getDimensionPixelSize(R.dimen.channel_img_height));
     }
 
     public void setImage(ImageId img1Id) {
-
-
-      Img1Id = img1Id;
-
-      if (Img1Id == null) {
-        Img1.setVisibility(View.GONE);
+      if (img1Id == null) {
+        imageView.setVisibility(View.GONE);
       } else {
-        Img1.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
-        Img1.setVisibility(View.VISIBLE);
+        imageView.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
+        imageView.setVisibility(View.VISIBLE);
       }
     }
   }
 
-
-  @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
-    int action = ev.getAction();
-    int X = (int)ev.getRawX();
-    int Y = (int)ev.getRawY();
-
-		View tapView = null;
-		ViewGroup vg = this;
-		boolean stop;
-
-		do {
-			stop = true;
-			int chldn = vg.getChildCount();
-			for(int i = 0; i < chldn; i++) {
-				View chld = vg.getChildAt(i);
-				if(chld.getVisibility() != View.VISIBLE) continue;
-				int[] loc = new int[2];
-				chld.getLocationOnScreen(loc);
-				if(X > loc[0] && X <= loc[0] + chld.getWidth() &&
-				   Y > loc[1] && Y <= loc[1] + chld.getHeight()) {
-          if(chld instanceof CaptionView) {
-						tapView = chld;
-						stop = true;
-					}
-					break;
-				}
-			}
-		} while(!stop);
-
-		if(tapView == null) return super.onInterceptTouchEvent(ev);
-		if(tapView == _stealingEventsFromView) return true;
-		if(action == MotionEvent.ACTION_DOWN && _stealingEventsFromView == null) {
-			_stealingEventsVictim = this;
-			_stealingEventsFromView = tapView;
-			_stealingStartTime = ev.getEventTime();
-			return true;
-		} 
-		return super.onInterceptTouchEvent(ev);
-  }
-
-	private void stopStealingEvents() {
-		_stealingEventsVictim = null;
-		_stealingEventsFromView = null;
-	}
-
-  private void triggerOnLongPressIfNeeded(MotionEvent ev) {
-    if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
-       _stealingEventsVictim != null) {
-      _stealingEventsVictim.onLongClick(_stealingEventsFromView);
-      stopStealingEvents();
-    }
-  }
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
@@ -904,39 +903,69 @@ public class SceneLayout extends LinearLayout implements View.OnLongClickListene
     float deltaY = Math.abs(Y - LastYtouch);
     float deltaX = Math.abs(X - LastXtouch);
 
-    if(action == MotionEvent.ACTION_DOWN) {
-      OrigX = X;
-      triggerOnLongPressIfNeeded(ev);
+    if (action == MotionEvent.ACTION_DOWN) {
+      initialX = (int) X;
+      initialY = (int) Y;
+      if (isInsideCaption((int) X, (int) Y)) {
+        longPressHandler.postDelayed(captionLongPressRunnable, LONG_PRESS_TIME);
+      } else {
+        longPressHandler.postDelayed(generalLongPressRunnable, LONG_PRESS_TIME);
+      }
+
       LastXtouch = X;
       LastYtouch = Y;
       int sld = Slided();
       buttonSliding = (sld == 1) || (sld == 2);
       return true;
-    } else if(action == MotionEvent.ACTION_MOVE) {
-      if(_stealingEventsVictim != null) {
-        if(Math.abs(OrigX - X) > _stealingGiveBackTolerance) {
-          stopStealingEvents();
-        } else {
-          triggerOnLongPressIfNeeded(ev);
-          return true;
-        }
+    } else if (action == MotionEvent.ACTION_MOVE) {
+      // Some of phones are automatically sending move event, even if there is no real movement
+      // (x and y is not changing) that's why we need to verify the positions.
+      if (Math.abs(initialX - X) > LONG_PRESS_TOLERANCE || Math.abs(initialY - Y) > LONG_PRESS_TOLERANCE) {
+        longPressHandler.removeCallbacks(generalLongPressRunnable);
+        longPressHandler.removeCallbacks(captionLongPressRunnable);
       }
-      if(!Sliding() && deltaY >= deltaX * 1.1f) {
+
+      if (!Sliding() && deltaY >= deltaX * 1.1f) {
         return super.onTouchEvent(ev);
       }
 
-      if(X != LastXtouch) {
-        Slide((int)(X - LastXtouch));
+      if (X != LastXtouch) {
+        Slide((int) (X - LastXtouch));
         listener.onMove(this);
       }
       LastXtouch = X;
       LastYtouch = Y;
-      if(Sliding()) {
+      if (Sliding()) {
         return true;
       }
-    } else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+      longPressHandler.removeCallbacks(generalLongPressRunnable);
+      longPressHandler.removeCallbacks(captionLongPressRunnable);
+
       AnimateToRestingPosition(buttonSliding);
     }
+
     return super.onTouchEvent(ev);
+  }
+
+  private boolean isInsideCaption(int x, int y) {
+    Rect outRect = new Rect();
+    caption_text.getDrawingRect(outRect);
+    outRect.offset(caption_text.getLeft(), channelIconContainer.getTop() + caption_text.getTop());
+
+    return outRect.contains(x, y);
+  }
+
+  private Listener provideSceneListenerForLongPressCallback() {
+    return listener;
+  }
+
+  private ViewHolder provideViewHolderForLongPressCallback() {
+    try {
+      return viewHolderProvider.call();
+    } catch (Exception e) {
+      // Should never happen
+      return null;
+    }
   }
 }

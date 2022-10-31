@@ -19,14 +19,13 @@ package org.supla.android.scenes
 
 
 import android.content.Context
-import android.graphics.Canvas
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.Observable
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.LocationDao
@@ -35,9 +34,9 @@ import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
 
+
 class ScenesAdapter(private val scenesVM: ScenesViewModel,
-                    private val locationDao: LocationDao,
-                    private val sceneController: SceneController): RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+                    private val locationDao: LocationDao): RecyclerView.Adapter<ViewHolder>(),
                     SceneLayout.Listener {
     
     inner class Section(var location: Location,
@@ -56,8 +55,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         setScenes(it)
     }
 
-    private val _reorderingCallback = ScenesReorderingCallback()
-    private val _touchHelper = ItemTouchHelper(_reorderingCallback)
+    private val _touchHelper = ItemTouchHelper(ScenesReorderingCallback())
 
     override fun onAttachedToRecyclerView(v: RecyclerView) {
         super.onAttachedToRecyclerView(v)
@@ -77,7 +75,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): RecyclerView.ViewHolder {
+                                    viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when(viewType) {
             R.layout.scene_list_item -> {
@@ -94,8 +92,7 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
         }
     }
 
-    override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
-                                  pos: Int) {
+    override fun onBindViewHolder(vh: ViewHolder, pos: Int) {
         when(vh) {
             is SceneListItemViewHolder -> {
                 val scene = getScene(pos)
@@ -103,12 +100,13 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
                 vh.binding.sceneLayout.tag = scene.sceneId
                 vh.binding.sceneLayout.setSceneListener(this)
                 vh.binding.sceneLayout.setScene(getScene(pos))
+                vh.binding.sceneLayout.setViewHolderProvider { vh }
             }
             is LocationListItemViewHolder -> {
                 val vm = LocationListItemViewModel(locationDao, getLocation(pos))
                 vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                                                     override fun onPropertyChanged(sender: Observable, pid:Int) {
-                                                        scenesVM.onLocationStateChanged() 
+                                                        scenesVM.onLocationStateChanged()
                                                     }
                 })
                 vh.binding.viewModel = vm
@@ -121,20 +119,15 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     override fun getItemCount(): Int {
-        return if(_sections.isEmpty()) 0 else _sections.map { 
-          it.scenes.count() + 1 }.reduce { a, v -> a + v }
+        return if(_sections.isEmpty()) {
+            0
+        } else {
+            _sections.map { it.scenes.count() + 1 }.reduce { a, v -> a + v }
+        }
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
-    }
-
-    fun invalidateAll() {
-        val parent = _parentView
-        if(parent != null) {
-            parent.setAdapter(null)
-            parent.setAdapter(this)
-        }
     }
 
     private fun setScenes(scenes: List<Scene>) {
@@ -246,76 +239,55 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
     }
 
     inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
             var scene: Scene? = null
     }
 
     inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        ViewHolder(binding.root)
 
     inner class ScenesReorderingCallback:  ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
-        private var dragging = false
-
         override fun getMovementFlags(recyclerView: RecyclerView,
-                                      viewHolder: RecyclerView.ViewHolder): Int {
-            if(_slidedScene?.Slided() ?: 0 != 0) {
+                                      viewHolder: ViewHolder): Int {
+            if((_slidedScene?.Slided() ?: 0) != 0) {
                 return 0
             }
-            return if(viewHolder is SceneListItemViewHolder) super.getMovementFlags(recyclerView, viewHolder) else 0
+            return super.getMovementFlags(recyclerView, viewHolder)
         }
-
-        override fun clearView(reyclerView: RecyclerView,
-                               viewHolder: RecyclerView.ViewHolder) {
-            dragging = false
-            scenesVM.onSceneOrderUpdate(_sections.map { it.scenes }.flatten())
-        }
-        
 
         override fun onMove(recyclerView: RecyclerView,
-                            viewHolder: RecyclerView.ViewHolder,
-                            target: RecyclerView.ViewHolder): Boolean {
-            if(viewHolder is SceneListItemViewHolder && target is SceneListItemViewHolder) {
-                val srcScene = viewHolder.scene!!
-                val dstScene = target.scene!!
-                if(srcScene.locationId == dstScene.locationId) {
-                    swapScenes(srcScene, dstScene)
-                    return true
-                } else {
-                    // reorder is only supported without the same location
-                    return false
-                }
-                
-            } else {
-                // drop target type not compatible
+                            viewHolder: ViewHolder,
+                            target: ViewHolder): Boolean {
+            if (viewHolder !is SceneListItemViewHolder || target !is SceneListItemViewHolder) {
+                return false;
+            }
+
+            val sourceScene = viewHolder.scene!!
+            val destinationScene = target.scene!!
+            if (sourceScene.locationId != destinationScene.locationId) {
                 return false
             }
+
+            swapScenes(sourceScene, destinationScene)
+            return true
         }
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, 
+
+        override fun onSwiped(viewHolder: ViewHolder,
                               direction: Int) {
-            // no-op
+            scenesVM.onSceneOrderUpdate(_sections.map { it.scenes }.flatten())
         }
-        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, 
-                                 viewHolder: RecyclerView.ViewHolder,
-                                 dX: Float, dY: Float, actionState: Int,
-                                 isActive: Boolean) {
-            if(dragging || !isActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY,
-                                  actionState, isActive)
-            } else if(isActive) {
-                val offset = _context.resources.getDimensionPixelSize(R.dimen.scene_drag_offset).toFloat()
-                dragging = true
-                super.onChildDraw(c, recyclerView, viewHolder, dX - offset, dY + offset,
-                                  actionState, isActive)
-            }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return false
         }
-    }    
+    }
 
     override fun onLeftButtonClick(sl: SceneLayout) {
-        sceneController.stopScene(sl.tag as Int)
+        SuplaApp.getApp().suplaClient.stopScene(sl.tag as Int)
     }
     override fun onRightButtonClick(sl: SceneLayout) {
-        sceneController.startScene(sl.tag as Int)
+        SuplaApp.getApp().suplaClient.startScene(sl.tag as Int)
     }
     
     override fun onMove(sl: SceneLayout) {
@@ -339,5 +311,10 @@ class ScenesAdapter(private val scenesVM: ScenesViewModel,
             }
         }
         editor.edit(sceneId)
+    }
+
+    override fun onLongPress(viewHolder: ViewHolder) {
+        SuplaApp.Vibrate(_context)
+        _touchHelper.startDrag(viewHolder)
     }
 }

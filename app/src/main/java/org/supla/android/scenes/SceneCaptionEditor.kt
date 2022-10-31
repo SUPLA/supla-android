@@ -1,5 +1,5 @@
 package org.supla.android.scenes
- 
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -24,37 +24,34 @@ import org.supla.android.CaptionEditor
 import org.supla.android.SuplaApp
 import org.supla.android.R
 
-class SceneCaptionEditor(context: Context): CaptionEditor(context) {
+class SceneCaptionEditor(context: Context) : CaptionEditor(context) {
 
-    interface Listener {
-        fun onCaptionChange()
-    }
+  interface Listener {
+    fun onCaptionChange()
+  }
 
-    var listener: Listener? = null
+  var listener: Listener? = null
 
-    override protected fun getTitle(): Int {
-        return R.string.scene_name
-    }
+  override fun getTitle(): Int {
+    return R.string.scene_name
+  }
 
-    override protected fun getCaption(): String {
-        val repo = DbHelper.getInstance(getContext())
-            .getSceneRepository()
-        val scene = repo.getScene(getId())!!
-        return scene.caption
-    }
+  override fun getCaption(): String {
+    val repo = DbHelper.getInstance(context).sceneRepository
+    val scene = repo.getScene(id)!!
+    return scene.caption
+  }
 
-    override protected fun applyChanged(newCaption: String) {
-        SuplaApp.getApp().getSuplaClient().renameScene(getId(),
-                                                       newCaption)
-        val repo = DbHelper.getInstance(getContext())
-            .getSceneRepository()
-        val scene = repo.getScene(getId())!!
-        scene.caption = newCaption
-        repo.updateScene(scene)
-        listener?.onCaptionChange()
-    }
+  override fun applyChanged(newCaption: String) {
+    SuplaApp.getApp().suplaClient.renameScene(id, newCaption)
+    val repo = DbHelper.getInstance(context).sceneRepository
+    val scene = repo.getScene(id)!!
+    scene.caption = newCaption
+    repo.updateScene(scene)
+    listener?.onCaptionChange()
+  }
 
-    override protected fun getHint(): Int {
-        return R.string.str_default;
-    }
+  override fun getHint(): Int {
+    return R.string.str_default
+  }
 }

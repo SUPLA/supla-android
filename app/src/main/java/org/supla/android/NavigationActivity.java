@@ -244,10 +244,6 @@ public class NavigationActivity extends BaseActivity
     return ContentLayout;
   }
 
-  protected ViewGroup getContentView() {
-    return Content;
-  }
-
   @Override
   public void setContentView(int layoutResID) {
 
@@ -274,12 +270,6 @@ public class NavigationActivity extends BaseActivity
     setBtnBackground(MenuButton, R.drawable.back);
     MenuButton.setVisibility(View.VISIBLE);
     MenuButton.setTag(Integer.valueOf(1));
-    ProfileButton.setVisibility(View.GONE);
-  }
-
-  public void hideMenuButton() {
-    getMenuBarLayout();
-    MenuButton.setVisibility(View.GONE);
     ProfileButton.setVisibility(View.GONE);
   }
 
@@ -373,17 +363,6 @@ public class NavigationActivity extends BaseActivity
     if (MenuBarLayout != null) MenuBarLayout.setVisibility(View.VISIBLE);
   }
 
-  public void hideMenuBar() {
-
-    RelativeLayout.LayoutParams lp =
-        new RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-    lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-    getContentLayout().setLayoutParams(lp);
-
-    if (MenuBarLayout != null) MenuBarLayout.setVisibility(View.GONE);
-  }
-
   public void showMenu(boolean Animated) {
     showHideMenu(true, Animated);
   }
@@ -469,7 +448,6 @@ public class NavigationActivity extends BaseActivity
     }
 
     if (v != MenuButton && menuIsVisible()) {
-
       hideMenu(true);
     }
 

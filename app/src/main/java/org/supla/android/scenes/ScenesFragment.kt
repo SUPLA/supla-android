@@ -55,6 +55,11 @@ class ScenesFragment : Fragment() {
   }
 
   fun reload() {
+    scenesVM.cleanup()
+
+    binding.scenesList.adapter = null
+    binding.scenesList.adapter = scenesVM.scenesAdapter
+
     scenesVM.reload()
   }
 }

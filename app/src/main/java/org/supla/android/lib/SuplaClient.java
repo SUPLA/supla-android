@@ -43,18 +43,14 @@ import org.supla.android.Trace;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
-import org.supla.android.data.source.SceneRepository;
-import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
-import org.supla.android.scenes.SceneController;
-import org.supla.android.scenes.SceneController;
 
 @SuppressWarnings("unused")
-public class SuplaClient extends Thread implements SceneController {
+public class SuplaClient extends Thread {
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();

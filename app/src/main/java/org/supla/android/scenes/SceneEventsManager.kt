@@ -3,7 +3,7 @@ package org.supla.android.scenes
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.util.Date
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,12 +43,12 @@ class SceneEventsManager @Inject constructor() {
 
   fun observerScene(sceneId: Int): Observable<SceneState> {
     return subjects[sceneId]?.hide()
-      ?.distinctUntilChanged { stateA, stateB -> stateA.active == stateB.active }
+      ?.distinctUntilChanged { stateA, stateB -> stateA.executing == stateB.executing }
       ?: Observable.just(SceneState(false))
   }
 
   data class SceneState(
-    val active: Boolean,
+    val executing: Boolean,
     val endTime: Date? = null
   )
 }

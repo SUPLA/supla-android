@@ -37,8 +37,7 @@ class ScenesViewModel @Inject constructor(
   private val messageHandler: SuplaClientMessageHandler,
   private val sceneEventsManager: SceneEventsManager,
   private val dispatchers: CoroutineDispatchers,
-  dbHelper: DbHelper,
-  scController: SceneController
+  dbHelper: DbHelper
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   private var _scenes = MutableLiveData<List<Scene>>(emptyList())
@@ -46,10 +45,7 @@ class ScenesViewModel @Inject constructor(
 
   val scenes: LiveData<List<Scene>> = _scenes
 
-  val scenesAdapter = ScenesAdapter(
-    this, LocationDao(dbHelper),
-    scController
-  )
+  val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper))
 
   init {
     viewModelScope.launch {
@@ -63,6 +59,10 @@ class ScenesViewModel @Inject constructor(
         messageHandler.registerMessageListener(this@ScenesViewModel)
       }
     }
+  }
+
+  fun cleanup() {
+    _scenes.value = listOf()
   }
 
   fun onLocationStateChanged() {
