@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-  <data>
-    <import type="android.view.View" />
-    <variable name="viewModel"
-              type="org.supla.android.scenes.LocationListItemViewModel"
-              />
-  </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
   <LinearLayout
       android:id="@+id/container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:onClick="@{() -> viewModel.setCollapsed(!viewModel.getCollapsed())}"
       android:orientation="vertical">
 
     <LinearLayout
@@ -30,11 +21,9 @@
             android:id="@+id/tvSectionCaption"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/channel_separator_text_margin"
-            android:layout_weight="1"
+            android:layout_marginStart="@dimen/channel_separator_text_margin"
             android:gravity="center_vertical"
             android:minWidth="100dp"
-            android:text="@{viewModel.locationName}"
             android:textColor="@color/channel_section_text"
             android:textSize="@dimen/channel_section_text" />
       </FrameLayout>
@@ -51,21 +40,16 @@
             android:layout_width="25dp"
             android:layout_height="15dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:background="@drawable/collapsed"
-            android:visibility="@{viewModel.collapsed ? View.VISIBLE : View.INVISIBLE}"
             android:cropToPadding="false"
             android:drawingCacheQuality="high" />
       </FrameLayout>
 
     </LinearLayout>
-
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/channel_separetor" />
-
   </LinearLayout>
-
 </layout>

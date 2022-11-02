@@ -794,6 +794,7 @@ public class MainActivity extends NavigationActivity
         groupsVisible = View.VISIBLE;
         break;
       case R.id.scenes_item:
+        reloadScenes();
         scenesVisible = View.VISIBLE;
         break;
     }

@@ -20,301 +20,238 @@ package org.supla.android.scenes
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.ViewGroup
-import androidx.databinding.Observable
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.LocationDao
 import org.supla.android.databinding.LocationListItemBinding
 import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
+import java.lang.ref.WeakReference
+import javax.inject.Inject
 
 
-class ScenesAdapter(private val scenesVM: ScenesViewModel,
-                    private val locationDao: LocationDao): RecyclerView.Adapter<ViewHolder>(),
-                    SceneLayout.Listener {
-    
-    inner class Section(var location: Location,
-                        var scenes: MutableList<Scene> = mutableListOf())
+class ScenesAdapter @Inject constructor(
+  @ActivityContext private val context: Context,
+  private val channelRepository: ChannelRepository
+) : RecyclerView.Adapter<ViewHolder>(),
+  SceneLayout.Listener {
 
-    data class Path(val sectionIdx: Int, var sceneIdx: Int? = null)
+  private var recyclerView: WeakReference<RecyclerView>? = null
+  private var _sections: List<Section> = emptyList()
+  private var _vTypes: List<Int> = emptyList()
+  private var _paths: List<Path> = emptyList()
 
-    private var _sections: List<Section> = emptyList()
-    private var _vTypes: List<Int> = emptyList()
-    private var _paths: List<Path> = emptyList()
-    private lateinit var _context: Context
-    private var _parentView: RecyclerView? = null
-    private var _slidedScene: SceneLayout? = null
-
-    private val _scenesObserver: Observer<List<Scene>> = Observer {
-        setScenes(it)
+  private val callback = ScenesListCallback(this).also {
+    it.leftButtonClickedListener = { sceneId -> leftButtonClickCallback(sceneId) }
+    it.rightButtonClickedListener = { sceneId -> rightButtonClickCallback(sceneId) }
+    it.onMovedListener = { fromPos, toPos -> swapScenesInternally(fromPos, toPos) }
+    it.onMoveFinishedListener = {
+      movementFinishedCallback(_sections.map { section -> section.scenes }.flatten())
     }
+  }
+  private val itemTouchHelper = ItemTouchHelper(callback)
 
-    private val _touchHelper = ItemTouchHelper(ScenesReorderingCallback())
+  var leftButtonClickCallback: (sceneId: Int) -> Unit = { _: Int -> }
+  var rightButtonClickCallback: (sceneId: Int) -> Unit = { _: Int -> }
+  var movementFinishedCallback: (scenes: List<Scene>) -> Unit = { }
+  var reloadCallback: () -> Unit = { }
+  var toggleLocationCallback: (location: Location) -> Unit = { }
 
-    override fun onAttachedToRecyclerView(v: RecyclerView) {
-        super.onAttachedToRecyclerView(v)
-        
-        scenesVM.scenes.observeForever(_scenesObserver)
-        _touchHelper.attachToRecyclerView(v)
-        _context = v.context
-        _parentView = v
+  override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+    super.onAttachedToRecyclerView(recyclerView)
+    this.recyclerView = WeakReference(recyclerView)
+
+    itemTouchHelper.attachToRecyclerView(recyclerView)
+    callback.setup(recyclerView)
+  }
+
+  override fun onCreateViewHolder(
+    parent: ViewGroup,
+    viewType: Int
+  ): ViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    return when (viewType) {
+      R.layout.scene_list_item -> {
+        val binding = SceneListItemBinding.inflate(inflater, parent, false)
+        val holder = SceneListItemViewHolder(binding)
+        holder
+      }
+      R.layout.location_list_item -> {
+        val binding = LocationListItemBinding.inflate(inflater, parent, false)
+        binding.tvSectionCaption.typeface = SuplaApp.getApp().typefaceQuicksandRegular
+        LocationListItemViewHolder(binding)
+      }
+      else -> throw IllegalArgumentException("unsupported view type $viewType")
     }
+  }
 
-
-
-    override fun onDetachedFromRecyclerView(v: RecyclerView) {
-        scenesVM.scenes.removeObserver(_scenesObserver)
-        _parentView = null
-        super.onDetachedFromRecyclerView(v)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return when(viewType) {
-            R.layout.scene_list_item -> {
-                val binding = SceneListItemBinding.inflate(inflater, parent, false)
-                val holder = SceneListItemViewHolder(binding)
-                holder
-            }
-            R.layout.location_list_item -> {
-                val binding = LocationListItemBinding.inflate(inflater, parent, false)
-                binding.tvSectionCaption.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
-                LocationListItemViewHolder(binding)
-            }
-            else -> throw IllegalArgumentException("unsupported view type $viewType")
+  override fun onBindViewHolder(vh: ViewHolder, pos: Int) {
+    when (vh) {
+      is SceneListItemViewHolder -> {
+        val scene = getScene(pos)
+        vh.scene = scene
+        vh.binding.sceneLayout.tag = scene.sceneId
+        vh.binding.sceneLayout.setSceneListener(this)
+        vh.binding.sceneLayout.setScene(getScene(pos))
+        vh.binding.sceneLayout.setViewHolderProvider { vh }
+      }
+      is LocationListItemViewHolder -> {
+        val location = getLocation(pos)
+        vh.binding.container.setOnClickListener {
+          recyclerView?.get()?.let { callback.closeWhenSwiped(it) }
+          toggleLocationCallback(location)
         }
-    }
-
-    override fun onBindViewHolder(vh: ViewHolder, pos: Int) {
-        when(vh) {
-            is SceneListItemViewHolder -> {
-                val scene = getScene(pos)
-                vh.scene = scene
-                vh.binding.sceneLayout.tag = scene.sceneId
-                vh.binding.sceneLayout.setSceneListener(this)
-                vh.binding.sceneLayout.setScene(getScene(pos))
-                vh.binding.sceneLayout.setViewHolderProvider { vh }
-            }
-            is LocationListItemViewHolder -> {
-                val vm = LocationListItemViewModel(locationDao, getLocation(pos))
-                vm.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-                                                    override fun onPropertyChanged(sender: Observable, pid:Int) {
-                                                        scenesVM.onLocationStateChanged()
-                                                    }
-                })
-                vh.binding.viewModel = vm
-            }
-        }
-    }
-
-    override fun getItemViewType(pos: Int): Int {
-        return _vTypes[pos]
-    }
-
-    override fun getItemCount(): Int {
-        return if(_sections.isEmpty()) {
-            0
+        vh.binding.tvSectionCaption.text = location.caption
+        vh.binding.ivSectionCollapsed.visibility = if ((location.collapsed and 0x4) > 0) {
+          VISIBLE
         } else {
-            _sections.map { it.scenes.count() + 1 }.reduce { a, v -> a + v }
+          GONE
         }
+      }
+    }
+  }
+
+  override fun getItemViewType(pos: Int): Int {
+    return _vTypes[pos]
+  }
+
+  override fun getItemCount(): Int {
+    return if (_sections.isEmpty()) {
+      0
+    } else {
+      _sections.map { it.scenes.count() + 1 }.reduce { a, v -> a + v }
+    }
+  }
+
+  override fun getItemId(position: Int): Long {
+    return position.toLong()
+  }
+
+  fun setScenes(scenes: List<Scene>) {
+    val secs = mutableListOf<Section>()
+    val vTypes = mutableListOf<Int>()
+    val paths = mutableListOf<Path>()
+
+    var loc: Location? = null
+    var locScenes: MutableList<Scene> = mutableListOf()
+    var i = 0
+    var lc = -1
+    while (i < scenes.count()) {
+      if (loc == null) {
+        loc = channelRepository.getLocation(scenes[i].locationId)
+        vTypes.add(R.layout.location_list_item)
+        paths.add(Path(++lc))
+      }
+
+      if (loc!!.collapsed and 0x4 == 0) {
+        paths.add(Path(lc, locScenes.count()))
+        locScenes.add(scenes[i])
+        vTypes.add(R.layout.scene_list_item)
+      }
+      i++
+      if (i == scenes.count() ||
+        scenes[i].locationId != loc.locationId
+      ) {
+        secs.add(Section(loc, locScenes))
+        locScenes = mutableListOf()
+        loc = null
+      }
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    val oldPaths = _paths
+    val oldSecs = _sections
+    _sections = secs
+    _vTypes = vTypes
+    _paths = paths
 
-    private fun setScenes(scenes: List<Scene>) {
-        val secs = mutableListOf<Section>()
-        val vTypes = mutableListOf<Int>()
-        val paths = mutableListOf<Path>()
-        
-        var loc: Location? = null
-        var locScenes: MutableList<Scene> = mutableListOf()
-        var i = 0
-        var lc = -1
-        while(i < scenes.count()) {
-            if(loc == null) {
-                loc = locationDao.getLocation(scenes[i].locationId)
-                vTypes.add(R.layout.location_list_item)
-                paths.add(Path(++lc))
+    if (_paths.size != oldPaths.size) {
+      notifyDataSetChanged()
+    } else {
+      var pos = 0
+      for (p in _paths) {
+        if (oldSecs[p.sectionIdx].scenes.size ==
+          _sections[p.sectionIdx].scenes.size
+        ) {
+          if (p.sceneIdx != null) {
+            val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
+            val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
+            if (a != b) {
+              notifyItemChanged(pos)
             }
-
-            if(loc!!.getCollapsed() and 0x4 == 0) {
-                paths.add(Path(lc, locScenes.count()))
-                locScenes.add(scenes[i])
-                vTypes.add(R.layout.scene_list_item)
-            }
-            i++
-            if(i == scenes.count() ||
-               scenes[i].locationId != loc.locationId) {
-                secs.add(Section(loc, locScenes))
-                locScenes = mutableListOf()
-                loc = null
-            }
-        }
-
-        val oldPaths = _paths
-        val oldSecs = _sections
-        _sections = secs
-        _vTypes = vTypes
-        _paths = paths
-
-        if(_paths.size != oldPaths.size) {
-            notifyDataSetChanged()
+          }
         } else {
-            var pos = 0
-            for(p in _paths) {
-                if(oldSecs[p.sectionIdx].scenes.size ==
-                       _sections[p.sectionIdx].scenes.size) {
-                    if(p.sceneIdx != null) {
-                        val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
-                        val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
-                        if(a != b) {
-                            notifyItemChanged(pos)
-                        }
-                    }
-                } else {
-                    notifyDataSetChanged()
-                    return
-                }
-                
-                pos += 1
-            }
-        }
-    }
-
-    private fun getLocation(pos: Int): Location {
-        return _sections[_paths[pos].sectionIdx].location
-    }
-
-    private fun getScene(pos: Int): Scene {
-        val path = _paths[pos]
-        return _sections[path.sectionIdx].scenes[path.sceneIdx!!]
-    }
-
-    private fun swapScenes(src: Scene, dst: Scene) {
-        var offset = 1
-        for(sec in _sections) {
-            var si:Int? = null
-            var di:Int? = null
-            for(i in 0.until(sec.scenes.count())) {
-                if(sec.scenes[i].sceneId == src.sceneId) {
-                    si = i
-                }
-
-                if(sec.scenes[i].sceneId == dst.sceneId) {
-                    di = i
-                }
-
-                if(si != null && di != null) break
-            }
-
-            if(si != null && di != null) {
-                var delta = 0
-                if(si > di) {
-                    delta = -1
-                } else if(si < di) {
-                    delta = 1
-                }
-                var i = si
-
-                while(i != di) {
-                    val tmp = sec.scenes[i]
-                    sec.scenes[i] = sec.scenes[i + delta]
-                    sec.scenes[i + delta] = tmp
-                    notifyItemMoved(offset + i, offset + i + delta)
-                    i += delta
-                }
-                return
-            }
-            offset += sec.scenes.count() + 1
-        }
-    }
-
-    inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
-        ViewHolder(binding.root) {
-            var scene: Scene? = null
-    }
-
-    inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
-        ViewHolder(binding.root)
-
-    inner class ScenesReorderingCallback:  ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-
-        override fun getMovementFlags(recyclerView: RecyclerView,
-                                      viewHolder: ViewHolder): Int {
-            if((_slidedScene?.Slided() ?: 0) != 0) {
-                return 0
-            }
-            return super.getMovementFlags(recyclerView, viewHolder)
+          notifyDataSetChanged()
+          return
         }
 
-        override fun onMove(recyclerView: RecyclerView,
-                            viewHolder: ViewHolder,
-                            target: ViewHolder): Boolean {
-            if (viewHolder !is SceneListItemViewHolder || target !is SceneListItemViewHolder) {
-                return false;
-            }
-
-            val sourceScene = viewHolder.scene!!
-            val destinationScene = target.scene!!
-            if (sourceScene.locationId != destinationScene.locationId) {
-                return false
-            }
-
-            swapScenes(sourceScene, destinationScene)
-            return true
-        }
-
-        override fun onSwiped(viewHolder: ViewHolder,
-                              direction: Int) {
-            scenesVM.onSceneOrderUpdate(_sections.map { it.scenes }.flatten())
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return false
-        }
+        pos += 1
+      }
     }
+  }
 
-    override fun onLeftButtonClick(sl: SceneLayout) {
-        SuplaApp.getApp().suplaClient.stopScene(sl.tag as Int)
+  internal fun closeSwipedElement() {
+    recyclerView?.get()?.let {
+      callback.closeWhenSwiped(it)
     }
-    override fun onRightButtonClick(sl: SceneLayout) {
-        SuplaApp.getApp().suplaClient.startScene(sl.tag as Int)
-    }
-    
-    override fun onMove(sl: SceneLayout) {
-        if(sl != _slidedScene) {
-            _slidedScene?.AnimateToRestingPosition(true)
-        }
-    }
+  }
 
-    override fun onButtonSlide(sl: SceneLayout) {
-        _slidedScene?.AnimateToRestingPosition(true)
-        _slidedScene = sl
-    }
+  private fun getLocation(pos: Int): Location {
+    return _sections[_paths[pos].sectionIdx].location
+  }
 
-    override fun onCaptionLongPress(sl: SceneLayout) {
-        val sceneId = sl.tag as Int
-        SuplaApp.Vibrate(_context)
-        val editor = SceneCaptionEditor(_context)
-        editor.listener = object: SceneCaptionEditor.Listener {
-            override fun onCaptionChange() {
-                scenesVM.reload()
-            }
-        }
-        editor.edit(sceneId)
-    }
+  private fun getScene(pos: Int): Scene {
+    val path = _paths[pos]
+    return _sections[path.sectionIdx].scenes[path.sceneIdx!!]
+  }
 
-    override fun onLongPress(viewHolder: ViewHolder) {
-        SuplaApp.Vibrate(_context)
-        _touchHelper.startDrag(viewHolder)
+  private fun swapScenesInternally(fromPos: Int, toPos: Int) {
+    val fromPath = _paths[fromPos]
+    val toPath = _paths[toPos]
+
+    val buf = _sections[fromPath.sectionIdx].scenes[fromPath.sceneIdx!!]
+    _sections[fromPath.sectionIdx].scenes[fromPath.sceneIdx!!] =
+      _sections[toPath.sectionIdx].scenes[toPath.sceneIdx!!]
+    _sections[toPath.sectionIdx].scenes[toPath.sceneIdx!!] = buf
+  }
+
+  override fun onCaptionLongPress(sl: SceneLayout) {
+    val sceneId = sl.tag as Int
+    SuplaApp.Vibrate(context)
+    val editor = SceneCaptionEditor(context)
+    editor.listener = object : SceneCaptionEditor.Listener {
+      override fun onCaptionChange() {
+        reloadCallback()
+      }
     }
+    editor.edit(sceneId)
+  }
+
+  override fun onLongPress(viewHolder: ViewHolder) {
+    SuplaApp.Vibrate(context)
+    itemTouchHelper.startDrag(viewHolder)
+  }
+
+  inner class Section(
+    var location: Location,
+    var scenes: MutableList<Scene> = mutableListOf()
+  )
+
+  data class Path(val sectionIdx: Int, var sceneIdx: Int? = null)
+
+  inner class SceneListItemViewHolder(val binding: SceneListItemBinding) :
+    ViewHolder(binding.root) {
+    var scene: Scene? = null
+  }
+
+  inner class LocationListItemViewHolder(val binding: LocationListItemBinding) :
+    ViewHolder(binding.root)
 }

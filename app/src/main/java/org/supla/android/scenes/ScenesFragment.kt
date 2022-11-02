@@ -26,7 +26,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentScenesBinding
+import org.supla.android.db.DbHelper
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -34,7 +37,13 @@ class ScenesFragment : Fragment() {
 
   private lateinit var binding: FragmentScenesBinding
 
-  private val scenesVM: ScenesViewModel by viewModels()
+  private val viewModel: ScenesViewModel by viewModels()
+
+  @Inject
+  lateinit var dbHelper: DbHelper
+
+  @Inject
+  lateinit var scenesAdapter: ScenesAdapter
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -47,19 +56,35 @@ class ScenesFragment : Fragment() {
       container, false
     )
 
+    setupAdapter()
+
     binding.lifecycleOwner = requireActivity()
-    binding.viewModel = scenesVM
-    scenesVM.reload()
+    binding.viewModel = viewModel
+    binding.scenesList.adapter = scenesAdapter
 
     return binding.root
   }
 
   fun reload() {
-    scenesVM.cleanup()
+    viewModel.cleanup()
 
     binding.scenesList.adapter = null
-    binding.scenesList.adapter = scenesVM.scenesAdapter
+    binding.scenesList.adapter = scenesAdapter
 
-    scenesVM.reload()
+    viewModel.reload()
+  }
+
+  private fun setupAdapter() {
+    scenesAdapter.leftButtonClickCallback = {
+      SuplaApp.Vibrate(context)
+      SuplaApp.getApp().suplaClient.stopScene(it)
+    }
+    scenesAdapter.rightButtonClickCallback = {
+      SuplaApp.Vibrate(context)
+      SuplaApp.getApp().suplaClient.startScene(it)
+    }
+    scenesAdapter.movementFinishedCallback = { viewModel.onSceneOrderUpdate(it) }
+    scenesAdapter.reloadCallback = { viewModel.reload() }
+    scenesAdapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
   }
 }

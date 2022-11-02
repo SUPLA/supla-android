@@ -18,21 +18,14 @@ package org.supla.android.scenes;
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,71 +52,35 @@ import org.supla.android.listview.LineView;
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout {
 
-  private static final int LONG_PRESS_TIME = 400; // Time in milliseconds
-  private static final int LONG_PRESS_TOLERANCE = 3; // Tolerance for movement when recognizing long press (in px)
   private static final String TIMER_INACTIVE = "--:--:--";
 
 
   @Inject
   SceneEventsManager eventsManager;
 
-  // Temporary solution to disable moving in adapter when renaming
-  private final Handler longPressHandler = new Handler();
-  private final Runnable generalLongPressRunnable = () ->
-      provideSceneListenerForLongPressCallback().onLongPress(
-          provideViewHolderForLongPressCallback());
-  private final Runnable captionLongPressRunnable = () ->
-      provideSceneListenerForLongPressCallback().onCaptionLongPress(this);
   private Callable<ViewHolder> viewHolderProvider;
-  private int initialX;
-  private int initialY;
 
-
-  private boolean buttonSliding = false;
   private RelativeLayout content;
-  private FrameLayout right_btn;
-  private FrameLayout left_btn;
-
-  private RelativeLayout channelIconContainer;
 
   private ChannelImageLayout imgl;
 
-  private TextView left_btn_text;
-  private TextView right_btn_text;
   private CaptionView caption_text;
 
   private SuplaChannelStatus right_onlineStatus;
-  private SuplaChannelStatus right_ActiveStatus;
   private SuplaChannelStatus left_onlineStatus;
   private TextView sceneDurationTimer;
   private CountDownTimer sceneCountDown;
-  private LineView bottom_line;
   private Handler uiThreadHandler;
 
-  private boolean Anim;
-
-  private boolean RightButtonEnabled;
-  private boolean LeftButtonEnabled;
-
-  private Preferences prefs;
-  private float LastXtouch = -1;
-  private float LastYtouch = -1;
   private Listener listener;
 
   private int sceneId;
+  private int locationId;
   private Disposable sceneChangesDisposable = null;
 
   public interface Listener {
 
-    void onLeftButtonClick(SceneLayout l);
-
-    void onRightButtonClick(SceneLayout l);
-
     void onCaptionLongPress(SceneLayout l);
-
-    void onButtonSlide(SceneLayout l);
-
-    void onMove(SceneLayout l);
 
     void onLongPress(ViewHolder viewHolder);
   }
@@ -135,30 +92,21 @@ public class SceneLayout extends LinearLayout {
     init(context);
   }
 
+  public int getLocationId() {
+    return locationId;
+  }
+
   private void init(Context context) {
     uiThreadHandler = new Handler(Looper.getMainLooper());
-    prefs = new Preferences(context);
+    Preferences prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
     setBackgroundColor(getResources().getColor(R.color.channel_cell));
-
-    right_btn = new FrameLayout(context);
-    left_btn = new FrameLayout(context);
 
     float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
     int channelHeight = (int) (
         ((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
             * heightScaleFactor);
-
-    right_btn.setLayoutParams(new LayoutParams(
-        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
-
-    right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
-
-    left_btn.setLayoutParams(new LayoutParams(
-        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
-
-    left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
@@ -166,14 +114,6 @@ public class SceneLayout extends LinearLayout {
     content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
     addView(content);
-    addView(left_btn);
-    addView(right_btn);
-
-    left_btn_text = newTextView(context);
-    left_btn.addView(left_btn_text);
-
-    right_btn_text = newTextView(context);
-    right_btn.addView(right_btn_text);
 
     right_onlineStatus = newOnlineStatus(context, true);
     right_onlineStatus.setId(ViewHelper.generateViewId());
@@ -195,12 +135,12 @@ public class SceneLayout extends LinearLayout {
     sceneDurationTimer.setLayoutParams(sdlp);
     sceneDurationTimer.setText(TIMER_INACTIVE);
 
-    channelIconContainer = new RelativeLayout(context);
+    RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
     channelIconContainer
         .setLayoutParams(getChannelIconContainerLayoutParams());
 
-    right_ActiveStatus = new SuplaChannelStatus(context);
+    SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
     right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
 
@@ -218,30 +158,22 @@ public class SceneLayout extends LinearLayout {
     right_ActiveStatus.setVisibility(View.GONE);
     content.addView(right_ActiveStatus);
 
-    bottom_line = new LineView(context);
+    LineView bottom_line = new LineView(context);
     content.addView(bottom_line);
 
     imgl = new ChannelImageLayout(context, heightScaleFactor);
     channelIconContainer.addView(imgl);
 
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
-    //caption_text.setOnLongClickListener(v -> listener.onCaptionLongPress(this));
-    channelIconContainer.addView(caption_text);
-
-    OnTouchListener tl = (v, event) -> {
-      int action = event.getAction();
-
-      if (action == MotionEvent.ACTION_DOWN) {
-        onActionBtnTouchDown(v);
-      } else if (action == MotionEvent.ACTION_UP) {
-        onActionBtnTouchUp(v);
-      }
-
+    caption_text.setOnLongClickListener(v -> {
+      listener.onCaptionLongPress(this);
       return true;
-    };
-
-    left_btn.setOnTouchListener(tl);
-    right_btn.setOnTouchListener(tl);
+    });
+    channelIconContainer.addView(caption_text);
+    setOnLongClickListener(v -> {
+      listener.onLongPress(provideViewHolderForLongPressCallback());
+      return true;
+    });
   }
 
 
@@ -302,22 +234,7 @@ public class SceneLayout extends LinearLayout {
     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
         getResources().getDimension(R.dimen.default_text_size));
     tv.setTextColor(getResources().getColor(R.color.label_grey));
-    tv.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
-
-    return tv;
-  }
-
-  private TextView newTextView(Context context) {
-
-    TextView tv = new TextView(context);
-    tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
-    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-        getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
-    tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+    tv.setGravity(Gravity.BOTTOM | Gravity.END);
 
     return tv;
   }
@@ -353,304 +270,6 @@ public class SceneLayout extends LinearLayout {
     return result;
   }
 
-  public void setLeftBtnText(String Text) {
-    left_btn_text.setText(Text);
-  }
-
-  public void setRightBtnText(String Text) {
-    right_btn_text.setText(Text);
-  }
-
-  public void Slide(int delta) {
-
-    if (Anim) {
-      return;
-    }
-
-    if (!LeftButtonEnabled
-        && delta > 0 && content.getLeft() + delta > 0) {
-      delta = content.getLeft() * -1;
-    }
-
-    if (!RightButtonEnabled
-        && delta < 0 && content.getLeft() + delta < 0) {
-      delta = content.getLeft() * -1;
-    }
-
-    content.layout(content.getLeft() + delta, content.getTop(),
-        content.getWidth() + content.getLeft() + delta, content.getHeight());
-
-    int bcolor = getResources().getColor(R.color.channel_btn);
-
-    left_btn.setBackgroundColor(bcolor);
-    right_btn.setBackgroundColor(bcolor);
-
-    UpdateLeftBtn();
-    UpdateRightBtn();
-
-  }
-
-  public float percentOfSliding() {
-    if (content.getLeft() < 0) {
-      return right_btn.getWidth() > 0 ?
-          content.getLeft() * -100f / right_btn.getWidth() : 0;
-    }
-
-    return left_btn.getWidth() > 0 ?
-        content.getLeft() * 100f / left_btn.getWidth() : 0;
-  }
-
-  public boolean Sliding() {
-    return Anim || percentOfSliding() > 0;
-  }
-
-  public int Slided() {
-
-    if (Anim) {
-      return 10;
-    }
-
-    if (content.getLeft() > 0) {
-      return content.getLeft() == right_btn.getWidth() ? 100 : 1;
-    }
-
-    if (content.getLeft() < 0) {
-      return content.getLeft() == left_btn.getWidth() * -1 ? 200 : 2;
-    }
-
-    return 0;
-  }
-
-  private void UpdateLeftBtn() {
-
-    float pr = content.getLeft() * 100 / left_btn.getWidth();
-
-    if (pr <= 0) {
-      pr = 0;
-    } else if (pr > 100) {
-      pr = 100;
-    }
-
-    left_btn.setRotationY(90 - 90 * pr / 100);
-
-    int left = content.getLeft() / 2 - left_btn.getWidth() / 2;
-    int right = left_btn.getWidth() + (content.getLeft() / 2 - left_btn.getWidth() / 2);
-
-    if (left > 0) {
-      left = 0;
-    }
-    if (right > left_btn.getWidth()) {
-      right = left_btn.getWidth();
-    }
-
-    left_btn.layout(left, 0, right, left_btn.getHeight());
-
-  }
-
-  private void onActionBtnTouchUpDown(boolean up, View v) {
-    if (up) {
-      if (prefs.isButtonAutohide()) {
-        AnimateToRestingPosition(true);
-      }
-      if (v == left_btn) {
-        listener.onLeftButtonClick(this);
-      } else {
-        listener.onRightButtonClick(this);
-      }
-
-    }
-  }
-
-  private void onActionBtnTouchDown(View v) {
-    if (Slided() == 0) {
-      return;
-    }
-
-    if (v == left_btn || v == right_btn) {
-      v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
-    }
-
-    onActionBtnTouchUpDown(false, v);
-  }
-
-  private void onActionBtnTouchUp(View v) {
-    if (Slided() == 0) {
-      return;
-    }
-
-    if (v == left_btn || v == right_btn) {
-
-      final View _v = v;
-
-      final Handler handler = new Handler();
-      handler.postDelayed(() -> _v.setBackgroundColor(getResources().getColor(R.color.channel_btn)),
-          200);
-
-    }
-
-    onActionBtnTouchUpDown(true, v);
-  }
-
-  private void UpdateRightBtn() {
-
-    float pr = (content.getLeft() * -1) * 100 / (float) right_btn.getWidth();
-
-    if (pr <= 0) {
-      pr = 0;
-    } else if (pr > 100) {
-      pr = 100;
-    }
-
-    right_btn.setRotationY(-90 + 90 * pr / 100);
-
-    int left = getWidth() + (content.getLeft() / 2 - right_btn.getWidth() / 2);
-
-    if (content.getLeft() * -1 > right_btn.getWidth()) {
-      left = getWidth() - right_btn.getWidth();
-    }
-
-    right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
-  }
-
-  public void AnimateToRestingPosition(boolean start_pos) {
-
-    if (!start_pos && Anim) {
-      return;
-    }
-
-    if (!start_pos) {
-      listener.onButtonSlide(this);
-    }
-
-    ObjectAnimator btn_animr = null;
-    ObjectAnimator btn_animx = null;
-    ObjectAnimator content_animx = null;
-
-    final AnimParams params = new AnimParams();
-
-    params.left_btn_rotation = 90;
-    params.left_btn_left = left_btn.getWidth() * -1;
-    params.left_btn_right = 0;
-
-    if (content.getLeft() > 0) {
-
-      if (!start_pos
-          && content.getLeft() >= left_btn.getWidth() / 2) {
-
-        params.content_left = left_btn.getWidth();
-        params.content_right = getWidth() + left_btn.getWidth();
-
-        btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 0f);
-        btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), 0);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(),
-            params.content_left);
-
-      } else {
-
-        params.content_left = 0;
-        params.content_right = content.getWidth();
-
-        btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 90f);
-        btn_animx = ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(),
-            left_btn.getWidth() / 2 * -1);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
-
-      }
-
-    } else if (content.getLeft() < 0) {
-
-      if (!start_pos
-          && content.getLeft() * -1 >= right_btn.getWidth() / 2) {
-
-        params.content_left = right_btn.getWidth() * -1;
-        params.content_right = getWidth() - right_btn.getWidth();
-
-        btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), 0f);
-        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(),
-            params.content_right);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(),
-            params.content_left);
-
-      } else {
-
-        params.content_left = 0;
-        params.content_right = content.getWidth();
-
-        btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), -90f);
-        btn_animx = ObjectAnimator.ofFloat(right_btn, "x", right_btn.getLeft(),
-            getWidth() + right_btn.getWidth() / 2);
-        content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
-
-      }
-
-    }
-
-    if (content_animx != null) {
-
-      AnimatorSet as = new AnimatorSet();
-      as.playTogether(btn_animr, btn_animx, content_animx);
-      as.setDuration(200);
-
-      as.addListener(new Animator.AnimatorListener() {
-
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-          Anim = true;
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-
-          content.setTranslationX(0);
-          content.layout(params.content_left, content.getTop(), params.content_right, getWidth());
-
-          left_btn.setTranslationX(0);
-          right_btn.setTranslationX(0);
-          UpdateLeftBtn();
-          UpdateRightBtn();
-          Anim = false;
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-          onAnimationEnd(animation);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-      });
-
-      as.start();
-    }
-
-  }
-
-  private void setRightButtonEnabled(boolean rightButtonEnabled) {
-
-    if (RightButtonEnabled != rightButtonEnabled) {
-      AnimateToRestingPosition(true);
-      RightButtonEnabled = rightButtonEnabled;
-    }
-
-  }
-
-  private void setLeftButtonEnabled(boolean leftButtonEnabled) {
-
-    if (LeftButtonEnabled != leftButtonEnabled) {
-      AnimateToRestingPosition(true);
-      LeftButtonEnabled = leftButtonEnabled;
-    }
-
-  }
-
-  public boolean getButtonsEnabled() {
-    return LeftButtonEnabled || RightButtonEnabled;
-  }
-
   public String getCaption() {
     return caption_text.getText().toString();
   }
@@ -667,6 +286,8 @@ public class SceneLayout extends LinearLayout {
 
   public void setScene(Scene scene) {
     sceneId = scene.getSceneId();
+    locationId = scene.getLocationId();
+
     int[] standardIcons = {
         R.drawable.scene0, R.drawable.scene1,
         R.drawable.scene2, R.drawable.scene3,
@@ -692,12 +313,6 @@ public class SceneLayout extends LinearLayout {
     }
 
     imgl.setImage(imgId);
-
-    setRightBtnText(getResources().getString(R.string.btn_execute));
-    setLeftBtnText(getResources().getString(R.string.btn_abort));
-
-    setLeftButtonEnabled(true);
-    setRightButtonEnabled(true);
 
     caption_text.setText(scene.getCaption());
     setupSceneStatus(scene.isExecuting());
@@ -780,16 +395,6 @@ public class SceneLayout extends LinearLayout {
 
     return sb.toString();
   }
-
-  private static class AnimParams {
-
-    public int content_left;
-    public int content_right;
-    public int left_btn_rotation;
-    public int left_btn_left;
-    public int left_btn_right;
-  }
-
 
   static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
@@ -891,73 +496,6 @@ public class SceneLayout extends LinearLayout {
         imageView.setVisibility(View.VISIBLE);
       }
     }
-  }
-
-
-  @Override
-  public boolean onTouchEvent(MotionEvent ev) {
-    int action = ev.getAction();
-    float X = ev.getX();
-    float Y = ev.getY();
-
-    float deltaY = Math.abs(Y - LastYtouch);
-    float deltaX = Math.abs(X - LastXtouch);
-
-    if (action == MotionEvent.ACTION_DOWN) {
-      initialX = (int) X;
-      initialY = (int) Y;
-      if (isInsideCaption((int) X, (int) Y)) {
-        longPressHandler.postDelayed(captionLongPressRunnable, LONG_PRESS_TIME);
-      } else {
-        longPressHandler.postDelayed(generalLongPressRunnable, LONG_PRESS_TIME);
-      }
-
-      LastXtouch = X;
-      LastYtouch = Y;
-      int sld = Slided();
-      buttonSliding = (sld == 1) || (sld == 2);
-      return true;
-    } else if (action == MotionEvent.ACTION_MOVE) {
-      // Some of phones are automatically sending move event, even if there is no real movement
-      // (x and y is not changing) that's why we need to verify the positions.
-      if (Math.abs(initialX - X) > LONG_PRESS_TOLERANCE || Math.abs(initialY - Y) > LONG_PRESS_TOLERANCE) {
-        longPressHandler.removeCallbacks(generalLongPressRunnable);
-        longPressHandler.removeCallbacks(captionLongPressRunnable);
-      }
-
-      if (!Sliding() && deltaY >= deltaX * 1.1f) {
-        return super.onTouchEvent(ev);
-      }
-
-      if (X != LastXtouch) {
-        Slide((int) (X - LastXtouch));
-        listener.onMove(this);
-      }
-      LastXtouch = X;
-      LastYtouch = Y;
-      if (Sliding()) {
-        return true;
-      }
-    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-      longPressHandler.removeCallbacks(generalLongPressRunnable);
-      longPressHandler.removeCallbacks(captionLongPressRunnable);
-
-      AnimateToRestingPosition(buttonSliding);
-    }
-
-    return super.onTouchEvent(ev);
-  }
-
-  private boolean isInsideCaption(int x, int y) {
-    Rect outRect = new Rect();
-    caption_text.getDrawingRect(outRect);
-    outRect.offset(caption_text.getLeft(), channelIconContainer.getTop() + caption_text.getTop());
-
-    return outRect.contains(x, y);
-  }
-
-  private Listener provideSceneListenerForLongPressCallback() {
-    return listener;
   }
 
   private ViewHolder provideViewHolderForLongPressCallback() {

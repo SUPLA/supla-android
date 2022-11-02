@@ -24,8 +24,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.supla.android.data.source.local.LocationDao
-import org.supla.android.db.DbHelper
+import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
+import org.supla.android.db.Location
 import org.supla.android.db.Scene
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -37,23 +38,19 @@ class ScenesViewModel @Inject constructor(
   private val messageHandler: SuplaClientMessageHandler,
   private val sceneEventsManager: SceneEventsManager,
   private val dispatchers: CoroutineDispatchers,
-  dbHelper: DbHelper
+  private val sceneRepository: SceneRepository,
+  private val channelRepository: ChannelRepository
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   private var _scenes = MutableLiveData<List<Scene>>(emptyList())
-  private val _sceneRepo = dbHelper.sceneRepository
 
   val scenes: LiveData<List<Scene>> = _scenes
-
-  val scenesAdapter = ScenesAdapter(this, LocationDao(dbHelper))
 
   init {
     viewModelScope.launch {
       withContext(dispatchers.io()) {
         // First initialize all scenes
-        val userScenes = _sceneRepo.getAllProfileScenes()
-        userScenes.stream().forEach { emitSceneStateChange(it) }
-        _scenes.postValue(userScenes)
+        loadScenes()
 
         // After that start observe
         messageHandler.registerMessageListener(this@ScenesViewModel)
@@ -65,22 +62,21 @@ class ScenesViewModel @Inject constructor(
     _scenes.value = listOf()
   }
 
-  fun onLocationStateChanged() {
-    reload()
-  }
-
   fun onSceneOrderUpdate(scenes: List<Scene>) {
-    var si = 0
-    for (s in scenes) {
-      s.sortOrder = si++
-      _sceneRepo.updateScene(s)
+    viewModelScope.launch {
+      withContext(dispatchers.io()) {
+        var si = 0
+        for (s in scenes) {
+          s.sortOrder = si++
+          sceneRepository.updateScene(s)
+        }
+      }
     }
-    reload()
   }
 
   override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
     if (msg.type == SuplaClientMsg.onSceneStateChanged) {
-      val scene = _sceneRepo.getScene(msg.sceneId) ?: return
+      val scene = sceneRepository.getScene(msg.sceneId) ?: return
       emitSceneStateChange(scene)
     }
   }
@@ -88,16 +84,35 @@ class ScenesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       withContext(dispatchers.io()) {
-        // First initialize all scenes
-        val userScenes = _sceneRepo.getAllProfileScenes()
-        userScenes.stream().forEach { emitSceneStateChange(it) }
-        _scenes.postValue(userScenes)
+        loadScenes()
+      }
+    }
+  }
+
+  fun toggleLocationCollapsed(location: Location) {
+    if (location.collapsed and 0x4 > 0) {
+      location.collapsed = (location.collapsed and 0x4.inv())
+    } else {
+      location.collapsed = (location.collapsed or 0x4)
+    }
+
+    viewModelScope.launch {
+      withContext(dispatchers.io()) {
+        channelRepository.updateLocation(location)
+        loadScenes()
       }
     }
   }
 
   override fun onCleared() {
     messageHandler.unregisterMessageListener(this)
+  }
+
+  private fun loadScenes() {
+    // First initialize all scenes
+    val userScenes = sceneRepository.getAllProfileScenes()
+    userScenes.stream().forEach { emitSceneStateChange(it) }
+    _scenes.postValue(userScenes)
   }
 
   private fun emitSceneStateChange(scene: Scene) {
