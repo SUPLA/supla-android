@@ -47,6 +47,8 @@ class ProfilesFragment : Fragment() {
         profilesVM.uiState.observe(requireActivity())
         { uiState ->
             when (uiState) {
+                is ProfilesUiState.ProfileNew ->
+                    onNewProfile(uiState.profileId)
                 is ProfilesUiState.EditProfile ->
                     openEditProfileView(uiState.profileId)
                 is ProfilesUiState.ListProfiles ->
@@ -58,13 +60,20 @@ class ProfilesFragment : Fragment() {
 
     }
 
-    private fun openEditProfileView(profileId: Long) {
-        val navId = if (profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
+    private fun onNewProfile(profileId: Long) {
         val profilesAmount = profilesVM.getAmountOfProfiles()
-        if (profilesAmount >= 3 && profileId == ProfileIdNew) {
+        if (profilesAmount >= 3) {
             showAccountsLimitDialog()
             return
         }
+        val navId = R.id.newProfile
+        val args = AuthFragmentArgs(profileId, true, false)
+        navCoordinator.wantsBack = true
+        findNavController().navigate(navId, args.toBundle())
+    }
+
+    private fun openEditProfileView(profileId: Long) {
+        val navId = R.id.editProfile
         val args = AuthFragmentArgs(profileId, true, false)
         navCoordinator.wantsBack = true
         findNavController().navigate(navId, args.toBundle())

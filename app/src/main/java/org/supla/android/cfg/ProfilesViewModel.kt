@@ -38,7 +38,7 @@ class ProfilesViewModel(private val profileManager: ProfileManager) : ViewModel(
     }
 
     fun onNewProfile() {
-        _uiState.value = ProfilesUiState.EditProfile(ProfileIdNew)
+        _uiState.value = ProfilesUiState.ProfileNew(ProfileIdNew)
     }
 
     override fun onEditProfile(profileId: Long) {
@@ -62,6 +62,7 @@ class ProfilesViewModel(private val profileManager: ProfileManager) : ViewModel(
 }
 
 sealed class ProfilesUiState {
+    data class ProfileNew(val profileId: Long) : ProfilesUiState()
     data class ListProfiles(val profiles: List<AuthProfileItem>) : ProfilesUiState()
     data class EditProfile(val profileId: Long) : ProfilesUiState()
     data class ProfileActivation(val profileId: Long) : ProfilesUiState()

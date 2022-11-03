@@ -135,7 +135,6 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     }
 
     private void addButton(int id, @DrawableRes int iconResId, @StringRes int textResId) {
-        Log.d("dupa", String.valueOf((availableButtons & id)));
         if ((availableButtons & id) == 0) {
             return;
         }
