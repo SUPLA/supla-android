@@ -19,18 +19,14 @@ package org.supla.android.scenes
  */
 
 import android.content.Context
-import org.supla.android.db.DbHelper
 import org.supla.android.CaptionEditor
-import org.supla.android.SuplaApp
 import org.supla.android.R
+import org.supla.android.SuplaApp
+import org.supla.android.db.DbHelper
 
 class SceneCaptionEditor(context: Context) : CaptionEditor(context) {
 
-  interface Listener {
-    fun onCaptionChange()
-  }
-
-  var listener: Listener? = null
+  var captionChangedListener: () -> Unit = { }
 
   override fun getTitle(): Int {
     return R.string.scene_name
@@ -48,7 +44,7 @@ class SceneCaptionEditor(context: Context) : CaptionEditor(context) {
     val scene = repo.getScene(id)!!
     scene.caption = newCaption
     repo.updateScene(scene)
-    listener?.onCaptionChange()
+    captionChangedListener()
   }
 
   override fun getHint(): Int {

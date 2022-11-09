@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dagger.hilt.android.qualifiers.ActivityContext
+import org.supla.android.LocationCaptionEditor
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ChannelRepository
@@ -104,6 +105,7 @@ class ScenesAdapter @Inject constructor(
           callback.closeWhenSwiped(withAnimation = false)
           toggleLocationCallback(location)
         }
+        vh.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
         vh.binding.tvSectionCaption.text = location.caption
         vh.binding.ivSectionCollapsed.visibility = if ((location.collapsed and 0x4) > 0) {
           VISIBLE
@@ -169,26 +171,33 @@ class ScenesAdapter @Inject constructor(
 
     if (_paths.size != oldPaths.size) {
       notifyDataSetChanged()
-    } else {
-      var pos = 0
-      for (p in _paths) {
-        if (oldSecs[p.sectionIdx].scenes.size ==
-          _sections[p.sectionIdx].scenes.size
-        ) {
-          if (p.sceneIdx != null) {
-            val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
-            val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
-            if (a != b) {
-              notifyItemChanged(pos)
-            }
+      return
+    }
+
+    var pos = 0
+    for (p in _paths) {
+      if (oldSecs[p.sectionIdx].scenes.size ==
+        _sections[p.sectionIdx].scenes.size
+      ) {
+        if (p.sceneIdx != null) {
+          val a = oldSecs[p.sectionIdx].scenes[p.sceneIdx!!]
+          val b = _sections[p.sectionIdx].scenes[p.sceneIdx!!]
+          if (a != b) {
+            notifyItemChanged(pos)
           }
         } else {
-          notifyDataSetChanged()
-          return
+          val oldLocationName = oldSecs[p.sectionIdx].location.caption
+          val newLocationName = _sections[p.sectionIdx].location.caption
+          if (oldLocationName != newLocationName) {
+            notifyItemChanged(pos)
+          }
         }
-
-        pos += 1
+      } else {
+        notifyDataSetChanged()
+        return
       }
+
+      pos += 1
     }
   }
 
@@ -228,11 +237,7 @@ class ScenesAdapter @Inject constructor(
   override fun onCaptionLongPress(sceneId: Int) {
     SuplaApp.Vibrate(context)
     val editor = SceneCaptionEditor(context)
-    editor.listener = object : SceneCaptionEditor.Listener {
-      override fun onCaptionChange() {
-        reloadCallback()
-      }
-    }
+    editor.captionChangedListener = reloadCallback
     editor.edit(sceneId)
   }
 
@@ -240,6 +245,15 @@ class ScenesAdapter @Inject constructor(
     SuplaApp.Vibrate(context)
     callback.closeWhenSwiped()
     itemTouchHelper.startDrag(viewHolder)
+  }
+
+  private fun changeLocationCaption(locationId: Int): Boolean {
+    SuplaApp.Vibrate(context)
+    val editor = LocationCaptionEditor(context)
+    editor.captionChangedListener = reloadCallback
+    editor.edit(locationId)
+
+    return true
   }
 
   inner class Section(
