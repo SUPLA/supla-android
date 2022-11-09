@@ -73,18 +73,15 @@ public class DefaultSceneRepository(private val dao: SceneDao): SceneRepository 
     }
 
     override fun updateSuplaSceneState(state: SuplaSceneState): Boolean {
-        val scene = dao.getSceneByRemoteId(state.sceneId)
-        if(scene == null) { 
-           return false 
-        }
+        val scene = dao.getSceneByRemoteId(state.sceneId) ?: return false
 
         val cloned = scene.clone()
         cloned.assign(state)
-        if(scene == cloned) {
+        return if(scene == cloned) {
             // no change in data
-            return false
+            false
         } else {
-            return dao.updateScene(cloned)
+            dao.updateScene(cloned)
         }
     }
 

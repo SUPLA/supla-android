@@ -39,6 +39,7 @@ class SegmentedButton @JvmOverloads constructor(
     val attrsArray = intArrayOf(android.R.attr.src, android.R.attr.text)
     val ta = ctx.obtainStyledAttributes(attrs, attrsArray)
     val drawable = ta.getDrawable(0)
+
     val innerView = if (drawable != null) {
       ImageView(ctx, attrs, defStyleAttr)
     } else {

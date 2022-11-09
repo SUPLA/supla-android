@@ -86,17 +86,19 @@
                 app:visibility="@{!viewmodel.dataLoading}">
 
                 <org.supla.android.ui.SegmentedButton
-                    style="@style/SegmentedButton.Texted"
+                    style="@style/Widget.SegmentedButton.Texted"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/widget_text"
                     android:text="@string/widget_configure_type_channel_label" />
 
                 <org.supla.android.ui.SegmentedButton
-                    style="@style/SegmentedButton.Texted"
+                    style="@style/Widget.SegmentedButton.Texted"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/widget_text"
                     android:text="@string/widget_configure_type_group_label" />
             </org.supla.android.ui.SegmentedButtonGroup>
 
