@@ -30,12 +30,10 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.LocationDao
 import org.supla.android.databinding.LocationListItemBinding
 import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -45,14 +43,11 @@ class ScenesAdapter @Inject constructor(
 ) : RecyclerView.Adapter<ViewHolder>(),
   SceneLayout.Listener {
 
-  private var recyclerView: WeakReference<RecyclerView>? = null
   private var _sections: List<Section> = emptyList()
   private var _vTypes: List<Int> = emptyList()
   private var _paths: List<Path> = emptyList()
 
   private val callback = ScenesListCallback(this).also {
-    it.leftButtonClickedListener = { sceneId -> leftButtonClickCallback(sceneId) }
-    it.rightButtonClickedListener = { sceneId -> rightButtonClickCallback(sceneId) }
     it.onMovedListener = { fromPos, toPos -> swapScenesInternally(fromPos, toPos) }
     it.onMoveFinishedListener = {
       movementFinishedCallback(_sections.map { section -> section.scenes }.flatten())
@@ -68,7 +63,6 @@ class ScenesAdapter @Inject constructor(
 
   override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
     super.onAttachedToRecyclerView(recyclerView)
-    this.recyclerView = WeakReference(recyclerView)
 
     itemTouchHelper.attachToRecyclerView(recyclerView)
     callback.setup(recyclerView)
@@ -107,7 +101,7 @@ class ScenesAdapter @Inject constructor(
       is LocationListItemViewHolder -> {
         val location = getLocation(pos)
         vh.binding.container.setOnClickListener {
-          recyclerView?.get()?.let { callback.closeWhenSwiped(it) }
+          callback.closeWhenSwiped(withAnimation = false)
           toggleLocationCallback(location)
         }
         vh.binding.tvSectionCaption.text = location.caption
@@ -198,10 +192,8 @@ class ScenesAdapter @Inject constructor(
     }
   }
 
-  internal fun closeSwipedElement() {
-    recyclerView?.get()?.let {
-      callback.closeWhenSwiped(it)
-    }
+  private fun closeSwipedElement() {
+    callback.closeWhenSwiped()
   }
 
   private fun getLocation(pos: Int): Location {
@@ -223,8 +215,17 @@ class ScenesAdapter @Inject constructor(
     _sections[toPath.sectionIdx].scenes[toPath.sceneIdx!!] = buf
   }
 
-  override fun onCaptionLongPress(sl: SceneLayout) {
-    val sceneId = sl.tag as Int
+  override fun onLeftButtonClick(sceneId: Int) {
+    closeSwipedElement()
+    leftButtonClickCallback(sceneId)
+  }
+
+  override fun onRightButtonClick(sceneId: Int) {
+    closeSwipedElement()
+    rightButtonClickCallback(sceneId)
+  }
+
+  override fun onCaptionLongPress(sceneId: Int) {
     SuplaApp.Vibrate(context)
     val editor = SceneCaptionEditor(context)
     editor.listener = object : SceneCaptionEditor.Listener {
@@ -237,6 +238,7 @@ class ScenesAdapter @Inject constructor(
 
   override fun onLongPress(viewHolder: ViewHolder) {
     SuplaApp.Vibrate(context)
+    callback.closeWhenSwiped()
     itemTouchHelper.startDrag(viewHolder)
   }
 

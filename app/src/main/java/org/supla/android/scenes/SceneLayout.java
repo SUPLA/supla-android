@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -60,10 +61,15 @@ public class SceneLayout extends LinearLayout {
 
   private Callable<ViewHolder> viewHolderProvider;
 
+
   private RelativeLayout content;
+  private FrameLayout right_btn;
+  private FrameLayout left_btn;
 
   private ChannelImageLayout imgl;
 
+  private TextView left_btn_text;
+  private TextView right_btn_text;
   private CaptionView caption_text;
 
   private SuplaChannelStatus right_onlineStatus;
@@ -80,7 +86,11 @@ public class SceneLayout extends LinearLayout {
 
   public interface Listener {
 
-    void onCaptionLongPress(SceneLayout l);
+    void onLeftButtonClick(int sceneId);
+
+    void onRightButtonClick(int sceneId);
+
+    void onCaptionLongPress(int sceneId);
 
     void onLongPress(ViewHolder viewHolder);
   }
@@ -96,6 +106,10 @@ public class SceneLayout extends LinearLayout {
     return locationId;
   }
 
+  public int getSceneId() {
+    return sceneId;
+  }
+
   private void init(Context context) {
     uiThreadHandler = new Handler(Looper.getMainLooper());
     Preferences prefs = new Preferences(context);
@@ -103,10 +117,23 @@ public class SceneLayout extends LinearLayout {
 
     setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
+    right_btn = new FrameLayout(context);
+    left_btn = new FrameLayout(context);
+
     float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
     int channelHeight = (int) (
         ((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
             * heightScaleFactor);
+
+    right_btn.setLayoutParams(new LayoutParams(
+        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+
+    right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+
+    left_btn.setLayoutParams(new LayoutParams(
+        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+
+    left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
@@ -114,6 +141,14 @@ public class SceneLayout extends LinearLayout {
     content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
     addView(content);
+    addView(left_btn);
+    addView(right_btn);
+
+    left_btn_text = newTextView(context);
+    left_btn.addView(left_btn_text);
+
+    right_btn_text = newTextView(context);
+    right_btn.addView(right_btn_text);
 
     right_onlineStatus = newOnlineStatus(context, true);
     right_onlineStatus.setId(ViewHelper.generateViewId());
@@ -166,14 +201,20 @@ public class SceneLayout extends LinearLayout {
 
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
     caption_text.setOnLongClickListener(v -> {
-      listener.onCaptionLongPress(this);
+      listener.onCaptionLongPress(sceneId);
       return true;
     });
     channelIconContainer.addView(caption_text);
     setOnLongClickListener(v -> {
+      if (isSlided()) {
+        return false;
+      }
       listener.onLongPress(provideViewHolderForLongPressCallback());
       return true;
     });
+
+    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(sceneId));
+    right_btn.setOnClickListener(v -> listener.onRightButtonClick(sceneId));
   }
 
 
@@ -239,6 +280,21 @@ public class SceneLayout extends LinearLayout {
     return tv;
   }
 
+  private TextView newTextView(Context context) {
+
+    TextView tv = new TextView(context);
+    tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+
+    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+        getResources().getDimension(R.dimen.channel_btn_text_size));
+    tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
+    tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+    return tv;
+  }
+
   protected RelativeLayout.LayoutParams getOnlineStatusLayoutParams(boolean right) {
 
     int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -270,19 +326,78 @@ public class SceneLayout extends LinearLayout {
     return result;
   }
 
+  public void setLeftBtnText(String Text) {
+    left_btn_text.setText(Text);
+  }
+
+  public void setRightBtnText(String Text) {
+    right_btn_text.setText(Text);
+  }
+
+  public void Slide(int delta) {
+    content.layout(delta, content.getTop(),
+        content.getWidth() + delta, content.getHeight());
+
+    int bcolor = getResources().getColor(R.color.channel_btn);
+
+    left_btn.setBackgroundColor(bcolor);
+    right_btn.setBackgroundColor(bcolor);
+
+    UpdateLeftBtn();
+    UpdateRightBtn();
+
+  }
+
+  private void UpdateLeftBtn() {
+
+    float pr = content.getLeft() * 100 / left_btn.getWidth();
+
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
+
+    left_btn.setRotationY(90 - 90 * pr / 100);
+
+    int left = content.getLeft() / 2 - left_btn.getWidth() / 2;
+    int right = left_btn.getWidth() + (content.getLeft() / 2 - left_btn.getWidth() / 2);
+
+    if (left > 0) {
+      left = 0;
+    }
+    if (right > left_btn.getWidth()) {
+      right = left_btn.getWidth();
+    }
+
+    left_btn.layout(left, 0, right, left_btn.getHeight());
+
+  }
+
+  private void UpdateRightBtn() {
+
+    float pr = (content.getLeft() * -1) * 100 / (float) right_btn.getWidth();
+
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
+
+    right_btn.setRotationY(-90 + 90 * pr / 100);
+
+    int left = getWidth() + (content.getLeft() / 2 - right_btn.getWidth() / 2);
+
+    if (content.getLeft() * -1 > right_btn.getWidth()) {
+      left = getWidth() - right_btn.getWidth();
+    }
+
+    right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
+  }
+
   public String getCaption() {
     return caption_text.getText().toString();
   }
-
-  public void setBackgroundColor(int color) {
-
-    super.setBackgroundColor(color);
-
-    if (content != null) {
-      content.setBackgroundColor(color);
-    }
-  }
-
 
   public void setScene(Scene scene) {
     sceneId = scene.getSceneId();
@@ -313,6 +428,9 @@ public class SceneLayout extends LinearLayout {
     }
 
     imgl.setImage(imgId);
+
+    setRightBtnText(getResources().getString(R.string.btn_execute));
+    setLeftBtnText(getResources().getString(R.string.btn_abort));
 
     caption_text.setText(scene.getCaption());
     setupSceneStatus(scene.isExecuting());
@@ -382,10 +500,10 @@ public class SceneLayout extends LinearLayout {
   }
 
   private String formatMillis(long v) {
-    long r = v, k = 0;
+    long r = v;
     StringBuilder sb = new StringBuilder();
 
-    k = r / 3600000;
+    long k = r / 3600000;
     sb.append(String.format("%02d:", k));
     r -= k * 3600000;
     k = r / 60000;
@@ -394,6 +512,10 @@ public class SceneLayout extends LinearLayout {
     sb.append(String.format("%02d", r / 1000));
 
     return sb.toString();
+  }
+
+  private boolean isSlided() {
+    return content.getLeft() != 0;
   }
 
   static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
@@ -424,7 +546,7 @@ public class SceneLayout extends LinearLayout {
 
   }
 
-  private class ChannelImageLayout extends LinearLayout {
+  private static class ChannelImageLayout extends LinearLayout {
 
     private final ImageView imageView;
     private final float heightScaleFactor;
