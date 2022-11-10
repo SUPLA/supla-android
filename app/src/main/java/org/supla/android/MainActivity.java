@@ -718,15 +718,14 @@ public class MainActivity extends NavigationActivity
         if (channelLV != null) {
           channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
         }
-
-                if (cgroupLV != null) {
-                    cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
-                }
-                scenesFragment().reload();
-            }
-            downloadUserIcons = null;
+        if (cgroupLV != null) {
+          cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
         }
+        reloadScenes();
+      }
+      downloadUserIcons = null;
     }
+  }
 
   @Override
   public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {}
@@ -771,9 +770,6 @@ public class MainActivity extends NavigationActivity
     super.onProfileChanged();
     resetListViews();
     runDownloadTask();
-    if (scenesView.getVisibility() == View.VISIBLE) {
-      reloadScenes();
-    }
   }
 
   private interface Reorder {
@@ -794,7 +790,6 @@ public class MainActivity extends NavigationActivity
         groupsVisible = View.VISIBLE;
         break;
       case R.id.scenes_item:
-        reloadScenes();
         scenesVisible = View.VISIBLE;
         break;
     }

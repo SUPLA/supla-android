@@ -1005,23 +1005,28 @@ public class SuplaClient extends Thread {
 
 
   private void sceneUpdate(SuplaScene scene) {
+    boolean dataChanged = false;
+    Trace.d(
+        log_tag,
+        "Scene id:"
+            + scene.getId()
+            + " locationId: "
+            + scene.getLocationId()
+            + " altIcon:"
+            + scene.getAltIcon()
+            + " userIcon:"
+            + scene.getUserIcon()
+            + " caption: "
+            + scene.getCaption()
+            + " EOL: "
+            + scene.isEol());
+
     SceneRepository sr = DbH.getSceneRepository();
-    if (sr.updateSuplaScene(scene)) {  Trace.d(
-          log_tag,
-          "Scene id:"
-              + scene.getId()
-              + " locationId: "
-              + scene.getLocationId()
-              + " altIcon:"
-              + scene.getAltIcon()
-              + " userIcon:"
-              + scene.getUserIcon()
-              + " caption: "
-              + scene.getCaption()
-              + " EOL: "
-              + scene.isEol());
+    sr.updateSuplaScene(scene);
+
+    if (scene.isEol()) {
+      sr.setScenesVisible(0, 2);
     }
-    // TODO: consider message broadcast after EOL.
   }
 
   private void sceneStateUpdate(SuplaSceneState state) {
@@ -1335,6 +1340,10 @@ public class SuplaClient extends Thread {
     }
 
     if (DbH.setChannelGroupRelationsVisible(Visible, WhereVisible)) {
+      _DataChanged = true;
+    }
+
+    if (DbH.getSceneRepository().setScenesVisible(Visible, WhereVisible)) {
       _DataChanged = true;
     }
 

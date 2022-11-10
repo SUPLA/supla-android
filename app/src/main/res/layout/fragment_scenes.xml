@@ -16,6 +16,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:scenes="@{viewModel.scenes}"
+        app:visibility="@{!viewModel.loading}"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <ProgressBar
+        android:id="@+id/scenesLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        app:visibility="@{viewModel.loading}"
+        android:visibility="gone" />
   </FrameLayout>
 </layout>

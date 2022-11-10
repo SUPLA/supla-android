@@ -1,5 +1,5 @@
 package org.supla.android.db
- 
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -26,135 +26,117 @@ import java.text.DateFormat
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 
-data class Scene(var profileId: Long = 0,
-                 var sceneId: Int = 0,
-                 var locationId: Int = 0,
-                 var altIcon: Int = 0,
-                 var userIcon: Int = 0,
-                 var caption: String = "",
-                 var sortOrder: Int = 0,
-                 var startedAt: Date? = null,
-                 var estimatedEndDate: Date? = null,
-                 var initiatorId: Int? = null,
-                 var initiatorName: String? = null): DbItem() {
+data class Scene(
+  var profileId: Long = 0,
+  var sceneId: Int = 0,
+  var locationId: Int = 0,
+  var altIcon: Int = 0,
+  var userIcon: Int = 0,
+  var caption: String = "",
+  var sortOrder: Int = 0,
+  var startedAt: Date? = null,
+  var estimatedEndDate: Date? = null,
+  var initiatorId: Int? = null,
+  var initiatorName: String? = null,
+  var visible: Int = 0
+) : DbItem() {
 
-    override fun AssignCursorData(cur: Cursor) {
-        setId(cur.getLong(0))
-        sceneId = cur.getInt(1)
-        locationId = cur.getInt(2)
-        altIcon = cur.getInt(3)
-        userIcon = cur.getInt(4)
-        caption = cur.getString(5)
-        if(!cur.isNull(6)) {
-            startedAt = dateFromString(cur.getString(6))
-        }
-        if(!cur.isNull(7)) {
-            estimatedEndDate = dateFromString(cur.getString(7))
-        }
-        if(!cur.isNull(8)) {
-            initiatorId = cur.getInt(8)
-        }
-        if(!cur.isNull(9)) {
-            initiatorName = cur.getString(9)
-        }
-        sortOrder = cur.getInt(10)
-        profileId = cur.getLong(11)
+  override fun AssignCursorData(cur: Cursor) {
+    id = cur.getLong(cur.getColumnIndex(SuplaContract.SceneEntry._ID))
+    sceneId = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID))
+    locationId = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID))
+    altIcon = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON))
+    userIcon = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_USERICON))
+    caption = cur.getString(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION))
+
+    var idx = cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
+    if (!cur.isNull(idx)) {
+      startedAt = dateFromString(cur.getString(idx))
     }
-
-    override fun getContentValues(): ContentValues {
-        val vals = ContentValues()
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, sceneId)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID, locationId)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON, altIcon)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_USERICON, userIcon)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION, caption)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER, sortOrder)
-        if(startedAt != null) {
-            vals.put(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT, dateToString(startedAt!!))
-        } else {
-            vals.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
-        }
-        if(estimatedEndDate != null) {
-            vals.put(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE, dateToString(estimatedEndDate!!))
-        } else {
-            vals.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
-        }
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID, initiatorId)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME, initiatorName)
-        vals.put(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, profileId)
-
-        return vals
+    idx = cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE)
+    if (!cur.isNull(idx)) {
+      estimatedEndDate = dateFromString(cur.getString(idx))
     }
-
-    fun assign(scene: SuplaScene) {
-        sceneId = scene.id
-        locationId = scene.locationId
-        altIcon = scene.altIcon
-        userIcon = scene.userIcon
-        caption = scene.caption
+    idx = cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID)
+    if (!cur.isNull(idx)) {
+      initiatorId = cur.getInt(idx)
     }
-
-    fun assign(state: SuplaSceneState) {
-        assert(sceneId == state.sceneId)
-        startedAt = state.startedAt
-        estimatedEndDate = state.estimatedEndDate
-        initiatorId = state.initiatorId
-        initiatorName = state.initiatorName
+    idx = cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME)
+    if (!cur.isNull(idx)) {
+      initiatorName = cur.getString(idx)
     }
+    sortOrder = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER))
+    profileId = cur.getLong(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID))
+    visible = cur.getInt(cur.getColumnIndex(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE))
+  }
 
-    fun clone(): Scene {
-        val rv = copy()
-        rv.setId(getId())
-        return rv
+  override fun getContentValues(): ContentValues {
+    val values = ContentValues()
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, sceneId)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID, locationId)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON, altIcon)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_USERICON, userIcon)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION, caption)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER, sortOrder)
+    if (startedAt != null) {
+      values.put(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT, dateToString(startedAt!!))
+    } else {
+      values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
-
-    fun isExecuting(): Boolean {
-        val sst = startedAt
-        val now = Date()
-//        val timeSinceStart = computeTimeSinceStart(now)
-        if(sst != null && sst < now) {
-            val eet = estimatedEndDate
-            if(eet == null || eet > now) {
-                return true
-            }
-        }
-        return false
+    if (estimatedEndDate != null) {
+      values.put(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE, dateToString(estimatedEndDate!!))
+    } else {
+      values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID, initiatorId)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME, initiatorName)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, profileId)
+    values.put(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE, visible)
 
-    private fun dateFromString(str: String): Date {
-        val fmt = DateFormat.getDateTimeInstance()
-        return fmt.parse(str)!!
+    return values
+  }
+
+  fun assign(scene: SuplaScene) {
+    sceneId = scene.id
+    locationId = scene.locationId
+    altIcon = scene.altIcon
+    userIcon = scene.userIcon
+    caption = scene.caption
+  }
+
+  fun assign(state: SuplaSceneState) {
+    assert(sceneId == state.sceneId)
+    startedAt = state.startedAt
+    estimatedEndDate = state.estimatedEndDate
+    initiatorId = state.initiatorId
+    initiatorName = state.initiatorName
+  }
+
+  fun clone(): Scene {
+    val rv = copy()
+    rv.id = id
+    return rv
+  }
+
+  fun isExecuting(): Boolean {
+    val sst = startedAt
+    val now = Date()
+    if (sst != null && sst < now) {
+      val eet = estimatedEndDate
+      if (eet == null || eet > now) {
+        return true
+      }
     }
+    return false
+  }
 
-    private fun dateToString(date: Date): String {
-        val fmt = DateFormat.getDateTimeInstance()
-        return fmt.format(date)
-    }
+  private fun dateFromString(str: String): Date {
+    val fmt = DateFormat.getDateTimeInstance()
+    return fmt.parse(str)!!
+  }
 
-    private fun formatMillis(v: Long): String {
-        var r = v
-        var k: Long = 0
-        var rv = ""
-        k = r / 3600000
-        rv += String.format("%02d:", k)
-        r -= k * 3600000
-        k = r / 60000
-        rv += String.format("%02d:", k)
-        r -= k * 60000
-        rv += String.format("%02d", r / 1000)
-
-        return rv
-    }
-
-    private fun computeTimeSinceStart(now: Date): String? {
-        val sst = startedAt
-        val eet = estimatedEndDate
-        if(sst != null && sst < now && (eet == null || eet.time > now.time)) {
-            val diff = now.time - sst.time
-            val rv = formatMillis(diff)
-            return rv
-        } else {
-            return null
-        }
-    }
+  private fun dateToString(date: Date): String {
+    val fmt = DateFormat.getDateTimeInstance()
+    return fmt.format(date)
+  }
 }

@@ -17,52 +17,58 @@ package org.supla.android.data.source.local
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import org.supla.android.db.SuplaContract
-import org.supla.android.db.Scene
 import org.supla.android.Trace
+import org.supla.android.db.Scene
+import org.supla.android.db.SuplaContract
+import org.supla.android.extensions.TAG
 
-public class SceneDao(dap: DatabaseAccessProvider): BaseDao(dap) {
-
-  private val TAG = SceneDao::class.java.simpleName
-
+class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
   fun getSceneByRemoteId(remoteId: Int): Scene? {
-    return getItem( { Scene() },
-                    SuplaContract.SceneEntry.ALL_COLUMNS,
-                    SuplaContract.SceneEntry.TABLE_NAME,
-                    key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
-                    key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID,
-                        getCachedProfileId()) )
+    return getItem(
+      { Scene() },
+      SuplaContract.SceneEntry.ALL_COLUMNS,
+      SuplaContract.SceneEntry.TABLE_NAME,
+      key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
+      key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, cachedProfileId)
+    )
   }
 
   fun sceneCursor(): Cursor {
     return read {
-      it.query(SuplaContract.SceneViewEntry.VIEW_NAME,
-               SuplaContract.SceneViewEntry.ALL_COLUMNS, 
-               SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = ? " /* selection */, 
-               arrayOf(getCachedProfileId().toString()) /* selectionArgs */, 
-               null /* groupBy */, 
-               null /* having */,
-               /* order by - begin */
-               SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
-               SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + 
-               " COLLATE LOCALIZED, " +
-               SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
-               SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
-               SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
-               /* order by - end */,
-               null /* limit */)
+      val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
+        "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
+      val selectionArgs = arrayOf(cachedProfileId.toString())
+      val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
+        SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
+        " COLLATE LOCALIZED, " +
+        SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
+        SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
+        SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
+
+      it.query(
+        SuplaContract.SceneViewEntry.VIEW_NAME,
+        SuplaContract.SceneViewEntry.ALL_COLUMNS,
+        selection,
+        selectionArgs,
+        null /* groupBy */,
+        null /* having */,
+        order,
+        null /* limit */
+      )
     }
   }
 
   fun updateScene(scene: Scene): Boolean {
     return try {
-      update(scene, SuplaContract.SceneEntry.TABLE_NAME, 
-             key(SuplaContract.SceneEntry._ID, scene.id))
+      update(
+        scene, SuplaContract.SceneEntry.TABLE_NAME,
+        key(SuplaContract.SceneEntry._ID, scene.id)
+      )
       true
-    } catch(e: Exception) {
+    } catch (e: Exception) {
       Trace.w(TAG, "updateScene", e)
       false
     }
@@ -70,13 +76,31 @@ public class SceneDao(dap: DatabaseAccessProvider): BaseDao(dap) {
 
   fun insertScene(scene: Scene): Boolean {
     return try {
-      insert(scene.copy(profileId = getCachedProfileId()), 
-             SuplaContract.SceneEntry.TABLE_NAME)
+      insert(
+        scene.copy(profileId = cachedProfileId),
+        SuplaContract.SceneEntry.TABLE_NAME
+      )
       true
-    } catch(e: Exception) {
+    } catch (e: Exception) {
       Trace.w(TAG, "insertScene", e)
       false
     }
   }
-  
+
+  fun setScenesVisible(visible: Int, whereVisible: Int) =
+    setVisible(
+      SuplaContract.SceneEntry.TABLE_NAME,
+      visible,
+      key(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE, whereVisible)
+    )
+
+  private fun setVisible(table: String, visible: Int, key: Key<Int>): Boolean {
+    val selection = key.asSelection() + " AND " +
+      SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = ?"
+    val selectionArgs = arrayOf(key.value.toString(), cachedProfileId.toString())
+    val values = ContentValues()
+    values.put(key.column, visible)
+
+    return write<Int> { return@write it.update(table, values, selection, selectionArgs) } > 0
+  }
 }

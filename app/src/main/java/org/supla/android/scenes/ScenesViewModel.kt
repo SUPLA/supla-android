@@ -22,6 +22,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.data.source.ChannelRepository
@@ -39,26 +42,33 @@ class ScenesViewModel @Inject constructor(
   private val sceneEventsManager: SceneEventsManager,
   private val dispatchers: CoroutineDispatchers,
   private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository
+  private val channelRepository: ChannelRepository,
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
+  private val scenesDisposable: Disposable
+
   private var _scenes = MutableLiveData<List<Scene>>(emptyList())
+  private var _loading = MutableLiveData(false)
 
   val scenes: LiveData<List<Scene>> = _scenes
+  val loading: LiveData<Boolean> = _loading
 
   init {
-    viewModelScope.launch {
-      withContext(dispatchers.io()) {
-        // First initialize all scenes
-        loadScenes()
+    _loading.postValue(true)
+    messageHandler.registerMessageListener(this@ScenesViewModel)
 
-        // After that start observe
-        messageHandler.registerMessageListener(this@ScenesViewModel)
+    scenesDisposable = sceneRepository.getAllProfileScenes()
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe {
+        _loading.postValue(false)
+        it.stream().forEach { scene -> emitSceneStateChange(scene) }
+        _scenes.postValue(it)
       }
-    }
   }
 
   fun cleanup() {
+    _loading.postValue(true)
     _scenes.value = listOf()
   }
 
@@ -84,7 +94,7 @@ class ScenesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       withContext(dispatchers.io()) {
-        loadScenes()
+        sceneRepository.reloadScenes()
       }
     }
   }
@@ -99,20 +109,14 @@ class ScenesViewModel @Inject constructor(
     viewModelScope.launch {
       withContext(dispatchers.io()) {
         channelRepository.updateLocation(location)
-        loadScenes()
+        sceneRepository.reloadScenes()
       }
     }
   }
 
   override fun onCleared() {
     messageHandler.unregisterMessageListener(this)
-  }
-
-  private fun loadScenes() {
-    // First initialize all scenes
-    val userScenes = sceneRepository.getAllProfileScenes()
-    userScenes.stream().forEach { emitSceneStateChange(it) }
-    _scenes.postValue(userScenes)
+    scenesDisposable.dispose()
   }
 
   private fun emitSceneStateChange(scene: Scene) {

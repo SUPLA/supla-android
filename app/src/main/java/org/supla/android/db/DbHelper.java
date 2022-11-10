@@ -167,6 +167,8 @@ public class DbHelper extends BaseDbHelper {
             + " TEXT NULL, "
             + SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER
             + " INTEGER NOT NULL, "
+            + SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE
+            + " INTEGER NOT NULL,"
             + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID
             + " TEXT NULL)";
 
@@ -219,6 +221,9 @@ public class DbHelper extends BaseDbHelper {
             + ", "
             + "S."
             + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID
+            + ", "
+            + "S."
+            + SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE
             + ", "
             + "L."
             + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
