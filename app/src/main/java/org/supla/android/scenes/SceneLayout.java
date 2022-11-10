@@ -18,6 +18,7 @@ package org.supla.android.scenes;
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -52,9 +53,6 @@ import org.supla.android.listview.LineView;
 
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout {
-
-  private static final String TIMER_INACTIVE = "--:--:--";
-
 
   @Inject
   SceneEventsManager eventsManager;
@@ -168,7 +166,6 @@ public class SceneLayout extends LinearLayout {
     sdlp.setMargins(0, 0, 0,
         (int) getResources().getDimension(R.dimen.form_element_spacing));
     sceneDurationTimer.setLayoutParams(sdlp);
-    sceneDurationTimer.setText(TIMER_INACTIVE);
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
@@ -474,13 +471,19 @@ public class SceneLayout extends LinearLayout {
       return;
     }
     long sceneDuration = end.getTime() - System.currentTimeMillis();
-    sceneCountDown = new CountDownTimer(sceneDuration, 1000) {
-      private long duration = sceneDuration;
+    sceneCountDown = new CountDownTimer(sceneDuration, 100) {
+      private final long endTime = end.getTime();
+      private boolean firstTick = true;
 
       public void onTick(long millisUntilFinished) {
         uiThreadHandler.post(() -> {
-          duration -= 1000;
-          sceneDurationTimer.setText(formatMillis(duration));
+          long restTime = endTime - System.currentTimeMillis();
+          sceneDurationTimer.setText(formatMillis(restTime));
+
+          if (firstTick) {
+            sceneDurationTimer.setVisibility(VISIBLE);
+            firstTick = false;
+          }
         });
       }
 
@@ -493,25 +496,23 @@ public class SceneLayout extends LinearLayout {
   }
 
   private void setTimerInactive() {
-    sceneDurationTimer.setText(TIMER_INACTIVE);
+    sceneDurationTimer.setVisibility(GONE);
+
     SuplaChannelStatus.ShapeType state = SuplaChannelStatus.ShapeType.Ring;
     left_onlineStatus.setShapeType(state);
     right_onlineStatus.setShapeType(state);
   }
 
-  private String formatMillis(long v) {
-    long r = v;
-    StringBuilder sb = new StringBuilder();
+  @SuppressLint("DefaultLocale")
+  private String formatMillis(long leftTimeMillis) {
+    // Plus 1 because we don't want to see 00:00:00 for one second, last second should be shown
+    // as 00:00:01 and after that view should disappear.
+    long leftTimeSecs = leftTimeMillis / 1000 + 1;
+    int leftHours = (int) leftTimeSecs / 3600;
+    int leftMinutes = (int) (leftTimeSecs % 3600) / 60;
+    int leftSeconds = (int) (leftTimeSecs % 60);
 
-    long k = r / 3600000;
-    sb.append(String.format("%02d:", k));
-    r -= k * 3600000;
-    k = r / 60000;
-    sb.append(String.format("%02d:", k));
-    r -= k * 60000;
-    sb.append(String.format("%02d", r / 1000));
-
-    return sb.toString();
+    return String.format("%02d:%02d:%02d", leftHours, leftMinutes, leftSeconds);
   }
 
   private boolean isSlided() {
