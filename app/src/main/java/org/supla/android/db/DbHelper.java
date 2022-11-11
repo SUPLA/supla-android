@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import dagger.hilt.android.EntryPointAccessors;
 import io.reactivex.rxjava3.core.Completable;
+import java.util.LinkedList;
 import java.util.List;
 import org.supla.android.Encryption;
 import org.supla.android.Preferences;
@@ -1278,9 +1279,9 @@ public class DbHelper extends BaseDbHelper {
   }
 
   public List<Integer> iconsToDownload() {
-    List<Integer> rv = new java.util.LinkedList();
-    rv.addAll(channelRepository.getChannelUserIconIds());
-    rv.addAll(sceneRepository.getSceneUserIconIds());
+    List<Integer> rv = new LinkedList();
+    rv.addAll(channelRepository.getChannelUserIconIdsToDownload());
+    rv.addAll(sceneRepository.getSceneUserIconIdsToDownload());
     return rv;
   }
 

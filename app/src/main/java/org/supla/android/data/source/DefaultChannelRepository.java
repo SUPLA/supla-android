@@ -328,10 +328,10 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public List<Integer> getChannelUserIconIds() {
+  public List<Integer> getChannelUserIconIdsToDownload() {
     Set<Integer> result = new LinkedHashSet<>();
-    result.addAll(channelDao.getChannelUserIconIds());
-    result.addAll(channelDao.getChannelGroupUserIconIds());
+    result.addAll(channelDao.getChannelUserIconIdsToDownload());
+    result.addAll(channelDao.getChannelGroupUserIconIdsToDownload());
     return new ArrayList<>(result);
   }
 

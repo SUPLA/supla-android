@@ -109,7 +109,7 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
     scenesSubject.onNext(loadScenes())
   }
 
-  override fun getSceneUserIconIds(): List<Int> {
+  override fun getSceneUserIconIdsToDownload(): List<Int> {
     return loadScenes().flatMap { listOf(it.altIcon, it.userIcon) }
   }
 

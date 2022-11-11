@@ -524,7 +524,7 @@ public class ChannelDao extends BaseDao {
   }
 
   @SuppressLint("Range")
-  public List<Integer> getChannelUserIconIds() {
+  public List<Integer> getChannelUserIconIdsToDownload() {
     String sql =
         "SELECT C."
             + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
@@ -577,7 +577,7 @@ public class ChannelDao extends BaseDao {
   }
 
   @SuppressLint("Range")
-  public List<Integer> getChannelGroupUserIconIds() {
+  public List<Integer> getChannelGroupUserIconIdsToDownload() {
     String sql =
         "SELECT C."
             + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON

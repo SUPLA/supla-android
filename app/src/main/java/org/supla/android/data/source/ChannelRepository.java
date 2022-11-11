@@ -74,7 +74,7 @@ public interface ChannelRepository {
 
   List<Channel> getZWaveBridgeChannels();
 
-  List<Integer> getChannelUserIconIds();
+  List<Integer> getChannelUserIconIdsToDownload();
 
   Completable reorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId);
 

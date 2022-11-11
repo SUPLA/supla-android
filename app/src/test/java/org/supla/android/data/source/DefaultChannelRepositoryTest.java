@@ -1030,11 +1030,11 @@ public class DefaultChannelRepositoryTest {
   @Test
   public void shouldGetChannelUserIconIds() {
     // given
-    when(channelDao.getChannelUserIconIds()).thenReturn(Arrays.asList(1, 2));
-    when(channelDao.getChannelGroupUserIconIds()).thenReturn(Arrays.asList(3, 4));
+    when(channelDao.getChannelUserIconIdsToDownload()).thenReturn(Arrays.asList(1, 2));
+    when(channelDao.getChannelGroupUserIconIdsToDownload()).thenReturn(Arrays.asList(3, 4));
 
     // when
-    List<Integer> result = defaultChannelRepository.getChannelUserIconIds();
+    List<Integer> result = defaultChannelRepository.getChannelUserIconIdsToDownload();
 
     // then
     assertEquals(4, result.size());
@@ -1043,8 +1043,8 @@ public class DefaultChannelRepositoryTest {
     assertEquals(3, (int) result.get(2));
     assertEquals(4, (int) result.get(3));
 
-    verify(channelDao).getChannelUserIconIds();
-    verify(channelDao).getChannelGroupUserIconIds();
+    verify(channelDao).getChannelUserIconIdsToDownload();
+    verify(channelDao).getChannelGroupUserIconIdsToDownload();
     verifyNoMoreInteractions(channelDao);
     verifyNoInteractions(locationDao);
   }
