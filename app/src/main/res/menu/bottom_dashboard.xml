@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+  <item android:id="@+id/channels_item"
+        android:title="@string/navbar_channels"
+        android:icon="@drawable/list" />
+
+  <item android:id="@+id/groups_item" 
+        android:title="@string/navbar_groups"
+        android:icon="@drawable/groupon" />
+
+  <item android:id="@+id/scenes_item"
+        android:title="@string/navbar_scenes"
+        android:icon="@drawable/coffee" />
+</menu>

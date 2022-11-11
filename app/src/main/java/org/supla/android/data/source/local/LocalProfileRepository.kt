@@ -51,20 +51,14 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
     override fun deleteProfile(id: Long) {
         delete(SuplaContract.AuthProfileEntry.TABLE_NAME,
                key(SuplaContract.AuthProfileEntry._ID, id))
-        val tables = listOf(SuplaContract.LocationEntry.TABLE_NAME,
-                            SuplaContract.ChannelEntry.TABLE_NAME,
-                            SuplaContract.ChannelValueEntry.TABLE_NAME,
-                            SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-                            SuplaContract.ColorListItemEntry.TABLE_NAME,
-                            SuplaContract.ChannelGroupEntry.TABLE_NAME,
-                            SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-                            SuplaContract.UserIconsEntry.TABLE_NAME)
-        for(table in tables) {
-            delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))
-        }
+        removeProfileBoundData(id)
     }
 
     override fun updateProfile(profile: AuthProfileItem) {
+        val prev = getProfile(profile.id)
+        if(prev != null && prev.authInfoChanged(profile)) {
+            removeProfileBoundData(profile.id)
+        }
         update(profile, SuplaContract.AuthProfileEntry.TABLE_NAME,
                key(SuplaContract.AuthProfileEntry._ID, profile.id))
     }
@@ -131,6 +125,22 @@ class LocalProfileRepository(provider: DatabaseAccessProvider): ProfileRepositor
     private fun encrypted(bytes: ByteArray): ByteArray {
         val key = Preferences.getDeviceID(SuplaApp.getApp())
         return Encryption.encryptDataWithNullOnException(bytes, key)
+    }
+
+
+    private fun removeProfileBoundData(id: Long) {
+        val tables = listOf(SuplaContract.LocationEntry.TABLE_NAME,
+                            SuplaContract.ChannelEntry.TABLE_NAME,
+                            SuplaContract.ChannelValueEntry.TABLE_NAME,
+                            SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+                            SuplaContract.ColorListItemEntry.TABLE_NAME,
+                            SuplaContract.ChannelGroupEntry.TABLE_NAME,
+                            SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+                            SuplaContract.SceneEntry.TABLE_NAME,
+                            SuplaContract.UserIconsEntry.TABLE_NAME)
+        for(table in tables) {
+            delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))
+        }
     }
 
 }

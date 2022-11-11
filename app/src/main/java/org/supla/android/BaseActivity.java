@@ -20,14 +20,24 @@ package org.supla.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-
+import android.view.WindowManager.LayoutParams;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
-
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaChannelState;
@@ -42,18 +52,6 @@ import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.lib.SuplaVersionError;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
-
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.functions.Action;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @SuppressLint("registered")
 public class BaseActivity extends FragmentActivity implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
@@ -383,12 +381,17 @@ public class BaseActivity extends FragmentActivity implements SuplaClientMessage
 
 
     protected void setStatusBarColor(int colorId) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ResourcesCompat.getColor(getResources(),
-                    colorId, null));
+        Window window = getWindow();
+        window.clearFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        int color = ResourcesCompat.getColor(getResources(), colorId, null);
+        window.setStatusBarColor(color);
+        int navigationBarColor = ResourcesCompat.getColor(getResources(),
+            R.color.channel_cell, null);
+        window.setNavigationBarColor(navigationBarColor);
+        View view = window.getDecorView();
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         }
     }
 

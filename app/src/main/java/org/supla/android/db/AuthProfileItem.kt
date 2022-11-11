@@ -82,4 +82,19 @@ data class AuthProfileItem(var name: String = "",
     fun isEmailAuthorizationEnabled(): Boolean {
         return authInfo.emailAuth
     }
+
+    fun authInfoChanged(other: AuthProfileItem): Boolean {
+        val a = authInfo
+        val b = other.authInfo
+
+        return !(a.emailAuth == b.emailAuth && 
+                 a.emailAddress == b.emailAddress &&
+                 a.serverAutoDetect == b.serverAutoDetect &&
+                 a.serverForEmail == b.serverForEmail &&
+                 a.serverForAccessID == b.serverForAccessID &&
+                 a.accessID == b.accessID &&
+                 a.accessIDpwd == b.accessIDpwd)
+
+    }
+
 }
