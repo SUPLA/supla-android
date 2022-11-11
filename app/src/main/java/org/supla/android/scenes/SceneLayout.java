@@ -412,16 +412,17 @@ public class SceneLayout extends LinearLayout {
         R.drawable.scene16, R.drawable.scene17,
         R.drawable.scene18, R.drawable.scene19};
 
-    int iconId = scene.getAltIcon();
-    if (iconId == 0) {
-      iconId = scene.getUserIcon();
-    }
-
+    int iconId = scene.getUserIcon();
     ImageId imgId;
-    if (iconId < standardIcons.length) {
+
+    if (iconId == 0) {
+      iconId = scene.getAltIcon();
+      if (iconId >= standardIcons.length) {
+        iconId = 0;
+      }
       imgId = new ImageId(standardIcons[iconId]);
     } else {
-      imgId = new ImageId(iconId, 0);
+      imgId = new ImageId(iconId, 1);
     }
 
     imgl.setImage(imgId);
