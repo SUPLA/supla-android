@@ -48,7 +48,7 @@ class ScenesAdapter @Inject constructor(
   private var _vTypes: List<Int> = emptyList()
   private var _paths: List<Path> = emptyList()
 
-  private val callback = ScenesListCallback(this).also {
+  private val callback = ScenesListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapScenesInternally(fromPos, toPos) }
     it.onMoveFinishedListener = {
       movementFinishedCallback(_sections.map { section -> section.scenes }.flatten())
@@ -201,10 +201,6 @@ class ScenesAdapter @Inject constructor(
     }
   }
 
-  private fun closeSwipedElement() {
-    callback.closeWhenSwiped()
-  }
-
   private fun getLocation(pos: Int): Location {
     return _sections[_paths[pos].sectionIdx].location
   }
@@ -225,12 +221,12 @@ class ScenesAdapter @Inject constructor(
   }
 
   override fun onLeftButtonClick(sceneId: Int) {
-    closeSwipedElement()
+    callback.closeWhenSwiped()
     leftButtonClickCallback(sceneId)
   }
 
   override fun onRightButtonClick(sceneId: Int) {
-    closeSwipedElement()
+    callback.closeWhenSwiped()
     rightButtonClickCallback(sceneId)
   }
 

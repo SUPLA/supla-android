@@ -3,6 +3,7 @@ package org.supla.android.scenes
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Region
 import android.view.MotionEvent
@@ -20,13 +21,14 @@ import androidx.recyclerview.widget.RecyclerView.*
 import org.supla.android.R
 
 @SuppressLint("ClickableViewAccessibility")
-class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.SimpleCallback(
-  ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-) {
+class ScenesListCallback(context: Context, private val adapter: ScenesAdapter) :
+  ItemTouchHelper.SimpleCallback(
+    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+  ) {
 
-  private lateinit var leftButton: ActionButton
-  private lateinit var rightButton: ActionButton
+  private val buttonWidth =
+    context.resources.getDimensionPixelSize(R.dimen.channel_layout_button_width)
 
   var onMovedListener: (fromPos: Int, toPos: Int) -> Unit = { _: Int, _: Int -> }
   var onMoveFinishedListener: () -> Unit = { }
@@ -54,12 +56,6 @@ class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.S
       false
     }
     recyclerView.addOnScrollListener(onScrollListener)
-
-    val context = recyclerView.context
-    leftButton =
-      ActionButton(context, ActionButton.Position.LEFT, context.getString(R.string.btn_abort))
-    rightButton =
-      ActionButton(context, ActionButton.Position.RIGHT, context.getString(R.string.btn_execute))
   }
 
   override fun getMovementFlags(
@@ -149,9 +145,9 @@ class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.S
     if (actionState == ACTION_STATE_SWIPE) {
       if (state is ItemState.Swiped) {
         if (state.position == ItemPosition.SWIPED_RIGHT) {
-          correctedX += leftButton.getButtonWidth().toFloat()
+          correctedX += buttonWidth.toFloat()
         } else {
-          correctedX -= rightButton.getButtonWidth().toFloat()
+          correctedX -= buttonWidth.toFloat()
         }
       }
 
@@ -161,7 +157,7 @@ class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.S
         }
         lastActiveFlag -> {
           previousPosition = state.position
-          state = calculateState(viewHolder, correctedX)
+          state = calculateState(viewHolder)
           animateOnFingerRelease(viewHolder.itemView)
         }
       }
@@ -200,18 +196,18 @@ class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.S
     state = ItemState.Closed
   }
 
-  private fun calculateState(viewHolder: ViewHolder, dX: Float) = when {
-    state.position == ItemPosition.CLOSED && lastActivePosition > leftButton.getButtonWidth() / 2 ->
-      newState(viewHolder, dX, ItemPosition.SWIPED_RIGHT)
-    state.position == ItemPosition.CLOSED && lastActivePosition < -rightButton.getButtonWidth() / 2 ->
-      newState(viewHolder, dX, ItemPosition.SWIPED_LEFT)
-    state.position == ItemPosition.SWIPED_RIGHT && lastActivePosition < -rightButton.getButtonWidth() / 2 ->
-      newState(viewHolder, dX, ItemPosition.SWIPED_LEFT)
-    state.position == ItemPosition.SWIPED_RIGHT && lastActivePosition < leftButton.getButtonWidth() / 2 ->
+  private fun calculateState(viewHolder: ViewHolder) = when {
+    state.position == ItemPosition.CLOSED && lastActivePosition > buttonWidth / 2 ->
+      newState(viewHolder, buttonWidth.toFloat(), ItemPosition.SWIPED_RIGHT)
+    state.position == ItemPosition.CLOSED && lastActivePosition < -buttonWidth / 2 ->
+      newState(viewHolder, -buttonWidth.toFloat(), ItemPosition.SWIPED_LEFT)
+    state.position == ItemPosition.SWIPED_RIGHT && lastActivePosition < -buttonWidth / 2 ->
+      newState(viewHolder, -buttonWidth.toFloat(), ItemPosition.SWIPED_LEFT)
+    state.position == ItemPosition.SWIPED_RIGHT && lastActivePosition < buttonWidth / 2 ->
       ItemState.Closed
-    state.position == ItemPosition.SWIPED_LEFT && lastActivePosition > leftButton.getButtonWidth() / 2 ->
-      newState(viewHolder, dX, ItemPosition.SWIPED_RIGHT)
-    state.position == ItemPosition.SWIPED_LEFT && lastActivePosition > -rightButton.getButtonWidth() / 2 ->
+    state.position == ItemPosition.SWIPED_LEFT && lastActivePosition > buttonWidth / 2 ->
+      newState(viewHolder, buttonWidth.toFloat(), ItemPosition.SWIPED_RIGHT)
+    state.position == ItemPosition.SWIPED_LEFT && lastActivePosition > -buttonWidth / 2 ->
       ItemState.Closed
     else -> state
   }
@@ -222,8 +218,8 @@ class ScenesListCallback(private val adapter: ScenesAdapter) : ItemTouchHelper.S
   private fun animateOnFingerRelease(view: View) {
     val destination = when (state.position) {
       ItemPosition.CLOSED -> 0f
-      ItemPosition.SWIPED_RIGHT -> leftButton.getButtonWidth().toFloat()
-      ItemPosition.SWIPED_LEFT -> -rightButton.getButtonWidth().toFloat()
+      ItemPosition.SWIPED_RIGHT -> buttonWidth.toFloat()
+      ItemPosition.SWIPED_LEFT -> -buttonWidth.toFloat()
     }
 
     startAnimation(view, lastActivePosition, destination)
