@@ -24,8 +24,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import dagger.hilt.android.EntryPointAccessors;
 import io.reactivex.rxjava3.core.Completable;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import org.supla.android.Encryption;
 import org.supla.android.Preferences;
 import org.supla.android.R;
@@ -1279,10 +1281,10 @@ public class DbHelper extends BaseDbHelper {
   }
 
   public List<Integer> iconsToDownload() {
-    List<Integer> rv = new LinkedList();
-    rv.addAll(channelRepository.getChannelUserIconIdsToDownload());
-    rv.addAll(sceneRepository.getSceneUserIconIdsToDownload());
-    return rv;
+    Set<Integer> result = new LinkedHashSet<>();
+    result.addAll(channelRepository.getChannelUserIconIdsToDownload());
+    result.addAll(sceneRepository.getSceneUserIconIdsToDownload());
+    return new ArrayList<>(result);
   }
 
   public boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
