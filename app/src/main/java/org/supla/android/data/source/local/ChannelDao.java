@@ -555,7 +555,7 @@ public class ChannelDao extends BaseDao {
             + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
             + " IS NULL"
             + " AND (C."
-            + SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID
+            + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID
             + " = "
             + getCachedProfileId()
             + ")";
