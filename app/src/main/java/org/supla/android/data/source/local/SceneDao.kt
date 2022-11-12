@@ -19,10 +19,12 @@ package org.supla.android.data.source.local
  */
 import android.content.ContentValues
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Trace
 import org.supla.android.db.Scene
 import org.supla.android.db.SuplaContract
 import org.supla.android.extensions.TAG
+import java.util.ArrayList
 
 class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
@@ -34,6 +36,37 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
       key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, cachedProfileId)
     )
+  }
+
+  fun getSceneUserIconIdsToDownload(): List<Int> {
+    val sql = ("SELECT S."
+      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " "
+      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " FROM "
+      + SuplaContract.SceneEntry.TABLE_NAME + " AS S LEFT JOIN "
+      + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (S."
+      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " = U."
+      + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " AND S."
+      + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = U."
+      + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ") WHERE "
+      + SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
+      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " > 0 AND U."
+      + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " IS NULL AND (S."
+      + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = " + cachedProfileId + ")")
+
+    val ids = ArrayList<Int>()
+    read { sqLiteDatabase: SQLiteDatabase -> sqLiteDatabase.rawQuery(sql, null) }.
+    use{ cursor ->
+      if (cursor.moveToFirst()) {
+        do {
+          val id =
+            cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON))
+          if (!ids.contains(id)) {
+            ids.add(id)
+          }
+        } while (cursor.moveToNext())
+      }
+    }
+    return ids
   }
 
   fun sceneCursor(): Cursor {
