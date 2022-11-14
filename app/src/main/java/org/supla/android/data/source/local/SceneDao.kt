@@ -60,8 +60,11 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       .use { cursor ->
         if (cursor.moveToFirst()) {
           do {
-            val id =
-              cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON))
+            val id = cursor.getInt(
+              cursor.getColumnIndexOrThrow(
+                SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+              )
+            )
             if (!ids.contains(id)) {
               ids.add(id)
             }

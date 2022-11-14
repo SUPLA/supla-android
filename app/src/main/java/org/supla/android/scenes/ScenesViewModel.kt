@@ -62,7 +62,9 @@ class ScenesViewModel @Inject constructor(
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe {
         _loading.postValue(false)
-        it.stream().forEach { scene -> emitSceneStateChange(scene) }
+        for (scene in it) {
+          emitSceneStateChange(scene)
+        }
         _scenes.postValue(it)
       }
   }
