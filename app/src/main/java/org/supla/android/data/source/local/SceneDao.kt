@@ -69,11 +69,11 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return ids
   }
 
-  fun sceneCursor(): Cursor {
+  fun sceneCursor(profileId: Long = cachedProfileId): Cursor {
     return read {
       val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
         "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
-      val selectionArgs = arrayOf(cachedProfileId.toString())
+      val selectionArgs = arrayOf(profileId.toString())
       val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
         SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
         " COLLATE LOCALIZED, " +

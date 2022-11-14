@@ -67,7 +67,9 @@ class WidgetVisibilityHandlerTest {
       0,
       profileId,
       true,
-      -1
+      -1,
+      1,
+      2
     )
     whenever(widgetPreferences.getWidgetConfiguration(widgetId)).thenReturn(widgetConfiguration)
 

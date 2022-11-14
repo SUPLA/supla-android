@@ -20,6 +20,7 @@ package org.supla.android.widget.onoff.configuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.profile.ProfileManager
@@ -35,12 +36,14 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   widgetPreferences: WidgetPreferences,
   profileManager: ProfileManager,
   channelRepository: ChannelRepository,
+  sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
   profileManager,
   channelRepository,
+  sceneRepository,
   dispatchers
 ) {
   override fun filterItems(channelBase: ChannelBase): Boolean {

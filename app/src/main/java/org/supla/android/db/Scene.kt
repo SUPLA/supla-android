@@ -20,6 +20,8 @@ package org.supla.android.db
 
 import android.content.ContentValues
 import android.database.Cursor
+import org.supla.android.R
+import org.supla.android.images.ImageId
 import java.util.Date
 import java.text.DateFormat
 
@@ -84,7 +86,10 @@ data class Scene(
       values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
     if (estimatedEndDate != null) {
-      values.put(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE, dateToString(estimatedEndDate!!))
+      values.put(
+        SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE,
+        dateToString(estimatedEndDate!!)
+      )
     } else {
       values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
@@ -128,6 +133,29 @@ data class Scene(
       }
     }
     return false
+  }
+
+  fun getImageId(): ImageId {
+    val standardIcons = intArrayOf(
+      R.drawable.scene0, R.drawable.scene1,
+      R.drawable.scene2, R.drawable.scene3,
+      R.drawable.scene4, R.drawable.scene5,
+      R.drawable.scene6, R.drawable.scene7,
+      R.drawable.scene8, R.drawable.scene9,
+      R.drawable.scene10, R.drawable.scene11,
+      R.drawable.scene12, R.drawable.scene13,
+      R.drawable.scene14, R.drawable.scene15,
+      R.drawable.scene16, R.drawable.scene17,
+      R.drawable.scene18, R.drawable.scene19
+    )
+
+    return if (userIcon != 0) {
+      ImageId(userIcon, 1)
+    } else if (altIcon >= standardIcons.size) {
+      ImageId(standardIcons[0])
+    } else {
+      ImageId(standardIcons[altIcon])
+    }
   }
 
   private fun dateFromString(str: String): Date {

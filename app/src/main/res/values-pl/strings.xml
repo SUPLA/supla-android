@@ -453,6 +453,7 @@
     <string name="widget_configure_type_label">Widżet dla:</string>
     <string name="widget_configure_type_channel_label">Kanału</string>
     <string name="widget_configure_type_group_label">Grupy</string>
+    <string name="widget_configure_type_scene_label">Sceny</string>
     <string name="widget_configure_channel_label">Kanał dla widgetu</string>
     <string name="widget_configure_group_label">Grupa dla widgetu</string>
     <string name="widget_configure_action_label">Akcja</string>
@@ -503,5 +504,6 @@
     <string name="navbar_scenes">Sceny</string>
     <string name="btn_execute">Wykonaj</string>
     <string name="btn_abort">Przerwij</string>
+    <string name="btn_abort_and_execute">Przewij i wykonaj</string>
     <string name="scene_name">Nazwa sceny</string>
 </resources>

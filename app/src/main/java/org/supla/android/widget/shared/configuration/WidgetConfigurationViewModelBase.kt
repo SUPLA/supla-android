@@ -25,10 +25,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.ChannelGroup
+import org.supla.android.data.source.SceneRepository
+import org.supla.android.db.*
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.profile.ProfileManager
@@ -41,6 +39,7 @@ abstract class WidgetConfigurationViewModelBase(
   private val widgetPreferences: WidgetPreferences,
   private val profileManager: ProfileManager,
   private val channelRepository: ChannelRepository,
+  private val sceneRepository: SceneRepository,
   private val dispatchers: CoroutineDispatchers
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
@@ -49,20 +48,20 @@ abstract class WidgetConfigurationViewModelBase(
   private val _dataLoading = MutableLiveData<Boolean>()
   val dataLoading: LiveData<Boolean> = _dataLoading
 
-  private val _confirmationResult = MutableLiveData<Result<ChannelBase>>()
-  val confirmationResult: LiveData<Result<ChannelBase>> = _confirmationResult
+  private val _confirmationResult = MutableLiveData<Result<DbItem>>()
+  val confirmationResult: LiveData<Result<DbItem>> = _confirmationResult
 
   private val _profilesList = MutableLiveData<List<AuthProfileItem>>()
   val profilesList: LiveData<List<AuthProfileItem>> = _profilesList
 
-  private val _itemsList = MutableLiveData<List<ChannelBase>>()
-  val itemsList: LiveData<List<ChannelBase>> = _itemsList
+  private val _itemsList = MutableLiveData<List<DbItem>>()
+  val itemsList: LiveData<List<DbItem>> = _itemsList
 
   private val _itemsType = MutableLiveData(ItemType.CHANNEL)
   val itemsType: LiveData<ItemType> = _itemsType
 
-  var selectedProfile: AuthProfileItem? = null
-  var selectedItem: ChannelBase? = null
+  private var selectedProfile: AuthProfileItem? = null
+  var selectedItem: DbItem? = null
   var selectedAction: WidgetAction? = null
   var widgetId: Int? = null
   var displayName: String? = null
@@ -85,20 +84,16 @@ abstract class WidgetConfigurationViewModelBase(
       }
       else -> {
         val itemType = itemsType.value ?: ItemType.CHANNEL
-        val itemId =
-          if (itemType.isChannel()) {
-            (selectedItem as Channel).channelId
-          } else {
-            (selectedItem as ChannelGroup).groupId
-          }
+        val itemId = when (itemType) {
+          ItemType.CHANNEL -> (selectedItem as Channel).channelId
+          ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
+          ItemType.SCENE -> (selectedItem as Scene).sceneId
+        }
         val color = if (itemType.isChannel()) (selectedItem as Channel).color else 0
 
         setWidgetConfiguration(
-          widgetId!!,
           itemId,
           itemType,
-          displayName!!,
-          selectedItem!!.func,
           color
         )
         _confirmationResult.value = Result.success(selectedItem!!)
@@ -124,7 +119,7 @@ abstract class WidgetConfigurationViewModelBase(
     reloadItems()
   }
 
-  open fun changeChannel(channel: ChannelBase?) {
+  open fun changeItem(channel: DbItem?) {
     selectedItem = channel
   }
 
@@ -132,7 +127,7 @@ abstract class WidgetConfigurationViewModelBase(
 
   private fun reloadItems() {
     _dataLoading.value = true
-    changeChannel(null)
+    changeItem(null)
     displayName = null
 
     viewModelScope.launch {
@@ -161,11 +156,13 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   private fun loadItems() {
-    val items: List<ChannelBase> = if (itemsType.value == ItemType.CHANNEL) {
-      getAllChannels().filter { filterItems(it) }
-    } else {
-      getAllChannelGroups().filter { filterItems(it) }
+    val items: List<DbItem> = when (itemsType.value) {
+      ItemType.CHANNEL -> getAllChannels().filter { filterItems(it) }
+      ItemType.GROUP -> getAllChannelGroups().filter { filterItems(it) }
+      ItemType.SCENE -> getAllScenes()
+      else -> emptyList()
     }
+
     _itemsList.postValue(items)
     if (items.isNotEmpty()) {
       selectedItem = items[0]
@@ -208,25 +205,43 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
+  private fun getAllScenes(): List<Scene> {
+    val profileId = selectedProfile?.id
+    return if (profileId != null) {
+      sceneRepository.getAllScenesForProfile(profileId)
+    } else {
+      emptyList()
+    }
+  }
+
   private fun setWidgetConfiguration(
-    widgetId: Int,
     itemId: Int,
     itemType: ItemType,
-    itemName: String,
-    channelFunction: Int,
     channelColor: Int
   ) {
+    val channelFunction = if (itemType == ItemType.SCENE) 0 else (selectedItem as ChannelBase).func
+    val altIcon = when (itemType) {
+      ItemType.SCENE -> (selectedItem as Scene).altIcon
+      else -> (selectedItem as ChannelBase).altIcon
+    }
+    val userIcon = when (itemType) {
+      ItemType.SCENE -> (selectedItem as Scene).userIcon
+      else -> (selectedItem as ChannelBase).userIconId
+    }
+
     val configuration = WidgetConfiguration(
       itemId,
       itemType,
-      itemName,
+      displayName!!,
       channelFunction,
       channelColor,
       selectedProfile!!.id,
       visibility = true,
-      selectedAction?.actionId
+      selectedAction?.actionId,
+      altIcon,
+      userIcon
     )
-    widgetPreferences.setWidgetConfiguration(widgetId, configuration)
+    widgetPreferences.setWidgetConfiguration(widgetId!!, configuration)
   }
 }
 

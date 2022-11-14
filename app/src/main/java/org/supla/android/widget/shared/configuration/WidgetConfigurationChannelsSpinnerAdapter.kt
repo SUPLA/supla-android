@@ -19,14 +19,21 @@ package org.supla.android.widget.shared.configuration
 
 import android.content.Context
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.DbItem
+import org.supla.android.db.Scene
 
 class WidgetConfigurationChannelsSpinnerAdapter(
   context: Context,
-  objects: MutableList<ChannelBase>
-) : WidgetConfigurationSpinnerBase<ChannelBase>(context, objects) {
+  objects: MutableList<DbItem>
+) : WidgetConfigurationSpinnerBase<DbItem>(context, objects) {
 
-  override fun getItemText(item: ChannelBase): String =
-    item.getNotEmptyCaption(context)
+  override fun getItemText(item: DbItem): String {
+    return if (item is Scene) {
+      item.caption
+    } else {
+      (item as ChannelBase).getNotEmptyCaption(context)
+    }
+  }
 
   override fun getItemId(position: Int): Long = getItem(position)?.id!!
 }

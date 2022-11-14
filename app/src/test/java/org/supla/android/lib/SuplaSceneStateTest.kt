@@ -11,7 +11,7 @@ class SuplaSceneStateTest {
             415, "iPhone Elon", true)
         Assert.assertEquals(155, state.sceneId)
         Assert.assertNull(state.startedAt)
-        Assert.assertNull(state.estamitedEndDate)
+        Assert.assertNull(state.estimatedEndDate)
         Assert.assertFalse(state.isDuringExecution)
         Assert.assertEquals(0, state.millisecondsLeft)
         Assert.assertEquals(415, state.initiatorId)
@@ -38,7 +38,7 @@ class SuplaSceneStateTest {
             0, "", false);
         Assert.assertEquals(156, state.sceneId)
         Assert.assertNotNull(state.startedAt)
-        Assert.assertNotNull(state.estamitedEndDate)
+        Assert.assertNotNull(state.estimatedEndDate)
         Assert.assertFalse(state.isDuringExecution)
     }
 }

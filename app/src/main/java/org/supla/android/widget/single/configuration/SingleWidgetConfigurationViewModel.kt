@@ -22,7 +22,10 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.DbItem
+import org.supla.android.db.Scene
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
@@ -35,12 +38,14 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   widgetPreferences: WidgetPreferences,
   profileManager: ProfileManager,
   channelRepository: ChannelRepository,
+  sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
   profileManager,
   channelRepository,
+  sceneRepository,
   dispatchers
 ) {
 
@@ -54,13 +59,22 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
       channelBase.isRollerShutter()
   }
 
-  override fun changeChannel(channel: ChannelBase?) {
-    super.changeChannel(channel)
+  override fun changeItem(channel: DbItem?) {
+    super.changeItem(channel)
     updateActions()
   }
 
   private fun updateActions() {
-    if (selectedItem?.isSwitch() == true) {
+    val item = selectedItem
+    if (item is Scene) {
+      _actionsList.postValue(
+        listOf(
+          WidgetAction.EXECUTE,
+          WidgetAction.INTERRUPT_AND_EXECUTE,
+          WidgetAction.INTERRUPT
+        )
+      )
+    } else if (item is ChannelBase && item.isSwitch()) {
       _actionsList.postValue(
         listOf(
           WidgetAction.TURN_ON,
@@ -68,7 +82,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
           WidgetAction.TOGGLE
         )
       )
-    } else if (selectedItem?.isRollerShutter() == true) {
+    } else if (item is ChannelBase && item.isRollerShutter()) {
       _actionsList.postValue(
         listOf(
           WidgetAction.MOVE_UP,

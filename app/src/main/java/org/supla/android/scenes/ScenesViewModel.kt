@@ -100,10 +100,10 @@ class ScenesViewModel @Inject constructor(
   }
 
   fun toggleLocationCollapsed(location: Location) {
-    if (location.collapsed and 0x4 > 0) {
-      location.collapsed = (location.collapsed and 0x4.inv())
+    if (location.collapsed and 0x8 > 0) {
+      location.collapsed = (location.collapsed and 0x8.inv())
     } else {
-      location.collapsed = (location.collapsed or 0x4)
+      location.collapsed = (location.collapsed or 0x8)
     }
 
     viewModelScope.launch {

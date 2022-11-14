@@ -14,6 +14,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
+import org.supla.android.scenes.SceneEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
 
 private const val INITIAL_PROFILE_ID = -1L
@@ -31,13 +32,16 @@ class MultiAccountProfileManagerTest {
     @Mock
     private lateinit var widgetVisibilityHandler: WidgetVisibilityHandler
 
+    @Mock
+    private lateinit var sceneEventsManager: SceneEventsManager
+
     private val profileIdHolder = ProfileIdHolder(INITIAL_PROFILE_ID)
 
     private lateinit var profileManager: MultiAccountProfileManager
 
     @Before
     fun setUp() {
-        profileManager = MultiAccountProfileManager(dbHelper, DEVICE_ID, profileRepository, profileIdHolder, widgetVisibilityHandler)
+        profileManager = MultiAccountProfileManager(dbHelper, DEVICE_ID, profileRepository, profileIdHolder, widgetVisibilityHandler, sceneEventsManager)
     }
 
     @Test

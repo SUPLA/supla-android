@@ -46,11 +46,9 @@ class WidgetPreferences(context: Context) {
       putInt(getKeyForChannelColor(widgetId), configuration.channelColor)
       putLong(getKeyForProfileId(widgetId), configuration.profileId)
       putBoolean(getKeyForWidgetVisibility(widgetId), configuration.visibility)
-      putLong(
-        getKeyForWidgetActionId(widgetId),
-        configuration.actionId
-          ?: INVALID_VALUE
-      )
+      putLong(getKeyForWidgetActionId(widgetId), configuration.actionId ?: INVALID_VALUE)
+      putInt(getKeyForWidgetAltIcon(widgetId), configuration.altIcon)
+      putInt(getKeyForWidgetUserIcon(widgetId), configuration.userIcon)
       apply()
     }
   }
@@ -69,6 +67,8 @@ class WidgetPreferences(context: Context) {
     val profileId = preferences.getLong(getKeyForProfileId(widgetId), INVALID_PROFILE_ID)
     val visibility = preferences.getBoolean(getKeyForWidgetVisibility(widgetId), false)
     val actionId = preferences.getLong(getKeyForWidgetActionId(widgetId), INVALID_VALUE)
+    val altIcon = preferences.getInt(getKeyForWidgetAltIcon(widgetId), -1)
+    val userIcon = preferences.getInt(getKeyForWidgetUserIcon(widgetId), -1)
     return WidgetConfiguration(
       itemId,
       itemType,
@@ -77,7 +77,9 @@ class WidgetPreferences(context: Context) {
       channelColor,
       profileId,
       visibility,
-      actionId
+      actionId,
+      altIcon,
+      userIcon
     )
   }
 
@@ -91,6 +93,8 @@ class WidgetPreferences(context: Context) {
       remove(getKeyForProfileId(widgetId))
       remove(getKeyForWidgetVisibility(widgetId))
       remove(getKeyForWidgetActionId(widgetId))
+      remove(getKeyForWidgetAltIcon(widgetId))
+      remove(getKeyForWidgetUserIcon(widgetId))
       apply()
     }
   }
@@ -128,6 +132,14 @@ internal fun getKeyForWidgetActionId(widgetId: Int): String {
   return "$SHARED_PREFERENCES.ACTION_ID.$widgetId"
 }
 
+internal fun getKeyForWidgetAltIcon(widgetId: Int): String {
+  return "$SHARED_PREFERENCES.ALT_ICON.$widgetId"
+}
+
+internal fun getKeyForWidgetUserIcon(widgetId: Int): String {
+  return "$SHARED_PREFERENCES.USER_ICON.$widgetId"
+}
+
 data class WidgetConfiguration(
   val itemId: Int,
   val itemType: ItemType,
@@ -136,5 +148,7 @@ data class WidgetConfiguration(
   val channelColor: Int,
   val profileId: Long,
   val visibility: Boolean,
-  val actionId: Long?
+  val actionId: Long?,
+  val altIcon: Int,
+  val userIcon: Int
 )

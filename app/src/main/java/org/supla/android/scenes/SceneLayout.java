@@ -400,32 +400,7 @@ public class SceneLayout extends LinearLayout {
     sceneId = scene.getSceneId();
     locationId = scene.getLocationId();
 
-    int[] standardIcons = {
-        R.drawable.scene0, R.drawable.scene1,
-        R.drawable.scene2, R.drawable.scene3,
-        R.drawable.scene4, R.drawable.scene5,
-        R.drawable.scene6, R.drawable.scene7,
-        R.drawable.scene8, R.drawable.scene9,
-        R.drawable.scene10, R.drawable.scene11,
-        R.drawable.scene12, R.drawable.scene13,
-        R.drawable.scene14, R.drawable.scene15,
-        R.drawable.scene16, R.drawable.scene17,
-        R.drawable.scene18, R.drawable.scene19};
-
-    int iconId = scene.getUserIcon();
-    ImageId imgId;
-
-    if (iconId == 0) {
-      iconId = scene.getAltIcon();
-      if (iconId >= standardIcons.length) {
-        iconId = 0;
-      }
-      imgId = new ImageId(standardIcons[iconId]);
-    } else {
-      imgId = new ImageId(iconId, 1);
-    }
-
-    imgl.setImage(imgId);
+    imgl.setImage(scene.getImageId());
 
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));

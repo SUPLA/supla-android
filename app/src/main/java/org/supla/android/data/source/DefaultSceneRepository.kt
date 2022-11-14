@@ -19,6 +19,7 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.database.Cursor
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -41,13 +42,17 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
     // (something like Rx with Room).
     // Debounce is used for optimization -> to avoid many reloads.
     remissionSubject.subscribeOn(Schedulers.io())
-      .debounce(100, TimeUnit.MILLISECONDS)
+      .debounce(50, TimeUnit.MILLISECONDS)
       .subscribe { scenesSubject.onNext(loadScenes()) }
   }
 
   override fun getAllProfileScenes(): Observable<List<Scene>> {
     return scenesSubject.hide()
       .doOnSubscribe { scenesSubject.onNext(loadScenes()) }
+  }
+
+  override fun getAllScenesForProfile(profileId: Long): List<Scene> {
+    return parseScenesCursor(dao.sceneCursor(profileId))
   }
 
   override fun getScene(id: Int): Scene? {
@@ -114,17 +119,19 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
   }
 
   private fun loadScenes(): List<Scene> {
-    val rv = mutableListOf<Scene>()
-    val cur = dao.sceneCursor()
+    return parseScenesCursor(dao.sceneCursor())
+  }
 
-    cur.moveToFirst()
-    while (!cur.isAfterLast) {
+  private fun parseScenesCursor(cursor: Cursor): List<Scene> {
+    val rv = mutableListOf<Scene>()
+    cursor.moveToFirst()
+    while (!cursor.isAfterLast) {
       val itm = Scene()
-      itm.AssignCursorData(cur)
+      itm.AssignCursorData(cursor)
       rv.add(itm)
-      cur.moveToNext()
+      cursor.moveToNext()
     }
-    cur.close()
+    cursor.close()
 
     return rv
   }

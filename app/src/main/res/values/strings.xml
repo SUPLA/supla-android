@@ -431,6 +431,7 @@
     <string translatable="false" name="widget_configure_type_label">Widget for:</string>
     <string translatable="false" name="widget_configure_type_channel_label">Channel</string>
     <string translatable="false" name="widget_configure_type_group_label">Group</string>
+    <string translatable="false" name="widget_configure_type_scene_label">Scene</string>
     <string name="widget_configure_channel_label">Channel of widget</string>
     <string translatable="false" name="widget_configure_group_label">Group of widget</string>
     <string name="widget_configure_action_label">Action</string>
@@ -513,5 +514,6 @@
     <string translatable="false" name="navbar_scenes">Scenes</string>
     <string translatable="false" name="btn_execute">Execute</string>
     <string translatable="false" name="btn_abort">Abort</string>
+    <string translatable="false" name="btn_abort_and_execute">Abort and execute</string>
     <string translatable="false" name="scene_name">Scene name</string>
 </resources>
