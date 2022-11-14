@@ -39,41 +39,46 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
   }
 
   fun getSceneUserIconIdsToDownload(): List<Int> {
-    val sql = ("SELECT S."
-      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " "
-      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " FROM "
-      + SuplaContract.SceneEntry.TABLE_NAME + " AS S LEFT JOIN "
-      + SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (S."
-      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " = U."
-      + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " AND S."
-      + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = U."
-      + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ") WHERE "
-      + SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE + " > 0 AND "
-      + SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " > 0 AND U."
-      + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " IS NULL AND (S."
-      + SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = " + cachedProfileId + ")")
+    val sql = (
+      "SELECT S." +
+        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " " +
+        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " FROM " +
+        SuplaContract.SceneEntry.TABLE_NAME + " AS S LEFT JOIN " +
+        SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (S." +
+        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " = U." +
+        SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " AND S." +
+        SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = U." +
+        SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ") WHERE " +
+        SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE + " > 0 AND " +
+        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " > 0 AND U." +
+        SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " IS NULL AND (S." +
+        SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = " + cachedProfileId + ")"
+      )
 
     val ids = ArrayList<Int>()
-    read { sqLiteDatabase: SQLiteDatabase -> sqLiteDatabase.rawQuery(sql, null) }.
-    use{ cursor ->
-      if (cursor.moveToFirst()) {
-        do {
-          val id =
-            cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON))
-          if (!ids.contains(id)) {
-            ids.add(id)
-          }
-        } while (cursor.moveToNext())
+    read { sqLiteDatabase: SQLiteDatabase -> sqLiteDatabase.rawQuery(sql, null) }
+      .use { cursor ->
+        if (cursor.moveToFirst()) {
+          do {
+            val id = cursor.getInt(
+              cursor.getColumnIndexOrThrow(
+                SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+              )
+            )
+            if (!ids.contains(id)) {
+              ids.add(id)
+            }
+          } while (cursor.moveToNext())
+        }
       }
-    }
     return ids
   }
 
-  fun sceneCursor(): Cursor {
+  fun sceneCursor(profileId: Long = cachedProfileId): Cursor {
     return read {
       val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
         "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
-      val selectionArgs = arrayOf(cachedProfileId.toString())
+      val selectionArgs = arrayOf(profileId.toString())
       val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
         SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
         " COLLATE LOCALIZED, " +
@@ -97,7 +102,8 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
   fun updateScene(scene: Scene): Boolean {
     return try {
       update(
-        scene, SuplaContract.SceneEntry.TABLE_NAME,
+        scene,
+        SuplaContract.SceneEntry.TABLE_NAME,
         key(SuplaContract.SceneEntry._ID, scene.id)
       )
       true

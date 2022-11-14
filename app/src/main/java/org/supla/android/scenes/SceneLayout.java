@@ -54,11 +54,9 @@ import org.supla.android.listview.LineView;
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout {
 
-  @Inject
-  SceneEventsManager eventsManager;
+  @Inject SceneEventsManager eventsManager;
 
   private Callable<ViewHolder> viewHolderProvider;
-
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -93,7 +91,6 @@ public class SceneLayout extends LinearLayout {
     void onLongPress(ViewHolder viewHolder);
   }
 
-
   public SceneLayout(Context context) {
     super(context);
 
@@ -119,17 +116,22 @@ public class SceneLayout extends LinearLayout {
     left_btn = new FrameLayout(context);
 
     float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
-    int channelHeight = (int) (
-        ((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
-            * heightScaleFactor);
+    int channelHeight =
+        (int)
+            (((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
+                * heightScaleFactor);
 
-    right_btn.setLayoutParams(new LayoutParams(
-        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+    right_btn.setLayoutParams(
+        new LayoutParams(
+            getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
+            channelHeight));
 
     right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
-    left_btn.setLayoutParams(new LayoutParams(
-        getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+    left_btn.setLayoutParams(
+        new LayoutParams(
+            getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
+            channelHeight));
 
     left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
@@ -157,20 +159,18 @@ public class SceneLayout extends LinearLayout {
 
     sceneDurationTimer = newTimerView(context);
     content.addView(sceneDurationTimer);
-    RelativeLayout.LayoutParams sdlp = new RelativeLayout
-        .LayoutParams((int) getResources().getDimension(R.dimen.channel_imgtext_width),
-        (int) (getResources().getDimension(R.dimen.default_text_size)
-            * 1.5));
+    RelativeLayout.LayoutParams sdlp =
+        new RelativeLayout.LayoutParams(
+            (int) getResources().getDimension(R.dimen.channel_imgtext_width),
+            (int) (getResources().getDimension(R.dimen.default_text_size) * 1.5));
     sdlp.addRule(RelativeLayout.ABOVE, right_onlineStatus.getId());
     sdlp.addRule(RelativeLayout.ALIGN_RIGHT, right_onlineStatus.getId());
-    sdlp.setMargins(0, 0, 0,
-        (int) getResources().getDimension(R.dimen.form_element_spacing));
+    sdlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.form_element_spacing));
     sceneDurationTimer.setLayoutParams(sdlp);
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
-    channelIconContainer
-        .setLayoutParams(getChannelIconContainerLayoutParams());
+    channelIconContainer.setLayoutParams(getChannelIconContainerLayoutParams());
 
     SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
@@ -178,8 +178,7 @@ public class SceneLayout extends LinearLayout {
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-          dot_size / 2, dot_size * 2);
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
 
       lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
       lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -197,23 +196,24 @@ public class SceneLayout extends LinearLayout {
     channelIconContainer.addView(imgl);
 
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
-    caption_text.setOnLongClickListener(v -> {
-      listener.onCaptionLongPress(sceneId);
-      return true;
-    });
+    caption_text.setOnLongClickListener(
+        v -> {
+          listener.onCaptionLongPress(sceneId);
+          return true;
+        });
     channelIconContainer.addView(caption_text);
-    setOnLongClickListener(v -> {
-      if (isSlided()) {
-        return false;
-      }
-      listener.onLongPress(provideViewHolderForLongPressCallback());
-      return true;
-    });
+    setOnLongClickListener(
+        v -> {
+          if (isSlided()) {
+            return false;
+          }
+          listener.onLongPress(provideViewHolderForLongPressCallback());
+          return true;
+        });
 
     left_btn.setOnClickListener(v -> listener.onLeftButtonClick(sceneId));
     right_btn.setOnClickListener(v -> listener.onRightButtonClick(sceneId));
   }
-
 
   public SceneLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -257,8 +257,9 @@ public class SceneLayout extends LinearLayout {
   private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
     RelativeLayout.LayoutParams lp;
 
-    lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    lp =
+        new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
     return lp;
@@ -269,8 +270,8 @@ public class SceneLayout extends LinearLayout {
     TextView tv = new TextView(context);
     tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
-    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-        getResources().getDimension(R.dimen.default_text_size));
+    tv.setTextSize(
+        TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size));
     tv.setTextColor(getResources().getColor(R.color.label_grey));
     tv.setGravity(Gravity.BOTTOM | Gravity.END);
 
@@ -284,8 +285,8 @@ public class SceneLayout extends LinearLayout {
 
     tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
-    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-        getResources().getDimension(R.dimen.channel_btn_text_size));
+    tv.setTextSize(
+        TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
     tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
@@ -332,8 +333,7 @@ public class SceneLayout extends LinearLayout {
   }
 
   public void Slide(int delta) {
-    content.layout(delta, content.getTop(),
-        content.getWidth() + delta, content.getHeight());
+    content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
     int bcolor = getResources().getColor(R.color.channel_btn);
 
@@ -342,7 +342,6 @@ public class SceneLayout extends LinearLayout {
 
     UpdateLeftBtn();
     UpdateRightBtn();
-
   }
 
   private void UpdateLeftBtn() {
@@ -368,7 +367,6 @@ public class SceneLayout extends LinearLayout {
     }
 
     left_btn.layout(left, 0, right, left_btn.getHeight());
-
   }
 
   private void UpdateRightBtn() {
@@ -400,32 +398,7 @@ public class SceneLayout extends LinearLayout {
     sceneId = scene.getSceneId();
     locationId = scene.getLocationId();
 
-    int[] standardIcons = {
-        R.drawable.scene0, R.drawable.scene1,
-        R.drawable.scene2, R.drawable.scene3,
-        R.drawable.scene4, R.drawable.scene5,
-        R.drawable.scene6, R.drawable.scene7,
-        R.drawable.scene8, R.drawable.scene9,
-        R.drawable.scene10, R.drawable.scene11,
-        R.drawable.scene12, R.drawable.scene13,
-        R.drawable.scene14, R.drawable.scene15,
-        R.drawable.scene16, R.drawable.scene17,
-        R.drawable.scene18, R.drawable.scene19};
-
-    int iconId = scene.getUserIcon();
-    ImageId imgId;
-
-    if (iconId == 0) {
-      iconId = scene.getAltIcon();
-      if (iconId >= standardIcons.length) {
-        iconId = 0;
-      }
-      imgId = new ImageId(standardIcons[iconId]);
-    } else {
-      imgId = new ImageId(iconId, 1);
-    }
-
-    imgl.setImage(imgId);
+    imgl.setImage(scene.getImageId());
 
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));
@@ -437,20 +410,22 @@ public class SceneLayout extends LinearLayout {
   }
 
   private void observeStateChanges() {
-    sceneChangesDisposable = eventsManager
-        .observerScene(sceneId)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(sceneState -> {
-          if (sceneState.getExecuting()) {
-            startTimer(sceneState.getEndTime());
-          } else {
-            if (sceneCountDown != null) {
-              sceneCountDown.cancel();
-              setTimerInactive();
-            }
-          }
-          setupSceneStatus(sceneState.getExecuting());
-        });
+    sceneChangesDisposable =
+        eventsManager
+            .observerScene(sceneId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                sceneState -> {
+                  if (sceneState.getExecuting()) {
+                    startTimer(sceneState.getEndTime());
+                  } else {
+                    if (sceneCountDown != null) {
+                      sceneCountDown.cancel();
+                      setTimerInactive();
+                    }
+                  }
+                  setupSceneStatus(sceneState.getExecuting());
+                });
   }
 
   private ShapeType getStatusShapeType(boolean sceneActive) {
@@ -472,27 +447,29 @@ public class SceneLayout extends LinearLayout {
       return;
     }
     long sceneDuration = end.getTime() - System.currentTimeMillis();
-    sceneCountDown = new CountDownTimer(sceneDuration, 100) {
-      private final long endTime = end.getTime();
-      private boolean firstTick = true;
+    sceneCountDown =
+        new CountDownTimer(sceneDuration, 100) {
+          private final long endTime = end.getTime();
+          private boolean firstTick = true;
 
-      public void onTick(long millisUntilFinished) {
-        uiThreadHandler.post(() -> {
-          long restTime = endTime - System.currentTimeMillis();
-          sceneDurationTimer.setText(formatMillis(restTime));
+          public void onTick(long millisUntilFinished) {
+            uiThreadHandler.post(
+                () -> {
+                  long restTime = endTime - System.currentTimeMillis();
+                  sceneDurationTimer.setText(formatMillis(restTime));
 
-          if (firstTick) {
-            sceneDurationTimer.setVisibility(VISIBLE);
-            firstTick = false;
+                  if (firstTick) {
+                    sceneDurationTimer.setVisibility(VISIBLE);
+                    firstTick = false;
+                  }
+                });
           }
-        });
-      }
 
-      public void onFinish() {
-        sceneCountDown = null;
-        uiThreadHandler.post(() -> setTimerInactive());
-      }
-    };
+          public void onFinish() {
+            sceneCountDown = null;
+            uiThreadHandler.post(() -> setTimerInactive());
+          }
+        };
     sceneCountDown.start();
   }
 
@@ -522,7 +499,6 @@ public class SceneLayout extends LinearLayout {
 
   static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
-
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
       super(context);
       float textSize = getResources().getDimension(R.dimen.channel_caption_text_size);
@@ -534,18 +510,19 @@ public class SceneLayout extends LinearLayout {
       setTextColor(getResources().getColor(R.color.channel_caption_text));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-          LayoutParams.WRAP_CONTENT);
+      RelativeLayout.LayoutParams lp =
+          new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
       if (imgl_id != -1) {
         lp.addRule(RelativeLayout.BELOW, imgl_id);
       }
 
-      lp.topMargin = (int) (getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
-          * heightScaleFactor);
+      lp.topMargin =
+          (int)
+              (getResources().getDimensionPixelSize(R.dimen.channel_caption_top_margin)
+                  * heightScaleFactor);
       setLayoutParams(lp);
     }
-
   }
 
   private static class ChannelImageLayout extends LinearLayout {
@@ -583,14 +560,12 @@ public class SceneLayout extends LinearLayout {
     }
 
     private void setImageDimensions(ImageView Img, int width, int height) {
-      int sw = scaledDimension(width),
-          sh = scaledDimension(height);
+      int sw = scaledDimension(width), sh = scaledDimension(height);
 
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(sw, sh);
 
       Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
       Img.setLayoutParams(lp);
-
     }
 
     private void setDimensions() {
@@ -599,15 +574,16 @@ public class SceneLayout extends LinearLayout {
       int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
       int sh = scaledDimension(h);
 
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-          LayoutParams.WRAP_CONTENT, sh);
+      RelativeLayout.LayoutParams lp =
+          new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, sh);
 
       lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
       lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
 
       setLayoutParams(lp);
 
-      setImageDimensions(imageView,
+      setImageDimensions(
+          imageView,
           getResources().getDimensionPixelSize(R.dimen.channel_img_width),
           getResources().getDimensionPixelSize(R.dimen.channel_img_height));
     }

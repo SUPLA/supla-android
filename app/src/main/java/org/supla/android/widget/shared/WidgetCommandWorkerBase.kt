@@ -115,7 +115,11 @@ abstract class WidgetCommandWorkerBase(
   }
 
   protected fun callAction(configuration: WidgetConfiguration, action: ActionId) {
-    val type = if (configuration.itemType.isGroup()) SubjectType.GROUP else SubjectType.CHANNEL
+    val type = when (configuration.itemType) {
+      ItemType.CHANNEL -> SubjectType.CHANNEL
+      ItemType.GROUP -> SubjectType.GROUP
+      ItemType.SCENE -> SubjectType.SCENE
+    }
     callAction(configuration, ActionParameters(action, type, configuration.itemId))
   }
 

@@ -31,11 +31,13 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.Scene
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
+import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
@@ -62,25 +64,15 @@ class SingleWidget : WidgetProviderBase() {
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
-      val channel = Channel()
-      channel.func = configuration.itemFunction
-
-      val active = if (turnOnOrClose(configuration)) {
-        getActiveValue(configuration.itemFunction)
-      } else {
-        0
-      }
-
-      views.setImageViewBitmap(
-        R.id.single_widget_button,
-        ImageCache.getBitmap(
-          context,
-          channel.getImageIdx(
-            ChannelBase.WhichOne.First,
-            active
-          )
+      if (configuration.itemType == ItemType.SCENE) {
+        val scene = Scene(altIcon = configuration.altIcon, userIcon = configuration.userIcon)
+        views.setImageViewBitmap(
+          R.id.single_widget_button,
+          ImageCache.getBitmap(context, scene.getImageId())
         )
-      )
+      } else {
+        setChannelIcons(configuration, views, context)
+      }
 
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
@@ -114,6 +106,28 @@ class SingleWidget : WidgetProviderBase() {
         removeWidgetsWork
       )
     }
+  }
+
+  private fun setChannelIcons(
+    configuration: WidgetConfiguration,
+    views: RemoteViews,
+    context: Context
+  ) {
+    val channel = Channel()
+    channel.func = configuration.itemFunction
+    channel.altIcon = configuration.altIcon
+    channel.userIconId = configuration.userIcon
+
+    val active = if (turnOnOrClose(configuration)) {
+      getActiveValue(configuration.itemFunction)
+    } else {
+      0
+    }
+
+    views.setImageViewBitmap(
+      R.id.single_widget_button,
+      ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
+    )
   }
 
   companion object {

@@ -24,6 +24,7 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
+import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
 
 /**
@@ -42,20 +43,25 @@ class SingleWidgetCommandWorker(
 
   override fun perform(configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)
-
-    when (configuration.itemFunction) {
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
-      SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_POWERSWITCH -> {
-        if (action == null) {
-          return callCommon(configuration)
-        }
+    if (configuration.itemType == ItemType.SCENE) {
+      if (action != null) {
         callAction(configuration, action.suplaAction)
       }
-      else -> return callCommon(configuration)
+    } else {
+      when (configuration.itemFunction) {
+        SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+        SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
+        SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
+        SUPLA_CHANNELFNC_LIGHTSWITCH,
+        SUPLA_CHANNELFNC_POWERSWITCH -> {
+          if (action == null) {
+            return callCommon(configuration)
+          }
+          callAction(configuration, action.suplaAction)
+        }
+        else -> return callCommon(configuration)
+      }
     }
     return Result.success()
   }

@@ -63,6 +63,8 @@ class OnOffWidget : WidgetProviderBase() {
 
       val channel = Channel()
       channel.func = configuration.itemFunction
+      channel.altIcon = configuration.altIcon
+      channel.userIconId = configuration.userIcon
 
       val activeValue = getActiveValue(configuration.itemFunction)
       views.setImageViewBitmap(

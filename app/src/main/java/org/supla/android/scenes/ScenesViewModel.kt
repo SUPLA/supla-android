@@ -42,7 +42,7 @@ class ScenesViewModel @Inject constructor(
   private val sceneEventsManager: SceneEventsManager,
   private val dispatchers: CoroutineDispatchers,
   private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository,
+  private val channelRepository: ChannelRepository
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   private val scenesDisposable: Disposable
@@ -62,7 +62,9 @@ class ScenesViewModel @Inject constructor(
       .observeOn(AndroidSchedulers.mainThread())
       .subscribe {
         _loading.postValue(false)
-        it.stream().forEach { scene -> emitSceneStateChange(scene) }
+        for (scene in it) {
+          emitSceneStateChange(scene)
+        }
         _scenes.postValue(it)
       }
   }
@@ -100,10 +102,10 @@ class ScenesViewModel @Inject constructor(
   }
 
   fun toggleLocationCollapsed(location: Location) {
-    if (location.collapsed and 0x4 > 0) {
-      location.collapsed = (location.collapsed and 0x4.inv())
+    if (location.collapsed and 0x8 > 0) {
+      location.collapsed = (location.collapsed and 0x8.inv())
     } else {
-      location.collapsed = (location.collapsed or 0x4)
+      location.collapsed = (location.collapsed or 0x8)
     }
 
     viewModelScope.launch {

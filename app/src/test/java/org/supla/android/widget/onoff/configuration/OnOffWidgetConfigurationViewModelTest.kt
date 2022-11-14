@@ -36,6 +36,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
 import org.supla.android.di.CoroutineDispatchers
@@ -72,6 +73,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   @Mock
   private lateinit var channelRepository: ChannelRepository
 
+  @Mock
+  private lateinit var sceneRepository: SceneRepository
+
   @Before
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
@@ -102,6 +106,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -139,6 +144,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -182,6 +188,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -222,6 +229,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -262,6 +270,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -299,6 +308,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -336,6 +346,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -361,6 +372,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
 
@@ -383,6 +395,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -408,6 +421,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
         widgetPreferences,
         profileManager,
         channelRepository,
+        sceneRepository,
         dispatchers
       )
       advanceUntilIdle()
@@ -441,6 +455,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -505,6 +520,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()

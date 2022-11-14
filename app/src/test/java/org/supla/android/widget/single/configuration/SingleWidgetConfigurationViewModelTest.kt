@@ -36,6 +36,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
 import org.supla.android.di.CoroutineDispatchers
@@ -70,6 +71,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
   @Mock
   private lateinit var channelRepository: ChannelRepository
 
+  @Mock
+  private lateinit var sceneRepository: SceneRepository
+
   @Before
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
@@ -102,6 +106,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -144,6 +149,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -186,6 +192,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -220,6 +227,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
     advanceUntilIdle()
@@ -248,9 +256,10 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
-    viewModel.changeChannel(channel)
+    viewModel.changeItem(channel)
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
@@ -272,9 +281,10 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
-    viewModel.changeChannel(channel)
+    viewModel.changeItem(channel)
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
@@ -293,13 +303,14 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
-    viewModel.changeChannel(channel)
+    viewModel.changeItem(channel)
 
     // when
     channel.func = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
-    viewModel.changeChannel(channel)
+    viewModel.changeItem(channel)
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
@@ -316,12 +327,13 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       widgetPreferences,
       profileManager,
       channelRepository,
+      sceneRepository,
       dispatchers
     )
-    viewModel.changeChannel(channel)
+    viewModel.changeItem(channel)
 
     // when
-    viewModel.changeChannel(null)
+    viewModel.changeItem(null)
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
