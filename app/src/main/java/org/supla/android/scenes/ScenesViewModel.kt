@@ -42,7 +42,7 @@ class ScenesViewModel @Inject constructor(
   private val sceneEventsManager: SceneEventsManager,
   private val dispatchers: CoroutineDispatchers,
   private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository,
+  private val channelRepository: ChannelRepository
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   private val scenesDisposable: Disposable

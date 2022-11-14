@@ -67,7 +67,8 @@ class SingleWidget : WidgetProviderBase() {
       if (configuration.itemType == ItemType.SCENE) {
         val scene = Scene(altIcon = configuration.altIcon, userIcon = configuration.userIcon)
         views.setImageViewBitmap(
-          R.id.single_widget_button, ImageCache.getBitmap(context, scene.getImageId())
+          R.id.single_widget_button,
+          ImageCache.getBitmap(context, scene.getImageId())
         )
       } else {
         setChannelIcons(configuration, views, context)

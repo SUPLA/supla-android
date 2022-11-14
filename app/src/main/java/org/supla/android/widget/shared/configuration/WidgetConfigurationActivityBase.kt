@@ -115,7 +115,7 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
   private fun getSelectedChannelCaption(): String {
     val maxLength = getNameMaxLength()
-    val caption = when(val item = viewModel().selectedItem) {
+    val caption = when (val item = viewModel().selectedItem) {
       is ChannelBase -> item.getNotEmptyCaption(this)
       is Scene -> item.caption
       else -> ""

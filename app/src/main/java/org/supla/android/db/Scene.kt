@@ -22,11 +22,10 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.supla.android.R
 import org.supla.android.images.ImageId
-import java.util.Date
-import java.text.DateFormat
-
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
+import java.text.DateFormat
+import java.util.Date
 
 data class Scene(
   var profileId: Long = 0,

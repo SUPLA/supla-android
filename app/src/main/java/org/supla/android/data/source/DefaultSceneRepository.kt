@@ -1,6 +1,5 @@
 package org.supla.android.data.source
 
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -115,7 +114,7 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
   }
 
   override fun getSceneUserIconIdsToDownload(): List<Int> {
-    return dao.getSceneUserIconIdsToDownload();
+    return dao.getSceneUserIconIdsToDownload()
   }
 
   private fun loadScenes(): List<Scene> {
