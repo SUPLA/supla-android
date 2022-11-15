@@ -23,9 +23,9 @@ import org.supla.android.tools.UsedFromNativeCode
 @UsedFromNativeCode
 
 /*
-The variable temperature is zero if the sensor does not exist or the value is less than -273,
+The variable temperature is null if the sensor does not exist or the value is less than -273,
 which is considered a sensor error.
-The humidity variable is zero if the sensor does not exist or the value is below 0 or above 100
+The humidity variable is null if the sensor does not exist or the value is below 0 or above 100
 which means considered a sensor error.
  */
 
