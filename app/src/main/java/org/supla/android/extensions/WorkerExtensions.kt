@@ -2,8 +2,10 @@ package org.supla.android.extensions
 
 import androidx.work.Worker
 import dagger.hilt.android.EntryPointAccessors
+import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.di.ProfileManagerEntryPoint
 import org.supla.android.di.SingleCallProviderEntryPoint
+import org.supla.android.di.TemperaturePresenterEntryPoint
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 
@@ -18,3 +20,9 @@ fun Worker.getSingleCallProvider(): SingleCall.Provider =
     applicationContext,
     SingleCallProviderEntryPoint::class.java
   ).provideSingleCallProvider()
+
+fun Worker.getTemperaturePresenter(): TemperaturePresenter =
+  EntryPointAccessors.fromApplication(
+    applicationContext,
+    TemperaturePresenterEntryPoint::class.java
+  ).provideTemperaturePresenter()

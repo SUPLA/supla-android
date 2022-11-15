@@ -89,12 +89,12 @@ abstract class WidgetConfigurationViewModelBase(
           ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
           ItemType.SCENE -> (selectedItem as Scene).sceneId
         }
-        val color = if (itemType.isChannel()) (selectedItem as Channel).color else 0
+        val value = if (itemType.isChannel()) (selectedItem as Channel).color else 0
 
         setWidgetConfiguration(
           itemId,
           itemType,
-          color
+          "$value"
         )
         _confirmationResult.value = Result.success(selectedItem!!)
       }
@@ -217,7 +217,7 @@ abstract class WidgetConfigurationViewModelBase(
   private fun setWidgetConfiguration(
     itemId: Int,
     itemType: ItemType,
-    channelColor: Int
+    value: String
   ) {
     val channelFunction = if (itemType == ItemType.SCENE) 0 else (selectedItem as ChannelBase).func
     val altIcon = when (itemType) {
@@ -234,7 +234,7 @@ abstract class WidgetConfigurationViewModelBase(
       itemType,
       displayName!!,
       channelFunction,
-      channelColor,
+      value,
       selectedProfile!!.id,
       visibility = true,
       selectedAction?.actionId,
@@ -286,3 +286,7 @@ internal fun ChannelBase.isGateController() =
 internal fun ChannelBase.isDoorLock() =
   func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK ||
     func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+
+internal fun ChannelBase.isThermometer() =
+  func == SUPLA_CHANNELFNC_THERMOMETER ||
+    func == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE

@@ -18,14 +18,17 @@ package org.supla.android.db
  */
 
 import junit.framework.TestCase
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.TemperaturePresenterFactory
 import org.supla.android.cfg.CfgData
+import org.supla.android.cfg.CfgRepository
 import org.supla.android.cfg.ChannelHeight
 import org.supla.android.cfg.TemperatureUnit
+import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.data.presenter.TemperaturePresenterImpl
 import org.supla.android.lib.SuplaConst
 import java.nio.ByteBuffer
@@ -48,13 +51,21 @@ class ChannelTest : TestCase() {
     false
   )
 
+  @Before
+  fun setup() {
+  }
+
   @Test
   fun testThermometerTemperatureCelsius() {
-    val temperaturePresenterFactory: TemperaturePresenterFactory = mock {
-      on { getTemperaturePresenter() } doReturn TemperaturePresenterImpl(celsiusCfg)
+    val cfgRepository: CfgRepository = mock {
+      on { getCfg() } doReturn celsiusCfg
+    }
+    val temperaturePresenterFactory = object : TemperaturePresenterFactory {
+      override fun getTemperaturePresenter(): TemperaturePresenter =
+        TemperaturePresenterImpl(cfgRepository)
     }
 
-    val ref: Double = 23.0
+    val ref = 23.0
     val ch = Channel(temperaturePresenterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8).putDouble(ref).array().reversedArray()
@@ -70,11 +81,15 @@ class ChannelTest : TestCase() {
 
   @Test
   fun testThermostatTemeratureHumidityCelsius() {
-    val temperaturePresenterFactory: TemperaturePresenterFactory = mock {
-      on { getTemperaturePresenter() } doReturn TemperaturePresenterImpl(celsiusCfg)
+    val cfgRepository: CfgRepository = mock {
+      on { getCfg() } doReturn celsiusCfg
+    }
+    val temperaturePresenterFactory = object : TemperaturePresenterFactory {
+      override fun getTemperaturePresenter(): TemperaturePresenter =
+        TemperaturePresenterImpl(cfgRepository)
     }
 
-    val ref: Int = 13
+    val ref = 13
     val ch = Channel(temperaturePresenterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8)
@@ -92,11 +107,15 @@ class ChannelTest : TestCase() {
 
   @Test
   fun testThermometerTemperatureFahrenheit() {
-    val temperaturePresenterFactory: TemperaturePresenterFactory = mock {
-      on { getTemperaturePresenter() } doReturn TemperaturePresenterImpl(fahrenheitCfg)
+    val cfgRepository: CfgRepository = mock {
+      on { getCfg() } doReturn fahrenheitCfg
+    }
+    val temperaturePresenterFactory = object : TemperaturePresenterFactory {
+      override fun getTemperaturePresenter(): TemperaturePresenter =
+        TemperaturePresenterImpl(cfgRepository)
     }
 
-    val ref: Double = 23.0 // measured value in Celsius
+    val ref = 23.0 // measured value in Celsius
     val ch = Channel(temperaturePresenterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8).putDouble(ref).array().reversedArray()

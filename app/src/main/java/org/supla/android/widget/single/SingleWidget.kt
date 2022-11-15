@@ -39,6 +39,7 @@ import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
+import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -70,11 +71,11 @@ class SingleWidget : WidgetProviderBase() {
           R.id.single_widget_button,
           ImageCache.getBitmap(context, scene.getImageId())
         )
+        views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       } else {
         setChannelIcons(configuration, views, context)
       }
 
-      views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
     } else {
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
@@ -124,10 +125,18 @@ class SingleWidget : WidgetProviderBase() {
       0
     }
 
-    views.setImageViewBitmap(
-      R.id.single_widget_button,
-      ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
-    )
+    if (channel.isThermometer()) {
+      views.setTextViewText(R.id.single_widget_text, configuration.value)
+      views.setViewVisibility(R.id.single_widget_button, View.GONE)
+      views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
+    } else {
+      views.setImageViewBitmap(
+        R.id.single_widget_button,
+        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
+      )
+      views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+      views.setViewVisibility(R.id.single_widget_text, View.GONE)
+    }
   }
 
   companion object {
@@ -139,6 +148,7 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.single_widget)
   val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
   views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
+  views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)
 
   return views
 }

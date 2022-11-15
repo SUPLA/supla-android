@@ -17,7 +17,6 @@ package org.supla.android.scenes
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View.GONE
@@ -36,7 +35,6 @@ import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
 import javax.inject.Inject
-
 
 class ScenesAdapter @Inject constructor(
   @ActivityContext private val context: Context,
@@ -107,7 +105,7 @@ class ScenesAdapter @Inject constructor(
         }
         vh.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
         vh.binding.tvSectionCaption.text = location.caption
-        vh.binding.ivSectionCollapsed.visibility = if ((location.collapsed and 0x4) > 0) {
+        vh.binding.ivSectionCollapsed.visibility = if ((location.collapsed and 0x8) > 0) {
           VISIBLE
         } else {
           GONE
@@ -148,7 +146,7 @@ class ScenesAdapter @Inject constructor(
         paths.add(Path(++lc))
       }
 
-      if (loc!!.collapsed and 0x4 == 0) {
+      if (loc!!.collapsed and 0x8 == 0) {
         paths.add(Path(lc, locScenes.count()))
         locScenes.add(scenes[i])
         vTypes.add(R.layout.scene_list_item)

@@ -485,7 +485,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
         this.itemId == channelId &&
           this.itemCaption == channelCaption &&
           this.itemFunction == channelFunc &&
-          this.channelColor == channelColor &&
+          this.value == "$channelColor" &&
           this.profileId == profileId
       }
     )

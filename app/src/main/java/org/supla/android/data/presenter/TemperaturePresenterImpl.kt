@@ -17,37 +17,51 @@ package org.supla.android.data.presenter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.ChannelValue
-import org.supla.android.cfg.CfgData
+import org.supla.android.cfg.CfgRepository
 import org.supla.android.cfg.TemperatureUnit
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.ChannelValue
 
-class TemperaturePresenterImpl(private val config: CfgData): TemperaturePresenter {
+class TemperaturePresenterImpl(private val cfgRepository: CfgRepository) : TemperaturePresenter {
 
-    override fun getTemp(value: ChannelValue, channel: ChannelBase): Double {
-        return getConvertedValue(value.getTemp(channel.func))
+  private var config = cfgRepository.getCfg()
+
+  override fun getTemp(value: ChannelValue, channel: ChannelBase): Double {
+    return getConvertedValue(value.getTemp(channel.func))
+  }
+
+  override fun formattedWithUnit(value: ChannelValue, channel: ChannelBase): String {
+    return String.format("%.1f%s", getTemp(value, channel), getUnitString())
+  }
+
+  override fun formattedWithUnitForWidget(rawValue: Double): String {
+    return String.format("%.1f\n%s", getConvertedValue(rawValue), getUnitString())
+  }
+
+  override fun getConvertedValue(rawValue: Double): Double {
+    if (rawValue <= ChannelBase.TEMPERATURE_NA_VALUE) {
+      return rawValue // Pass-through special value without conversion.
     }
-
-    override fun formattedWithUnit(value: ChannelValue, channel: ChannelBase): String {
-        return String.format("%.1f%s", getTemp(value, channel), getUnitString())
+    return if (config.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
+      toFahrenheit(rawValue)
+    } else {
+      rawValue
     }
+  }
 
-    override fun getConvertedValue(rawValue: Double): Double {
-        if(rawValue <= ChannelBase.TEMPERATURE_NA_VALUE) {
-            return rawValue // Pass-through special value without conversion.
-        }
-        return if(config.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
-            toFahrenheit(rawValue)
-        } else {
-            rawValue
-        }
+  override fun getUnitString(): String {
+    return if (config.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
+      "\u00B0F"
+    } else {
+      "\u00B0C"
     }
+  }
 
-    override fun getUnitString(): String {
-        return if (config.temperatureUnit.value==TemperatureUnit.FAHRENHEIT) "\u00B0F" else "\u00B0C"
-    }
+  override fun reloadConfig() {
+    config = cfgRepository.getCfg()
+  }
 
-    private fun toFahrenheit(celsiusValue: Double): Double {
-        return 9.0/5.0 * celsiusValue + 32.0
-    }
+  private fun toFahrenheit(celsiusValue: Double): Double {
+    return 9.0 / 5.0 * celsiusValue + 32.0
+  }
 }

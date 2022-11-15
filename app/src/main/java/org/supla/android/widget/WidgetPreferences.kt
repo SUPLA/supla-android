@@ -19,7 +19,6 @@ package org.supla.android.widget
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import org.supla.android.profile.INVALID_PROFILE_ID
 import org.supla.android.profile.INVALID_VALUE
 import org.supla.android.widget.shared.configuration.ItemType
@@ -43,7 +42,7 @@ class WidgetPreferences(context: Context) {
       putInt(getKeyForItemType(widgetId), configuration.itemType.getIntValue())
       putString(getKeyForItemCaption(widgetId), configuration.itemCaption)
       putInt(getKeyForItemFunction(widgetId), configuration.itemFunction)
-      putInt(getKeyForChannelColor(widgetId), configuration.channelColor)
+      putString(getKeyForValue(widgetId), configuration.value)
       putLong(getKeyForProfileId(widgetId), configuration.profileId)
       putBoolean(getKeyForWidgetVisibility(widgetId), configuration.visibility)
       putLong(getKeyForWidgetActionId(widgetId), configuration.actionId ?: INVALID_VALUE)
@@ -63,7 +62,7 @@ class WidgetPreferences(context: Context) {
       ?: ItemType.CHANNEL
     val itemCaption = preferences.getString(getKeyForItemCaption(widgetId), null)
     val itemFunction = preferences.getInt(getKeyForItemFunction(widgetId), -1)
-    val channelColor = preferences.getInt(getKeyForChannelColor(widgetId), Color.WHITE)
+    val value = preferences.getString(getKeyForValue(widgetId), null)
     val profileId = preferences.getLong(getKeyForProfileId(widgetId), INVALID_PROFILE_ID)
     val visibility = preferences.getBoolean(getKeyForWidgetVisibility(widgetId), false)
     val actionId = preferences.getLong(getKeyForWidgetActionId(widgetId), INVALID_VALUE)
@@ -74,7 +73,7 @@ class WidgetPreferences(context: Context) {
       itemType,
       itemCaption,
       itemFunction,
-      channelColor,
+      value,
       profileId,
       visibility,
       actionId,
@@ -89,7 +88,7 @@ class WidgetPreferences(context: Context) {
       remove(getKeyForItemType(widgetId))
       remove(getKeyForItemCaption(widgetId))
       remove(getKeyForItemFunction(widgetId))
-      remove(getKeyForChannelColor(widgetId))
+      remove(getKeyForValue(widgetId))
       remove(getKeyForProfileId(widgetId))
       remove(getKeyForWidgetVisibility(widgetId))
       remove(getKeyForWidgetActionId(widgetId))
@@ -116,8 +115,8 @@ internal fun getKeyForItemFunction(widgetId: Int): String {
   return "$SHARED_PREFERENCES.ITEM_FUNCTION.$widgetId"
 }
 
-internal fun getKeyForChannelColor(widgetId: Int): String {
-  return "$SHARED_PREFERENCES.CHANNEL_COLOR.$widgetId"
+internal fun getKeyForValue(widgetId: Int): String {
+  return "$SHARED_PREFERENCES.VALUE.$widgetId"
 }
 
 internal fun getKeyForProfileId(widgetId: Int): String {
@@ -145,7 +144,7 @@ data class WidgetConfiguration(
   val itemType: ItemType,
   val itemCaption: String?,
   val itemFunction: Int,
-  val channelColor: Int,
+  val value: String?,
   val profileId: Long,
   val visibility: Boolean,
   val actionId: Long?,

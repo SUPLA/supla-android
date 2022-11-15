@@ -64,7 +64,7 @@ class WidgetVisibilityHandlerTest {
       ItemType.CHANNEL,
       null,
       0,
-      0,
+      "0",
       profileId,
       true,
       -1,

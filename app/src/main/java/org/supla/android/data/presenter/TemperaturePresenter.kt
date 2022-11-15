@@ -22,28 +22,37 @@ import org.supla.android.db.ChannelValue
 
 interface TemperaturePresenter {
 
-    /**
-     * Returns numeric value corresponding to measurement point,
-     * respecting current temperature unit settings (i.e. converting
-     * the value to target scale, if necessary).
-     */
-    fun getTemp(value: ChannelValue, channel: ChannelBase): Double
+  /**
+   * Returns numeric value corresponding to measurement point,
+   * respecting current temperature unit settings (i.e. converting
+   * the value to target scale, if necessary).
+   */
+  fun getTemp(value: ChannelValue, channel: ChannelBase): Double
 
-    /**
-     * Returns string representation of temperature measurement point.
-     * This is expected to be a fixed-point number possibly suffixed by
-     * the unit representation.
-     */
-    fun formattedWithUnit(value: ChannelValue, channel: ChannelBase): String
+  /**
+   * Returns string representation of temperature measurement point.
+   * This is expected to be a fixed-point number possibly suffixed by
+   * the unit representation.
+   */
+  fun formattedWithUnit(value: ChannelValue, channel: ChannelBase): String
 
-    /**
-     * Given raw measured value, returns value converted to unit representable for
-     * the user.
-     */
-    fun getConvertedValue(rawValue: Double): Double
+  /**
+   * Returns string representation of temperature measurement point.
+   * This is expected to be a fixed-point number possibly suffixed by
+   * the unit representation.
+   */
+  fun formattedWithUnitForWidget(rawValue: Double): String
 
-    /**
-     * Returns string representing display unit.
-     */
-    fun getUnitString(): String
+  /**
+   * Given raw measured value, returns value converted to unit representable for
+   * the user.
+   */
+  fun getConvertedValue(rawValue: Double): Double
+
+  /**
+   * Returns string representing display unit.
+   */
+  fun getUnitString(): String
+
+  fun reloadConfig()
 }

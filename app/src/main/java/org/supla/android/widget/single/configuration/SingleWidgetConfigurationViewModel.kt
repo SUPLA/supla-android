@@ -56,7 +56,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     return channelBase.isGateController() ||
       channelBase.isDoorLock() ||
       channelBase.isSwitch() ||
-      channelBase.isRollerShutter()
+      channelBase.isRollerShutter() ||
+      channelBase.isThermometer()
   }
 
   override fun changeItem(channel: DbItem?) {

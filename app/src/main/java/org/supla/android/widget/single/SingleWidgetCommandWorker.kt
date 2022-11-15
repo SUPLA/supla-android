@@ -17,11 +17,14 @@ package org.supla.android.widget.single
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.work.WorkerParameters
+import org.supla.android.extensions.getTemperaturePresenter
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.ItemType
@@ -41,7 +44,9 @@ class SingleWidgetCommandWorker(
   workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
-  override fun perform(configuration: WidgetConfiguration): Result {
+  private val temperaturePresenter = getTemperaturePresenter()
+
+  override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)
     if (configuration.itemType == ItemType.SCENE) {
       if (action != null) {
@@ -60,6 +65,9 @@ class SingleWidgetCommandWorker(
           }
           callAction(configuration, action.suplaAction)
         }
+        SUPLA_CHANNELFNC_THERMOMETER,
+        SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+          return handleThermometerWidget(widgetId, configuration)
         else -> return callCommon(configuration)
       }
     }
@@ -70,5 +78,22 @@ class SingleWidgetCommandWorker(
     val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
       configuration.actionId == WidgetAction.MOVE_DOWN.actionId
     return performCommon(configuration, turnOnOrClose)
+  }
+
+  private fun handleThermometerWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
+    val temperature = (loadValue(configuration) as TemperatureAndHumidity).temperature
+      ?: return Result.failure()
+    updateWidgetConfiguration(
+      widgetId,
+      configuration.copy(value = temperaturePresenter.formattedWithUnitForWidget(temperature))
+    )
+    applicationContext.sendBroadcast(
+      intent(
+        applicationContext,
+        AppWidgetManager.ACTION_APPWIDGET_UPDATE,
+        widgetId
+      )
+    )
+    return Result.success()
   }
 }

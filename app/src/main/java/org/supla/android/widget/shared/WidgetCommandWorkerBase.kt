@@ -36,6 +36,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.lib.singlecall.ChannelValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
@@ -86,10 +87,11 @@ abstract class WidgetCommandWorkerBase(
 
     SuplaApp.Vibrate(applicationContext)
 
-    return perform(configuration)
+    return perform(widgetId, configuration)
   }
 
   protected open fun perform(
+    widgetId: Int,
     configuration: WidgetConfiguration
   ): Result = performCommon(
     configuration,
@@ -123,6 +125,13 @@ abstract class WidgetCommandWorkerBase(
     callAction(configuration, ActionParameters(action, type, configuration.itemId))
   }
 
+  protected fun loadValue(configuration: WidgetConfiguration): ChannelValue =
+    singleCallProvider.provide(applicationContext, configuration.profileId)
+      .getChannelValue(configuration.itemId)
+
+  protected fun updateWidgetConfiguration(widgetId: Int, configuration: WidgetConfiguration) =
+    preferences.setWidgetConfiguration(widgetId, configuration)
+
   private fun callRgbwAction(configuration: WidgetConfiguration, turnOnOrClose: Boolean) {
     val brightness = getBrightness(turnOnOrClose)
     callAction(
@@ -133,7 +142,7 @@ abstract class WidgetCommandWorkerBase(
         configuration.itemId,
         brightness,
         brightness,
-        configuration.channelColor.toLong(),
+        configuration.value!!.toLong(),
         colorRandom = false,
         onOff = true
       )

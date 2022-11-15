@@ -30,10 +30,7 @@ import androidx.multidex.MultiDexApplication;
 import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import javax.inject.Inject;
-import org.supla.android.cfg.CfgRepository;
-import org.supla.android.cfg.PrefsCfgRepositoryImpl;
 import org.supla.android.data.presenter.TemperaturePresenter;
-import org.supla.android.data.presenter.TemperaturePresenterImpl;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -61,6 +58,7 @@ public class SuplaApp extends MultiDexApplication
 
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
+  @Inject TemperaturePresenter temperaturePresenter;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -240,12 +238,8 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
-  public CfgRepository getCfgRepository() {
-    return new PrefsCfgRepositoryImpl(this);
-  }
-
   public TemperaturePresenter getTemperaturePresenter() {
-    return new TemperaturePresenterImpl(getCfgRepository().getCfg());
+    return temperaturePresenter;
   }
 
   public void cleanupToken() {

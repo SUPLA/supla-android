@@ -18,24 +18,26 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
-
+import androidx.lifecycle.ViewModelProvider
+import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.profile.ProfileManager
 
-class CfgViewModelFactory(private val repository: CfgRepository,
-                          private val profileManager: ProfileManager,
-                          private val navCoordinator: NavCoordinator = NavCoordinator()): ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-	if(modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-	    return CfgViewModel(repository, profileManager, navCoordinator) as T
-  } else if(modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
-      return ProfilesViewModel(profileManager) as T
-  } else if(modelClass.isAssignableFrom(NavCoordinator::class.java)) {
-      return navCoordinator as T
-	} else {
-	    throw IllegalArgumentException("unknown view model class")
-	}
+class CfgViewModelFactory(
+  private val repository: CfgRepository,
+  private val profileManager: ProfileManager,
+  private val temperaturePresenter: TemperaturePresenter,
+  private val navCoordinator: NavCoordinator = NavCoordinator()
+) : ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return if (modelClass.isAssignableFrom(CfgViewModel::class.java)) {
+      CfgViewModel(repository, navCoordinator, temperaturePresenter) as T
+    } else if (modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
+      ProfilesViewModel(profileManager) as T
+    } else if (modelClass.isAssignableFrom(NavCoordinator::class.java)) {
+      navCoordinator as T
+    } else {
+      throw IllegalArgumentException("unknown view model class")
     }
+  }
 }
