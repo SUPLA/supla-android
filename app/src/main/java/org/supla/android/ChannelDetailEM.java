@@ -286,39 +286,50 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         if (show) {
             llDetails.setVisibility(GONE);
+            boolean wasVisible = chartHelper.isVisible();
             chartHelper.setVisibility(VISIBLE);
             rlButtons1.setVisibility(INVISIBLE);
             rlButtons2.setVisibility(VISIBLE);
             setImgBackground(ivGraph, R.drawable.graphon);
             ivGraph.setTag(1);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                    android.R.layout.simple_spinner_item,
-                    chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
-            emSpinnerMaster.setAdapter(adapter);
+            if(wasVisible) {
+                // Don't reinitialize spinners, just trigger data reload
+                postDelayed(new Runnable() {
+                        public void run() {
+                            chartHelper.load(getRemoteId(), emSpinnerMaster.getSelectedItemPosition());
+                            chartHelper.animate();
+                        }
+                    }, 50);
 
-            emSpinnerMaster.setOnItemSelectedListener(null);
-            emSpinnerSlave.setOnItemSelectedListener(null);
+            } else {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                                                                  android.R.layout.simple_spinner_item,
+                                                                  chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
+                emSpinnerMaster.setAdapter(adapter);
 
-            postDelayed(new Runnable() {
-                public void run() {
-                    chartHelper.restoreSpinners(getChannelBase().getFunc(),
-                                                emSpinnerMaster, emSpinnerSlave,
-                                                new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
-                                                        updateSlaveSpinnerItems();
-                                                    }
-                                                });
-                    emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
-                    onItemSelected(emSpinnerSlave, null,
-                                   emSpinnerSlave.getSelectedItemPosition(),
-                                   emSpinnerSlave.getSelectedItemId());
-                    emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
-                }
-            }, 50);
+                emSpinnerMaster.setOnItemSelectedListener(null);
+                emSpinnerSlave.setOnItemSelectedListener(null);
 
+                postDelayed(new Runnable() {
+                        public void run() {
+                            chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                                        emSpinnerMaster, emSpinnerSlave,
+                                                        new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
+                                                                updateSlaveSpinnerItems();
+                                                            }
+                                                        });
+                            emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
+                            onItemSelected(emSpinnerSlave, null,
+                                           emSpinnerSlave.getSelectedItemPosition(),
+                                           emSpinnerSlave.getSelectedItemId());
+                            emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
+                        }
+                    }, 50);
+            }
         } else {
             int flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
             boolean singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
