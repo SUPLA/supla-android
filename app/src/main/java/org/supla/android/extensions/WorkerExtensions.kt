@@ -1,19 +1,15 @@
 package org.supla.android.extensions
 
+import android.appwidget.AppWidgetManager
 import androidx.work.Worker
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.data.presenter.TemperaturePresenter
-import org.supla.android.di.ProfileManagerEntryPoint
+import org.supla.android.di.AppWidgetManagerEntryPoint
 import org.supla.android.di.SingleCallProviderEntryPoint
 import org.supla.android.di.TemperaturePresenterEntryPoint
+import org.supla.android.di.WidgetPreferencesEntryPoint
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.profile.ProfileManager
-
-fun Worker.getProfileManager(): ProfileManager =
-  EntryPointAccessors.fromApplication(
-    applicationContext,
-    ProfileManagerEntryPoint::class.java
-  ).provideProfileManager()
+import org.supla.android.widget.WidgetPreferences
 
 fun Worker.getSingleCallProvider(): SingleCall.Provider =
   EntryPointAccessors.fromApplication(
@@ -26,3 +22,15 @@ fun Worker.getTemperaturePresenter(): TemperaturePresenter =
     applicationContext,
     TemperaturePresenterEntryPoint::class.java
   ).provideTemperaturePresenter()
+
+fun Worker.getWidgetPreferences(): WidgetPreferences =
+  EntryPointAccessors.fromApplication(
+    applicationContext,
+    WidgetPreferencesEntryPoint::class.java
+  ).provideWidgetPreferences()
+
+fun Worker.getAppWidgetManager(): AppWidgetManager =
+  EntryPointAccessors.fromApplication(
+    applicationContext,
+    AppWidgetManagerEntryPoint::class.java
+  ).provideAppWidgetManager()

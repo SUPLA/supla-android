@@ -22,21 +22,25 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import org.supla.android.extensions.getWidgetPreferences
 
 /**
  * Worker for handling widget removal. When widget is removed the preferences are cleaned up within this worker.
  */
-class RemoveWidgetsWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-    private val preferences = WidgetPreferences(appContext)
+class RemoveWidgetsWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
+  appContext,
+  workerParams
+) {
+  private val preferences = getWidgetPreferences()
 
-    override fun doWork(): Result {
-        val widgetIds: IntArray = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                ?: return Result.failure()
+  override fun doWork(): Result {
+    val widgetIds: IntArray = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+      ?: return Result.failure()
 
-        for (widgetId in widgetIds) {
-            preferences.removeWidgetConfiguration(widgetId)
-        }
-
-        return Result.success()
+    for (widgetId in widgetIds) {
+      preferences.removeWidgetConfiguration(widgetId)
     }
+
+    return Result.success()
+  }
 }

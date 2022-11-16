@@ -35,7 +35,7 @@ class TemperaturePresenterImpl(private val cfgRepository: CfgRepository) : Tempe
   }
 
   override fun formattedWithUnitForWidget(rawValue: Double): String {
-    return String.format("%.1f\n%s", getConvertedValue(rawValue), getUnitString())
+    return String.format("%.1f%s", getConvertedValue(rawValue), getUnitString().substring(0, 1))
   }
 
   override fun getConvertedValue(rawValue: Double): Double {

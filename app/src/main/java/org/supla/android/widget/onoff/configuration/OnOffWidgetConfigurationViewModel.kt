@@ -19,15 +19,18 @@ package org.supla.android.widget.onoff.configuration
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
+import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
 import org.supla.android.widget.shared.configuration.isRollerShutter
 import org.supla.android.widget.shared.configuration.isSwitch
+import org.supla.android.widget.shared.configuration.isThermometer
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,16 +40,20 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   profileManager: ProfileManager,
   channelRepository: ChannelRepository,
   sceneRepository: SceneRepository,
-  dispatchers: CoroutineDispatchers
+  dispatchers: CoroutineDispatchers,
+  singleCallProvider: SingleCall.Provider,
+  temperaturePresenter: TemperaturePresenter
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
   profileManager,
   channelRepository,
   sceneRepository,
-  dispatchers
+  dispatchers,
+  singleCallProvider,
+  temperaturePresenter
 ) {
   override fun filterItems(channelBase: ChannelBase): Boolean {
-    return channelBase.isSwitch() || channelBase.isRollerShutter()
+    return channelBase.isSwitch() || channelBase.isRollerShutter() || channelBase.isThermometer()
   }
 }

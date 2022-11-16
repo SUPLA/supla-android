@@ -90,8 +90,7 @@ class SingleWidget : WidgetProviderBase() {
     Trace.i(TAG, "Got intent with action: " + intent?.action)
 
     if (intent?.action == ACTION_PRESSED) {
-      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-        ?: IntArray(0)
+      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
       val inputData = Data.Builder()
         .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
         .build()
@@ -119,17 +118,17 @@ class SingleWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
-    val active = if (turnOnOrClose(configuration)) {
-      getActiveValue(configuration.itemFunction)
-    } else {
-      0
-    }
-
     if (channel.isThermometer()) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
+      val active = if (turnOnOrClose(configuration)) {
+        getActiveValue(configuration.itemFunction)
+      } else {
+        0
+      }
+
       views.setImageViewBitmap(
         R.id.single_widget_button,
         ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
@@ -166,6 +165,9 @@ internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
   return configuration.actionId == WidgetAction.TURN_ON.actionId ||
     configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
+
+fun updateSingleWidget(context: Context, widgetId: Int) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
   Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")

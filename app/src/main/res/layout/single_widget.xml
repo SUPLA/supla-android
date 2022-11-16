@@ -10,6 +10,7 @@
       android:layout_margin="6dp"
       android:gravity="center"
       android:maxLines="1"
+      android:ellipsize="end"
       android:textColor="@color/widget_text"
       android:textSize="12sp" />
 

@@ -24,14 +24,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
+import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.*
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.singlecall.SingleCall
+import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.shared.loadTemperature
 import java.security.InvalidParameterException
 
 abstract class WidgetConfigurationViewModelBase(
@@ -40,7 +44,9 @@ abstract class WidgetConfigurationViewModelBase(
   private val profileManager: ProfileManager,
   private val channelRepository: ChannelRepository,
   private val sceneRepository: SceneRepository,
-  private val dispatchers: CoroutineDispatchers
+  private val dispatchers: CoroutineDispatchers,
+  private val singleCallProvider: SingleCall.Provider,
+  private val temperaturePresenter: TemperaturePresenter
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
   val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -83,20 +89,13 @@ abstract class WidgetConfigurationViewModelBase(
         _confirmationResult.value = Result.failure(EmptyDisplayNameException())
       }
       else -> {
-        val itemType = itemsType.value ?: ItemType.CHANNEL
-        val itemId = when (itemType) {
-          ItemType.CHANNEL -> (selectedItem as Channel).channelId
-          ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
-          ItemType.SCENE -> (selectedItem as Scene).sceneId
+        viewModelScope.launch {
+          withContext(dispatchers.io()) {
+            _dataLoading.postValue(true)
+            storeWidgetConfiguration()
+            _dataLoading.postValue(false)
+          }
         }
-        val value = if (itemType.isChannel()) (selectedItem as Channel).color else 0
-
-        setWidgetConfiguration(
-          itemId,
-          itemType,
-          "$value"
-        )
-        _confirmationResult.value = Result.success(selectedItem!!)
       }
     }
   }
@@ -214,6 +213,29 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
+  private fun storeWidgetConfiguration() {
+    val itemType = itemsType.value ?: ItemType.CHANNEL
+    val itemId = when (itemType) {
+      ItemType.CHANNEL -> (selectedItem as Channel).channelId
+      ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
+      ItemType.SCENE -> (selectedItem as Scene).sceneId
+    }
+    val value = when {
+      itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
+        loadThermometerTemperature(itemId)
+      itemType.isChannel() -> (selectedItem as Channel).color.toString()
+      itemType.isGroup() -> (selectedItem as ChannelGroup).colors[0].toString()
+      else -> "0"
+    }
+
+    setWidgetConfiguration(
+      itemId,
+      itemType,
+      value
+    )
+    _confirmationResult.postValue(Result.success(selectedItem!!))
+  }
+
   private fun setWidgetConfiguration(
     itemId: Int,
     itemType: ItemType,
@@ -243,6 +265,14 @@ abstract class WidgetConfigurationViewModelBase(
     )
     widgetPreferences.setWidgetConfiguration(widgetId!!, configuration)
   }
+
+  private fun loadThermometerTemperature(itemId: Int): String = loadTemperature(
+    { (loadTemperatureValue(itemId) as TemperatureAndHumidity).temperature ?: 0.0 },
+    { temperature -> temperaturePresenter.formattedWithUnitForWidget(temperature) }
+  )
+
+  private fun loadTemperatureValue(itemId: Int): org.supla.android.lib.singlecall.ChannelValue =
+    singleCallProvider.provide(selectedProfile!!.id).getChannelValue(itemId)
 }
 
 enum class ItemType(val id: Int) {

@@ -25,21 +25,19 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
-import org.supla.android.extensions.getSingleCallProvider
+import org.supla.android.extensions.getTemperaturePresenter
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
-import org.supla.android.lib.singlecall.ChannelValue
 import org.supla.android.lib.singlecall.ResultException
+import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.widget.WidgetConfiguration
-import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.onoff.ARG_TURN_ON
 import org.supla.android.widget.shared.configuration.ItemType
 
@@ -48,11 +46,10 @@ private const val INTERNAL_ERROR = -10
 abstract class WidgetCommandWorkerBase(
   appContext: Context,
   workerParams: WorkerParameters
-) : Worker(appContext, workerParams) {
+) : WidgetWorkerBase(appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
-  private val preferences = WidgetPreferences(appContext)
-  private val singleCallProvider = getSingleCallProvider()
+  private val temperaturePresenter = getTemperaturePresenter()
 
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -90,15 +87,19 @@ abstract class WidgetCommandWorkerBase(
     return perform(widgetId, configuration)
   }
 
+  protected abstract fun updateWidget(widgetId: Int)
+
   protected open fun perform(
     widgetId: Int,
     configuration: WidgetConfiguration
   ): Result = performCommon(
+    widgetId,
     configuration,
     inputData.getBoolean(ARG_TURN_ON, false)
   )
 
   protected fun performCommon(
+    widgetId: Int,
     configuration: WidgetConfiguration,
     turnOnOrClose: Boolean
   ): Result {
@@ -112,6 +113,9 @@ abstract class WidgetCommandWorkerBase(
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
         callAction(configuration, if (turnOnOrClose) ActionId.SHUT else ActionId.REVEAL)
+      SUPLA_CHANNELFNC_THERMOMETER,
+      SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+        return handleThermometerWidget(widgetId, configuration)
     }
     return Result.success()
   }
@@ -124,13 +128,6 @@ abstract class WidgetCommandWorkerBase(
     }
     callAction(configuration, ActionParameters(action, type, configuration.itemId))
   }
-
-  protected fun loadValue(configuration: WidgetConfiguration): ChannelValue =
-    singleCallProvider.provide(applicationContext, configuration.profileId)
-      .getChannelValue(configuration.itemId)
-
-  protected fun updateWidgetConfiguration(widgetId: Int, configuration: WidgetConfiguration) =
-    preferences.setWidgetConfiguration(widgetId, configuration)
 
   private fun callRgbwAction(configuration: WidgetConfiguration, turnOnOrClose: Boolean) {
     val brightness = getBrightness(turnOnOrClose)
@@ -151,7 +148,7 @@ abstract class WidgetCommandWorkerBase(
 
   private fun callAction(configuration: WidgetConfiguration, parameters: ActionParameters) {
     try {
-      singleCallProvider.provide(applicationContext, configuration.profileId)
+      singleCallProvider.provide(configuration.profileId)
         .executeAction(parameters)
       showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
     } catch (ex: ResultException) {
@@ -262,4 +259,23 @@ abstract class WidgetCommandWorkerBase(
     } else {
       0
     }
+
+  private fun handleThermometerWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
+    val temperature = loadTemperature(
+      { (loadValue(configuration) as TemperatureAndHumidity).temperature ?: 0.0 },
+      { temperature -> temperaturePresenter.formattedWithUnitForWidget(temperature) }
+    )
+    updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
+    updateWidget(widgetId)
+    return Result.success()
+  }
+}
+
+internal fun loadTemperature(
+  remoteCall: () -> Double,
+  formatter: (temperature: Double) -> String
+): String = try {
+  formatter(remoteCall())
+} catch (ex: Exception) {
+  "---"
 }
