@@ -23,19 +23,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
-import org.supla.android.data.presenter.TemperaturePresenter
 
 @RunWith(MockitoJUnitRunner::class)
 class CfgViewModelTest : TestCase() {
 
   @Mock
-  private lateinit var temperaturePresenter: TemperaturePresenter
-
-  @Mock
-  private lateinit var mockRepository: CfgRepository
+  private lateinit var appConfigurationProvider: AppConfigurationProvider
 
   private val fakeCfg = CfgData(
     TemperatureUnit.CELSIUS,
@@ -50,11 +45,9 @@ class CfgViewModelTest : TestCase() {
 
   @Test
   fun beforeInteractionNoNavigationDecision() {
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn fakeCfg
-    }
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
     val nc = NavCoordinator()
-    CfgViewModel(repository, nc, temperaturePresenter)
+    CfgViewModel(appConfigurationProvider)
     assertNull(
       "should not be set initially",
       nc.navAction.value
@@ -63,42 +56,34 @@ class CfgViewModelTest : TestCase() {
 
   @Test
   fun saveIsOneShot() {
-    Mockito.`when`(mockRepository.getCfg())
-      .thenReturn(fakeCfg)
-    val viewModel = CfgViewModel(mockRepository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    val viewModel = CfgViewModel(appConfigurationProvider)
     assertTrue(viewModel.saveEnabled.value!!)
     viewModel.onSaveConfig()
     assertFalse(viewModel.saveEnabled.value!!)
-    verify(temperaturePresenter, never()).reloadConfig()
   }
 
   @Test
   fun savedChangePropagatesToRepository() {
-    val initialData = fakeCfg
     var storedData: CfgData? = null
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-      on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
     viewModel.onSaveConfig()
     assertEquals(TemperatureUnit.FAHRENHEIT, storedData!!.temperatureUnit.value)
     assertEquals(fakeCfg.buttonAutohide.value, storedData!!.buttonAutohide.value)
     assertEquals(fakeCfg.channelHeight.value, storedData!!.channelHeight.value)
     assertEquals(fakeCfg.showChannelInfo.value, storedData!!.showChannelInfo.value)
-    verify(temperaturePresenter).reloadConfig()
   }
 
   @Test
   fun temperatureUnitChangePropagatesToRepository() {
     val initialData = fakeCfg
     var storedData: CfgData? = null
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-      on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    val viewModel = CfgViewModel(appConfigurationProvider)
     assertFalse(viewModel.isDirty.value!!)
     viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
     assertTrue(viewModel.isDirty.value!!)
@@ -108,73 +93,54 @@ class CfgViewModelTest : TestCase() {
     assertEquals(initialData.channelHeight, storedData!!.channelHeight)
     assertEquals(initialData.showChannelInfo, storedData!!.showChannelInfo)
     assertEquals(TemperatureUnit.FAHRENHEIT, storedData!!.temperatureUnit.value)
-    verify(temperaturePresenter).reloadConfig()
   }
 
   @Test
   fun defaultSettingForButtonAutohideIsTrue() {
-    val initialData = fakeCfg
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-    }
-    val vm = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    val vm = CfgViewModel(appConfigurationProvider)
     assertEquals(true, vm.cfgData.buttonAutohide.value)
   }
 
   @Test
   fun buttonAutohidePropagatesToRepository() {
-    val initialData = fakeCfg
     var storedData: CfgData? = null
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-      on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    val viewModel = CfgViewModel(appConfigurationProvider)
     val origVal = viewModel.cfgData.buttonAutohide.value!!
     val newVal = !origVal
     viewModel.setButtonAutohide(newVal)
     viewModel.onSaveConfig()
     assertEquals(newVal, storedData!!.buttonAutohide.value)
-    verify(temperaturePresenter).reloadConfig()
   }
 
   @Test
   fun `default channel height is 100 percent`() {
-    val initialData = fakeCfg
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    val viewModel = CfgViewModel(appConfigurationProvider)
     assertEquals(ChannelHeight.HEIGHT_100, viewModel.cfgData.channelHeight.value)
   }
 
   @Test
   fun `setting channel height to 60`() {
-    val initialData = fakeCfg
     var storedData: CfgData? = null
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-      on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
     viewModel.onSaveConfig()
     assertEquals(ChannelHeight.HEIGHT_60, storedData!!.channelHeight.value)
-    verify(temperaturePresenter).reloadConfig()
   }
 
   @Test
   fun `setting channel height to 150`() {
-    val initialData = fakeCfg
     var storedData: CfgData? = null
-    val repository: CfgRepository = mock {
-      on { getCfg() } doReturn initialData
-      on { storeCfg(any()) } doAnswer { storedData = it.getArgument(0) }
-    }
-    val viewModel = CfgViewModel(repository, NavCoordinator(), temperaturePresenter)
+    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
     viewModel.onSaveConfig()
     assertEquals(ChannelHeight.HEIGHT_150, storedData!!.channelHeight.value)
-    verify(temperaturePresenter).reloadConfig()
   }
 }

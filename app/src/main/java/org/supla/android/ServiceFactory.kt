@@ -1,4 +1,7 @@
 package org.supla.android
+
+import org.supla.android.data.TemperatureFormatter
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,8 +20,6 @@ package org.supla.android
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.presenter.TemperaturePresenter
-
 interface TemperaturePresenterFactory {
-    fun getTemperaturePresenter(): TemperaturePresenter
+    fun getTemperaturePresenter(): TemperatureFormatter
 }

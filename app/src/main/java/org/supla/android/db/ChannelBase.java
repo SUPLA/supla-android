@@ -27,7 +27,7 @@ import android.text.style.RelativeSizeSpan;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.TemperaturePresenterFactory;
-import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.TemperatureFormatter;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -46,11 +46,6 @@ public abstract class ChannelBase extends DbItem {
     private long profileId;
 
     private TemperaturePresenterFactory temperaturePresenterFactory;
-
-    // Special magic constant used to represent temperature value representing
-    // that temperature data is not available. This should be done differently
-    // at some point in future.
-    public final static int TEMPERATURE_NA_VALUE = -273;
 
     public  ChannelBase() {
         profileId = -1;
@@ -72,14 +67,14 @@ public abstract class ChannelBase extends DbItem {
                                                                      float presetdRelativeSize) {
 
         if (measuredTempFrom != null && measuredTempTo != null
-                && measuredTempFrom.doubleValue() > measuredTempTo.doubleValue()) {
+                && measuredTempFrom > measuredTempTo) {
             Double f = measuredTempFrom;
             measuredTempFrom = measuredTempTo;
             measuredTempTo = f;
         }
 
         if (presetTempFrom != null && presetTempTo != null
-                && presetTempFrom.doubleValue() > presetTempTo.doubleValue()) {
+                && presetTempFrom > presetTempTo) {
             Double f = presetTempFrom;
             presetTempFrom = presetTempTo;
             presetTempTo = f;
@@ -87,26 +82,16 @@ public abstract class ChannelBase extends DbItem {
 
         String measured;
         String preset;
-        TemperaturePresenter tp = getTemperaturePresenter();
+        TemperatureFormatter tp = getTemperaturePresenter();
 
-        if (measuredTempFrom != null && measuredTempFrom > TEMPERATURE_NA_VALUE) {
-            measured = String.format("%.1f%s", tp.getConvertedValue(measuredTempFrom), tp.getUnitString());
-            if (measuredTempTo != null && measuredTempTo > TEMPERATURE_NA_VALUE) {
-                measured += String.format(" - %.1f%s", tp.getConvertedValue(measuredTempTo), tp.getUnitString());
-            }
-        } else {
-            measured = "---" + tp.getUnitString();
+        measured = tp.getTemperatureString(measuredTempFrom, true);
+        if (tp.isTemperatureDefined(measuredTempTo)) {
+            measured += " - " + tp.getTemperatureString(measuredTempTo, true);
         }
 
-        if (presetTempFrom != null && presetTempFrom > TEMPERATURE_NA_VALUE) {
-            preset = "/" + Integer.toString((int)tp.getConvertedValue(presetTempFrom))
-                    + tp.getUnitString();
-            if (presetTempTo != null && presetTempTo > TEMPERATURE_NA_VALUE) {
-                preset += " - " + Integer.toString((int)tp.getConvertedValue(presetTempTo))
-                        + tp.getUnitString();
-            }
-        } else {
-            preset = "/---" + tp.getUnitString();
+        preset = "/" + tp.getTemperatureString(presetTempFrom, true);
+        if (tp.isTemperatureDefined(presetTempTo)) {
+            preset += " - " + tp.getTemperatureString(presetTempTo, true);
         }
 
         SpannableString ss = new SpannableString(measured + preset);
@@ -614,10 +599,11 @@ public abstract class ChannelBase extends DbItem {
         switch (getFunc()) {
 
             case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
 
-                if (getOnLine()
-                        && value.getTemp(getFunc()) >= TEMPERATURE_NA_VALUE) {
-                    return getTemperaturePresenter().formattedWithUnit(value, this);
+                double temperature = value.getTemp(getFunc());
+                if (getOnLine() && getTemperaturePresenter().isTemperatureDefined(temperature)) {
+                    return getTemperaturePresenter().getTemperatureString(temperature, true);
                 } else {
                     return "---";
                 }
@@ -627,15 +613,6 @@ public abstract class ChannelBase extends DbItem {
 
                 if (getOnLine() && humidity >= 0) {
                     return String.format("%.1f", humidity);
-                } else {
-                    return "---";
-                }
-
-            case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-                double temp = value.getTemp(getFunc());
-                if (getOnLine()
-                        && temp >= TEMPERATURE_NA_VALUE) {
-                    return getTemperaturePresenter().formattedWithUnit(value, this);
                 } else {
                     return "---";
                 }
@@ -730,7 +707,7 @@ public abstract class ChannelBase extends DbItem {
         return null;
     }
 
-    protected TemperaturePresenter getTemperaturePresenter() {
+    protected TemperatureFormatter getTemperaturePresenter() {
         return temperaturePresenterFactory.getTemperaturePresenter();
     }
 

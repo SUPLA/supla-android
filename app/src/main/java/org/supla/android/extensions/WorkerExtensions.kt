@@ -3,7 +3,7 @@ package org.supla.android.extensions
 import android.appwidget.AppWidgetManager
 import androidx.work.Worker
 import dagger.hilt.android.EntryPointAccessors
-import org.supla.android.data.presenter.TemperaturePresenter
+import org.supla.android.data.TemperatureFormatter
 import org.supla.android.di.AppWidgetManagerEntryPoint
 import org.supla.android.di.SingleCallProviderEntryPoint
 import org.supla.android.di.TemperaturePresenterEntryPoint
@@ -17,7 +17,7 @@ fun Worker.getSingleCallProvider(): SingleCall.Provider =
     SingleCallProviderEntryPoint::class.java
   ).provideSingleCallProvider()
 
-fun Worker.getTemperaturePresenter(): TemperaturePresenter =
+fun Worker.getTemperatureFormatter(): TemperatureFormatter =
   EntryPointAccessors.fromApplication(
     applicationContext,
     TemperaturePresenterEntryPoint::class.java

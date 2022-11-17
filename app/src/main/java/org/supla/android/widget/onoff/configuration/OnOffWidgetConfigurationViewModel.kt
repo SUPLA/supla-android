@@ -19,7 +19,7 @@ package org.supla.android.widget.onoff.configuration
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.data.presenter.TemperaturePresenter
+import org.supla.android.data.TemperatureFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
@@ -42,7 +42,7 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers,
   singleCallProvider: SingleCall.Provider,
-  temperaturePresenter: TemperaturePresenter
+  temperatureFormatter: TemperatureFormatter
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
@@ -51,9 +51,11 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   dispatchers,
   singleCallProvider,
-  temperaturePresenter
+  temperatureFormatter
 ) {
   override fun filterItems(channelBase: ChannelBase): Boolean {
     return channelBase.isSwitch() || channelBase.isRollerShutter() || channelBase.isThermometer()
   }
+
+  override fun temperatureWithUnit(): Boolean = true
 }

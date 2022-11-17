@@ -8,10 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.Preferences
-import org.supla.android.cfg.CfgRepository
-import org.supla.android.cfg.PrefsCfgRepositoryImpl
-import org.supla.android.data.presenter.TemperaturePresenter
-import org.supla.android.data.presenter.TemperaturePresenterImpl
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -70,14 +66,4 @@ class ApplicationModule {
   @Singleton
   fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
     SuplaClientMessageHandler.getGlobalInstance()
-
-  @Provides
-  @Singleton
-  fun provideCfgRepository(@ApplicationContext context: Context): CfgRepository =
-    PrefsCfgRepositoryImpl(context)
-
-  @Provides
-  @Singleton
-  fun provideTemperaturePresenter(cfgRepository: CfgRepository): TemperaturePresenter =
-    TemperaturePresenterImpl(cfgRepository)
 }

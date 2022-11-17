@@ -17,42 +17,37 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import org.supla.android.Preferences
-import org.supla.android.db.DbHelper
-import org.supla.android.profile.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface CfgRepository {
-    fun getCfg(): CfgData
-    fun storeCfg(cfg: CfgData)
-}
+@Singleton
+class AppConfigurationProvider @Inject constructor(private val preferences: Preferences) {
 
-class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
-    private val prefs: Preferences
-    private val helper: DbHelper
-    private val context: Context
+  private var configuration = loadConfig()
 
-    init {
-        prefs = Preferences(ctx)
-	      helper = DbHelper.getInstance(ctx)
-        context = ctx
-    }
+  fun getConfiguration(): CfgData = configuration
 
-    override fun getCfg(): CfgData {
-        return CfgData(prefs.temperatureUnit,
-                       prefs.isButtonAutohide,
-                       ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
-                       prefs.isShowChannelInfo,
-                       prefs.isShowOpeningPercent)
-    }
+  fun storeConfiguration(cfg: CfgData) {
+    preferences.temperatureUnit = cfg.temperatureUnit.value
+    preferences.isButtonAutohide = cfg.buttonAutohide.value ?: true
+    preferences.channelHeight = cfg.channelHeight.value?.percent ?: 100
+    preferences.isShowChannelInfo = cfg.showChannelInfo.value ?: true
+    preferences.isShowOpeningPercent = cfg.showOpeningPercent.value ?: false
 
+    configuration = cfg
+  }
 
-    override fun storeCfg(cfg: CfgData) {
-        prefs.temperatureUnit = cfg.temperatureUnit.value
-        prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
-        prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
-        prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
-        prefs.isShowOpeningPercent = cfg.showOpeningPercent.value ?: false
-    }
+  private fun loadConfig(): CfgData {
+    val channelHeight = ChannelHeight.values()
+      .firstOrNull { it.percent == preferences.channelHeight } ?: ChannelHeight.HEIGHT_100
+    return CfgData(
+      preferences.temperatureUnit,
+      preferences.isButtonAutohide,
+      channelHeight,
+      preferences.isShowChannelInfo,
+      preferences.isShowOpeningPercent
+    )
+  }
 
 }

@@ -20,19 +20,14 @@ package org.supla.android.cfg
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.supla.android.data.presenter.TemperaturePresenter
 import org.supla.android.profile.ProfileManager
 
 class CfgViewModelFactory(
-  private val repository: CfgRepository,
   private val profileManager: ProfileManager,
-  private val temperaturePresenter: TemperaturePresenter,
   private val navCoordinator: NavCoordinator = NavCoordinator()
 ) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return if (modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-      CfgViewModel(repository, navCoordinator, temperaturePresenter) as T
-    } else if (modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
+    return if (modelClass.isAssignableFrom(ProfilesViewModel::class.java)) {
       ProfilesViewModel(profileManager) as T
     } else if (modelClass.isAssignableFrom(NavCoordinator::class.java)) {
       navCoordinator as T

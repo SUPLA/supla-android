@@ -30,7 +30,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.TemperaturePresenterFactory;
-import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.TemperatureFormatter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
@@ -56,8 +56,8 @@ public class ThermostatChartHelper extends ChartHelper {
     @SuppressLint("Range")
     protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
         float[] phases = new float[1];
-        TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
-        phases[0] = (float) tp.getConvertedValue(c.getDouble(
+        TemperatureFormatter tp = temperaturePresenterFactory.getTemperaturePresenter();
+        phases[0] = (float) tp.getTemperatureInConfiguredUnit(c.getDouble(
                 c.getColumnIndex(
                         SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE)));
 

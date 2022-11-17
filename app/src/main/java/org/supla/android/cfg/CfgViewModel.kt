@@ -20,19 +20,19 @@ package org.supla.android.cfg
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.supla.android.data.presenter.TemperaturePresenter
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CfgViewModel(
-  private val repository: CfgRepository,
-  private val navCoordinator: NavCoordinator,
-  private val temperaturePresenter: TemperaturePresenter
+@HiltViewModel
+class CfgViewModel @Inject constructor(
+  private val configurationProvider: AppConfigurationProvider
 ) : ViewModel() {
 
-  val cfgData: CfgData = repository.getCfg()
+  val cfgData: CfgData = configurationProvider.getConfiguration()
   private val _isDirty = MutableLiveData(false)
 
   /**
-   indicates that configuration is changed and should be saved.
+  indicates that configuration is changed and should be saved.
    */
   val isDirty: LiveData<Boolean> = _isDirty
 
@@ -73,14 +73,9 @@ class CfgViewModel(
     }
   }
 
-  fun openLocationReordering() {
-    navCoordinator.navigate(NavigationFlow.LOCATION_REORDERING)
-  }
-
   fun saveConfig() {
     if (isDirty.value == true) {
-      repository.storeCfg(cfgData)
-      temperaturePresenter.reloadConfig()
+      configurationProvider.storeConfiguration(cfgData)
     }
   }
 
@@ -90,8 +85,8 @@ class CfgViewModel(
   }
 
   /**
-   sets config dirty flag, to indicate that configuration has
-   been updated.
+  sets config dirty flag, to indicate that configuration has
+  been updated.
    */
   private fun setConfigDirty() {
     _isDirty.value = true

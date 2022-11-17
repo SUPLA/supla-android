@@ -29,7 +29,7 @@ import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
-import org.supla.android.extensions.getTemperaturePresenter
+import org.supla.android.extensions.getTemperatureFormatter
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
@@ -49,7 +49,7 @@ abstract class WidgetCommandWorkerBase(
 ) : WidgetWorkerBase(appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
-  private val temperaturePresenter = getTemperaturePresenter()
+  private val temperaturePresenter = getTemperatureFormatter()
 
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -263,7 +263,7 @@ abstract class WidgetCommandWorkerBase(
   private fun handleThermometerWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
     val temperature = loadTemperature(
       { (loadValue(configuration) as TemperatureAndHumidity).temperature ?: 0.0 },
-      { temperature -> temperaturePresenter.formattedWithUnitForWidget(temperature) }
+      { temperature -> temperaturePresenter.getTemperatureString(temperature) }
     )
     updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
     updateWidget(widgetId)

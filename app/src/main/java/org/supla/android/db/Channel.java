@@ -25,9 +25,7 @@ import android.database.Cursor;
 import android.annotation.SuppressLint;
 
 import org.supla.android.R;
-import org.supla.android.SuplaApp;
 import org.supla.android.TemperaturePresenterFactory;
-import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
@@ -221,10 +219,6 @@ public class Channel extends ChannelBase {
 
     public double getHumidity() {
         return Value != null ? Value.getDistance() : -1;
-    }
-
-    public double getTemp() {
-        return Value != null ? getTemperaturePresenter().getTemp(Value, this) : TEMPERATURE_NA_VALUE;
     }
 
     public double getDistance() {

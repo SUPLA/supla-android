@@ -243,7 +243,6 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
-          android:onClick="@{() -> viewModel.openLocationReordering()}"
           android:text="@string/location_ordering" />
       <ImageView
           android:id="@+id/locationOrderingChevron"

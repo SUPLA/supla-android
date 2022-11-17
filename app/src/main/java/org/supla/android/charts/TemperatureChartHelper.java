@@ -32,7 +32,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.TemperaturePresenterFactory;
-import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.TemperatureFormatter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
@@ -72,8 +72,8 @@ public class TemperatureChartHelper extends ChartHelper {
 
     @SuppressLint("Range")
     protected float getTemperature(Cursor c) {
-        TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
-        return (float) tp.getConvertedValue(c.getDouble(
+        TemperatureFormatter tp = temperaturePresenterFactory.getTemperaturePresenter();
+        return (float) tp.getTemperatureInConfiguredUnit(c.getDouble(
                 c.getColumnIndex(
                         SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE)));
     }

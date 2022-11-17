@@ -24,7 +24,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
-import org.supla.android.data.presenter.TemperaturePresenter
+import org.supla.android.data.TemperatureFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.*
@@ -46,7 +46,7 @@ abstract class WidgetConfigurationViewModelBase(
   private val sceneRepository: SceneRepository,
   private val dispatchers: CoroutineDispatchers,
   private val singleCallProvider: SingleCall.Provider,
-  private val temperaturePresenter: TemperaturePresenter
+  private val temperatureFormatter: TemperatureFormatter
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
   val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -123,6 +123,7 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   protected abstract fun filterItems(channelBase: ChannelBase): Boolean
+  protected abstract fun temperatureWithUnit(): Boolean
 
   private fun reloadItems() {
     _dataLoading.value = true
@@ -268,7 +269,7 @@ abstract class WidgetConfigurationViewModelBase(
 
   private fun loadThermometerTemperature(itemId: Int): String = loadTemperature(
     { (loadTemperatureValue(itemId) as TemperatureAndHumidity).temperature ?: 0.0 },
-    { temperature -> temperaturePresenter.formattedWithUnitForWidget(temperature) }
+    { temperature -> temperatureFormatter.getTemperatureString(temperature, temperatureWithUnit()) }
   )
 
   private fun loadTemperatureValue(itemId: Int): org.supla.android.lib.singlecall.ChannelValue =

@@ -23,6 +23,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
@@ -35,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
-import org.supla.android.data.presenter.TemperaturePresenter
+import org.supla.android.data.TemperatureFormatter
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
@@ -50,15 +51,18 @@ class CfgActivity : AppCompatActivity() {
     const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
   }
 
+  private val viewModel: CfgViewModel by viewModels()
+
   @Inject
   lateinit var profileManager: ProfileManager
-
   @Inject
-  lateinit var temperaturePresenter: TemperaturePresenter
+  lateinit var temperatureFormatter: TemperatureFormatter
+
   private lateinit var binding: ActivityCfgBinding
+  private lateinit var navCoordinator: NavCoordinator
   private var shouldShowBack = false
 
-  val navToolbar: AppBar
+  private val navToolbar: AppBar
     get() = binding.navToolbar
 
   override fun onCreate(sis: Bundle?) {
@@ -67,11 +71,9 @@ class CfgActivity : AppCompatActivity() {
     SuplaApp.getApp().initTypefaceCollection(this)
 
     val factory =
-      CfgViewModelFactory(PrefsCfgRepositoryImpl(this), profileManager, temperaturePresenter)
+      CfgViewModelFactory(profileManager)
     val provider = ViewModelProvider(this, factory)
-    val navCoordinator = provider[NavCoordinator::class.java]
-
-    val viewModel = provider[CfgViewModel::class.java]
+    navCoordinator = provider[NavCoordinator::class.java]
 
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.viewModel = viewModel
@@ -171,6 +173,10 @@ class CfgActivity : AppCompatActivity() {
       }
       finish()
     }
+  }
+
+  fun navigateToReordering() {
+    navCoordinator.navigate(NavigationFlow.LOCATION_REORDERING)
   }
 
   private fun handleNavigationDirective(what: NavigationFlow) {

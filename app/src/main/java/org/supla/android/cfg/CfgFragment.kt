@@ -86,11 +86,11 @@ class CfgFragment: Fragment() {
                 0 -> viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
             }
             viewModel.saveConfig()
-            
+
         }
 
         binding.showOpeningMode.position = if(viewModel.cfgData.showOpeningPercent.value == true) 0 else 1
-        binding.showOpeningMode.setOnPositionChangedListener() { 
+        binding.showOpeningMode.setOnPositionChangedListener {
             pos -> when(pos) {
                 0 -> viewModel.setShowOpeningPercent(true)
                 1 -> viewModel.setShowOpeningPercent(false)
@@ -107,7 +107,12 @@ class CfgFragment: Fragment() {
             viewModel.setShowChannelInfo(!viewModel.cfgData.showChannelInfo.value!!)
             viewModel.saveConfig()
         }
-        return binding.root
+
+        binding.locationOrderingButton.setOnClickListener {
+          (requireActivity() as CfgActivity).navigateToReordering()
+        }
+
+      return binding.root
     }
 
 }

@@ -29,7 +29,7 @@ import com.github.mikephil.charting.data.Entry;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.TemperaturePresenterFactory;
-import org.supla.android.data.presenter.TemperaturePresenter;
+import org.supla.android.data.TemperatureFormatter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
@@ -80,22 +80,14 @@ public class TempHumidityChartHelper extends TemperatureChartHelper {
     @Override
     @SuppressLint("Range")
     protected float getTemperature(Cursor c) {
-        TemperaturePresenter tp = temperaturePresenterFactory.getTemperaturePresenter();
-        return (float) tp.getConvertedValue(c.getDouble(
+        TemperatureFormatter tp = temperaturePresenterFactory.getTemperaturePresenter();
+        return (float) tp.getTemperatureInConfiguredUnit(c.getDouble(
                 c.getColumnIndex(
                         SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE)));
     }
 
-    public boolean isTemperatureVisible() {
-        return temperatureVisible;
-    }
-
     public void setTemperatureVisible(boolean temperatureVisible) {
         this.temperatureVisible = temperatureVisible;
-    }
-
-    public boolean isHumidityVisible() {
-        return humidityVisible;
     }
 
     public void setHumidityVisible(boolean humidityVisible) {

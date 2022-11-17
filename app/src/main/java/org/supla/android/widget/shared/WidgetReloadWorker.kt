@@ -4,7 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.work.WorkerParameters
 import org.supla.android.extensions.getAppWidgetManager
-import org.supla.android.extensions.getTemperaturePresenter
+import org.supla.android.extensions.getTemperatureFormatter
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.widget.WidgetConfiguration
@@ -18,21 +18,26 @@ class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
   WidgetWorkerBase(context, workerParameters) {
 
   private val appWidgetManager = getAppWidgetManager()
-  private val temperaturePresenter = getTemperaturePresenter()
+  private val temperaturePresenter = getTemperatureFormatter()
 
   override fun doWork(): Result {
     val onOffWidgetIds =
       appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, OnOffWidget::class.java))
-    handleWidgets(onOffWidgetIds) { context, widgetId -> updateOnOffWidget(context, widgetId) }
+    handleWidgets(onOffWidgetIds, true) { context, widgetId ->
+      updateOnOffWidget(context, widgetId)
+    }
     val singleWidgetIds =
       appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, SingleWidget::class.java))
-    handleWidgets(singleWidgetIds) { context, widgetId -> updateSingleWidget(context, widgetId) }
+    handleWidgets(singleWidgetIds, false) { context, widgetId ->
+      updateSingleWidget(context, widgetId)
+    }
 
     return Result.success()
   }
 
   private fun handleWidgets(
     widgetIds: IntArray,
+    temperatureWithUnit: Boolean,
     updateWidget: (context: Context, widgetId: Int) -> Unit
   ) {
     for (widgetId in widgetIds) {
@@ -43,7 +48,9 @@ class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
 
       val temperature = loadTemperature(
         { (loadValue(configuration) as TemperatureAndHumidity).temperature ?: 0.0 },
-        { temperature -> temperaturePresenter.formattedWithUnitForWidget(temperature) }
+        { temperature ->
+          temperaturePresenter.getTemperatureString(temperature, temperatureWithUnit)
+        }
       )
       updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
       updateWidget(applicationContext, widgetId)
