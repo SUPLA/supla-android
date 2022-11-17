@@ -23,7 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
-import org.supla.android.TemperaturePresenterFactory
+import org.supla.android.TemperatureFormatterProvider
 import org.supla.android.cfg.*
 import org.supla.android.data.TemperatureFormatter
 import org.supla.android.lib.SuplaConst
@@ -56,8 +56,8 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn celsiusCfg
     }
-    val temperatureFormatterFactory = object : TemperaturePresenterFactory {
-      override fun getTemperaturePresenter(): TemperatureFormatter =
+    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
+      override fun getTemperatureFormatter(): TemperatureFormatter =
         TemperatureFormatter(cfgRepository)
     }
 
@@ -79,8 +79,8 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn celsiusCfg
     }
-    val temperatureFormatterFactory = object : TemperaturePresenterFactory {
-      override fun getTemperaturePresenter(): TemperatureFormatter =
+    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
+      override fun getTemperatureFormatter(): TemperatureFormatter =
         TemperatureFormatter(cfgRepository)
     }
 
@@ -104,8 +104,8 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn fahrenheitCfg
     }
-    val temperatureFormatterFactory = object : TemperaturePresenterFactory {
-      override fun getTemperaturePresenter(): TemperatureFormatter =
+    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
+      override fun getTemperatureFormatter(): TemperatureFormatter =
         TemperatureFormatter(cfgRepository)
     }
 

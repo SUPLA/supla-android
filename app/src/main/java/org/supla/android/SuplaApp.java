@@ -50,7 +50,8 @@ import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, TemperaturePresenterFactory {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+        TemperatureFormatterProvider {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -67,8 +68,7 @@ public class SuplaApp extends MultiDexApplication
 
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
-  @Inject
-  TemperatureFormatter temperatureFormatter;
+  @Inject TemperatureFormatter temperatureFormatter;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -250,7 +250,7 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
-  public TemperatureFormatter getTemperaturePresenter() {
+  public TemperatureFormatter getTemperatureFormatter() {
     return temperatureFormatter;
   }
 

@@ -20,6 +20,6 @@ import org.supla.android.data.TemperatureFormatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-interface TemperaturePresenterFactory {
-    fun getTemperaturePresenter(): TemperatureFormatter
+interface TemperatureFormatterProvider {
+  fun getTemperatureFormatter(): TemperatureFormatter
 }

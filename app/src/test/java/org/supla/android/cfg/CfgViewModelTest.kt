@@ -67,7 +67,9 @@ class CfgViewModelTest : TestCase() {
   fun savedChangePropagatesToRepository() {
     var storedData: CfgData? = null
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(
+      any()
+    )
     val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
     viewModel.onSaveConfig()
@@ -82,7 +84,9 @@ class CfgViewModelTest : TestCase() {
     val initialData = fakeCfg
     var storedData: CfgData? = null
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(
+      any()
+    )
     val viewModel = CfgViewModel(appConfigurationProvider)
     assertFalse(viewModel.isDirty.value!!)
     viewModel.setTemperatureUnit(TemperatureUnit.FAHRENHEIT)
@@ -106,7 +110,9 @@ class CfgViewModelTest : TestCase() {
   fun buttonAutohidePropagatesToRepository() {
     var storedData: CfgData? = null
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(
+      any()
+    )
     val viewModel = CfgViewModel(appConfigurationProvider)
     val origVal = viewModel.cfgData.buttonAutohide.value!!
     val newVal = !origVal
@@ -126,7 +132,9 @@ class CfgViewModelTest : TestCase() {
   fun `setting channel height to 60`() {
     var storedData: CfgData? = null
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(
+      any()
+    )
     val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setChannelHeight(ChannelHeight.HEIGHT_60)
     viewModel.onSaveConfig()
@@ -137,7 +145,9 @@ class CfgViewModelTest : TestCase() {
   fun `setting channel height to 150`() {
     var storedData: CfgData? = null
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(any())
+    doAnswer { storedData = it.getArgument(0) }.`when`(appConfigurationProvider).storeConfiguration(
+      any()
+    )
     val viewModel = CfgViewModel(appConfigurationProvider)
     viewModel.setChannelHeight(ChannelHeight.HEIGHT_150)
     viewModel.onSaveConfig()

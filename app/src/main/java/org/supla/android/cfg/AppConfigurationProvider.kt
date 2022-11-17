@@ -49,5 +49,4 @@ class AppConfigurationProvider @Inject constructor(private val preferences: Pref
       preferences.isShowOpeningPercent
     )
   }
-
 }

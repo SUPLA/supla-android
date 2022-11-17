@@ -23,7 +23,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TemperatureFormatter @Inject constructor(private val appConfigurationProvider: AppConfigurationProvider) {
+class TemperatureFormatter @Inject constructor(
+  private val appConfigurationProvider: AppConfigurationProvider
+) {
 
   fun isTemperatureDefined(rawValue: Double?): Boolean {
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
@@ -55,7 +57,6 @@ class TemperatureFormatter @Inject constructor(private val appConfigurationProvi
       toFahrenheit(value)
     }
   }
-
 
   private fun isCelsius(): Boolean =
     appConfigurationProvider.getConfiguration().temperatureUnit.value == TemperatureUnit.CELSIUS

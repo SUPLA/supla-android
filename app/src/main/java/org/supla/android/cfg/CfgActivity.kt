@@ -55,6 +55,7 @@ class CfgActivity : AppCompatActivity() {
 
   @Inject
   lateinit var profileManager: ProfileManager
+
   @Inject
   lateinit var temperatureFormatter: TemperatureFormatter
 

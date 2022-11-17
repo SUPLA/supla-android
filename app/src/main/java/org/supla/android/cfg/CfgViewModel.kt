@@ -32,7 +32,7 @@ class CfgViewModel @Inject constructor(
   private val _isDirty = MutableLiveData(false)
 
   /**
-  indicates that configuration is changed and should be saved.
+   indicates that configuration is changed and should be saved.
    */
   val isDirty: LiveData<Boolean> = _isDirty
 
@@ -85,8 +85,8 @@ class CfgViewModel @Inject constructor(
   }
 
   /**
-  sets config dirty flag, to indicate that configuration has
-  been updated.
+   sets config dirty flag, to indicate that configuration has
+   been updated.
    */
   private fun setConfigDirty() {
     _isDirty.value = true
