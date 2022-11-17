@@ -4,7 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.work.WorkerParameters
 import org.supla.android.extensions.getAppWidgetManager
-import org.supla.android.extensions.getTemperatureFormatter
+import org.supla.android.extensions.getValuesFormatter
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.widget.WidgetConfiguration
@@ -18,7 +18,7 @@ class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
   WidgetWorkerBase(context, workerParameters) {
 
   private val appWidgetManager = getAppWidgetManager()
-  private val temperaturePresenter = getTemperatureFormatter()
+  private val valuesFormatter = getValuesFormatter()
 
   override fun doWork(): Result {
     val onOffWidgetIds =
@@ -46,12 +46,17 @@ class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
         continue
       }
 
-      val temperature = loadTemperature(
-        { (loadValue(configuration) as TemperatureAndHumidity).temperature ?: 0.0 },
-        { temperature ->
-          temperaturePresenter.getTemperatureString(temperature, temperatureWithUnit)
+      val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
+        if (configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+          { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit) }
+        } else {
+          { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit) }
         }
+      val temperature = loadTemperatureAndHumidity(
+        { (loadValue(configuration) as TemperatureAndHumidity) },
+        formatter
       )
+
       updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
       updateWidget(applicationContext, widgetId)
     }

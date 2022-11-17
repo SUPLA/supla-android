@@ -30,18 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
-import org.supla.android.TemperatureFormatterProvider;
-import org.supla.android.data.TemperatureFormatter;
+import org.supla.android.ValuesFormatterProvider;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
 public class ThermostatChartHelper extends ChartHelper {
 
-  private TemperatureFormatterProvider temperatureFormatterProvider;
+  private ValuesFormatterProvider valuesFormatterProvider;
 
   public ThermostatChartHelper(Context context) {
     super(context);
-    temperatureFormatterProvider = SuplaApp.getApp();
+    valuesFormatterProvider = SuplaApp.getApp();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class ThermostatChartHelper extends ChartHelper {
   @SuppressLint("Range")
   protected void addBarEntries(int n, float time, Cursor c, ArrayList<BarEntry> entries) {
     float[] phases = new float[1];
-    TemperatureFormatter tp = temperatureFormatterProvider.getTemperatureFormatter();
+    ValuesFormatter tp = valuesFormatterProvider.getValuesFormatter();
     phases[0] =
         (float)
             tp.getTemperatureInConfiguredUnit(

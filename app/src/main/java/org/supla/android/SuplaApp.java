@@ -38,7 +38,7 @@ import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import org.supla.android.data.TemperatureFormatter;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -50,8 +50,7 @@ import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
-        TemperatureFormatterProvider {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -68,7 +67,7 @@ public class SuplaApp extends MultiDexApplication
 
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
-  @Inject TemperatureFormatter temperatureFormatter;
+  @Inject ValuesFormatter valuesFormatter;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -250,8 +249,8 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
-  public TemperatureFormatter getTemperatureFormatter() {
-    return temperatureFormatter;
+  public ValuesFormatter getValuesFormatter() {
+    return valuesFormatter;
   }
 
   public void cleanupToken() {

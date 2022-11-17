@@ -23,9 +23,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
-import org.supla.android.TemperatureFormatterProvider
+import org.supla.android.ValuesFormatterProvider
 import org.supla.android.cfg.*
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.lib.SuplaConst
 import java.nio.ByteBuffer
 
@@ -56,13 +56,13 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn celsiusCfg
     }
-    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
-      override fun getTemperatureFormatter(): TemperatureFormatter =
-        TemperatureFormatter(cfgRepository)
+    val valuesFormatterFactory = object : ValuesFormatterProvider {
+      override fun getValuesFormatter(): ValuesFormatter =
+        ValuesFormatter(cfgRepository)
     }
 
     val ref = 23.0
-    val ch = Channel(temperatureFormatterFactory)
+    val ch = Channel(valuesFormatterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8).putDouble(ref).array().reversedArray()
     chval.onLine = true
@@ -79,13 +79,13 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn celsiusCfg
     }
-    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
-      override fun getTemperatureFormatter(): TemperatureFormatter =
-        TemperatureFormatter(cfgRepository)
+    val valuesFormatterFactory = object : ValuesFormatterProvider {
+      override fun getValuesFormatter(): ValuesFormatter =
+        ValuesFormatter(cfgRepository)
     }
 
     val ref = 13
-    val ch = Channel(temperatureFormatterFactory)
+    val ch = Channel(valuesFormatterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8)
       .putInt(0).putInt(ref * 1000)
@@ -104,13 +104,13 @@ class ChannelTest : TestCase() {
     val cfgRepository: AppConfigurationProvider = mock {
       on { getConfiguration() } doReturn fahrenheitCfg
     }
-    val temperatureFormatterFactory = object : TemperatureFormatterProvider {
-      override fun getTemperatureFormatter(): TemperatureFormatter =
-        TemperatureFormatter(cfgRepository)
+    val valuesFormatterFactory = object : ValuesFormatterProvider {
+      override fun getValuesFormatter(): ValuesFormatter =
+        ValuesFormatter(cfgRepository)
     }
 
     val ref = 23.0 // measured value in Celsius
-    val ch = Channel(temperatureFormatterFactory)
+    val ch = Channel(valuesFormatterFactory)
     val chval = ChannelValue()
     chval.channelValue = ByteBuffer.allocate(8).putDouble(ref).array().reversedArray()
     chval.onLine = true

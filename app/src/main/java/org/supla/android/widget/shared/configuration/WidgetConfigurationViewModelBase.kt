@@ -24,7 +24,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.*
@@ -35,7 +35,7 @@ import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.shared.loadTemperature
+import org.supla.android.widget.shared.loadTemperatureAndHumidity
 import java.security.InvalidParameterException
 
 abstract class WidgetConfigurationViewModelBase(
@@ -46,7 +46,7 @@ abstract class WidgetConfigurationViewModelBase(
   private val sceneRepository: SceneRepository,
   private val dispatchers: CoroutineDispatchers,
   private val singleCallProvider: SingleCall.Provider,
-  private val temperatureFormatter: TemperatureFormatter
+  private val valuesFormatter: ValuesFormatter
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
   val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -223,7 +223,7 @@ abstract class WidgetConfigurationViewModelBase(
     }
     val value = when {
       itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
-        loadThermometerTemperature(itemId)
+        getWidgetValue(selectedItem as Channel)
       itemType.isChannel() -> (selectedItem as Channel).color.toString()
       itemType.isGroup() -> (selectedItem as ChannelGroup).colors[0].toString()
       else -> "0"
@@ -235,6 +235,19 @@ abstract class WidgetConfigurationViewModelBase(
       value
     )
     _confirmationResult.postValue(Result.success(selectedItem!!))
+  }
+
+  private fun getWidgetValue(channel: Channel): String {
+    val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
+      if (channel.func == SUPLA_CHANNELFNC_THERMOMETER) {
+        { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit()) }
+      } else {
+        { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit()) }
+      }
+    return loadTemperatureAndHumidity(
+      { (loadChannelValue(channel.channelId) as TemperatureAndHumidity) },
+      formatter
+    )
   }
 
   private fun setWidgetConfiguration(
@@ -267,12 +280,7 @@ abstract class WidgetConfigurationViewModelBase(
     widgetPreferences.setWidgetConfiguration(widgetId!!, configuration)
   }
 
-  private fun loadThermometerTemperature(itemId: Int): String = loadTemperature(
-    { (loadTemperatureValue(itemId) as TemperatureAndHumidity).temperature ?: 0.0 },
-    { temperature -> temperatureFormatter.getTemperatureString(temperature, temperatureWithUnit()) }
-  )
-
-  private fun loadTemperatureValue(itemId: Int): org.supla.android.lib.singlecall.ChannelValue =
+  private fun loadChannelValue(itemId: Int): org.supla.android.lib.singlecall.ChannelValue =
     singleCallProvider.provide(selectedProfile!!.id).getChannelValue(itemId)
 }
 

@@ -35,7 +35,7 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
@@ -80,7 +80,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
   private lateinit var singleCallProvider: SingleCall.Provider
 
   @Mock
-  private lateinit var temperatureFormatter: TemperatureFormatter
+  private lateinit var valuesFormatter: ValuesFormatter
 
   @Before
   fun setUp() {
@@ -117,7 +117,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -162,7 +162,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -207,7 +207,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -244,7 +244,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -275,7 +275,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -302,7 +302,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -326,7 +326,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -352,7 +352,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormatter
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 

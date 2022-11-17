@@ -38,4 +38,5 @@ class OnOffWidgetCommandWorker(
   workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
   override fun updateWidget(widgetId: Int) = updateOnOffWidget(applicationContext, widgetId)
+  override fun temperatureWithUnit(): Boolean = true
 }

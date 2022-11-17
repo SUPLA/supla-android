@@ -24,8 +24,8 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
-import org.supla.android.TemperatureFormatterProvider;
-import org.supla.android.data.TemperatureFormatter;
+import org.supla.android.ValuesFormatterProvider;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -43,16 +43,16 @@ public abstract class ChannelBase extends DbItem {
   private int Flags;
   private long profileId;
 
-  private TemperatureFormatterProvider temperatureFormatterProvider;
+  private ValuesFormatterProvider valuesFormatterProvider;
 
   public ChannelBase() {
     profileId = -1;
-    temperatureFormatterProvider = SuplaApp.getApp();
+    valuesFormatterProvider = SuplaApp.getApp();
   }
 
-  public ChannelBase(TemperatureFormatterProvider tpFact) {
+  public ChannelBase(ValuesFormatterProvider tpFact) {
     profileId = -1;
-    temperatureFormatterProvider = tpFact;
+    valuesFormatterProvider = tpFact;
   }
 
   @SuppressLint("DefaultLocale")
@@ -78,7 +78,7 @@ public abstract class ChannelBase extends DbItem {
 
     String measured;
     String preset;
-    TemperatureFormatter tp = getTemperaturePresenter();
+    ValuesFormatter tp = getTemperaturePresenter();
 
     measured = tp.getTemperatureString(measuredTempFrom, true);
     if (tp.isTemperatureDefined(measuredTempTo)) {
@@ -677,8 +677,8 @@ public abstract class ChannelBase extends DbItem {
     return null;
   }
 
-  protected TemperatureFormatter getTemperaturePresenter() {
-    return temperatureFormatterProvider.getTemperatureFormatter();
+  protected ValuesFormatter getTemperaturePresenter() {
+    return valuesFormatterProvider.getValuesFormatter();
   }
 
   public abstract CharSequence getHumanReadableValue(WhichOne whichOne);

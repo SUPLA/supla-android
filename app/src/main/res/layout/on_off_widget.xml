@@ -79,7 +79,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1.5"
-        android:textSize="14sp"
+        android:textSize="13sp"
+        android:lineSpacingExtra="4dp"
         android:background="@android:color/transparent"
         android:padding="5dp" />
 

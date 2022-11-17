@@ -1,6 +1,6 @@
 package org.supla.android
 
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -20,6 +20,6 @@ import org.supla.android.data.TemperatureFormatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-interface TemperatureFormatterProvider {
-  fun getTemperatureFormatter(): TemperatureFormatter
+interface ValuesFormatterProvider {
+  fun getValuesFormatter(): ValuesFormatter
 }

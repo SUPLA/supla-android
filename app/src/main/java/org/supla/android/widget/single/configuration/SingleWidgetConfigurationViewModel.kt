@@ -21,7 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
@@ -43,7 +43,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers,
   singleCallProvider: SingleCall.Provider,
-  temperatureFormatter: TemperatureFormatter
+  valuesFormatter: ValuesFormatter
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
@@ -52,7 +52,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   dispatchers,
   singleCallProvider,
-  temperatureFormatter
+  valuesFormatter
 ) {
 
   private val _actionsList = MutableLiveData<List<WidgetAction>>()

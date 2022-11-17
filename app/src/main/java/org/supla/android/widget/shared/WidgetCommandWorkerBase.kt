@@ -29,7 +29,7 @@ import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
-import org.supla.android.extensions.getTemperatureFormatter
+import org.supla.android.extensions.getValuesFormatter
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
@@ -49,7 +49,7 @@ abstract class WidgetCommandWorkerBase(
 ) : WidgetWorkerBase(appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
-  private val temperaturePresenter = getTemperatureFormatter()
+  private val valuesFormatter = getValuesFormatter()
 
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -88,6 +88,7 @@ abstract class WidgetCommandWorkerBase(
   }
 
   protected abstract fun updateWidget(widgetId: Int)
+  protected abstract fun temperatureWithUnit(): Boolean
 
   protected open fun perform(
     widgetId: Int,
@@ -261,21 +262,32 @@ abstract class WidgetCommandWorkerBase(
     }
 
   private fun handleThermometerWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
-    val temperature = loadTemperature(
-      { (loadValue(configuration) as TemperatureAndHumidity).temperature ?: 0.0 },
-      { temperature -> temperaturePresenter.getTemperatureString(temperature) }
+    val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
+      if (configuration.itemFunction == SUPLA_CHANNELFNC_THERMOMETER) {
+        { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit()) }
+      } else {
+        { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit()) }
+      }
+    val temperature = loadTemperatureAndHumidity(
+      { (loadValue(configuration) as TemperatureAndHumidity) },
+      formatter
     )
+
     updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
     updateWidget(widgetId)
     return Result.success()
   }
 }
 
-internal fun loadTemperature(
-  remoteCall: () -> Double,
-  formatter: (temperature: Double) -> String
-): String = try {
-  formatter(remoteCall())
-} catch (ex: Exception) {
-  "---"
+internal fun loadTemperatureAndHumidity(
+  remoteCall: () -> TemperatureAndHumidity,
+  formatter: (channelValue: TemperatureAndHumidity?) -> String
+): String {
+  val rawValue: TemperatureAndHumidity? = try {
+    remoteCall()
+  } catch (ex: Exception) {
+    null
+  }
+
+  return formatter(rawValue)
 }

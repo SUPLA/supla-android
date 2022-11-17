@@ -31,18 +31,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
-import org.supla.android.TemperatureFormatterProvider;
-import org.supla.android.data.TemperatureFormatter;
+import org.supla.android.ValuesFormatterProvider;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
 
 public class TemperatureChartHelper extends ChartHelper {
 
-  private TemperatureFormatterProvider temperatureFormatterProvider;
+  private ValuesFormatterProvider valuesFormatterProvider;
 
   public TemperatureChartHelper(Context context) {
     super(context);
-    temperatureFormatterProvider = SuplaApp.getApp();
+    valuesFormatterProvider = SuplaApp.getApp();
   }
 
   @Override
@@ -67,7 +67,7 @@ public class TemperatureChartHelper extends ChartHelper {
 
   @SuppressLint("Range")
   protected float getTemperature(Cursor c) {
-    TemperatureFormatter tp = temperatureFormatterProvider.getTemperatureFormatter();
+    ValuesFormatter tp = valuesFormatterProvider.getValuesFormatter();
     return (float)
         tp.getTemperatureInConfiguredUnit(
             c.getDouble(

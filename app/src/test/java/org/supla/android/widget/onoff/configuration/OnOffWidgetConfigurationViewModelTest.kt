@@ -35,7 +35,7 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
@@ -82,7 +82,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   private lateinit var singleCallProvider: SingleCall.Provider
 
   @Mock
-  private lateinit var temperatureFormat: TemperatureFormatter
+  private lateinit var temperatureFormat: ValuesFormatter
 
   @Before
   fun setUp() {

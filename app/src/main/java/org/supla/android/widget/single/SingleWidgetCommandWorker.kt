@@ -42,6 +42,7 @@ class SingleWidgetCommandWorker(
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
   override fun updateWidget(widgetId: Int) = updateSingleWidget(applicationContext, widgetId)
+  override fun temperatureWithUnit(): Boolean = false
 
   override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)

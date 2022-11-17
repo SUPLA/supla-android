@@ -19,11 +19,12 @@ package org.supla.android.data
 
 import org.supla.android.cfg.AppConfigurationProvider
 import org.supla.android.cfg.TemperatureUnit
+import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TemperatureFormatter @Inject constructor(
+class ValuesFormatter @Inject constructor(
   private val appConfigurationProvider: AppConfigurationProvider
 ) {
 
@@ -34,9 +35,9 @@ class TemperatureFormatter @Inject constructor(
   fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false): String {
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
-        String.format("%s%s", NO_TEMPERATURE_TEXT, getUnitString())
+        String.format("%s%s", NO_VALUE_TEXT, getUnitString())
       !isTemperatureDefined(rawValue) ->
-        String.format("%s", NO_TEMPERATURE_TEXT)
+        String.format("%s", NO_VALUE_TEXT)
       withUnit -> String.format(
         "%.1f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
@@ -58,6 +59,28 @@ class TemperatureFormatter @Inject constructor(
     }
   }
 
+  fun getTemperatureAndHumidityString(
+    temperatureAndHumidity: TemperatureAndHumidity?,
+    withUnit: Boolean = false
+  ): String {
+    val temperatureString = getTemperatureString(temperatureAndHumidity?.temperature, withUnit)
+    val humidityString = getHumidityString(temperatureAndHumidity?.humidity)
+
+    return String.format("%s\n%s", temperatureString, humidityString)
+  }
+
+  private fun getHumidityString(rawValue: Double?): String {
+    return when {
+      !isHumidityDefined(rawValue) ->
+        String.format("%s%s", NO_VALUE_TEXT, '%')
+      else -> String.format("%.1f%s", rawValue, '%')
+    }
+  }
+
+  private fun isHumidityDefined(rawValue: Double?): Boolean {
+    return rawValue != null && rawValue > 0
+  }
+
   private fun isCelsius(): Boolean =
     appConfigurationProvider.getConfiguration().temperatureUnit.value == TemperatureUnit.CELSIUS
 
@@ -75,7 +98,7 @@ class TemperatureFormatter @Inject constructor(
   }
 
   companion object {
-    private const val NO_TEMPERATURE_TEXT = "---"
+    private const val NO_VALUE_TEXT = "---"
 
     /**
      * Special magic constant used to represent temperature value representing

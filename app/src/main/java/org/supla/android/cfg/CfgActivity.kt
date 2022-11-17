@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.*
 import org.supla.android.NavigationActivity.INTENTSENDER
 import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
-import org.supla.android.data.TemperatureFormatter
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.databinding.ActivityCfgBinding
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
@@ -57,7 +57,7 @@ class CfgActivity : AppCompatActivity() {
   lateinit var profileManager: ProfileManager
 
   @Inject
-  lateinit var temperatureFormatter: TemperatureFormatter
+  lateinit var valuesFormatter: ValuesFormatter
 
   private lateinit var binding: ActivityCfgBinding
   private lateinit var navCoordinator: NavCoordinator
