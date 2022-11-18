@@ -75,31 +75,43 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
 
   private fun updateActions() {
     val item = selectedItem
-    if (item is Scene) {
-      _actionsList.postValue(
-        listOf(
-          WidgetAction.EXECUTE,
-          WidgetAction.INTERRUPT_AND_EXECUTE,
-          WidgetAction.INTERRUPT
+    when {
+      item is Scene -> {
+        _actionsList.postValue(
+          listOf(
+            WidgetAction.EXECUTE,
+            WidgetAction.INTERRUPT_AND_EXECUTE,
+            WidgetAction.INTERRUPT
+          )
         )
-      )
-    } else if (item is ChannelBase && item.isSwitch()) {
-      _actionsList.postValue(
-        listOf(
-          WidgetAction.TURN_ON,
-          WidgetAction.TURN_OFF,
-          WidgetAction.TOGGLE
+      }
+      item is ChannelBase && item.isSwitch() -> {
+        _actionsList.postValue(
+          listOf(
+            WidgetAction.TURN_ON,
+            WidgetAction.TURN_OFF,
+            WidgetAction.TOGGLE
+          )
         )
-      )
-    } else if (item is ChannelBase && item.isRollerShutter()) {
-      _actionsList.postValue(
-        listOf(
-          WidgetAction.MOVE_UP,
-          WidgetAction.MOVE_DOWN
+      }
+      item is ChannelBase && item.isRollerShutter() -> {
+        _actionsList.postValue(
+          listOf(
+            WidgetAction.MOVE_UP,
+            WidgetAction.MOVE_DOWN
+          )
         )
-      )
-    } else {
-      _actionsList.postValue(listOf())
+      }
+      item is ChannelBase && item.isGateController() -> {
+        _actionsList.postValue(
+          listOf(
+            WidgetAction.OPEN,
+            WidgetAction.CLOSE,
+            WidgetAction.OPEN_CLOSE
+          )
+        )
+      }
+      else -> _actionsList.postValue(listOf())
     }
   }
 }

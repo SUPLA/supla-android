@@ -53,7 +53,9 @@ class SingleWidgetCommandWorker(
     } else {
       when (configuration.itemFunction) {
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR -> if (action != null) {
+          callAction(configuration, action.suplaAction)
+        }
         SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
         SUPLA_CHANNELFNC_LIGHTSWITCH,

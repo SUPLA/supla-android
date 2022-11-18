@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/on_off_widget_value_text"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_weight="1.5"
+    android:autoSizeTextType="uniform"
+    android:background="@android:color/transparent"
+    android:lineSpacingExtra="4dp"
+    android:maxLines="2"
+    android:padding="5dp"
+    android:textColor="@color/widget_text"
+    android:textSize="13sp" />
