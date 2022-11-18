@@ -21,6 +21,7 @@ import android.content.Context
 import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.actions.ActionParameters
@@ -76,9 +77,11 @@ class SingleCall private constructor(
   }
 
   @Singleton
-  class Provider @Inject constructor(private val profileRepository: ProfileRepository) {
-    fun provide(context: Context, profileId: Long) =
-      SingleCall(context, profileId, profileRepository)
+  class Provider @Inject constructor(
+    private val profileRepository: ProfileRepository,
+    @ApplicationContext private val context: Context
+  ) {
+    fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)
   }
 
   companion object {

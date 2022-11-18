@@ -39,6 +39,7 @@ import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
+import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -70,11 +71,11 @@ class SingleWidget : WidgetProviderBase() {
           R.id.single_widget_button,
           ImageCache.getBitmap(context, scene.getImageId())
         )
+        views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       } else {
         setChannelIcons(configuration, views, context)
       }
 
-      views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
     } else {
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
@@ -89,8 +90,7 @@ class SingleWidget : WidgetProviderBase() {
     Trace.i(TAG, "Got intent with action: " + intent?.action)
 
     if (intent?.action == ACTION_PRESSED) {
-      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-        ?: IntArray(0)
+      val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
       val inputData = Data.Builder()
         .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
         .build()
@@ -118,16 +118,24 @@ class SingleWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
-    val active = if (turnOnOrClose(configuration)) {
-      getActiveValue(configuration.itemFunction)
+    if (channel.isThermometer()) {
+      views.setTextViewText(R.id.single_widget_text, configuration.value)
+      views.setViewVisibility(R.id.single_widget_button, View.GONE)
+      views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
-      0
-    }
+      val active = if (turnOnOrClose(configuration)) {
+        getActiveValue(configuration.itemFunction)
+      } else {
+        0
+      }
 
-    views.setImageViewBitmap(
-      R.id.single_widget_button,
-      ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
-    )
+      views.setImageViewBitmap(
+        R.id.single_widget_button,
+        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
+      )
+      views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+      views.setViewVisibility(R.id.single_widget_text, View.GONE)
+    }
   }
 
   companion object {
@@ -139,6 +147,7 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.single_widget)
   val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
   views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
+  views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)
 
   return views
 }
@@ -156,6 +165,9 @@ internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
   return configuration.actionId == WidgetAction.TURN_ON.actionId ||
     configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
+
+fun updateSingleWidget(context: Context, widgetId: Int) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
   Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")

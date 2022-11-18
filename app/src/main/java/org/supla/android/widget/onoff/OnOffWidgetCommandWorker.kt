@@ -22,7 +22,6 @@ import androidx.work.WorkerParameters
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 
-
 const val ARG_TURN_ON = "ARG_TURN_ON"
 
 /**
@@ -35,6 +34,9 @@ const val ARG_TURN_ON = "ARG_TURN_ON"
  * It supports also opening and closing of roller shutters
  */
 class OnOffWidgetCommandWorker(
-        appContext: Context,
-        workerParams: WorkerParameters
-) : WidgetCommandWorkerBase(appContext, workerParams)
+  appContext: Context,
+  workerParams: WorkerParameters
+) : WidgetCommandWorkerBase(appContext, workerParams) {
+  override fun updateWidget(widgetId: Int) = updateOnOffWidget(applicationContext, widgetId)
+  override fun temperatureWithUnit(): Boolean = true
+}

@@ -123,6 +123,4 @@ class SingleWidgetConfigurationActivity :
 
   override fun getIntent(context: Context, intentAction: String, widgetId: Int) =
     intent(context, intentAction, widgetId)
-
-  override fun getNameMaxLength() = resources.getInteger(R.integer.single_widget_name_max_length)
 }

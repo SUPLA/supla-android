@@ -21,12 +21,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Scene
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.*
@@ -39,14 +41,18 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   profileManager: ProfileManager,
   channelRepository: ChannelRepository,
   sceneRepository: SceneRepository,
-  dispatchers: CoroutineDispatchers
+  dispatchers: CoroutineDispatchers,
+  singleCallProvider: SingleCall.Provider,
+  valuesFormatter: ValuesFormatter
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
   profileManager,
   channelRepository,
   sceneRepository,
-  dispatchers
+  dispatchers,
+  singleCallProvider,
+  valuesFormatter
 ) {
 
   private val _actionsList = MutableLiveData<List<WidgetAction>>()
@@ -56,8 +62,11 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     return channelBase.isGateController() ||
       channelBase.isDoorLock() ||
       channelBase.isSwitch() ||
-      channelBase.isRollerShutter()
+      channelBase.isRollerShutter() ||
+      channelBase.isThermometer()
   }
+
+  override fun temperatureWithUnit(): Boolean = false
 
   override fun changeItem(channel: DbItem?) {
     super.changeItem(channel)

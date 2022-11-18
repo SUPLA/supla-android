@@ -35,12 +35,14 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.Preferences
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
 import org.supla.android.widget.WidgetPreferences
@@ -73,6 +75,12 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
 
   @Mock
   private lateinit var sceneRepository: SceneRepository
+
+  @Mock
+  private lateinit var singleCallProvider: SingleCall.Provider
+
+  @Mock
+  private lateinit var valuesFormatter: ValuesFormatter
 
   @Before
   fun setUp() {
@@ -107,7 +115,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -150,7 +160,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -193,7 +205,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -228,7 +242,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -257,7 +273,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -282,7 +300,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -304,7 +324,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 
@@ -328,7 +350,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       profileManager,
       channelRepository,
       sceneRepository,
-      dispatchers
+      dispatchers,
+      singleCallProvider,
+      valuesFormatter
     )
     viewModel.changeItem(channel)
 

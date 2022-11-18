@@ -35,11 +35,13 @@ import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
+import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
 private const val ACTION_TURN_ON = "ACTION_TURN_ON"
 private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
+private const val ACTION_UPDATE = "ACTION_UPDATE"
 
 /**
  * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
@@ -61,27 +63,12 @@ class OnOffWidget : WidgetProviderBase() {
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.on_off_widget_channel_name, configuration.itemCaption)
 
-      val channel = Channel()
-      channel.func = configuration.itemFunction
-      channel.altIcon = configuration.altIcon
-      channel.userIconId = configuration.userIcon
+      setChannelIcons(configuration, views, context)
 
-      val activeValue = getActiveValue(configuration.itemFunction)
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_on_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue))
-      )
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0))
-      )
-
-      views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.VISIBLE)
-      views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_removed_label, View.GONE)
     } else {
-      views.setViewVisibility(R.id.on_off_widget_turn_on_button, View.GONE)
-      views.setViewVisibility(R.id.on_off_widget_turn_off_button, View.GONE)
+      views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
+      views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_removed_label, View.VISIBLE)
     }
     // Instruct the widget manager to update the widget
@@ -97,21 +84,57 @@ class OnOffWidget : WidgetProviderBase() {
       ACTION_TURN_OFF -> false
       else -> null
     }
-    if (turnOnOff != null) {
-      val widgetIds = intent?.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-        ?: IntArray(0)
-      val inputData = Data.Builder()
-        .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
+    if (turnOnOff == null && intent?.action != ACTION_UPDATE) {
+      return
+    }
+
+    val widgetIds = intent?.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+      ?: IntArray(0)
+    val inputData = if (turnOnOff == null) {
+      Data.Builder().putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds).build()
+    } else {
+      Data.Builder()
         .putBoolean(ARG_TURN_ON, turnOnOff)
+        .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
         .build()
+    }
 
-      val removeWidgetsWork = OneTimeWorkRequestBuilder<OnOffWidgetCommandWorker>()
-        .setInputData(inputData)
-        .build()
+    val removeWidgetsWork = OneTimeWorkRequestBuilder<OnOffWidgetCommandWorker>()
+      .setInputData(inputData)
+      .build()
 
-      // Work for widget ID is unique, so no other worker for the same ID will be started
-      WorkManager.getInstance()
-        .enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
+    // Work for widget ID is unique, so no other worker for the same ID will be started
+    WorkManager.getInstance()
+      .enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
+  }
+
+  private fun setChannelIcons(
+    configuration: WidgetConfiguration,
+    views: RemoteViews,
+    context: Context
+  ) {
+    val channel = Channel()
+    channel.func = configuration.itemFunction
+    channel.altIcon = configuration.altIcon
+    channel.userIconId = configuration.userIcon
+
+    if (channel.isThermometer()) {
+      views.setImageViewResource(R.id.on_off_widget_value_icon, R.drawable.thermometer)
+      views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
+      views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
+      views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
+    } else {
+      val activeValue = getActiveValue(configuration.itemFunction)
+      views.setImageViewBitmap(
+        R.id.on_off_widget_turn_on_button,
+        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue))
+      )
+      views.setImageViewBitmap(
+        R.id.on_off_widget_turn_off_button,
+        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0))
+      )
+      views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
+      views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
     }
   }
 
@@ -133,6 +156,9 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
   val turnOffPendingIntent = pendingIntent(context, ACTION_TURN_OFF, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
+  val updatePendingIntent = pendingIntent(context, ACTION_UPDATE, widgetId)
+  views.setOnClickPendingIntent(R.id.on_off_widget_value_text, updatePendingIntent)
+  views.setOnClickPendingIntent(R.id.on_off_widget_value_icon, updatePendingIntent)
 
   return views
 }
@@ -145,6 +171,9 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
     PendingIntent.FLAG_UPDATE_CURRENT
   )
 }
+
+fun updateOnOffWidget(context: Context, widgetId: Int) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
 fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
   Trace.d(OnOffWidget::javaClass.name, "Creating intent with action: $intentAction")

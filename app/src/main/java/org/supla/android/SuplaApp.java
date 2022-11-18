@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
@@ -27,13 +29,16 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import org.supla.android.cfg.CfgRepository;
-import org.supla.android.cfg.PrefsCfgRepositoryImpl;
-import org.supla.android.data.presenter.TemperaturePresenter;
-import org.supla.android.data.presenter.TemperaturePresenterImpl;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -41,10 +46,11 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, TemperaturePresenterFactory {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -61,6 +67,7 @@ public class SuplaApp extends MultiDexApplication
 
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
+  @Inject ValuesFormatter valuesFormatter;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -79,6 +86,8 @@ public class SuplaApp extends MultiDexApplication
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+    enqueueWidgetRefresh();
   }
 
   public static void Vibrate(Context context) {
@@ -240,15 +249,22 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
-  public CfgRepository getCfgRepository() {
-    return new PrefsCfgRepositoryImpl(this);
-  }
-
-  public TemperaturePresenter getTemperaturePresenter() {
-    return new TemperaturePresenterImpl(getCfgRepository().getCfg());
+  public ValuesFormatter getValuesFormatter() {
+    return valuesFormatter;
   }
 
   public void cleanupToken() {
     _OAuthToken = null;
+  }
+
+  private void enqueueWidgetRefresh() {
+    Constraints constraints =
+        new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+    PeriodicWorkRequest request =
+        new PeriodicWorkRequest.Builder(WidgetReloadWorker.class, 30, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build();
+    WorkManager.getInstance()
+        .enqueueUniquePeriodicWork(WORK_ID, ExistingPeriodicWorkPolicy.KEEP, request);
   }
 }

@@ -41,7 +41,10 @@ class SingleWidgetCommandWorker(
   workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(appContext, workerParams) {
 
-  override fun perform(configuration: WidgetConfiguration): Result {
+  override fun updateWidget(widgetId: Int) = updateSingleWidget(applicationContext, widgetId)
+  override fun temperatureWithUnit(): Boolean = false
+
+  override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)
     if (configuration.itemType == ItemType.SCENE) {
       if (action != null) {
@@ -56,19 +59,19 @@ class SingleWidgetCommandWorker(
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_POWERSWITCH -> {
           if (action == null) {
-            return callCommon(configuration)
+            return callCommon(widgetId, configuration)
           }
           callAction(configuration, action.suplaAction)
         }
-        else -> return callCommon(configuration)
+        else -> return callCommon(widgetId, configuration)
       }
     }
     return Result.success()
   }
 
-  private fun callCommon(configuration: WidgetConfiguration): Result {
+  private fun callCommon(widgetId: Int, configuration: WidgetConfiguration): Result {
     val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
       configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-    return performCommon(configuration, turnOnOrClose)
+    return performCommon(widgetId, configuration, turnOnOrClose)
   }
 }

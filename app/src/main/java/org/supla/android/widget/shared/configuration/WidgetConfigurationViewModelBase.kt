@@ -24,14 +24,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Preferences
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.*
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.singlecall.SingleCall
+import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.shared.loadTemperatureAndHumidity
 import java.security.InvalidParameterException
 
 abstract class WidgetConfigurationViewModelBase(
@@ -40,7 +44,9 @@ abstract class WidgetConfigurationViewModelBase(
   private val profileManager: ProfileManager,
   private val channelRepository: ChannelRepository,
   private val sceneRepository: SceneRepository,
-  private val dispatchers: CoroutineDispatchers
+  private val dispatchers: CoroutineDispatchers,
+  private val singleCallProvider: SingleCall.Provider,
+  private val valuesFormatter: ValuesFormatter
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
   val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -83,20 +89,13 @@ abstract class WidgetConfigurationViewModelBase(
         _confirmationResult.value = Result.failure(EmptyDisplayNameException())
       }
       else -> {
-        val itemType = itemsType.value ?: ItemType.CHANNEL
-        val itemId = when (itemType) {
-          ItemType.CHANNEL -> (selectedItem as Channel).channelId
-          ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
-          ItemType.SCENE -> (selectedItem as Scene).sceneId
+        viewModelScope.launch {
+          withContext(dispatchers.io()) {
+            _dataLoading.postValue(true)
+            storeWidgetConfiguration()
+            _dataLoading.postValue(false)
+          }
         }
-        val color = if (itemType.isChannel()) (selectedItem as Channel).color else 0
-
-        setWidgetConfiguration(
-          itemId,
-          itemType,
-          color
-        )
-        _confirmationResult.value = Result.success(selectedItem!!)
       }
     }
   }
@@ -124,6 +123,7 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   protected abstract fun filterItems(channelBase: ChannelBase): Boolean
+  protected abstract fun temperatureWithUnit(): Boolean
 
   private fun reloadItems() {
     _dataLoading.value = true
@@ -214,10 +214,46 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
+  private fun storeWidgetConfiguration() {
+    val itemType = itemsType.value ?: ItemType.CHANNEL
+    val itemId = when (itemType) {
+      ItemType.CHANNEL -> (selectedItem as Channel).channelId
+      ItemType.GROUP -> (selectedItem as ChannelGroup).groupId
+      ItemType.SCENE -> (selectedItem as Scene).sceneId
+    }
+    val value = when {
+      itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
+        getWidgetValue(selectedItem as Channel)
+      itemType.isChannel() -> (selectedItem as Channel).color.toString()
+      itemType.isGroup() -> (selectedItem as ChannelGroup).colors[0].toString()
+      else -> "0"
+    }
+
+    setWidgetConfiguration(
+      itemId,
+      itemType,
+      value
+    )
+    _confirmationResult.postValue(Result.success(selectedItem!!))
+  }
+
+  private fun getWidgetValue(channel: Channel): String {
+    val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
+      if (channel.func == SUPLA_CHANNELFNC_THERMOMETER) {
+        { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit()) }
+      } else {
+        { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit()) }
+      }
+    return loadTemperatureAndHumidity(
+      { (loadChannelValue(channel.channelId) as TemperatureAndHumidity) },
+      formatter
+    )
+  }
+
   private fun setWidgetConfiguration(
     itemId: Int,
     itemType: ItemType,
-    channelColor: Int
+    value: String
   ) {
     val channelFunction = if (itemType == ItemType.SCENE) 0 else (selectedItem as ChannelBase).func
     val altIcon = when (itemType) {
@@ -234,7 +270,7 @@ abstract class WidgetConfigurationViewModelBase(
       itemType,
       displayName!!,
       channelFunction,
-      channelColor,
+      value,
       selectedProfile!!.id,
       visibility = true,
       selectedAction?.actionId,
@@ -243,6 +279,9 @@ abstract class WidgetConfigurationViewModelBase(
     )
     widgetPreferences.setWidgetConfiguration(widgetId!!, configuration)
   }
+
+  private fun loadChannelValue(itemId: Int): org.supla.android.lib.singlecall.ChannelValue =
+    singleCallProvider.provide(selectedProfile!!.id).getChannelValue(itemId)
 }
 
 enum class ItemType(val id: Int) {
@@ -286,3 +325,7 @@ internal fun ChannelBase.isGateController() =
 internal fun ChannelBase.isDoorLock() =
   func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK ||
     func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+
+internal fun ChannelBase.isThermometer() =
+  func == SUPLA_CHANNELFNC_THERMOMETER ||
+    func == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE

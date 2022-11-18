@@ -173,7 +173,7 @@
             android:background="@drawable/background_widget_configuration_field"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:maxLength="@integer/single_widget_name_max_length"
+            android:maxLength="@integer/widget_name_max_length"
             android:maxLines="1"
             android:onTextChanged="@{viewmodel::onDisplayNameChanged}"
             android:padding="12dp"
