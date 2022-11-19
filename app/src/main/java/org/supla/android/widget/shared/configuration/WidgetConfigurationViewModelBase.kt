@@ -17,6 +17,7 @@ package org.supla.android.widget.shared.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -60,8 +61,8 @@ abstract class WidgetConfigurationViewModelBase(
   private val _profilesList = MutableLiveData<List<AuthProfileItem>>()
   val profilesList: LiveData<List<AuthProfileItem>> = _profilesList
 
-  private val _itemsList = MutableLiveData<List<DbItem>>()
-  val itemsList: LiveData<List<DbItem>> = _itemsList
+  private val _itemsList = MutableLiveData<List<SpinnerItem<DbItem>>>()
+  val itemsList: LiveData<List<SpinnerItem<DbItem>>> = _itemsList
 
   private val _itemsType = MutableLiveData(ItemType.CHANNEL)
   val itemsType: LiveData<ItemType> = _itemsType
@@ -122,7 +123,7 @@ abstract class WidgetConfigurationViewModelBase(
     selectedItem = channel
   }
 
-  protected abstract fun filterItems(channelBase: ChannelBase): Boolean
+  protected abstract fun filterItems(channelBase: DbItem): Boolean
   protected abstract fun temperatureWithUnit(): Boolean
 
   private fun reloadItems() {
@@ -156,30 +157,41 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   private fun loadItems() {
-    val items: List<DbItem> = when (itemsType.value) {
-      ItemType.CHANNEL -> getAllChannels().filter { filterItems(it) }
-      ItemType.GROUP -> getAllChannelGroups().filter { filterItems(it) }
+    val items: List<SpinnerItem<DbItem>> = when (itemsType.value) {
+      ItemType.CHANNEL -> getChannels()
+      ItemType.GROUP -> getAllChannelGroups().filter { filterItems(it.value) }
       ItemType.SCENE -> getAllScenes()
       else -> emptyList()
     }
 
     _itemsList.postValue(items)
     if (items.isNotEmpty()) {
-      selectedItem = items[0]
+      selectedItem = items[0].value
     }
   }
 
-  private fun getAllChannels(): List<Channel> {
+  private fun getChannels(): List<SpinnerItem<DbItem>> {
     channelRepository.getAllProfileChannels(selectedProfile?.id).use { cursor ->
-      val channels = mutableListOf<Channel>()
+      val channels = mutableListOf<SpinnerItem<DbItem>>()
       if (!cursor.moveToFirst()) {
         return channels
       }
 
+      var lastLocationId = -1L
       do {
         val channel = Channel()
         channel.AssignCursorData(cursor)
-        channels.add(channel)
+
+        if (filterItems(channel)) {
+          getLocationFromChannelCursor(cursor).let {
+            if (it.value.id != lastLocationId) {
+              lastLocationId = it.value.id
+              channels.add(it)
+            }
+          }
+
+          channels.add(SpinnerItem(channel))
+        }
       } while (cursor.moveToNext())
 
       // As the widgets are stateless it is possible that user creates many widgets for the same channel id
@@ -187,17 +199,27 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
-  private fun getAllChannelGroups(): List<ChannelGroup> {
+  private fun getAllChannelGroups(): List<SpinnerItem<DbItem>> {
     channelRepository.getAllProfileChannelGroups(selectedProfile?.id).use { cursor ->
-      val channelGroups = mutableListOf<ChannelGroup>()
+      val channelGroups = mutableListOf<SpinnerItem<DbItem>>()
       if (!cursor.moveToFirst()) {
         return channelGroups
       }
 
+      var lastLocationId = -1L
       do {
         val channelGroup = ChannelGroup()
         channelGroup.AssignCursorData(cursor)
-        channelGroups.add(channelGroup)
+        if (filterItems(channelGroup)) {
+          getLocationFromChannelCursor(cursor).let {
+            if (it.value.id != lastLocationId) {
+              lastLocationId = it.value.id
+              channelGroups.add(it)
+            }
+          }
+
+          channelGroups.add(SpinnerItem(channelGroup))
+        }
       } while (cursor.moveToNext())
 
       // As the widgets are stateless it is possible that user creates many widgets for the same channel id
@@ -205,10 +227,33 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
-  private fun getAllScenes(): List<Scene> {
+  private fun getLocationFromChannelCursor(cursor: Cursor): SpinnerItem<DbItem> {
+    val captionIndex = cursor.getColumnIndex("section")
+    val idIndex = cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)
+
+    val location = Location()
+    location.id = cursor.getInt(idIndex).toLong()
+    location.caption = cursor.getString(captionIndex)
+    return SpinnerItem(location)
+  }
+
+  private fun getAllScenes(): List<SpinnerItem<DbItem>> {
     val profileId = selectedProfile?.id
     return if (profileId != null) {
-      sceneRepository.getAllScenesForProfile(profileId)
+      val listWithLocations: MutableList<SpinnerItem<DbItem>> = mutableListOf()
+
+      var lastLocationId = -1
+      sceneRepository.getAllScenesForProfile(profileId).forEach {
+        val location = it.second
+        if (lastLocationId != location.locationId) {
+          lastLocationId = location.locationId
+          listWithLocations.add(SpinnerItem(location))
+        }
+
+        listWithLocations.add(SpinnerItem(it.first))
+      }
+
+      listWithLocations
     } else {
       emptyList()
     }
@@ -225,7 +270,6 @@ abstract class WidgetConfigurationViewModelBase(
       itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
         getWidgetValue(selectedItem as Channel)
       itemType.isChannel() -> (selectedItem as Channel).color.toString()
-      itemType.isGroup() -> (selectedItem as ChannelGroup).colors[0].toString()
       else -> "0"
     }
 

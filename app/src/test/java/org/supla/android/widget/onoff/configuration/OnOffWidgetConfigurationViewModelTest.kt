@@ -123,7 +123,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(1))
+    assertThat(channels.size, `is`(2))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
@@ -165,7 +165,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(1))
+    assertThat(channels.size, `is`(2))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(channelRepository).getAllProfileChannelGroups(profileId)
     verify(profileManager).getCurrentProfile()
@@ -209,7 +209,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(5))
+    assertThat(channels.size, `is`(6))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
@@ -223,14 +223,17 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `should load all channel groups with switch function`() = runTest {
     // given
     val profileId = 234L
-    val cursor: Cursor = mockCursorChannels(
+    val functions = intArrayOf(
       SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       SuplaConst.SUPLA_CHANNELFNC_DIMMER,
       SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
       SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
       SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
     )
-    whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
+    val channelsCursor: Cursor = mockCursorChannels()
+    whenever(channelRepository.getAllProfileChannels(any())).thenReturn(channelsCursor)
+    val groupsCursor = mockCursorChannelGroups(*functions)
+    whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(groupsCursor)
     whenever(preferences.configIsSet()).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
@@ -254,7 +257,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(5))
+    assertThat(channels.size, `is`(6))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(channelRepository).getAllProfileChannelGroups(profileId)
     verify(profileManager).getCurrentProfile()
@@ -295,7 +298,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(2))
+    assertThat(channels.size, `is`(3))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
@@ -309,11 +312,14 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `should load all roller shutter channel groups`() = runTest {
     // given
     val profileId = 234L
-    val cursor: Cursor = mockCursorChannels(
+    val functions = intArrayOf(
       SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
     )
+    val cursor: Cursor = mockCursorChannels(*functions)
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
+    val groupsCursor = mockCursorChannelGroups(*functions)
+    whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(groupsCursor)
     whenever(preferences.configIsSet()).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
@@ -337,7 +343,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(2))
+    assertThat(channels.size, `is`(3))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(channelRepository).getAllProfileChannelGroups(profileId)
     verify(profileManager).getCurrentProfile()

@@ -66,7 +66,7 @@ class SingleWidgetConfigurationActivity :
     val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
     binding.widgetSingleCommon.widgetSingleConfigureSwitches.adapter = adapter
     binding.widgetSingleCommon.widgetSingleConfigureSwitches.onItemSelectedListener =
-      channelItemSelectedListener(adapter)
+      itemSelectedListener(adapter)
   }
 
   private fun setupProfilesSpinner() {

@@ -26,6 +26,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
+import org.supla.android.db.Location
 import org.supla.android.db.Scene
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.singlecall.SingleCall
@@ -58,12 +59,16 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   private val _actionsList = MutableLiveData<List<WidgetAction>>()
   val actionsList: LiveData<List<WidgetAction>> = _actionsList
 
-  override fun filterItems(channelBase: ChannelBase): Boolean {
-    return channelBase.isGateController() ||
-      channelBase.isDoorLock() ||
-      channelBase.isSwitch() ||
-      channelBase.isRollerShutter() ||
-      channelBase.isThermometer()
+  override fun filterItems(dbItem: DbItem): Boolean {
+    return when (dbItem) {
+      is Location -> true
+      is ChannelBase -> dbItem.isGateController() ||
+        dbItem.isDoorLock() ||
+        dbItem.isSwitch() ||
+        dbItem.isRollerShutter() ||
+        dbItem.isThermometer()
+      else -> false
+    }
   }
 
   override fun temperatureWithUnit(): Boolean = false

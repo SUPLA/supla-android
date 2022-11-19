@@ -23,6 +23,8 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.DbItem
+import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
@@ -53,8 +55,13 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   singleCallProvider,
   valuesFormatter
 ) {
-  override fun filterItems(channelBase: ChannelBase): Boolean {
-    return channelBase.isSwitch() || channelBase.isRollerShutter() || channelBase.isThermometer()
+  override fun filterItems(channelBase: DbItem): Boolean {
+    return when (channelBase) {
+      is Location -> true
+      is ChannelBase -> channelBase.isSwitch() || channelBase.isRollerShutter() ||
+        channelBase.isThermometer()
+      else -> false
+    }
   }
 
   override fun temperatureWithUnit(): Boolean = true

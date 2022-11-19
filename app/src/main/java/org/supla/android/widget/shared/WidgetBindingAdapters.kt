@@ -22,10 +22,7 @@ import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbItem
-import org.supla.android.widget.shared.configuration.WidgetAction
-import org.supla.android.widget.shared.configuration.WidgetConfigurationActionsSpinnerAdapter
-import org.supla.android.widget.shared.configuration.WidgetConfigurationChannelsSpinnerAdapter
-import org.supla.android.widget.shared.configuration.WidgetConfigurationProfilesSpinnerAdapter
+import org.supla.android.widget.shared.configuration.*
 
 @BindingAdapter("visibility")
 fun setViewVisibility(view: View, isVisible: Boolean) {
@@ -37,9 +34,10 @@ fun setViewVisibility(view: View, isVisible: Boolean) {
 }
 
 @BindingAdapter("channels")
-fun setSpinnerChannels(spinner: Spinner, items: List<DbItem>?) {
+fun setSpinnerChannels(spinner: Spinner, items: List<SpinnerItem<DbItem>>?) {
   items?.let {
     (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
+    spinner.setSelection(1)
   }
 }
 
