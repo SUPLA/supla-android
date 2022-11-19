@@ -32,7 +32,10 @@ enum class WidgetAction(
   TOGGLE(5, R.string.widget_action_toggle, ActionId.TOGGLE),
   EXECUTE(6, R.string.btn_execute, ActionId.EXECUTE),
   INTERRUPT(7, R.string.btn_abort, ActionId.INTERRUPT),
-  INTERRUPT_AND_EXECUTE(8, R.string.btn_abort_and_execute, ActionId.INTERRUPT_AND_EXECUTE);
+  INTERRUPT_AND_EXECUTE(8, R.string.btn_abort_and_execute, ActionId.INTERRUPT_AND_EXECUTE),
+  OPEN(9, R.string.channel_btn_open, ActionId.OPEN),
+  CLOSE(10, R.string.channel_btn_close, ActionId.CLOSE),
+  OPEN_CLOSE(11, R.string.channel_btn_openclose, ActionId.OPEN_CLOSE);
 
   companion object {
     fun fromId(actionId: Long?): WidgetAction? {

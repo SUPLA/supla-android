@@ -1,50 +1,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp"
-    android:background="@drawable/widget_background">
+    android:layout_height="85dp"
+    android:background="@drawable/widget_background"
+    android:maxWidth="60dp">
 
   <TextView
       android:id="@+id/single_widget_channel_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
       android:layout_margin="6dp"
+      android:ellipsize="end"
       android:gravity="center"
       android:maxLines="1"
-      android:ellipsize="end"
       android:textColor="@color/widget_text"
       android:textSize="12sp" />
-
 
   <ImageButton
       android:id="@+id/single_widget_button"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@id/single_widget_channel_name"
-      android:layout_alignParentBottom="true"
+      android:layout_above="@id/single_widget_channel_name"
       android:layout_marginStart="5dp"
+      android:layout_marginTop="10dp"
       android:layout_marginEnd="5dp"
-      android:layout_marginBottom="5dp"
       android:background="@drawable/widget_button_background"
       android:padding="5dp"
       android:scaleType="fitCenter"
       android:visibility="gone" />
 
-  <Button
-      android:id="@+id/single_widget_text"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@id/single_widget_channel_name"
-      android:layout_alignParentBottom="true"
-      android:layout_marginStart="5dp"
-      android:layout_marginEnd="5dp"
-      android:layout_marginBottom="10dp"
-      android:background="@android:color/transparent"
-      android:scaleType="fitCenter"
-      android:lineSpacingExtra="4dp"
-      android:visibility="gone"
-      android:textSize="13sp" />
-
+  <include layout="@layout/single_widget_value_text" />
 
   <TextView
       android:id="@+id/single_widget_removed_label"

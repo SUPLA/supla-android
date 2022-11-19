@@ -1,17 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp"
-    android:background="@drawable/widget_background">
+    android:layout_height="85dp"
+    android:background="@drawable/widget_background"
+    android:maxWidth="125dp">
 
   <TextView
       android:id="@+id/on_off_widget_channel_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
       android:layout_margin="6dp"
+      android:ellipsize="end"
       android:gravity="center"
       android:maxLines="1"
-      android:ellipsize="end"
       android:textColor="@color/widget_text"
       android:textSize="12sp" />
 
@@ -19,8 +20,8 @@
       android:id="@+id/on_off_widget_buttons"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@id/on_off_widget_channel_name"
-      android:layout_alignParentBottom="true"
+      android:layout_above="@id/on_off_widget_channel_name"
+      android:layout_marginTop="10dp"
       android:orientation="horizontal">
 
     <ImageButton
@@ -29,7 +30,6 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:background="@drawable/widget_button_background"
         android:padding="5dp"
@@ -41,7 +41,6 @@
         android:layout_height="match_parent"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:background="@drawable/widget_button_background"
         android:padding="5dp"
@@ -53,11 +52,11 @@
       android:id="@+id/on_off_widget_value"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@id/on_off_widget_channel_name"
-      android:layout_alignParentBottom="true"
+      android:layout_above="@id/on_off_widget_channel_name"
+      android:layout_marginTop="5dp"
+      android:gravity="center_vertical"
       android:orientation="horizontal"
-      android:visibility="gone"
-      android:gravity="center_vertical">
+      android:visibility="gone">
 
     <ImageButton
         android:id="@+id/on_off_widget_value_icon"
@@ -65,24 +64,12 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
         android:layout_weight="1"
-        android:padding="5dp"
         android:background="@android:color/transparent"
+        android:padding="5dp"
         android:scaleType="fitCenter" />
 
-    <Button
-        android:id="@+id/on_off_widget_value_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1.5"
-        android:textSize="13sp"
-        android:lineSpacingExtra="4dp"
-        android:background="@android:color/transparent"
-        android:padding="5dp" />
+    <include layout="@layout/on_off_widget_value_text" />
 
   </LinearLayout>
 

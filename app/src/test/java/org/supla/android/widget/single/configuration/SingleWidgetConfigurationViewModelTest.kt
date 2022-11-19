@@ -336,7 +336,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
 
     // then
     val actionsList = viewModel.actionsList.getOrAwaitValue()
-    assertThat(actionsList.size, `is`(0))
+    assertThat(actionsList.size, `is`(3))
   }
 
   @Test
