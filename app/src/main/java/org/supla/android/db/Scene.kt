@@ -21,6 +21,7 @@ package org.supla.android.db
 import android.content.ContentValues
 import android.database.Cursor
 import org.supla.android.R
+import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
@@ -153,9 +154,14 @@ data class Scene(
       R.drawable.scene18, R.drawable.scene19
     )
 
-    return if (userIcon != 0) {
-      ImageId(userIcon, 1)
-    } else if (altIcon >= standardIcons.size) {
+    if (userIcon != 0) {
+      val id = ImageId(userIcon, 1);
+      if (ImageCache.bitmapExists(id)) {
+        return id;
+      }
+    }
+
+    return if (altIcon >= standardIcons.size) {
       ImageId(standardIcons[0])
     } else {
       ImageId(standardIcons[altIcon])
