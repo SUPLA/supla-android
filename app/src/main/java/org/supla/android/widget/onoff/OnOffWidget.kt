@@ -21,6 +21,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Data
@@ -118,20 +119,35 @@ class OnOffWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
+    val activeValue = getActiveValue(configuration.itemFunction)
+    val nightMode = context
+      .resources
+      .configuration
+      .uiMode
+      .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+    val viewId = if (channel.isThermometer()) {
+      R.id.on_off_widget_value_icon
+    } else {
+      R.id.on_off_widget_turn_on_button
+    }
+
+    views.setImageViewBitmap(
+      viewId,
+      ImageCache.getBitmap(
+        context,
+        channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, activeValue)
+      )
+    )
+
     if (channel.isThermometer()) {
-      views.setImageViewResource(R.id.on_off_widget_value_icon, R.drawable.thermometer)
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      val activeValue = getActiveValue(configuration.itemFunction)
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_on_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, activeValue))
-      )
       views.setImageViewBitmap(
         R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, 0))
+        ImageCache.getBitmap(context, channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, 0))
       )
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)

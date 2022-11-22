@@ -18,6 +18,7 @@ package org.supla.android.widget.shared.configuration
  */
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +58,11 @@ class WidgetConfigurationChannelsSpinnerAdapter(
   private fun createItemView(position: Int, convertView: View?, @LayoutRes layout: Int): View {
     val view = convertView ?: LayoutInflater.from(context).inflate(layout, null)
     val item = getItem(position) ?: return view
+    val nightMode = context
+      .resources
+      .configuration
+      .uiMode
+      .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
     when {
       item.isLocation() -> {
@@ -75,7 +81,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
 
         val icon = view.findViewById<ImageView>(R.id.spinner_item_icon)
         icon.visibility = View.VISIBLE
-        icon.setImageBitmap(ImageCache.getBitmap(context, scene.getImageId()))
+        icon.setImageBitmap(ImageCache.getBitmap(context, scene.getImageId(nightMode)))
       }
       else -> {
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = false
@@ -90,7 +96,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
         icon.setImageBitmap(
           ImageCache.getBitmap(
             context,
-            channel.getImageIdx(ChannelBase.WhichOne.First, 0)
+            channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, 0)
           )
         )
       }

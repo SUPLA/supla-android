@@ -140,24 +140,41 @@ data class Scene(
     return false
   }
 
-  fun getImageId(): ImageId {
-    val standardIcons = intArrayOf(
-      R.drawable.scene0, R.drawable.scene1,
-      R.drawable.scene2, R.drawable.scene3,
-      R.drawable.scene4, R.drawable.scene5,
-      R.drawable.scene6, R.drawable.scene7,
-      R.drawable.scene8, R.drawable.scene9,
-      R.drawable.scene10, R.drawable.scene11,
-      R.drawable.scene12, R.drawable.scene13,
-      R.drawable.scene14, R.drawable.scene15,
-      R.drawable.scene16, R.drawable.scene17,
-      R.drawable.scene18, R.drawable.scene19
-    )
+  fun getImageId(nightMode: Boolean): ImageId {
+    val standardIcons: IntArray
+
+    if (nightMode) {
+      standardIcons = intArrayOf(
+        R.drawable.scene0_nightmode, R.drawable.scene1_nightmode,
+        R.drawable.scene2_nightmode, R.drawable.scene3_nightmode,
+        R.drawable.scene4_nightmode, R.drawable.scene5_nightmode,
+        R.drawable.scene6_nightmode, R.drawable.scene7_nightmode,
+        R.drawable.scene8_nightmode, R.drawable.scene9_nightmode,
+        R.drawable.scene10_nightmode, R.drawable.scene11_nightmode,
+        R.drawable.scene12_nightmode, R.drawable.scene13_nightmode,
+        R.drawable.scene14_nightmode, R.drawable.scene15_nightmode,
+        R.drawable.scene16_nightmode, R.drawable.scene17_nightmode,
+        R.drawable.scene18_nightmode, R.drawable.scene19_nightmode
+      )
+    } else {
+      standardIcons = intArrayOf(
+        R.drawable.scene0, R.drawable.scene1,
+        R.drawable.scene2, R.drawable.scene3,
+        R.drawable.scene4, R.drawable.scene5,
+        R.drawable.scene6, R.drawable.scene7,
+        R.drawable.scene8, R.drawable.scene9,
+        R.drawable.scene10, R.drawable.scene11,
+        R.drawable.scene12, R.drawable.scene13,
+        R.drawable.scene14, R.drawable.scene15,
+        R.drawable.scene16, R.drawable.scene17,
+        R.drawable.scene18, R.drawable.scene19
+      )
+    }
 
     if (userIcon != 0) {
-      val id = ImageId(userIcon, 1);
+      val id = ImageId(userIcon, 1)
       if (ImageCache.bitmapExists(id)) {
-        return id;
+        return id
       }
     }
 
@@ -166,6 +183,10 @@ data class Scene(
     } else {
       ImageId(standardIcons[altIcon])
     }
+  }
+
+  fun getImageId(): ImageId {
+    return getImageId(false)
   }
 
   private fun dateFromString(str: String): Date {

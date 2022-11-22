@@ -21,6 +21,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Data
@@ -65,15 +66,21 @@ class SingleWidget : WidgetProviderBase() {
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
+      val nightMode = context
+        .resources
+        .configuration
+        .uiMode
+        .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
       if (configuration.itemType == ItemType.SCENE) {
         val scene = Scene(altIcon = configuration.altIcon, userIcon = configuration.userIcon)
         views.setImageViewBitmap(
           R.id.single_widget_button,
-          ImageCache.getBitmap(context, scene.getImageId())
+          ImageCache.getBitmap(context, scene.getImageId(nightMode))
         )
         views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       } else {
-        setChannelIcons(configuration, views, context)
+        setChannelIcons(configuration, views, context, nightMode)
       }
 
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
@@ -111,7 +118,8 @@ class SingleWidget : WidgetProviderBase() {
   private fun setChannelIcons(
     configuration: WidgetConfiguration,
     views: RemoteViews,
-    context: Context
+    context: Context,
+    nightMode: Boolean
   ) {
     val channel = Channel()
     channel.func = configuration.itemFunction
@@ -131,7 +139,10 @@ class SingleWidget : WidgetProviderBase() {
 
       views.setImageViewBitmap(
         R.id.single_widget_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.First, active))
+        ImageCache.getBitmap(
+          context,
+          channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, active)
+        )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_text, View.GONE)
