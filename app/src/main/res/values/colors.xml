@@ -102,4 +102,6 @@
     <color name="widget_text">@color/supla_text_light</color>
     <color name="widget_background">@color/supla_background_light</color>
     <color name="widget_fields_border">#3078801F</color>
+    <color name="widget_spinner_location_background">@color/channel_section_cell</color>
+    <color name="widget_spinner_item_background">@color/supla_background_light</color>
 </resources>

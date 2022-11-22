@@ -68,7 +68,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
       item.isLocation() -> {
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = true
         view.findViewById<LinearLayout>(R.id.spinner_item_content)
-          .setBackgroundResource(R.color.channel_section_cell)
+          .setBackgroundResource(R.color.widget_spinner_location_background)
         view.findViewById<TextView>(R.id.spinner_item_text)?.text = (item.value as Location).caption
         view.findViewById<ImageView>(R.id.spinner_item_icon).visibility = View.GONE
       }
@@ -76,7 +76,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = false
         val scene = (item.value as Scene)
         view.findViewById<LinearLayout>(R.id.spinner_item_content)
-          .setBackgroundResource(R.color.channel_cell)
+          .setBackgroundResource(R.color.widget_spinner_item_background)
         view.findViewById<TextView>(R.id.spinner_item_text)?.text = scene.caption
 
         val icon = view.findViewById<ImageView>(R.id.spinner_item_icon)
@@ -87,7 +87,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = false
         val channel = (item.value as ChannelBase)
         view.findViewById<LinearLayout>(R.id.spinner_item_content)
-          .setBackgroundResource(R.color.channel_cell)
+          .setBackgroundResource(R.color.widget_spinner_item_background)
         view.findViewById<TextView>(R.id.spinner_item_text)?.text =
           channel.getNotEmptyCaption(context)
 
