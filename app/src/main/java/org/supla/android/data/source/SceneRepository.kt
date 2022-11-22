@@ -19,6 +19,7 @@ package org.supla.android.data.source
  */
 
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.db.Location
 import org.supla.android.db.Scene
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
@@ -26,7 +27,7 @@ import org.supla.android.lib.SuplaSceneState
 interface SceneRepository {
 
   fun getAllProfileScenes(): Observable<List<Scene>>
-  fun getAllScenesForProfile(profileId: Long): List<Scene>
+  fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>>
   fun getSceneUserIconIdsToDownload(): List<Int>
   fun getScene(id: Int): Scene?
   fun updateScene(scene: Scene): Boolean

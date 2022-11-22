@@ -66,7 +66,7 @@ class OnOffWidgetConfigurationActivity :
     val adapter = WidgetConfigurationChannelsSpinnerAdapter(this, mutableListOf())
     binding.widgetOnOffCommon.widgetOnOffConfigureItems.adapter = adapter
     binding.widgetOnOffCommon.widgetOnOffConfigureItems.onItemSelectedListener =
-      channelItemSelectedListener(adapter)
+      itemSelectedListener(adapter)
   }
 
   private fun setupProfilesSpinner() {

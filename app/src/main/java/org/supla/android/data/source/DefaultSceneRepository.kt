@@ -24,7 +24,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.local.SceneDao
+import org.supla.android.db.Location
 import org.supla.android.db.Scene
+import org.supla.android.db.SuplaContract.SceneEntry
+import org.supla.android.db.SuplaContract.SceneViewEntry
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 import java.util.concurrent.TimeUnit
@@ -50,7 +53,7 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
       .doOnSubscribe { scenesSubject.onNext(loadScenes()) }
   }
 
-  override fun getAllScenesForProfile(profileId: Long): List<Scene> {
+  override fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>> {
     return parseScenesCursor(dao.sceneCursor(profileId))
   }
 
@@ -118,20 +121,31 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
   }
 
   private fun loadScenes(): List<Scene> {
-    return parseScenesCursor(dao.sceneCursor())
+    return parseScenesCursor(dao.sceneCursor()).map { it.first }
   }
 
-  private fun parseScenesCursor(cursor: Cursor): List<Scene> {
-    val rv = mutableListOf<Scene>()
+  private fun parseScenesCursor(cursor: Cursor): List<Pair<Scene, Location>> {
+    val rv = mutableListOf<Pair<Scene, Location>>()
     cursor.moveToFirst()
     while (!cursor.isAfterLast) {
       val itm = Scene()
       itm.AssignCursorData(cursor)
-      rv.add(itm)
+      rv.add(Pair(itm, readLocationFromCursor(cursor)))
       cursor.moveToNext()
     }
     cursor.close()
 
     return rv
+  }
+
+  private fun readLocationFromCursor(cursor: Cursor): Location {
+    val location = Location()
+
+    var index = cursor.getColumnIndex(SceneEntry.COLUMN_NAME_LOCATIONID)
+    location.locationId = cursor.getInt(index)
+    index = cursor.getColumnIndex(SceneViewEntry.COLUMN_NAME_LOCATION_NAME)
+    location.caption = cursor.getString(index)
+
+    return location
   }
 }
