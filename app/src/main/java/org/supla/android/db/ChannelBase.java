@@ -271,6 +271,10 @@ public abstract class ChannelBase extends DbItem {
     return 0;
   }
 
+  // We intentionally specify icons with the _nighthtmode
+  // suffix for night mode instead of using the default icons
+  // from the drawable-night directory because not every
+  // part of the application is night mode enabled yet.
   private int getImageResourceIdForNightMode(WhichOne whichImage, int active, boolean _50percent) {
     int img_idx = -1;
 

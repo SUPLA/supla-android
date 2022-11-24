@@ -144,6 +144,10 @@ data class Scene(
     val standardIcons: IntArray
 
     if (nightMode) {
+      // We intentionally specify icons with the _nighthtmode
+      // suffix for night mode instead of using the default icons
+      // from the drawable-night directory because not every
+      // part of the application is night mode enabled yet.
       standardIcons = intArrayOf(
         R.drawable.scene0_nightmode, R.drawable.scene1_nightmode,
         R.drawable.scene2_nightmode, R.drawable.scene3_nightmode,
