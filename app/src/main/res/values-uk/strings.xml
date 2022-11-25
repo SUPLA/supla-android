@@ -451,5 +451,5 @@
   <string name="calibration_failed">Помилка калібрування.</string>
   <string name="calibration_lost">Калібрування втрачено.</string>
   <string name="motor_problem">Проблема з двигуном / Несподівана зупинка.</string>
-  <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=uk</string>
 </resources>
