@@ -374,4 +374,82 @@
   <string name="btn_abort" translatable="false">Перервати</string>
   <string name="btn_abort_and_execute" translatable="false">Перервати і виконати</string>
   <string name="scene_name" translatable="false">Назва сцени</string>
+  <string name="cfg_profile_active_indicator" translatable="false">активний</string>
+  <string name="menubar_appsettings" translatable="false">Налаштування додатків</string>
+  <string name="about_app">"This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA    "</string>
+  <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
+  <string name="start">СТАРТ</string>
+  <string name="wizard_remember_passwd">Запам’ятати пароль</string>
+  <string name="wizard_iodevice_notfound">Пристроїв не знайдено! Переконайтеся, що пристрій, який Ви хочете налаштувати, знаходиться в режимі налаштування, а потім повторіть спробу. ВАЖЛИВО - Деякі версії Android вимагають увімкнення GPS для того, щоб програми могли шукати мережі Wi-Fi, тому переконайтеся, що GPS також увімкнено.</string>
+  <string name="wizard_done">Налаштування перенесено на пристрій.</string>
+  <string name="wizard_iodev_data">Дані пристрою</string>
+  <string name="em_total_forward_reactive_energy">Спожита реактивна енергія</string>
+  <string name="em_total_reverse_reactive_energy">Повернута реактивна енергія</string>
+  <string name="em_frequency">Частота</string>
+  <string name="em_voltage">Напруга</string>
+  <string name="em_current">Інтенсивність</string>
+  <string name="em_power_active">Активна потужність</string>
+  <string name="em_power_reactive">Реактивна потужність</string>
+  <string name="em_power_factor">Коефіцієнт потужності</string>
+  <string name="em_phase_angle">Кут зсуву фаз</string>
+  <string name="em_power_apparent">Видима потужність</string>
+  <string name="hp_normal">NORMAL</string>
+  <string name="hp_turbo">TURBO</string>
+  <string name="hp_auto">AUTO</string>
+  <string name="hp_cfg_turbo_time">Тривалість режиму TURBO</string>
+  <string name="hp_cfg_water_max">Максимальна температура води</string>
+  <string name="hp_cfg_eco_reduction">Зниження температури в режимі ЕCО</string>
+  <string name="meter_value">Стан лічильника</string>
+  <string name="total_cost">Загальна вартість</string>
+  <string name="current_cost">Вартість поточного місяця</string>
+  <string name="temperature">Температура</string>
+  <string name="channel_func_opensensor_gate">Датчик відкриття воріт</string>
+  <string name="channel_func_windsensor">Датчик вітру</string>
+  <string name="channel_func_rainsensor">Датчик дощу</string>
+  <string name="zwave_select_channel">Виберіть міст z-wave, а потім канал, який Ви хочете налаштувати.</string>
+  <string name="device_name">Назва пристрою</string>
+  <string name="channel_number">Номер каналу</string>
+  <string name="device_id">Ідентифікатор пристрою</string>
+  <string name="soft_ver">Версія програмного забезпечення</string>
+  <string name="function">Функція</string>
+  <string name="device">Пристрій</string>
+  <string name="zwave_welcome_title">Майстер z-wave</string>
+  <string name="zwave_welcome_message">Вітаємо у майстрі конфігурації моста z-wave. Це дозволить Вам підключити пристрої z-wave до Supli. Для продовження натисніть \"Далі\".</string>
+  <string name="zwave_before_search_title">Це займе певний час</string>
+  <string name="zwave_before_search_message">"Перш ніж продовжити, переконайтеся, що всі Ваші пристрої z-wave увімкнені. Натискання кнопки \"Далі\" призведе до пошуку Вашої мережі z-wave, що може зайняти від декількох секунд до декількох хвилин. "</string>
+  <string name="zwave_dialog_channel_detail_message">Нижче наведено детальну інформацію про обраний канал. Вкажіть його призначення, обравши відповідну функцію.</string>
+  <string name="zwave_network">Мережа z-wave</string>
+  <string name="zwave_select_node">Виберіть пристрій z-wave, який буде пов\'язаний з каналом Supli.</string>
+  <string name="zwave_device">Пристрій z-wave</string>
+  <string name="zwave_offline">Поза мережею?</string>
+  <string name="zwave_error_common_message">Натисніть \"Назад\" для повернення до попереднього кроку або \"Вихід\" для завершення.</string>
+  <string name="zwave_done">Готово! Тепер ви можете завершити процес конфігурації, натиснувши кнопку \"ОК\", або можете натиснути кнопку \"Назад\", щоб налаштувати наступний канал або змінити існуючі налаштування.</string>
+  <string name="bridge">Міст</string>
+  <string name="em_phase_to_phase_balance">Векторний міжфазний баланс</string>
+  <string name="vl_cfg_mode">Режим затемнення</string>
+  <string name="vl_cfg_auto">AUTO</string>
+  <string name="vl_cfg_mode1">РЕЖИМ 1</string>
+  <string name="vl_cfg_mode2">РЕЖИМ 2</string>
+  <string name="vl_cfg_mode3">РЕЖИМ 3</string>
+  <string name="vl_cfg_yes">ТАК</string>
+  <string name="vl_cfg_no">НІ</string>
+  <string name="cfg_op_range">Робочий діапазон</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="light_source_lifespan_hours">Термін служби джерела світла (години)</string>
+  <string name="reset_lightsource_usage_counter">Обнулити лічильник споживання джерела світла</string>
+  <string name="wake_up_frequency">Частота пробудження</string>
+  <string name="zwave_change_wake_up_settings">Ви також можете змінити налаштування пробудження, натиснувши іконку нижче.</string>
+  <string name="wakeup_info">"*) Встановлені налаштування будуть застосовані при наступному пробудженні вузла. "</string>
+  <string name="seconds">Секунди</string>
+  <string name="widget_configure_type_channel_label" translatable="false">Каналу</string>
+  <string name="status_led">Світлодіодний індикатор стану</string>
+  <string name="input">Вхід</string>
+  <string name="str_default" translatable="false">За замовчуванням</string>
+  <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
+  <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
+  <string name="recalibration_question">Ви впевнені, що хочете почати калібрування?</string>
+  <string name="calibration_failed">Помилка калібрування.</string>
+  <string name="calibration_lost">Калібрування втрачено.</string>
+  <string name="motor_problem">Проблема з двигуном / Несподівана зупинка.</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=uk</string>
 </resources>
