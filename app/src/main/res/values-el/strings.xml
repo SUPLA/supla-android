@@ -1,7 +1,7 @@
 <resources>
 
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
-    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=el</string>
 
     <string name="version">Η έκδοση</string>
 
