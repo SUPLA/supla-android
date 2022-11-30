@@ -137,7 +137,7 @@
                 android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_no_channel : @string/widget_configure_no_group }"
                 android:textColor="@color/widget_text"
                 android:textSize="16sp"
-                app:visibility="@{viewmodel.itemsList.size() == 0}" />
+                app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() == 0}" />
 
         </LinearLayout>
 
@@ -154,7 +154,8 @@
             android:textSize="12sp"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_profile_and_channel" />
+            app:layout_constraintTop_toBottomOf="@id/widget_on_off_profile_and_channel"
+            app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() > 0}"/>
 
         <EditText
             android:id="@+id/widget_on_off_configure_name"
@@ -172,7 +173,8 @@
             android:textColor="@color/widget_text"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_name_label" />
+            app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_name_label"
+            app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() > 0}"/>
 
         <ProgressBar
             android:layout_width="wrap_content"
