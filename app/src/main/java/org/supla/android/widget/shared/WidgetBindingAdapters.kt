@@ -37,7 +37,9 @@ fun setViewVisibility(view: View, isVisible: Boolean) {
 fun setSpinnerChannels(spinner: Spinner, items: List<SpinnerItem<DbItem>>?) {
   items?.let {
     (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
-    spinner.setSelection(1)
+    if (items.size > 1) {
+      spinner.setSelection(1)
+    }
   }
 }
 

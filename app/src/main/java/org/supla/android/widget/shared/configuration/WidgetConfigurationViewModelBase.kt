@@ -159,7 +159,7 @@ abstract class WidgetConfigurationViewModelBase(
   private fun loadItems() {
     val items: List<SpinnerItem<DbItem>> = when (itemsType.value) {
       ItemType.CHANNEL -> getChannels()
-      ItemType.GROUP -> getAllChannelGroups().filter { filterItems(it.value) }
+      ItemType.GROUP -> getAllChannelGroups()
       ItemType.SCENE -> getAllScenes()
       else -> emptyList()
     }
