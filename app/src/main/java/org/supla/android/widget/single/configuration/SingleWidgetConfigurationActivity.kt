@@ -102,7 +102,7 @@ class SingleWidgetConfigurationActivity :
     binding.widgetSingleCommon.widgetSingleConfigureName.background =
       ContextCompat.getDrawable(
         this,
-        R.drawable.rounded_edittext_err
+        R.drawable.background_widget_configuration_field_err
       )
   }
 
