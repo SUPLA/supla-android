@@ -120,11 +120,6 @@ class OnOffWidget : WidgetProviderBase() {
     channel.userIconId = configuration.userIcon
 
     val activeValue = getActiveValue(configuration.itemFunction)
-    val nightMode = context
-      .resources
-      .configuration
-      .uiMode
-      .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
     val viewId = if (channel.isThermometer()) {
       R.id.on_off_widget_value_icon
@@ -136,7 +131,21 @@ class OnOffWidget : WidgetProviderBase() {
       viewId,
       ImageCache.getBitmap(
         context,
-        channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, activeValue)
+        channel.getImageIdx(false, ChannelBase.WhichOne.First, activeValue)
+      )
+    )
+
+    val viewIdNightMode = if (channel.isThermometer()) {
+      R.id.on_off_widget_value_icon_night_mode
+    } else {
+      R.id.on_off_widget_turn_on_button_night_mode
+    }
+
+    views.setImageViewBitmap(
+      viewIdNightMode,
+      ImageCache.getBitmap(
+        context,
+        channel.getImageIdx(true, ChannelBase.WhichOne.First, activeValue)
       )
     )
 
@@ -147,7 +156,11 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       views.setImageViewBitmap(
         R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, 0))
+        ImageCache.getBitmap(context, channel.getImageIdx(false, ChannelBase.WhichOne.First, 0))
+      )
+      views.setImageViewBitmap(
+        R.id.on_off_widget_turn_off_button_night_mode,
+        ImageCache.getBitmap(context, channel.getImageIdx(true, ChannelBase.WhichOne.First, 0))
       )
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
@@ -170,11 +183,14 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.on_off_widget)
   val turnOnPendingIntent = pendingIntent(context, ACTION_TURN_ON, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button, turnOnPendingIntent)
+  views.setOnClickPendingIntent(R.id.on_off_widget_turn_on_button_night_mode, turnOnPendingIntent)
   val turnOffPendingIntent = pendingIntent(context, ACTION_TURN_OFF, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button, turnOffPendingIntent)
+  views.setOnClickPendingIntent(R.id.on_off_widget_turn_off_button_night_mode, turnOffPendingIntent)
   val updatePendingIntent = pendingIntent(context, ACTION_UPDATE, widgetId)
   views.setOnClickPendingIntent(R.id.on_off_widget_value_text, updatePendingIntent)
   views.setOnClickPendingIntent(R.id.on_off_widget_value_icon, updatePendingIntent)
+  views.setOnClickPendingIntent(R.id.on_off_widget_value_icon_night_mode, updatePendingIntent)
 
   return views
 }

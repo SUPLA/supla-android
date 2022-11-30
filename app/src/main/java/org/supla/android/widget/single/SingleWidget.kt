@@ -66,26 +66,26 @@ class SingleWidget : WidgetProviderBase() {
     if (configuration != null && isWidgetValid(configuration)) {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
-      val nightMode = context
-        .resources
-        .configuration
-        .uiMode
-        .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
       if (configuration.itemType == ItemType.SCENE) {
         val scene = Scene(altIcon = configuration.altIcon, userIcon = configuration.userIcon)
         views.setImageViewBitmap(
           R.id.single_widget_button,
-          ImageCache.getBitmap(context, scene.getImageId(nightMode))
+          ImageCache.getBitmap(context, scene.getImageId(false))
+        )
+        views.setImageViewBitmap(
+          R.id.single_widget_button_night_mode,
+          ImageCache.getBitmap(context, scene.getImageId(true))
         )
         views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+        views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
       } else {
-        setChannelIcons(configuration, views, context, nightMode)
+        setChannelIcons(configuration, views, context)
       }
 
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
     } else {
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
+      views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
     }
     // Instruct the widget manager to update the widget
@@ -119,7 +119,6 @@ class SingleWidget : WidgetProviderBase() {
     configuration: WidgetConfiguration,
     views: RemoteViews,
     context: Context,
-    nightMode: Boolean
   ) {
     val channel = Channel()
     channel.func = configuration.itemFunction
@@ -129,6 +128,7 @@ class SingleWidget : WidgetProviderBase() {
     if (channel.isThermometer()) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
+      views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
       val active = if (turnOnOrClose(configuration)) {
@@ -141,10 +141,18 @@ class SingleWidget : WidgetProviderBase() {
         R.id.single_widget_button,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, active)
+          channel.getImageIdx(false, ChannelBase.WhichOne.First, active)
+        )
+      )
+      views.setImageViewBitmap(
+        R.id.single_widget_button_night_mode,
+        ImageCache.getBitmap(
+          context,
+          channel.getImageIdx(true, ChannelBase.WhichOne.First, active)
         )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
+      views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_text, View.GONE)
     }
   }
@@ -158,6 +166,7 @@ internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.single_widget)
   val turnOnPendingIntent = pendingIntent(context, ACTION_PRESSED, widgetId)
   views.setOnClickPendingIntent(R.id.single_widget_button, turnOnPendingIntent)
+  views.setOnClickPendingIntent(R.id.single_widget_button_night_mode, turnOnPendingIntent)
   views.setOnClickPendingIntent(R.id.single_widget_text, turnOnPendingIntent)
 
   return views
