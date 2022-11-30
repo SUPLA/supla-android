@@ -117,7 +117,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="19dp"
                 android:gravity="center"
-                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_channel_label : @string/widget_configure_group_label}"
+                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_channel_label : (viewmodel.itemsType == ItemType.SCENE ? @string/widget_configure_scene_label : @string/widget_configure_group_label)}"
                 android:textAllCaps="true"
                 android:textColor="@color/label_grey"
                 android:textSize="12sp"
@@ -142,7 +142,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
                 android:gravity="center"
-                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_no_channel : @string/widget_configure_no_group }"
+                android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_no_channel : (viewmodel.itemsType == ItemType.SCENE ? @string/widget_configure_no_scene : @string/widget_configure_no_group) }"
                 android:textColor="@color/widget_text"
                 android:textSize="16sp"
                 app:visibility="@{viewmodel.itemsList.size() == 0}" />
