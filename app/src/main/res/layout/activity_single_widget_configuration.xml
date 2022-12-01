@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="54dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
             android:text="@string/widget_configure_title"
             android:textColor="@color/widget_text"
