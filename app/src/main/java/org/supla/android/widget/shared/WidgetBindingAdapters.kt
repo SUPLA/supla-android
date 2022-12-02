@@ -41,7 +41,9 @@ fun setSpinnerChannels(spinner: Spinner, items: List<SpinnerItem<DbItem>>?) {
     // Without it, ItemSelectedListener was not called when moving from channels to scenes.
     spinner.adapter = spinner.adapter;
     (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
-    spinner.setSelection(1)
+    if (items.size > 1) {
+      spinner.setSelection(1)
+    }
   }
 }
 
