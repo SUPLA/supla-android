@@ -62,7 +62,8 @@
         <activity
             android:name=".StartActivity"
             android:noHistory="true"
-            android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -74,7 +75,8 @@
         <activity
             android:name=".StatusActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+            android:screenOrientation="sensorPortrait"
+            android:exported="true"></activity>
 
         <activity
             android:name=".MainActivity"
@@ -104,18 +106,21 @@
         <activity
             android:name=".ZWaveConfigurationWizardActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+            android:screenOrientation="sensorPortrait"
+            android:exported="true"></activity>
 
         <activity
             android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
-            android:theme="@style/AppTheme.Light.Widget">
+            android:theme="@style/AppTheme.Light.Widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
             android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
-            android:theme="@style/AppTheme.Light.Widget">
+            android:theme="@style/AppTheme.Light.Widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
