@@ -177,7 +177,7 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
     context,
     widgetId,
     intent(context, intentAction, widgetId),
-    PendingIntent.FLAG_UPDATE_CURRENT
+    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
   )
 }
 
