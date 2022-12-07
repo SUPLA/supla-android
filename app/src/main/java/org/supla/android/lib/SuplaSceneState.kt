@@ -4,15 +4,12 @@ import java.util.*
 
 class SuplaSceneState(
     val sceneId: Int, millisecondsFromStart: Long, millisecondsLeft: Long,
-    initiatorId: Int, initiatorName: String, eol: Boolean
+    val initiatorId: Int, val initiatorName: String, val isEol: Boolean
 ) {
     var startedAt: Date? = null
         private set
     var estimatedEndDate: Date? = null
         private set
-    val initiatorId: Int
-    val initiatorName: String
-    val isEol: Boolean
     val isDuringExecution: Boolean
         get() {
             if (startedAt != null && estimatedEndDate != null) {
@@ -42,9 +39,5 @@ class SuplaSceneState(
             startedAt = null
             estimatedEndDate = null
         }
-
-        this.initiatorId = initiatorId
-        this.initiatorName = initiatorName
-        isEol = eol
     }
 }
