@@ -46,22 +46,6 @@
         android:padding="5dp"
         android:scaleType="fitCenter" />
 
-    <ImageButton
-        android:id="@+id/on_off_widget_turn_off_button_night_mode"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="0"
-        android:background="@null"
-        android:alpha=".0"/>
-
-    <ImageButton
-        android:id="@+id/on_off_widget_turn_on_button_night_mode"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="0"
-        android:background="@null"
-        android:alpha=".0"/>
-
   </LinearLayout>
 
   <LinearLayout
@@ -84,14 +68,6 @@
         android:background="@android:color/transparent"
         android:padding="5dp"
         android:scaleType="fitCenter" />
-
-    <ImageButton
-        android:id="@+id/on_off_widget_value_icon_night_mode"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="0"
-        android:background="@android:color/transparent"
-        android:alpha=".0"/>
 
     <include layout="@layout/on_off_widget_value_text" />
 

@@ -29,15 +29,6 @@
       android:scaleType="fitCenter"
       android:visibility="gone" />
 
-  <ImageButton
-      android:id="@+id/single_widget_button_night_mode"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:layout_above="@id/single_widget_channel_name"
-      android:background="@android:color/transparent"
-      android:visibility="gone"
-      android:alpha=".0"/>
-
   <include layout="@layout/single_widget_value_text" />
 
   <TextView
