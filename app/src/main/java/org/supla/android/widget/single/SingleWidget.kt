@@ -21,7 +21,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
+import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Data
@@ -72,12 +72,17 @@ class SingleWidget : WidgetProviderBase() {
           R.id.single_widget_button,
           ImageCache.getBitmap(context, scene.getImageId(false))
         )
-        views.setImageViewBitmap(
-          R.id.single_widget_button_night_mode,
-          ImageCache.getBitmap(context, scene.getImageId(true))
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          views.setImageViewBitmap(
+            R.id.single_widget_button_night_mode,
+            ImageCache.getBitmap(context, scene.getImageId(true))
+          )
+          views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
+        } else {
+          views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
+        }
         views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
-        views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
+
       } else {
         setChannelIcons(configuration, views, context)
       }

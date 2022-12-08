@@ -22,6 +22,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Data
@@ -141,13 +142,15 @@ class OnOffWidget : WidgetProviderBase() {
       R.id.on_off_widget_turn_on_button_night_mode
     }
 
-    views.setImageViewBitmap(
-      viewIdNightMode,
-      ImageCache.getBitmap(
-        context,
-        channel.getImageIdx(true, ChannelBase.WhichOne.First, activeValue)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      views.setImageViewBitmap(
+        viewIdNightMode,
+        ImageCache.getBitmap(
+          context,
+          channel.getImageIdx(true, ChannelBase.WhichOne.First, activeValue)
+        )
       )
-    )
+    }
 
     if (channel.isThermometer()) {
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
@@ -158,10 +161,12 @@ class OnOffWidget : WidgetProviderBase() {
         R.id.on_off_widget_turn_off_button,
         ImageCache.getBitmap(context, channel.getImageIdx(false, ChannelBase.WhichOne.First, 0))
       )
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_off_button_night_mode,
-        ImageCache.getBitmap(context, channel.getImageIdx(true, ChannelBase.WhichOne.First, 0))
-      )
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        views.setImageViewBitmap(
+          R.id.on_off_widget_turn_off_button_night_mode,
+          ImageCache.getBitmap(context, channel.getImageIdx(true, ChannelBase.WhichOne.First, 0))
+        )
+      }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
     }
