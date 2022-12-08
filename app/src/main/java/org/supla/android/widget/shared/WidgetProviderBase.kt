@@ -20,6 +20,8 @@ package org.supla.android.widget.shared
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.os.Bundle
+import android.widget.RemoteViews
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -49,8 +51,33 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     // There may be multiple widgets active, so update all of them
     for (appWidgetId in appWidgetIds) {
       val configuration = preferences.getWidgetConfiguration(appWidgetId)
-      updateAppWidget(context, appWidgetManager, appWidgetId, configuration)
+      val views = updateAppWidget(context, appWidgetManager, appWidgetId, configuration)
+      // Instruct the widget manager to update the widget
+      appWidgetManager.updateAppWidget(appWidgetId, views)
     }
+  }
+
+  override fun onAppWidgetOptionsChanged(
+    context: Context?,
+    appWidgetManager: AppWidgetManager?,
+    appWidgetId: Int,
+    newOptions: Bundle?
+  ) {
+    Trace.i(TAG, "Updating widget with id: $appWidgetId")
+    if (context == null) {
+      Trace.w(TAG, "Update not possible because of missing context (widgetId: $appWidgetId)")
+      return
+    }
+    if (appWidgetManager == null) {
+      Trace.w(TAG, "Update not possible because of missing manager (widgetId: $appWidgetId)")
+      return
+    }
+
+    val preferences = WidgetPreferences(context)
+    // There may be multiple widgets active, so update all of them
+    val configuration = preferences.getWidgetConfiguration(appWidgetId)
+    val views = updateAppWidget(context, appWidgetManager, appWidgetId, configuration)
+    appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views)
   }
 
   override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
@@ -72,7 +99,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     appWidgetManager: AppWidgetManager,
     widgetId: Int,
     configuration: WidgetConfiguration?
-  )
+  ): RemoteViews
 
   companion object {
     private val TAG = WidgetProviderBase::javaClass.name
