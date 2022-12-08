@@ -25,7 +25,7 @@
       android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/on_off_widget_turn_off_button"
+        android:id="@+id/on_off_widget_turn_off_button_night_mode"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
@@ -36,7 +36,7 @@
         android:scaleType="fitCenter" />
 
     <ImageButton
-        android:id="@+id/on_off_widget_turn_on_button"
+        android:id="@+id/on_off_widget_turn_on_button_night_mode"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="5dp"
@@ -47,7 +47,7 @@
         android:scaleType="fitCenter" />
 
     <ImageButton
-        android:id="@+id/on_off_widget_turn_off_button_night_mode"
+        android:id="@+id/on_off_widget_turn_off_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="0"
@@ -55,7 +55,7 @@
         android:alpha=".0"/>
 
     <ImageButton
-        android:id="@+id/on_off_widget_turn_on_button_night_mode"
+        android:id="@+id/on_off_widget_turn_on_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="0"
@@ -75,7 +75,7 @@
       android:visibility="gone">
 
     <ImageButton
-        android:id="@+id/on_off_widget_value_icon"
+        android:id="@+id/on_off_widget_value_icon_night_mode"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
@@ -86,7 +86,7 @@
         android:scaleType="fitCenter" />
 
     <ImageButton
-        android:id="@+id/on_off_widget_value_icon_night_mode"
+        android:id="@+id/on_off_widget_value_icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="0"
