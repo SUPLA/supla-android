@@ -122,14 +122,17 @@ class OnOffWidget : WidgetProviderBase() {
       Configuration.UI_MODE_NIGHT_YES -> true
       else -> false
     }
+    val activeValue = getActiveValue(configuration.itemFunction)
 
     if (channel.isThermometer()) {
-      views.setImageViewResource(R.id.on_off_widget_value_icon, R.drawable.thermometer)
+      views.setImageViewBitmap(
+        R.id.on_off_widget_value_icon,
+        ImageCache.getBitmap(context, channel.getImageIdx(inNightMode, ChannelBase.WhichOne.First, activeValue))
+      )
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      val activeValue = getActiveValue(configuration.itemFunction)
       views.setImageViewBitmap(
         R.id.on_off_widget_turn_on_button,
         ImageCache.getBitmap(context, channel.getImageIdx(inNightMode, ChannelBase.WhichOne.First, activeValue))
