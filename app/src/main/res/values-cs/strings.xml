@@ -80,8 +80,9 @@
     <string name="wizard_server_compat_error">Server, ke kterému jste se připojili, nepodporuje tuto funkci!</string>
     <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
     <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
+    <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
     <string name="wizard_addnetwork_error">Nelze přidat konfiguraci sítě WiFi!</string>
-    <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti WiFi byla překročena!</string>
+    <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti WiFi byla překročena! Přejděte do nastavení WiFi v systému Android, vyberte možnost Upřesnit a zaškrtněte možnost „Zapnout WiFi automaticky".</string>
     <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě WiFi!</string>
     <string name="wizard_connect_timeout">Doba čekání na spojení s vykonávajícím zařízením byla překročena!</string>
     <string name="wizard_configure_timeout">Doba čekání na dokončení konfigurace zařízení byla překročena!</string>
