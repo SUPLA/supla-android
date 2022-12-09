@@ -97,13 +97,14 @@
     <string name="wizard_result_conn_error">Es gelang nicht, die Verbindung mit dem Gerät herzustellen!</string>
     <string name="wizard_iodevice_notfound">Die Suche nach irgendwelchen Geräten war erfolglos! Stellen Sie sicher, dass das Gerät, dass Sie konfigurieren lassen möchten im Konfigurationsmodus funktioniert und versuchen Sie erneut. WICHTIG - Bei manchen Android-Versionen muss das GPS aktiviert sein, damit die Apps die WiFi-Netzwerke durchsuchen könnten. Stellen Sie daher sicher, dass das GPS eingeschaltet ist.</string>
     <string name="wizard_step3_txt1">Schließen Sie Ihr Betätigungsgerät an das Stromnetz an. Das Gerät soll standardmäßig im Konfigurationsmodus funktionieren, dies mit einer blinkenden Leuchtdiode signalisierend</string>
-    <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten!</string>
+    <string name="wizard_wifi_timeout">Für die Daten von dem aktuellen WiFi-Netzwerk wurde das Zeitlimit überschritten! Gehen Sie zu Ihren Android-WLAN-Einstellungen, wählen Sie erweiterte Einstellungen und aktivieren Sie dann eine Option: „WLAN automatisch aktivieren“.</string>
     <string name="wizard_connect_timeout">Für die Herstellung der Verbindung mit dem Betätigungsgerät wurde das Zeitlimit überschritten!</string>
     <string name="wizard_reconnect_timeout">Für die Rückkehr zum Grundversorgungs-WiFi-Netz wurde das Zeitlimit überschritten!</string>
     <string name="wizard_configure_timeout">Für den Abschluss der Konfiguration des Gerätes wurde das Zeitlimit überschritten!</string>
     <string name="wizard_scan_timeout">Für den Abschluss des Browsens des WiFi-Netzes wurde das Zeitlimit abgeschlossen!</string>
     <string name="wizard_remember_passwd">Passwort speichern</string>
     <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
+    <string name="wizard_location_error">Damit der Assistent zum Hinzufügen ordnungsgemäß funktioniert, muss der Ortungsdienst auf diesem Gerät aktiviert sein. Gehen Sie zu Ihren Systemeinstellungen, wählen Sie dann „Standort“ und vergewissern Sie sich, dass die Standortfunktion aktiviert ist.</string>
     <string name="start">START</string>
     <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
     <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
