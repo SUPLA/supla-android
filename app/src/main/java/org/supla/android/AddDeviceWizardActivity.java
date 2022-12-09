@@ -43,6 +43,8 @@ import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
@@ -716,6 +718,19 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
     }
 
+    private boolean isLocationEnabled() {
+        try {
+            int locationMode = Settings.Secure
+                .getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } catch (SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
     protected void onBtnNextClick() {
         setBtnNextPreloaderVisible(true);
         setBtnNextEnabled(false);
@@ -724,6 +739,10 @@ public class AddDeviceWizardActivity extends WizardActivity implements
             case PAGE_STEP_1:
 
                 setStep(STEP_CHECK_WIFI);
+
+                if (!isLocationEnabled()) {
+                    showError(R.string.wizard_location_error);
+                }
 
                 if (!checkWiFi()) {
                     showError(R.string.wizard_wifi_error);

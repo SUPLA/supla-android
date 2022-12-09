@@ -152,8 +152,9 @@
     <string name="wizard_server_compat_error">The connected Server does not support this function!</string>
     <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
     <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
+    <string translatable="false" name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>
     <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
-    <string name="wizard_wifi_timeout">Current WiFi Network Data timeout.</string>
+    <string name="wizard_wifi_timeout">Current WiFi Network Data timeout. Go to your Android WiFi settings, select Advanced, then check "Turn on WiFi automatically"</string>
     <string name="wizard_scan_timeout">WiFi Network Scan timeout!</string>
     <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
     <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
