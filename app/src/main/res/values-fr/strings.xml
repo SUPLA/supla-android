@@ -103,13 +103,14 @@
     <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
     <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le WiFi, assurez-vous donc que le GPS est activé.</string>
     <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
-    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé!</string>
+    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé! Accédez aux Paramètres Wifi sur Android, choisissez l\'Option Avancés et séléctionnez ensuite « Activez le Wifi automatiquement »</string>
     <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
     <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
     <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
     <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
+    <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu'elle est activée.</string>
     <string name="start">DÉMARRER</string>
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
