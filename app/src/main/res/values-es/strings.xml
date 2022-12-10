@@ -104,13 +104,14 @@
     <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quiere configurar esta en el modo de configuración y a continuación inténtelo de nuevo. IMPORTANTE – En algunas versiones de Android es necesario activar el GPS  para permitir la búsqueda de redes WiFi a las aplicaciones, por lo tanto asegúrese de tener el GPS activado.</string>
     <string name="wizard_step3_txt1">Conecte su dispositivo de entrada/salida a la alimentación. El dispositivo debería funcionar por defecto en el modo de configuración, señalizándolo mediante el parpadeo del diodo de estado de la siguiente forma</string>
     <string name="wizard_iodev_laststate">Estado anterior</string>
-    <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera para los datos de la red WiFi actual!</string>
+    <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera para los datos de la red WiFi actual! Ve a los ajustes de Wi-Fi de Android, selecciona Avanzado, luego marca "Activar Wi-Fi automáticamente"</string>
     <string name="wizard_connect_timeout">¡Se ha superado el tiempo de espera para establecer la conexión con el dispositivo de entrada/salida!</string>
     <string name="wizard_reconnect_timeout">¡Se ha superado el tiempo de espera para reconectar a la red WiFi Base!</string>
     <string name="wizard_configure_timeout">¡Se ha superado el tiempo de espera para completar la configuración del dispositivo!</string>
     <string name="wizard_scan_timeout">¡Se ha superado el tiempo de espera para completar la búsqueda de redes WiFi!</string>
     <string name="wizard_remember_passwd">Recordar la contraseña</string>
     <string name="wizard_wifi_error">¡La red WiFi está desactivada o no se puede leer su identificador o su nombre!</string>
+    <string name="wizard_location_error">Para que el asistente para agregar funcione correctamente, es necesario que esté habilitado en este dispositivo el servicio de localización. Para habilitarlo, seleccione la opción “Localización” en la configuración del sistema y asegúrese de que esté activado.</string>
     <string name="start">START</string>
     <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este asistente!</string>
     <string name="wizard_step1_txt1">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
