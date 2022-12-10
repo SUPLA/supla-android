@@ -111,8 +111,9 @@
     <string name="wizard_server_compat_error">Server, s ktorým bolo nadviazané spojenie, túto funkciu nepodporuje!</string>
     <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez WiFi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
     <string name="wizard_wifi_error">WiFi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
+    <string name="wizard_location_error">Ak má sprievodca pridávania fungovať správne, musí byť na danom zariadení zapnutá služba lokalizácie. Prejdite na nastavenia systému, následne si vyberte možnosť „Lokalizácia” a uistite sa, že je zapnutá.</string>
     <string name="wizard_addnetwork_error">Nedá sa pridať konfigurácia WiFi siete!</string>
-    <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej WiFi sieti!</string>
+    <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej WiFi sieti! Prejdite do nastavení WiFi systému Android, vyberte Rozšírené a následne možnosť "Zapnúť WiFi automaticky"</string>
     <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania WiFi sietí!</string>
     <string name="wizard_connect_timeout">Bola prekročená lehota čakania na nadviazanie spojenia s vykonávacím zariadením!</string>
     <string name="wizard_configure_timeout">Bola prekročená lehota čakania na dokončenie konfigurácie zariadenia!</string>
