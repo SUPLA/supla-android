@@ -110,7 +110,7 @@
     <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
     <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
     <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
-    <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu'elle est activée.</string>
+    <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu\'elle est activée.</string>
     <string name="start">DÉMARRER</string>
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
