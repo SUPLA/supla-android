@@ -24,6 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.instanceOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -40,6 +41,8 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelGroup
+import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.singlecall.SingleCall
@@ -123,7 +126,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(1))
+    assertThat(channels.size, `is`(2))
+    assertThat(channels.get(0).value, instanceOf(Location::class.java))
+    assertThat(channels.get(1).value, instanceOf(Channel::class.java))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
@@ -170,7 +175,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(1))
+    assertThat(channels.size, `is`(2))
+    assertThat(channels.get(0).value, instanceOf(Location::class.java))
+    assertThat(channels.get(1).value, instanceOf(ChannelGroup::class.java))
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(channelRepository).getAllProfileChannelGroups(profileId)
     verify(profileManager).getCurrentProfile()
@@ -213,7 +220,10 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     val channels = viewModel.itemsList.getOrAwaitValue()
 
     // then
-    assertThat(channels.size, `is`(4))
+    assertThat(channels.size, `is`(5))
+    channels.forEachIndexed { index, channel ->
+     assertThat(channel.value, instanceOf(if (index == 0) Location::class.java else Channel::class.java))
+    }
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
