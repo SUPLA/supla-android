@@ -98,8 +98,9 @@
     <string name="wizard_server_compat_error">Serverul conectat nu suportă această funcție!</string>
     <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea WiFi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
     <string name="wizard_wifi_error">Rețeaua WiFi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
+    <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>
     <string name="wizard_addnetwork_error">Nu se poate adăuga configurația rețelei WiFi!</string>
-    <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale WiFi a fost depășit!</string>
+    <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale WiFi a fost depășit! Accesați setările WiFi al sistemului Android, selectați Avansate, după care bifați opțiunea „Porniți WiFi automat”</string>
     <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei WiFi a fost depășit!</string>
     <string name="wizard_connect_timeout">Timpul de așteptare pentru stabilirea conexiunii cu dispozitivul de acționare a fost depășit!</string>
     <string name="wizard_configure_timeout">Timpul de așteptare pentru completarea configurației dispozitivului a fost depășit!</string>
