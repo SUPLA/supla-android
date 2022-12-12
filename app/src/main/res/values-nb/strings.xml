@@ -98,8 +98,9 @@
     <string name="wizard_server_compat_error">Serveren du er koblet til, støtter ikke denne funksjonen!</string>
     <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
     <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
+    <string name="wizard_location_error">For at veiviseren for å legge til nye enheter skal fungere ordentlig, må Posisjon være aktivert på denne enheten. Gå til systeminnstillinger, deretter velg «Posisjon» og kontroller at den er slått på.</string>
     <string name="wizard_addnetwork_error">Det er ikke mulig å legge til konfigurasjonen til det trådløse nettverket!</string>
-    <string name="wizard_wifi_timeout">Ventetiden for opplysninger om trådløs nettverk er overskredet!</string>
+    <string name="wizard_wifi_timeout">Ventetiden for opplysninger om trådløs nettverk er overskredet! Gå til Android WiFi-innstillingene, velg Avanserte, og velg «Slå på WiFi automatisk»</string>
     <string name="wizard_scan_timeout">Ventetiden for avslutning av trådløs nettverk søket er overskredet!</string>
     <string name="wizard_connect_timeout">Ventetiden for etablering av kobling med aktuator er overskredet!</string>
     <string name="wizard_configure_timeout">Ventetiden for avslutning av konfigurasjon av enheten er overskredet!</string>
