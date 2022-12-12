@@ -79,8 +79,9 @@
     <string name="wizard_server_compat_error">Serveris, prie kurio prisijungta, nepaliko šios funkcijos!</string>
     <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto WiFi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
     <string name="wizard_wifi_error">WiFi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
+    <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
     <string name="wizard_addnetwork_error">Negalima pridėti WiFi tinklo konfigūravimo!</string>
-    <string name="wizard_wifi_timeout">Viršytas aktualaus WiFi tinklo duomenų laukimo laikas!</string>
+    <string name="wizard_wifi_timeout">Viršytas aktualaus WiFi tinklo duomenų laukimo laikas! Eikite į Android sistemos Wi-Fi nustatymus, pasirinkite Išplėstiniai parametrai, o tada pažymėkite "Įjungti Wi-Fi automatiškai".</string>
     <string name="wizard_scan_timeout">Viršytas WiFi tinklo paieškos pabaigimo laukimo laikas!</string>
     <string name="wizard_connect_timeout">Viršytas ryšio užmezgimo su vykdomuoju įrenginiu laukimo laikas!</string>
     <string name="wizard_configure_timeout">Viršytas įrenginio konfigūracijos užbaigimo laukimo laikas!</string>
