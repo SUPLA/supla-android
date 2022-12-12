@@ -98,8 +98,9 @@
     <string name="wizard_server_compat_error">De server waarmee u verbonden bent, ondersteunt deze functie niet!</string>
     <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
     <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
+    <string name="wizard_location_error">De wizard Toevoegen werkt alleen correct als de Locatieservice op dit toestel is ingeschakeld. Ga naar je systeeminstellingen, selecteer dan "Locatie" en vergewis je ervan dat de optie ingeschakeld is.</string>
     <string name="wizard_addnetwork_error">Kan geen WiFi-netwerkconfiguratie toevoegen!</string>
-    <string name="wizard_wifi_timeout">Wachttijd voor actuele WiFi-gegevens overschreden!</string>
+    <string name="wizard_wifi_timeout">Wachttijd voor actuele WiFi-gegevens overschreden! Ga naar de Android WiFi-instellingen, selecteer "Geavanceerd" en vink vervolgens de optie "WiFi automatisch inschakelen" aan.</string>
     <string name="wizard_scan_timeout">Wachttijd overschreden wachten op WiFi zoeken voltooid!</string>
     <string name="wizard_connect_timeout">Wachttijd voor het tot stand brengen van een verbinding met het uitvoerende apparaat is overschreden!</string>
     <string name="wizard_configure_timeout">Wachttijd voor het voltooien van de apparaatconfiguratie overschreden!</string>
