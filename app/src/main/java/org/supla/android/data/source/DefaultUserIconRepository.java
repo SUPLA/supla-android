@@ -70,8 +70,8 @@ public class DefaultUserIconRepository implements UserIconRepository {
     }
 
     @Override
-    public void deleteUserIcons() {
-        userIconDao.delete();
+    public void deleteUserIcons(long profileId) {
+        userIconDao.delete(profileId);
     }
 
     @Override

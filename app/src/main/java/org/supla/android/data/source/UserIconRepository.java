@@ -22,7 +22,7 @@ public interface UserIconRepository {
 
     boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4);
 
-    void deleteUserIcons();
+    void deleteUserIcons(long profileId);
 
     void loadUserIconsIntoCache();
 }

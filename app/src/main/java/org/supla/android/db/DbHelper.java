@@ -1291,8 +1291,8 @@ public class DbHelper extends BaseDbHelper {
     return userIconRepository.addUserIcons(id, img1, img2, img3, img4);
   }
 
-  public void deleteUserIcons() {
-    userIconRepository.deleteUserIcons();
+  public void deleteUserIcons(long profileId) {
+    userIconRepository.deleteUserIcons(profileId);
   }
 
   public void loadUserIconsIntoCache() {

@@ -53,8 +53,8 @@ public class UserIconDao extends BaseDao {
         });
     }
 
-    public void delete() {
-        delete(SuplaContract.UserIconsEntry.TABLE_NAME);
+    public void delete(long profileId) {
+        delete(SuplaContract.UserIconsEntry.TABLE_NAME, key(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID, profileId));
     }
 
     public Cursor getUserIcons() {

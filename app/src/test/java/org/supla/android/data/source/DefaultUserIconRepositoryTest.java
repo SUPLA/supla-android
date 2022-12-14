@@ -118,9 +118,9 @@ public class DefaultUserIconRepositoryTest {
     @Test
     public void shouldDeleteUserIcons() {
         // when
-        userIconRepository.deleteUserIcons();
+        userIconRepository.deleteUserIcons(5);
         // then
-        verify(userIconDao).delete();
+        verify(userIconDao).delete(5);
         verifyNoMoreInteractions(userIconDao);
         verifyZeroInteractions(imageCacheProvider);
     }

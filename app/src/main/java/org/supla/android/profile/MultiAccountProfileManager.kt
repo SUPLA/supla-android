@@ -59,7 +59,7 @@ class MultiAccountProfileManager(
         }
 
         repo.updateProfile(profile)
-        dbHelper.deleteUserIcons()
+        dbHelper.deleteUserIcons(profile.id)
         if(profile.isActive) {
             activateProfile(profile.id, forceActivate)
         }
