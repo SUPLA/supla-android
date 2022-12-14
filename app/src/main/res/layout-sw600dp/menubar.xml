@@ -62,16 +62,6 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp">
         <Button
-            android:id="@+id/groupbutton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="80dp"
-            android:layout_height="45dp"
-            android:layout_toLeftOf="@id/profilebutton"
-            android:layout_gravity="center_vertical|right"
-            android:background="@drawable/groupoff"
-            android:clickable="true" />
-
-        <Button
             android:id="@+id/profilebutton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_marginLeft="10dp"
