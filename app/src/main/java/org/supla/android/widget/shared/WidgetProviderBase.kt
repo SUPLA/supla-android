@@ -24,7 +24,9 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.Trace
+import org.supla.android.db.DbHelper
 import org.supla.android.extensions.getAllWidgetIds
+import org.supla.android.images.ImageCache
 import org.supla.android.profile.INVALID_PROFILE_ID
 import org.supla.android.widget.INVALID_CHANNEL_ID
 import org.supla.android.widget.RemoveWidgetsWorker
@@ -37,13 +39,19 @@ private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
  * IMPORTANT: Always when adding new widget, please adapt [getAllWidgetIds].
  */
 abstract class WidgetProviderBase : AppWidgetProvider() {
-
   override fun onUpdate(
     context: Context,
     appWidgetManager: AppWidgetManager,
     appWidgetIds: IntArray
   ) {
     Trace.i(TAG, "Updating widgets with ids: " + appWidgetIds.toReadableString())
+
+    if (ImageCache.size() == 0) {
+      // It seems that after some time when the application is in the background, the cache is destroyed.
+      // https://forum.supla.org/viewtopic.php?p=138424#p138424
+      var dbHelper = DbHelper.getInstance(context)
+      dbHelper.loadUserIconsIntoCache()
+    }
 
     val preferences = WidgetPreferences(context)
     // There may be multiple widgets active, so update all of them

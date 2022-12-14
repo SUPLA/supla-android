@@ -63,6 +63,10 @@ public class ImageCache {
     return imgId != null && map.containsKey(imgId);
   }
 
+  public static synchronized int size() {
+    return map.size();
+  }
+
   public static synchronized boolean addBitmap(ImageId imgId, Bitmap bmp) {
     if (!bitmapExists(imgId)) {
       return map.put(imgId, bmp) != null;
