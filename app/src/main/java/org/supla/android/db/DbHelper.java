@@ -78,7 +78,7 @@ public class DbHelper extends BaseDbHelper {
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
-        new DefaultUserIconRepository(new UserIconDao(this), new ImageCacheProvider());
+        new DefaultUserIconRepository(new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 

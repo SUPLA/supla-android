@@ -834,17 +834,18 @@ public abstract class ChannelBase extends DbItem {
 
       switch (getFunc()) {
         case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-          Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1);
+          Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1, profileId);
           break;
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-          Id = new ImageId(getUserIconId(), 1);
+          Id = new ImageId(getUserIconId(), 1, profileId);
           break;
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-          Id = new ImageId(getUserIconId(), (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1));
+          Id = new ImageId(getUserIconId(),
+              (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1), profileId);
           break;
         default:
-          Id = new ImageId(getUserIconId(), active + 1);
+          Id = new ImageId(getUserIconId(), active + 1, profileId);
           break;
       }
 

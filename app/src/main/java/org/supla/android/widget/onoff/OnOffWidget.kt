@@ -116,6 +116,7 @@ class OnOffWidget : WidgetProviderBase() {
     context: Context
   ) {
     val channel = Channel()
+    channel.profileId = configuration.profileId
     channel.func = configuration.itemFunction
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon

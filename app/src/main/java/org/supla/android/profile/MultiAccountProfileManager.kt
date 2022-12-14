@@ -102,8 +102,6 @@ class MultiAccountProfileManager(
             return false
         }
 
-
-        ImageCache.clear()
         initiateReconnect()
         if(repo.setProfileActive(id)) {
             profileIdHolder.profileId = id

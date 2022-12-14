@@ -63,19 +63,20 @@ public class UserIconDao extends BaseDao {
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
                 + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
-                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME
-                + " WHERE " + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
-                + " = " + getCachedProfileId();
+                + ", " + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+                + " FROM " + SuplaContract.UserIconsEntry.TABLE_NAME;
 
         return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
     }
 
     public static class Image extends Key<byte[]> {
         public final int subId;
+        public final long profileId;
 
-        public Image(String column, byte[] value, int subId) {
+        public Image(String column, byte[] value, int subId, long profileId) {
             super(column, value);
             this.subId = subId;
+            this.profileId = profileId;
         }
     }
 }

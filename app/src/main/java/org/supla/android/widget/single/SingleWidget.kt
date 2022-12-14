@@ -67,7 +67,8 @@ class SingleWidget : WidgetProviderBase() {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
       if (configuration.itemType == ItemType.SCENE) {
-        val scene = Scene(altIcon = configuration.altIcon, userIcon = configuration.userIcon)
+        val scene = Scene(profileId = configuration.profileId, altIcon = configuration.altIcon,
+          userIcon = configuration.userIcon)
         views.setImageViewBitmap(
           R.id.single_widget_button,
           ImageCache.getBitmap(context, scene.getImageId(false))
@@ -126,6 +127,7 @@ class SingleWidget : WidgetProviderBase() {
     context: Context,
   ) {
     val channel = Channel()
+    channel.profileId = configuration.profileId
     channel.func = configuration.itemFunction
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon

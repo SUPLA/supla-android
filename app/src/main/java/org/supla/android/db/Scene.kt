@@ -176,7 +176,7 @@ data class Scene(
     }
 
     if (userIcon != 0) {
-      val id = ImageId(userIcon, 1)
+      val id = ImageId(userIcon, 1, profileId)
       if (ImageCache.bitmapExists(id)) {
         return id
       }

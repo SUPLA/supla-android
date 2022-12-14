@@ -23,12 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.BindingAdapter;
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
-import org.supla.android.SuplaApp;
 
 public class ImageCache {
   private static final LinkedHashMap<ImageId, Bitmap> map = new LinkedHashMap<>();
@@ -60,14 +57,6 @@ public class ImageCache {
     }
 
     return result;
-  }
-
-  @BindingAdapter("suplaImage")
-  public static void bindBitmap(AppCompatImageView iv, ImageId imgid) {
-    android.util.Log.d("Scene", "bind Bitmap called " + imgid.getId());
-    Bitmap bmp = ImageCache.getBitmap(SuplaApp.getApp(), imgid);
-    android.util.Log.d("Scene", "setting bitmap: " + bmp);
-    iv.setImageBitmap(bmp);
   }
 
   public static synchronized boolean bitmapExists(ImageId imgId) {

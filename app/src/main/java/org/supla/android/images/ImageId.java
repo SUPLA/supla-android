@@ -20,20 +20,23 @@ package org.supla.android.images;
 
 public class ImageId {
 
-    private int Id;
-    private int SubId;
+    private int id;
+    private int subId;
     private boolean userImage;
+    private long profileId;
 
     public ImageId(int resId) {
-        Id = resId;
+        id = resId;
         userImage = false;
-        SubId = 0;
+        subId = 0;
+        profileId = 0;
     }
 
-    public ImageId(int userImageId, int subId) {
-        Id = userImageId;
-        SubId = subId;
+    public ImageId(int userImageId, int subId, long profileId) {
+        id = userImageId;
+        this.subId = subId;
         userImage = true;
+        this.profileId = profileId;
     }
 
     public static boolean equals(ImageId id1, ImageId id2) {
@@ -45,12 +48,14 @@ public class ImageId {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public int getSubId() {
-        return SubId;
+        return subId;
     }
+
+    public long getProfileId() { return profileId; }
 
     public boolean isUserImage() {
         return userImage;
@@ -63,16 +68,20 @@ public class ImageId {
 
         ImageId imageId = (ImageId) o;
 
-        if (Id != imageId.Id) return false;
-        if (SubId != imageId.SubId) return false;
+        if (id != imageId.id) return false;
+        if (subId != imageId.subId) return false;
+        if (profileId != imageId.profileId) return false;
         return userImage == imageId.userImage;
     }
 
     @Override
     public int hashCode() {
-        int result = Id;
-        result = 31 * result + SubId;
+        int result = id;
+        result = 31 * result + subId;
         result = 31 * result + (userImage ? 1 : 0);
+        if (profileId != 0) {
+            result = 31 * result + (int) profileId;
+        }
         return result;
     }
 }
