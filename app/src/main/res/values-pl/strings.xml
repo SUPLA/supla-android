@@ -1,35 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="confirm_button_text" translatable="false">OK</string>
-    <string name="profiles_title" translatable="false">Konta</string>
-    <string name="profile_name_label" translatable="false">NAZWA KONTA</string>
-    <string name="profile_set_as_default" translatable="false">Aktywne</string>
-    <string name="profile_activate_not_available" translatable="false">Żeby deaktywować to konto najpierw ustaw inne jako aktywne</string>
-    <string name="form_cannot_delete_active_profile" translatable="false">Nie można usunąć aktywnego konta</string>
+    <string name="confirm_button_text">OK</string>
+    <string name="profiles_title">Konta</string>
+    <string name="profile_name_label">NAZWA KONTA</string>
+    <string name="form_cannot_delete_active_profile">Nie można usunąć aktywnego konta</string>
     <string name="delete_account">Usuń</string>
 
     <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
-    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto ?</string>
-    <string name="profile_default_name" translatable="false">Domyślne</string>
-    <string name="profile_select_active" translatable="false">Aktywne konto</string>
+    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto?</string>
+    <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
+    <string name="profile_default_name">Domyślne</string>
+    <string name="profile_select_active">Aktywne konto</string>
     <string name="profile_act_info">Dotknij konta aby się zalogować</string>
-    <string name="form_error" translatable="false">Błąd</string>
-    <string name="form_profile_name_missing" translatable="false">Podaj nazwę konta</string>
-    <string name="form_profile_required_data_missing" translatable="false">Uzupełnij wymagane dane</string>
+    <string name="form_error">Błąd</string>
+    <string name="form_profile_name_missing">Podaj nazwę konta</string>
+    <string name="form_profile_required_data_missing">Uzupełnij wymagane dane</string>
     <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
     <string name="add_account">Dodaj konto</string>
     <string name="edit_account">Edytuj konto</string>
-    <string name="dont_have_account_yet" translatable="false">Nie masz jeszcze konta w Supla Cloud?</string>
+    <string name="dont_have_account_yet">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
-    <string name="feedback_title">Wyślij email</string>
-    <string name="donate_title">Wesprzyj projekt</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
     <string name="forumpage_url">https://forum.supla.org</string>
 
     <string name="version">wersja</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">O programie</string>
     <string name="settings">Ustawienia</string>
     <string name="add_device">Dodaj urządzenie</string>
@@ -76,10 +73,6 @@
     <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
     <string name="channel_caption_mailsensor">Czujnik poczty</string>
 
-    <string name="rgb_brightness">Jasność</string>
-    <string name="rgb_color">Kolor</string>
-    <string name="rgb_state">Stan</string>
-
     <string name="channel_btn_open">Otwórz</string>
     <string name="channel_btn_openclose">Otwórz Zamknij</string>
     <string name="channel_btn_on">Włącz</string>
@@ -100,7 +93,6 @@
     <string name="advanced_settings">Zaawansowane</string>
     <string name="create_account"><u>Utwórz konto</u></string>
 
-    <string name="cfg_label_profile_name">AKTYWNE KONTO</string>
     <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
 
     <string name="cfg_label_email_auth">Email</string>
@@ -136,16 +128,15 @@
     <string name="rs_percent_caption_open">Procent otwarcia</string>
     <string name="calibration">[Kalibracja]</string>
 
-    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego w ustawieniach adresu email! (Wyłącz opcje zaawansowane w ustawieniach)</string>
-    <string name="device_registration_disabled">Rejestracja urządzeń we/wy jest obecnie wyłączona. Aby kontynuować przejdź na stronę %1$s i w zakładce ”Moja SUPLA” włącz dodawanie urządzeń.</string>
+    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
 
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
     <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Sieć %1$s będzie wykorzystywana przez urządzenie wykonawcze do łączena się z serwerem.</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
     <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
@@ -155,8 +146,9 @@
     <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
     <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
+    <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>
     <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
-    <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi!</string>
+    <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi! Przejdź do ustawień WiFi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz WiFi automatycznie"</string>
     <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
     <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
     <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
@@ -202,8 +194,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Grzałka Home+</string>
     <string name="hp_on">WŁĄCZONY</string>
     <string name="hp_off">WYŁĄCZONY</string>
-    <string name="hp_turn_on">WŁĄCZ</string>
-    <string name="hp_turn_off">WYŁĄCZ</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -219,9 +209,7 @@
     <string name="total_cost">Łączny koszt</string>
     <string name="current_cost">Koszt w bieżącym miesiącu</string>
     <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
-    <string name="impulses_count">Ilość impulsów</string>
     <string name="meter_value">Stan licznika</string>
-    <string name="channel_func_impulsecounter">Licznik impulsów</string>
     <string name="minutes">Minuty</string>
     <string name="hours">Godziny</string>
     <string name="days">Dni</string>
@@ -418,7 +406,7 @@
     <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
     <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
     <string name="mode_change_in_progress">Trwa zmiana trybu</string>
-    <string name="wizard_step1_txt2">Upewnij się, że dane mobilne są wyłączone podczas dodawania urządzeń. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
+    <string name="wizard_step1_txt2">Zaleca się aby dane mobilne podczas dodawania urządzeń były wyłączone. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
     <string name="wake_up_frequency">Częstotliwość wybudzania</string>
     <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
     <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
@@ -449,8 +437,8 @@
     <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
     <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
     <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
-    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat "SSID not found" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
-    <string name="incorrect_email_or_password">Błędy adres email lub hasło</string>
+    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
+    <string name="incorrect_email_or_password">Błędny adres email lub hasło</string>
     <string name="channel_name">Nazwa kanału</string>
     <string name="location_name">Nazwa lokalizacji</string>
     <string name="str_default">Domyślnie</string>
@@ -460,6 +448,38 @@
     <string name="calibration_failed">Kalibracja nie powiodła się.</string>
     <string name="calibration_lost">Kalibracja została utracona.</string>
     <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
+
+    <string name="widget_configure_title">Konfiguracja widżetu</string>
+    <string name="widget_configure_profile_label">Konto</string>
+    <string name="widget_configure_type_label">Widżet dla:</string>
+    <string name="widget_configure_type_channel_label">Kanału</string>
+    <string name="widget_configure_type_group_label">Grupy</string>
+    <string name="widget_configure_type_scene_label">Sceny</string>
+    <string name="widget_configure_channel_label">Kanał dla widżetu</string>
+    <string name="widget_configure_group_label">Grupa dla widżetu</string>
+    <string name="widget_configure_scene_label">Scena dla widżetu</string>
+    <string name="widget_configure_action_label">Akcja</string>
+    <string name="widget_configure_name_label">Nazwa</string>
+    <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
+    <string name="widget_configure_no_selection">Nie wybrano kanału</string>
+    <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
+    <string name="widget_configure_no_group">Brak dostępnych grup</string>
+    <string name="widget_configure_no_scene">Brak dostępnch scen</string>
+    <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
+    <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
+    <string name="widget_app_not_initialized">Proszę się zalogować!</string>
+    <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
+    <string name="widget_command_error">Wystąpił błąd! (kod: %1$i)</string>
+    <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$i)</string>
+    <string name="widget_command_subject_offline">%1$s jest offline!</string>
+    <string name="widget_command_subject_unavailable">%1$s nie istnieje!</string>
+    <string name="widget_command_no_access">Brak dostępu! (code: %1$i)</string>
+    <string name="widget_command_started">Wykonano</string>
+    <string name="widget_removed_label">Kanał usunięty</string>
+    <string name="widget_group">grupa</string>
+    <string name="widget_scene">scena</string>
+    <string name="widget_action_toggle">Przełącz</string>
+
     <string translatable="false" name="lastconnectionresetcause_unknown">0: nieznany</string>
     <string translatable="false"
 	    name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
@@ -482,4 +502,11 @@
     <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
     <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
     <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
+    <string name="navbar_channels">Kanały</string>
+    <string name="navbar_groups">Grupy</string>
+    <string name="navbar_scenes">Sceny</string>
+    <string name="btn_execute">Wykonaj</string>
+    <string name="btn_abort">Przerwij</string>
+    <string name="btn_abort_and_execute">Przewij i wykonaj</string>
+    <string name="scene_name">Nazwa sceny</string>
 </resources>

@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Trimite un e-mail</string>
-    <string name="donate_title">Susține proiectul</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
 
     <string name="version">versiune</string>
 
-    <string name="feedback">Feedback</string>
     <string name="about">Despre program</string>
     <string name="settings">Setări</string>
     <string name="add_device">Adaugă un dispozitiv</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Senzor de deschidere a geamului</string>
     <string name="channel_caption_mailsensor">Senzor de poștă</string>
 
-    <string name="rgb_brightness">Claritate</string>
-    <string name="rgb_color">Culoare</string>
-    <string name="rgb_state">Stare</string>
-
     <string name="channel_btn_open">Deschide</string>
     <string name="channel_btn_openclose">Deschide Închide</string>
     <string name="channel_btn_on">Activează</string>
@@ -78,25 +71,24 @@
     <string name="advanced_settings">Setări avansate</string>
     <string name="create_account"><u>Creează cont</u></string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
-    <string name="rate_msg">Dacă vă place această aplicație, vă rugăm să acordați un moment pentru a o evalua. Vă mulțumim pentru suport!</string>
+    <string name="rate_msg">Știați că Supla este un proiect deschis și gratuit care este dezvoltat de către comunitate? Dacă vă place această aplicație, vă rugăm să-i acordați un moment pentru a o evalua. Mulțumim.</string>
     <string name="rate_now">Evaluează acum</string>
     <string name="rate_later">Mai târziu</string>
     <string name="rate_no_thanks">Nu, mulțumesc</string>
     <string name="rs_percent_caption">Procentul de închidere</string>
     <string name="calibration">[Calibrare]</string>
 
-    <string name="add_wizard_is_not_available">Creatorul pentru adăugare este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introduse însetări!</string>
-    <string name="device_registration_disabled">În prezent, înregistrarea dispozitivelor I/O este dezactivată. Pentru a continua, accesați pagina %1$s și în fila „SUPLA mea” activați adăugarea dispozitivelor.</string>
+    <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
 
     <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
     <string name="wizard_step1_txt3">Pentru a continua, apăsați<b>Mai departe</b>.</string>
     <string name="next">Mai departe</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Rețeaua %1$s va fi utilizată de dispozitivul de acționare pentru conectarea la server.</string>
     <string name="wizard_remember_passwd">Salvează parola</string>
 
     <string name="wizard_step3_txt1">Conectați dispozitivul de acționare la alimentare. Dispozitivul trebuie să funcționeze în mod implicit în modul de configurare, semnalizând acest lucru prin pâlpâirea diodei de stare după cum urmează</string>
@@ -106,8 +98,9 @@
     <string name="wizard_server_compat_error">Serverul conectat nu suportă această funcție!</string>
     <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea WiFi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
     <string name="wizard_wifi_error">Rețeaua WiFi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
+    <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>
     <string name="wizard_addnetwork_error">Nu se poate adăuga configurația rețelei WiFi!</string>
-    <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale WiFi a fost depășit!</string>
+    <string name="wizard_wifi_timeout">Timpul de așteptare pentru datele rețelei actuale WiFi a fost depășit! Accesați setările WiFi al sistemului Android, selectați Avansate, după care bifați opțiunea „Porniți WiFi automat”</string>
     <string name="wizard_scan_timeout">Timpul de așteptare pentru finalizarea căutării rețelei WiFi a fost depășit!</string>
     <string name="wizard_connect_timeout">Timpul de așteptare pentru stabilirea conexiunii cu dispozitivul de acționare a fost depășit!</string>
     <string name="wizard_configure_timeout">Timpul de așteptare pentru completarea configurației dispozitivului a fost depășit!</string>
@@ -153,8 +146,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Încălzitor Home+</string>
     <string name="hp_on">ACTIVAT</string>
     <string name="hp_off">DEZACTIVAT</string>
-    <string name="hp_turn_on">ACTIVEAZĂ</string>
-    <string name="hp_turn_off">DEZACTIVEAZĂ</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +161,7 @@
     <string name="total_cost">Costul total</string>
     <string name="current_cost">Costul în luna curentă</string>
     <string name="current_consumption">Consumul în luna curentă</string>
-    <string name="impulses_count">Număr de impulsuri</string>
     <string name="meter_value">Starea contorului</string>
-    <string name="channel_func_impulsecounter">Contor de impulsuri</string>
     <string name="minutes">Minute</string>
     <string name="hours">Ore</string>
     <string name="days">Zile</string>
@@ -266,7 +255,7 @@
     <string name="channel_number" >Numărul canalului</string>
     <string name="connection_reset_cause" >Motivul pentru repornirea conexiunii</string>
     <string name="connection_time" >Timp de conectare</string>
-    <string name="device" >"Dispozitiv "</string>
+    <string name="device">Dispozitiv</string>
     <string name="device_id" >Id-ul dispozitivului</string>
     <string name="device_name" >Denumire dispozitivului</string>
     <string name="do_you_want_to_save" >Doriţi să salvaţi setările?</string>
@@ -377,4 +366,93 @@
     <string name="zwave_welcome_message" >Bine aţi venit la creatorul de configurare a podului Z-Wave. Acesta vă va permite să conectați dispozitivele Z-Wave la Supla. Faceți clic pe „Mai departe” pentru a continua.</string>
     <string name="zwave_welcome_title" >Creator Z-Wave</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet">Nu ai încă cont pe Supla Cloud?</string>
+    <string name="profiles_title">Conturi</string>
+    <string name="profile_name_label">DENUMIRE CONT</string>
+    <string name="form_cannot_delete_active_profile">Un contact activ nu poate fi șters</string>
+    <string name="profile_default_name">Implicit</string>
+    <string name="profile_select_active">Selectează un cont activ</string>
+    <string name="profile_act_info">Atinge contul pentru a te conecta</string>
+    <string name="form_error">Eroare</string>
+    <string name="form_profile_name_missing">Trebuie introdusă denumirea contului</string>
+    <string name="form_profile_required_data_missing">Completează datele  solicitate</string>
+    <string name="form_profile_duplicate">Există deja un con cu această denumire</string>
+    <string name="add_account">Adaugă cont</string>
+    <string name="edit_account">Editează contul</string>
+    <string name="delete_account">Șterge</string>
+    <string name="delete_account_confirm_title">Șterge cont</string>
+    <string name="delete_account_confirm_message">Sigur dorești să ștergi contul?</string>
+    <string name="delete_account_confirm_message_with_widgets">Sigur dorești să ștergi contul? Confirmarea va elimina widget-urile  asociate.</string>
+    <string name="cfg_label_access_id_auth">Identificator</string>
+    <string name="cfg_channel_height">Înălțimea canalului</string>
+    <string name="cfg_temperature_unit">Unitate de temperatură</string>
+    <string name="cfg_button_autohide">Ascunderea automată a butoanelor</string>
+    <string name="profile">Contul tău</string>
+    <string name="profile_plural">Conturile Tale</string>
+    <string name="menubar_appsettings">Setări</string>
+    <string name="rs_percent_caption_open">Procent de deschidere</string>
+    <string name="em_chart_phase_n">Faza %d</string>
+    <string name="em_chart_all_phases">Faza 1 + 2 + 3</string>
+    <string name="widget_configure_title">Configurare widget</string>
+    <string name="widget_configure_profile_label">Cont</string>
+    <string name="widget_configure_channel_label">Canalpentruwidget</string>
+    <string name="widget_configure_action_label">Acțiune</string>
+    <string name="widget_configure_name_label">Denumire</string>
+    <string name="widget_configure_error">Configurarea canalului a eșuat...</string>
+    <string name="widget_configure_no_selection">Nu a fost selectat canalul</string>
+    <string name="widget_configure_no_channel">Nu există canale disponibile</string>
+    <string name="double_button_widget_description">Widget cu două butoane</string>
+    <string name="single_button_widget_description">Widget cu un singur buton</string>
+    <string name="widget_app_not_initialized">Vă rugăm să te conectezi!</string>
+    <string name="widget_command_no_connection">Lipsă conexiune la internet!</string>
+    <string name="widget_command_started">Realizat</string>
+    <string name="widget_removed_label">Canal șters</string>
+    <string name="channel_caption_roofwindowopeningsensor">Senzor deschidere fereastră de mansardă</string>
+    <string name="channel_caption_roofwindow">Fereastra de mansardă</string>
+    <string name="channel_func_controllingtheroofwindow">Deschidere și închidere fereastră de mansardă</string>
+    <string name="channel_func_opensensor_roofwindow">Senzor deschidere fereastră de mansardă</string>
+    <string name="event_openedclosedtheroofwindow">a deschis/a închis fereastra de mansardă</string>
+    <string name="status_led">LED de stare</string>
+    <string name="info_led_on">Dioda LED se aprinde când  se stabilește conexiunea cu serverul.</string>
+    <string name="info_led_off">Dioda LED nu se aprinde când se stabilește conexiunea cu serverul.</string>
+    <string name="info_led_alwaysoff">Dioda LED este întotdeauna stinsă, cu excepția cazului în care dispozitivul este în modul de configurare wifi (mod AP).</string>
+    <string name="input">Intrare</string>
+    <string name="monostable">Monostabil</string>
+    <string name="bistable">Bistabil</string>
+    <string name="wizard_iodev_connect_failed">Încercarea de a stabili o conexiune WiFi cu dispozitivul executiv a eșuat.</string>
+    <string name="diw_cfg_info_oprange">Reglează intervalul de lucru al dimmer-ului setând nivelul minim și  maxim de luminozitate. Valoarea minimă și maximă poate fi setată prin mișcarea glisoarelor de pe ambele părți ale roții.</string>
+    <string name="diw_cfg_info_in_options">Opțiuni de intrare</string>
+    <string name="diw_cfg_info_mono_option">Această opțiune modifică comportamentul  intrării la care este conectat butonul monostabil. Dacă opțiunea este dezactivată, dimmer-ul oprește procesul de luminozitate atunci când atinge nivelul maxim de luminozitate, iar în cazul dimmării, când atinge nivelul minim. Activarea acestei opțiuni va trece la nivelul minim de îndată ce luminozitatea maximă este atinsă, iar în cazul diminuării la valoarea maximă, imediat ce este atins minimul. Iluminarea / estomparea va continua atâta timp cât butonul este apăsat.</string>
+    <string name="diw_cfg_info_bi_option">Opțiunea modifică comportamentul dimmer-ului atunci când iluminarea este aprinsă folosind butonul bistabil. Dacă opțiunea este activată, dimmer-ul va seta nivelul maxim de luminozitate imediat după aprinderea luminii. Dacă opțiunea este dezactivată, dimmer-ul va seta nivelul de luminozitate memorat înainte de stingerea iluminării.</string>
+    <string name="dgf_too_long_operation_warning">Secțiunile de sticlă sunt expuse mai mult de 20 de ore, ceea ce poate avea un impact negativ asupra longevității lor. Se recomandă acoperirea tuturor secțiunilor minim 4 ore pentru regenerarea acestora.</string>
+    <string name="dgf_planned_regeneration_in_progress">Regenerarea planificată este în curs.</string>
+    <string name="dgf_regeneration_after20h">Regenerarea este în desfășurare, inițiată după 20 de ore de funcționare.</string>
+    <string name="wizard_done_explentations">Dacă dispozitivul nu apare în aplicație, repeta această procedură de adăugare din nou și citiți „Starea anterioară” prezentată mai sus. Conține informație care face posibilă determinarea motivului pentru care dispozitivul nu a reușit să se conecteze la server. Mesajul „SSID not found” înseamnă că denumirea introdusă a rețelei WiFi de 2,4 GHz nu a fost  găsită sau rețeaua este în afara razei de acțiune.</string>
+    <string name="incorrect_email_or_password">Adresă de e-mail sau parolă greșită</string>
+    <string name="channel_name">Denumirea canalului</string>
+    <string name="location_name">Denumirea locației</string>
+    <string name="overcurrent_warning">Alimentarea a fost oprită după depăşirea pragului stabilit de intensitate admisibilă a curentului.</string>
+    <string name="overcurrent_question">Alimentarea a fost oprită după depășirea pragului setat al intensității curentului admisibil. Ești sigur că vrei să pornești alimentarea?</string>
+    <string name="recalibration_question">Sigur vrei să începi calibrarea?</string>
+    <string name="calibration_failed">Calibrare a eșuat.</string>
+    <string name="calibration_lost">Calibrare pierdută.</string>
+    <string name="motor_problem">Problemă cu motorul / Oprire  neașteptată.</string>
+    <string name="lastconnectionresetcause_unknown">0: necunoscut</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: nici un răspuns de la server</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: conexiunea WiFi pierdută</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: resetarea conexiunii la server</string>
+    <string name="basic_profile_warning">Mod indisponibil</string>
+    <string name="basic_config_unavailable">Înainte de dezactivarea modului avansat, vă rugăm să selectați autentificarea e-mailului cu  detectarea automată a serverului.</string>
+    <string name="add_device_warning">Asistentul de adăugare automată a dispozitivului nu este disponibil în modul de autentificare cu identificator de acces. Dispozitivele pot fi apoi adăugate manual.</string>
+    <string name="show_channel_info">Afișează butonulⓘ</string>
+    <string name="add_device_needs_cloud_title">Configurarea dispozitivului</string>
+    <string name="add_device_needs_cloud_message">Acest dispozitiv nu are niciun canal vizibil în aplicație. Pentru a finaliza configurarea accesează cloud.supra.org</string>
+    <string name="add_device_needs_cloud_dismiss">Înțeleg</string>
+    <string name="add_device_needs_cloud_go">Accesează CLOUD</string>
+    <string name="associeted_with_at_error">Nu poate fi modificată funcția canalului asociat cu declanșatorul acțiunii.</string>
+    <string name="location_ordering">Ordine alocației</string>
+    <string name="rs_display_mode">Rolete %</string>
+    <string name="rs_display_mode_opening">Deschidere</string>
+    <string name="rs_display_mode_closing">Închidere</string>
+    <string name="status_accessid_inactive">Identificator de acces inactiv</string>
 </resources>

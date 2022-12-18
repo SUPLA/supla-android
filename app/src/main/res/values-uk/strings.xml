@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">SUPLA</string>
+  <string name="dont_have_account_yet">У вас ще немає облікового запису в Supla Cloud?</string>
+  <string name="profiles_title">Облікові записи</string>
+  <string name="profile_name_label">НАЗВА ОБЛІКОВОГО ЗАПИСУ</string>
+  <string name="form_cannot_delete_active_profile">Активний обліковий запис не можна видалити</string>
+  <string name="profile_default_name">За замовчуванням</string>
+  <string name="profile_select_active">Виберіть активний обліковий запис</string>
+  <string name="profile_act_info">Торкніться облікового запису, щоб увійти</string>
+  <string name="form_error">Помилка</string>
+  <string name="form_profile_name_missing">Введіть назву облікового запису</string>
+  <string name="form_profile_required_data_missing">Заповніть необхідні дані</string>
+  <string name="form_profile_duplicate">Обліковий запис із такою назвою вже існує</string>
+  <string name="add_account">Додати обліковий запис</string>
+  <string name="edit_account">Редагувати обліковий запис</string>
+  <string name="version">версія</string>
+  <string name="about">Про програму</string>
+  <string name="settings">Налаштування</string>
+  <string name="add_device">Додайте пристрій</string>
+  <string name="z_wave">Міст z-wave</string>
+  <string name="help">Довідка</string>
+  <string name="status_connecting">Підключення...</string>
+  <string name="status_unknown_err">Невідома помилка</string>
+  <string name="status_temporarily_unavailable">Послуга тимчасово недоступна</string>
+  <string name="status_bad_credentials">Неправильні облікові дані</string>
+  <string name="status_climit_exceded">Перевищено ліміт клієнтських додатків</string>
+  <string name="status_version_error">Несумісна версія сервера</string>
+  <string name="status_reg_disabled">Реєстрація в даний час відключена. Увійдіть в \\\"Supla Cloud\\\" і переключіть реєстрацію клієнтів на АКТИВНУ на вкладці \\ \"Смартфони\\\".</string>
+  <string name="status_access_id_not_assigned">Цьому пристрою не присвоєно ідентифікатор доступу. Перейдіть на сторінку \\\"Supla Cloud\\\" і на вкладці \\\"Смартфони\\\" призначте відповідний ідентифікатор.</string>
+  <string name="status_device_disabled">Пристрій вимкнено. Увійдіть в \\\"Supla Cloud\\\" і включіть цей смартфон на вкладці \\\"Смартфони\\\".</string>
+  <string name="status_accessid_disabled">Ідентифікатор доступу вимкнено</string>
+  <string name="err_hostnotfound">Адреса сервера не знайдена. Переконайтеся, що у вас є підключення до Інтернету та що створено обліковий запис із введеною адресою електронної пошти.</string>
+  <string name="err_cantconnecttohost">Не вдалося підключитися до сервера</string>
+  <string name="channel_caption_gateway">Хвіртка</string>
+  <string name="channel_caption_gate">Ворота</string>
+  <string name="channel_caption_garagedoor">Гаражні ворота</string>
+  <string name="channel_caption_door">Двері</string>
+  <string name="channel_caption_rollershutter">Ролета</string>
+  <string name="channel_caption_powerswith">Вимикач живлення</string>
+  <string name="channel_caption_lightswith">Вимикач світла</string>
+  <string name="channel_caption_thermometer">Термометр</string>
+  <string name="channel_caption_humidity">Вологість</string>
+  <string name="channel_caption_humidityandtemperature">Температура і вологість</string>
+  <string name="channel_caption_windsensor">Швидкість вітру</string>
+  <string name="channel_caption_pressuresensor">Датчик тиску</string>
+  <string name="channel_caption_rainsensor">Вимірювання опадів</string>
+  <string name="channel_caption_weightsensor">Вага</string>
+  <string name="channel_caption_dimmer">Регулятор освітленості</string>
+  <string name="channel_caption_rgblighting">Освітлення RGB</string>
+  <string name="channel_caption_dimmerandrgblighting">Регулятор освітленості та освітлення RGB</string>
+  <string name="channel_caption_noliquidsensor">Датчик відсутності рідини</string>
+  <string name="channel_caption_gatewayopeningsensor">Датчик відчинення хвіртки</string>
+  <string name="channel_caption_gateopeningsensor">Датчик відчинення воріт</string>
+  <string name="channel_caption_garagedooropeningsensor">Датчик відчинення гаражних воріт</string>
+  <string name="channel_caption_dooropeningsensor">Датчик відчинення дверей</string>
+  <string name="channel_caption_rsopeningsensor">Датчик відчинення ролет</string>
+  <string name="channel_caption_depthsensor">Датчик глибини</string>
+  <string name="channel_caption_distancesensor">Датчик відстані</string>
+  <string name="channel_caption_windowopeningsensor">Датчик відкриття вікна</string>
+  <string name="channel_caption_mailsensor">Датчик пошти</string>
+  <string name="channel_caption_staircasetimer">Сходовий автомат</string>
+  <string name="channel_caption_electricitymeter">Лічильник електроенергії</string>
+  <string name="channel_caption_gasmeter">Лічильник газу</string>
+  <string name="channel_caption_watermeter">Лічильник води</string>
+  <string name="channel_caption_thermostat">Термостат</string>
+  <string name="channel_caption_thermostat_hp_homeplus">"Обігрівач Home+ "</string>
+  <string name="channel_btn_open">Відчинити</string>
+  <string name="channel_btn_openclose">Відчинити Зачинити</string>
+  <string name="channel_btn_on">Увімкнути</string>
+  <string name="channel_btn_off">Вимкнути</string>
+  <string name="event_openedthegateway">відчинив ворота</string>
+  <string name="event_openedclosedthegate">відчинив/зачинив ворота</string>
+  <string name="event_openedclosedthegatedoors">відчинив/зачинив двері гаража</string>
+  <string name="event_openedthedoor">відчинив двері</string>
+  <string name="event_openedcloserollershutter">відчинив/зачинив ролету</string>
+  <string name="event_poweronoff">увімкнув/вимкнув живлення</string>
+  <string name="event_turnedthelightonoff">увімкнув/вимкнув світло</string>
+  <string name="server_address">АДРЕСА СЕРВЕРА</string>
+  <string name="access_id">ID ДОСТУПУ</string>
+  <string name="password">ПАРОЛЬ</string>
+  <string name="email">ЕЛЕКТРОННА ПОШТА</string>
+  <string name="advanced_settings">Розширений</string>
+  <string name="create_account">Створити обліковий запис</string>
+  <string name="delete_account">Видалити</string>
+  <string name="delete_account_confirm_title" translatable="false">Видалити обліковий запси</string>
+  <string name="delete_account_confirm_message" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис?</string>
+  <string name="delete_account_confirm_message_with_widgets" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис? Підтвердження видалить пов’язані віджети.</string>
+  <string name="cfg_label_access_id_auth">ID</string>
+  <string name="cfg_channel_height" translatable="false">Висота каналу</string>
+  <string name="cfg_temperature_unit" translatable="false">Одиниця вимірювання температури</string>
+  <string name="cfg_button_autohide" translatable="false">Автоматичне приховування кнопки</string>
+  <string name="profile" translatable="false">Ваш обліковий запис</string>
+  <string name="profile_plural" translatable="false">Ваші облікові записи</string>
+  <string name="rate_msg">Чи знаєте ви, що Supla є відкритим і безкоштовним проєктом, розробленим спільнотою? Якщо вам подобається ця програма, будь ласка, знайдіть час, щоб оцінити її. Дякуємо вам за підтримку!</string>
+  <string name="rate_now">Оцінити зараз</string>
+  <string name="rate_later">Пізніше</string>
+  <string name="rate_no_thanks">Ні, дякую</string>
+  <string name="rs_percent_caption">Відсоток закриття</string>
+  <string name="rs_percent_caption_open">Відсоток відкриття</string>
+  <string name="calibration">[Калібрування]</string>
+  <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
+  <string name="next">Далі</string>
+  <string name="wizard_step3_txt1">Підключіть пристрій до джерела живлення. За замовчуванням пристрій має працювати в режимі конфігурації, сигналізуючи про це блиманням світлодіода стану наступним чином</string>
+  <string name="wizard_step3_txt3">Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.</string>
+  <string name="wizard_step1_txt3">Натисніть <b>Далі</b>, щоб продовжити.</string>
+  <string name="wizard_step3_txt2">Якщо пристрій не перебуває в режимі налаштування після ввімкнення живлення, утримуйте кнопку <b>CONFIG</b> принаймні 5 секунд.</string>
+  <string name="wizard_server_compat_error">Сервер, до якого ви підключені, не підтримує цю функцію!</string>
+  <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
+  <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
+  <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
+  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію WiFi!</string>
+  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу WiFi! Перейдіть до налаштувань WiFi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати WiFi автоматично".</string>
+  <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі WiFi!</string>
+  <string name="wizard_connect_timeout">Минув час очікування встановлення з\'єднання з пристроєм виконання!</string>
+  <string name="wizard_configure_timeout">Час очікування завершення налаштування пристрою минув!</string>
+  <string name="wizard_reconnect_timeout">Минув час для повернення до основного Wi-Fi!</string>
+  <string name="device_reg_request_timeout">Минув час очікування інформації про наявність реєстрації пристрою!</string>
+  <string name="wizard_iodev_name">Назва</string>
+  <string name="wizard_iodev_laststate">Попередній статус</string>
+  <string name="wizard_result_param_error">Неправильні вхідні параметри!</string>
+  <string name="wizard_result_compat_error">Підключений пристрій несумісний із цим майстром!</string>
+  <string name="wizard_result_conn_error">Неможливо підключитися до пристрою!</string>
+  <string name="wizard_result_failed">Помилка налаштування!</string>
+  <string name="wizard_not_enought_permissions">Додоаток не має достатніх дозволів. Перейдіть до керування додатками в налаштуваннях системи. Потім знайдіть додаток %1$s і ввімкніть усі необхідні дозволи.</string>
+  <string name="em_total_forward_avtive_energy">Спожита активна енергія</string>
+  <string name="em_reverse_active_energy">Повернуто активну енергію</string>
+  <string name="em_phase1">Фаза 1</string>
+  <string name="em_phase2">Фаза 2</string>
+  <string name="em_phase3">Фаза 3</string>
+  <string name="hp_on">УВІМКНЕНИЙ</string>
+  <string name="hp_off">ВИМКНЕНИЙ</string>
+  <string name="hp_eco">ЕКО</string>
+  <string name="hp_room_temperature">Температура в приміщенні</string>
+  <string name="hp_cfg_temp_comfort_auto">Комфортна температура в режимі AUTO</string>
+  <string name="hp_calendar_comfort">Комфорт</string>
+  <string name="hp_calendar_eco">ЕКО</string>
+  <string name="hp_cfg_temp_eco">ECO температура в режимі AUTO</string>
+  <string name="hp_hour">год.</string>
+  <string name="current_consumption">Споживання за поточний місяць</string>
+  <string name="minutes">Хвилини</string>
+  <string name="hours">Години</string>
+  <string name="days">Дні</string>
+  <string name="months">Місяці</string>
+  <string name="years">Роки</string>
+  <string name="ranking_of_hours">Рейтинг годин</string>
+  <string name="ranking_of_weekdays">Рейтинг днів тижня</string>
+  <string name="ranking_of_months">Рейтинг місяців</string>
+  <string name="consumption_acording_to_phases">Споживання за фазою</string>
+  <string name="humidity">Вологість</string>
+  <string name="last24hours">Останні 24 години</string>
+  <string name="last7days">Останні 7 днів</string>
+  <string name="last30days">Останні 30 днів</string>
+  <string name="last90days">Останні 90 днів</string>
+  <string name="all_available_history">Вся історія доступна</string>
+  <string name="retrieving_data_from_the_server">Завантаження даних із сервера...</string>
+  <string name="no_chart_data_available">Немає даних для діаграми.</string>
+  <string name="em_chart_phase_n">Фаза %d</string>
+  <string name="em_chart_all_phases">Фаза 1+2+3</string>
+  <string name="comparsion_minmin">Похвилинне порівняння</string>
+  <string name="comparsion_hourhour">Погодинне порівняння</string>
+  <string name="comparsion_dayday">Порівняння за день</string>
+  <string name="comparsion_monthmonth">Порівняння за місяць</string>
+  <string name="comparsion_yearyear">Порівняння за рік</string>
+  <string name="hp_error_1">Нестача води</string>
+  <string name="hp_error_2">Згорів обігрівач</string>
+  <string name="hp_error_3">Помилка датчика температури води</string>
+  <string name="hp_error_4">Помилка датчика температури в приміщенні</string>
+  <string name="hp_error_5">Відсутність перебоїв у роботі мережі</string>
+  <string name="current_production">Виробництво поточного місяця</string>
+  <string name="production_acording_to_phases">Виробництво за фазою</string>
+  <string name="enter_superuser_credentials">Введіть облікові дані основного користувача</string>
+  <string name="channel_func_none">Немає функції</string>
+  <string name="channel_func_controllingthegatewaylock">Відкриття воріт</string>
+  <string name="channel_func_controllingthegate">Відкриття/закриття в\'їзних воріт</string>
+  <string name="channel_func_controllingthegaragedoor">Відкриття/закриття гаражних воріт</string>
+  <string name="channel_func_thermometer">Термометр</string>
+  <string name="channel_func_humidity">Датчик вологості</string>
+  <string name="channel_func_humidityandtemperature">Датчик температури та вологості</string>
+  <string name="channel_func_opensensor_gateway">Датчик відчинення хвіртки</string>
+  <string name="channel_func_opensensor_garagedoor">Датчик відчинення гаражних воріт</string>
+  <string name="channel_func_noliquidsensor">Датчик відсутності рідини</string>
+  <string name="channel_func_controllingthedoorlock">Відчинення дверей</string>
+  <string name="channel_func_opensensor_door">Датчик відчинення дверей</string>
+  <string name="channel_func_controllingtherollershutter">Відкривання і закривання ролет</string>
+  <string name="channel_func_opensensor_rollershutter">Датчик відчинення ролет</string>
+  <string name="channel_func_powerswitch">Вимикач живлення</string>
+  <string name="channel_func_lightswitch">Вимикач світла</string>
+  <string name="channel_func_dimmer">Регулятор освітленості</string>
+  <string name="channel_func_rgblighting">Освітлення RGB</string>
+  <string name="channel_func_dimmerandrgblighting">Регулятор освітленості та освітлення RGB</string>
+  <string name="channel_func_depthsensor">Датчик глибини</string>
+  <string name="channel_func_distancesensor">Датчик відстані</string>
+  <string name="channel_func_openingsensor_window">Датчик відкриття вікна</string>
+  <string name="channel_func_mailsensor">Датчик пошти</string>
+  <string name="channel_func_pressuresensor">Датчик тиску</string>
+  <string name="channel_func_weightsensor">Вага</string>
+  <string name="channel_func_weather_station">Метеостанція</string>
+  <string name="channel_func_staircasetimer">Сходовий автомат</string>
+  <string name="channel_func_electricity_meter">Лічильник електроенергії</string>
+  <string name="channel_func_gas_meter">Лічильник газу</string>
+  <string name="channel_func_water_meter">Лічильник води</string>
+  <string name="channel_func_heat_meter">Теплолічильник</string>
+  <string name="channel_func_thermostat">Термостат</string>
+  <string name="channel_func_thermostat_heatpol_homeplus">"Обігрівач Home+ "</string>
+  <string name="channel_func_valve_openclose">Клапан</string>
+  <string name="channel_func_valve_percentage">Клапан</string>
+  <string name="channel_caption_valve">Клапан</string>
+  <string name="channel_btn_close">Зачинити</string>
+  <string name="valve_open_warning">Клапан зачинився вручну або по радіо. Перш ніж відчинити його, переконайтеся, що він не був зачинений через затоплення. Щоб вимкнути попередження, відкрийте клапан вручну. Ви впевнені, що хочете відчинити клапан із додатка?!</string>
+  <string name="valve_warning">Клапан зачинився вручну або по радіо. Перш ніж відчинити його, переконайтеся, що він не був зачинений через затоплення. Щоб вимкнути попередження, відчиніть клапан вручну.</string>
+  <string name="yes">Так</string>
+  <string name="no">Ні</string>
+  <string name="exit">Вихід</string>
+  <string name="channel_caption_heatmeter">Теплолічильник</string>
+  <string name="channel_id">Ідентифікатор каналу</string>
+  <string name="caption">Підпис</string>
+  <string name="zwave_error_unexpected_response">Відповідь пристрою не відповідає очікуванням. Спосіб:%1$s Код:%2$s</string>
+  <string name="zwave_error_function_change_error">Не вдалося змінити функцію каналу. Код %1$s</string>
+  <string name="zwave_error_caption_change_error">Не вдалося змінити субтитри каналу. Код %1$s</string>
+  <string name="zwave_error_get_basic_cfg_timeout">Минув час очікування базових даних конфігурації каналу</string>
+  <string name="zwave_error_set_function_timeout">Минув час для зміни функції каналу.</string>
+  <string name="zwave_error_set_caption_timeout">Час очікування зміни підпису каналу минув.</string>
+  <string name="zwave_error_get_assigned_node_id_timeout">Час очікування ідентифікатора призначеного пристрою z-wave минув.</string>
+  <string name="zwave_error_get_node_list_timeout">Час очікування для списку пристроїв z-wave минув.</string>
+  <string name="zwave_reset_and_clear">Скидання мережі та налаштувань</string>
+  <string name="zwave_add_device">Додайте пристрій</string>
+  <string name="zwave_remove_device">Видаліть пристрій</string>
+  <string name="zwave_supla_channel">Канал</string>
+  <string name="zwave_waiting_for_button_press">Очікування натискання кнопки в пристрої z-wave.</string>
+  <string name="zwave_button_press_timeout">Час натискання кнопки минув.</string>
+  <string name="zwave_node_searching">Пошук мережі z-wave для створення списку пристроїв.</string>
+  <string name="zwave_remove_device_timeout">Час очікування видалення пристрою минув.</string>
+  <string name="zwave_waiting_for_reset">Очікування підтвердження скидання мережі z-wave разом із видаленням налаштувань.</string>
+  <string name="zwave_waiting_for_reset_timeout">Час очікування скидання мережі z-wave минув.</string>
+  <string name="zwave_error_assign_node_id_timeout">Час очікування для призначення пристрою z-wave каналу минув.</string>
+  <string name="zwave_bridge_offline">Міст z-wave не відповідає. Перевірте, чи підключено міст до сервера.</string>
+  <string name="zwave_waiting_for_add">Очікування додавання пристрою до мережі z-wave.</string>
+  <string name="zwave_waiting_for_add_timeout">Час очікування для додавання пристрою до мережі z-wave минув.</string>
+  <string name="zwave_reset_confirm_question">Ви впевнені, що бажаєте скинути налаштування та мережу z-wave?</string>
+  <string name="zwave_used">Присвоєно:</string>
+  <string name="zwave_node_assign_confirm_question">Вибраний пристрій z-wave уже пов’язано з іншим каналом. Ви впевнені, що бажаєте перемістити цей пристрій на цей канал?</string>
+  <string name="zwave_error_slave_mode">Ця функція недоступна, коли міст перебуває в підлеглому режимі.</string>
+  <string name="restore_question">Ви впевнені, що хочете відновити налаштування за замовчуванням ?</string>
+  <string name="belongs_to_group_error">Ви не можете змінити функцію каналу, який належить до групи.</string>
+  <string name="has_schedule_error">Ви не можете змінити функції каналу, який має розклад.</string>
+  <string name="associeted_with_scene_error">Ви не можете змінити функцію каналу, пов’язаного зі сценою.</string>
+  <string name="event_openedclosedthevalve">Відкриття/закриття клапана</string>
+  <string name="aritmetic_balance_minutes">Арифметичний баланс - Хвилини</string>
+  <string name="aritmetic_balance_hours">Арифметичний баланс - Години</string>
+  <string name="aritmetic_balance_days">Арифметичний баланс - Дні</string>
+  <string name="aritmetic_balance_months">Арифметичний баланс - Місяці</string>
+  <string name="aritmetic_balance_years">Арифметичний баланс - Роки</string>
+  <string name="vector_balance_minutes">Векторний баланс - Хвилини</string>
+  <string name="vector_balance_hours">Векторний баланс - Години</string>
+  <string name="vector_balance_days">Векторний баланс - Дні</string>
+  <string name="vector_balance_months">Векторний баланс - Місяці</string>
+  <string name="vector_balance_years">Векторний баланс - Роки</string>
+  <string name="wheel">Коло</string>
+  <string name="slider">Застібка</string>
+  <string name="vl_cfg_boost">Посилення</string>
+  <string name="information">Інформація</string>
+  <string name="vl_dimmer_info_txt1">Регулювання яскравості освітлення</string>
+  <string name="vl_dimmer_info_txt2">Щоб змінити рівень яскравості, проведіть пальцем по повзунку або колесу яскравості.</string>
+  <string name="vl_dimmer_info_txt3">За допомогою кнопки ввімкнути/вимкнути освітлення можна вимкнути або повністю ввімкнути.</string>
+  <string name="vl_dimmer_info_txt4">Регулятор освітлення запам\'ятає рівень яскравості перед тим, як вимкнути освітлення.</string>
+  <string name="vl_dimmer_info_txt5">Щоб налаштувати параметри регулятора освітлення, натисніть кнопку налаштувань.</string>
+  <string name="vl_dimmer_cfg_info_txt1">Режим затемнення / Робочий діапазон</string>
+  <string name="vl_dimmer_cfg_info_txt2">Відрегулюйте ефективність затемнення світлодіодного освітлення, вибравши відповідний режим. Також відрегулюйте робочий діапазон регулятора освітлення, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
+  <string name="vl_dimmer_cfg_info_txt3">Режим 1: Затемнення по спадаючій лінії (V-Pro)</string>
+  <string name="vl_dimmer_cfg_info_txt4">Режим 2: затемнення по висхідній лінії</string>
+  <string name="vl_dimmer_cfg_info_txt5">Режим 3: Затемнення по спадаючій лінії (альтернатива)</string>
+  <string name="vl_dimmer_cfg_info_txt6">Посилення</string>
+  <string name="vl_dimmer_cfg_info_txt7">Ця функція допомагає ввімкнути світлодіодне освітлення на низькому рівні яскравості, забезпечуючи початкове підвищення (посилення) рівня яскравості. Переміщаючи темно-сірий повзунок по колу, ви можете збільшити або зменшити рівень посилення, який позначено зеленою лінією. Під час увімкнення освітлення рівень яскравості буде збільшено (підвищено) до встановленого значення, а потім повернеться до рівня, запам’ятованого до вимкнення освітлення.</string>
+  <string name="vl_dimmer_cfg_info_txt8">Додаткову інформацію про регулятор освітлення можна знайти на</string>
+  <string name="time_exceeded">Час вийшов. Спробуйте знову.</string>
+  <string name="battery_level">Рівень заряду батареї</string>
+  <string name="battery_powered">Працює від батареї</string>
+  <string name="wifi_signal_strength">Потужність сигналу WiFi</string>
+  <string name="bridge_node_online">Мостовий вузол - онлайн</string>
+  <string name="bridge_signal_strength">Мостовий вузол  - потужність сигналу</string>
+  <string name="uptime">Час роботи</string>
+  <string name="connection_time">Час підключення</string>
+  <string name="battery_health">Термін служби батареї</string>
+  <string name="connection_reset_cause">Причина перезапуску з\'єднання</string>
+  <string name="light_source_lifespan">Термін служби джерела світла</string>
+  <string name="light_source_operatingtime">Час роботи джерела світла</string>
+  <string name="chanel_lightsource_lifespan_settings">Змініть параметри ресурсу джерела світла</string>
+  <string name="lightsource_warning">Термін служби джерела світла %1$s</string>
+  <string name="uv_warning1">Термін служби УФ-випромінювача %1$s. Заплануйте його заміну.</string>
+  <string name="uv_warning2">Термін служби УФ-випромінювача %1$s. Замінити випромінювач.</string>
+  <string name="wizard_step2_txt1">Введіть ім\'я та пароль вашої домашньої або корпоративної WiFi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
+  <string name="enabling_registration_timeout">Час реєстрації минув!</string>
+  <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
+  <string name="enter_suplaorg_credentails">Введіть дані для входу в Supla Cloud.</string>
+  <string name="save_without_saving">Ви впевнені, що хочете вийти без запису?</string>
+  <string name="do_you_want_to_save">Хочете зберегти налаштування?</string>
+  <string name="restoring_default_settings">Відновлення налаштувань за замовчуванням триває</string>
+  <string name="mode_change_in_progress">Триває зміна режиму</string>
+  <string name="wizard_step1_txt2">Під час додавання пристроїв переконайтеся, що мобільний трансфер даних вимкнено. В іншому випадку додавання може завершитися помилкою.</string>
+  <string name="zwave_waiting_for_resposne_timeout">Час очікування відповіді моста z-wave минув.</string>
+  <string name="zwave_unexpected_answer">Несподівана відповідь з мосту. Код: %1$s</string>
+  <string name="zwave_device_communication_error">Виникла проблема зв’язку з пристроєм z-wave. Переконайтеся, що ваш пристрій z-wave знаходиться в зоні дії шлюзу.</string>
+  <string name="widget_configure_title">Конфігурація віджета</string>
+  <string name="widget_configure_profile_label">Обліковий запис</string>
+  <string name="widget_configure_type_label" translatable="false">Віджет для:</string>
+  <string name="widget_configure_type_group_label" translatable="false">Групи</string>
+  <string name="widget_configure_type_scene_label" translatable="false">Сцени</string>
+  <string name="widget_configure_channel_label">Канал для віджета</string>
+  <string name="widget_configure_group_label" translatable="false">Група для віджета</string>
+  <string name="widget_configure_action_label">Подія</string>
+  <string name="widget_configure_name_label">Назва</string>
+  <string name="widget_configure_error">Помилка налаштування каналу…</string>
+  <string name="widget_configure_no_selection">Канал не вибрано</string>
+  <string name="widget_configure_no_channel">Немає доступних каналів</string>
+  <string name="widget_configure_no_group" translatable="false">Немає доступних груп</string>
+  <string name="double_button_widget_description">Двокнопковий віджет</string>
+  <string name="single_button_widget_description">"Одно кнопковий віджет "</string>
+  <string name="widget_app_not_initialized">Будь ласка, увійдіть!</string>
+  <string name="widget_command_no_connection">Немає підключення до Інтернету!</string>
+  <string name="widget_command_error" translatable="false">Сталася помилка! (код: %1$i)</string>
+  <string name="widget_command_connection_failure" translatable="false">Помилка з\'єднання! (код: %1$i)</string>
+  <string name="widget_command_subject_offline" translatable="false">%1$s поза мережею!</string>
+  <string name="widget_command_subject_unavailable" translatable="false">%1$s не існує!</string>
+  <string name="widget_command_no_access" translatable="false">Відсутність доступу! (код: %1$i)</string>
+  <string name="widget_command_started">Готово</string>
+  <string name="widget_removed_label">Канал видалено</string>
+  <string name="widget_group" translatable="false">група</string>
+  <string name="widget_scene" translatable="false">етап</string>
+  <string name="widget_action_toggle" translatable="false">Переключити</string>
+  <string name="channel_caption_roofwindowopeningsensor">Датчик відчинення мансардного вікна</string>
+  <string name="channel_caption_roofwindow">Мансардне вікно</string>
+  <string name="channel_func_controllingtheroofwindow">Відчинення та зачинення мансардного вікна</string>
+  <string name="channel_func_opensensor_roofwindow">Датчик відчинення мансардного вікна</string>
+  <string name="event_openedclosedtheroofwindow">відчинив/зачинив мансардне вікно</string>
+  <string name="info_led_on">Світлодіод світиться, коли встановлено з’єднання з сервером.</string>
+  <string name="info_led_off">Світлодіод не світиться, коли встановлено з’єднання з сервером.</string>
+  <string name="info_led_alwaysoff">Світлодіодний індикатор завжди вимкнений, якщо пристрій не перебуває в режимі налаштування Wi-Fi (режим AP).</string>
+  <string name="monostable">Моностабільний</string>
+  <string name="bistable">Бістабільний</string>
+  <string name="wizard_iodev_connect_failed">Спроба встановити WiFi-з\'єднання з приводом не вдалася.</string>
+  <string name="diw_cfg_info_oprange">Відрегулюйте робочий діапазон регулятора яскравості, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
+  <string name="diw_cfg_info_in_options">Параметри введення</string>
+  <string name="diw_cfg_info_mono_option">Параметр змінює поведінку входу, до якого підключено моностабільну кнопку. Коли опція вимкнена, регулятор припиняє процес освітлення, коли досягає максимального рівня яскравості, а в разі затемнення – коли досягає мінімального рівня. Увімкнення цієї опції призведе до переходу на мінімальний рівень одразу після досягнення максимальної яскравості, а у разі затемнення до максимального значення – відразу після досягнення мінімальної. Затухання триватиме, поки натиснуто кнопку.</string>
+  <string name="diw_cfg_info_bi_option">"Опція змінює поведінку регулятора освітлення при включенні освітлення за допомогою бістабільної кнопки. Якщо опція включена, регулятор встановить максимальний рівень яскравості відразу після включення освітлення. Якщо параметр вимкнено, регулятор встановить рівень яскравості, який запам’ятався перед вимкненням освітлення. "</string>
+  <string name="dgf_too_long_operation_warning">Скляні секції експонуються більше 20 годин, що може негативно вплинути на термін їх служби. Рекомендується накрити всі секції мінімум на 4 години для їх регенерації.</string>
+  <string name="dgf_planned_regeneration_in_progress">Виконується планова регенерація.</string>
+  <string name="dgf_regeneration_after20h">Триває регенерація, розпочата після 20 годин роботи.</string>
+  <string name="wizard_done_explentations">Якщо пристрій не відображається в додатку, повторіть процедуру додавання ще раз і прочитайте «попередній статус», показаний вище. Він містить інформацію, яка дозволяє визначити, чому пристрій не підключився до сервера. Повідомлення \\\"SSID not found \\\" («SSID не знайдено»)означає, що введене ім\'я мережі Wi-Fi 2,4 ГГц не знайдено або ця мережа недоступна.</string>
+  <string name="incorrect_email_or_password">Неправильна адреса електронної пошти або пароль</string>
+  <string name="channel_name">Назва каналу</string>
+  <string name="location_name">Назва місця</string>
+  <string name="lastconnectionresetcause_unknown" translatable="false">0: невідомо</string>
+  <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: немає відповіді сервера</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Wi-Fi з’єднання втрачено</string>
+  <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: скидання підключення до сервера</string>
+  <string name="basic_profile_warning" translatable="false">Режим недоступний</string>
+  <string name="basic_config_unavailable" translatable="false">Перш ніж вимкнути розширений режим, виберіть автентифікацію електронної пошти з автоматичним визначенням сервера.</string>
+  <string name="add_device_warning" translatable="false">Майстер автоматичного додавання пристроїв недоступний у режимі автентифікації за ідентифікатором доступу. Пристрої можуть бути додані вручну.</string>
+  <string name="show_channel_info" translatable="false">Показати кнопку ⓘ</string>
+  <string name="add_device_needs_cloud_title" translatable="false">Конфігурація пристрою</string>
+  <string name="add_device_needs_cloud_message" translatable="false">Цей пристрій не має видимих каналів у програмі. Щоб завершити налаштування, перейдіть на cloud.supla.org</string>
+  <string name="add_device_needs_cloud_dismiss" translatable="false">Розумію</string>
+  <string name="add_device_needs_cloud_go" translatable="false">Перейдіть до CLOUD</string>
+  <string name="associeted_with_at_error" translatable="false">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
+  <string name="location_ordering" translatable="false">Порядок розташування</string>
+  <string name="rs_display_mode" translatable="false">Ролети %</string>
+  <string name="rs_display_mode_opening" translatable="false">Відкриття</string>
+  <string name="rs_display_mode_closing" translatable="false">Закриття</string>
+  <string name="status_accessid_inactive">Ідентифікатор доступу неактивний.</string>
+  <string name="navbar_channels" translatable="false">Канали</string>
+  <string name="navbar_groups" translatable="false">Групи</string>
+  <string name="navbar_scenes" translatable="false">Сцени</string>
+  <string name="btn_execute" translatable="false">Виконати</string>
+  <string name="btn_abort" translatable="false">Перервати</string>
+  <string name="btn_abort_and_execute" translatable="false">Перервати і виконати</string>
+  <string name="scene_name" translatable="false">Назва сцени</string>
+  <string name="cfg_profile_active_indicator" translatable="false">активний</string>
+  <string name="menubar_appsettings" translatable="false">Налаштування додатків</string>
+  <string name="about_app">"This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA    "</string>
+  <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
+  <string name="start">СТАРТ</string>
+  <string name="wizard_remember_passwd">Запам’ятати пароль</string>
+  <string name="wizard_iodevice_notfound">Пристроїв не знайдено! Переконайтеся, що пристрій, який Ви хочете налаштувати, знаходиться в режимі налаштування, а потім повторіть спробу. ВАЖЛИВО - Деякі версії Android вимагають увімкнення GPS для того, щоб програми могли шукати мережі Wi-Fi, тому переконайтеся, що GPS також увімкнено.</string>
+  <string name="wizard_done">Налаштування перенесено на пристрій.</string>
+  <string name="wizard_iodev_data">Дані пристрою</string>
+  <string name="em_total_forward_reactive_energy">Спожита реактивна енергія</string>
+  <string name="em_total_reverse_reactive_energy">Повернута реактивна енергія</string>
+  <string name="em_frequency">Частота</string>
+  <string name="em_voltage">Напруга</string>
+  <string name="em_current">Інтенсивність</string>
+  <string name="em_power_active">Активна потужність</string>
+  <string name="em_power_reactive">Реактивна потужність</string>
+  <string name="em_power_factor">Коефіцієнт потужності</string>
+  <string name="em_phase_angle">Кут зсуву фаз</string>
+  <string name="em_power_apparent">Видима потужність</string>
+  <string name="hp_normal">NORMAL</string>
+  <string name="hp_turbo">TURBO</string>
+  <string name="hp_auto">AUTO</string>
+  <string name="hp_cfg_turbo_time">Тривалість режиму TURBO</string>
+  <string name="hp_cfg_water_max">Максимальна температура води</string>
+  <string name="hp_cfg_eco_reduction">Зниження температури в режимі ЕCО</string>
+  <string name="meter_value">Стан лічильника</string>
+  <string name="total_cost">Загальна вартість</string>
+  <string name="current_cost">Вартість поточного місяця</string>
+  <string name="temperature">Температура</string>
+  <string name="channel_func_opensensor_gate">Датчик відкриття воріт</string>
+  <string name="channel_func_windsensor">Датчик вітру</string>
+  <string name="channel_func_rainsensor">Датчик дощу</string>
+  <string name="zwave_select_channel">Виберіть міст z-wave, а потім канал, який Ви хочете налаштувати.</string>
+  <string name="device_name">Назва пристрою</string>
+  <string name="channel_number">Номер каналу</string>
+  <string name="device_id">Ідентифікатор пристрою</string>
+  <string name="soft_ver">Версія програмного забезпечення</string>
+  <string name="function">Функція</string>
+  <string name="device">Пристрій</string>
+  <string name="zwave_welcome_title">Майстер z-wave</string>
+  <string name="zwave_welcome_message">Вітаємо у майстрі конфігурації моста z-wave. Це дозволить Вам підключити пристрої z-wave до Supli. Для продовження натисніть \"Далі\".</string>
+  <string name="zwave_before_search_title">Це займе певний час</string>
+  <string name="zwave_before_search_message">"Перш ніж продовжити, переконайтеся, що всі Ваші пристрої z-wave увімкнені. Натискання кнопки \"Далі\" призведе до пошуку Вашої мережі z-wave, що може зайняти від декількох секунд до декількох хвилин. "</string>
+  <string name="zwave_dialog_channel_detail_message">Нижче наведено детальну інформацію про обраний канал. Вкажіть його призначення, обравши відповідну функцію.</string>
+  <string name="zwave_network">Мережа z-wave</string>
+  <string name="zwave_select_node">Виберіть пристрій z-wave, який буде пов\'язаний з каналом Supli.</string>
+  <string name="zwave_device">Пристрій z-wave</string>
+  <string name="zwave_offline">Поза мережею?</string>
+  <string name="zwave_error_common_message">Натисніть \"Назад\" для повернення до попереднього кроку або \"Вихід\" для завершення.</string>
+  <string name="zwave_done">Готово! Тепер ви можете завершити процес конфігурації, натиснувши кнопку \"ОК\", або можете натиснути кнопку \"Назад\", щоб налаштувати наступний канал або змінити існуючі налаштування.</string>
+  <string name="bridge">Міст</string>
+  <string name="em_phase_to_phase_balance">Векторний міжфазний баланс</string>
+  <string name="vl_cfg_mode">Режим затемнення</string>
+  <string name="vl_cfg_auto">AUTO</string>
+  <string name="vl_cfg_mode1">РЕЖИМ 1</string>
+  <string name="vl_cfg_mode2">РЕЖИМ 2</string>
+  <string name="vl_cfg_mode3">РЕЖИМ 3</string>
+  <string name="vl_cfg_yes">ТАК</string>
+  <string name="vl_cfg_no">НІ</string>
+  <string name="cfg_op_range">Робочий діапазон</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="light_source_lifespan_hours">Термін служби джерела світла (години)</string>
+  <string name="reset_lightsource_usage_counter">Обнулити лічильник споживання джерела світла</string>
+  <string name="wake_up_frequency">Частота пробудження</string>
+  <string name="zwave_change_wake_up_settings">Ви також можете змінити налаштування пробудження, натиснувши іконку нижче.</string>
+  <string name="wakeup_info">"*) Встановлені налаштування будуть застосовані при наступному пробудженні вузла. "</string>
+  <string name="seconds">Секунди</string>
+  <string name="widget_configure_type_channel_label" translatable="false">Каналу</string>
+  <string name="status_led">Світлодіодний індикатор стану</string>
+  <string name="input">Вхід</string>
+  <string name="str_default" translatable="false">За замовчуванням</string>
+  <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
+  <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
+  <string name="recalibration_question">Ви впевнені, що хочете почати калібрування?</string>
+  <string name="calibration_failed">Помилка калібрування.</string>
+  <string name="calibration_lost">Калібрування втрачено.</string>
+  <string name="motor_problem">Проблема з двигуном / Несподівана зупинка.</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=uk</string>
+  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+</resources>

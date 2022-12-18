@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <data>
+    <variable
+        name="viewModel"
+        type="org.supla.android.scenes.ScenesViewModel" />
+  </data>
+  <FrameLayout
+      android:id="@+id/container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/scenesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scenes="@{viewModel.scenes}"
+        app:visibility="@{!viewModel.loading}"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <ProgressBar
+        android:id="@+id/scenesLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        app:visibility="@{viewModel.loading}"
+        android:visibility="gone" />
+  </FrameLayout>
+</layout>

@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Send e-post</string>
-    <string name="donate_title">Støtt prosjektet</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
-    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+    <string name="create_url">https://cloud.supla.org/register?lang=nb</string>
 
     <string name="version">versjon</string>
 
-    <string name="feedback">Tilbakemelding</string>
     <string name="about">Om programmet</string>
     <string name="settings">Innstillinger</string>
     <string name="add_device">Legg til enhet</string>
@@ -54,10 +51,6 @@
     <string name="channel_caption_windowopeningsensor">Vindusåpner sensor</string>
     <string name="channel_caption_mailsensor">Postsensor</string>
 
-    <string name="rgb_brightness">Lysstyrke</string>
-    <string name="rgb_color">Farge</string>
-    <string name="rgb_state">Tilstand</string>
-
     <string name="channel_btn_open">Åpne</string>
     <string name="channel_btn_openclose">Åpne Steng</string>
     <string name="channel_btn_on">På</string>
@@ -78,25 +71,24 @@
     <string name="advanced_settings">Avanserte innstillinger</string>
     <string name="create_account"><u>Opprett konto</u></string>
 
-    <string name="about_app">"  This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA     "</string>
+    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
-    <string name="rate_msg">Dersom du liker denne appen ta litt tid til å vurdere den. Takk for ditt støtte!</string>
+    <string name="rate_msg">Visste du at Supla er et åpent og gratis samfunnsprosjekt? Hvis du liker denne appen, vennligst ta tiden og vurder den. Takk for støtten din!</string>
     <string name="rate_now">Vurder nå</string>
     <string name="rate_later">Senere</string>
     <string name="rate_no_thanks">Nei takk</string>
     <string name="rs_percent_caption">Prosent av stenging</string>
     <string name="calibration">[Kalibrering]</string>
 
-    <string name="add_wizard_is_not_available">Assistenten for å legge til er kun tilgjengelig når en tilkobling til serveren har blitt opprettet på bakgrunn av e-post adresse oppført i innstillingene!</string>
-    <string name="device_registration_disabled">Registering av enheter inngang/utgang er for tiden skrudd av. For å fortsette, gå til nettsiden %1$s og i fanen ”Min SUPLA” skru på legg til enheter.</string>
+    <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
 
     <string name="wizard_step1_txt1">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
     <string name="wizard_step1_txt3">For å fortsette trykk på <b>Videre</b>.</string>
     <string name="next">Videre</string>
     <string name="start">START</string><![CDATA[>
 
+
     ]]>
-    <string name="wizard_step2_txt3">*) Nettverket %1$s blir brukt av enheten for tilkobling til serveren.</string>
     <string name="wizard_remember_passwd">Husk passord</string>
 
     <string name="wizard_step3_txt1">Sett din aktuator til lading. Enheten bør jobbe i standard konfigurasjonsmodus, og signalisere det ved en LED-diode blinkende på denne måten</string>
@@ -106,8 +98,9 @@
     <string name="wizard_server_compat_error">Serveren du er koblet til, støtter ikke denne funksjonen!</string>
     <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
     <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
+    <string name="wizard_location_error">For at veiviseren for å legge til nye enheter skal fungere ordentlig, må Posisjon være aktivert på denne enheten. Gå til systeminnstillinger, deretter velg «Posisjon» og kontroller at den er slått på.</string>
     <string name="wizard_addnetwork_error">Det er ikke mulig å legge til konfigurasjonen til det trådløse nettverket!</string>
-    <string name="wizard_wifi_timeout">Ventetiden for opplysninger om trådløs nettverk er overskredet!</string>
+    <string name="wizard_wifi_timeout">Ventetiden for opplysninger om trådløs nettverk er overskredet! Gå til Android WiFi-innstillingene, velg Avanserte, og velg «Slå på WiFi automatisk»</string>
     <string name="wizard_scan_timeout">Ventetiden for avslutning av trådløs nettverk søket er overskredet!</string>
     <string name="wizard_connect_timeout">Ventetiden for etablering av kobling med aktuator er overskredet!</string>
     <string name="wizard_configure_timeout">Ventetiden for avslutning av konfigurasjon av enheten er overskredet!</string>
@@ -153,8 +146,6 @@
     <string name="channel_caption_thermostat_hp_homeplus">Varmeapparat Home+</string>
     <string name="hp_on">PÅ</string>
     <string name="hp_off">AV</string>
-    <string name="hp_turn_on">SKRU PÅ</string>
-    <string name="hp_turn_off">SKRU AV</string>
     <string name="hp_normal">NORMAL</string>
     <string name="hp_eco">ECO</string>
     <string name="hp_turbo">TURBO</string>
@@ -170,9 +161,7 @@
     <string name="total_cost">Total kostnad</string>
     <string name="current_cost">Kostnad for gjeldende måned</string>
     <string name="current_consumption">Forbruk i gjeldende måned</string>
-    <string name="impulses_count">Antall impulser</string>
     <string name="meter_value">Meterlesing</string>
-    <string name="channel_func_impulsecounter">Impulsmåler</string>
     <string name="minutes">Minutter</string>
     <string name="hours">Time</string>
     <string name="days">Dager</string>
@@ -377,4 +366,93 @@
     <string name="zwave_welcome_message">Velkommen til konfigurasjonsveiviseren for z-wave bro. Den vil tillate deg å koble z-wave enhetene dine til Supla. Klikk \"Neste\" for å fortsette.</string>
     <string name="zwave_welcome_title">Z-wave konfigurasjonsveiviser</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet">Du har ikke en Suppla Cloud-konto ennå?</string>
+    <string name="profiles_title">Kontoer</string>
+    <string name="profile_name_label">KONTONAVN</string>
+    <string name="form_cannot_delete_active_profile">En aktiv konto kan ikke slettes</string>
+    <string name="profile_default_name">Standard</string>
+    <string name="profile_select_active">Velg en aktiv konto</string>
+    <string name="profile_act_info">Trykk på en konto for å logge på</string>
+    <string name="form_error">Feil</string>
+    <string name="form_profile_name_missing">Skriv inn et kontonavn</string>
+    <string name="form_profile_required_data_missing">Fyll ut de nødvendige dataene</string>
+    <string name="form_profile_duplicate">En konto med dette navnet eksisterer allerede</string>
+    <string name="add_account">Legg til konto</string>
+    <string name="edit_account">Rediger konto</string>
+    <string name="delete_account">Slett</string>
+    <string name="delete_account_confirm_title">Slett konto</string>
+    <string name="delete_account_confirm_message">Er du sikker på at du vil slette kontoen?</string>
+    <string name="delete_account_confirm_message_with_widgets">Er du sikker på at du vil slette kontoen? Bekreftelsen vil bety eliminasjon av relaterte widgets.</string>
+    <string name="cfg_label_access_id_auth">ID</string>
+    <string name="cfg_channel_height">Kanalhøyde</string>
+    <string name="cfg_temperature_unit">Temperaturenhet</string>
+    <string name="cfg_button_autohide">Automatisk skjuling av knapper</string>
+    <string name="profile">Kontoen din</string>
+    <string name="profile_plural">Dine kontoer</string>
+    <string name="menubar_appsettings">Innstillinger</string>
+    <string name="rs_percent_caption_open">Åpningsprosent</string>
+    <string name="em_chart_phase_n">Fase %d</string>
+    <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
+    <string name="widget_configure_title">Widget-konfigurasjon</string>
+    <string name="widget_configure_profile_label">Konto</string>
+    <string name="widget_configure_channel_label">Kanal for widgeten</string>
+    <string name="widget_configure_action_label">Handling</string>
+    <string name="widget_configure_name_label">Navn</string>
+    <string name="widget_configure_error">Kanalkonfigurasjon mislyktes ...</string>
+    <string name="widget_configure_no_selection">Ingen kanal er valgt</string>
+    <string name="widget_configure_no_channel">Ingen tilgjengelige kanaler</string>
+    <string name="double_button_widget_description">To-knapps widget</string>
+    <string name="single_button_widget_description">En-knapps widget</string>
+    <string name="widget_app_not_initialized">Vennligst logg inn!</string>
+    <string name="widget_command_no_connection">Ingen internettforbindelse!</string>
+    <string name="widget_command_started">Ferdig</string>
+    <string name="widget_removed_label">Kanal fjernet</string>
+    <string name="channel_caption_roofwindowopeningsensor">Sensor for åpning av takvinfu</string>
+    <string name="channel_caption_roofwindow">Takvindu</string>
+    <string name="channel_func_controllingtheroofwindow">Takvindu åpning og lukking</string>
+    <string name="channel_func_opensensor_roofwindow">Sensor for åpning av takvinfu</string>
+    <string name="event_openedclosedtheroofwindow">åpnet / lukket takvinduet</string>
+    <string name="status_led">Status LED</string>
+    <string name="info_led_on">LED-en lyser når tilkoblingen til serveren er etablert.</string>
+    <string name="info_led_off">LED-en lyser ikke når forbindelsen med serveren er etablert.</string>
+    <string name="info_led_alwaysoff">Lysdioden er alltid av, med mindre enheten er i wifi-konfigurasjonsmodus (AP-modus).</string>
+    <string name="input">Inngang</string>
+    <string name="monostable">Monostabil</string>
+    <string name="bistable">Bistabil</string>
+    <string name="wizard_iodev_connect_failed">Forsøket på å etablere en WiFi-tilkobling med den utøvende enheten mislyktes.</string>
+    <string name="diw_cfg_info_oprange">Juster dimmerens arbeidsområde ved å stille inn minimum og maksimum lysstyrkenivå. Minimums- og maksimumsverdien kan stilles inn ved å flytte glidebryterne på begge sider av hjulet.</string>
+    <string name="diw_cfg_info_in_options">Inngangsalternativer</string>
+    <string name="diw_cfg_info_mono_option">Dette alternativet endrer oppførselen til inngangen som den monostabile knappen er koblet til. Hvis alternativet er deaktivert, stopper dimmeren lysingsprosessen når det maksimale lysstyrkenivået er nådd, og ved dimming når det når minimumsnivået. Aktivering av dette alternativet vil bytte til minimumsnivået så snart maksimal lysstyrke er nådd, og ved dimming til maksimumsverdien, så snart minimum er nådd. Lysningen / dimmingen fortsetter så lenge knappen holdes nede.</string>
+    <string name="diw_cfg_info_bi_option">Alternativet endrer oppførselen til dimmeren når belysningen slås på med den bistabile knappen. Hvis alternativet er aktivert, vil dimmeren stille inn maksimalt lysstyrkenivå rett etter at lyset er slått på. Hvis alternativet er deaktivert, vil dimmeren stille inn lysstyrkenivået som er lagret før du slår av belysningen.</string>
+    <string name="dgf_too_long_operation_warning">Glasspartiene er eksponert i mer enn 20 timer, noe som kan ha negativ innvirkning på levetiden. Det anbefales å dekke alle seksjoner i minimum 4 timer for å regenerere dem.</string>
+    <string name="dgf_planned_regeneration_in_progress">Planlagt regenerering pågår.</string>
+    <string name="dgf_regeneration_after20h">Regenerering pågår, startet etter 20 timers drift.</string>
+    <string name="wizard_done_explentations">Hvis enheten ikke vises i applikasjonen, gjenta denne tilleggsprosedyren igjen og les \"Forrige status\" vist ovenfor. Den inneholder informasjon som gjør det mulig å finne ut hvorfor enheten ikke klarte å koble til serveren. Meldingen \"SSID not found\" betyr at det angitte navnet på 2,4 GHz WiFi-nettverket ikke ble funnet eller at nettverket er utenfor rekkevidde.</string>
+    <string name="incorrect_email_or_password">Feil e-postadresse eller passord</string>
+    <string name="channel_name">Kanalnavn</string>
+    <string name="location_name">Stedsnavn</string>
+    <string name="overcurrent_warning">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet.</string>
+    <string name="overcurrent_question">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet. Er du sikker på at du vil slå på?</string>
+    <string name="recalibration_question">Er du sikker på at du vil starte kalibrering?</string>
+    <string name="calibration_failed">Kalibrering mislyktes.</string>
+    <string name="calibration_lost">Kalibrering tapt.</string>
+    <string name="motor_problem">Motorproblem / Uventet stopp.</string>
+    <string name="lastconnectionresetcause_unknown">0: ukjent</string>
+    <string name="lastconnectionresetcause_activity_timeout">1: ingen respons fra serveren</string>
+    <string name="lastconnectionresetcause_wifi_connection_lost">2: Mistet WiFi-tilkobling</string>
+    <string name="lastconnectionresetcause_server_connection_lost">3: tilbakestilling av servertilkobling</string>
+    <string name="basic_profile_warning">Modus utilgjengelig</string>
+    <string name="basic_config_unavailable">Før du slår av avansert modus, vennligst velg e-postautentisering med automatisk serveroppdagelse.</string>
+    <string name="add_device_warning">Veiviseren for automatisk tillegging  enheter er ikke tilgjengelig i ID-tilgangsautentiseringsmodus. Enheter kan deretter legges til manuelt.</string>
+    <string name="show_channel_info">Vis ⓘ-knappen</string>
+    <string name="add_device_needs_cloud_title">Enhetskonfigurasjon</string>
+    <string name="add_device_needs_cloud_message">Denne enheten har ingen synlige kanaler i appen. Gå til cloud.supla.org for å fullføre konfigurasjonen</string>
+    <string name="add_device_needs_cloud_dismiss">Jeg forstår</string>
+    <string name="add_device_needs_cloud_go">Gå til CLOUD</string>
+    <string name="associeted_with_at_error">Funksjonen til kanalen knyttet til handlingsutløseren kan ikke endres.</string>
+    <string name="location_ordering">Rekkefølgen av plassering</string>
+    <string name="rs_display_mode">Rullegardiner %</string>
+    <string name="rs_display_mode_opening">Åpning</string>
+    <string name="rs_display_mode_closing">Nedleggelser</string>
+    <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
 </resources>

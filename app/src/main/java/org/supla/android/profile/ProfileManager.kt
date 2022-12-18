@@ -20,7 +20,9 @@ package org.supla.android.profile
 
 import org.supla.android.db.AuthProfileItem
 
-const val ProfileIdNew: Long = -1
+const val INVALID_VALUE: Long = -1
+const val PROFILE_ID_NEW: Long = INVALID_VALUE
+const val INVALID_PROFILE_ID: Long = -2
 
 /**
  * Additional holder class is needed because of circular dependency between
@@ -66,7 +68,7 @@ interface ProfileManager {
      * returns true if profile has been changed (i.e. reauthentication
      * is required).
      */
-    fun activateProfile(id: Long, force: Boolean): Boolean
+    fun activateProfile(id: Long, force: Boolean = false): Boolean
 
     /**
      * Remove profile

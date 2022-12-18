@@ -28,7 +28,7 @@ public class SuplaConnError {
     public int Code;
 
     public SuplaConnError() {
-
+        // This constructor is used by native code
     }
 
     public SuplaConnError(int Code) {
@@ -47,11 +47,11 @@ public class SuplaConnError {
 
         switch (Code) {
 
-            case SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND:
+            case SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND:
                 resid = R.string.err_hostnotfound;
                 break;
 
-            case SuplaConst.SUPLA_RESULTCODE_CANTCONNECTTOHOST:
+            case SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST:
                 resid = R.string.err_cantconnecttohost;
                 break;
 

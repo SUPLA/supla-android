@@ -45,6 +45,7 @@ import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
@@ -53,6 +54,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
         SuplaRestApiClientTask.IAsyncResults, SuplaThermostatCalendar.OnCalendarTouchListener {
 
@@ -90,6 +96,9 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     private LinearLayout llChart;
     private ListView lvChannelList;
     private TextView tvErrorMessage;
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -457,7 +466,7 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
         }
 
         if (dtm == null) {
-            dtm = new DownloadThermostatMeasurements(this.getContext());
+            dtm = new DownloadThermostatMeasurements(this.getContext(), profileIdHolder.getProfileId().intValue());
             dtm.setChannelId(getRemoteId());
             dtm.setDelegate(this);
             dtm.execute();

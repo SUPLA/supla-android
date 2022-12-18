@@ -28,5 +28,6 @@ public class SuplaChannelExtendedValue implements Serializable  {
     public SuplaTimerState TimerStateValue = null;
 
     public SuplaChannelExtendedValue() {
+        // This constructor is used by native code
     }
 }

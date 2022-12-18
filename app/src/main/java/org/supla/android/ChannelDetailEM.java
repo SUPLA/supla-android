@@ -18,6 +18,8 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import static java.lang.String.format;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -49,15 +51,18 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static java.lang.String.format;
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailEM extends DetailLayout implements View.OnClickListener, SuplaRestApiClientTask.IAsyncResults, AdapterView.OnItemSelectedListener {
 
     final Handler mHandler = new Handler();
@@ -120,6 +125,10 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     private int slaveLastSelectedIdx = -1;
     private int slaveNumItems = -1;
     private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
+    private boolean mArrowsVisible = false;
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailEM(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -277,39 +286,50 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
         if (show) {
             llDetails.setVisibility(GONE);
+            boolean wasVisible = chartHelper.isVisible();
             chartHelper.setVisibility(VISIBLE);
             rlButtons1.setVisibility(INVISIBLE);
             rlButtons2.setVisibility(VISIBLE);
             setImgBackground(ivGraph, R.drawable.graphon);
             ivGraph.setTag(1);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
-                    android.R.layout.simple_spinner_item,
-                    chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
-            emSpinnerMaster.setAdapter(adapter);
+            if(wasVisible) {
+                // Don't reinitialize spinners, just trigger data reload
+                postDelayed(new Runnable() {
+                        public void run() {
+                            chartHelper.load(getRemoteId(), emSpinnerMaster.getSelectedItemPosition());
+                            chartHelper.animate();
+                        }
+                    }, 50);
 
-            emSpinnerMaster.setOnItemSelectedListener(null);
-            emSpinnerSlave.setOnItemSelectedListener(null);
+            } else {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(),
+                                                                  android.R.layout.simple_spinner_item,
+                                                                  chartHelper.getMasterSpinnerItems(mBalanceAvailable ? 0 : 19));
+                emSpinnerMaster.setAdapter(adapter);
 
-            postDelayed(new Runnable() {
-                public void run() {
-                    chartHelper.restoreSpinners(getChannelBase().getFunc(),
-                                                emSpinnerMaster, emSpinnerSlave,
-                                                new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
-                                                        updateSlaveSpinnerItems();
-                                                    }
-                                                });
-                    emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
-                    onItemSelected(emSpinnerSlave, null,
-                                   emSpinnerSlave.getSelectedItemPosition(),
-                                   emSpinnerSlave.getSelectedItemId());
-                    emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
-                }
-            }, 50);
+                emSpinnerMaster.setOnItemSelectedListener(null);
+                emSpinnerSlave.setOnItemSelectedListener(null);
 
+                postDelayed(new Runnable() {
+                        public void run() {
+                            chartHelper.restoreSpinners(getChannelBase().getFunc(),
+                                                        emSpinnerMaster, emSpinnerSlave,
+                                                        new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
+                                                                updateSlaveSpinnerItems();
+                                                            }
+                                                        });
+                            emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
+                            onItemSelected(emSpinnerSlave, null,
+                                           emSpinnerSlave.getSelectedItemPosition(),
+                                           emSpinnerSlave.getSelectedItemId());
+                            emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
+                        }
+                    }, 50);
+            }
         } else {
             int flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
             boolean singlePhase = (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
@@ -486,8 +506,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvTotalCost.setText(String.format("%.2f " + em.getCurrency(), em.getTotalCost()));
             tvCurrentCost.setText(String.format("%.2f " + em.getCurrency(),
                     currentCost));
-            ivDirection.setVisibility((em.getMeasuredValues()
-                    & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0 ? VISIBLE : INVISIBLE);
+            mArrowsVisible = (em.getMeasuredValues()
+                              & SuplaConst.EM_VAR_REVERSE_ACTIVE_ENERGY ) > 0;
+            ivDirection.setVisibility(mArrowsVisible ? VISIBLE : INVISIBLE);
 
             Button btn = null;
             switch (phase) {
@@ -653,7 +674,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
         }
 
         if (demm == null) {
-            demm = new DownloadElectricityMeterMeasurements(this.getContext());
+            demm = new DownloadElectricityMeterMeasurements(this.getContext(), profileIdHolder.getProfileId().intValue());
             demm.setChannelId(getRemoteId());
             demm.setDelegate(this);
             demm.execute();
@@ -684,10 +705,9 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     @Override
     public void onDetailShow() {
         super.onDetailShow();
-
         mBalanceAvailable = false;
         emProgress.setVisibility(INVISIBLE);
-        ivDirection.setVisibility(INVISIBLE);
+        ivDirection.setVisibility(mArrowsVisible ? VISIBLE : INVISIBLE);
         setProductionDataSource(false, false);
         showChart(false);
 

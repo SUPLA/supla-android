@@ -25,7 +25,7 @@ import org.supla.android.data.source.local.UserIconDao;
  */
 public class ImageCacheProvider {
     public void addImage(int id, UserIconDao.Image image) {
-        ImageCache.addImage(new ImageId(id, image.subId), image.value);
+        ImageCache.addImage(new ImageId(id, image.subId, image.profileId), image.value);
     }
 
     public void addImage(ImageId imgId, byte[] image) {

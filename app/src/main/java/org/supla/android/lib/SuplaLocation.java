@@ -23,4 +23,7 @@ public class SuplaLocation {
     public int Id;
     public String Caption;
 
+    public SuplaLocation() {
+        // This constructor is used by native code
+    }
 }

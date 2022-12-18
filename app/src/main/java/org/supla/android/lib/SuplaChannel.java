@@ -28,4 +28,8 @@ public class SuplaChannel extends SuplaChannelBase {
 
     public SuplaChannelValue Value;
 
+    public SuplaChannel() {
+        // This constructor is used by native code
+    }
+
 }

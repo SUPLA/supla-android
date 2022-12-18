@@ -681,12 +681,13 @@ public class ChannelListView extends ListView implements
 
 
                 if (getMargin() != 0) {
-                    mDetailLayout.setVisibility(View.VISIBLE);
-                    setVisibility(View.INVISIBLE);
-                    mDetailVisible = true;
+                    if(!mDetailVisible) {
+                        mDetailLayout.setVisibility(View.VISIBLE);
+                        setVisibility(View.INVISIBLE);
+                        mDetailVisible = true;
 
-                    onDetailShow();
-
+                        onDetailShow();
+                    }
                 } else {
                     mDetailLayout.setVisibility(View.INVISIBLE);
                     setVisibility(View.VISIBLE);
@@ -771,7 +772,6 @@ public class ChannelListView extends ListView implements
 
         if (onDetailListener != null)
             onDetailListener.onChannelDetailHide();
-        mDetailLayout = null;
     }
 
     private void setChannelBackgroundColor(int color) {

@@ -23,5 +23,7 @@ public class SuplaMinVersionRequired {
     public long CallType;
     public int MinVersion;
 
-
+    public SuplaMinVersionRequired() {
+        // This constructor is used by native code
+    }
 }

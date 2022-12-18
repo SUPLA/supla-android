@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="layout_background">#171717</color>
+    <color name="field_background">#262627</color>
+    <color name="button_background">#2AA75A</color>
+
+    <color name="widget_text">#FFFFFF</color>
+    <color name="widget_background">#171717</color>
+    <color name="widget_fields_border">#4E5255</color>
+    <color name="widget_spinner_location_background">#2AA75A</color>
+    <color name="widget_spinner_item_background">#262627</color>
+</resources>

@@ -1,136 +1,148 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-  <data>
-    <import type="android.view.View" />
-    <variable
-	      name="viewModel"
-	      type="org.supla.android.cfg.AuthItemViewModel" />
-    <variable
-        name="navCoordinator"
-        type="org.supla.android.cfg.NavCoordinator" />
-  </data>
-  
-  <LinearLayout
-      android:id="@+id/cfg"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      android:background="@color/activity_bg">
-    <androidx.appcompat.widget.SwitchCompat
-        app:theme="@style/Switch"
-        android:id="@+id/cfg_cb_advanced"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="71dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:checked="@={viewModel.isAdvancedMode}"
-        android:text="@string/advanced_settings"
-	      android:textSize="@dimen/default_text_size"
-        android:visibility="@{viewModel.allowsBasicMode ? View.VISIBLE : View.GONE}"
-        />
-    <FrameLayout
-		    android:layout_weight="1"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent">
-      <ScrollView
-          android:id="@+id/scroll_view"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-	      <LinearLayout
-	          android:layout_width="match_parent"
-	          android:layout_height="match_parent"
-	          android:orientation="vertical">
-	        <RelativeLayout
-              android:id="@+id/cfg_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="top"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:layout_centerHorizontal="true">
-            <include
-		            android:id="@+id/cfg_basic"
-		            android:visibility="@{viewModel.isAdvancedMode ? View.GONE : View.VISIBLE}"
-		            layout="@layout/activity_cfg_basic" />
-            <include
-		            android:id="@+id/cfg_advanced"
-		            android:visibility="@{viewModel.isAdvancedMode ? View.VISIBLE : View.GONE}"
-		            layout="@layout/activity_cfg_advanced" />
-	        </RelativeLayout>
-	        <View
-	            android:layout_height="50dp"
-	            android:layout_width="match_parent" />
-	      </LinearLayout>
-      </ScrollView>
-      <View
-          android:layout_height="50dp"
-          android:layout_width="match_parent"
-          android:layout_gravity="bottom"
-          android:background="@drawable/gradient_shape" />
-    </FrameLayout>
-    <RelativeLayout
-        android:layout_width="match_parent" 
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
 
-    <org.supla.android.ui.StandaloneRoundedButton
-        android:id="@+id/cfg_save"
-        style="@style/StandaloneRoundedGreenButton"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.supla.android.cfg.AuthItemViewModel" />
+
+        <variable
+            name="navCoordinator"
+            type="org.supla.android.cfg.NavCoordinator" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/cfg"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/standalone_button_height"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:enabled="@{viewModel.saveEnabled}"
-        android:onClick="@{() -> viewModel.onSaveConfig()}"
-        android:text="@string/confirm_button_text"
-         />
-    <TextView
-        style="@style/FormLabel"
-        android:id="@+id/dont_have_account_text"
-        android:text="@string/dont_have_account_yet"
-        android:layout_below="@+id/cfg_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:singleLine="false"
-        android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}"
-        android:gravity="center_horizontal" />
+        android:layout_height="match_parent"
+        android:background="@color/activity_bg"
+        android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cfg_create_account"
-        style="@style/LinkButton"
-        android:layout_width="wrap_content"
-        android:layout_height="20sp"
-        android:layout_below="@+id/dont_have_account_text"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:layout_centerHorizontal="true"
-        android:onClick="@{() -> viewModel.onCreateAccount()}"
-        android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}"
-        android:text="@string/create_account" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/cfg_cb_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="71dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:checked="@={viewModel.isAdvancedMode}"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="@string/advanced_settings"
+            android:textSize="@dimen/default_text_size"
+            app:theme="@style/Switch" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/cfg_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="top"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+
+                        <include
+                            android:id="@+id/cfg_basic"
+                            layout="@layout/activity_cfg_basic"
+                            android:visibility="@{viewModel.isAdvancedMode ? View.GONE : View.VISIBLE}" />
+
+                        <include
+                            android:id="@+id/cfg_advanced"
+                            layout="@layout/activity_cfg_advanced"
+                            android:visibility="@{viewModel.isAdvancedMode ? View.VISIBLE : View.GONE}" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" />
+                </LinearLayout>
+            </ScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradient_shape" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <org.supla.android.ui.StandaloneRoundedButton
+                android:id="@+id/cfg_save"
+                style="@style/StandaloneRoundedGreenButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/standalone_button_height"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/form_field_spacing"
+                android:enabled="@{viewModel.saveEnabled}"
+                android:onClick="@{() -> viewModel.onSaveConfig()}"
+                android:text="@string/confirm_button_text" />
+
+            <TextView
+                android:id="@+id/dont_have_account_text"
+                style="@style/FormLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cfg_save"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center_horizontal"
+                android:singleLine="false"
+                android:text="@string/dont_have_account_yet"
+                android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cfg_create_account"
+                style="@style/LinkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="20sp"
+                android:layout_below="@+id/dont_have_account_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="@dimen/form_field_spacing"
+                android:fontFamily="@font/open_sans_bold"
+                android:onClick="@{() -> viewModel.onCreateAccount()}"
+                android:text="@string/create_account"
+                android:visibility="@{viewModel.hasValidAccount ? View.GONE : View.VISIBLE}" />
 
 
-    <org.supla.android.ui.StandaloneRoundedButton
-        android:id="@+id/cfg_delete"
-        style="@style/StandaloneRoundedRedButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/standalone_button_height"
-        android:layout_marginTop="@dimen/shrink_field_spacing"
-        android:layout_marginBottom="@dimen/form_field_spacing"
-        android:layout_below="@id/cfg_create_account"
-        android:layout_centerHorizontal="true"
-        android:visibility="@{viewModel.isDeleteAvailable ? View.VISIBLE : View.GONE }"
-        android:onClick="@{() -> viewModel.onDeleteProfile(false)}"
-        android:text="@string/delete_account" />
+            <org.supla.android.ui.StandaloneRoundedButton
+                android:id="@+id/cfg_delete"
+                style="@style/StandaloneRoundedRedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/standalone_button_height"
+                android:layout_below="@id/cfg_create_account"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/shrink_field_spacing"
+                android:layout_marginBottom="@dimen/form_field_spacing"
+                android:onClick="@{() -> viewModel.onDeleteProfile(false)}"
+                android:text="@string/delete_account"
+                android:visibility="@{viewModel.isDeleteAvailable ? View.VISIBLE : View.GONE }" />
 
-    </RelativeLayout>
-  </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </layout>

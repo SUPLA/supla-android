@@ -9,7 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.db.ProfileIdProvider;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.SuplaContract.UserIconsEntry;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.images.ImageId;
 
@@ -37,6 +39,8 @@ public class DefaultUserIconRepositoryTest {
     private UserIconDao userIconDao;
     @Mock
     private ImageCacheProvider imageCacheProvider;
+    @Mock
+    private ProfileIdProvider profileIdProvider;
 
     @InjectMocks
     private DefaultUserIconRepository userIconRepository;
@@ -114,9 +118,9 @@ public class DefaultUserIconRepositoryTest {
     @Test
     public void shouldDeleteUserIcons() {
         // when
-        userIconRepository.deleteUserIcons();
+        userIconRepository.deleteUserIcons(5);
         // then
-        verify(userIconDao).delete();
+        verify(userIconDao).delete(5);
         verifyNoMoreInteractions(userIconDao);
         verifyZeroInteractions(imageCacheProvider);
     }
@@ -125,11 +129,14 @@ public class DefaultUserIconRepositoryTest {
     public void shouldLoadUserIconsIntoCache() {
         // given
         int id = 3;
-        int idColumnIndex = 2;
+        int remoteIdColumnIndex = 2;
         byte[] image = new byte[1];
         int imageColumnIndex = 1;
+        int profileId = 1234;
+        int profileIdColumnIndex = 5;
 
-        Cursor cursor = mockCursor(id, idColumnIndex, image, imageColumnIndex);
+        Cursor cursor = mockCursor(id, remoteIdColumnIndex, image, imageColumnIndex,
+            profileId, profileIdColumnIndex);
         when(userIconDao.getUserIcons()).thenReturn(cursor);
 
         // when
@@ -146,18 +153,21 @@ public class DefaultUserIconRepositoryTest {
         assertEquals(3, imageId.getId());
         assertSame(imageBytes, image);
 
-        verifyCursor(cursor, imageColumnIndex, idColumnIndex);
+        verifyCursor(cursor, imageColumnIndex, remoteIdColumnIndex, profileIdColumnIndex);
     }
 
     @Test
     public void shouldNotLoadUserIconsIntoCacheWhenImageLengthIsZero() {
         // given
         int id = 3;
-        int idColumnIndex = 2;
+        int remoteIdColumnIndex= 2;
         byte[] image = new byte[0];
         int imageColumnIndex = 1;
+        int profileId = 5678;
+        int profileIdColumnIndex = 5;
 
-        Cursor cursor = mockCursor(id, idColumnIndex, image, imageColumnIndex);
+        Cursor cursor = mockCursor(id, remoteIdColumnIndex, image, imageColumnIndex,
+            profileId, profileIdColumnIndex);
         when(userIconDao.getUserIcons()).thenReturn(cursor);
 
         // when
@@ -165,7 +175,7 @@ public class DefaultUserIconRepositoryTest {
 
         // then
         verify(imageCacheProvider, never()).addImage(any(), any());
-        verifyCursor(cursor, imageColumnIndex, idColumnIndex);
+        verifyCursor(cursor, imageColumnIndex, remoteIdColumnIndex, profileIdColumnIndex);
     }
 
     private void assertImage(UserIconDao.Image image, String column, byte[] value, int subId) {
@@ -174,27 +184,31 @@ public class DefaultUserIconRepositoryTest {
         assertEquals(subId, image.subId);
     }
 
-    private Cursor mockCursor(int id, int idColumnIndex, byte[] image, int imageColumnIndex) {
+    private Cursor mockCursor(int id, int remoteIdColumnIndex, byte[] image, int imageColumnIndex,
+        long profileId, int profileIdColumnIndex) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.moveToFirst()).thenReturn(true);
         when(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1)).thenReturn(imageColumnIndex);
         when(cursor.getBlob(imageColumnIndex)).thenReturn(image);
-        when(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID)).thenReturn(idColumnIndex);
-        when(cursor.getInt(idColumnIndex)).thenReturn(id);
-
+        when(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID)).thenReturn(remoteIdColumnIndex);
+        when(cursor.getInt(remoteIdColumnIndex)).thenReturn(id);
+        when(cursor.getColumnIndex(UserIconsEntry.COLUMN_NAME_PROFILEID)).thenReturn(profileIdColumnIndex);
+        when(cursor.getLong(profileIdColumnIndex)).thenReturn(profileId);
         return cursor;
     }
 
-    private void verifyCursor(Cursor cursor, int imageColumnIndex, int idColumnIndex) {
+    private void verifyCursor(Cursor cursor, int imageColumnIndex, int idColumnIndex, int profileIdColumnIndex) {
         verify(cursor).moveToFirst();
         verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1);
         verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2);
         verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3);
         verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4);
+        verify(cursor, times(4)).getColumnIndex(UserIconsEntry.COLUMN_NAME_PROFILEID);
         verify(cursor, times(4)).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID);
         verify(cursor).getBlob(imageColumnIndex);
         verify(cursor, times(3)).getBlob(0);
         verify(cursor, times(4)).getInt(idColumnIndex);
+        verify(cursor, times(4)).getLong(profileIdColumnIndex);
         verify(cursor).moveToNext();
         verify(cursor).close();
         verifyNoMoreInteractions(cursor);

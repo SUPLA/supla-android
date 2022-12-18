@@ -15,8 +15,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.supla.android.profile.ProfileManager;
+
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MenuItemsLayout extends LinearLayout implements View.OnClickListener {
 
     public static final int BTN_SETTINGS = 0x1;
@@ -35,6 +42,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     private boolean mInitialized = false;
     private int availableButtons = 0;
     private OnClickListener mOnClickListener;
+
+    @Inject ProfileManager profileManager;
 
     public MenuItemsLayout(Context context) {
         super(context);
@@ -240,9 +249,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             return;
         }
 
-        boolean hasManyAccounts = 
-            SuplaApp.getApp().getProfileManager()
-            .getAllProfiles().size() > 1;
+        boolean hasManyAccounts = profileManager.getAllProfiles().size() > 1;
 
         availableButtons = available;
         mMainButtonsAreaLayout.removeAllViews();

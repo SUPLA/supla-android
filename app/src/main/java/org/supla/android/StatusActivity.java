@@ -37,6 +37,11 @@ import org.supla.android.lib.SuplaRegisterError;
 import org.supla.android.lib.SuplaVersionError;
 import org.supla.android.profile.ProfileManager;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class StatusActivity extends NavigationActivity {
 
     private int mode;
@@ -48,6 +53,8 @@ public class StatusActivity extends NavigationActivity {
     private ProgressBar progress;
     private RelativeLayout rlStatus;
     private SuperuserAuthorizationDialog authorizationDialog;
+
+    @Inject ProfileManager profileManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,8 +178,7 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            ProfileManager pm = SuplaApp.getApp().getProfileManager();
-            if(pm.getAllProfiles().size() <= 1) {
+            if(profileManager.getAllProfiles().size() <= 1) {
                 NavigationActivity.showAuth(this);
             } else {
                 NavigationActivity.showProfile(this);
@@ -242,8 +248,7 @@ public class StatusActivity extends NavigationActivity {
                 && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
-            ProfileManager pm = SuplaApp.getApp().getProfileManager();
-            if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
+            if (profileManager.getCurrentProfile().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
                 }
@@ -270,7 +275,7 @@ public class StatusActivity extends NavigationActivity {
 
     @Override
     protected void onConnErrorMsg(SuplaConnError error) {
-        if (error.Code == SuplaConst.SUPLA_RESULTCODE_HOSTNOTFOUND)
+        if (error.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND)
             setStatusError(getResources().getString(R.string.err_hostnotfound));
     }
 

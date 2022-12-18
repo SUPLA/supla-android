@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- new color definitions start here -->
-    <color name="supla_green">#12a71e</color> 
+    <color name="supla_green">#12a71e</color>
+
+    <color name="item_selected">#ffffff</color>
+    <color name="item_unselected">#dadbdc</color>
+
+    <color name="supla_background_light">#F5F6F7</color>
+    <color name="supla_text_light">#000000</color>
     <!-- new color definitions end here -->
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
@@ -55,7 +61,7 @@
     <color name="zwave_btn_separator">#B4B7BA</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
-    <color name="zwave_info_table_bg">#F5F6F7</color>
+    <color name="zwave_info_table_bg">@color/supla_background_light</color>
     <color name="zwave_info_table_text">#000000</color>
     <color name="zwave_info_table_separator">#B4B7BA</color>
 
@@ -75,7 +81,7 @@
     <color name="switcher_background_light">#1F767880</color>
     <color name="switcher_border_light">#7678801F</color>
 
-    <color name="list_separator_bg">#E5E5E5</color>
+    <color name="list_separator_bg">#AAAAAA</color>
     <color name="red_alert">#EB3A28</color>
     <color name="label_grey">#7e8082</color>
     <color name="holder_grey">#7e8082</color>
@@ -84,4 +90,18 @@
     <color name="cell_bg_new">#FAFBFC</color>
     <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
+    <color name="ripple">#5112a71e</color>
+
+    <!-- New colors with day/night support -->
+
+    <color name="layout_background">#F5F6F7</color>
+    <color name="field_background">#FFFFFF</color>
+    <color name="button_background">@color/supla</color>
+    <color name="button_background_disabled">#B4B7BA</color>
+
+    <color name="widget_text">@color/supla_text_light</color>
+    <color name="widget_background">@color/supla_background_light</color>
+    <color name="widget_fields_border">#3078801F</color>
+    <color name="widget_spinner_location_background">@color/channel_section_cell</color>
+    <color name="widget_spinner_item_background">@color/supla_background_light</color>
 </resources>

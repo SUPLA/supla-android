@@ -37,7 +37,6 @@ import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
-import org.supla.android.db.DbHelper;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
@@ -45,12 +44,18 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
         AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -72,6 +77,9 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     private int slaveLastSelectedIdx = -1;
     private int slaveNumItems = -1;
     private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailIC(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -278,7 +286,7 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
         }
 
         if (dtm == null) {
-            dtm = new DownloadImpulseCounterMeasurements(this.getContext());
+            dtm = new DownloadImpulseCounterMeasurements(this.getContext(), profileIdHolder.getProfileId().intValue());
             dtm.setChannelId(getRemoteId());
             dtm.setDelegate(this);
             dtm.execute();

@@ -1,13 +1,10 @@
 <resources>
 
-    <string name="feedback_title">Envoyer un e-mail</string>
-    <string name="donate_title">Faire un don</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=fr</string>
 
     <string name="version">version</string>
 
-    <string name="feedback">Retour d\u0027information</string>
     <string name="about">À propos de l\u0027application</string>
     <string name="settings">Paramètres</string>
 
@@ -49,10 +46,6 @@
     <string name="channel_caption_windowopeningsensor">Capteur d\'ouverture de fenêtre</string>
     <string name="channel_caption_mailsensor">Détecteur de courrier</string>
 
-    <string name="rgb_brightness">Luminosité</string>
-    <string name="rgb_color">Couleur</string>
-    <string name="rgb_state">Status</string>
-
     <string name="channel_btn_open">Ouvrir</string>
     <string name="channel_btn_openclose">Ouvrir Fermer</string>
     <string name="channel_btn_on">Allumer</string>
@@ -84,14 +77,15 @@
  You should have received a copy of the GNU General Public License\n
  along with this program; if not, write to the Free Software\n
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-    </string>
+   </string>
 
-    <string name="rate_msg">Si vous aimez cette application, consacrez un instant afin de l\u0027évaluer. Nous vous remercions de votre support !</string>
+    <string name="rate_msg">Saviez-vous que Supla est un projet ouvert et gratuit développé par la communauté ? Si vous aimez cette application, veuillez prendre un moment pour la noter. Merci pour votre soutien !</string>
     <string name="rate_now">Évaluer maintenant</string>
     <string name="rate_later">Plus tard</string>
     <string name="rate_no_thanks">Non, merci</string>
     <string name="rs_percent_caption">Pourcentage fermeture</string>
     <string name="calibration">[Calibration]</string>
+    <string name="add_wizard_is_not_available">L\'assistant d\'ajout n\'est disponible que lorsqu\'une connexion au serveur a été établie sur la base de l\'adresse électronique saisie ! (Désactivez les options avancées dans la configuration de votre compte)</string>
     <string name="wizard_step1_txt3">Pour continuer, appuyez sur <b>Continuer</b>.</string>
     <string name="add_device">Ajoutez un dispositif</string>
     <string name="advanced_settings">Paramètres avancés</string>
@@ -101,7 +95,6 @@
     <string name="wizard_step3_txt2">Si le dispositif est allumé mais ne fonctionne pas en mode de configuration, maintenez la touche <b>CONFIG</b> pendant au moins 5 secondes.</string>
     <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
     <string name="wizard_result_failed">Échec de la configuration!</string>
-    <string name="add_wizard_is_not_available">Assistant d\'ajout est disponible uniquement lorsque vous êtes connecté au serveur en entrant votre adresse e-mail conforme à aux paramètres!</string>
     <string name="wizard_iodev_laststate">Statut précédent</string>
     <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
     <string name="wizard_iodev_name">Nom</string>
@@ -110,21 +103,20 @@
     <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
     <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le WiFi, assurez-vous donc que le GPS est activé.</string>
     <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
-    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé!</string>
+    <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé! Accédez aux Paramètres Wifi sur Android, choisissez l\'Option Avancés et séléctionnez ensuite « Activez le Wifi automatiquement »</string>
     <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
     <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
     <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
     <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
-    <string name="device_registration_disabled">Enregistrement des dispositifs d\'entrée/sortie est actuellement désactivé. Pour continuer, allez à %1$s et activez l\'ajout de dispositifs dans l\'onglet Ma SUPLA.</string>
     <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
     <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
+    <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu\'elle est activée.</string>
     <string name="start">DÉMARRER</string>
     <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
     <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
     <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
     <string name="wizard_server_compat_error">Le serveur auquel vous êtes connecté ne prend pas en charge cette fonctionnalité!</string>
     <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
-    <string name="wizard_step2_txt3">*) Le réseau %1$s sera utilisé par vos actionneurs pour vous connecter au serveur.</string>
     <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
     <string name="help">Aide</string>
     <string name="channel_caption_staircasetimer">Minuterie d\'escalier</string>
@@ -165,9 +157,7 @@
     <string name="total_cost">Coût total</string>
     <string name="current_cost">Coût dans le mois courant</string>
     <string name="current_consumption">Consommation dans le mois courant</string>
-    <string name="impulses_count">Nombre d\'impulsions</string>
-    <string name="meter_value">"Valeur du compteur"</string>
-    <string name="channel_func_impulsecounter">Compteur d\'impulsions</string>
+    <string name="meter_value">Valeur du compteur</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Heures</string>
     <string name="days">Jours</string>
@@ -191,8 +181,6 @@
     <string name="comparsion_dayday">Comparaison jour par jour</string>
     <string name="comparsion_monthmonth">Comparaison mois par mois</string>
     <string name="comparsion_yearyear">Comparaison année par année</string>
-    <string name="hp_turn_off">Éteindre</string>
-    <string name="hp_turn_on">Allumer</string>
     <string name="hp_error_1">Manque d\'eau</string>
     <string name="hp_error_2">Chauffage brûlé</string>
     <string name="hp_error_3">Erreur du capteur de température de l\'eau</string>
@@ -378,4 +366,93 @@
     <string name="zwave_waiting_for_add">En attente d\'ajout de l\'appareil au réseau z-wave.</string>
    <string name="zwave_waiting_for_add_timeout">Le temps d\'attente pour l\'ajout de l\'appareil au réseau z-wave a expiré.</string>
     <string name="hp_calendar_eco">ECO</string>
+    <string name="dont_have_account_yet">Vous n\'avez pas encore de compte Supla Cloud ?</string>
+   <string name="profiles_title">Comptes</string>
+   <string name="profile_name_label">NOM DU COMPTE</string>
+   <string name="form_cannot_delete_active_profile">Impossible de supprimer le compte actif</string>
+   <string name="profile_default_name">Défaut</string>
+   <string name="profile_select_active">Sélectionnez le compte actif</string>
+   <string name="profile_act_info">Touchez un compte pour vous connecter</string>
+   <string name="form_error">Erreur</string>
+   <string name="form_profile_name_missing">Entrez le nom du compte</string>
+   <string name="form_profile_required_data_missing">Remplissez les données requises</string>
+   <string name="form_profile_duplicate">Le compte avec ce nom existe déjà</string>
+   <string name="add_account">Ajouter un compte</string>
+   <string name="edit_account">Modifier le compte</string>
+   <string name="delete_account">Supprimer</string>
+   <string name="delete_account_confirm_title">Supprimer le compte</string>
+   <string name="delete_account_confirm_message">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
+   <string name="delete_account_confirm_message_with_widgets">Êtes-vous sûr de vouloir supprimer le compte ? La confirmation signifie que les widgets associés seront supprimés.</string>
+   <string name="cfg_label_access_id_auth">ID</string>
+   <string name="cfg_channel_height">Hauteur du canal</string>
+   <string name="cfg_temperature_unit">Unité de température</string>
+   <string name="cfg_button_autohide">Masquage automatique des boutons</string>
+   <string name="profile">Votre compte</string>
+   <string name="profile_plural">Vos comptes</string>
+   <string name="menubar_appsettings">Paramètres</string>
+   <string name="rs_percent_caption_open">Pourcentage d\'ouverture</string>
+   <string name="em_chart_phase_n">Phase %d</string>
+   <string name="em_chart_all_phases">Phase 1+2+3</string>
+   <string name="widget_configure_title">Configuration du widget</string>
+   <string name="widget_configure_profile_label">Compte</string>
+   <string name="widget_configure_channel_label">Canal pour le widget</string>
+   <string name="widget_configure_action_label">Action</string>
+   <string name="widget_configure_name_label">Nom</string>
+   <string name="widget_configure_error">La configuration du canal a échoué...</string>
+   <string name="widget_configure_no_selection">Aucun canal sélectionné</string>
+   <string name="widget_configure_no_channel">Aucun canal disponible</string>
+   <string name="double_button_widget_description">Widget à deux boutons</string>
+   <string name="single_button_widget_description">Widget à un bouton</string>
+   <string name="widget_app_not_initialized">Veuillez vous connecter !</string>
+   <string name="widget_command_no_connection">Pas de connexion internet !</string>
+   <string name="widget_command_started">Réalisé</string>
+   <string name="widget_removed_label">Canal supprimé</string>
+   <string name="channel_caption_roofwindowopeningsensor">Capteur de fenêtre de toit ouverte</string>
+   <string name="channel_caption_roofwindow">Fenêtre de toit</string>
+   <string name="channel_func_controllingtheroofwindow">Ouverture et fermeture de la fenêtre de toit</string>
+   <string name="channel_func_opensensor_roofwindow">Capteur de fenêtre de toit ouverte</string>
+   <string name="event_openedclosedtheroofwindow">a ouvert/fermé la fenêtre de toit</string>
+   <string name="status_led">LED de statut</string>
+   <string name="info_led_on">La LED est allumée si une connexion au serveur a été établie.</string>
+   <string name="info_led_off">LED non allumée si une connexion au serveur a été établie.</string>
+   <string name="info_led_alwaysoff">La LED est toujours éteinte, sauf si l\'appareil est en mode de configuration wifi (mode AP).</string>
+   <string name="input">Entrée</string>
+   <string name="monostable">Monostable</string>
+   <string name="bistable">Bistable</string>
+   <string name="wizard_iodev_connect_failed">Une tentative d\'établir une connexion WiFi avec le dispositif déclencher a échoué.</string>
+   <string name="diw_cfg_info_oprange">Ajustez la plage de fonctionnement du variateur en réglant les niveaux de luminosité minimum et maximum. Les valeurs minimales et maximales peuvent être définies en déplaçant les curseurs situés de part et d\'autre de la roue.</string>
+   <string name="diw_cfg_info_in_options">Options d\'entrée</string>
+   <string name="diw_cfg_info_mono_option">Cette option modifie le comportement de l\'entrée à laquelle le bouton monostable est connecté. Lorsque l\'option est désactivée, le variateur cessera d\'éclairer lorsqu\'il atteindra le niveau de luminosité maximal et d\'atténuer lorsqu\'il atteindra le niveau minimal. Si l\'option est activée, le variateur passe au niveau minimum dès que le niveau de luminosité maximum est atteint et, dans le cas d\'une gradation, à la valeur maximum dès que le minimum est atteint. L\'éclaircissement ou l\'atténuation se poursuit tant que le bouton est enfoncé.</string>
+   <string name="diw_cfg_info_bi_option">Cette option modifie le comportement du variateur lorsque l\'éclairage est allumé à l\'aide du bouton bistable. Lorsque l\'option est activée, le variateur règle le niveau de luminosité maximal dès que l\'éclairage est allumé. Lorsque l\'option est désactivée, le variateur fixe le niveau de luminosité mémorisé avant que l\'éclairage ne soit éteint.</string>
+   <string name="dgf_too_long_operation_warning">Des sections du verre sont exposées pendant plus de 20 heures, ce qui peut affecter leur durée de vie. Il est conseillé de couvrir toutes les sections pendant un minimum de 4 heures pour la régénération.</string>
+   <string name="dgf_planned_regeneration_in_progress">Régénération programmée en cours.</string>
+   <string name="dgf_regeneration_after20h">Régénération initiée après 20h de fonctionnement en cours.</string>
+   <string name="wizard_done_explentations">Si l\'appareil n\'apparaît pas dans l\'application, répétez à nouveau cette procédure d\'ajout et lisez le « Statut précédent » indiqué ci-dessus. Il contient des informations permettant de déterminer pourquoi l\'appareil ne s\'est pas connecté au serveur. Le message « SSID non trouvé » signifie que le nom du réseau WiFi 2,4 GHz saisi n\'a pas été trouvé ou que le réseau est hors de portée.</string>
+   <string name="incorrect_email_or_password">Adresse e-mail ou mot de passe incorrect(e)</string>
+   <string name="channel_name">Nom du canal</string>
+   <string name="location_name">Nom de la localisation</string>
+   <string name="overcurrent_warning">L\'alimentation a été coupée après avoir dépassé le seuil de limite de courant fixé.</string>
+   <string name="overcurrent_question">L\'alimentation a été coupée lorsque la limite de courant fixée a été dépassée. Êtes-vous sûr de vouloir mettre l\'appareil sous tension ?</string>
+   <string name="recalibration_question">Êtes-vous sûr de vouloir commencer le calibrage ?</string>
+   <string name="calibration_failed">Le calibrage a échoué.</string>
+   <string name="calibration_lost">Le calibrage a été perdu.</string>
+   <string name="motor_problem">Problème de moteur / Arrêt inattendu.</string>
+   <string name="lastconnectionresetcause_unknown">0 : inconnu</string>
+   <string name="lastconnectionresetcause_activity_timeout">1 : aucune réponse du serveur</string>
+   <string name="lastconnectionresetcause_wifi_connection_lost">2 : perte de la connexion WiFi</string>
+   <string name="lastconnectionresetcause_server_connection_lost">3 : réinitialisation de la connexion avec le serveur</string>
+   <string name="basic_profile_warning">Mode non disponible</string>
+   <string name="basic_config_unavailable">Sélectionnez l\'authentification par courriel avec détection automatique du serveur avant de désactiver le mode avancé.</string>
+   <string name="add_device_warning">L\'assistant d\'ajout automatique de périphérique n\'est pas disponible en mode d\'authentification Access ID. Les dispositifs peuvent ensuite être ajoutés manuellement.</string>
+   <string name="show_channel_info">Afficher le bouton ⓘ</string>
+   <string name="add_device_needs_cloud_title">Configuration du dispositif</string>
+   <string name="add_device_needs_cloud_message">Ce dispositif n\'a pas de canaux visibles dans l\'application. Pour terminer la configuration, allez sur cloud.supla.org</string>
+   <string name="add_device_needs_cloud_dismiss">Je comprends.</string>
+   <string name="add_device_needs_cloud_go">Aller à CLOUD</string>
+   <string name="associeted_with_at_error">La fonction de canal associée au déclencheur d\'action ne peut pas être modifiée.</string>
+   <string name="location_ordering">Ordre de localisation</string>
+   <string name="rs_display_mode">Stores de fenêtre %</string>
+   <string name="rs_display_mode_opening">Ouvertures</string>
+   <string name="rs_display_mode_closing">Fermetures</string>
+   <string name="status_accessid_inactive">ID d\'accès inactif</string>
 </resources>

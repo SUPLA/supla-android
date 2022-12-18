@@ -32,14 +32,23 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
 import org.supla.android.listview.ChannelListView;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTempHumidityMeasurements;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     private ImageView ivHumidityIcon;
     private TextView tvHumidity;
     private CheckBox cbHumidity;
     private CheckBox cbTemperature;
+
+    @Inject
+    ProfileIdHolder profileIdHolder;
 
     public ChannelDetailTempHumidity(Context context, ChannelListView cLV) {
         super(context, cLV);
@@ -58,7 +67,7 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     }
 
     protected DownloadMeasurementLogs getDMLInstance() {
-        return new DownloadTempHumidityMeasurements(getContext());
+        return new DownloadTempHumidityMeasurements(getContext(), profileIdHolder.getProfileId().intValue());
     }
 
     @Override

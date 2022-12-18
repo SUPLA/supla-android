@@ -27,4 +27,7 @@ public class SuplaChannelValueUpdate {
 
     public SuplaChannelValue Value;
 
+    public SuplaChannelValueUpdate() {
+        // This constructor is used by native code
+    }
 }

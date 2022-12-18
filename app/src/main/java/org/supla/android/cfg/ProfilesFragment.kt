@@ -17,32 +17,25 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
+import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.SuplaApp
-import org.supla.android.profile.ProfileIdNew
-import org.supla.android.databinding.FragmentCfgBinding
 import org.supla.android.databinding.FragmentProfilesBinding
+import org.supla.android.profile.PROFILE_ID_NEW
+import org.supla.android.profile.ProfileManager
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfilesFragment: Fragment() {
+    @Inject internal lateinit var profileManager: ProfileManager
     private val navCoordinator: NavCoordinator by activityViewModels()
     private val viewModel: CfgViewModel by activityViewModels()
     private val profilesVM: ProfilesViewModel by viewModels()
@@ -71,8 +64,8 @@ class ProfilesFragment: Fragment() {
     }
 
     private fun openEditProfileView(profileId: Long) {
-        val navId = if(profileId == ProfileIdNew) R.id.newProfile else R.id.editProfile
-        val args = AuthFragmentArgs(profileId, true, false)
+        val navId = if(profileId == PROFILE_ID_NEW) R.id.newProfile else R.id.editProfile
+        val args = AuthFragmentArgs(profileId, asPopup = false)
         navCoordinator.wantsBack = true
         findNavController().navigate(navId, args.toBundle())
     }
@@ -95,9 +88,5 @@ class ProfilesFragment: Fragment() {
         super.onResume()
 
         profilesVM.reload()
-    }
-
-    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-        return ProfilesViewModelFactory()
     }
 }

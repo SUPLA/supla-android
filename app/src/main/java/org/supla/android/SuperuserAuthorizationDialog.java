@@ -33,15 +33,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.supla.android.di.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConst;
-
 import org.supla.android.profile.AuthInfo;
+import org.supla.android.profile.ProfileManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.internal.managers.ViewComponentManager;
 
 public class SuperuserAuthorizationDialog implements View.OnClickListener, DialogInterface.OnCancelListener, View.OnTouchListener, SuplaClientMessageHandler.OnSuplaClientMessageListener, TextWatcher {
     private Context context;
@@ -79,8 +83,10 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         edPassword = v.findViewById(R.id.dialogPwd);
         edPassword.addTextChangedListener(this);
 
-        AuthInfo ainfo = SuplaApp.getApp().getProfileManager()
-            .getCurrentProfile().getAuthInfo();
+        ProfileManager profileManager = EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ProfileManagerEntryPoint.class)
+                .provideProfileManager();
+        AuthInfo ainfo = profileManager.getCurrentProfile().getAuthInfo();
         edEmail.setText(ainfo.getEmailAddress(),
                         EditText.BufferType.EDITABLE);
 
@@ -172,7 +178,14 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
             timeoutTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    ((Activity) context).runOnUiThread(new Runnable() {
+                    Activity act = null;
+                    if(context instanceof ViewComponentManager.FragmentContextWrapper) {
+                      act = (Activity)((ViewComponentManager.FragmentContextWrapper)context)
+                        .getBaseContext();
+                    } else {
+                      act = (Activity)context;
+                    }
+                    act.runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
@@ -317,5 +330,4 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
     public static boolean lastOneIsStillShowing() {
         return lastVisibleInstance != null && lastVisibleInstance.isShowing();
     }
-
 }

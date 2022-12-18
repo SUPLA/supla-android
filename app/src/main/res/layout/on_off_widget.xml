@@ -1,0 +1,111 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="85dp"
+    android:background="@drawable/widget_background"
+    android:maxWidth="125dp">
+
+  <TextView
+      android:id="@+id/on_off_widget_channel_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_margin="6dp"
+      android:ellipsize="end"
+      android:gravity="center"
+      android:maxLines="1"
+      android:textColor="@color/widget_text"
+      android:textSize="12sp" />
+
+  <LinearLayout
+      android:id="@+id/on_off_widget_buttons"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@id/on_off_widget_channel_name"
+      android:layout_marginTop="10dp"
+      android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/on_off_widget_turn_off_button"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_button_background"
+        android:padding="5dp"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/on_off_widget_turn_on_button"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_button_background"
+        android:padding="5dp"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/on_off_widget_turn_off_button_night_mode"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:background="@null"
+        android:alpha=".0"/>
+
+    <ImageButton
+        android:id="@+id/on_off_widget_turn_on_button_night_mode"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:background="@null"
+        android:alpha=".0"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/on_off_widget_value"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@id/on_off_widget_channel_name"
+      android:layout_marginTop="5dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:visibility="gone">
+
+    <ImageButton
+        android:id="@+id/on_off_widget_value_icon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/on_off_widget_value_icon_night_mode"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:background="@android:color/transparent"
+        android:alpha=".0"/>
+
+    <include layout="@layout/on_off_widget_value_text" />
+
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/on_off_widget_removed_label"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:gravity="center"
+      android:text="@string/widget_removed_label"
+      android:textColor="@color/widget_text"
+      android:textSize="16sp"
+      android:visibility="gone" />
+
+</RelativeLayout>

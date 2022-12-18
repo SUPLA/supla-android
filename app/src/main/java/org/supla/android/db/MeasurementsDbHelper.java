@@ -31,11 +31,15 @@ import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.TempHumidityLogDao;
 import org.supla.android.data.source.local.TemperatureLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
+import org.supla.android.di.ProfileIdHolderEntryPoint;
+import org.supla.android.profile.ProfileIdHolder;
 
 import java.util.Date;
 
 import static org.supla.android.data.source.local.BaseDao.timestampStartsWithTheCurrentMonth;
 import static org.supla.android.db.DbHelper.DATABASE_VERSION;
+
+import dagger.hilt.android.EntryPointAccessors;
 
 public class MeasurementsDbHelper extends BaseDbHelper {
 
@@ -68,7 +72,10 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {
-                    instance = result = new MeasurementsDbHelper(context, () -> SuplaApp.getApp().getProfileIdHolder().getProfileId());
+                    ProfileIdHolder profileIdHolder = EntryPointAccessors.fromApplication(
+                            context.getApplicationContext(), ProfileIdHolderEntryPoint.class)
+                            .provideProfileIdHolder();
+                    instance = result = new MeasurementsDbHelper(context, () -> profileIdHolder.getProfileId());
                 }
             }
         }

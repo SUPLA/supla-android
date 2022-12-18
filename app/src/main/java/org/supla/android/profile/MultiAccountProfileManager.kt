@@ -25,31 +25,41 @@ import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
+import org.supla.android.scenes.SceneEventsManager
+import org.supla.android.widget.WidgetVisibilityHandler
 import kotlin.random.Random
 
-class MultiAccountProfileManager(private val dbHelper: DbHelper,
-                                 private val deviceId: String,
-                                 private val repo: ProfileRepository,
-                                 private val profileIdHolder: ProfileIdHolder) : ProfileManager {
+class MultiAccountProfileManager(
+        private val dbHelper: DbHelper,
+        private val deviceId: String,
+        private val repo: ProfileRepository,
+        private val profileIdHolder: ProfileIdHolder,
+        private val widgetVisibilityHandler: WidgetVisibilityHandler,
+        private val sceneEventsManager: SceneEventsManager
+) : ProfileManager {
 
     override fun getCurrentProfile(): AuthProfileItem {
         return repo.allProfiles.first { it.isActive }
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
-        val forceActivate: Boolean
-        if(profile.id == ProfileIdNew) {
+        var forceActivate: Boolean
+        if(profile.id == PROFILE_ID_NEW) {
             profile.id = repo.createNamedProfile(profile.name)
             forceActivate = profile.isActive
         } else if(profile.isActive) {
             val prev = getProfile(profile.id)
             forceActivate = profile.isActive && !(prev?.isActive?:false)
+
+            if(prev != null && prev.authInfoChanged(profile)) {
+                forceActivate = true
+            }
         } else {
             forceActivate = false
         }
 
         repo.updateProfile(profile)
-        dbHelper.deleteUserIcons()
+        dbHelper.deleteUserIcons(profile.id)
         if(profile.isActive) {
             activateProfile(profile.id, forceActivate)
         }
@@ -71,7 +81,7 @@ class MultiAccountProfileManager(private val dbHelper: DbHelper,
     }
 
     override fun getProfile(id: Long): AuthProfileItem? {
-        return if (id == ProfileIdNew) {
+        return if (id == PROFILE_ID_NEW) {
             val authInfo = AuthInfo(emailAuth=true,
                                     serverAutoDetect=true,
                                     guid=encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE)),
@@ -92,18 +102,18 @@ class MultiAccountProfileManager(private val dbHelper: DbHelper,
             return false
         }
 
-
-        ImageCache.clear()
         initiateReconnect()
         if(repo.setProfileActive(id)) {
             profileIdHolder.profileId = id
         }
-        DbHelper.getInstance(SuplaApp.getApp()).loadUserIconsIntoCache()
+        dbHelper.loadUserIconsIntoCache()
+        sceneEventsManager.cleanup()
         return true
     }
 
     override fun removeProfile(id: Long) {
         repo.deleteProfile(id)
+        widgetVisibilityHandler.onProfileRemoved(id)
     }
 
     private fun initiateReconnect() {

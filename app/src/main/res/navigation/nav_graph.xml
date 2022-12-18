@@ -28,9 +28,6 @@
         android:name="profileId"
         app:argType="long" />
     <argument
-        android:name="allowBasicMode"
-        app:argType="boolean" />
-    <argument
         android:name="asPopup"
         app:argType="boolean" />
   </fragment>
@@ -42,9 +39,6 @@
     <argument
         android:name="profileId"
         app:argType="long" />
-    <argument
-        android:name="allowBasicMode"
-        app:argType="boolean" />
     <argument
         android:name="asPopup"
         app:argType="boolean" />

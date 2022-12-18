@@ -22,7 +22,9 @@ import android.database.Cursor;
 import android.annotation.SuppressLint;
 
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.db.ProfileIdProvider;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.SuplaContract.UserIconsEntry;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.images.ImageId;
@@ -31,11 +33,14 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
     private final UserIconDao userIconDao;
     private final ImageCacheProvider imageCacheProvider;
+    private final ProfileIdProvider profileIdProvider;
 
     public DefaultUserIconRepository(UserIconDao userIconDao,
-                                     ImageCacheProvider imageCacheProvider) {
+                                     ImageCacheProvider imageCacheProvider,
+                                     ProfileIdProvider profileIdProvider) {
         this.userIconDao = userIconDao;
         this.imageCacheProvider = imageCacheProvider;
+        this.profileIdProvider = profileIdProvider;
     }
 
     @Override
@@ -45,10 +50,14 @@ public class DefaultUserIconRepository implements UserIconRepository {
         }
 
         UserIconDao.Image[] images = {
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1, 1),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2, 2),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3, 3),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4, 4),
+                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1,
+                    img1, 1, profileIdProvider.getCachedProfileId()),
+                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2,
+                    img2, 2, profileIdProvider.getCachedProfileId()),
+                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3,
+                    img3, 3, profileIdProvider.getCachedProfileId()),
+                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4,
+                    img4, 4, profileIdProvider.getCachedProfileId()),
         };
 
         userIconDao.insert(id, images);
@@ -61,8 +70,8 @@ public class DefaultUserIconRepository implements UserIconRepository {
     }
 
     @Override
-    public void deleteUserIcons() {
-        userIconDao.delete();
+    public void deleteUserIcons(long profileId) {
+        userIconDao.delete(profileId);
     }
 
     @Override
@@ -75,9 +84,11 @@ public class DefaultUserIconRepository implements UserIconRepository {
                     byte[] image = cursor.getBlob(cursor.getColumnIndex(imageType.column));
                     int remoteId = cursor.getInt(cursor.getColumnIndex(
                             SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
+                    long profileId = cursor.getLong(cursor.getColumnIndex(
+                        UserIconsEntry.COLUMN_NAME_PROFILEID));
 
                     if (image != null && image.length > 0) {
-                        imageCacheProvider.addImage(new ImageId(remoteId, imageType.subId), image);
+                        imageCacheProvider.addImage(new ImageId(remoteId, imageType.subId, profileId), image);
                     }
                 }
             } while (cursor.moveToNext());
