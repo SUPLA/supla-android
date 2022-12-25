@@ -31,6 +31,7 @@ const val ARG_TURN_ON = "ARG_TURN_ON"
  * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
  * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
+ * staircase timer [SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER]
  * It supports also opening and closing of roller shutters
  */
 class OnOffWidgetCommandWorker(
