@@ -106,7 +106,8 @@ abstract class WidgetCommandWorkerBase(
   ): Result {
     when (configuration.itemFunction) {
       SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_POWERSWITCH ->
+      SUPLA_CHANNELFNC_POWERSWITCH,
+      SUPLA_CHANNELFNC_STAIRCASETIMER ->
         callAction(configuration, if (turnOnOrClose) ActionId.TURN_ON else ActionId.TURN_OFF)
       SUPLA_CHANNELFNC_DIMMER,
       SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
