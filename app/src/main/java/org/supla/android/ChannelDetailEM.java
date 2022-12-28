@@ -615,6 +615,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
 
     public void setData(ChannelBase channel) {
         super.setData(channel);
+        mBalanceAvailable = false;
         emImgIcon.setTag(-1);
         showChart(ivGraph.getTag() != null);
         channelDataToViews();
@@ -705,7 +706,7 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     @Override
     public void onDetailShow() {
         super.onDetailShow();
-        mBalanceAvailable = false;
+
         emProgress.setVisibility(INVISIBLE);
         ivDirection.setVisibility(mArrowsVisible ? VISIBLE : INVISIBLE);
         setProductionDataSource(false, false);
