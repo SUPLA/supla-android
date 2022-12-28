@@ -770,7 +770,22 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             master.setSelection(mct);
         }
     }
-    
+
+    private int getCorrectPosition(Spinner spinner, int position) {
+        if (spinner != null
+            && spinner.getAdapter() != null
+            && spinner.getAdapter().getCount() > 0) {
+            if (position < 0) {
+                position = 0;
+            }
+            if (position >= spinner.getAdapter().getCount()) {
+                position = spinner.getAdapter().getCount()-1;
+            }
+            return position;
+        }
+
+        return -1;
+    }
 
     public void restoreSpinners(int func,Spinner master,
                                 Spinner slave,
@@ -778,12 +793,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         int mct, sct;
         mct = prefs.getChartType(func, 0, -1);
         sct = prefs.getChartType(func, 1, -1);
-        if(mct < 0) mct = 0;
         
-        master.setSelection(mct);
+        master.setSelection(getCorrectPosition(master, mct));
         slaveReload.run();
         
-        slave.setSelection(sct);
+        slave.setSelection(getCorrectPosition(slave, sct));
     }
 
     public void setDateRangeBySpinners(Spinner master, Spinner slave) {
