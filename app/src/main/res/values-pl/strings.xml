@@ -177,8 +177,8 @@
 
     <string name="em_total_forward_avtive_energy">Energia czynna pobrana</string>
     <string name="em_reverse_active_energy">Energia czynna zwrócona</string>
-    <string name="em_total_forward_reactive_energy">Energia bierna pobrana</string>
-    <string name="em_total_reverse_reactive_energy">Energia bierna zwrócona</string>
+    <string name="em_total_forward_reactive_energy">Energia bierna indukcyjna</string>
+    <string name="em_total_reverse_reactive_energy">Energia bierna pojemnościowa</string>
     <string name="em_frequency">Częstotliwość</string>
     <string name="em_voltage">Napięcie</string>
     <string name="em_current">Natężenie</string>
