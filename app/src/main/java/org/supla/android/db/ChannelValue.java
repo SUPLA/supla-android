@@ -243,9 +243,9 @@ public class ChannelValue extends DbItem {
 
                 byte[] t = getChannelValue();
                 if (t.length >= 4) {
-                    int x = (int) t[3] & 0xFF;
+                    short x = (short) (t[3] & 0xFF);
                     x <<= 8;
-                    x |= (int) t[2] & 0xFF;
+                    x |= (short) (t[2] & 0xFF);
 
                     return x * 0.01;
                 }
@@ -268,9 +268,9 @@ public class ChannelValue extends DbItem {
 
                 byte[] t = getChannelValue();
                 if (t.length >= 6) {
-                    int x = (int) t[5] & 0xFF;
+                    short x = (short)(t[5] & 0xFF);
                     x <<= 8;
-                    x |= (int) t[4] & 0xFF;
+                    x |= (short) (t[4] & 0xFF);
 
                     return x * 0.01;
                 }
