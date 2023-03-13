@@ -230,6 +230,10 @@ public class SuplaConst {
     public final static int EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED = 0x4000;
     public final static int EM_VAR_ALL = 0xFFFF;
 
+    public final static int EM_VAR_POWER_ACTIVE_KW = 0x100000;
+    public final static int EM_VAR_POWER_REACTIVE_KVAR = 0x200000;
+    public final static int EM_VAR_POWER_APPARENT_KVA = 0x400000;
+
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V1 = 10;
     public final static int EV_TYPE_ELECTRICITY_METER_MEASUREMENT_V2 = 12;
     public final static int EV_TYPE_IMPULSE_COUNTER_DETAILS_V1 = 20;
