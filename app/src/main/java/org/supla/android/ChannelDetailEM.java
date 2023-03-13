@@ -378,11 +378,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 tvCurrent, tvlCurrent);
 
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_ACTIVE,
-                tvPowerActive, tvlPowerActive);
+            SuplaConst.EM_VAR_POWER_ACTIVE_KW, tvPowerActive, tvlPowerActive);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_REACTIVE,
-                tvPowerReactive, tvlPowerReactive);
+            SuplaConst.EM_VAR_POWER_REACTIVE_KVAR, tvPowerReactive, tvlPowerReactive);
         displayMeasurementDetail(vars, SuplaConst.EM_VAR_POWER_APPARENT,
-                tvPowerApparent, tvlPowerApparent);
+            SuplaConst.EM_VAR_POWER_APPARENT_KVA, tvPowerApparent, tvlPowerApparent);
 
         displayMeasurementDetail(vars, sum ? 0 : SuplaConst.EM_VAR_POWER_FACTOR,
                 tvPowerFactor, tvlPowerFactor);
@@ -581,11 +581,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvCurrent.setText(formatter.doubleToStringWithUnit(current,
                     "A", 3));
             tvPowerActive.setText(formatter.doubleToStringWithUnit(powerActive,
-                    "W", 5));
+                (vars & SuplaConst.EM_VAR_POWER_ACTIVE_KW) > 0 ? "kW" : "W", 5));
             tvPowerReactive.setText(formatter.doubleToStringWithUnit(powerReactive,
-                    "var", 5));
+                (vars & SuplaConst.EM_VAR_POWER_REACTIVE_KVAR) > 0 ? "kvar" : "var", 5));
             tvPowerApparent.setText(formatter.doubleToStringWithUnit(powerApparent,
-                    "VA", 5));
+                (vars & SuplaConst.EM_VAR_POWER_APPARENT_KVA) > 0 ? "kVA" : "VA", 5));
             tvPowerFactor.setText(formatter.doubleToStringWithUnit(powerFactor,
                     null, 3));
             tvPhaseAngle.setText(formatter.doubleToStringWithUnit(phaseAngle,
