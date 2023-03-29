@@ -175,10 +175,10 @@
     <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
     <string name="wizard_result_failed">Configuration Failed!</string>
     <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
-    <string name="em_total_forward_avtive_energy">Forward active Energy</string>
-    <string name="em_reverse_active_energy">Reverse active Energy</string>
-    <string name="em_total_forward_reactive_energy">Forward reactive Energy</string>
-    <string name="em_total_reverse_reactive_energy">Reverse reactive Energy</string>
+    <string name="em_total_forward_avtive_energy">Forward active energy</string>
+    <string name="em_reverse_active_energy">Reverse active energy</string>
+    <string name="em_total_forward_reactive_energy">Forward reactive energy</string>
+    <string name="em_total_reverse_reactive_energy">Reverse reactive energy</string>
     <string name="em_frequency">Frequency</string>
     <string name="em_voltage">Voltage</string>
     <string name="em_current">Current</string>

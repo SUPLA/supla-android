@@ -7,7 +7,7 @@ object Deps {
     const val GoogleMaterial = "com.google.android.material:material:${Versions.GoogleMaterial}"
 
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-    const val AndroidBuildTools = "com.android.tools.build:gradle:7.2.1"
+    const val AndroidBuildTools = "com.android.tools.build:gradle:7.4.2"
 
     const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
 
