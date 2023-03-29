@@ -571,6 +571,18 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
                 }
             }
 
+            if ((vars & SuplaConst.EM_VAR_POWER_ACTIVE_KW) > 0) {
+                powerActive *= 1000;
+            }
+
+            if ((vars & SuplaConst.EM_VAR_POWER_REACTIVE_KVAR) > 0) {
+                powerReactive *= 1000;
+            }
+
+            if ((vars & SuplaConst.EM_VAR_POWER_APPARENT_KVA) > 0) {
+                powerApparent *= 1000;
+            }
+
             SuplaFormatter formatter = SuplaFormatter.sharedFormatter();
 
             setBtnBackground(btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
@@ -581,11 +593,11 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
             tvCurrent.setText(formatter.doubleToStringWithUnit(current,
                     "A", 3));
             tvPowerActive.setText(formatter.doubleToStringWithUnit(powerActive,
-                (vars & SuplaConst.EM_VAR_POWER_ACTIVE_KW) > 0 ? "kW" : "W", 5));
+                "W", 5));
             tvPowerReactive.setText(formatter.doubleToStringWithUnit(powerReactive,
-                (vars & SuplaConst.EM_VAR_POWER_REACTIVE_KVAR) > 0 ? "kvar" : "var", 5));
+                "var", 5));
             tvPowerApparent.setText(formatter.doubleToStringWithUnit(powerApparent,
-                (vars & SuplaConst.EM_VAR_POWER_APPARENT_KVA) > 0 ? "kVA" : "VA", 5));
+                 "VA", 5));
             tvPowerFactor.setText(formatter.doubleToStringWithUnit(powerFactor,
                     null, 3));
             tvPhaseAngle.setText(formatter.doubleToStringWithUnit(phaseAngle,
