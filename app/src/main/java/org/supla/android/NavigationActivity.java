@@ -142,7 +142,7 @@ public class NavigationActivity extends BaseActivity
 
   private void updateProfileButtonVisibility(boolean visible) {
 
-    if (profileManager.getAllProfiles().size() > 1 && visible) {
+    if (profileManager.getAllProfiles().blockingFirst().size() > 1 && visible) {
       ProfileButton.setVisibility(View.VISIBLE);
     } else {
       ProfileButton.setVisibility(View.GONE);
@@ -399,10 +399,6 @@ public class NavigationActivity extends BaseActivity
     showActivity(this, AboutActivity.class, 0);
   }
 
-  public void showCreateAccount() {
-    showActivity(this, CreateAccountActivity.class, 0);
-  }
-
   public void showAddWizard() {
     showActivity(this, AddDeviceWizardActivity.class, 0);
   }
@@ -499,8 +495,7 @@ public class NavigationActivity extends BaseActivity
     if (CurrentActivity != null
         && !(CurrentActivity instanceof StatusActivity)
         && !(CurrentActivity instanceof CfgActivity)
-        && !(CurrentActivity instanceof AddDeviceWizardActivity)
-        && !(CurrentActivity instanceof CreateAccountActivity)) {
+        && !(CurrentActivity instanceof AddDeviceWizardActivity)) {
       showStatus(this);
     }
   }

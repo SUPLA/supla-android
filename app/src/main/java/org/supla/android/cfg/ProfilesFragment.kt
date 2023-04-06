@@ -25,26 +25,22 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.FragmentProfilesBinding
-import org.supla.android.profile.PROFILE_ID_NEW
+import org.supla.android.features.createaccount.CreateAccountFragment
+import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.profile.ProfileManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfilesFragment: Fragment() {
     @Inject internal lateinit var profileManager: ProfileManager
-    private val navCoordinator: NavCoordinator by activityViewModels()
+    @Inject internal lateinit var navigator: CfgActivityNavigator
+
     private val viewModel: CfgViewModel by activityViewModels()
     private val profilesVM: ProfilesViewModel by viewModels()
     private lateinit var binding: FragmentProfilesBinding
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
 
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
@@ -63,11 +59,12 @@ class ProfilesFragment: Fragment() {
 
     }
 
-    private fun openEditProfileView(profileId: Long) {
-        val navId = if(profileId == PROFILE_ID_NEW) R.id.newProfile else R.id.editProfile
-        val args = AuthFragmentArgs(profileId, asPopup = false)
-        navCoordinator.wantsBack = true
-        findNavController().navigate(navId, args.toBundle())
+    private fun openEditProfileView(profileId: Long?) {
+        if (profileId == null) {
+            navigator.navigateTo(R.id.cfgNewProfile,)
+        } else {
+            navigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(profileId))
+        }
     }
 
     override fun onCreateView(

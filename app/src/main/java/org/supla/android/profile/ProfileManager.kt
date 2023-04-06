@@ -18,11 +18,10 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.db.AuthProfileItem
-
-const val INVALID_VALUE: Long = -1
-const val PROFILE_ID_NEW: Long = INVALID_VALUE
-const val INVALID_PROFILE_ID: Long = -2
 
 /**
  * Additional holder class is needed because of circular dependency between
@@ -33,45 +32,37 @@ data class ProfileIdHolder(var profileId: Long?)
 interface ProfileManager {
 
     /**
-     * Returns current profile.
+     * Saves profile to database and sets the ID
      */
-    fun getCurrentProfile(): AuthProfileItem
+    fun create(profile: AuthProfileItem): Completable
 
     /**
-     * Updates current profile.
+     * Tries to get a profile for the given ID
      */
-    fun updateCurrentProfile(profile: AuthProfileItem)
+    fun read(id: Long): Maybe<AuthProfileItem>
 
     /**
-     * Get authentication settings of current profile.
+     * Updates given profile in the DB
      */
-    fun getCurrentAuthInfo(): AuthInfo
+    fun update(profile: AuthProfileItem): Completable
 
     /**
-     * Update authentication settings of current profile.
+     * Deletes profile with the given ID from DB
      */
-    fun updateCurrentAuthInfo(info: AuthInfo)
-
-
-    /**
-     * Return list of all user profiles
-     */
-    fun getAllProfiles(): List<AuthProfileItem>
+    fun delete(id: Long): Completable
 
     /**
-     * Return profile with given id
+     * Gets a list of all profiles stored in DB
      */
-    fun getProfile(id: Long): AuthProfileItem?
+    fun getAllProfiles(): Observable<List<AuthProfileItem>>
 
     /**
-     * Activate profile with given id
-     * returns true if profile has been changed (i.e. reauthentication
-     * is required).
+     * Gets a profile which currently is set as active
      */
-    fun activateProfile(id: Long, force: Boolean = false): Boolean
+    fun getCurrentProfile(): Maybe<AuthProfileItem>
 
     /**
-     * Remove profile
+     * Activates profile with the given ID in the DB
      */
-    fun removeProfile(id: Long)
+    fun activateProfile(id: Long, force: Boolean = false): Completable
 }

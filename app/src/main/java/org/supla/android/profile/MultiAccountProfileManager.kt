@@ -18,113 +18,74 @@ package org.supla.android.profile
  */
 
 
-import org.supla.android.Encryption
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.images.ImageCache
-import org.supla.android.lib.SuplaConst
 import org.supla.android.scenes.SceneEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
-import kotlin.random.Random
 
 class MultiAccountProfileManager(
-        private val dbHelper: DbHelper,
-        private val deviceId: String,
-        private val repo: ProfileRepository,
-        private val profileIdHolder: ProfileIdHolder,
-        private val widgetVisibilityHandler: WidgetVisibilityHandler,
-        private val sceneEventsManager: SceneEventsManager
+  private val dbHelper: DbHelper,
+  private val profileRepository: ProfileRepository,
+  private val profileIdHolder: ProfileIdHolder,
+  private val widgetVisibilityHandler: WidgetVisibilityHandler,
+  private val sceneEventsManager: SceneEventsManager
 ) : ProfileManager {
 
-    override fun getCurrentProfile(): AuthProfileItem {
-        return repo.allProfiles.first { it.isActive }
+  override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
+    if (profile.id != null) {
+      throw IllegalArgumentException("Entity which is planned to be created in the database shouldn't have ID!")
+    }
+    profile.id = profileRepository.createProfile(profile)
+  }
+
+  override fun read(id: Long): Maybe<AuthProfileItem> = Maybe.fromCallable {
+    profileRepository.getProfile(id)
+  }
+
+  override fun update(profile: AuthProfileItem): Completable = Completable.fromRunnable {
+    if (profile.id == null) {
+      throw IllegalArgumentException("It's not possible update entity without ID!")
+    }
+    profileRepository.updateProfile(profile)
+  }
+
+  override fun delete(id: Long): Completable = Completable.fromRunnable {
+    profileRepository.deleteProfile(id)
+    widgetVisibilityHandler.onProfileRemoved(id)
+  }
+
+  override fun getAllProfiles(): Observable<List<AuthProfileItem>> = Observable.fromCallable {
+    profileRepository.allProfiles
+  }
+
+  override fun getCurrentProfile(): Maybe<AuthProfileItem> = Maybe.fromCallable {
+    profileRepository.allProfiles.firstOrNull { it.isActive }
+  }
+
+  override fun activateProfile(id: Long, force: Boolean): Completable = Completable.fromRunnable {
+    val current = profileRepository.allProfiles.firstOrNull { it.isActive }
+    if (current != null && current.id == id && !force) {
+      return@fromRunnable
     }
 
-    override fun updateCurrentProfile(profile: AuthProfileItem) {
-        var forceActivate: Boolean
-        if(profile.id == PROFILE_ID_NEW) {
-            profile.id = repo.createNamedProfile(profile.name)
-            forceActivate = profile.isActive
-        } else if(profile.isActive) {
-            val prev = getProfile(profile.id)
-            forceActivate = profile.isActive && !(prev?.isActive?:false)
-
-            if(prev != null && prev.authInfoChanged(profile)) {
-                forceActivate = true
-            }
-        } else {
-            forceActivate = false
-        }
-
-        repo.updateProfile(profile)
-        dbHelper.deleteUserIcons(profile.id)
-        if(profile.isActive) {
-            activateProfile(profile.id, forceActivate)
-        }
+    if (profileRepository.setProfileActive(id)) {
+      profileIdHolder.profileId = id
     }
+    initiateReconnect()
+    dbHelper.loadUserIconsIntoCache()
+    sceneEventsManager.cleanup()
+  }
 
-    override fun getCurrentAuthInfo(): AuthInfo {
-        return getCurrentProfile().authInfo
+  private fun initiateReconnect() {
+    with(SuplaApp.getApp()) {
+      CancelAllRestApiClientTasks(true)
+      cleanupToken()
+      suplaClient?.reconnect()
     }
-
-    override fun updateCurrentAuthInfo(info: AuthInfo) {
-        val cp = getCurrentProfile()
-        val np = cp.copy(authInfo = info)
-        np.id = cp.id
-        updateCurrentProfile(np)
-    }
-
-    override fun getAllProfiles(): List<AuthProfileItem> {
-        return repo.allProfiles
-    }
-
-    override fun getProfile(id: Long): AuthProfileItem? {
-        return if (id == PROFILE_ID_NEW) {
-            val authInfo = AuthInfo(emailAuth=true,
-                                    serverAutoDetect=true,
-                                    guid=encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE)),
-                                    authKey=encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE)))
-            val rv = AuthProfileItem(authInfo=authInfo,
-                                     advancedAuthSetup=false,
-                                     isActive=if(repo.allProfiles.size > 0) false else true)
-            rv.id = id
-            rv
-        } else {
-            repo.getProfile(id)
-        }
-    }
-
-    override fun activateProfile(id: Long, force: Boolean): Boolean {
-        val current = getCurrentProfile()
-        if((current.id == id && !force)) {
-            return false
-        }
-
-        initiateReconnect()
-        if(repo.setProfileActive(id)) {
-            profileIdHolder.profileId = id
-        }
-        dbHelper.loadUserIconsIntoCache()
-        sceneEventsManager.cleanup()
-        return true
-    }
-
-    override fun removeProfile(id: Long) {
-        repo.deleteProfile(id)
-        widgetVisibilityHandler.onProfileRemoved(id)
-    }
-
-    private fun initiateReconnect() {
-        with(SuplaApp.getApp()) {
-            CancelAllRestApiClientTasks(true)
-            cleanupToken()
-            suplaClient?.reconnect()
-        }
-    }
-
-    private fun encrypted(bytes: ByteArray): ByteArray {
-        return Encryption.encryptDataWithNullOnException(bytes, deviceId)
-    }
+  }
 }

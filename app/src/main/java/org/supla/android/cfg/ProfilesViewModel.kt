@@ -22,7 +22,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.profile.ProfileManager
-import org.supla.android.profile.PROFILE_ID_NEW
 import org.supla.android.db.AuthProfileItem
 import javax.inject.Inject
 
@@ -40,7 +39,7 @@ class ProfilesViewModel @Inject constructor(private val profileManager: ProfileM
     }
 
     fun onNewProfile() {
-        _uiState.value = ProfilesUiState.EditProfile(PROFILE_ID_NEW)
+        _uiState.value = ProfilesUiState.EditProfile(null)
     }
 
     override fun onEditProfile(profileId: Long) {
@@ -48,20 +47,27 @@ class ProfilesViewModel @Inject constructor(private val profileManager: ProfileM
     }
 
     fun onActivateProfile(profileId: Long) {
-        if(profileManager.activateProfile(profileId, true)) {
+        val activated = try {
+            profileManager.activateProfile(profileId, true).blockingAwait()
+            true
+        } catch (throwable: Throwable) {
+            false
+        }
+
+        if(activated) {
             _uiState.value = ProfilesUiState.ProfileActivation(profileId)
         }
     }
 
     fun reload() {
-        val profiles = profileManager.getAllProfiles()
+        val profiles = profileManager.getAllProfiles().blockingFirst()
         _uiState.value = ProfilesUiState.ListProfiles(profiles)
     }
 }
 
 sealed class ProfilesUiState {
     data class ListProfiles(val profiles: List<AuthProfileItem>): ProfilesUiState()
-    data class EditProfile(val profileId: Long): ProfilesUiState()
+    data class EditProfile(val profileId: Long?): ProfilesUiState()
     data class ProfileActivation(val profileId: Long): ProfilesUiState()
 }
 

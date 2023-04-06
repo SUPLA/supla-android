@@ -86,7 +86,7 @@ public class SuperuserAuthorizationDialog implements View.OnClickListener, Dialo
         ProfileManager profileManager = EntryPointAccessors.fromApplication(
                 context.getApplicationContext(), ProfileManagerEntryPoint.class)
                 .provideProfileManager();
-        AuthInfo ainfo = profileManager.getCurrentProfile().getAuthInfo();
+        AuthInfo ainfo = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
         edEmail.setText(ainfo.getEmailAddress(),
                         EditText.BufferType.EDITABLE);
 

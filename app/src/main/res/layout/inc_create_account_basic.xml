@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="org.supla.android.cfg.AuthItemViewModel" />
+            type="org.supla.android.features.createaccount.CreateAccountViewModel" />
     </data>
 
     <LinearLayout
@@ -41,8 +41,7 @@
             android:layout_marginStart="2dp"
             android:text="@string/profile_name_label"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="9sp"
-            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}" />
+            android:textSize="9sp" />
 
         <EditText
             android:id="@+id/cfg_profile_name"
@@ -54,12 +53,10 @@
             android:fontFamily="@font/open_sans_regular"
             android:lines="1"
             android:maxLines="1"
-            android:onTextChanged="@{viewModel::onProfileNameChange}"
             android:padding="5dp"
             android:singleLine="true"
-            android:text="@{viewModel.profileName}"
-            android:textSize="14sp"
-            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}" />
+            android:text="@{viewModel.viewState.accountName}"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/cfg_label_email"
@@ -82,9 +79,8 @@
             android:background="@drawable/rounded_edittext"
             android:fontFamily="@font/open_sans_regular"
             android:inputType="textEmailAddress"
-            android:onTextChanged="@{viewModel::onEmailChange}"
             android:padding="5dp"
-            android:text="@={viewModel.emailAddress}"
+            android:text="@{viewModel.viewState.emailAddress}"
             android:textSize="14sp" />
 
     </LinearLayout>

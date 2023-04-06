@@ -509,4 +509,11 @@
     <string name="btn_abort">Przerwij</string>
     <string name="btn_abort_and_execute">Przewij i wykonaj</string>
     <string name="scene_name">Nazwa sceny</string>
+
+  <string name="remove_account_title">Usunąć konto?</string>
+  <string name="remove_account_locally">Zapomnij na tym urządzeniu</string>
+  <string name="remove_account_remotely">Zapomnij i usuń na serwerze</string>
+  <string name="cancel">Anuluj</string>
+  <string name="form_profile_removal_failure">Usunięcie konta nie powiodło się, spróbuje ponownie</string>
+  <string name="general_failure">Wykonanie akcji nie powiodło się</string>
 </resources>

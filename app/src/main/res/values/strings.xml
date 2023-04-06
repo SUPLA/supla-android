@@ -519,4 +519,11 @@
     <string translatable="false" name="btn_abort">Abort</string>
     <string translatable="false" name="btn_abort_and_execute">Abort and execute</string>
     <string translatable="false" name="scene_name">Scene name</string>
+
+    <string translatable="false" name="remove_account_title">Delete account?</string>
+    <string translatable="false" name="remove_account_locally">Forget on this device</string>
+    <string translatable="false" name="remove_account_remotely">Forget and remove on cloud</string>
+    <string translatable="false" name="cancel">Cancel</string>
+    <string translatable="false" name="form_profile_removal_failure">Removal of your account failed, please try again</string>
+    <string translatable="false" name="general_failure">Action was not performed successfully</string>
 </resources>

@@ -83,8 +83,7 @@ public class DbHelper extends BaseDbHelper {
   }
 
   /**
-   * Gets a single instance of the {@link DbHelper} class. If the instance does not exist, is
-   * created like in classic Singleton pattern.
+   * Gets a single instance of the {@link DbHelper} class. If the instance does not exist, is created like in classic Singleton pattern.
    *
    * @param context The context.
    * @return {@link DbHelper} instance.
@@ -745,7 +744,9 @@ public class DbHelper extends BaseDbHelper {
   private void insertDefaultProfile(SQLiteDatabase db) {
     ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
     AuthProfileItem itm = migrator.makeProfileUsingPreferences();
-    db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    if (itm != null) {
+      db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    }
   }
 
   private void alterTablesToReferProfile(SQLiteDatabase db) {
@@ -999,14 +1000,14 @@ public class DbHelper extends BaseDbHelper {
     db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv, null, null);
     String column_name = "profileid";
     String tables[] = {
-      SuplaContract.LocationEntry.TABLE_NAME,
-      SuplaContract.ChannelEntry.TABLE_NAME,
-      SuplaContract.ChannelValueEntry.TABLE_NAME,
-      SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-      SuplaContract.ColorListItemEntry.TABLE_NAME,
-      SuplaContract.ChannelGroupEntry.TABLE_NAME,
-      SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-      SuplaContract.UserIconsEntry.TABLE_NAME
+        SuplaContract.LocationEntry.TABLE_NAME,
+        SuplaContract.ChannelEntry.TABLE_NAME,
+        SuplaContract.ChannelValueEntry.TABLE_NAME,
+        SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+        SuplaContract.ColorListItemEntry.TABLE_NAME,
+        SuplaContract.ChannelGroupEntry.TABLE_NAME,
+        SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+        SuplaContract.UserIconsEntry.TABLE_NAME
     };
 
     for (String table : tables) {
@@ -1022,8 +1023,11 @@ public class DbHelper extends BaseDbHelper {
     byte[] encrypted;
     String key = Preferences.getDeviceID(getContext());
 
-    if (payload == null) encrypted = null;
-    else encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    if (payload == null) {
+      encrypted = null;
+    } else {
+      encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    }
     if (encrypted == null) {
       cv.putNull(column);
     } else {

@@ -178,7 +178,7 @@ public class StatusActivity extends NavigationActivity {
         super.onClick(v);
 
         if (v == btnSettings) {
-            if(profileManager.getAllProfiles().size() <= 1) {
+            if(profileManager.getAllProfiles().blockingFirst().size() <= 1) {
                 NavigationActivity.showAuth(this);
             } else {
                 NavigationActivity.showProfile(this);
@@ -248,7 +248,7 @@ public class StatusActivity extends NavigationActivity {
                 && (error.ResultCode == SuplaConst.SUPLA_RESULTCODE_REGISTRATION_DISABLED
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
-            if (profileManager.getCurrentProfile().getAuthInfo().getEmailAuth()) {
+            if (profileManager.getCurrentProfile().blockingGet().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
                 }

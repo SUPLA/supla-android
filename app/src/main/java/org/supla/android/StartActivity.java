@@ -59,7 +59,7 @@ public class StartActivity extends BaseActivity {
             public void run() {
 
 
-                if (prefs.configIsSet()) {
+                if (prefs.isAnyAccountRegistered()) {
                     NavigationActivity.showMain(startActivity);
                 } else {
                     NavigationActivity.showAuth(startActivity);

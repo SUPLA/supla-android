@@ -12,12 +12,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.features.createaccount.CreateAccountViewEvent
+import org.supla.android.features.createaccount.CreateAccountViewModel
 import org.supla.android.profile.AuthInfo
 import org.supla.android.profile.ProfileManager
 import org.supla.android.widget.WidgetManager
 
 @RunWith(MockitoJUnitRunner::class)
-class AuthItemViewModelTest {
+class CreateAccountViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -28,7 +30,7 @@ class AuthItemViewModelTest {
     private lateinit var widgetManager: WidgetManager
 
     @InjectMocks
-    private lateinit var viewModel: AuthItemViewModel
+    private lateinit var viewModel: CreateAccountViewModel
 
     @Test
     fun shouldInformWhenDeletingActiveProfile() = runBlocking {
@@ -46,7 +48,7 @@ class AuthItemViewModelTest {
         // then
         val action = viewModel.editAction.first()
         assertNotNull(action)
-        assertTrue(action is AuthItemEditAction.Alert)
+        assertTrue(action is CreateAccountViewEvent.Alert)
         verify(profileManager).getProfile(profileId)
         verifyNoMoreInteractions(profileManager)
         verifyZeroInteractions(widgetManager)
@@ -69,8 +71,8 @@ class AuthItemViewModelTest {
         // then
         val action = viewModel.editAction.first()
         assertNotNull(action)
-        assertTrue(action is AuthItemEditAction.ConfirmDelete)
-        assertTrue((action as AuthItemEditAction.ConfirmDelete).hasWidgets)
+        assertTrue(action is CreateAccountViewEvent.ConfirmDelete)
+        assertTrue((action as CreateAccountViewEvent.ConfirmDelete).hasWidgets)
         verify(profileManager).getProfile(profileId)
         verify(widgetManager).hasProfileWidgets(profileId)
         verifyNoMoreInteractions(profileManager, widgetManager)
@@ -92,8 +94,8 @@ class AuthItemViewModelTest {
         // then
         val action = viewModel.editAction.first()
         assertNotNull(action)
-        assertTrue(action is AuthItemEditAction.ConfirmDelete)
-        assertFalse((action as AuthItemEditAction.ConfirmDelete).hasWidgets)
+        assertTrue(action is CreateAccountViewEvent.ConfirmDelete)
+        assertFalse((action as CreateAccountViewEvent.ConfirmDelete).hasWidgets)
         verify(profileManager).getProfile(profileId)
         verify(widgetManager).hasProfileWidgets(profileId)
         verifyNoMoreInteractions(profileManager, widgetManager)
@@ -109,13 +111,13 @@ class AuthItemViewModelTest {
 
         // when
         viewModel.onCreated(profileId)
-        viewModel.onDeleteProfile(true)
+        viewModel.onDeleteProfile()
 
         // then
         val action = viewModel.editAction.first()
         assertNotNull(action)
-        assertTrue(action is AuthItemEditAction.ReturnFromAuth)
-        assertTrue((action as AuthItemEditAction.ReturnFromAuth).authSettingChanged)
+        assertTrue(action is CreateAccountViewEvent.ReturnFromCreateAccount)
+        assertTrue((action as CreateAccountViewEvent.ReturnFromCreateAccount).authSettingChanged)
         verify(profileManager).getProfile(profileId)
         verify(profileManager).removeProfile(profileId)
         verifyNoMoreInteractions(profileManager)

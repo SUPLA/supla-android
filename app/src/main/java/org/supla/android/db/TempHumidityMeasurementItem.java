@@ -61,7 +61,7 @@ public class TempHumidityMeasurementItem extends MeasurementItem {
     @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
-        setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TempHumidityLogEntry._ID)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.TempHumidityLogEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID)));
 

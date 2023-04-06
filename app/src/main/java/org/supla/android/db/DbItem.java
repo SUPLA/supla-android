@@ -22,13 +22,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public abstract class DbItem {
-    private long Id;
+    private Long Id;
 
-    public long getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         Id = id;
     }
 

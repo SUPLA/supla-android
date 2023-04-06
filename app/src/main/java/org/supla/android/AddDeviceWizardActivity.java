@@ -423,7 +423,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        if (!profileManager.getCurrentProfile().isEmailAuthorizationEnabled()) {
+        if (!profileManager.getCurrentProfile().blockingGet().isEmailAuthorizationEnabled()) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
@@ -1136,7 +1136,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
                         espConfigTask.setDelegate(wizard);
 
                         setStep(STEP_CONFIGURE);
-                        AuthInfo info = profileManager.getCurrentAuthInfo();
+                        AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
                                 info.getServerForEmail(),
@@ -1228,7 +1228,7 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
                         setStep(STEP_CONFIGURE);
 
-                        AuthInfo ai = profileManager.getCurrentAuthInfo();
+                        AuthInfo ai = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
                         espConfigTask.execute(getSelectedSSID(),
                                 edPassword.getText().toString(),
                                 ai.getServerForEmail(),

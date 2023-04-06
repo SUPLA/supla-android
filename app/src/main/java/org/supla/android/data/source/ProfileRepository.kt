@@ -22,8 +22,8 @@ import org.supla.android.db.AuthProfileItem
 
 
 interface ProfileRepository {
-    fun createNamedProfile(name: String): Long
     val allProfiles: List<AuthProfileItem>
+    fun createProfile(profile: AuthProfileItem): Long
     fun getProfile(id: Long): AuthProfileItem?
     fun deleteProfile(id: Long)
     fun updateProfile(profile: AuthProfileItem)

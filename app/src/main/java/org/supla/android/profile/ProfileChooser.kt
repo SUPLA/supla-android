@@ -32,7 +32,7 @@ class ProfileChooser(private val context: Context,
     var listener: Listener? = null
 
     init {
-        profiles = profileManager.getAllProfiles().toTypedArray()
+        profiles = profileManager.getAllProfiles().blockingFirst().toTypedArray()
     }
 
     fun show() {
@@ -59,7 +59,14 @@ class ProfileChooser(private val context: Context,
     }
 
     fun selectProfile(idx: Int) {
-        if(profileManager.activateProfile(profiles[idx].id, false)) {
+        val activated = try {
+            profileManager.activateProfile(profiles[idx].id, false).blockingAwait()
+            true
+        } catch (throwable: Throwable) {
+            false
+        }
+
+        if(activated) {
             listener?.onProfileChanged()
         }
         dialog?.dismiss()

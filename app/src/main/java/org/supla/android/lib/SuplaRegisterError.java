@@ -21,12 +21,13 @@ package org.supla.android.lib;
 import android.content.Context;
 
 import org.supla.android.R;
-import org.supla.android.SuplaApp;
+import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaRegisterError {
 
     public int ResultCode;
 
+    @UsedFromNativeCode
     public SuplaRegisterError() {
         // This constructor is used by native code
     }

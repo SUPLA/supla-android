@@ -249,7 +249,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
             return;
         }
 
-        boolean hasManyAccounts = profileManager.getAllProfiles().size() > 1;
+        boolean hasManyAccounts = profileManager.getAllProfiles().blockingFirst().size() > 1;
 
         availableButtons = available;
         mMainButtonsAreaLayout.removeAllViews();

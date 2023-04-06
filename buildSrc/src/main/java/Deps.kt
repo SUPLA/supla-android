@@ -11,6 +11,8 @@ object Deps {
 
     const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
 
+    const val FragmentViewBinding = "com.github.Zhuinden:fragmentviewbindingdelegate-kt:${Versions.FragmentViewBinding}"
+
     object Hilt {
         const val Hilt = "com.google.dagger:hilt-android:${Versions.Hilt}"
         const val Kapt = "com.google.dagger:hilt-android-compiler:${Versions.Hilt}"
@@ -47,6 +49,7 @@ object Deps {
     object RxJava {
         const val RxJava = "io.reactivex.rxjava3:rxjava:${Versions.RxJava.RxJava}"
         const val RxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.RxJava.RxAndroid}"
+        const val RxKotlin = "com.github.reactivex:rxkotlin:${Versions.RxJava.RxKotlin}"
     }
 
     object Testing {

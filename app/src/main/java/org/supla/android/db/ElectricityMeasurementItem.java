@@ -147,7 +147,7 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
-        setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID)));
 

@@ -71,7 +71,7 @@ public class ThermostatMeasurementItem extends MeasurementItem {
     @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
-        setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry._ID)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID)));
 

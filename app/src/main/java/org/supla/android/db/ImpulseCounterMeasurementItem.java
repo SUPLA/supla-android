@@ -67,7 +67,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
     @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
-        setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry._ID)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID)));
 

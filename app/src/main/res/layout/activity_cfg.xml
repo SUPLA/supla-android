@@ -1,41 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-  <data>
-    <import type="android.view.View" />
-    <variable
-        name="viewModel"
-        type="org.supla.android.cfg.CfgViewModel" />
-  </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
   <!-- Note: this part should go to more generic nav activity
        once new navigation model gets implemented in the rest
        of the app. -->
   <androidx.coordinatorlayout.widget.CoordinatorLayout
-      id="@+id/nav_area"
+    android:id="@+id/nav_area"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg">
+
+    <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@color/activity_bg">
-    <androidx.fragment.app.FragmentContainerView
+      android:layout_height="match_parent">
+
+      <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        />
-    <com.google.android.material.appbar.AppBarLayout
+        app:defaultNavHost="true" />
+
+      <RelativeLayout
+        android:id="@+id/loadingIndicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        >
+        android:layout_height="match_parent"
+        android:background="@color/dialog_scrim"
+        android:visibility="gone">
+
+        <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:indeterminate="true" />
+      </RelativeLayout>
+    </FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true">
+
       <org.supla.android.ui.AppBar
-          android:id="@+id/nav_toolbar"
-          style="@style/AppBar"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/top_bar_height"
-          />
+        android:id="@+id/nav_toolbar"
+        style="@style/AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height" />
     </com.google.android.material.appbar.AppBarLayout>
 
   </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,7 +15,7 @@
 
         <variable
             name="viewModel"
-            type="org.supla.android.cfg.AuthItemViewModel" />
+            type="org.supla.android.features.createaccount.CreateAccountViewModel" />
     </data>
 
     <RelativeLayout
@@ -41,8 +41,7 @@
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/profile_name_label"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="9sp"
-            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE }" />
+            android:textSize="9sp" />
 
         <EditText
             android:id="@+id/cfg_profile_name"
@@ -55,12 +54,10 @@
             android:fontFamily="@font/open_sans_regular"
             android:lines="1"
             android:maxLines="1"
-            android:onTextChanged="@{viewModel::onProfileNameChange}"
             android:padding="5dp"
             android:singleLine="true"
-            android:text="@{viewModel.profileName}"
-            android:textSize="14sp"
-            android:visibility="@{viewModel.allowsEditingProfileName ? View.VISIBLE : View.GONE}" />
+            android:text="@{viewModel.viewState.accountName}"
+            android:textSize="14sp" />
 
         <org.supla.android.ui.SegmentedButtonGroup
             android:id="@+id/authType"
@@ -102,7 +99,7 @@
                 android:id="@+id/emailAuthForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:visibility="@{viewModel.authByEmail ? View.VISIBLE : View.GONE}">
+                app:visibility="@{viewModel.viewState.authorizeByEmail ? View.VISIBLE : View.GONE}">
 
                 <TextView
                     android:id="@+id/cfg_label_email"
@@ -127,9 +124,8 @@
                     android:background="@drawable/rounded_edittext"
                     android:fontFamily="@font/open_sans_regular"
                     android:inputType="textEmailAddress"
-                    android:onTextChanged="@{viewModel::onEmailChange}"
                     android:padding="5dp"
-                    android:text="@={viewModel.emailAddress}"
+                    android:text="@{viewModel.viewState.emailAddress}"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -156,12 +152,11 @@
                     android:layout_marginTop="@dimen/form_label_dist"
                     android:layout_marginEnd="25dp"
                     android:background="@drawable/rounded_edittext"
-                    android:enabled="@{!viewModel.serverAutoDiscovery}"
                     android:fontFamily="@font/open_sans_regular"
                     android:importantForAutofill="no"
                     android:inputType="textUri|textNoSuggestions"
                     android:padding="5dp"
-                    android:text="@={viewModel.serverAddrEmail}"
+                    android:text="@{viewModel.viewState.emailAddressServer}"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="@id/cfg_email"
                     app:layout_constraintRight_toLeftOf="@id/cb_auto_label"
@@ -172,7 +167,6 @@
                     style="@style/CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.serverAutoDiscovery}"
                     android:onClick="@{() -> viewModel.toggleServerAutoDiscovery()}"
                     android:textAllCaps="false"
                     app:layout_constrainedWidth="true"
@@ -195,7 +189,7 @@
                 android:id="@+id/cfg_accessIdAuthForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.authByEmail ? View.GONE : View.VISIBLE}">
+                android:visibility="@{viewModel.viewState.authorizeByEmail ? View.GONE : View.VISIBLE}">
 
                 <TextView
                     android:id="@+id/cfg_label_access_id"
@@ -222,7 +216,7 @@
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:padding="5dp"
-                    android:text="@={viewModel.accessID}"
+                    android:text="@{viewModel.viewState.accessIdentifier}"
                     android:textSize="14sp" />
 
                 <TextView
@@ -249,7 +243,7 @@
                     android:fontFamily="@font/open_sans_regular"
                     android:inputType="textPassword"
                     android:padding="5dp"
-                    android:text="@={viewModel.accessIDpwd}"
+                    android:text="@{viewModel.viewState.accessIdentifierPassword}"
                     android:textSize="14sp" />
 
                 <TextView
@@ -278,7 +272,7 @@
                     android:importantForAutofill="no"
                     android:inputType="textUri|textNoSuggestions"
                     android:padding="5dp"
-                    android:text="@={viewModel.serverAddrAccessID}"
+                    android:text="@{viewModel.viewState.accessIdentifierServer}"
                     android:textSize="14sp" />
 
                 <TextView

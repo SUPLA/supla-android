@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -81,7 +82,10 @@ public class SuplaApp extends MultiDexApplication
   public void onCreate() {
     super.onCreate();
     SuplaApp._SuplaApp = this;
-    profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
+    AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
+    if (currentProfile != null) {
+      profileIdHolder.setProfileId(currentProfile.getId());
+    }
 
     SuplaFormatter.sharedFormatter();
 

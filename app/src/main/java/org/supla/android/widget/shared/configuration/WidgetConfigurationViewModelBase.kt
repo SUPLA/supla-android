@@ -142,10 +142,10 @@ abstract class WidgetConfigurationViewModelBase(
   private fun triggerDataLoad() {
     viewModelScope.launch {
       withContext(dispatchers.io()) {
-        val configSet = preferences.configIsSet()
+        val configSet = preferences.isAnyAccountRegistered
         if (configSet) {
-          _profilesList.postValue(profileManager.getAllProfiles())
-          selectedProfile = profileManager.getCurrentProfile()
+          _profilesList.postValue(profileManager.getAllProfiles().blockingFirst())
+          selectedProfile = profileManager.getCurrentProfile().blockingGet()
 
           loadItems()
         }

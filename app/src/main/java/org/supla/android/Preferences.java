@@ -41,8 +41,6 @@ public class Preferences {
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
     private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
-    private static final String pref_hp_turbo_time = "pref_hp_turbo_time";
-    private static final String pref_hp_eco_reduction = "pref_hp_eco_reduction";
     private static final String pref_brightness_picker_type_slider
             = "pref_brightness_picker_type_slider";
     private static final String pref_temperature_unit = "pref_temperature_unit";
@@ -52,6 +50,8 @@ public class Preferences {
     private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
     private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
+
+    private static final String pref_any_account_registered = "pref_any_account_registered";
 
     private final Context _context;
     private final ProfileManager profileManager;
@@ -152,11 +152,6 @@ public class Preferences {
     @Deprecated
     public byte[] getAuthKey() {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
-    }
-
-    public boolean configIsSet() {
-        return profileManager.getCurrentProfile()
-            .getAuthInfo().isAuthDataComplete();
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
@@ -262,7 +257,7 @@ public class Preferences {
     }
 
     private String getChartTypeKey(int channel, int idx) {
-        int pid = (int)profileManager.getCurrentProfile().getId();
+        int pid = profileManager.getCurrentProfile().blockingGet().getId().intValue();
         return String.format(pref_chart_type, channel, pid, idx);
     }
 
@@ -274,5 +269,13 @@ public class Preferences {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putInt(getChartTypeKey(channel, idx), charttype);
         ed.apply();
+    }
+
+    public boolean isAnyAccountRegistered() {
+        return _prefs.getBoolean(pref_any_account_registered, false);
+    }
+
+    public void setAnyAccountRegistered(boolean isRegistered) {
+        _prefs.edit().putBoolean(pref_any_account_registered, isRegistered).apply();
     }
 }

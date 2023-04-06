@@ -19,12 +19,12 @@ package org.supla.android.widget
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.supla.android.profile.INVALID_PROFILE_ID
-import org.supla.android.profile.INVALID_VALUE
 import org.supla.android.widget.shared.configuration.ItemType
 
 const val INVALID_CHANNEL_ID = -1
 private const val SHARED_PREFERENCES = "SwitchPreferences"
+private const val INVALID_VALUE = -1L
+internal const val INVALID_PROFILE_ID = -1L
 
 /**
  * Maintains widget specific preferences.

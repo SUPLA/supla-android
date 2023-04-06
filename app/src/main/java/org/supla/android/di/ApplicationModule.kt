@@ -8,8 +8,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.Preferences
+import org.supla.android.SuplaApp
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
+import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
@@ -30,7 +33,6 @@ class ApplicationModule {
   @Provides
   @Singleton
   fun provideProfileManager(
-    @ApplicationContext context: Context,
     dbHelper: DbHelper,
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
@@ -39,7 +41,6 @@ class ApplicationModule {
   ): ProfileManager {
     return MultiAccountProfileManager(
       dbHelper,
-      Preferences.getDeviceID(context),
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
@@ -61,6 +62,12 @@ class ApplicationModule {
   @Singleton
   fun provideAppWidgetManager(@ApplicationContext context: Context) =
     AppWidgetManager.getInstance(context)
+
+  @Provides
+  @Singleton
+  fun provideSuplaClientProvider(): SuplaClientProvider = object: SuplaClientProvider {
+    override fun provide(): SuplaClient = SuplaApp.getApp().suplaClient
+  }
 
   @Provides
   @Singleton

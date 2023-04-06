@@ -387,7 +387,7 @@
     <string name="profile_act_info">Konto antippen, um sich anzumelden</string>
     <string name="form_error">Fehler</string>
     <string name="form_profile_name_missing">Kontoname angeben</string>
-    <string name="form_profile_required_data_missing">Erforderliche Angaben vervollständigen</string>
+    <string name="form_profile_required_data_missing">Bitte die erforderliche Angaben vervollständigen</string>
     <string name="form_profile_duplicate">Es gibt schon ein Konto mit diesem Namen</string>
     <string name="add_account">Konto hinzufügen</string>
     <string name="edit_account">Konto bearbeiten</string>
@@ -455,4 +455,11 @@
     <string name="rs_display_mode_opening">Öffnungen</string>
     <string name="rs_display_mode_closing">Schließungen</string>
     <string name="status_accessid_inactive">Zugriffskennung nicht aktiv</string>
+
+ <string name="remove_account_title">Das Konto löschen?</string>
+ <string name="remove_account_locally">Vergiss auf diesem Gerät</string>
+ <string name="remove_account_remotely">Vergiss und lösch im Cloud</string>
+ <string name="cancel">Abbrechen</string>
+ <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
+ <string translatable="false" name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 </resources>

@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.extensions.getAllWidgetIds
-import org.supla.android.profile.INVALID_PROFILE_ID
 import javax.inject.Inject
 import javax.inject.Singleton
 

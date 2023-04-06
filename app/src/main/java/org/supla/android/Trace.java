@@ -17,7 +17,7 @@ public class Trace
         if ( LOGGING_LEVEL >=1) Log.e(tag,msg);
     }
 
-    public static void e(String tag, String msg, Exception e)
+    public static void e(String tag, String msg, Throwable e)
     {
         if ( LOGGING_LEVEL >=1) Log.e(tag,msg,e);
     }

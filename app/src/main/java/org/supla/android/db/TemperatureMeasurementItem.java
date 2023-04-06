@@ -49,7 +49,7 @@ public class TemperatureMeasurementItem extends MeasurementItem {
     @SuppressLint("Range")
     public void AssignCursorData(Cursor cursor) {
 
-        setId(cursor.getInt(cursor.getColumnIndex(SuplaContract.TemperatureLogEntry._ID)));
+        setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.TemperatureLogEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(
                 SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID)));
 
