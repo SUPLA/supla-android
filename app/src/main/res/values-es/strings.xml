@@ -53,12 +53,12 @@
     <string name="channel_btn_off">Desactivar</string>
 
     <string name="event_openedthegateway">ha abierto el portillo</string>
-    <string name="event_openedclosedthegate">ha abierto / ha cerrado la puerta</string>
-    <string name="event_openedclosedthegatedoors">ha abierto / ha cerrado la puerta de garaje</string>
+    <string name="event_openedclosedthegate">ha abierto / cerrado la puerta</string>
+    <string name="event_openedclosedthegatedoors">ha abierto / cerrado la puerta de garaje</string>
     <string name="event_openedthedoor">ha abierto la puerta</string>
-    <string name="event_openedcloserollershutter">ha abierto / ha cerrado la persiana</string>
+    <string name="event_openedcloserollershutter">ha abierto / cerrado la persiana</string>
     <string name="event_poweronoff">ha activado / desactivado la alimentación</string>
-    <string name="event_turnedthelightonoff">ha encendido / ha apagado la luz</string>
+    <string name="event_turnedthelightonoff">ha encendido / apagado la luz</string>
 
     <string name="server_address">DIRECCIÓN DEL SERVIDOR</string>
     <string name="access_id">IDENTIFICACIÓN DE ACCESO</string>
@@ -101,7 +101,7 @@
     <string name="next">Siguiente</string>
     <string name="wizard_addnetwork_error">¡No se puede añadir la configuración de la red WiFi!</string>
     <string name="wizard_result_conn_error">¡No se puede establecer una conexión con el dispositivo!</string>
-    <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quiere configurar esta en el modo de configuración y a continuación inténtelo de nuevo. IMPORTANTE – En algunas versiones de Android es necesario activar el GPS  para permitir la búsqueda de redes WiFi a las aplicaciones, por lo tanto asegúrese de tener el GPS activado.</string>
+    <string name="wizard_iodevice_notfound">¡No se ha encontrado ningún dispositivo! Comprueba que el dispositivo que quiere configurar está en el modo de configuración y a continuación inténtelo de nuevo. IMPORTANTE – En algunas versiones de Android es necesario activar el GPS  para permitir la búsqueda de redes WiFi a las aplicaciones, por lo tanto asegúrese de tener el GPS activado.</string>
     <string name="wizard_step3_txt1">Conecte su dispositivo de entrada/salida a la alimentación. El dispositivo debería funcionar por defecto en el modo de configuración, señalizándolo mediante el parpadeo del diodo de estado de la siguiente forma</string>
     <string name="wizard_iodev_laststate">Estado anterior</string>
     <string name="wizard_wifi_timeout">¡Se ha superado el tiempo de espera para los datos de la red WiFi actual! Ve a los ajustes de Wi-Fi de Android, selecciona Avanzado, luego marca "Activar Wi-Fi automáticamente"</string>
@@ -175,7 +175,7 @@
     <string name="last30days">Últimos 30 días</string>
     <string name="last90days">Últimos 90 días</string>
     <string name="all_available_history">Todo el historial disponible</string>
-    <string name="retrieving_data_from_the_server">Descargando datos del servidor ...</string>
+    <string name="retrieving_data_from_the_server">Descargando datos del servidor...</string>
     <string name="no_chart_data_available">No hay datos para el gráfico.</string>
     <string name="comparsion_minmin">Comparación minuto a minuto</string>
     <string name="comparsion_hourhour">Comparación hora a hora</string>
@@ -217,7 +217,7 @@
     <string name="channel_func_dimmerandrgblighting">Atenuador y alumbrado RGB</string>
     <string name="channel_func_depthsensor">Sensor de profundidad</string>
     <string name="channel_func_distancesensor">Sensor de distancia</string>
-    <string name="channel_func_openingsensor_window">Dectector de apertura de ventanas</string>
+    <string name="channel_func_openingsensor_window">Sensor de apertura de ventanas</string>
     <string name="channel_func_mailsensor">Sensor de correo</string>
     <string name="channel_func_windsensor">Sensor de viento</string>
     <string name="channel_func_pressuresensor">Sensor de presión atmosférica</string>
@@ -256,7 +256,7 @@
     <string name="channel_id">ID del canal</string>
     <string name="channel_number">Número del canal</string>
     <string name="connection_reset_cause">Causa del reinicio de la conexión</string>
-    <string name="connection_time">Tiempo de conección</string>
+    <string name="connection_time">Tiempo de conexión</string>
     <string name="device">Dispositivo</string>
     <string name="device_id">ID del dispositivo</string>
     <string name="device_name">Nombre del dispositivo</string>
@@ -270,13 +270,13 @@
     <string name="has_schedule_error">No se puede cambiar la función del canal que tiene programa.</string>
     <string name="information">Información</string>
     <string name="light_source_lifespan">Vida útil de la fuente de luz</string>
-    <string name="light_source_lifespan_hours">Durción de la luz (horas)</string>
+    <string name="light_source_lifespan_hours">Duración de la luz (horas)</string>
     <string name="light_source_operatingtime">Tiempo de trabajo de la fuente de luz</string>
     <string name="lightsource_warning">Duración de la fuente de luz es% 1 $ s</string>
     <string name="mode_change_in_progress">Cambio de modo en curso</string>
     <string name="no">No</string>
     <string name="reset_lightsource_usage_counter">Resetear el contador de uso de la fuente de luz</string>
-    <string name="restore_question">¿Está seguro de que quiere restaurar la cofiguración predeterminada?</string>
+    <string name="restore_question">¿Está seguro de que quiere restaurar la configuración predeterminada?</string>
     <string name="restoring_default_settings">Se están restaurando los ajustes predeterminados</string>
     <string name="save_without_saving">¿Está seguro de que quiere salir sin guardar?</string>
     <string name="seconds">Segundos</string>
@@ -284,7 +284,7 @@
     <string name="soft_ver">Versión</string>
     <string name="time_exceeded">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
     <string name="uptime">Tiempo de trabajo</string>
-    <string name="uv_warning1">Duración de la lámpara ultravioleta es% 1 $ s. Plane su reemplazo.</string>
+    <string name="uv_warning1">Duración de la lámpara ultravioleta es% 1 $ s. Planee su reemplazo.</string>
     <string name="uv_warning2">Duración de la lámpara ultravioleta es% 1 $ s. Reemplácela.</string>
     <string name="valve_open_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
     <string name="valve_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
@@ -311,8 +311,8 @@
     <string name="vl_dimmer_cfg_info_txt7">Esta función ayuda a encender la iluminación LED a un nivel de brillo bajo memorizado, proporcionando un inicio para aumentar (intensificar) el nivel de brillo. Al mover la barra deslizante gris oscuro alrededor del círculo, puede aumentar o disminuir la intensificación marcada con la línea verde. Al encender la iluminación, el nivel de brillo aumentará (intensificará) al valor preestablecido, y luego volverá al nivel memorizado antes de apagar la iluminación.</string>
     <string name="vl_dimmer_cfg_info_txt8">Más información sobre el atenuador en:</string>
     <string name="vl_dimmer_info_txt1">Control de atenuación</string>
-    <string name="vl_dimmer_info_txt2">Para cambiar el nivel de brillo deslize con un dedo en indicador en la barra o en el círculo de brillo</string>
-    <string name="vl_dimmer_info_txt3">Con la tecla Encender/Apagar pede encender o apagar el alumbrado por completo.</string>
+    <string name="vl_dimmer_info_txt2">Para cambiar el nivel de brillo desliza un dedo sobre la barra o en el círculo de brillo</string>
+    <string name="vl_dimmer_info_txt3">Con la tecla Encender/Apagar puede encender o apagar el alumbrado por completo.</string>
     <string name="vl_dimmer_info_txt4">El atenuador recordará el nivel de alumbrado</string>
     <string name="vl_dimmer_info_txt5">Para ajustar los parámetros del atenuador, presione la tecla de configuración.</string>
     <string name="wake_up_frequency">Frecuencia de activación</string>
@@ -327,11 +327,11 @@
     <string name="zwave_add_device">Añadir dispositivo</string>
     <string name="zwave_before_search_message">Antes de continuar asegúrese de que todos sus dispositivos z-wave están en línea. Al presionar Siguiente se escaneará su red z-wave lo que puede tardar segundos o minutos.</string>
     <string name="zwave_before_search_title">Va a tardar un rato</string>
-    <string name="zwave_bridge_offline">Puente z-wave no responde. Verifice si el puente está conectado con al servidor</string>
+    <string name="zwave_bridge_offline">Puente z-wave no responde. Verifica si el puente está conectado con al servidor</string>
     <string name="zwave_button_press_timeout">¡Se ha superado el tiempo de espera a presionar una tecla!</string>
     <string name="zwave_change_wake_up_settings">También puede cambiar la configuración de activación presionando el icono de abajo.</string>
-    <string name="zwave_device">Dispositivio con z-wave</string>
-    <string name="zwave_device_communication_error">Se ha producido un problema con la comunicación con el dispositivo z-wave. Verifice si el dispositivo está al alcance del portillo.</string>
+    <string name="zwave_device">Dispositivo con z-wave</string>
+    <string name="zwave_device_communication_error">Se ha producido un problema con la comunicación con el dispositivo z-wave. Verifica si el dispositivo está al alcance del puente.</string>
     <string name="zwave_dialog_channel_detail_message">A continuación se muestran los detalles del canal seleccionado. Defina su propósito seleccionando la función adecuada.</string>
     <string name="zwave_done">¡Terminado! Ahora puedes finalizar el proceso de configuración presionando \"ok\" o puedes presionar „atrás” para configurar otro canal o cambiar los ajustes actuales.</string>
     <string name="zwave_error_assign_node_id_timeout">¡Se ha superado el tiempo de espera a asignar el dispositivo z-wave al. canal!</string>
@@ -343,10 +343,10 @@
     <string name="zwave_error_get_node_list_timeout">¡Se ha superado el tiempo de espera a la lista de dispositivos z-wave!</string>
     <string name="zwave_error_set_caption_timeout">¡Se ha superado el tiempo de espera al cambio de descripción del canal!</string>
     <string name="zwave_error_set_function_timeout">¡Se ha superado el tiempo de espera al cambio de función del canal!</string>
-    <string name="zwave_error_slave_mode">Está función no está disponible cuando el puente esté en el submodo.</string>
+    <string name="zwave_error_slave_mode">Está función no está disponible cuando el puente esté en el modo esclavo.</string>
     <string name="zwave_error_unexpected_response">La respuesta del dispositivo no es la esperada. Método: %1$s Código:%2$s</string>
     <string name="zwave_network">Red z-wave</string>
-    <string name="zwave_node_assign_confirm_question">El dispositivo elejido z-wave ya está asociado con otro canal. ¿Está seguro de que quiere mover el dispositivo a este canal?</string>
+    <string name="zwave_node_assign_confirm_question">El dispositivo elegido z-wave ya está asociado con otro canal. ¿Está seguro de que quiere mover el dispositivo a este canal?</string>
     <string name="zwave_node_searching">Búsqueda de red z-wave para crear una lista de dispositivos</string>
     <string name="zwave_offline">¿Desconectado?</string>
     <string name="zwave_remove_device">Eliminar dispositivo</string>
