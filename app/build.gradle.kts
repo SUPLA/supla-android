@@ -130,6 +130,7 @@ dependencies {
     testImplementation(Deps.Testing.Hamcrest)
     testImplementation(Deps.Testing.Coroutines)
     testImplementation(Deps.Testing.Mockk)
+    testImplementation(Deps.Testing.AssertJ)
     androidTestImplementation(Deps.Testing.Androidx.Navigation)
 
     implementation(files("src/main/libs/jsoup-1.13.1.jar"))

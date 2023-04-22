@@ -19,6 +19,8 @@ package org.supla.android.widget.single.configuration
 
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -89,6 +91,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
     Dispatchers.setMain(testDispatcher)
+
+    whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
   }
 
   @After
@@ -105,11 +109,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_ALARM
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -133,7 +137,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -152,11 +156,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_ALARM
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(channelsCursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -183,7 +187,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -199,11 +203,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -228,7 +232,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -239,11 +243,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     val profileId = 123L
     val cursor: Cursor = mockCursorChannels()
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -265,7 +269,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }

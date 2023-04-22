@@ -26,7 +26,7 @@ class LocationCaptionEditor(context: Context?) : CaptionEditor(context) {
       location.caption = newCaption
       dbH.updateLocation(location)
     }
-    val client = SuplaApp.getApp().suplaClient
+    val client = SuplaApp.getApp().getSuplaClient()
     client?.setLocationCaption(id, newCaption)
     captionChangedListener()
   }

@@ -12,6 +12,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import org.supla.android.*
 import org.supla.android.cfg.CfgActivity
+import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.features.webcontent.WebContentFragment
 import javax.inject.Inject
 
@@ -27,15 +28,21 @@ class CfgActivityNavigator @Inject constructor(@ActivityContext private val acti
 
   fun navigateToMain() {
     showActivity((activityContext as CfgActivity), MainActivity::class.java)
+    activityContext.finish()
   }
 
   fun navigateToCreateAccount() {
-    val arguments = WebContentFragment.bundle(activityContext.getString(R.string.create_url))
-    navigateTo(R.id.createAccount, arguments)
+    navigateTo(R.id.createAccount)
+  }
+
+  fun navigateToDeleteAccount(serverAddress: String?, destination: DeleteAccountWebFragment.EndDestination) {
+    navController.popBackStack(R.id.cfgProfiles, false)
+    navigateTo(R.id.webContentDeleteAccount, DeleteAccountWebFragment.bundle(serverAddress, destination))
   }
 
   fun navigateToStatus() {
     showActivity((activityContext as CfgActivity), StatusActivity::class.java)
+    activityContext.finish()
   }
 
   fun restartAppStack() {
@@ -43,6 +50,7 @@ class CfgActivityNavigator @Inject constructor(@ActivityContext private val acti
       it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
       activityContext.startActivity(it)
     }
+    (activityContext as CfgActivity).finish()
   }
 
   fun back(): Boolean = navController.navigateUp()

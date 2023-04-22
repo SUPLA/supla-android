@@ -21,7 +21,7 @@ package org.supla.android.profile
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.SuplaApp
+import org.supla.android.core.SuplaAppProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
@@ -33,7 +33,8 @@ class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
   private val widgetVisibilityHandler: WidgetVisibilityHandler,
-  private val sceneEventsManager: SceneEventsManager
+  private val sceneEventsManager: SceneEventsManager,
+  private val suplaAppProvider: SuplaAppProvider
 ) : ProfileManager {
 
   override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -82,10 +83,10 @@ class MultiAccountProfileManager(
   }
 
   private fun initiateReconnect() {
-    with(SuplaApp.getApp()) {
+    with(suplaAppProvider.provide()) {
       CancelAllRestApiClientTasks(true)
       cleanupToken()
-      suplaClient?.reconnect()
+      getSuplaClient()?.reconnect()
     }
   }
 }

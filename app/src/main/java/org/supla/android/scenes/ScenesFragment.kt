@@ -77,11 +77,11 @@ class ScenesFragment : Fragment() {
   private fun setupAdapter() {
     scenesAdapter.leftButtonClickCallback = {
       SuplaApp.Vibrate(context)
-      SuplaApp.getApp().suplaClient.stopScene(it)
+      SuplaApp.getApp().getSuplaClient()?.stopScene(it)
     }
     scenesAdapter.rightButtonClickCallback = {
       SuplaApp.Vibrate(context)
-      SuplaApp.getApp().suplaClient.startScene(it)
+      SuplaApp.getApp().getSuplaClient()?.startScene(it)
     }
     scenesAdapter.movementFinishedCallback = { viewModel.onSceneOrderUpdate(it) }
     scenesAdapter.reloadCallback = { viewModel.reload() }

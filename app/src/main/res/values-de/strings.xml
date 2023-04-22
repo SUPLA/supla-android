@@ -4,6 +4,7 @@
     <string name="settings">Einstellungen</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=de</string>
+    <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=de</string>
     <string name="forumpage_url">https://de-forum.supla.org/</string>
 
     <string name="version">version</string>

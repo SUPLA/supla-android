@@ -20,8 +20,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.Trace
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.extensions.TAG
+import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.account.DeleteAccountUseCase
@@ -62,7 +65,7 @@ class CreateAccountViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = this::onProfileLoaded,
           onError = { throwable ->
-            // TODO profile not found
+            Trace.e(TAG, "Could not find profile", throwable)
           },
         )
         .disposeBySelf()
@@ -209,10 +212,10 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private fun isAccessIdentifierEqual(profile: AuthProfileItem, state: CreateAccountViewState): Boolean {
-    return if (state.accessIdentifier.isNotEmpty()) {
-      profile.authInfo.accessID != state.accessIdentifier.toInt()
+    return if (state.accessIdentifier.isNotEmpty() && profile.authInfo.accessID != 0) {
+      profile.authInfo.accessID == state.accessIdentifier.toInt()
     } else {
-      true
+      profile.authInfo.accessID == 0 && (state.accessIdentifier.isEmpty() || state.accessIdentifier == "0")
     }
   }
 
@@ -241,9 +244,32 @@ class CreateAccountViewModel @Inject constructor(
     }
   }
 
+  fun deleteProfileWithCloud(profileId: Long?) {
+    profileId?.let {
+      profileManager.read(profileId)
+        .toSingle()
+        .flatMap(this::deleteAndGetReturnInfo)
+        .attach()
+        .subscribeBy(
+          onSuccess = {
+            val destination = if (preferences.isAnyAccountRegistered.not()) {
+              DeleteAccountWebFragment.EndDestination.RESTART
+            } else if (it.activeProfileRemoved) {
+              DeleteAccountWebFragment.EndDestination.RECONNECT
+            } else {
+              DeleteAccountWebFragment.EndDestination.CLOSE
+            }
+
+            sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
+          },
+          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
+        )
+    }
+  }
+
   private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
     deleteAccountUseCase(profile.id)
-      .andThen(Single.just(RemovalBackInfo(profile.isActive)))
+      .andThen(Single.just(RemovalBackInfo(profile.isActive, profile.authInfo.serverAddress)))
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
@@ -252,7 +278,8 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private data class RemovalBackInfo(
-    val activeProfileRemoved: Boolean
+    val activeProfileRemoved: Boolean,
+    val serverAddress: String?
   )
 
   private data class SaveBackInfo(

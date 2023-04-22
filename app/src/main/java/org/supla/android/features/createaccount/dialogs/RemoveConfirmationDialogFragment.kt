@@ -33,6 +33,10 @@ class RemoveConfirmationDialogFragment: DialogFragment() {
         dismiss()
         viewModel.deleteProfile(profileId)
       }
+      removeAccountRemotelyButton.setOnClickListener {
+        dismiss()
+        viewModel.deleteProfileWithCloud(profileId)
+      }
     }
   }
 

@@ -88,14 +88,10 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
       CreateAccountViewEvent.ShowUnknownErrorDialog ->
         showAlertDialog(R.string.form_error, R.string.general_failure)
       CreateAccountViewEvent.Close -> navigator.back()
-      CreateAccountViewEvent.RestartFlow -> {
-        navigator.restartAppStack()
-        requireActivity().finish()
-      }
-      CreateAccountViewEvent.Reconnect -> {
-        navigator.navigateToStatus()
-        requireActivity().finish()
-      }
+      CreateAccountViewEvent.RestartFlow -> navigator.restartAppStack()
+      CreateAccountViewEvent.Reconnect -> navigator.navigateToStatus()
+      is CreateAccountViewEvent.NavigateToWebRemoval ->
+        navigator.navigateToDeleteAccount(event.serverAddress, event.destination)
     }
   }
 

@@ -4,33 +4,24 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.CallSuper
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.databinding.FragmentWebContentBinding
 
-private const val ARG_URL = "arg_url"
+abstract class WebContentFragment<S : ViewState, E : ViewEvent> : BaseFragment<S, E>(R.layout.fragment_web_content) {
 
-@AndroidEntryPoint
-class WebContentFragment : BaseFragment<WebContentViewState, WebContentViewEvent>(R.layout.fragment_web_content) {
+  protected abstract val url: String
 
-  private val viewModel: WebContentViewModel by viewModels()
-  override fun getViewModel(): BaseViewModel<WebContentViewState, WebContentViewEvent> = viewModel
+  protected val binding by viewBinding(FragmentWebContentBinding::bind)
 
-  private val binding by viewBinding(FragmentWebContentBinding::bind)
-
-  private val url: String by lazy { arguments!!.getString(ARG_URL)!! }
-
-  private val client = object: WebViewClient() {
+  private val client = object : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
-      viewModel.urlLoaded(url)
-      binding.caProgressBar.visibility = View.GONE
-      binding.webBrowser.visibility = View.VISIBLE
+      (getViewModel() as WebContentViewModel).urlLoaded(url)
     }
   }
 
@@ -44,25 +35,21 @@ class WebContentFragment : BaseFragment<WebContentViewState, WebContentViewEvent
     }
   }
 
-  override fun handleEvents(event: WebContentViewEvent) = when(event) {
-    WebContentViewEvent.LoadRegistrationScript -> {
-      binding.webBrowser.loadUrl("javascript:(function() { document.body.classList.add('in-app-register'); })()")
+  @CallSuper
+  override fun handleViewState(state: S) {
+    if (state.loading) {
+      binding.caProgressBar.visibility = View.VISIBLE
+      binding.webBrowser.visibility = View.GONE
+    } else {
+      binding.caProgressBar.visibility = View.GONE
+      binding.webBrowser.visibility = View.VISIBLE
     }
-  }
-
-  override fun handleViewState(state: WebContentViewState) {
   }
 
   override fun onStart() {
     super.onStart()
-    binding.caProgressBar.visibility = View.VISIBLE
-    binding.webBrowser.visibility = View.GONE
 
     binding.webBrowser.webViewClient = client
     binding.webBrowser.loadUrl(url)
-  }
-
-  companion object {
-    fun bundle(url: String) = bundleOf(ARG_URL to url)
   }
 }

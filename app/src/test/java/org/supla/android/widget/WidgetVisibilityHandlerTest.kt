@@ -28,7 +28,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import org.supla.android.extensions.getAllWidgetIds
-import org.supla.android.profile.INVALID_PROFILE_ID
 import org.supla.android.widget.shared.configuration.ItemType
 
 @RunWith(MockitoJUnitRunner::class)

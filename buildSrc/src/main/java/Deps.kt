@@ -59,6 +59,7 @@ object Deps {
         const val Hamcrest = "org.hamcrest:hamcrest-all:${Versions.Testing.Hamcrest}"
         const val Coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.Testing.Coroutines}"
         const val Mockk = "io.mockk:mockk:${Versions.Testing.Mockk}"
+        const val AssertJ = "org.assertj:assertj-core:${Versions.Testing.AssertJ}"
 
         object Mockito {
             const val Core = "org.mockito:mockito-core:${Versions.Testing.Mockito.Core}"

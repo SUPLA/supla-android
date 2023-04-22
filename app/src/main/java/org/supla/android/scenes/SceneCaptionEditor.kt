@@ -39,7 +39,7 @@ class SceneCaptionEditor(context: Context) : CaptionEditor(context) {
   }
 
   override fun applyChanged(newCaption: String) {
-    SuplaApp.getApp().suplaClient.renameScene(id, newCaption)
+    SuplaApp.getApp().getSuplaClient()?.renameScene(id, newCaption)
     val repo = DbHelper.getInstance(context).sceneRepository
     val scene = repo.getScene(id)!!
     scene.caption = newCaption

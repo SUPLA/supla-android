@@ -1,7 +1,14 @@
 package org.supla.android.core.networking.suplaclient
 
-import org.supla.android.lib.SuplaClient
-
 interface SuplaClientProvider {
-  fun provide(): SuplaClient
+  fun provide(): SuplaClientApi?
+}
+
+interface SuplaClientApi {
+  fun cancel()
+
+  @Throws(InterruptedException::class)
+  fun join()
+
+  fun reconnect()
 }

@@ -40,6 +40,7 @@ import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.core.networking.suplaclient.SuplaClientApi;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
@@ -51,7 +52,7 @@ import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 
 @SuppressWarnings("unused")
-public class SuplaClient extends Thread {
+public class SuplaClient extends Thread implements SuplaClientApi {
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();

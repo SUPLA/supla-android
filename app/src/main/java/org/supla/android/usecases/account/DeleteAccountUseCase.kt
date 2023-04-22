@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.Preferences
-import org.supla.android.SuplaApp
+import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileIdHolder
@@ -17,6 +17,7 @@ class DeleteAccountUseCase @Inject constructor(
   @ApplicationContext private val context: Context,
   private val profileManager: ProfileManager,
   private val suplaClientProvider: SuplaClientProvider,
+  private val suplaAppProvider: SuplaAppProvider,
   private val preferences: Preferences,
   private val profileIdHolder: ProfileIdHolder
 ) {
@@ -43,10 +44,9 @@ class DeleteAccountUseCase @Inject constructor(
           removeAndActivate(
             toRemove = profile,
             toActivate = profiles.first()
-          )
+          ).andThen(Completable.fromRunnable { startClient() })
         }
       }
-      .andThen(Completable.fromRunnable { startClient() })
 
   private fun removeLastProfile(profile: AuthProfileItem): Completable =
     profileManager.delete(profile.id)
@@ -60,12 +60,13 @@ class DeleteAccountUseCase @Inject constructor(
       .andThen(profileManager.delete(toRemove.id))
 
   private fun stopClient() {
-    val suplaClient = suplaClientProvider.provide()
-    suplaClient.cancel()
-    suplaClient.join()
+    suplaClientProvider.provide()?.let {
+      it.cancel()
+      it.join()
+    }
   }
 
   private fun startClient() {
-    (context as? SuplaApp)?.apply { SuplaClientInitIfNeed(context) }
+    suplaAppProvider.provide().SuplaClientInitIfNeed(context)
   }
 }

@@ -38,6 +38,7 @@ import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import org.supla.android.core.SuplaAppApi;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
@@ -51,7 +52,7 @@ import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider, SuplaAppApi {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
