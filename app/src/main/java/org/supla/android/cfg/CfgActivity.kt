@@ -45,12 +45,9 @@ import javax.inject.Inject
 class CfgActivity : BaseActivity() {
 
   companion object {
-    const val ACTION_PROFILE = "org.supla.android.CfgActivity.PROFILE"
     const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
     const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
   }
-
-  private val viewModel: CfgViewModel by viewModels()
 
   @Inject
   lateinit var profileManager: ProfileManager
@@ -87,8 +84,7 @@ class CfgActivity : BaseActivity() {
 
     setSupportActionBar(navToolbar)
 
-    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-      as NavHostFragment
+    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     val navController = navHostFragment.navController
     val navInflater = navController.navInflater
     val graph = navInflater.inflate(R.navigation.nav_graph)
@@ -97,21 +93,18 @@ class CfgActivity : BaseActivity() {
     val startLoc = when (action) {
       ACTION_CONFIG -> R.id.cfgMain
       ACTION_AUTH -> R.id.cfgAuth
-      ACTION_PROFILE -> R.id.cfgProfiles
       else -> null
     }
 
     if (startLoc != null) {
-      /* Reconfigure navigation graph to dynamic start location */
-      val args: Bundle? = if (action == ACTION_AUTH) {
-        CreateAccountFragment.bundle(null)
-      } else {
-        null
-      }
-
       graph.setStartDestination(startLoc)
-      navController.setGraph(graph, args)
     }
+
+    var args: Bundle? = null
+    if (action == ACTION_AUTH) {
+      args = CreateAccountFragment.bundle(null)
+    }
+    navController.setGraph(graph, args)
 
     val cfg = AppBarConfiguration(navController.graph)
     NavigationUI.setupWithNavController(
@@ -155,7 +148,7 @@ class CfgActivity : BaseActivity() {
   }
 
   override fun onBackPressed() {
-    if (navigator.back()) {
+    if (isBackHandledInChildFragment() || navigator.back()) {
       return
     }
 
@@ -168,6 +161,5 @@ class CfgActivity : BaseActivity() {
         navigator.navigateToStatus()
       }
     }
-    finish()
   }
 }

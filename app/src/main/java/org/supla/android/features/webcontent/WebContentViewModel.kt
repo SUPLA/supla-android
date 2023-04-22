@@ -1,20 +1,18 @@
 package org.supla.android.features.webcontent
 
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.annotation.CallSuper
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.tools.SuplaSchedulers
-import javax.inject.Inject
 
-@HiltViewModel
-class WebContentViewModel @Inject constructor(
+abstract class WebContentViewModel<S : ViewState, E : ViewEvent>(
+  defaultState: S,
   schedulers: SuplaSchedulers
-) : BaseViewModel<WebContentViewState, WebContentViewEvent>(WebContentViewState(), schedulers) {
+) : BaseViewModel<S, E>(defaultState, schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
-  fun urlLoaded(url: String?) {
-    if (url?.startsWith("https://cloud.supla.org/register?lang=") == true) {
-      sendEvent(WebContentViewEvent.LoadRegistrationScript)
-    }
+  @CallSuper
+  open fun urlLoaded(url: String?) {
+    updateState { loadingState(false) }
   }
 }

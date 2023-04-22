@@ -110,7 +110,7 @@ public class NavigationActivity extends BaseActivity
         sender,
         org.supla.android.cfg.CfgActivity.class,
         0,
-        org.supla.android.cfg.CfgActivity.ACTION_PROFILE);
+        null);
   }
 
   public static void showCfg(Activity sender) {

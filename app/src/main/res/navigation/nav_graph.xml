@@ -3,7 +3,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/cfgAuth">
+  app:startDestination="@id/cfgProfiles">
 
   <fragment
     android:id="@+id/cfgAuth"
@@ -27,15 +27,7 @@
   <fragment
     android:id="@+id/cfgEditProfile"
     android:name="org.supla.android.features.createaccount.CreateAccountFragment"
-    android:label="@string/edit_account">
-    <action
-      android:id="@+id/action_edit_to_remove_profile"
-      app:destination="@id/cfgRemoveProfile" />
-  </fragment>
-
-  <fragment
-    android:id="@+id/cfgRemoveProfile"
-    android:name="org.supla.android.features.createaccount.dialogs.RemoveConfirmationDialogFragment" />
+    android:label="@string/edit_account" />
 
   <fragment
     android:id="@+id/cfgNewProfile"
@@ -56,7 +48,12 @@
 
   <fragment
     android:id="@+id/webContentCreateAccount"
-    android:name="org.supla.android.features.webcontent.WebContentFragment"
+    android:name="org.supla.android.features.createaccountweb.CreateAccountWebFragment"
     android:label="@string/menubar_title" />
+
+  <fragment
+    android:id="@+id/webContentDeleteAccount"
+    android:name="org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment"
+    android:label="" />
 
 </navigation>

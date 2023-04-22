@@ -1,6 +1,7 @@
 package org.supla.android.features.createaccount
 
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 
 sealed class CreateAccountViewEvent : ViewEvent {
   object Close : CreateAccountViewEvent()
@@ -14,4 +15,8 @@ sealed class CreateAccountViewEvent : ViewEvent {
   object ShowRequiredDataMissingDialog : CreateAccountViewEvent()
   object ShowUnknownErrorDialog : CreateAccountViewEvent()
   object ShowRemovalFailureDialog : CreateAccountViewEvent()
+  data class NavigateToWebRemoval(
+    val serverAddress: String?,
+    val destination: DeleteAccountWebFragment.EndDestination
+  ) : CreateAccountViewEvent()
 }

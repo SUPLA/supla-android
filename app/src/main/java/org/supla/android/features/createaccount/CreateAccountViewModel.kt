@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.account.DeleteAccountUseCase
@@ -241,9 +242,32 @@ class CreateAccountViewModel @Inject constructor(
     }
   }
 
+  fun deleteProfileWithCloud(profileId: Long?) {
+    profileId?.let {
+      profileManager.read(profileId)
+        .toSingle()
+        .flatMap(this::deleteAndGetReturnInfo)
+        .attach()
+        .subscribeBy(
+          onSuccess = {
+            val destination = if (preferences.isAnyAccountRegistered.not()) {
+              DeleteAccountWebFragment.EndDestination.RESTART
+            } else if (it.activeProfileRemoved) {
+              DeleteAccountWebFragment.EndDestination.RECONNECT
+            } else {
+              DeleteAccountWebFragment.EndDestination.CLOSE
+            }
+
+            sendEvent(CreateAccountViewEvent.NavigateToWebRemoval(it.serverAddress, destination))
+          },
+          onError = { sendEvent(CreateAccountViewEvent.ShowRemovalFailureDialog) }
+        )
+    }
+  }
+
   private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
     deleteAccountUseCase(profile.id)
-      .andThen(Single.just(RemovalBackInfo(profile.isActive)))
+      .andThen(Single.just(RemovalBackInfo(profile.isActive, profile.authInfo.serverAddress)))
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
@@ -252,7 +276,8 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private data class RemovalBackInfo(
-    val activeProfileRemoved: Boolean
+    val activeProfileRemoved: Boolean,
+    val serverAddress: String?
   )
 
   private data class SaveBackInfo(
