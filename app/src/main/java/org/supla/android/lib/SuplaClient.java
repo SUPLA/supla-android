@@ -159,7 +159,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scSetSceneCaption(long _supla_client, int SceneID, String Caption);
 
-    private native boolean scReconnectAllClients(long _supla_client);
+  private native boolean scReconnectAllClients(long _supla_client);
 
   private native boolean scSetRegistrationEnabled(
       long _supla_client, int ioDeviceRegTimeSec, int clientRegTimeSec);
@@ -577,14 +577,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public boolean setSceneCaption(int SceneID, String Caption) {
-        long _supla_client_ptr = lockClientPtr();
-        try {
-            return _supla_client_ptr != 0
-                && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
-        } finally {
-            unlockClientPtr();
-        }
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
+    } finally {
+      unlockClientPtr();
     }
+  }
 
   public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
     long _supla_client_ptr = lockClientPtr();
@@ -1007,7 +1006,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-
   private void sceneUpdate(SuplaScene scene) {
     boolean dataChanged = false;
     Trace.d(
@@ -1171,14 +1169,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-    private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
-        SuplaClientMsg msg = new SuplaClientMsg(this,
-            SuplaClientMsg.onSceneCaptionSetResult);
-        msg.setCode(ResultCode);
-        msg.setText(Caption);
-        msg.setSceneId(SceneID);
-        sendMessage(msg);
-    }
+  private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
+    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneCaptionSetResult);
+    msg.setCode(ResultCode);
+    msg.setText(Caption);
+    msg.setSceneId(SceneID);
+    sendMessage(msg);
+  }
 
   private void onClientsReconnectResult(int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onClientsReconnectResult);
@@ -1473,9 +1470,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public void renameScene(int sceneId, String newName) {
-    if(!setSceneCaption(sceneId, newName)) {
+    if (!setSceneCaption(sceneId, newName)) {
       Trace.w(log_tag, "Failed to rename scene " + sceneId);
     }
-      
   }
 }

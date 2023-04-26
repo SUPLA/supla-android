@@ -52,7 +52,9 @@ import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider, SuplaAppApi {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+        ValuesFormatterProvider,
+        SuplaAppApi {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();

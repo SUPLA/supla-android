@@ -108,4 +108,3 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
     var processed: Boolean = false
   )
 }
-

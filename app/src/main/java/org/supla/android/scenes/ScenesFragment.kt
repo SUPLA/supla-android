@@ -31,7 +31,6 @@ import org.supla.android.databinding.FragmentScenesBinding
 import org.supla.android.db.DbHelper
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class ScenesFragment : Fragment() {
 
@@ -53,7 +52,8 @@ class ScenesFragment : Fragment() {
     binding = DataBindingUtil.inflate(
       inflater,
       R.layout.fragment_scenes,
-      container, false
+      container,
+      false
     )
 
     setupAdapter()

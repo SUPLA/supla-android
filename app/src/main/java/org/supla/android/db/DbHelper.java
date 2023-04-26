@@ -78,12 +78,14 @@ public class DbHelper extends BaseDbHelper {
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
-        new DefaultUserIconRepository(new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
+        new DefaultUserIconRepository(
+            new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 
   /**
-   * Gets a single instance of the {@link DbHelper} class. If the instance does not exist, is created like in classic Singleton pattern.
+   * Gets a single instance of the {@link DbHelper} class. If the instance does not exist, is
+   * created like in classic Singleton pattern.
    *
    * @param context The context.
    * @return {@link DbHelper} instance.
@@ -1000,14 +1002,14 @@ public class DbHelper extends BaseDbHelper {
     db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv, null, null);
     String column_name = "profileid";
     String tables[] = {
-        SuplaContract.LocationEntry.TABLE_NAME,
-        SuplaContract.ChannelEntry.TABLE_NAME,
-        SuplaContract.ChannelValueEntry.TABLE_NAME,
-        SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-        SuplaContract.ColorListItemEntry.TABLE_NAME,
-        SuplaContract.ChannelGroupEntry.TABLE_NAME,
-        SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-        SuplaContract.UserIconsEntry.TABLE_NAME
+      SuplaContract.LocationEntry.TABLE_NAME,
+      SuplaContract.ChannelEntry.TABLE_NAME,
+      SuplaContract.ChannelValueEntry.TABLE_NAME,
+      SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
+      SuplaContract.ColorListItemEntry.TABLE_NAME,
+      SuplaContract.ChannelGroupEntry.TABLE_NAME,
+      SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+      SuplaContract.UserIconsEntry.TABLE_NAME
     };
 
     for (String table : tables) {

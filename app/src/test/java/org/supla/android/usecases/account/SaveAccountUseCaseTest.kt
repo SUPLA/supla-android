@@ -176,7 +176,7 @@ class SaveAccountUseCaseTest {
         accessIDpwd = ""
       ),
       advancedAuthSetup = false,
-      isActive = false,
+      isActive = false
     )
   }
 }

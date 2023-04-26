@@ -26,9 +26,8 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.account.DeleteAccountUseCase
 import org.supla.android.usecases.account.SaveAccountUseCase
 
-
 @RunWith(MockitoJUnitRunner::class)
-class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent>() {
+class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent>() {
 
   @get:Rule
   var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -330,10 +329,12 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
       CreateAccountViewEvent.Reconnect
     )
 
-    verify(saveAccountUseCase, times(1)).invoke(argThat { profile ->
-      profile.isActive && profile.name == defaultName && profile.authInfo.emailAuth &&
-        profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
-    })
+    verify(saveAccountUseCase, times(1)).invoke(
+      argThat { profile ->
+        profile.isActive && profile.name == defaultName && profile.authInfo.emailAuth &&
+          profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
+      }
+    )
   }
 
   @Test
@@ -360,10 +361,12 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveAccountUseCase, times(1)).invoke(argThat { profile ->
-      profile.isActive.not() && profile.name.isEmpty() && profile.authInfo.emailAuth &&
-        profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
-    })
+    verify(saveAccountUseCase, times(1)).invoke(
+      argThat { profile ->
+        profile.isActive.not() && profile.name.isEmpty() && profile.authInfo.emailAuth &&
+          profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
+      }
+    )
   }
 
   @Test
@@ -401,10 +404,12 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveAccountUseCase, times(1)).invoke(argThat { arg ->
-      arg.isActive.not() && arg.authInfo.emailAuth &&
-        arg.name == newName && arg.advancedAuthSetup.not()
-    })
+    verify(saveAccountUseCase, times(1)).invoke(
+      argThat { arg ->
+        arg.isActive.not() && arg.authInfo.emailAuth &&
+          arg.name == newName && arg.advancedAuthSetup.not()
+      }
+    )
   }
 
   @Test
@@ -433,15 +438,17 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
       state.copy(emailAddress = originalEmail, accountName = profile.name),
       state.copy(emailAddress = newEmail, accountName = profile.name),
       state.copy(emailAddress = newEmail, accountName = profile.name, loading = true),
-      state.copy(emailAddress = newEmail, accountName = profile.name),
+      state.copy(emailAddress = newEmail, accountName = profile.name)
     )
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Reconnect
     )
-    verify(saveAccountUseCase, times(1)).invoke(argThat { arg ->
-      arg.isActive.not() && arg.authInfo.emailAuth &&
-        arg.authInfo.emailAddress == newEmail && arg.advancedAuthSetup.not()
-    })
+    verify(saveAccountUseCase, times(1)).invoke(
+      argThat { arg ->
+        arg.isActive.not() && arg.authInfo.emailAuth &&
+          arg.authInfo.emailAddress == newEmail && arg.advancedAuthSetup.not()
+      }
+    )
   }
 
   @Test
@@ -584,7 +591,7 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
       state,
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name),
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name, loading = true),
-      state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name),
+      state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name)
     )
     assertThat(events).containsExactly(expectedEvent)
     verify(saveAccountUseCase, times(1)).invoke(profile)
@@ -623,7 +630,7 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
     val state = CreateAccountViewState()
     assertThat(states).containsExactly(
       state.copy(loading = true),
-      state,
+      state
     )
     assertThat(events).containsExactly(event)
     verify(deleteAccountUseCase, times(1)).invoke(profileId)
@@ -679,7 +686,7 @@ class CreateAccountViewModelTest: BaseViewModelTest<CreateAccountViewState, Crea
     val state = CreateAccountViewState()
     assertThat(states).containsExactly(
       state.copy(loading = true),
-      state,
+      state
     )
     assertThat(events).containsExactly(event)
     verify(deleteAccountUseCase, times(1)).invoke(profileId)

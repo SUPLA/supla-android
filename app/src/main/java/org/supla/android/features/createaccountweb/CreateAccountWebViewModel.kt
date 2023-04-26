@@ -1,7 +1,6 @@
 package org.supla.android.features.createaccountweb
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.features.webcontent.WebContentViewModel
@@ -25,7 +24,7 @@ class CreateAccountWebViewModel @Inject constructor(
 }
 
 sealed class CreateAccountWebViewEvent : ViewEvent {
-  object LoadRegistrationScript: CreateAccountWebViewEvent()
+  object LoadRegistrationScript : CreateAccountWebViewEvent()
 }
 
 data class CreateAccountWebViewState(override val loading: Boolean = true) : ViewState(loading)

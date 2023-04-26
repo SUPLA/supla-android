@@ -106,11 +106,7 @@ public class NavigationActivity extends BaseActivity
   }
 
   public static void showProfile(Activity sender) {
-    showActivity(
-        sender,
-        org.supla.android.cfg.CfgActivity.class,
-        0,
-        null);
+    showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0, null);
   }
 
   public static void showCfg(Activity sender) {

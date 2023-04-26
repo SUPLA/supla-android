@@ -37,14 +37,14 @@ data class AuthInfo(
 ) {
 
   /**
-  Returns server used for current authentication method
+   Returns server used for current authentication method
    */
   val serverForCurrentAuthMethod: String
     get() = if (emailAuth) serverForEmail else serverForAccessID
 
   /**
-  A flag indicating if current authentication settings
-  are complete (but not necessarily correct).
+   A flag indicating if current authentication settings
+   are complete (but not necessarily correct).
    */
   val isAuthDataComplete: Boolean
     get() {
@@ -70,10 +70,10 @@ data class AuthInfo(
   }
 
   fun getDecryptedGuid(context: Context): ByteArray? {
-    return decrypt(guid, context);
+    return decrypt(guid, context)
   }
 
   fun getDecryptedAuthKey(context: Context): ByteArray? {
-    return decrypt(authKey, context);
+    return decrypt(authKey, context)
   }
 }

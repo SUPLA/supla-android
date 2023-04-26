@@ -21,8 +21,8 @@ package org.supla.android.profile
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import org.supla.android.db.AuthProfileItem
 import org.supla.android.SuplaApp
+import org.supla.android.db.AuthProfileItem
 
 /**
 ProfileMigrator is a utility class which only task is
@@ -40,7 +40,6 @@ class ProfileMigrator(ctx: Context) {
     private const val pref_email = "pref_email"
     private const val pref_advanced = "pref_advanced"
     private const val pref_proto_ver = "pref_proto_ver"
-
   }
 
   private val prefs: SharedPreferences
@@ -50,11 +49,10 @@ class ProfileMigrator(ctx: Context) {
   }
 
   /**
-  @returns a profile item object populated with
-  values derived from application preferences.
+   @returns a profile item object populated with
+   values derived from application preferences.
    */
   fun makeProfileUsingPreferences(): AuthProfileItem? {
-
     val serverAddr = prefs.getString(pref_serveraddr, "") ?: ""
     val accessID = prefs.getInt(pref_accessid, 0)
     val accessIDpwd = prefs.getString(pref_accessidpwd, "") ?: ""
@@ -67,10 +65,7 @@ class ProfileMigrator(ctx: Context) {
     }
 
     val client = SuplaApp.getApp().getSuplaClient()
-    val protoVer = prefs.getInt(
-      pref_proto_ver, if (client != null)
-        client.getMaxProtoVersion() else 0
-    )
+    val protoVer = prefs.getInt(pref_proto_ver, client?.maxProtoVersion ?: 0)
 
     val ai = AuthInfo(
       emailAuth = !isAdvanced,

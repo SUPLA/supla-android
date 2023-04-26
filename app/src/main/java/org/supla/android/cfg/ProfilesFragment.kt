@@ -34,56 +34,60 @@ import org.supla.android.profile.ProfileManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfilesFragment: Fragment() {
-    @Inject internal lateinit var profileManager: ProfileManager
-    @Inject internal lateinit var navigator: CfgActivityNavigator
+class ProfilesFragment : Fragment() {
+  @Inject
+  internal lateinit var profileManager: ProfileManager
 
-    private val viewModel: CfgViewModel by activityViewModels()
-    private val profilesVM: ProfilesViewModel by viewModels()
-    private lateinit var binding: FragmentProfilesBinding
+  @Inject
+  internal lateinit var navigator: CfgActivityNavigator
 
-    override fun onCreate(sis: Bundle?) {
-        super.onCreate(sis)
-        profilesVM.uiState.observe(requireActivity()) 
-        { 
-          uiState ->
-              when(uiState) {
-                  is ProfilesUiState.EditProfile -> 
-                      openEditProfileView(uiState.profileId)
-                  is ProfilesUiState.ListProfiles ->
-                      profilesVM.profilesAdapter.reloadData(uiState.profiles)
-                  is ProfilesUiState.ProfileActivation ->
-                      requireActivity().finish()
-              }
-        }
+  private val viewModel: CfgViewModel by activityViewModels()
+  private val profilesVM: ProfilesViewModel by viewModels()
+  private lateinit var binding: FragmentProfilesBinding
 
+  override fun onCreate(sis: Bundle?) {
+    super.onCreate(sis)
+    profilesVM.uiState.observe(requireActivity()) { uiState ->
+      when (uiState) {
+        is ProfilesUiState.EditProfile ->
+          openEditProfileView(uiState.profileId)
+        is ProfilesUiState.ListProfiles ->
+          profilesVM.profilesAdapter.reloadData(uiState.profiles)
+        is ProfilesUiState.ProfileActivation ->
+          requireActivity().finish()
+      }
     }
+  }
 
-    private fun openEditProfileView(profileId: Long?) {
-        if (profileId == null) {
-            navigator.navigateTo(R.id.cfgNewProfile,)
-        } else {
-            navigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(profileId))
-        }
+  private fun openEditProfileView(profileId: Long?) {
+    if (profileId == null) {
+      navigator.navigateTo(R.id.cfgNewProfile)
+    } else {
+      navigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(profileId))
     }
+  }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profiles,
-            container, false)
-        binding.lifecycleOwner = requireActivity()
-        binding.viewModel = viewModel
-        binding.profilesVM = profilesVM
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View {
+    binding = DataBindingUtil.inflate(
+      inflater,
+      R.layout.fragment_profiles,
+      container,
+      false
+    )
+    binding.lifecycleOwner = requireActivity()
+    binding.viewModel = viewModel
+    binding.profilesVM = profilesVM
 
-        return binding.root
-    }
+    return binding.root
+  }
 
-    override fun onResume() {
-        super.onResume()
+  override fun onResume() {
+    super.onResume()
 
-        profilesVM.reload()
-    }
+    profilesVM.reload()
+  }
 }

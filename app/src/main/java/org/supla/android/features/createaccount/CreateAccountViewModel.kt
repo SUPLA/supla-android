@@ -46,7 +46,7 @@ class CreateAccountViewModel @Inject constructor(
   private val preferences: Preferences,
   schedulers: SuplaSchedulers,
   private val saveAccountUseCase: SaveAccountUseCase,
-  private val deleteAccountUseCase: DeleteAccountUseCase,
+  private val deleteAccountUseCase: DeleteAccountUseCase
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
 
   override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
@@ -55,7 +55,7 @@ class CreateAccountViewModel @Inject constructor(
     updateState {
       it.copy(
         profileNameVisible = preferences.isAnyAccountRegistered,
-        deleteButtonVisible = preferences.isAnyAccountRegistered && profileId != null,
+        deleteButtonVisible = preferences.isAnyAccountRegistered && profileId != null
       )
     }
 
@@ -66,7 +66,7 @@ class CreateAccountViewModel @Inject constructor(
           onSuccess = this::onProfileLoaded,
           onError = { throwable ->
             Trace.e(TAG, "Could not find profile", throwable)
-          },
+          }
         )
         .disposeBySelf()
     }
@@ -286,4 +286,3 @@ class CreateAccountViewModel @Inject constructor(
     val authSettingsChanged: Boolean
   )
 }
-

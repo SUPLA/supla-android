@@ -13,7 +13,6 @@ import dagger.hilt.android.scopes.ActivityScoped
 import org.supla.android.*
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
-import org.supla.android.features.webcontent.WebContentFragment
 import javax.inject.Inject
 
 @ActivityScoped

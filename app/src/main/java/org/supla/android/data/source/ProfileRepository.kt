@@ -1,5 +1,5 @@
 package org.supla.android.data.source
- 
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,12 +20,11 @@ package org.supla.android.data.source
 
 import org.supla.android.db.AuthProfileItem
 
-
 interface ProfileRepository {
-    val allProfiles: List<AuthProfileItem>
-    fun createProfile(profile: AuthProfileItem): Long
-    fun getProfile(id: Long): AuthProfileItem?
-    fun deleteProfile(id: Long)
-    fun updateProfile(profile: AuthProfileItem)
-    fun setProfileActive(id: Long): Boolean
+  val allProfiles: List<AuthProfileItem>
+  fun createProfile(profile: AuthProfileItem): Long
+  fun getProfile(id: Long): AuthProfileItem?
+  fun deleteProfile(id: Long)
+  fun updateProfile(profile: AuthProfileItem)
+  fun setProfileActive(id: Long): Boolean
 }

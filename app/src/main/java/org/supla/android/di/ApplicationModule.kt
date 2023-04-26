@@ -69,13 +69,13 @@ class ApplicationModule {
 
   @Provides
   @Singleton
-  fun provideSuplaClientProvider(): SuplaClientProvider = object: SuplaClientProvider {
+  fun provideSuplaClientProvider(): SuplaClientProvider = object : SuplaClientProvider {
     override fun provide(): SuplaClient? = SuplaApp.getApp().getSuplaClient()
   }
 
   @Provides
   @Singleton
-  fun provideSuplaAppProvider(): SuplaAppProvider = object: SuplaAppProvider {
+  fun provideSuplaAppProvider(): SuplaAppProvider = object : SuplaAppProvider {
     override fun provide(): SuplaAppApi = SuplaApp.getApp()
   }
 

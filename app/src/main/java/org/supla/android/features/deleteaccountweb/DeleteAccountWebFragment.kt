@@ -27,7 +27,7 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
 
   @Inject lateinit var navigator: CfgActivityNavigator
 
-  override fun handleEvents(event: DeleteAccountWebViewEvent)  {
+  override fun handleEvents(event: DeleteAccountWebViewEvent) {
     when (event) {
       DeleteAccountWebViewEvent.CloseClicked -> {
         when (destination) {
@@ -50,7 +50,7 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
     RESTART, RECONNECT, CLOSE
   }
 
-  override fun onBackPressed() = when(destination) {
+  override fun onBackPressed() = when (destination) {
     EndDestination.RESTART -> {
       navigator.restartAppStack()
       true

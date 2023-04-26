@@ -31,7 +31,6 @@ class SaveAccountUseCase @Inject constructor(
     profile: AuthProfileItem,
     allProfiles: List<AuthProfileItem>
   ): Completable = Completable.fromRunnable {
-
     if (allProfiles.isNotEmpty() && profile.name.trim().isEmpty() && preferences.isAnyAccountRegistered) {
       throw SaveAccountException.EmptyName
     } else if (isNameDuplicated(profile, allProfiles)) {

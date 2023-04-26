@@ -154,7 +154,7 @@ spotless {
     kotlin {
         target(fileTree("dir" to "src", "include" to "**/*.kt"))
         ktlint(Versions.KtLint).editorConfigOverride(mapOf(
-                "disabled_rules" to "no-wildcard-imports",
+                "disabled_rules" to "no-wildcard-imports, filename",
                 "max_line_length" to "140",
                 "indent_size" to "2"
         ))

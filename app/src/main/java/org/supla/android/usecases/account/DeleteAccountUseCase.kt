@@ -50,10 +50,12 @@ class DeleteAccountUseCase @Inject constructor(
 
   private fun removeLastProfile(profile: AuthProfileItem): Completable =
     profileManager.delete(profile.id)
-      .andThen(Completable.fromRunnable {
-        preferences.isAnyAccountRegistered = false
-        profileIdHolder.profileId = null
-      })
+      .andThen(
+        Completable.fromRunnable {
+          preferences.isAnyAccountRegistered = false
+          profileIdHolder.profileId = null
+        }
+      )
 
   private fun removeAndActivate(toRemove: AuthProfileItem, toActivate: AuthProfileItem): Completable =
     profileManager.activateProfile(toActivate.id, true)

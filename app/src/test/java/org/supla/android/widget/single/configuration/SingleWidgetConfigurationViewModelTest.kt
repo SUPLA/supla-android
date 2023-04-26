@@ -25,8 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -226,7 +226,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     // then
     assertThat(channels.size, `is`(5))
     channels.forEachIndexed { index, channel ->
-     assertThat(channel.value, instanceOf(if (index == 0) Location::class.java else Channel::class.java))
+      assertThat(channel.value, instanceOf(if (index == 0) Location::class.java else Channel::class.java))
     }
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()

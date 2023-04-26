@@ -31,38 +31,38 @@ data class ProfileIdHolder(var profileId: Long?)
 
 interface ProfileManager {
 
-    /**
-     * Saves profile to database and sets the ID
-     */
-    fun create(profile: AuthProfileItem): Completable
+  /**
+   * Saves profile to database and sets the ID
+   */
+  fun create(profile: AuthProfileItem): Completable
 
-    /**
-     * Tries to get a profile for the given ID
-     */
-    fun read(id: Long): Maybe<AuthProfileItem>
+  /**
+   * Tries to get a profile for the given ID
+   */
+  fun read(id: Long): Maybe<AuthProfileItem>
 
-    /**
-     * Updates given profile in the DB
-     */
-    fun update(profile: AuthProfileItem): Completable
+  /**
+   * Updates given profile in the DB
+   */
+  fun update(profile: AuthProfileItem): Completable
 
-    /**
-     * Deletes profile with the given ID from DB
-     */
-    fun delete(id: Long): Completable
+  /**
+   * Deletes profile with the given ID from DB
+   */
+  fun delete(id: Long): Completable
 
-    /**
-     * Gets a list of all profiles stored in DB
-     */
-    fun getAllProfiles(): Observable<List<AuthProfileItem>>
+  /**
+   * Gets a list of all profiles stored in DB
+   */
+  fun getAllProfiles(): Observable<List<AuthProfileItem>>
 
-    /**
-     * Gets a profile which currently is set as active
-     */
-    fun getCurrentProfile(): Maybe<AuthProfileItem>
+  /**
+   * Gets a profile which currently is set as active
+   */
+  fun getCurrentProfile(): Maybe<AuthProfileItem>
 
-    /**
-     * Activates profile with the given ID in the DB
-     */
-    fun activateProfile(id: Long, force: Boolean = false): Completable
+  /**
+   * Activates profile with the given ID in the DB
+   */
+  fun activateProfile(id: Long, force: Boolean = false): Completable
 }

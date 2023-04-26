@@ -18,21 +18,20 @@ package org.supla.android.data.source.local
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlin.random.Random
 import android.content.ContentValues
+import org.supla.android.Encryption
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
-import org.supla.android.Encryption
 import org.supla.android.Trace
-import org.supla.android.lib.SuplaConst
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.db.SuplaContract
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.SuplaContract
 import org.supla.android.extensions.TAG
+import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.AuthInfo
+import kotlin.random.Random
 
 class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileRepository, BaseDao(provider) {
-
 
   override fun createProfile(profile: AuthProfileItem): Long {
     profile.authInfo.guid = encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
@@ -63,7 +62,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       removeProfileBoundData(profile.id)
     }
     update(
-      profile, SuplaContract.AuthProfileEntry.TABLE_NAME,
+      profile,
+      SuplaContract.AuthProfileEntry.TABLE_NAME,
       key(SuplaContract.AuthProfileEntry._ID, profile.id)
     )
   }
@@ -106,7 +106,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
         val cv2 = ContentValues()
         cv2.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 1)
         db.update(
-          SuplaContract.AuthProfileEntry.TABLE_NAME, cv2,
+          SuplaContract.AuthProfileEntry.TABLE_NAME,
+          cv2,
           SuplaContract.AuthProfileEntry._ID + " = ?",
           arrayOf(id.toString())
         )
@@ -140,7 +141,6 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
     return Encryption.encryptDataWithNullOnException(bytes, key)
   }
 
-
   private fun removeProfileBoundData(id: Long) {
     val tables = listOf(
       SuplaContract.LocationEntry.TABLE_NAME,
@@ -157,5 +157,4 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))
     }
   }
-
 }

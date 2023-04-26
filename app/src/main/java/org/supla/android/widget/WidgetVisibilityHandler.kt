@@ -28,26 +28,26 @@ import javax.inject.Singleton
 
 @Singleton
 class WidgetVisibilityHandler @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val appWidgetManager: AppWidgetManager,
-        private val widgetPreferences: WidgetPreferences
+  @ApplicationContext private val context: Context,
+  private val appWidgetManager: AppWidgetManager,
+  private val widgetPreferences: WidgetPreferences
 ) {
 
-    fun onProfileRemoved(profileId: Long) {
-        appWidgetManager.getAllWidgetIds(context).forEach {
-            val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@forEach
-            if (widgetConfig.profileId == profileId) {
-                widgetPreferences.setWidgetConfiguration(it, widgetConfig.copy(profileId = INVALID_PROFILE_ID))
-                updateWidget(it)
-            }
-        }
+  fun onProfileRemoved(profileId: Long) {
+    appWidgetManager.getAllWidgetIds(context).forEach {
+      val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@forEach
+      if (widgetConfig.profileId == profileId) {
+        widgetPreferences.setWidgetConfiguration(it, widgetConfig.copy(profileId = INVALID_PROFILE_ID))
+        updateWidget(it)
+      }
     }
+  }
 
-    private fun updateWidget(widgetId: Int) {
-        val intent = Intent().apply {
-            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
-        }
-        context.sendBroadcast(intent)
+  private fun updateWidget(widgetId: Int) {
+    val intent = Intent().apply {
+      action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+      putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
     }
+    context.sendBroadcast(intent)
+  }
 }

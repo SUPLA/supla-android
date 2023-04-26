@@ -102,7 +102,7 @@ class DeleteAccountUseCaseTest {
       suplaClientProvider,
       suplaAppProvider,
       preferences,
-      profileIdHolder,
+      profileIdHolder
     )
     verifyZeroInteractions(context, suplaAppProvider)
 

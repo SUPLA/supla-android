@@ -19,7 +19,6 @@ package org.supla.android.cfg
 
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
