@@ -159,6 +159,8 @@ class CfgActivity : BaseActivity() {
       } else {
         navigator.navigateToStatus()
       }
+    } else {
+      finishAffinity()
     }
   }
 }
