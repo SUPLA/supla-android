@@ -74,7 +74,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return ids
   }
 
-  fun sceneCursor(profileId: Long = cachedProfileId): Cursor {
+  fun sceneCursor(profileId: Long? = cachedProfileId): Cursor {
     return read {
       val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
         "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"

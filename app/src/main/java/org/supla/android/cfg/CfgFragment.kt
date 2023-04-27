@@ -24,14 +24,20 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentCfgBinding
+import org.supla.android.navigator.CfgActivityNavigator
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CfgFragment : Fragment() {
 
   private val viewModel: CfgViewModel by activityViewModels()
   private lateinit var binding: FragmentCfgBinding
+
+  @Inject lateinit var navigator: CfgActivityNavigator
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -109,7 +115,7 @@ class CfgFragment : Fragment() {
     }
 
     binding.locationOrderingButton.setOnClickListener {
-      (requireActivity() as CfgActivity).navigateToReordering()
+      navigator.navigateTo(R.id.cfgLocationOrdering)
     }
 
     return binding.root

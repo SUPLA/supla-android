@@ -23,6 +23,7 @@
 
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
     <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+    <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pl</string>
     <string name="forumpage_url">https://forum.supla.org</string>
 
     <string name="version">wersja</string>
@@ -509,4 +510,11 @@
     <string name="btn_abort">Przerwij</string>
     <string name="btn_abort_and_execute">Przewij i wykonaj</string>
     <string name="scene_name">Nazwa sceny</string>
+
+  <string name="remove_account_title">Usunąć konto?</string>
+  <string name="remove_account_locally">Zapomnij na tym urządzeniu</string>
+  <string name="remove_account_remotely">Zapomnij i usuń na serwerze</string>
+  <string name="cancel">Anuluj</string>
+  <string name="form_profile_removal_failure">Usunięcie konta nie powiodło się, spróbuje ponownie</string>
+  <string name="general_failure">Wykonanie akcji nie powiodło się</string>
 </resources>

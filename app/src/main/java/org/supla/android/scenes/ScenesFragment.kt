@@ -31,7 +31,6 @@ import org.supla.android.databinding.FragmentScenesBinding
 import org.supla.android.db.DbHelper
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class ScenesFragment : Fragment() {
 
@@ -53,7 +52,8 @@ class ScenesFragment : Fragment() {
     binding = DataBindingUtil.inflate(
       inflater,
       R.layout.fragment_scenes,
-      container, false
+      container,
+      false
     )
 
     setupAdapter()
@@ -77,11 +77,11 @@ class ScenesFragment : Fragment() {
   private fun setupAdapter() {
     scenesAdapter.leftButtonClickCallback = {
       SuplaApp.Vibrate(context)
-      SuplaApp.getApp().suplaClient.stopScene(it)
+      SuplaApp.getApp().getSuplaClient()?.stopScene(it)
     }
     scenesAdapter.rightButtonClickCallback = {
       SuplaApp.Vibrate(context)
-      SuplaApp.getApp().suplaClient.startScene(it)
+      SuplaApp.getApp().getSuplaClient()?.startScene(it)
     }
     scenesAdapter.movementFinishedCallback = { viewModel.onSceneOrderUpdate(it) }
     scenesAdapter.reloadCallback = { viewModel.reload() }

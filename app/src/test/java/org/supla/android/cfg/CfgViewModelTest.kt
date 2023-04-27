@@ -44,17 +44,6 @@ class CfgViewModelTest : TestCase() {
   var instantTaskExecutorRule = InstantTaskExecutorRule()
 
   @Test
-  fun beforeInteractionNoNavigationDecision() {
-    whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
-    val nc = NavCoordinator()
-    CfgViewModel(appConfigurationProvider)
-    assertNull(
-      "should not be set initially",
-      nc.navAction.value
-    )
-  }
-
-  @Test
   fun saveIsOneShot() {
     whenever(appConfigurationProvider.getConfiguration()).thenReturn(fakeCfg)
     val viewModel = CfgViewModel(appConfigurationProvider)

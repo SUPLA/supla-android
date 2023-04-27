@@ -3,12 +3,18 @@
     <!-- new color definitions start here -->
     <color name="supla_green">#12a71e</color>
 
+    <color name="primary">@color/supla</color>
+    <color name="on_primary">#ffffff</color>
+
     <color name="item_selected">#ffffff</color>
     <color name="item_unselected">#dadbdc</color>
 
     <color name="supla_background_light">#F5F6F7</color>
     <color name="supla_text_light">#000000</color>
+    
+    <color name="dialog_scrim">#80363738</color>
     <!-- new color definitions end here -->
+
     <color name="splash_bg">#12a71e</color>
     <color name="channel_btn">#12a71e</color>
     <color name="channel_btn_pressed">#5ae966</color>
@@ -91,6 +97,7 @@
     <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
     <color name="ripple">#5112a71e</color>
+    <color name="supla_stroke">#00BD59</color>
 
     <!-- New colors with day/night support -->
 

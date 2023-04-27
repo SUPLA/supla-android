@@ -78,7 +78,8 @@ public class DbHelper extends BaseDbHelper {
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
-        new DefaultUserIconRepository(new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
+        new DefaultUserIconRepository(
+            new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 
@@ -745,7 +746,9 @@ public class DbHelper extends BaseDbHelper {
   private void insertDefaultProfile(SQLiteDatabase db) {
     ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
     AuthProfileItem itm = migrator.makeProfileUsingPreferences();
-    db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    if (itm != null) {
+      db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    }
   }
 
   private void alterTablesToReferProfile(SQLiteDatabase db) {
@@ -1022,8 +1025,11 @@ public class DbHelper extends BaseDbHelper {
     byte[] encrypted;
     String key = Preferences.getDeviceID(getContext());
 
-    if (payload == null) encrypted = null;
-    else encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    if (payload == null) {
+      encrypted = null;
+    } else {
+      encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    }
     if (encrypted == null) {
       cv.putNull(column);
     } else {
