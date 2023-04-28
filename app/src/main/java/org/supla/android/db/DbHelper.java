@@ -46,6 +46,7 @@ import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.db.SuplaContract.AuthProfileEntry;
 import org.supla.android.di.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
@@ -56,12 +57,13 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
 import org.supla.android.listview.ListViewCursorAdapter;
+import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileMigrator;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 26;
+  public static final int DATABASE_VERSION = 27;
   private static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -1108,6 +1110,48 @@ public class DbHelper extends BaseDbHelper {
     createSceneView(db);
   }
 
+  private void upgradeToV27(SQLiteDatabase db) {
+    Cursor cursor =
+        db.query(
+            AuthProfileEntry.TABLE_NAME,
+            SuplaContract.AuthProfileEntry.ALL_COLUMNS,
+            null,
+            null,
+            null,
+            null,
+            null);
+
+    boolean validAccountAvailable = false;
+
+    if (cursor.moveToFirst()) {
+      Preferences prefs = new Preferences(getContext());
+
+      do {
+        AuthProfileItem profile = makeEmptyAuthItem();
+        profile.AssignCursorData(cursor);
+
+        if (profile.getAuthInfo().isAuthDataComplete()) {
+          prefs.setAnyAccountRegistered(true);
+          validAccountAvailable = true;
+        }
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+
+    if (!validAccountAvailable) {
+      // There is only empty account in the database which is not needed anymore.
+      db.delete(AuthProfileEntry.TABLE_NAME, null, null);
+    }
+  }
+
+  private AuthProfileItem makeEmptyAuthItem() {
+    return new AuthProfileItem(
+        "",
+        new AuthInfo(true, true, "", "", "", 0, "", 0, new byte[] {0}, new byte[] {0}),
+        false,
+        false);
+  }
+
   private void dropViews(SQLiteDatabase db) {
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelViewEntry.VIEW_NAME);
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
@@ -1182,6 +1226,9 @@ public class DbHelper extends BaseDbHelper {
             break;
           case 25:
             upgradeToV26(db);
+            break;
+          case 26:
+            upgradeToV27(db);
             break;
         }
       }
