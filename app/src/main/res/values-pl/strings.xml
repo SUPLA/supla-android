@@ -517,4 +517,5 @@
   <string name="cancel">Anuluj</string>
   <string name="form_profile_removal_failure">Usunięcie konta nie powiodło się, spróbuje ponownie</string>
   <string name="general_failure">Wykonanie akcji nie powiodło się</string>
+  <string name="push_notification_limit_exceeded">Przekroczono limit powiadomień PUSH, który wynosi %1$s na godzinę.</string>
 </resources>
