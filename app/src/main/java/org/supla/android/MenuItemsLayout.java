@@ -78,8 +78,9 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       setOrientation(VERTICAL);
 
       mMainButtonsAreaLayout = new LinearLayout(getContext());
-      mMainButtonsAreaLayout.setLayoutParams(
-          new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+      LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+      params.topMargin = (int) getResources().getDimension(R.dimen.top_bar_height);
+      mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
       mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));
       addView(mMainButtonsAreaLayout);

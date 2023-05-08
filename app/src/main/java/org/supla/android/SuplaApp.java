@@ -48,6 +48,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.usecases.scene.SceneStateObserverUseCase;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
@@ -72,6 +73,8 @@ public class SuplaApp extends MultiDexApplication
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
   @Inject ValuesFormatter valuesFormatter;
+  @Inject
+  SceneStateObserverUseCase sceneStateObserver;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -89,12 +92,19 @@ public class SuplaApp extends MultiDexApplication
     if (currentProfile != null) {
       profileIdHolder.setProfileId(currentProfile.getId());
     }
+    sceneStateObserver.register();
 
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
     enqueueWidgetRefresh();
+  }
+
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+    sceneStateObserver.unregister();
   }
 
   public static void Vibrate(Context context) {

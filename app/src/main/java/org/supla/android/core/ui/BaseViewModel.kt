@@ -3,6 +3,7 @@ package org.supla.android.core.ui
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -83,6 +84,15 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
+    val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
+
+    return subscribeOn(schedulers.io)
+      .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
+      .doOnSubscribe { updateState { loadingState(true) } }
+      .doOnTerminate { updateState { loadingState(false) } }
+  }
+
+  fun <T : Any> Observable<T>.attach(): Observable<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)

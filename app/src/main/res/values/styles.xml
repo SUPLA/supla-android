@@ -25,14 +25,14 @@
         <item name="colorPrimaryDark">@color/layout_background</item>
     </style>
 
-    <style name="MenuBarTitle">
+    <style name="MenuBarTitle" parent="AppTheme.TextAppearance.Subtitle1">
         <item name="android:textColor">?attr/brandPrimaryForegroundColor</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppBar">
-      <item name="titleTextAppearance">@style/title</item>
+      <item name="titleTextAppearance">@style/MenuBarTitle</item>
       <item name="android:background">?brandPrimaryBackgroundColor</item>
     </style>
 

@@ -36,15 +36,26 @@ class SceneEventsManager @Inject constructor() {
   }
 
   fun emitStateChange(sceneId: Int, state: SceneState) {
-    val subject =
-      subjects[sceneId] ?: BehaviorSubject.create<SceneState>().also { subjects[sceneId] = it }
-    subject.onNext(state)
+    getSubject(sceneId).onNext(state)
   }
 
   fun observerScene(sceneId: Int): Observable<SceneState> {
-    return subjects[sceneId]?.hide()
-      ?.distinctUntilChanged { stateA, stateB -> stateA.executing == stateB.executing }
-      ?: Observable.just(SceneState(false))
+    return getSubject(sceneId).hide()
+      .distinctUntilChanged { stateA, stateB -> stateA.executing == stateB.executing }
+  }
+
+  @Synchronized
+  private fun getSubject(sceneId: Int): Subject<SceneState> {
+    val subject = subjects[sceneId]
+
+    if (subject != null) {
+      return subject
+    }
+
+    return BehaviorSubject.create<SceneState>().also {
+      subjects[sceneId] = it
+      it.onNext(SceneState(false))
+    }
   }
 
   data class SceneState(
