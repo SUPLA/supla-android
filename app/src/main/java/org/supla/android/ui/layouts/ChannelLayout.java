@@ -1,4 +1,4 @@
-package org.supla.android.listview;
+package org.supla.android.ui.layouts;
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -28,31 +28,30 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.core.widget.TextViewCompat;
 import androidx.appcompat.widget.AppCompatTextView;
+import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
-import org.supla.android.Preferences;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelValue;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.listview.LineView;
+import org.supla.android.ui.lists.SlideableItem;
 
-public class ChannelLayout extends LinearLayout implements View.OnLongClickListener {
+public class ChannelLayout extends LinearLayout implements SlideableItem {
 
 
     private int mRemoteId;
@@ -60,7 +59,8 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private boolean mMeasurementSubChannel;
     private boolean mGroup;
 
-    private ChannelListView mParentListView;
+    public long locationId;
+
     private RelativeLayout content;
     private FrameLayout right_btn;
     private FrameLayout left_btn;
@@ -93,13 +93,42 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
     private Preferences prefs;
 
 
-    public ChannelLayout(Context context, ChannelListView parentListView) {
-        super(context);
+    private Listener listener;
 
+    public interface Listener {
+
+        void onLeftButtonClick(int channelId);
+
+        void onRightButtonClick(int channelId);
+
+        void onCaptionLongPress(int channelId);
+    }
+
+
+    public ChannelLayout(Context context) {
+        super(context);
+        init(context);
+    }
+
+
+    public ChannelLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public ChannelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    public void setChannelListener(Listener l) {
+        listener = l;
+    }
+
+    private void init(Context context) {
         prefs = new Preferences(context);
         setOrientation(LinearLayout.HORIZONTAL);
 
-        mParentListView = parentListView;
         setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
         right_btn = new FrameLayout(context);
@@ -111,12 +140,12 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         int channelHeight = (int)(((float)getResources().getDimensionPixelSize(R.dimen.channel_layout_height)) * heightScaleFactor);
 
         right_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+            getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
         left_btn.setLayoutParams(new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
+            getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width), channelHeight));
 
         left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
 
@@ -164,7 +193,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         {
             int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    dot_size / 2, dot_size * 2);
+                dot_size / 2, dot_size * 2);
 
             lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
             lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
@@ -182,36 +211,17 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         channelIconContainer.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
-        caption_text.setOnLongClickListener(this);
+        caption_text.setOnLongClickListener(v -> {
+            listener.onCaptionLongPress(mRemoteId);
+            return true;
+        });
         channelIconContainer.addView(caption_text);
 
-        OnTouchListener tl = new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                if (action == MotionEvent.ACTION_DOWN)
-                    onActionBtnTouchDown(v);
-                else if (action == MotionEvent.ACTION_UP)
-                    onActionBtnTouchUp(v);
-
-                return true;
-            }
-        };
-
-        left_btn.setOnTouchListener(tl);
-        right_btn.setOnTouchListener(tl);
+        left_btn.setOnClickListener(v -> listener.onLeftButtonClick(mRemoteId));
+        right_btn.setOnClickListener(v -> listener.onRightButtonClick(mRemoteId));
 
         right_onlineStatus.setVisibility(INVISIBLE);
         left_onlineStatus.setVisibility(INVISIBLE);
-    }
-
-
-    public ChannelLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public ChannelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
     }
 
     private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
@@ -318,20 +328,15 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         right_btn_text.setText(Text);
     }
 
-    public void Slide(int delta) {
+    public void slide(int delta) {
 
-        if (Anim)
-            return;
+        if (!LeftButtonEnabled && delta > 0)
+            delta = 0;
 
-        if (!LeftButtonEnabled
-                && delta > 0 && content.getLeft() + delta > 0)
-            delta = content.getLeft() * -1;
+        if (!RightButtonEnabled && delta < 0)
+            delta = 0;
 
-        if (!RightButtonEnabled
-                && delta < 0 && content.getLeft() + delta < 0)
-            delta = content.getLeft() * -1;
-
-        content.layout(content.getLeft() + delta, content.getTop(), content.getWidth() + content.getLeft() + delta, content.getHeight());
+        content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
         int bcolor = getResources().getColor(R.color.channel_btn);
 
@@ -340,12 +345,11 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         UpdateLeftBtn();
         UpdateRightBtn();
-
     }
 
     public void hideButtonImmediately() {
         if (Slided() > 0) {
-            Slide(content.getLeft() * -1);
+            slide(content.getLeft() * -1);
         }
     }
 
@@ -393,50 +397,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
         left_btn.layout(left, 0, right, left_btn.getHeight());
 
-    }
-
-    private void onActionBtnTouchUpDown(boolean up, View v) {
-        if (mParentListView != null
-                && mParentListView.getOnChannelButtonTouchListener() != null) {
-            mParentListView.getOnChannelButtonTouchListener().onChannelButtonTouch(mParentListView, v == left_btn, up, mRemoteId, mFunc);
-        }
-
-    }
-
-    private void onActionBtnTouchDown(View v) {
-        if (Slided() == 0) {
-            return;
-        }
-
-        if (v == left_btn || v == right_btn) {
-            v.setBackgroundColor(getResources().getColor(R.color.channel_btn_pressed));
-        }
-
-
-        onActionBtnTouchUpDown(false, v);
-    }
-
-    private void onActionBtnTouchUp(View v) {
-        if (Slided() == 0) {
-            return;
-        }
-
-        if (v == left_btn || v == right_btn) {
-
-            final View _v = v;
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    _v.setBackgroundColor(getResources().getColor(R.color.channel_btn));
-                }
-            }, 200);
-
-        }
-
-
-        onActionBtnTouchUpDown(true, v);
     }
 
     private void UpdateRightBtn() {
@@ -547,9 +507,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
                     UpdateLeftBtn();
                     UpdateRightBtn();
                     Anim = false;
-
-                    if (mParentListView != null)
-                        mParentListView.onSlideAnimationEnd();
                 }
 
                 @Override
@@ -628,6 +585,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         int OldFunc = mFunc;
         mFunc = cbase.getFunc();
         mRemoteId = cbase.getRemoteId();
+        locationId = cbase.getLocationId();
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
 
@@ -830,15 +788,6 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         }
         caption_text.setText(cbase.getNotEmptyCaption(getContext()));
 
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (mParentListView.getOnCaptionLongClickListener() != null) {
-            mParentListView.getOnCaptionLongClickListener().
-                    onChannelCaptionLongClick(mParentListView, mRemoteId);
-        }
-        return true;
     }
 
     private class AnimParams {

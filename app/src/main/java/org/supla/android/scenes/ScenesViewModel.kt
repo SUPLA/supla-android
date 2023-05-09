@@ -20,18 +20,12 @@ package org.supla.android.scenes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
-import org.supla.android.db.Location
 import org.supla.android.db.Scene
-import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMsg
 import javax.inject.Inject
@@ -40,9 +34,7 @@ import javax.inject.Inject
 class ScenesViewModel @Inject constructor(
   private val messageHandler: SuplaClientMessageHandler,
   private val sceneEventsManager: SceneEventsManager,
-  private val dispatchers: CoroutineDispatchers,
-  private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository
+  private val sceneRepository: SceneRepository
 ) : ViewModel(), SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   private val scenesDisposable: Disposable
@@ -69,50 +61,10 @@ class ScenesViewModel @Inject constructor(
       }
   }
 
-  fun cleanup() {
-    _loading.postValue(true)
-    _scenes.value = listOf()
-  }
-
-  fun onSceneOrderUpdate(scenes: List<Scene>) {
-    viewModelScope.launch {
-      withContext(dispatchers.io()) {
-        var si = 0
-        for (s in scenes) {
-          s.sortOrder = si++
-          sceneRepository.updateScene(s)
-        }
-      }
-    }
-  }
-
   override fun onSuplaClientMessageReceived(msg: SuplaClientMsg) {
     if (msg.type == SuplaClientMsg.onSceneStateChanged) {
       val scene = sceneRepository.getScene(msg.sceneId) ?: return
       emitSceneStateChange(scene)
-    }
-  }
-
-  fun reload() {
-    viewModelScope.launch {
-      withContext(dispatchers.io()) {
-        sceneRepository.reloadScenes()
-      }
-    }
-  }
-
-  fun toggleLocationCollapsed(location: Location) {
-    if (location.collapsed and 0x8 > 0) {
-      location.collapsed = (location.collapsed and 0x8.inv())
-    } else {
-      location.collapsed = (location.collapsed or 0x8)
-    }
-
-    viewModelScope.launch {
-      withContext(dispatchers.io()) {
-        channelRepository.updateLocation(location)
-        sceneRepository.reloadScenes()
-      }
     }
   }
 

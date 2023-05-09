@@ -1,4 +1,4 @@
-package org.supla.android.scenes;
+package org.supla.android.ui.layouts;
 
 /*
   Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -32,12 +32,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import java.util.Date;
-import java.util.concurrent.Callable;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
@@ -50,13 +48,14 @@ import org.supla.android.db.Scene;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.listview.LineView;
+import org.supla.android.scenes.SceneEventsManager;
+import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
-public class SceneLayout extends LinearLayout {
+public class SceneLayout extends LinearLayout implements SlideableItem {
 
-  @Inject SceneEventsManager eventsManager;
-
-  private Callable<ViewHolder> viewHolderProvider;
+  @Inject
+  SceneEventsManager eventsManager;
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -87,8 +86,6 @@ public class SceneLayout extends LinearLayout {
     void onRightButtonClick(int sceneId);
 
     void onCaptionLongPress(int sceneId);
-
-    void onLongPress(ViewHolder viewHolder);
   }
 
   public SceneLayout(Context context) {
@@ -202,14 +199,6 @@ public class SceneLayout extends LinearLayout {
           return true;
         });
     channelIconContainer.addView(caption_text);
-    setOnLongClickListener(
-        v -> {
-          if (isSlided()) {
-            return false;
-          }
-          listener.onLongPress(provideViewHolderForLongPressCallback());
-          return true;
-        });
 
     left_btn.setOnClickListener(v -> listener.onLeftButtonClick(sceneId));
     right_btn.setOnClickListener(v -> listener.onRightButtonClick(sceneId));
@@ -227,10 +216,6 @@ public class SceneLayout extends LinearLayout {
 
   public void setSceneListener(Listener l) {
     listener = l;
-  }
-
-  public void setViewHolderProvider(Callable<ViewHolder> provider) {
-    viewHolderProvider = provider;
   }
 
   @Override
@@ -332,7 +317,7 @@ public class SceneLayout extends LinearLayout {
     right_btn_text.setText(Text);
   }
 
-  public void Slide(int delta) {
+  public void slide(int delta) {
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
     int bcolor = getResources().getColor(R.color.channel_btn);
@@ -410,6 +395,10 @@ public class SceneLayout extends LinearLayout {
   }
 
   private void observeStateChanges() {
+    if (sceneChangesDisposable != null && !sceneChangesDisposable.isDisposed()) {
+      sceneChangesDisposable.dispose();
+    }
+
     sceneChangesDisposable =
         eventsManager
             .observerScene(sceneId)
@@ -491,10 +480,6 @@ public class SceneLayout extends LinearLayout {
     int leftSeconds = (int) (leftTimeSecs % 60);
 
     return String.format("%02d:%02d:%02d", leftHours, leftMinutes, leftSeconds);
-  }
-
-  private boolean isSlided() {
-    return content.getLeft() != 0;
   }
 
   static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
@@ -595,15 +580,6 @@ public class SceneLayout extends LinearLayout {
         imageView.setImageBitmap(ImageCache.getBitmap(getContext(), img1Id));
         imageView.setVisibility(View.VISIBLE);
       }
-    }
-  }
-
-  private ViewHolder provideViewHolderForLongPressCallback() {
-    try {
-      return viewHolderProvider.call();
-    } catch (Exception e) {
-      // Should never happen
-      return null;
     }
   }
 }

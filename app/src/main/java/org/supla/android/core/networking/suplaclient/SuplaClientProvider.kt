@@ -11,4 +11,6 @@ interface SuplaClientApi {
   fun join()
 
   fun reconnect()
+
+  fun open(ID: Int, Group: Boolean, Open: Int): Boolean
 }

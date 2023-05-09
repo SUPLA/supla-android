@@ -66,13 +66,8 @@ syays GNU General Public License for more details.
 
 @AndroidEntryPoint
 class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButtonTouchListener, OnDetailListener,
-  OnSectionLayoutTouchListener, IAsyncResults, OnChannelButtonClickListener, OnCaptionLongClickListener, OnSharedPreferenceChangeListener,
-  NavigationBarView.OnItemSelectedListener {
-  //  private ChannelListView channelLV;
-  //  private ChannelListView cgroupLV;
-  //  private View scenesView;
-  private var channelListViewCursorAdapter: ListViewCursorAdapter? = null
-  private var cgroupListViewCursorAdapter: ListViewCursorAdapter? = null
+  OnSectionLayoutTouchListener, IAsyncResults, OnChannelButtonClickListener, OnCaptionLongClickListener, OnSharedPreferenceChangeListener{
+
   private var downloadUserIcons: DownloadUserIcons? = null
   private var NotificationView: RelativeLayout? = null
   private var notif_handler: Handler? = null
@@ -82,13 +77,10 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   private var channelStatePopup: ChannelStatePopup? = null
   private lateinit var bottomNavigation: BottomNavigationView
   private lateinit var bottomBar: BottomAppBar
-  private val channelsOpened = true
 
   @Inject
   lateinit var navigator: MainNavigator
 
-  // Used in reordering. The initial position of taken item is saved here.
-  private var dragInitialPosition: Int? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -109,21 +101,9 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
       it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
     }
 
-//    channelLV = findViewById(R.id.channelsListView);
-//    channelLV.setOnChannelButtonClickListener(this);
-//    channelLV.setOnChannelButtonTouchListener(this);
-//    channelLV.setOnCaptionLongClickListener(this);
-//    channelLV.setOnDetailListener(this);
-//
-//    cgroupLV = findViewById(R.id.channelGroupListView);
-//    cgroupLV.setOnChannelButtonTouchListener(this);
-//    cgroupLV.setOnDetailListener(this);
-//
-//    scenesView = findViewById(R.id.scenesView);
     MeasurementsDbHelper.getInstance(this) // For upgrade purposes
     RegisterMessageHandler()
-//    showMenuBar()
-//    showMenuButton()
+
     val prefs = PreferenceManager.getDefaultSharedPreferences(this)
     prefs.registerOnSharedPreferenceChangeListener(this)
 
@@ -138,14 +118,13 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
       navController,
       cfg
     )
-    //bottomBar.setupWithNavController(navController, cfg)
-    //bottomNavigation.setupWithNavController(navController, cfg)
     bottomNavigation.setOnItemSelectedListener {
       return@setOnItemSelectedListener it.onNavDestinationSelected(navController) || super.onOptionsItemSelected(it)
     }
 
     navController.addOnDestinationChangedListener { _, destination, _ -> configureNavBar(destination) }
     findViewById<Toolbar>(R.id.nav_toolbar).apply {
+      setTitle(R.string.menubar_title)
       setNavigationIcon(R.drawable.hamburger)
       setNavigationOnClickListener {
         if (menuIsVisible()) {
@@ -162,135 +141,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     if (destination.id == R.id.channel_list_fragment) {
       bottomNavigation.selectedItemId = R.id.channel_list_fragment
     }
-  }
-
-  override fun onStop() {
-    super.onStop()
-    if (channelListViewCursorAdapter != null && channelListViewCursorAdapter!!.isInReorderingMode) {
-      channelListViewCursorAdapter!!.stopReorderingMode()
-    }
-    if (cgroupListViewCursorAdapter != null && cgroupListViewCursorAdapter!!.isInReorderingMode) {
-      cgroupListViewCursorAdapter!!.stopReorderingMode()
-    }
-  }
-
-  private fun SetListCursorAdapter(): Boolean {
-
-//    if (channelListViewCursorAdapter == null) {
-//
-//      channelListViewCursorAdapter =
-//          new ListViewCursorAdapter(this, getDbHelper().getChannelListCursor());
-//      channelLV.setAdapter(channelListViewCursorAdapter);
-//
-//      channelLV.setOnItemLongClickListener(
-//          (parent, view, position, id) -> onDragStarted(view, position, channelLV));
-//      channelLV.setOnDragListener(
-//          new ListViewDragListener(
-//              channelLV,
-//              droppedPosition ->
-//                  onDragStopped(
-//                      droppedPosition, channelListViewCursorAdapter, this::doChannelsReorder),
-//              position -> onDragPositionChanged(position, channelListViewCursorAdapter)));
-//      channelLV.setOnSectionLayoutTouchListener(this);
-//
-//      return true;
-//
-//    } else if (channelListViewCursorAdapter.getCursor() == null) {
-//
-//      channelListViewCursorAdapter.changeCursor(getDbHelper().getChannelListCursor());
-//    }
-    return false
-  }
-
-  private fun onDragStarted(view: View, position: Int, listView: ChannelListView): Boolean {
-    if (listView.isDetailVisible
-      || listView.isDetailSliding
-      || listView.isChannelLayoutSlided
-    ) {
-      dragInitialPosition = null
-      return false
-    }
-    dragInitialPosition = position
-    val shadowBuilder = View.DragShadowBuilder(view)
-    view.startDrag(null, shadowBuilder, listView.getItemAtPosition(position), 0)
-    return true
-  }
-
-  private fun onDragStopped(droppedPosition: Int, adapter: ListViewCursorAdapter, reorder: Reorder) {
-    adapter.stopReorderingMode()
-    if (dragInitialPosition == null || droppedPosition == ListViewDragListener.INVALID_POSITION) {
-      // Moved somewhere outside the list view or Something wrong, initial position not initialized.
-      return
-    }
-    if (!adapter.isReorderPossible(dragInitialPosition!!, droppedPosition)) {
-      // Moving outside of the section not allowed.
-      return
-    }
-    val initialPositionItem = adapter.getItemForPosition(dragInitialPosition!!)
-    val finalPositionItem = adapter.getItemForPosition(droppedPosition)
-    reorder.doReorder(initialPositionItem, finalPositionItem)
-  }
-
-  private fun onDragPositionChanged(position: Int, adapter: ListViewCursorAdapter) {
-    if (dragInitialPosition == null || position == ListViewDragListener.INVALID_POSITION) {
-      // Moved somewhere outside the list view or Something wrong, initial position not initialized.
-      adapter.stopReorderingMode()
-      return
-    }
-    if (!adapter.isReorderPossible(dragInitialPosition!!, position)) {
-      // Moving outside of the section not allowed.
-      adapter.stopReorderingMode()
-      return
-    }
-    adapter.updateReorderingMode(dragInitialPosition!!, position)
-  }
-
-  private fun doChannelsReorder(
-    initialPositionItem: ListViewCursorAdapter.Item,
-    finalPositionItem: ListViewCursorAdapter.Item
-  ) {
-    subscribe(
-      dbHelper.reorderChannels(initialPositionItem, finalPositionItem),
-      { channelListViewCursorAdapter!!.changeCursor(dbHelper.channelListCursor) }
-    ) { throwable: Throwable? -> Trace.w(TAG, "Channels reordering failed", throwable) }
-  }
-
-  private fun doGroupsReorder(
-    initialPositionItem: ListViewCursorAdapter.Item,
-    finalPositionItem: ListViewCursorAdapter.Item
-  ) {
-    subscribe(
-      dbHelper.reorderGroups(initialPositionItem, finalPositionItem),
-      { cgroupListViewCursorAdapter!!.changeCursor(dbHelper.groupListCursor) }
-    ) { throwable: Throwable? -> Trace.w(TAG, "Groups reordering failed", throwable) }
-  }
-
-  private fun SetGroupListCursorAdapter(): Boolean {
-
-//    if (cgroupListViewCursorAdapter == null) {
-//
-//      cgroupListViewCursorAdapter =
-//          new ListViewCursorAdapter(this, getDbHelper().getGroupListCursor(), true);
-//      cgroupLV.setAdapter(cgroupListViewCursorAdapter);
-//
-//      cgroupLV.setOnItemLongClickListener(
-//          (parent, view, position, id) -> onDragStarted(view, position, cgroupLV));
-//      cgroupLV.setOnDragListener(
-//          new ListViewDragListener(
-//              cgroupLV,
-//              droppedPosition ->
-//                  onDragStopped(
-//                      droppedPosition, cgroupListViewCursorAdapter, this::doGroupsReorder),
-//              position -> onDragPositionChanged(position, cgroupListViewCursorAdapter)));
-//      cgroupLV.setOnSectionLayoutTouchListener(this);
-//
-//      return true;
-//
-//    } else if (cgroupListViewCursorAdapter.getCursor() == null) {
-//
-//      cgroupListViewCursorAdapter.changeCursor(getDbHelper().getGroupListCursor());
-//    }
-    return false
   }
 
   protected fun hideDetail() {
@@ -313,25 +163,10 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
     }
-    resetListViews()
     hideDetail()
     runDownloadTask()
     val ra = RateApp(this)
     ra.showDialog(1000)
-  }
-
-  private fun resetListViews() {
-
-//    if (!SetListCursorAdapter()) {
-//      channelLV.setSelection(0);
-//      channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
-//    }
-//
-//    if (!SetGroupListCursorAdapter()) {
-//      cgroupLV.setSelection(0);
-//      cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
-//    }
-    reloadScenes()
   }
 
   override fun onDestroy() {
@@ -395,16 +230,12 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
 
   override fun onRegisteredMsg() {
     runDownloadTask()
-    resetListViews()
   }
 
   override fun onDisconnectedMsg() {
-    if (channelListViewCursorAdapter != null) channelListViewCursorAdapter!!.changeCursor(null)
   }
 
   override fun onConnectingMsg() {
-    SetListCursorAdapter()
-    SetGroupListCursorAdapter()
   }
 
   override fun onEventMsg(event: SuplaEvent) {
@@ -507,87 +338,9 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     }
   }
 
-  private fun ShowValveAlertDialog(channelId: Int, context: Context) {
-    val builder = AlertDialog.Builder(this)
-    builder.setTitle(android.R.string.dialog_alert_title)
-    builder.setMessage(R.string.valve_open_warning)
-    builder.setPositiveButton(
-      R.string.yes
-    ) { dialog: DialogInterface, id: Int ->
-      val client = SuplaApp.getApp().getSuplaClient()
-      if (client != null) {
-        SuplaApp.Vibrate(context)
-        client.open(channelId, false, 1)
-      }
-      dialog.cancel()
-    }
-    builder.setNeutralButton(R.string.no) { dialog: DialogInterface, id: Int -> dialog.cancel() }
-    val alert = builder.create()
-    alert.show()
-  }
-
   override fun onChannelButtonTouch(
     clv: ChannelListView, left: Boolean, up: Boolean, remoteId: Int, channelFunc: Int
   ) {
-
-//    if (menuIsVisible()) return;
-//
-//    SuplaClient client = SuplaApp.getApp().getSuplaClient();
-//    if (new Preferences(this).isButtonAutohide()) clv.hideButton(false);
-//
-//    if (client == null) return;
-//
-//    if (!up && client.turnOnOff(this, !left, remoteId, clv == cgroupLV, channelFunc, true)) {
-//      return;
-//    }
-//
-//    if (!left
-//        && !up
-//        && (channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
-//            || channelFunc == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)) {
-//      Channel channel = getDbHelper().getChannel(remoteId);
-//      if (channel != null
-//          && channel.getValue().isClosed()
-//          && (channel.getValue().flooding() || channel.getValue().isManuallyClosed())) {
-//        ShowValveAlertDialog(remoteId, this);
-//        return;
-//      }
-//    }
-//
-//    if (!up
-//        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-//        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
-//
-//      SuplaApp.Vibrate(this);
-//    }
-//
-//    if (up) {
-//
-//      if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-//          || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
-//        client.open(remoteId, clv == cgroupLV, 0);
-//      }
-//
-//    } else {
-//
-//      int Open;
-//
-//      if (left) {
-//        Open =
-//            channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-//                    || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-//                ? 1
-//                : 0;
-//      } else {
-//        Open =
-//            channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-//                    || channelFunc == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-//                ? 2
-//                : 1;
-//      }
-//
-//      client.open(remoteId, clv == cgroupLV, Open);
-//    }
   }
 
   override fun onBackPressed() {
@@ -611,33 +364,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   }
 
   override fun onSectionClick(clv: ChannelListView, caption: String, locationId: Int) {
-
-//    int _collapsed;
-//    if (clv == channelLV) {
-//      _collapsed = 0x1;
-//    } else if (clv == cgroupLV) {
-//      _collapsed = 0x2;
-//    } else {
-//      return;
-//    }
-//
-//    Location location = getDbHelper().getLocation(locationId);
-//    int collapsed = location.getCollapsed();
-//
-//    if ((collapsed & _collapsed) > 0) {
-//      collapsed ^= _collapsed;
-//    } else {
-//      collapsed |= _collapsed;
-//    }
-//
-//    location.setCollapsed(collapsed);
-//    getDbHelper().updateLocation(location);
-//
-//    if (clv == channelLV) {
-//      channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
-//    } else {
-//      cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
-//    }
   }
 
   override fun onRestApiTaskStarted(task: SuplaRestApiClientTask) {}
@@ -677,63 +403,10 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   }
 
   override fun onSharedPreferenceChanged(prefss: SharedPreferences, key: String) {
-    if (key == Preferences.pref_channel_height) {
-      /* Ivalidate the adapter, so that channel list can
-      be rebuilt with new layout. */
-      channelListViewCursorAdapter = null
-      cgroupListViewCursorAdapter = null
-    }
   }
 
   override fun onProfileChanged() {
     super.onProfileChanged()
-    resetListViews()
     runDownloadTask()
-  }
-
-  private interface Reorder {
-    fun doReorder(firstItem: ListViewCursorAdapter.Item?, secondItem: ListViewCursorAdapter.Item?)
-  }
-
-  override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//    when(item.itemId) {
-//      R.id.channels_item -> navigator.replaceTo(R.id.channel_list_fragment)
-//      R.id.group_list_fragment -> navigator.replaceTo(R.id.group_list_fragment)
-//      R.id.scenes_item -> navigator.replaceTo(R.id.scene_list_fragment)
-//    }
-//    if (menuIsVisible() || channelLV.isDetailSliding() || cgroupLV.isDetailSliding()) return false;
-//
-//    int scenesVisible = View.GONE, groupsVisible = View.GONE, channelsVisible = View.GONE;
-//
-//    switch (item.getItemId()) {
-//      case R.id.channels_item:
-//        channelsVisible = View.VISIBLE;
-//        break;
-//      case R.id.groups_item:
-//        groupsVisible = View.VISIBLE;
-//        break;
-//      case R.id.scenes_item:
-//        scenesVisible = View.VISIBLE;
-//        break;
-//    }
-//
-//    channelLV.setVisibility(channelsVisible);
-//    cgroupLV.setVisibility(groupsVisible);
-//    scenesView.setVisibility(scenesVisible);
-//
-//    channelsOpened = channelsVisible == View.VISIBLE;
-    return true
-  }
-
-  //  ScenesFragment scenesFragment() {
-  //    FragmentManager fmgr = getSupportFragmentManager();
-  //    return (ScenesFragment) fmgr.findFragmentById(R.id.scenesFragment);
-  //  }
-  private fun reloadScenes() {
-//    scenesFragment().reload();
-  }
-
-  companion object {
-    private val TAG = MainActivity::class.java.simpleName
   }
 }

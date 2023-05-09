@@ -46,12 +46,12 @@ import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
 import org.supla.android.R;
-import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.ui.layouts.ChannelLayout;
 
 
 public class ChannelListView extends ListView implements
@@ -318,9 +318,9 @@ public class ChannelListView extends ListView implements
 						if(chld instanceof ChannelLayout) {
 							chn = (ChannelLayout)chld;
 						}
-					} else if(chld instanceof ChannelLayout.CaptionView) {
-						tapView = chld;
-						stop = true;
+//					} else if(chld instanceof ChannelLayout.CaptionView) {
+//						tapView = chld;
+//						stop = true;
 					}
 					break;
 				}
@@ -347,7 +347,7 @@ public class ChannelListView extends ListView implements
     private void triggerOnLongPressIfNeeded(MotionEvent ev) {
         if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
            _stealingEventsVictim != null) {
-            _stealingEventsVictim.onLongClick(_stealingEventsFromView);
+            //_stealingEventsVictim.onLongClick(_stealingEventsFromView);
             stopStealingEvents();
         }
     }
@@ -495,7 +495,7 @@ public class ChannelListView extends ListView implements
                         }
 
                         if (X != LastXtouch) {
-                            channelLayout.Slide((int) (X - LastXtouch));
+                            channelLayout.slide((int) (X - LastXtouch));
                             buttonSliding = true;
 							stopStealingEvents();
                             if (channelLayout.percentOfSliding() > 3f) {
@@ -584,7 +584,7 @@ public class ChannelListView extends ListView implements
             triggerOnLongPressIfNeeded(ev);
 			if(ev.getEventTime() - _stealingStartTime > _longPressMillis &&
 			   _stealingEventsVictim != null) {
-				_stealingEventsVictim.onLongClick(_stealingEventsFromView);
+				//_stealingEventsVictim.onLongClick(_stealingEventsFromView);
 			}
 			stopStealingEvents();
             AnimateDetailSliding(false);

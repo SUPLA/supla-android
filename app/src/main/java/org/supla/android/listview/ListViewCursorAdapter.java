@@ -33,6 +33,7 @@ import org.supla.android.db.SuplaContract;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.supla.android.ui.layouts.ChannelLayout;
 
 public class ListViewCursorAdapter extends BaseAdapter {
 
@@ -289,14 +290,14 @@ public class ListViewCursorAdapter extends BaseAdapter {
 
             if (!(convertView instanceof ChannelLayout)
                     || convertView.getVisibility() == View.GONE) {
-                convertView = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView) parent : null);
+                convertView = new ChannelLayout(context);
             }
 
             cbase.AssignCursorData((Cursor) obj);
             SectionItem channelSection = getSectionAtPosition(position);
             setData((ChannelLayout) convertView, cbase, channelSection);
         } else {
-            ChannelLayout channelLayout = new ChannelLayout(context, parent instanceof ChannelListView ? (ChannelListView) parent : null);
+            ChannelLayout channelLayout = new ChannelLayout(context);
             convertView = channelLayout;
         }
 

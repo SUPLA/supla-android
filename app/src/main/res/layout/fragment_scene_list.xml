@@ -12,6 +12,7 @@
       android:layout_height="wrap_content"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
       app:layout_constraintTop_toTopOf="parent" />
+
   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

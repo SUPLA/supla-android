@@ -20,9 +20,6 @@ package org.supla.android.data.source
 
 import android.database.Cursor
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.local.SceneDao
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
@@ -30,27 +27,11 @@ import org.supla.android.db.SuplaContract.SceneEntry
 import org.supla.android.db.SuplaContract.SceneViewEntry
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
-import java.util.concurrent.TimeUnit
 
 class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
 
-  private val scenesSubject: Subject<List<Scene>> = PublishSubject.create()
-  private var remissionId: UInt = 0u
-  private val remissionSubject: Subject<Int> = PublishSubject.create()
-
-  init {
-    // This strange construction is needed to proper reload the list of scenes when
-    // something was added on the web interface. It simulates the reactive behavior of the database
-    // (something like Rx with Room).
-    // Debounce is used for optimization -> to avoid many reloads.
-    remissionSubject.subscribeOn(Schedulers.io())
-      .debounce(50, TimeUnit.MILLISECONDS)
-      .subscribe { scenesSubject.onNext(loadScenes()) }
-  }
-
-  override fun getAllProfileScenes(): Observable<List<Scene>> {
-    return scenesSubject.hide()
-      .doOnSubscribe { scenesSubject.onNext(loadScenes()) }
+  override fun getAllProfileScenes(): Observable<List<Scene>> = Observable.fromCallable {
+    loadScenes()
   }
 
   override fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>> {
@@ -86,11 +67,6 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
       }
     }
 
-    if (result) {
-      // We're notifying only when something changed.
-      remissionSubject.onNext(remissionId++.toInt())
-    }
-
     return result
   }
 
@@ -108,12 +84,7 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
   }
 
   override fun setScenesVisible(visible: Int, whereVisible: Int): Boolean {
-    remissionSubject.onNext(remissionId++.toInt())
     return dao.setScenesVisible(visible, whereVisible)
-  }
-
-  override suspend fun reloadScenes() {
-    scenesSubject.onNext(loadScenes())
   }
 
   override fun getSceneUserIconIdsToDownload(): List<Int> {

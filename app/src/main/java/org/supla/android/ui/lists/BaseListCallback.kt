@@ -1,4 +1,21 @@
-package org.supla.android.scenes
+package org.supla.android.ui.lists
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
@@ -21,11 +38,13 @@ import androidx.recyclerview.widget.RecyclerView.*
 import org.supla.android.R
 
 @SuppressLint("ClickableViewAccessibility")
-class ScenesListCallback(context: Context, private val adapter: ScenesAdapter) :
-  ItemTouchHelper.SimpleCallback(
-    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-  ) {
+abstract class BaseListCallback(
+  context: Context,
+  private val adapter: Adapter<ViewHolder>
+) : ItemTouchHelper.SimpleCallback(
+  ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+) {
 
   private val buttonWidth =
     context.resources.getDimensionPixelSize(R.dimen.channel_layout_button_width)
@@ -62,24 +81,10 @@ class ScenesListCallback(context: Context, private val adapter: ScenesAdapter) :
     recyclerView: RecyclerView,
     viewHolder: ViewHolder
   ): Int {
-    if (viewHolder is ScenesAdapter.LocationListItemViewHolder) {
+    if (viewHolder is BaseListAdapter.LocationListItemViewHolder) {
       return 0
     }
     return super.getMovementFlags(recyclerView, viewHolder)
-  }
-
-  override fun canDropOver(
-    recyclerView: RecyclerView,
-    current: ViewHolder,
-    target: ViewHolder
-  ): Boolean {
-    val currentView = current.itemView
-    val targetView = target.itemView
-
-    if (currentView !is SceneLayout || targetView !is SceneLayout) {
-      return false
-    }
-    return currentView.locationId == targetView.locationId
   }
 
   override fun onMove(
@@ -166,7 +171,7 @@ class ScenesListCallback(context: Context, private val adapter: ScenesAdapter) :
     if (actionState == ACTION_STATE_DRAG) {
       super.onChildDraw(c, recyclerView, viewHolder, 0f, dY, actionState, isCurrentlyActive)
     } else if (isCurrentlyActive) {
-      (viewHolder.itemView as SceneLayout).Slide(correctedX.toInt())
+      (viewHolder.itemView as SlideableItem).slide(correctedX.toInt())
     }
 
     lastActiveFlag = isCurrentlyActive
@@ -238,7 +243,7 @@ class ScenesListCallback(context: Context, private val adapter: ScenesAdapter) :
       interpolator = AccelerateDecelerateInterpolator()
       addUpdateListener {
         val x = it.getAnimatedValue(holderName) as Float
-        (view as SceneLayout).Slide(x.toInt())
+        (view as SlideableItem).slide(x.toInt())
       }
       if (toPos == 0f) {
         addListener { doOnEnd { view.translationX = 0f } }

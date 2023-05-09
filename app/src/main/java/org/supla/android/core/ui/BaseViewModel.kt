@@ -1,4 +1,21 @@
 package org.supla.android.core.ui
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Completable
@@ -69,6 +86,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Maybe called at '$calledAt' failed with ${it.message}", it) }
       .doOnSubscribe { updateState { loadingState(true) } }
       .doOnTerminate { updateState { loadingState(false) } }
@@ -78,15 +96,25 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Completable called at '$calledAt' failed with ${it.message}", it) }
       .doOnSubscribe { updateState { loadingState(true) } }
       .doOnTerminate { updateState { loadingState(false) } }
+  }
+
+  fun Completable.attachSilent(): Completable {
+    val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
+
+    return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
+      .doOnError { Trace.e(TAG, "Completable called at '$calledAt' failed with ${it.message}", it) }
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
       .doOnSubscribe { updateState { loadingState(true) } }
       .doOnTerminate { updateState { loadingState(false) } }
@@ -96,6 +124,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
       .doOnSubscribe { updateState { loadingState(true) } }
       .doOnTerminate { updateState { loadingState(false) } }

@@ -1,5 +1,4 @@
-package org.supla.android.data.source
-
+package org.supla.android.ui.lists
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,20 +17,6 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Observable
-import org.supla.android.db.Location
-import org.supla.android.db.Scene
-import org.supla.android.lib.SuplaScene
-import org.supla.android.lib.SuplaSceneState
-
-interface SceneRepository {
-
-  fun getAllProfileScenes(): Observable<List<Scene>>
-  fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>>
-  fun getSceneUserIconIdsToDownload(): List<Int>
-  fun getScene(id: Int): Scene?
-  fun updateScene(scene: Scene): Boolean
-  fun updateSuplaScene(suplaScene: SuplaScene): Boolean
-  fun updateSuplaSceneState(suplaSceneState: SuplaSceneState): Boolean
-  fun setScenesVisible(visible: Int, whereVisible: Int): Boolean
+interface SlideableItem {
+  fun slide(position: Int)
 }
