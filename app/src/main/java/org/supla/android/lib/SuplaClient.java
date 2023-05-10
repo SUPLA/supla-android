@@ -194,6 +194,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
+  private native boolean scRegisterPushNotificationClientToken(long _supla_client, int appId, String token);
+  
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) return;
     SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
@@ -752,6 +754,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0 && scExecuteAction(_supla_client_ptr, parameters);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
+  public boolean registerPushNotificationClientToken(int appId, String token) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
     } finally {
       unlockClientPtr();
     }
