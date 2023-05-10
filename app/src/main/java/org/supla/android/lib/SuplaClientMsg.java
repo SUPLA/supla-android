@@ -53,6 +53,8 @@ public class SuplaClientMsg {
   public static final int onLocationCaptionSetResult = 30;
   public static final int onSceneCaptionSetResult = 31;
   public final static int onSceneStateChanged = 32;
+  public static final int onChannelGroupCaptionSetResult = 33;
+
     private Object Sender;
     private int Type;
     private SuplaVersionError VersionError;

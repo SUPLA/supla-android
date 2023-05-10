@@ -155,6 +155,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
+  private native boolean scSetChannelGroupCaption(long _supla_client, int ChannelGroupID, String Caption);
+
   private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
 
   private native boolean scSetSceneCaption(long _supla_client, int SceneID, String Caption);
@@ -562,6 +564,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0 && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
+  public boolean setChannelGroupCaption(int ChannelGroupID, String Caption) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
     } finally {
       unlockClientPtr();
     }
@@ -1161,6 +1172,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
+  private void onChannelGroupCaptionSetResult(int ChannelGroupID, String Caption, int ResultCode) {
+    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelGroupCaptionSetResult);
+    msg.setCode(ResultCode);
+    msg.setText(Caption);
+    msg.setChannelGroupId(ChannelGroupID);
+    sendMessage(msg);
+  }
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onLocationCaptionSetResult);
     msg.setCode(ResultCode);
