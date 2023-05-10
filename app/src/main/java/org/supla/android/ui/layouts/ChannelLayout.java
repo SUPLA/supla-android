@@ -24,7 +24,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -35,6 +34,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatTextView;
+import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
@@ -49,10 +53,14 @@ import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.LineView;
+import org.supla.android.scenes.ListsEventsManager;
 import org.supla.android.ui.lists.SlideableItem;
 
+@AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem {
 
+    @Inject
+    ListsEventsManager eventsManager;
 
     private int mRemoteId;
     private int mFunc;
@@ -89,11 +97,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     private float heightScaleFactor = 1f;
     private boolean shouldUpdateChannelStateLayout;
-    
+
     private Preferences prefs;
 
 
     private Listener listener;
+
+    private Disposable changesDisposable = null;
 
     public interface Listener {
 
@@ -227,11 +237,35 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
+        observeChanges();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
+        if (changesDisposable != null && !changesDisposable.isDisposed()) {
+            changesDisposable.dispose();
+        }
+    }
+
+    private void observeChanges() {
+        if (changesDisposable != null && !changesDisposable.isDisposed()) {
+            changesDisposable.dispose();
+        }
+
+        if (mGroup) {
+            changesDisposable = eventsManager.observeGroup(mRemoteId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(state -> configureBasedOnData(state.getGroup()));
+        } else {
+            changesDisposable = eventsManager.observeChannel(mRemoteId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(state -> configureBasedOnData(state.getChannel()));
+        }
     }
 
     private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
@@ -287,7 +321,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
         if(mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
             margin = 0;
-            
+
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
         lp.leftMargin = margin;
 
@@ -587,6 +621,11 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     }
 
     public void setChannelData(ChannelBase cbase) {
+        configureBasedOnData(cbase);
+        observeChanges();
+    }
+
+    private void configureBasedOnData(ChannelBase cbase) {
 
         int OldFunc = mFunc;
         mFunc = cbase.getFunc();
@@ -974,10 +1013,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 			      LayoutParams.WRAP_CONTENT, sh);
-            
+
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            
+
             setLayoutParams(lp);
 
             if (mFunc == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR) {

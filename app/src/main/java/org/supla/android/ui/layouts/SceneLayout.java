@@ -48,14 +48,14 @@ import org.supla.android.db.Scene;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.listview.LineView;
-import org.supla.android.scenes.SceneEventsManager;
+import org.supla.android.scenes.ListsEventsManager;
 import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout implements SlideableItem {
 
   @Inject
-  SceneEventsManager eventsManager;
+  ListsEventsManager eventsManager;
 
   private RelativeLayout content;
   private FrameLayout right_btn;

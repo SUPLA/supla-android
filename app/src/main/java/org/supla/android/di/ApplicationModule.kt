@@ -19,7 +19,7 @@ import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
-import org.supla.android.scenes.SceneEventsManager
+import org.supla.android.scenes.ListsEventsManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.WidgetVisibilityHandler
 import javax.inject.Singleton
@@ -39,7 +39,7 @@ class ApplicationModule {
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
     widgetVisibilityHandler: WidgetVisibilityHandler,
-    sceneEventsManager: SceneEventsManager,
+    listsEventsManager: ListsEventsManager,
     suplaAppProvider: SuplaAppProvider
   ): ProfileManager {
     return MultiAccountProfileManager(
@@ -47,7 +47,7 @@ class ApplicationModule {
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
-      sceneEventsManager,
+      listsEventsManager,
       suplaAppProvider
     )
   }
