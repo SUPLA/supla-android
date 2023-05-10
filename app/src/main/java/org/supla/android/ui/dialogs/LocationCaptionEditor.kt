@@ -1,6 +1,9 @@
-package org.supla.android
+package org.supla.android.ui.dialogs
 
 import android.content.Context
+import org.supla.android.CaptionEditor
+import org.supla.android.R
+import org.supla.android.SuplaApp
 import org.supla.android.db.DbHelper
 
 class LocationCaptionEditor(context: Context?) : CaptionEditor(context) {

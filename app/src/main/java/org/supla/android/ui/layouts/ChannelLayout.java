@@ -125,6 +125,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         listener = l;
     }
 
+    public void setInfoIconClickListener(OnClickListener listener) {
+        channelStateIcon.setOnClickListener(listener);
+    }
+
     private void init(Context context) {
         prefs = new Preferences(context);
         setOrientation(LinearLayout.HORIZONTAL);
@@ -211,10 +215,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         channelIconContainer.addView(imgl);
 
         caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
-        caption_text.setOnLongClickListener(v -> {
-            listener.onCaptionLongPress(mRemoteId);
-            return true;
-        });
         channelIconContainer.addView(caption_text);
 
         left_btn.setOnClickListener(v -> listener.onLeftButtonClick(mRemoteId));
@@ -222,6 +222,16 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
         right_onlineStatus.setVisibility(INVISIBLE);
         left_onlineStatus.setVisibility(INVISIBLE);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
@@ -525,10 +535,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     }
 
-    public boolean getRightButtonEnabled() {
-        return RightButtonEnabled;
-    }
-
     private void setRightButtonEnabled(boolean rightButtonEnabled) {
 
         if (RightButtonEnabled != rightButtonEnabled) {
@@ -588,8 +594,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         locationId = cbase.getLocationId();
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
-
-        
 
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
@@ -788,6 +792,18 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         }
         caption_text.setText(cbase.getNotEmptyCaption(getContext()));
 
+        if (mGroup) {
+            caption_text.setOnLongClickListener(null);
+            caption_text.setClickable(false);
+            caption_text.setLongClickable(false);
+        } else {
+            caption_text.setOnLongClickListener(v -> {
+                listener.onCaptionLongPress(mRemoteId);
+                return true;
+            });
+            caption_text.setClickable(true);
+            caption_text.setLongClickable(true);
+        }
     }
 
     private class AnimParams {

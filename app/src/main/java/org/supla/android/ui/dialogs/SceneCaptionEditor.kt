@@ -1,4 +1,4 @@
-package org.supla.android.scenes
+package org.supla.android.ui.dialogs
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.

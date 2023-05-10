@@ -28,12 +28,6 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.functions.Action;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,8 +49,6 @@ import org.supla.android.lib.ZWaveWakeUpSettings;
 
 @SuppressLint("registered")
 public class BaseActivity extends FragmentActivity implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
-
-    private final CompositeDisposable disposables = new CompositeDisposable();
 
     protected static Activity CurrentActivity = null;
 
@@ -129,12 +121,6 @@ public class BaseActivity extends FragmentActivity implements SuplaClientMessage
                 }
             }, 1000, 1000);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        disposables.clear();
     }
 
     @Override
@@ -371,14 +357,6 @@ public class BaseActivity extends FragmentActivity implements SuplaClientMessage
     protected void invalidateDbHelper() {
         dbHelper = null;
     }
-
-    protected void subscribe(Completable completable, Action onComplete, Consumer<? super Throwable> onError) {
-        disposables.add(completable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onComplete, onError));
-    }
-
 
     protected void setStatusBarColor(int colorId) {
         Window window = getWindow();

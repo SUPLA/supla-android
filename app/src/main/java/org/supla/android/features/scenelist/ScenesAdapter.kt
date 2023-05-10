@@ -29,7 +29,7 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.SceneListItemBinding
 import org.supla.android.db.Scene
-import org.supla.android.scenes.SceneCaptionEditor
+import org.supla.android.ui.dialogs.SceneCaptionEditor
 import org.supla.android.ui.layouts.SceneLayout
 import org.supla.android.ui.lists.BaseListAdapter
 import org.supla.android.ui.lists.ListItem

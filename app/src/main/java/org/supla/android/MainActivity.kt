@@ -3,16 +3,12 @@ package org.supla.android
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -25,19 +21,14 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.db.ChannelBase
 import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.listview.ChannelListView
 import org.supla.android.listview.ChannelListView.*
-import org.supla.android.listview.ListViewCursorAdapter
-import org.supla.android.listview.draganddrop.ListViewDragListener
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
 import org.supla.android.restapi.SuplaRestApiClientTask
@@ -65,8 +56,8 @@ syays GNU General Public License for more details.
  */
 
 @AndroidEntryPoint
-class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButtonTouchListener, OnDetailListener,
-  OnSectionLayoutTouchListener, IAsyncResults, OnChannelButtonClickListener, OnCaptionLongClickListener, OnSharedPreferenceChangeListener{
+class MainActivity : NavigationActivity(), View.OnClickListener,
+  OnSectionLayoutTouchListener, IAsyncResults, OnSharedPreferenceChangeListener{
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var NotificationView: RelativeLayout? = null
@@ -74,7 +65,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   private var notif_nrunnable: Runnable? = null
   private var notif_img: ImageView? = null
   private var notif_text: TextView? = null
-  private var channelStatePopup: ChannelStatePopup? = null
   private lateinit var bottomNavigation: BottomNavigationView
   private lateinit var bottomBar: BottomAppBar
 
@@ -84,7 +74,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // Trace.d("MainActivity", "Created!");
     notif_handler = null
     notif_nrunnable = null
     setContentView(R.layout.activity_main)
@@ -143,34 +132,17 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     }
   }
 
-  protected fun hideDetail() {
-//    if (channelLV.getVisibility() == View.VISIBLE) {
-//      channelLV.hideDetail(false);
-//    } else {
-//      cgroupLV.hideDetail(false);
-//    }
-  }
-
-  override fun onPause() {
-    super.onPause()
-    if (!SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
-      hideDetail()
-    }
-  }
-
   override fun onResume() {
     super.onResume()
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
     }
-    hideDetail()
     runDownloadTask()
     val ra = RateApp(this)
     ra.showDialog(1000)
   }
 
   override fun onDestroy() {
-    // Trace.d("MainActivity", "Destroyed!");
     PreferenceManager.getDefaultSharedPreferences(this)
       .unregisterOnSharedPreferenceChangeListener(this)
     super.onDestroy()
@@ -222,20 +194,8 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
 //    }
   }
 
-  override fun onChannelState(state: SuplaChannelState) {
-    if (state != null && channelStatePopup != null && channelStatePopup!!.isVisible && channelStatePopup!!.remoteId == state.channelID) {
-      channelStatePopup!!.update(state)
-    }
-  }
-
   override fun onRegisteredMsg() {
     runDownloadTask()
-  }
-
-  override fun onDisconnectedMsg() {
-  }
-
-  override fun onConnectingMsg() {
   }
 
   override fun onEventMsg(event: SuplaEvent) {
@@ -274,10 +234,10 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     if (channel.caption != "") {
       msg = msg + " (" + channel.caption + ")"
     }
-    ShowNotificationMessage(msg, imgId, imgResId)
+    showNotificationMessage(msg, imgId, imgResId)
   }
 
-  private fun ShowHideNotificationView(show: Boolean) {
+  private fun showHideNotificationView(show: Boolean) {
     if (!show && NotificationView!!.visibility == View.GONE) return
     val height = resources.getDimension(R.dimen.channel_layout_height)
     NotificationView!!.visibility = View.VISIBLE
@@ -297,7 +257,7 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
         })
   }
 
-  fun ShowNotificationMessage(msg: String?, imgId: ImageId?, imgResId: Int) {
+  private fun showNotificationMessage(msg: String?, imgId: ImageId?, imgResId: Int) {
     notif_img!!.setImageBitmap(null)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       notif_img!!.background = null
@@ -314,33 +274,28 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
       }
     }
     notif_text!!.text = msg
-    ShowHideNotificationView(true)
+    showHideNotificationView(true)
     if (notif_handler != null && notif_nrunnable != null) {
       notif_handler!!.removeCallbacks(notif_nrunnable!!)
     }
     notif_handler = Handler()
     notif_nrunnable = Runnable {
-      HideNotificationMessage()
+      hideNotificationMessage()
       notif_handler = null
       notif_nrunnable = null
     }
     notif_handler!!.postDelayed(notif_nrunnable!!, 5000)
   }
 
-  fun HideNotificationMessage() {
-    ShowHideNotificationView(false)
+  private fun hideNotificationMessage() {
+    showHideNotificationView(false)
   }
 
   override fun onClick(v: View) {
     super.onClick(v)
     if (v.parent === NotificationView) {
-      HideNotificationMessage()
+      hideNotificationMessage()
     }
-  }
-
-  override fun onChannelButtonTouch(
-    clv: ChannelListView, left: Boolean, up: Boolean, remoteId: Int, channelFunc: Int
-  ) {
   }
 
   override fun onBackPressed() {
@@ -349,18 +304,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
     } else if (!navigator.back()) {
       finishAffinity()
     }
-  }
-
-  override fun onChannelDetailShow(channel: ChannelBase) {
-    setMenubarDetailTitle(channel.getNotEmptyCaption(this))
-    showBackButton()
-    dismissProfileSelector()
-    bottomBar!!.visibility = View.GONE
-  }
-
-  override fun onChannelDetailHide() {
-    showMenuButton()
-    bottomBar!!.visibility = View.VISIBLE
   }
 
   override fun onSectionClick(clv: ChannelListView, caption: String, locationId: Int) {
@@ -383,24 +326,6 @@ class MainActivity : NavigationActivity(), View.OnClickListener, OnChannelButton
   }
 
   override fun onRestApiTaskProgressUpdate(task: SuplaRestApiClientTask, progress: Double) {}
-  override fun onChannelStateButtonClick(clv: ChannelListView, remoteId: Int) {
-    if (channelStatePopup == null) {
-      channelStatePopup = ChannelStatePopup(this)
-    }
-    channelStatePopup!!.show(remoteId)
-  }
-
-  override fun onChannelCaptionLongClick(clv: ChannelListView, remoteId: Int) {
-    SuplaApp.Vibrate(this)
-    val editor = ChannelCaptionEditor(this)
-    editor.edit(remoteId)
-  }
-
-  override fun onLocationCaptionLongClick(clv: ChannelListView, locationId: Int) {
-    SuplaApp.Vibrate(this)
-    val editor = LocationCaptionEditor(this)
-    editor.edit(locationId)
-  }
 
   override fun onSharedPreferenceChanged(prefss: SharedPreferences, key: String) {
   }

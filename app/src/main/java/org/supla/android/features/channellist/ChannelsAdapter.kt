@@ -21,6 +21,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.*
 import org.supla.android.db.Location
+import org.supla.android.ui.dialogs.ChannelCaptionEditor
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
@@ -34,8 +35,8 @@ class ChannelsAdapter @Inject constructor(
 
   override fun onCaptionLongPress(channelId: Int) {
     SuplaApp.Vibrate(context)
-//    val editor = ChannelCaptionEditor(context)
-//    editor.captionChangedListener = reloadCallback
-//    editor.edit(channelId)
+    val editor = ChannelCaptionEditor(context)
+    editor.captionChangedListener = reloadCallback
+    editor.edit(channelId)
   }
 }

@@ -5,12 +5,15 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.ChannelStatePopup
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
+import org.supla.android.lib.SuplaChannelState
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
 import org.supla.android.usecases.channel.ButtonType
@@ -21,6 +24,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   private val viewModel: ChannelListViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
+  private lateinit var statePopup: ChannelStatePopup
 
   @Inject
   lateinit var adapter: ChannelsAdapter
@@ -32,6 +36,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     super.onViewCreated(view, savedInstanceState)
 
     binding.channelsList.adapter = adapter
+    statePopup = ChannelStatePopup(requireActivity())
     setupAdapter()
   }
 
@@ -66,5 +71,25 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     adapter.swappedElementsCallback = { first, second -> viewModel.swapItems(first, second) }
     adapter.reloadCallback = { viewModel.loadChannels() }
     adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
+    adapter.infoButtonClickCallback = { statePopup.show(it) }
+  }
+
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onChannelState -> handleChannelState(message.channelState)
+      SuplaClientMsg.onDataChanged -> handleChannelChange(message.channelId)
+    }
+  }
+
+  private fun handleChannelState(state: SuplaChannelState?) {
+    if (state != null && statePopup.isVisible && statePopup.remoteId == state.channelID) {
+      statePopup.update(state)
+    }
+  }
+
+  private fun handleChannelChange(channelId: Int) {
+    if (statePopup.isVisible && statePopup.remoteId == channelId) {
+      statePopup.update(channelId)
+    }
   }
 }

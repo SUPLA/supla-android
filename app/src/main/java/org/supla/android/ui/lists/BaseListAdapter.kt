@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import org.supla.android.LocationCaptionEditor
+import org.supla.android.ui.dialogs.LocationCaptionEditor
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
@@ -29,6 +29,7 @@ abstract class BaseListAdapter<T, D>(
   var leftButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var rightButtonClickCallback: (id: Int) -> Unit = { _ -> }
 
+  private var movedStartPosition: Int? = null
   protected var movedItem: T? = null
   protected var replacedItem: T? = null
 
@@ -80,9 +81,15 @@ abstract class BaseListAdapter<T, D>(
 
   protected fun swapInternally(fromPos: Int, toPos: Int) {
     if (movedItem == null) {
+      movedStartPosition = fromPos
       movedItem = items[fromPos]
     }
     replacedItem = items[toPos]
+    if (movedStartPosition == toPos) {
+      // moved back to original position
+      movedItem = null
+      replacedItem = null
+    }
 
     val buf = items[fromPos]
     items[fromPos] = items[toPos]
@@ -92,6 +99,7 @@ abstract class BaseListAdapter<T, D>(
   protected fun cleanSwap() {
     movedItem = null
     replacedItem = null
+    movedStartPosition = null
   }
 
   protected fun changeLocationCaption(locationId: Int): Boolean {
