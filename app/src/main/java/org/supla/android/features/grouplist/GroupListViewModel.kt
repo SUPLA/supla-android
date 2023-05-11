@@ -18,22 +18,29 @@ package org.supla.android.features.grouplist
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
+import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
+import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.location.isCollapsed
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,10 +48,16 @@ class GroupListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val profileManager: ProfileManager,
   private val groupActionUseCase: GroupActionUseCase,
+  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseViewModel<GroupListViewState, GroupListViewEvent>(GroupListViewState(), schedulers) {
+) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers) {
 
   override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
+
+  override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
 
   fun loadGroups() {
     reloadObservable()
@@ -56,15 +69,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   fun toggleLocationCollapsed(location: Location) {
-    if (location.isCollapsed()) {
-      location.collapsed = (location.collapsed and 0x2.inv())
-    } else {
-      location.collapsed = (location.collapsed or 0x2)
-    }
-
-    Completable.fromRunnable {
-      channelRepository.updateLocation(location)
-    }
+    toggleLocationUseCase(location, CollapsedFlag.GROUP)
       .andThen(reloadObservable())
       .attach()
       .subscribeBy(
@@ -98,6 +103,31 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun onListItemClick(channelId: Int) {
+    readChannelGroupByRemoteIdUseCase(channelId)
+      .attach()
+      .subscribeBy(
+        onSuccess = { openDetailsByChannelFunction(it) }
+      )
+      .disposeBySelf()
+  }
+
+  private fun openDetailsByChannelFunction(group: ChannelGroup) {
+    if (group.onLine.not()) {
+      return // do not open details for offline channels
+    }
+
+    if (group.func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
+      sendEvent(GroupListViewEvent.OpenThermostatDetails)
+      return
+    }
+
+    val detailType = provideDetailTypeUseCase(group)
+    if (detailType != null) {
+      sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+    }
+  }
+
   private fun reloadObservable(): Observable<List<ListItem>> = Observable.fromCallable {
     channelRepository.getAllProfileChannelGroups(profileManager.getCurrentProfile().blockingGet()!!.id).use { cursor ->
       val channels = mutableListOf<ListItem>()
@@ -113,7 +143,7 @@ class GroupListViewModel @Inject constructor(
             channels.add(ListItem.LocationItem(location))
           }
 
-          if (location?.isCollapsed() == false) {
+          if (location?.isCollapsed(CollapsedFlag.GROUP) == false) {
             channels.add(ListItem.ChannelItem(group))
           }
         } while (cursor.moveToNext())
@@ -122,13 +152,14 @@ class GroupListViewModel @Inject constructor(
       return@use channels
     }
   }
-
-  private fun Location.isCollapsed(): Boolean = (collapsed and 0x2 > 0)
 }
 
 sealed class GroupListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
+  data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : GroupListViewEvent()
+  object OpenThermostatDetails : GroupListViewEvent()
+  object ReassignAdapter : GroupListViewEvent()
 }
 
 data class GroupListViewState(

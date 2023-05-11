@@ -54,6 +54,12 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   override fun getViewModel(): BaseViewModel<SceneListViewState, SceneListViewEvent> = viewModel
 
   override fun handleEvents(event: SceneListViewEvent) {
+    when (event) {
+      SceneListViewEvent.ReassignAdapter -> {
+        binding.scenesList.adapter = null
+        binding.scenesList.adapter = adapter
+      }
+    }
   }
 
   override fun handleViewState(state: SceneListViewState) {

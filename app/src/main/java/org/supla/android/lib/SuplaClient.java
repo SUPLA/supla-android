@@ -1046,7 +1046,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + scene.isEol());
 
     SceneRepository sr = DbH.getSceneRepository();
-    sr.updateSuplaScene(scene);
+    if (sr.updateSuplaScene(scene)) {
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
+      msg.setSceneId(scene.getId());
+      sendMessage(msg);
+    }
 
     if (scene.isEol()) {
       sr.setScenesVisible(0, 2);
@@ -1072,7 +1076,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               + state.getInitiatorName()
               + " EOL: "
               + state.isEol());
-      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneStateChanged);
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
       msg.setSceneId(state.getSceneId());
       sendMessage(msg);
     }

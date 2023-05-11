@@ -24,7 +24,7 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.scenes.ListsEventsManager
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
 
 class MultiAccountProfileManager(

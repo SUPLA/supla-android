@@ -40,7 +40,6 @@ import org.supla.android.lib.SuplaClient;
 public abstract class DetailLayout extends FrameLayout {
 
     protected DbHelper DBH;
-    private ChannelListView cLV;
     private ChannelBase channelBase;
     private View mContentView;
     private int mRemoteId;
@@ -48,7 +47,6 @@ public abstract class DetailLayout extends FrameLayout {
 
     public DetailLayout(Context context, ChannelListView cLV) {
         super(context);
-        this.cLV = cLV;
         init();
     }
 
@@ -108,11 +106,6 @@ public abstract class DetailLayout extends FrameLayout {
         Group = mRemoteId != 0 && cbase instanceof ChannelGroup;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        return cLV.onTouchEvent(ev);
-    }
 
     public ChannelBase getChannelFromDatabase() {
 
@@ -152,7 +145,7 @@ public abstract class DetailLayout extends FrameLayout {
     }
 
     public boolean isDetailVisible() {
-        return cLV.isDetailVisible();
+        return true;
     }
 
     public void onDetailShow() {

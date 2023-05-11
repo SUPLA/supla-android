@@ -3,17 +3,16 @@ package org.supla.android
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -27,12 +26,13 @@ import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
-import org.supla.android.listview.ChannelListView
 import org.supla.android.listview.ChannelListView.*
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
-import org.supla.android.restapi.SuplaRestApiClientTask
-import org.supla.android.restapi.SuplaRestApiClientTask.IAsyncResults
+import org.supla.android.ui.ChangeableToolbarTitle
+import org.supla.android.ui.LoadableContent
+import org.supla.android.ui.animations.animateFadeIn
+import org.supla.android.ui.animations.animateFadeOut
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -56,8 +56,7 @@ syays GNU General Public License for more details.
  */
 
 @AndroidEntryPoint
-class MainActivity : NavigationActivity(), View.OnClickListener,
-  OnSectionLayoutTouchListener, IAsyncResults, OnSharedPreferenceChangeListener{
+class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableContent {
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var NotificationView: RelativeLayout? = null
@@ -67,6 +66,23 @@ class MainActivity : NavigationActivity(), View.OnClickListener,
   private var notif_text: TextView? = null
   private lateinit var bottomNavigation: BottomNavigationView
   private lateinit var bottomBar: BottomAppBar
+
+  private val toolbar: Toolbar by lazy { findViewById(R.id.nav_toolbar) }
+
+  private val menuListener: Openable = object : Openable {
+
+    override fun isOpen(): Boolean = menuIsVisible()
+
+    override fun close() = hideMenu(true)
+
+    override fun open() {
+      if (isOpen) {
+        hideMenu(true)
+      } else {
+        showMenu(true)
+      }
+    }
+  }
 
   @Inject
   lateinit var navigator: MainNavigator
@@ -93,47 +109,57 @@ class MainActivity : NavigationActivity(), View.OnClickListener,
     MeasurementsDbHelper.getInstance(this) // For upgrade purposes
     RegisterMessageHandler()
 
-    val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-    prefs.registerOnSharedPreferenceChangeListener(this)
-
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     val navController = navHostFragment.navController
 
     navController.setGraph(R.navigation.main_nav_graph)
 
-    val cfg = AppBarConfiguration(setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment))
-    NavigationUI.setupWithNavController(
-      bottomBar,
-      navController,
-      cfg
+    val cfg = AppBarConfiguration(
+      setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment),
+      menuListener
     )
+    NavigationUI.setupWithNavController(toolbar, navController, cfg)
     bottomNavigation.setOnItemSelectedListener {
       return@setOnItemSelectedListener it.onNavDestinationSelected(navController) || super.onOptionsItemSelected(it)
     }
 
     navController.addOnDestinationChangedListener { _, destination, _ -> configureNavBar(destination) }
-    findViewById<Toolbar>(R.id.nav_toolbar).apply {
-      setTitle(R.string.menubar_title)
-      setNavigationIcon(R.drawable.hamburger)
-      setNavigationOnClickListener {
-        if (menuIsVisible()) {
-          hideMenu(true)
-        } else {
-          showMenu(true)
-        }
+    toolbar.inflateMenu(R.menu.toolbar)
+    toolbar.menu.findItem(R.id.toolbar_accounts).isVisible = false
+    toolbar.setOnMenuItemClickListener { item ->
+      if (item.itemId == R.id.toolbar_accounts) {
+        showProfileSelector()
+        return@setOnMenuItemClickListener true
       }
-    }
 
+      false
+    }
   }
 
   private fun configureNavBar(destination: NavDestination) {
     if (destination.id == R.id.channel_list_fragment) {
       bottomNavigation.selectedItemId = R.id.channel_list_fragment
     }
+
+    val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
+    if (destination.id == R.id.legacy_detail_fragment) {
+      setAccountItemVisible(false)
+
+      findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
+      animateFadeOut(bottomBar, barHeight)
+    } else {
+      setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
+
+      animateFadeIn(bottomBar) {
+        findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, barHeight.toInt())
+      }
+    }
   }
 
   override fun onResume() {
     super.onResume()
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
+
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
     }
@@ -142,10 +168,8 @@ class MainActivity : NavigationActivity(), View.OnClickListener,
     ra.showDialog(1000)
   }
 
-  override fun onDestroy() {
-    PreferenceManager.getDefaultSharedPreferences(this)
-      .unregisterOnSharedPreferenceChangeListener(this)
-    super.onDestroy()
+  private fun setAccountItemVisible(visible: Boolean) {
+    toolbar.menu.findItem(R.id.toolbar_accounts)?.isVisible = visible
   }
 
   private fun runDownloadTask() {
@@ -156,42 +180,8 @@ class MainActivity : NavigationActivity(), View.OnClickListener,
     }
     if (downloadUserIcons == null) {
       downloadUserIcons = DownloadUserIcons(this)
-      downloadUserIcons!!.delegate = this
       downloadUserIcons!!.execute()
     }
-  }
-
-  override fun onDataChangedMsg(ChannelId: Int, GroupId: Int, extendedValue: Boolean) {
-
-//    ChannelListView LV = channelLV;
-//    int Id = ChannelId;
-//
-//    if (GroupId > 0) {
-//      Id = GroupId;
-//      LV = cgroupLV;
-//    }
-//
-//    if (LV != null) {
-//
-//      if (LV.detail_getRemoteId() == Id) {
-//
-//        ChannelBase cbase = LV.detail_getChannel();
-//        if (cbase != null && !cbase.getOnLine()) LV.hideDetail(false, true);
-//        else LV.detail_OnChannelDataChanged();
-//      }
-//
-//      LV.Refresh(
-//          LV == channelLV
-//              ? getDbHelper().getChannelListCursor()
-//              : getDbHelper().getGroupListCursor(),
-//          true);
-//    }
-//
-//    if (channelStatePopup != null
-//        && channelStatePopup.isVisible()
-//        && channelStatePopup.getRemoteId() == ChannelId) {
-//      channelStatePopup.update(ChannelId);
-//    }
   }
 
   override fun onRegisteredMsg() {
@@ -306,32 +296,14 @@ class MainActivity : NavigationActivity(), View.OnClickListener,
     }
   }
 
-  override fun onSectionClick(clv: ChannelListView, caption: String, locationId: Int) {
-  }
-
-  override fun onRestApiTaskStarted(task: SuplaRestApiClientTask) {}
-  override fun onRestApiTaskFinished(task: SuplaRestApiClientTask) {
-//    if (downloadUserIcons != null) {
-//      if (downloadUserIcons.downloadCount() > 0) {
-//        if (channelLV != null) {
-//          channelLV.Refresh(getDbHelper().getChannelListCursor(), true);
-//        }
-//        if (cgroupLV != null) {
-//          cgroupLV.Refresh(getDbHelper().getGroupListCursor(), true);
-//        }
-//        reloadScenes();
-//      }
-//      downloadUserIcons = null;
-//    }
-  }
-
-  override fun onRestApiTaskProgressUpdate(task: SuplaRestApiClientTask, progress: Double) {}
-
-  override fun onSharedPreferenceChanged(prefss: SharedPreferences, key: String) {
-  }
-
   override fun onProfileChanged() {
     super.onProfileChanged()
     runDownloadTask()
   }
+
+  override fun setToolbarTitle(title: String) {
+    toolbar.title = title
+  }
+
+  override fun getLoadingIndicator(): View = findViewById(R.id.loadingIndicator)
 }

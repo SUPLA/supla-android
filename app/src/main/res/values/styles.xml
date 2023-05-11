@@ -18,7 +18,12 @@
       <item name="linkColor">#007AFF</item>
       <item name="labelColor">#7e8082</item>
       <item name="switcherBackgroundColor">@color/switcher_background_light</item>
+      <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
     </style>
+
+  <style name="AppTheme.ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+    <item name="color">@color/on_primary</item>
+  </style>
 
     <style name="AppTheme.Light.Widget" parent="AppTheme.Light">
         <item name="colorPrimary">@color/supla_green</item>

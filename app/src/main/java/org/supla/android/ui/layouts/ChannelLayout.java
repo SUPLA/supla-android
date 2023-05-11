@@ -53,7 +53,7 @@ import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.LineView;
-import org.supla.android.scenes.ListsEventsManager;
+import org.supla.android.events.ListsEventsManager;
 import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
@@ -259,12 +259,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
             changesDisposable = eventsManager.observeGroup(mRemoteId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(state -> configureBasedOnData(state.getGroup()));
+                .subscribe(this::configureBasedOnData);
         } else {
             changesDisposable = eventsManager.observeChannel(mRemoteId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(state -> configureBasedOnData(state.getChannel()));
+                .subscribe(this::configureBasedOnData);
         }
     }
 

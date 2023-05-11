@@ -23,7 +23,9 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.supla.android.*
+import org.supla.android.Preferences
+import org.supla.android.R
+import org.supla.android.SuplaApp
 import org.supla.android.databinding.ChannelListItemBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
@@ -36,6 +38,7 @@ abstract class BaseChannelsAdapter(
 ) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
+  var listItemClickCallback: (id: Int) -> Unit = { _ -> }
 
   override val callback = ChannelsListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }
@@ -73,11 +76,12 @@ abstract class BaseChannelsAdapter(
   override fun onBindViewHolder(vh: ViewHolder, pos: Int) {
     when (vh) {
       is ChannelListItemViewHolder -> {
-        val channel = (items[pos] as ListItem.ChannelItem).channelBase
-        vh.binding.channelLayout.setChannelData(channel)
+        val channelBase = (items[pos] as ListItem.ChannelItem).channelBase
+        vh.binding.channelLayout.setChannelData(channelBase)
         vh.binding.channelLayout.setChannelListener(this)
         vh.binding.channelLayout.setOnLongClickListener { onLongPress(vh) }
-        vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(channel.remoteId) }
+        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(channelBase.remoteId) }
+        vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(channelBase.remoteId) }
       }
       is LocationListItemViewHolder -> {
         val location = (items[pos] as ListItem.LocationItem).location

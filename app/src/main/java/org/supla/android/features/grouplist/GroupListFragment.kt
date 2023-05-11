@@ -28,6 +28,8 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentGroupListBinding
+import org.supla.android.features.legacydetail.LegacyDetailFragment
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
 import org.supla.android.usecases.channel.ButtonType
@@ -44,6 +46,9 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
 
   @Inject
   lateinit var suplaClientProvider: SuplaClientProvider
+
+  @Inject
+  lateinit var navigator: MainNavigator
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -64,6 +69,15 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     when (event) {
       is GroupListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
+      is GroupListViewEvent.OpenLegacyDetails -> navigator.navigateToLegacyDetails(
+        event.remoteId,
+        event.type,
+        LegacyDetailFragment.ItemType.GROUP
+      )
+      is GroupListViewEvent.ReassignAdapter -> {
+        binding.groupsList.adapter = null
+        binding.groupsList.adapter = adapter
+      }
     }
   }
 
@@ -83,5 +97,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     adapter.swappedElementsCallback = { firstItem, secondItem -> viewModel.swapItems(firstItem, secondItem) }
     adapter.reloadCallback = { viewModel.loadGroups() }
     adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 }

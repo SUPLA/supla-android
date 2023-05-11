@@ -31,7 +31,7 @@ import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
 
-abstract class BaseViewModel<S : ViewState, E : ViewEvent> constructor(
+abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,
   private val schedulers: SuplaSchedulers
 ) : ViewModel() {

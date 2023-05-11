@@ -19,7 +19,7 @@ import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
-import org.supla.android.scenes.ListsEventsManager
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.WidgetVisibilityHandler
 import javax.inject.Singleton

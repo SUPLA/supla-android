@@ -6,9 +6,12 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.ui.ChangeableToolbarTitle
+import org.supla.android.ui.LoadableContent
 
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
@@ -19,8 +22,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     lifecycleScope.launchWhenStarted {
-      getViewModel().isLoadingEvent().collect { isLoading ->
-        (requireActivity() as? BaseActivity)?.showLoading(isLoading)
+      getViewModel().isLoadingEvent().collect {
+        (requireActivity() as? LoadableContent)?.getLoadingIndicator()?.visibleIf(it)
       }
     }
 
@@ -45,6 +48,9 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   protected abstract fun handleEvents(event: E)
 
   protected open fun onSuplaMessage(message: SuplaClientMsg) {
+  }
 
+  protected fun setToolbarTitle(title: String) {
+    (requireActivity() as? ChangeableToolbarTitle)?.setToolbarTitle(title)
   }
 }

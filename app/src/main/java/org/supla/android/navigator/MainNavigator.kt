@@ -10,7 +10,10 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import org.supla.android.R
+import org.supla.android.features.legacydetail.LegacyDetailFragment
+import org.supla.android.usecases.details.DetailType
 import javax.inject.Inject
+
 
 @ActivityScoped
 class MainNavigator @Inject constructor(@ActivityContext private val activityContext: Context) {
@@ -22,8 +25,18 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
     navController.navigate(destinationId, bundle)
   }
 
-  fun replaceTo(@IdRes destinationId: Int) {
-    navController.navigate(destinationId, null, NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.channel_list_fragment, true).build())
+  fun navigateToLegacyDetails(remoteId: Int, detailType: DetailType, itemType: LegacyDetailFragment.ItemType) {
+    val navBuilder = NavOptions.Builder()
+    navBuilder.setEnterAnim(R.anim.slide_left_in)
+      .setExitAnim(R.anim.slide_left_out)
+      .setPopEnterAnim(R.anim.slide_right_in)
+      .setPopExitAnim(R.anim.slide_right_out)
+
+    navController.navigate(
+      R.id.legacy_detail_fragment,
+      LegacyDetailFragment.bundle(remoteId, detailType, itemType),
+      navBuilder.build()
+    )
   }
 
   fun back(): Boolean = navController.navigateUp()

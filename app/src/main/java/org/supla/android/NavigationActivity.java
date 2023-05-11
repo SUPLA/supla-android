@@ -124,7 +124,6 @@ public class NavigationActivity extends BaseActivity
     CurrentActivity = this;
 
     getMenuBarLayout();
-    updateProfileButtonVisibility(this instanceof MainActivity);
   }
 
   @Override
@@ -409,7 +408,7 @@ public class NavigationActivity extends BaseActivity
     startActivity(intent);
   }
 
-  private void showProfileSelector() {
+  protected void showProfileSelector() {
     profileChooser = new ProfileChooser(this, profileManager);
     profileChooser.setListener(this);
     profileChooser.show();

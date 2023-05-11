@@ -3,7 +3,7 @@ package org.supla.android.usecases.channel
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.scenes.ListsEventsManager
+import org.supla.android.events.ListsEventsManager
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -12,8 +12,10 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
+import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
 import org.supla.android.usecases.channel.ButtonType
@@ -31,6 +33,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   @Inject
   lateinit var suplaClientProvider: SuplaClientProvider
+
+  @Inject
+  lateinit var navigator: MainNavigator
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -52,11 +57,22 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     when (event) {
       is ChannelListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
+      is ChannelListViewEvent.OpenLegacyDetails -> navigator.navigateToLegacyDetails(
+        event.remoteId,
+        event.type,
+        LegacyDetailFragment.ItemType.CHANNEL
+      )
+      is ChannelListViewEvent.ReassignAdapter -> {
+        binding.channelsList.adapter = null
+        binding.channelsList.adapter = adapter
+      }
     }
   }
 
   override fun handleViewState(state: ChannelListViewState) {
-    adapter.setItems(state.channels)
+    if (state.channels != null) {
+      adapter.setItems(state.channels)
+    }
   }
 
   private fun setupAdapter() {
@@ -72,6 +88,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     adapter.reloadCallback = { viewModel.loadChannels() }
     adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {

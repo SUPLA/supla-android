@@ -19,18 +19,15 @@ package org.supla.android.ui
 
 
 import android.content.Context
-import android.widget.LinearLayout
-import android.widget.FrameLayout
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import androidx.databinding.DataBindingUtil
 import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.widget.Toolbar.LayoutParams
+import androidx.databinding.DataBindingUtil
+import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.AppBarBinding
-import org.supla.android.R
 
 class AppBar @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null,

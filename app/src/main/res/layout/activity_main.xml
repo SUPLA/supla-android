@@ -19,10 +19,11 @@
   </com.google.android.material.appbar.AppBarLayout>
 
   <FrameLayout
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
-    android:layout_marginBottom="@dimen/bottom_bar_height">
+    android:paddingBottom="@dimen/bottom_bar_height">
 
     <androidx.fragment.app.FragmentContainerView
       android:id="@+id/nav_host_fragment"

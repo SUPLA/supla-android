@@ -1,11 +1,13 @@
-package org.supla.android.scenes
+package org.supla.android.events
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.SceneRepository
+import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
-import java.util.*
+import org.supla.android.db.Scene
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +32,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ListsEventsManager @Inject constructor(
-  private val channelRepository: ChannelRepository
+  private val channelRepository: ChannelRepository,
+  private val sceneRepository: SceneRepository
 ) {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
@@ -39,41 +42,36 @@ class ListsEventsManager @Inject constructor(
     subjects.clear()
   }
 
-  fun emitSceneChange(sceneId: Int, state: State.Scene) {
-    getSubjectForScene(sceneId).onNext(state)
+  fun emitSceneChange(sceneId: Int) {
+    getSubjectForScene(sceneId).onNext(State.Scene)
   }
 
   fun emitChannelChange(channelId: Int) {
-    getSubjectForChannel(channelId).onNext(State.Channel(channelId))
+    getSubjectForChannel(channelId).onNext(State.Channel)
   }
 
   fun emitGroupChange(groupId: Int) {
-    getSubjectForChannelGroup(groupId).onNext(State.Group(groupId))
+    getSubjectForChannelGroup(groupId).onNext(State.Group)
   }
 
-  fun observerScene(sceneId: Int): Observable<State.Scene> {
+  fun observerScene(sceneId: Int): Observable<Scene> {
     return getSubjectForScene(sceneId).hide()
-      .map { item -> item as State.Scene }
-      .distinctUntilChanged { stateA, stateB -> stateA.executing == stateB.executing }
+      .map { sceneRepository.getScene(sceneId)!! }
   }
 
-  fun observeChannel(channelId: Int): Observable<State.Channel> {
+  fun observeChannel(channelId: Int): Observable<Channel> {
     return getSubjectForChannel(channelId).hide()
-      .map { item -> item as State.Channel }
-      .map { state -> State.Channel(state.channelId, channelRepository.getChannel(state.channelId)) }
+      .map { channelRepository.getChannel(channelId) }
   }
 
-  fun observeGroup(channelId: Int): Observable<State.Group> {
-    return getSubjectForChannelGroup(channelId).hide()
-      .map { item -> item as State.Group }
-      .map { state -> State.Group(state.groupId, channelRepository.getChannelGroup(state.groupId)) }
+  fun observeGroup(groupId: Int): Observable<ChannelGroup> {
+    return getSubjectForChannelGroup(groupId).hide()
+      .map { channelRepository.getChannelGroup(groupId) }
   }
 
   private fun getSubjectForScene(sceneId: Int): Subject<State> {
     return getSubject(sceneId, IdType.SCENE) {
-      BehaviorSubject.create<State>().also {
-        it.onNext(State.Scene(false))
-      }
+      BehaviorSubject.create<State>().also { it.onNext(State.Scene) }
     }
   }
 
@@ -104,9 +102,9 @@ class ListsEventsManager @Inject constructor(
   }
 
   sealed class State {
-    data class Scene(val executing: Boolean, val endTime: Date? = null) : State()
-    data class Channel(val channelId: Int, val channel: org.supla.android.db.Channel? = null) : State()
-    data class Group(val groupId: Int, val group: ChannelGroup? = null) : State()
+    object Scene : State()
+    object Channel : State()
+    object Group : State()
   }
 
   enum class IdType { SCENE, CHANNEL, GROUP }

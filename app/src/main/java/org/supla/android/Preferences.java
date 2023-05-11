@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -268,5 +269,13 @@ public class Preferences {
 
   public void setAnyAccountRegistered(boolean isRegistered) {
     _prefs.edit().putBoolean(pref_any_account_registered, isRegistered).apply();
+  }
+
+  public void registerChangeListener(OnSharedPreferenceChangeListener listener) {
+    _prefs.registerOnSharedPreferenceChangeListener(listener);
+  }
+
+  public void unregisterChangeListener(OnSharedPreferenceChangeListener listener) {
+    _prefs.unregisterOnSharedPreferenceChangeListener(listener);
   }
 }

@@ -20,7 +20,7 @@ package org.supla.android.features.scenelist
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelRepository
@@ -28,17 +28,25 @@ import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.location.isCollapsed
 import javax.inject.Inject
 
 @HiltViewModel
 class SceneListViewModel @Inject constructor(
   private val sceneRepository: SceneRepository,
   private val channelRepository: ChannelRepository,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
+  preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseViewModel<SceneListViewState, SceneListViewEvent>(SceneListViewState(), schedulers) {
+) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers) {
 
   override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
+
+  override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 
   fun loadScenes() {
     sceneRepository.getAllProfileScenes()
@@ -60,7 +68,7 @@ class SceneListViewModel @Inject constructor(
         result.add(ListItem.LocationItem(location))
       }
 
-      if (location?.isCollapsed() == true) {
+      if (location?.isCollapsed(CollapsedFlag.SCENE) == true) {
         continue
       }
 
@@ -84,13 +92,7 @@ class SceneListViewModel @Inject constructor(
   }
 
   fun toggleLocationCollapsed(location: Location) {
-    if (location.collapsed and 0x8 > 0) {
-      location.collapsed = (location.collapsed and 0x8.inv())
-    } else {
-      location.collapsed = (location.collapsed or 0x8)
-    }
-
-    Completable.fromRunnable { channelRepository.updateLocation(location) }
+    toggleLocationUseCase(location, CollapsedFlag.SCENE)
       .andThen(sceneRepository.getAllProfileScenes())
       .map(this::sceneToListItem)
       .attach()
@@ -99,11 +101,11 @@ class SceneListViewModel @Inject constructor(
       )
       .disposeBySelf()
   }
-
-  private fun Location.isCollapsed(): Boolean = (collapsed and 0x8 > 0)
 }
 
-sealed class SceneListViewEvent : ViewEvent
+sealed class SceneListViewEvent: ViewEvent {
+  object ReassignAdapter : SceneListViewEvent()
+}
 
 data class SceneListViewState(
   override val loading: Boolean = false,

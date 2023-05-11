@@ -18,4 +18,8 @@
     android:id="@+id/scene_list_fragment"
     android:name="org.supla.android.features.scenelist.SceneListFragment"
     android:label="@string/menubar_title" />
+
+  <fragment
+    android:id="@+id/legacy_detail_fragment"
+    android:name="org.supla.android.features.legacydetail.LegacyDetailFragment" />
 </navigation>
