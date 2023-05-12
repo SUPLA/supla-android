@@ -2,6 +2,8 @@ package org.supla.android.ui.lists
 
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CallSuper
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -31,4 +33,15 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   }
 
   protected abstract fun sendReassignEvent()
+
+  protected abstract fun reloadList()
+
+  protected fun observeUpdates(updatesObservable: Observable<Any>) {
+    updatesObservable
+      .attach()
+      .subscribeBy(
+        onNext = { reloadList() }
+      )
+      .disposeBySelf()
+  }
 }

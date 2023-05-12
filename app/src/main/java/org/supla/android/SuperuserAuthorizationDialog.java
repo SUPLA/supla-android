@@ -36,7 +36,7 @@ import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.internal.managers.ViewComponentManager;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.supla.android.di.ProfileManagerEntryPoint;
+import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;

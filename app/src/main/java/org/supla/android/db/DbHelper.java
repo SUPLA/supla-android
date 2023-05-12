@@ -47,7 +47,7 @@ import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.db.SuplaContract.AuthProfileEntry;
-import org.supla.android.di.ProfileIdHolderEntryPoint;
+import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;

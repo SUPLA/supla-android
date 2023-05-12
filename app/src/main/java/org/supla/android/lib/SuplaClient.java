@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import dagger.hilt.android.EntryPointAccessors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,6 +46,8 @@ import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
+import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -53,6 +56,7 @@ import org.supla.android.profile.ProfileManager;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
+
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
@@ -75,13 +79,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private String oneTimePassword;
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
+  private final ListsEventsManager listsEventsManager;
 
   public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
-
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
+    this.listsEventsManager = EntryPointAccessors.fromApplication(
+            context.getApplicationContext(),
+            ListsEventsManagerEntryPoint.class
+        )
+        .provideListsEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -197,7 +206,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private native boolean scRegisterPushNotificationClientToken(long _supla_client, int appId, String token);
   
   private void sendMessage(SuplaClientMsg msg) {
-    if (canceled()) return;
+    if (canceled()) {
+      return;
+    }
     SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
   }
 
@@ -281,7 +292,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public void reconnect() {
-    if (connected()) disconnect();
+    if (connected()) {
+      disconnect();
+    }
   }
 
   private boolean connected() {
@@ -346,13 +359,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     try {
       return _supla_client_ptr != 0
           && scSetRGBW(
-              _supla_client_ptr,
-              ID,
-              Group ? 1 : 0,
-              Color,
-              ColorBrightness,
-              Brightness,
-              TurnOnOff ? 1 : 0);
+          _supla_client_ptr,
+          ID,
+          Group ? 1 : 0,
+          Color,
+          ColorBrightness,
+          Brightness,
+          TurnOnOff ? 1 : 0);
     } finally {
       unlockClientPtr();
     }
@@ -744,7 +757,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     try {
       return _supla_client_ptr != 0
           && scSetLightsourceLifespan(
-              _supla_client_ptr, ChannelID, resetCounter, setTime, lifeSpan);
+          _supla_client_ptr, ChannelID, resetCounter, setTime, lifeSpan);
     } finally {
       unlockClientPtr();
     }
@@ -947,8 +960,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = true;
     }
 
-    if (channel.EOL && DbH.setChannelsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel.EOL) {
+      listsEventsManager.emitChannelUpdate();
+      _DataChanged = DbH.setChannelsVisible(0, 2);
     }
 
     if (_DataChanged) {
@@ -985,8 +999,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = true;
     }
 
-    if (channel_group.EOL && DbH.setChannelGroupsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel_group.EOL) {
+      listsEventsManager.emitGroupUpdate();
+      _DataChanged = DbH.setChannelGroupsVisible(0, 2);
     }
 
     if (channel_group.EOL) {
@@ -1053,6 +1068,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (scene.isEol()) {
+      listsEventsManager.emitSceneUpdate();
       sr.setScenesVisible(0, 2);
     }
   }
@@ -1458,7 +1474,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
         if (connect()) {
           //noinspection StatementWithEmptyBody
-          while (!canceled() && iterate()) {}
+          while (!canceled() && iterate()) {
+          }
         }
 
       } finally {

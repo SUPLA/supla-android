@@ -1,4 +1,4 @@
-package org.supla.android.di
+package org.supla.android.di.entrypoints
 
 import android.appwidget.AppWidgetManager
 import dagger.hilt.EntryPoint

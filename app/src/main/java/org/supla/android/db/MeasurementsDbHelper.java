@@ -22,7 +22,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.data.source.DefaultMeasurableItemsRepository;
 import org.supla.android.data.source.MeasurableItemsRepository;
@@ -31,7 +30,7 @@ import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.TempHumidityLogDao;
 import org.supla.android.data.source.local.TemperatureLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
-import org.supla.android.di.ProfileIdHolderEntryPoint;
+import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.profile.ProfileIdHolder;
 
 import java.util.Date;

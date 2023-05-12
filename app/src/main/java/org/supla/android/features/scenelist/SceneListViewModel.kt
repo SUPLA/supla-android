@@ -27,6 +27,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -40,6 +41,7 @@ class SceneListViewModel @Inject constructor(
   private val sceneRepository: SceneRepository,
   private val channelRepository: ChannelRepository,
   private val toggleLocationUseCase: ToggleLocationUseCase,
+  listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers) {
@@ -47,6 +49,12 @@ class SceneListViewModel @Inject constructor(
   override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
 
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
+
+  override fun reloadList() = loadScenes()
+
+  init {
+    observeUpdates(listsEventsManager.observeSceneUpdates())
+  }
 
   fun loadScenes() {
     sceneRepository.getAllProfileScenes()

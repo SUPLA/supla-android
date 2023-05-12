@@ -10,6 +10,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
@@ -34,12 +35,21 @@ class ChannelListViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(preferences, ChannelListViewState(), schedulers) {
 
-  override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
   override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, channels = null)
+
+  override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
+
+  override fun reloadList() = loadChannels()
+
+  init {
+    observeUpdates(listsEventsManager.observeChannelUpdates())
+  }
+
 
   fun loadChannels() {
     reloadObservable()

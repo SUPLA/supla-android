@@ -1,4 +1,4 @@
-package org.supla.android.di
+package org.supla.android.di.entrypoints
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

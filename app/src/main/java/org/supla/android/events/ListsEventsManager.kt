@@ -8,6 +8,7 @@ import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Scene
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,6 +39,10 @@ class ListsEventsManager @Inject constructor(
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
 
+  private val channelUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
+  private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
+  private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
+
   fun cleanup() {
     subjects.clear()
   }
@@ -54,6 +59,18 @@ class ListsEventsManager @Inject constructor(
     getSubjectForChannelGroup(groupId).onNext(State.Group)
   }
 
+  fun emitChannelUpdate() {
+    channelUpdatesSubject.onNext(Any())
+  }
+
+  fun emitGroupUpdate() {
+    groupUpdatesSubject.onNext(Any())
+  }
+
+  fun emitSceneUpdate() {
+    sceneUpdatesSubject.onNext(Any())
+  }
+
   fun observerScene(sceneId: Int): Observable<Scene> {
     return getSubjectForScene(sceneId).hide()
       .map { sceneRepository.getScene(sceneId)!! }
@@ -68,6 +85,10 @@ class ListsEventsManager @Inject constructor(
     return getSubjectForChannelGroup(groupId).hide()
       .map { channelRepository.getChannelGroup(groupId) }
   }
+
+  fun observeChannelUpdates(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+  fun observeGroupUpdates(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+  fun observeSceneUpdates(): Observable<Any> = sceneUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
 
   private fun getSubjectForScene(sceneId: Int): Subject<State> {
     return getSubject(sceneId, IdType.SCENE) {

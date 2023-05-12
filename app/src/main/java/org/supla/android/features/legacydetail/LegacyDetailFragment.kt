@@ -43,35 +43,36 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    viewModel.loadData(remoteId, itemType)
+  }
 
-    val channelBase: ChannelBase = when (itemType) {
-      ItemType.CHANNEL -> channelRepository.getChannel(remoteId)
-      ItemType.GROUP -> channelRepository.getChannelGroup(remoteId)
+  override fun onDestroyView() {
+    if (this::detailView.isInitialized) {
+      detailView.onDetailHide()
     }
+
+    super.onDestroyView()
+  }
+
+  override fun handleEvents(event: LegacyDetailViewEvent) {
+    when (event) {
+      is LegacyDetailViewEvent.LoadDetailView -> setupDetailView(event.channelBase)
+    }
+  }
+
+  override fun handleViewState(state: LegacyDetailViewState) {
+  }
+
+  private fun setupDetailView(channelBase: ChannelBase) {
+    setToolbarTitle(channelBase.getNotEmptyCaption(context))
+
     detailView = getDetailView().apply { setData(channelBase) }
     binding.legacyDetailContent.addView(
       detailView,
       ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     detailView.visibility = View.VISIBLE
-
-    setToolbarTitle(channelBase.getNotEmptyCaption(context))
-  }
-
-  override fun onStart() {
-    super.onStart()
     detailView.onDetailShow()
-  }
-
-  override fun onStop() {
-    detailView.onDetailHide()
-    super.onStop()
-  }
-
-  override fun handleEvents(event: LegacyDetailViewEvent) {
-  }
-
-  override fun handleViewState(state: LegacyDetailViewState) {
   }
 
   private fun getDetailView(channelListView: ChannelListView? = null): DetailLayout = when (detailType) {

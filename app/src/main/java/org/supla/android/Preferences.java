@@ -28,7 +28,7 @@ import android.util.Base64;
 import dagger.hilt.android.EntryPointAccessors;
 import java.util.Random;
 import org.supla.android.cfg.TemperatureUnit;
-import org.supla.android.di.ProfileManagerEntryPoint;
+import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.profile.ProfileManager;
 
