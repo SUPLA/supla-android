@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import org.supla.android.ui.dialogs.LocationCaptionEditor
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.LocationListItemBinding
 import org.supla.android.db.Location
+import org.supla.android.ui.dialogs.LocationCaptionEditor
 
 abstract class BaseListAdapter<T, D>(
   private val context: Context,

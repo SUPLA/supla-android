@@ -14,7 +14,6 @@ import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.usecases.details.DetailType
 import javax.inject.Inject
 
-
 @ActivityScoped
 class MainNavigator @Inject constructor(@ActivityContext private val activityContext: Context) {
 

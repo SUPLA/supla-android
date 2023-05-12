@@ -34,7 +34,6 @@ import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -958,39 +957,6 @@ public class DefaultChannelRepositoryTest {
     // then
     assertEquals(expectedResult, result);
     verify(channelDao).setChannelsOffline();
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldGetChannelListCursorWithDefaultOrder() {
-    // given
-    String where = SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 ";
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelListCursorWithDefaultOrder(where)).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelListCursorWithDefaultOrder();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelListCursorWithDefaultOrder(where);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldGetChannelGroupListCursor() {
-    // given
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelGroupListCursor()).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelGroupListCursor();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelGroupListCursor();
     verifyNoMoreInteractions(channelDao);
     verifyNoInteractions(locationDao);
   }

@@ -28,12 +28,11 @@ import javax.inject.Inject
 class GroupsAdapter @Inject constructor(
   @ActivityContext private val context: Context,
   preferences: Preferences
-) : BaseChannelsAdapter(context, preferences),  ChannelLayout.Listener {
+) : BaseChannelsAdapter(context, preferences), ChannelLayout.Listener {
 
   override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x2) > 0)
 
   override fun onCaptionLongPress(groupId: Int) {
     // no action
   }
-
 }

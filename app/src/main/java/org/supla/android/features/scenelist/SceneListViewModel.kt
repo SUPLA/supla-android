@@ -111,7 +111,7 @@ class SceneListViewModel @Inject constructor(
   }
 }
 
-sealed class SceneListViewEvent: ViewEvent {
+sealed class SceneListViewEvent : ViewEvent {
   object ReassignAdapter : SceneListViewEvent()
 }
 

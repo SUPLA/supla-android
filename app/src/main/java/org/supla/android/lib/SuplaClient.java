@@ -86,11 +86,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
-    this.listsEventsManager = EntryPointAccessors.fromApplication(
-            context.getApplicationContext(),
-            ListsEventsManagerEntryPoint.class
-        )
-        .provideListsEventsManager();
+    this.listsEventsManager =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
+            .provideListsEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -164,7 +163,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
-  private native boolean scSetChannelGroupCaption(long _supla_client, int ChannelGroupID, String Caption);
+  private native boolean scSetChannelGroupCaption(
+      long _supla_client, int ChannelGroupID, String Caption);
 
   private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
 
@@ -203,8 +203,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
-  private native boolean scRegisterPushNotificationClientToken(long _supla_client, int appId, String token);
-  
+  private native boolean scRegisterPushNotificationClientToken(
+      long _supla_client, int appId, String token);
+
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
       return;
@@ -359,13 +360,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     try {
       return _supla_client_ptr != 0
           && scSetRGBW(
-          _supla_client_ptr,
-          ID,
-          Group ? 1 : 0,
-          Color,
-          ColorBrightness,
-          Brightness,
-          TurnOnOff ? 1 : 0);
+              _supla_client_ptr,
+              ID,
+              Group ? 1 : 0,
+              Color,
+              ColorBrightness,
+              Brightness,
+              TurnOnOff ? 1 : 0);
     } finally {
       unlockClientPtr();
     }
@@ -587,7 +588,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public boolean setChannelGroupCaption(int ChannelGroupID, String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
+      return _supla_client_ptr != 0
+          && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
     } finally {
       unlockClientPtr();
     }
@@ -757,7 +759,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     try {
       return _supla_client_ptr != 0
           && scSetLightsourceLifespan(
-          _supla_client_ptr, ChannelID, resetCounter, setTime, lifeSpan);
+              _supla_client_ptr, ChannelID, resetCounter, setTime, lifeSpan);
     } finally {
       unlockClientPtr();
     }
@@ -775,7 +777,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public boolean registerPushNotificationClientToken(int appId, String token) {
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
+      return _supla_client_ptr != 0
+          && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
     } finally {
       unlockClientPtr();
     }
@@ -1210,6 +1213,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     msg.setChannelGroupId(ChannelGroupID);
     sendMessage(msg);
   }
+
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onLocationCaptionSetResult);
     msg.setCode(ResultCode);
@@ -1474,8 +1478,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
         if (connect()) {
           //noinspection StatementWithEmptyBody
-          while (!canceled() && iterate()) {
-          }
+          while (!canceled() && iterate()) {}
         }
 
       } finally {

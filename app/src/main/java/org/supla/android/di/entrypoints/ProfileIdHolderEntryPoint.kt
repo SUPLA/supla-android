@@ -8,5 +8,5 @@ import org.supla.android.profile.ProfileIdHolder
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface ProfileIdHolderEntryPoint {
-    fun provideProfileIdHolder(): ProfileIdHolder
+  fun provideProfileIdHolder(): ProfileIdHolder
 }

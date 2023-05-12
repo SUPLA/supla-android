@@ -50,7 +50,6 @@ class ChannelListViewModel @Inject constructor(
     observeUpdates(listsEventsManager.observeChannelUpdates())
   }
 
-
   fun loadChannels() {
     reloadObservable()
       .attach()

@@ -124,5 +124,4 @@ abstract class BaseChannelsAdapter(
 
   inner class ChannelListItemViewHolder(val binding: ChannelListItemBinding) :
     ViewHolder(binding.root)
-
 }

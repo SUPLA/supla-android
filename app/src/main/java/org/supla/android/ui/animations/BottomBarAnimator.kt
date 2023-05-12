@@ -31,5 +31,4 @@ private class BottomBarAnimatorListener(private val animationEndCallback: () -> 
   override fun onAnimationEnd(p0: Animator?) {
     animationEndCallback()
   }
-
 }

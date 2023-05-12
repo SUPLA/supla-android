@@ -45,16 +45,15 @@ import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Scene;
+import org.supla.android.events.ListsEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
-import org.supla.android.events.ListsEventsManager;
 import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout implements SlideableItem {
 
-  @Inject
-  ListsEventsManager eventsManager;
+  @Inject ListsEventsManager eventsManager;
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -405,19 +404,20 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
         eventsManager
             .observerScene(sceneId)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(scene -> {
-              setupLayout(scene);
+            .subscribe(
+                scene -> {
+                  setupLayout(scene);
 
-              if (sceneCountDown != null) {
-                sceneCountDown.cancel();
-                setTimerInactive();
-              }
+                  if (sceneCountDown != null) {
+                    sceneCountDown.cancel();
+                    setTimerInactive();
+                  }
 
-              if (scene.isExecuting()) {
-                startTimer(scene.getEstimatedEndDate());
-              }
-              setupSceneStatus(scene.isExecuting());
-            });
+                  if (scene.isExecuting()) {
+                    startTimer(scene.getEstimatedEndDate());
+                  }
+                  setupSceneStatus(scene.isExecuting());
+                });
   }
 
   private ShapeType getStatusShapeType(boolean sceneActive) {

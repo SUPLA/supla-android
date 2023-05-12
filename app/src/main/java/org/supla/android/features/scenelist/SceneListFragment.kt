@@ -38,7 +38,6 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   @Inject
   lateinit var adapter: ScenesAdapter
 
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 

@@ -74,12 +74,9 @@ public class SuplaApp extends MultiDexApplication
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
   @Inject ValuesFormatter valuesFormatter;
-  @Inject
-  SceneStateObserverUseCase sceneStateObserver;
-  @Inject
-  ChannelStateObserverUseCase channelStateObserver;
-  @Inject
-  ChannelGroupStateObserverUseCase groupStateObserver;
+  @Inject SceneStateObserverUseCase sceneStateObserver;
+  @Inject ChannelStateObserverUseCase channelStateObserver;
+  @Inject ChannelGroupStateObserverUseCase groupStateObserver;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);

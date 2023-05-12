@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class ProvideDetailTypeUseCase @Inject constructor() {
 
-  operator fun invoke(channelBase: ChannelBase): DetailType? = when(channelBase.func) {
+  operator fun invoke(channelBase: ChannelBase): DetailType? = when (channelBase.func) {
     SuplaConst.SUPLA_CHANNELFNC_DIMMER,
     SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
     SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING -> DetailType.RGBW

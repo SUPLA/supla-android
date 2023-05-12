@@ -232,7 +232,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       }
       imgId = channel.imageIdx
       msg = resources.getString(msgId)
-      @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm:ss")
+      @SuppressLint("SimpleDateFormat")
+      val sdf = SimpleDateFormat("HH:mm:ss")
       msg = sdf.format(Date()) + " " + event.SenderName + " " + msg
     }
     if (channel.caption != "") {
@@ -258,7 +259,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
               NotificationView!!.visibility = View.GONE
             }
           }
-        })
+        }
+      )
   }
 
   private fun showNotificationMessage(msg: String?, imgId: ImageId?, imgResId: Int) {
@@ -312,7 +314,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
               super.onAnimationEnd(animation)
               animatingMenu = false
             }
-          })
+          }
+        )
     } else {
       if (animatingMenu) return
       animatingMenu = true
@@ -327,7 +330,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
               menuLayout.visibility = View.GONE
               animatingMenu = false
             }
-          })
+          }
+        )
     }
   }
 

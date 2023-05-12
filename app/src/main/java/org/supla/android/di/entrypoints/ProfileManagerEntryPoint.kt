@@ -8,5 +8,5 @@ import org.supla.android.profile.ProfileManager
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface ProfileManagerEntryPoint {
-    fun provideProfileManager(): ProfileManager
+  fun provideProfileManager(): ProfileManager
 }
