@@ -47,7 +47,6 @@ import org.supla.android.ViewHelper;
 import org.supla.android.db.Scene;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
-import org.supla.android.listview.LineView;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.ui.lists.SlideableItem;
 

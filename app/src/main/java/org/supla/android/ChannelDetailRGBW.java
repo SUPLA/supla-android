@@ -35,19 +35,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ColorListItem;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListener,
         SuplaColorBrightnessPicker.OnColorBrightnessChangeListener,
@@ -81,8 +78,8 @@ public class ChannelDetailRGBW extends DetailLayout implements View.OnClickListe
     private Boolean zamel;
     private Boolean comelit;
 
-    public ChannelDetailRGBW(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailRGBW(Context context) {
+        super(context);
     }
 
     public ChannelDetailRGBW(Context context, AttributeSet attrs) {

@@ -66,10 +66,6 @@ public interface ChannelRepository {
 
   Cursor getChannelListCursorForGroup(int groupId);
 
-  Cursor getChannelListCursorWithDefaultOrder();
-
-  Cursor getChannelGroupListCursor();
-
   boolean isZWaveBridgeChannelAvailable();
 
   List<Channel> getZWaveBridgeChannels();

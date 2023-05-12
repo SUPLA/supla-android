@@ -30,27 +30,21 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.CombinedChart;
-
+import dagger.hilt.android.AndroidEntryPoint;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.inject.Inject;
 import org.supla.android.charts.ChartHelper;
 import org.supla.android.charts.TemperatureChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTemperatureMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChannelDetailTemperature extends DetailLayout implements
@@ -71,8 +65,8 @@ public class ChannelDetailTemperature extends DetailLayout implements
     @Inject
     ProfileIdHolder profileIdHolder;
 
-    public ChannelDetailTemperature(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailTemperature(Context context) {
+        super(context);
     }
 
     public ChannelDetailTemperature(Context context, AttributeSet attrs) {

@@ -307,17 +307,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public Cursor getChannelListCursorWithDefaultOrder() {
-    return channelDao.getChannelListCursorWithDefaultOrder(
-        SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 ");
-  }
-
-  @Override
-  public Cursor getChannelGroupListCursor() {
-    return channelDao.getChannelGroupListCursor();
-  }
-
-  @Override
   public boolean isZWaveBridgeChannelAvailable() {
     return channelDao.isZWaveBridgeChannelAvailable();
   }

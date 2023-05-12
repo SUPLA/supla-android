@@ -31,32 +31,25 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.CombinedChart;
-
+import dagger.hilt.android.AndroidEntryPoint;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.inject.Inject;
 import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaThermostatScheduleCfg;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadThermostatMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChannelDetailThermostatHP extends DetailLayout implements View.OnClickListener,
@@ -100,8 +93,8 @@ public class ChannelDetailThermostatHP extends DetailLayout implements View.OnCl
     @Inject
     ProfileIdHolder profileIdHolder;
 
-    public ChannelDetailThermostatHP(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailThermostatHP(Context context) {
+        super(context);
     }
 
     public ChannelDetailThermostatHP(Context context, AttributeSet attrs) {

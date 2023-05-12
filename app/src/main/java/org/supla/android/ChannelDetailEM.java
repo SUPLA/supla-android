@@ -49,7 +49,6 @@ import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelElectricityMeterValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadElectricityMeterMeasurements;
@@ -130,8 +129,8 @@ public class ChannelDetailEM extends DetailLayout implements View.OnClickListene
     @Inject
     ProfileIdHolder profileIdHolder;
 
-    public ChannelDetailEM(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailEM(Context context) {
+        super(context);
     }
 
     public ChannelDetailEM(Context context, AttributeSet attrs) {

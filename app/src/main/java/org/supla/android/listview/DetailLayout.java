@@ -25,11 +25,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import org.supla.android.SuplaApp;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -45,7 +43,7 @@ public abstract class DetailLayout extends FrameLayout {
     private int mRemoteId;
     private boolean Group;
 
-    public DetailLayout(Context context, ChannelListView cLV) {
+    public DetailLayout(Context context) {
         super(context);
         init();
     }

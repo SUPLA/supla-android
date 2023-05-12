@@ -1,4 +1,4 @@
-package org.supla.android.listview;
+package org.supla.android.ui.layouts;
 
 import android.content.Context;
 import android.view.View;

@@ -21,6 +21,7 @@ package org.supla.android;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -60,7 +61,7 @@ public abstract class DimmerCalibrationTool
     private boolean settingsChanged;
 
     public DimmerCalibrationTool(ChannelDetailRGBW detailRGB) {
-        if (detailRGB == null || !(detailRGB.getContext() instanceof Activity)) {
+        if (detailRGB == null || !(detailRGB.getContext() instanceof ContextWrapper)) {
             throw new IllegalArgumentException("The detailRGB pattern is invalid");
         }
 
@@ -149,8 +150,8 @@ public abstract class DimmerCalibrationTool
 
     protected Activity getActivity() {
         return detailRGB == null
-                || !(detailRGB.getContext() instanceof Activity)
-                ? null : (Activity) detailRGB.getContext();
+                || !(detailRGB.getContext() instanceof ContextWrapper)
+                ? null : (Activity) ((ContextWrapper) detailRGB.getContext()).getBaseContext();
     }
 
     private void setConfigStarted(boolean started) {
@@ -186,7 +187,7 @@ public abstract class DimmerCalibrationTool
     protected void showPreloaderWithText(int resId) {
 
         if (preloaderPopup == null) {
-            preloaderPopup = new PreloaderPopup((Activity)detailRGB.getContext());
+            preloaderPopup = new PreloaderPopup((Activity) ((ContextWrapper) detailRGB.getContext()).getBaseContext());
         }
 
         preloaderPopup.setText(detailRGB.getContext().getResources().getString(resId));

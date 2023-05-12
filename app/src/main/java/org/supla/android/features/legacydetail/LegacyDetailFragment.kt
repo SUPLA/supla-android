@@ -1,6 +1,8 @@
 package org.supla.android.features.legacydetail
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,14 +13,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.*
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.data.source.ChannelRepository
 import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
-import org.supla.android.listview.ChannelListView
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.listview.DetailLayout
+import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
 import org.supla.android.usecases.details.DetailType
 import java.io.Serializable
-import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_DETAIL_TYPE = "ARG_DETAIL_TYPE"
@@ -35,9 +36,6 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
 
   override fun getViewModel(): BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent> = viewModel
-
-  @Inject
-  lateinit var channelRepository: ChannelRepository
 
   private lateinit var detailView: DetailLayout
 
@@ -63,6 +61,16 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   override fun handleViewState(state: LegacyDetailViewState) {
   }
 
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onDataChanged -> {
+        if (this::detailView.isInitialized) {
+          detailView.OnChannelDataChanged()
+        }
+      }
+    }
+  }
+
   private fun setupDetailView(channelBase: ChannelBase) {
     setToolbarTitle(channelBase.getNotEmptyCaption(context))
 
@@ -72,18 +80,19 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
       ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     detailView.visibility = View.VISIBLE
-    detailView.onDetailShow()
+
+    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, DEFAULT_ANIMATION_DURATION)
   }
 
-  private fun getDetailView(channelListView: ChannelListView? = null): DetailLayout = when (detailType) {
-    DetailType.RGBW -> ChannelDetailRGBW(context, channelListView)
-    DetailType.RS -> ChannelDetailRS(context, channelListView)
-    DetailType.IC -> ChannelDetailIC(context, channelListView)
-    DetailType.EM -> ChannelDetailEM(context, channelListView)
-    DetailType.TEMPERATURE -> ChannelDetailTemperature(context, channelListView)
-    DetailType.TEMPERATURE_HUMIDITY -> ChannelDetailTempHumidity(context, channelListView)
-    DetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context, channelListView)
-    DetailType.DIGIGLASS -> ChannelDetailDigiglass(context, channelListView)
+  private fun getDetailView(): DetailLayout = when (detailType) {
+    DetailType.RGBW -> ChannelDetailRGBW(context)
+    DetailType.RS -> ChannelDetailRS(context)
+    DetailType.IC -> ChannelDetailIC(context)
+    DetailType.EM -> ChannelDetailEM(context)
+    DetailType.TEMPERATURE -> ChannelDetailTemperature(context)
+    DetailType.TEMPERATURE_HUMIDITY -> ChannelDetailTempHumidity(context)
+    DetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context)
+    DetailType.DIGIGLASS -> ChannelDetailDigiglass(context)
   }
 
   companion object {

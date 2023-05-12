@@ -25,20 +25,16 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import dagger.hilt.android.AndroidEntryPoint;
+import javax.inject.Inject;
 import org.supla.android.charts.ChartHelper;
 import org.supla.android.charts.TempHumidityChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.images.ImageCache;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadMeasurementLogs;
 import org.supla.android.restapi.DownloadTempHumidityMeasurements;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
@@ -50,8 +46,8 @@ public class ChannelDetailTempHumidity extends ChannelDetailTemperature {
     @Inject
     ProfileIdHolder profileIdHolder;
 
-    public ChannelDetailTempHumidity(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailTempHumidity(Context context) {
+        super(context);
     }
 
     public ChannelDetailTempHumidity(Context context, AttributeSet attrs) {

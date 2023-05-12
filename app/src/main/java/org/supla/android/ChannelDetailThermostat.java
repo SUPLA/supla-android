@@ -21,15 +21,13 @@ package org.supla.android;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
 
 public class ChannelDetailThermostat extends DetailLayout implements View.OnClickListener {
 
-    public ChannelDetailThermostat(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailThermostat(Context context) {
+        super(context);
     }
 
     public ChannelDetailThermostat(Context context, AttributeSet attrs) {

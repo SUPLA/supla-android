@@ -32,19 +32,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.OnTouchListener,
         View.OnTouchListener, SuplaRoofWindowController.OnClosingPercentageChangeListener, View.OnClickListener,
@@ -70,8 +67,8 @@ public class ChannelDetailRS extends DetailLayout implements SuplaRollerShutter.
     private boolean showOpening;
     private TextView percentageCaption;
 
-    public ChannelDetailRS(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailRS(Context context) {
+        super(context);
     }
 
     public ChannelDetailRS(Context context, AttributeSet attrs) {

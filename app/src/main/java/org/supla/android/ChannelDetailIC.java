@@ -29,10 +29,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
-
+import dagger.hilt.android.AndroidEntryPoint;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.inject.Inject;
 import org.supla.android.charts.ImpulseCounterChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -42,18 +44,10 @@ import org.supla.android.images.ImageCache;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.restapi.DownloadImpulseCounterMeasurements;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientTask.IAsyncResults,
@@ -81,8 +75,8 @@ public class ChannelDetailIC extends DetailLayout implements SuplaRestApiClientT
     @Inject
     ProfileIdHolder profileIdHolder;
 
-    public ChannelDetailIC(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailIC(Context context) {
+        super(context);
     }
 
     public ChannelDetailIC(Context context, AttributeSet attrs) {

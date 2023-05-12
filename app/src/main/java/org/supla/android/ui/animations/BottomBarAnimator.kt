@@ -6,7 +6,7 @@ import android.animation.ObjectAnimator
 import android.view.View
 import com.google.android.material.bottomappbar.BottomAppBar
 
-const val DEFAULT_ANIMATION_DURATION = 500L
+const val DEFAULT_ANIMATION_DURATION = 300L
 
 fun animateFadeOut(bar: BottomAppBar, barHeight: Float) {
   ObjectAnimator.ofFloat(bar, "translationY", barHeight).apply {

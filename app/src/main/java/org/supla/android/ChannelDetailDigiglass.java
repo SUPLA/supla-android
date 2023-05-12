@@ -11,7 +11,6 @@ import org.supla.android.db.ChannelBase;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.listview.ChannelListView;
 import org.supla.android.listview.DetailLayout;
 
 import java.util.Timer;
@@ -27,8 +26,8 @@ public class ChannelDetailDigiglass extends DetailLayout implements View.OnClick
     private long refreshHold;
     private Timer delayTimer;
 
-    public ChannelDetailDigiglass(Context context, ChannelListView cLV) {
-        super(context, cLV);
+    public ChannelDetailDigiglass(Context context) {
+        super(context);
     }
 
     public ChannelDetailDigiglass(Context context, AttributeSet attrs) {

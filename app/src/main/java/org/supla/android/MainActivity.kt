@@ -26,7 +26,6 @@ import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
-import org.supla.android.listview.ChannelListView.*
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
 import org.supla.android.ui.ChangeableToolbarTitle
@@ -219,8 +218,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
         return
       }
     } else {
-      val msgId: Int
-      msgId = when (event.Event) {
+      val msgId: Int = when (event.Event) {
         SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK -> R.string.event_openedthegateway
         SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGATE -> R.string.event_openedclosedthegate
         SuplaConst.SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR -> R.string.event_openedclosedthegatedoors
@@ -290,7 +288,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   }
 
   private fun menuIsVisible(): Boolean {
-    return menuLayout.visibility == VISIBLE
+    return menuLayout.visibility == View.VISIBLE
   }
 
   private fun setMenuVisible(visible: Boolean) {
@@ -303,7 +301,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
         if (dbHelper.isZWaveBridgeChannelAvailable) MenuItemsLayout.BTN_ALL else MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
       menuLayout.setButtonsAvailable(btns)
       menuLayout.y = (-menuLayout.btnAreaHeight).toFloat()
-      menuLayout.visibility = VISIBLE
+      menuLayout.visibility = View.VISIBLE
       animatingMenu = true
       menuLayout.animate()
         .translationY(0f)
@@ -326,7 +324,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
           object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
               super.onAnimationEnd(animation)
-              menuLayout.visibility = GONE
+              menuLayout.visibility = View.GONE
               animatingMenu = false
             }
           })
