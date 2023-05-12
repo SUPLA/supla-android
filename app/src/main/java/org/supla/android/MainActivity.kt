@@ -3,7 +3,6 @@ package org.supla.android
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -12,6 +11,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -66,20 +66,22 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   private var notif_text: TextView? = null
   private lateinit var bottomNavigation: BottomNavigationView
   private lateinit var bottomBar: BottomAppBar
+  private var animatingMenu = false
 
   private val toolbar: Toolbar by lazy { findViewById(R.id.nav_toolbar) }
+  private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
 
   private val menuListener: Openable = object : Openable {
 
     override fun isOpen(): Boolean = menuIsVisible()
 
-    override fun close() = hideMenu(true)
+    override fun close() = setMenuVisible(false)
 
     override fun open() {
       if (isOpen) {
-        hideMenu(true)
+        setMenuVisible(false)
       } else {
-        showMenu(true)
+        setMenuVisible(true)
       }
     }
   }
@@ -90,6 +92,14 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    legacySetup()
+    navigationSetup()
+    toolbarSetup()
+
+    menuLayout.setOnClickListener(this::handleMenuClicks)
+  }
+
+  private fun legacySetup() {
     notif_handler = null
     notif_nrunnable = null
     setContentView(R.layout.activity_main)
@@ -108,22 +118,28 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
     MeasurementsDbHelper.getInstance(this) // For upgrade purposes
     RegisterMessageHandler()
+  }
 
+  private fun navigationSetup() {
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
     val navController = navHostFragment.navController
-
     navController.setGraph(R.navigation.main_nav_graph)
+    navController.addOnDestinationChangedListener { _, destination, _ -> configureToolbarOnDestinationChange(destination) }
 
-    val cfg = AppBarConfiguration(
-      setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment),
-      menuListener
+    NavigationUI.setupWithNavController(
+      toolbar,
+      navController,
+      AppBarConfiguration(
+        setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment),
+        menuListener
+      )
     )
-    NavigationUI.setupWithNavController(toolbar, navController, cfg)
     bottomNavigation.setOnItemSelectedListener {
       return@setOnItemSelectedListener it.onNavDestinationSelected(navController) || super.onOptionsItemSelected(it)
     }
+  }
 
-    navController.addOnDestinationChangedListener { _, destination, _ -> configureNavBar(destination) }
+  private fun toolbarSetup() {
     toolbar.inflateMenu(R.menu.toolbar)
     toolbar.menu.findItem(R.id.toolbar_accounts).isVisible = false
     toolbar.setOnMenuItemClickListener { item ->
@@ -136,7 +152,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     }
   }
 
-  private fun configureNavBar(destination: NavDestination) {
+  private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     if (destination.id == R.id.channel_list_fragment) {
       bottomNavigation.selectedItemId = R.id.channel_list_fragment
     }
@@ -249,19 +265,11 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   private fun showNotificationMessage(msg: String?, imgId: ImageId?, imgResId: Int) {
     notif_img!!.setImageBitmap(null)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      notif_img!!.background = null
-    } else {
-      notif_img!!.setBackgroundDrawable(null)
-    }
+    notif_img!!.background = null
     if (imgId != null) {
       notif_img!!.setImageBitmap(ImageCache.getBitmap(this, imgId))
     } else if (imgResId > 0) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        notif_img!!.background = resources.getDrawable(imgResId)
-      } else {
-        notif_img!!.setBackgroundDrawable(resources.getDrawable(imgResId))
-      }
+      notif_img!!.background = ResourcesCompat.getDrawable(resources, imgResId, null)
     }
     notif_text!!.text = msg
     showHideNotificationView(true)
@@ -281,6 +289,50 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     showHideNotificationView(false)
   }
 
+  private fun menuIsVisible(): Boolean {
+    return menuLayout.visibility == VISIBLE
+  }
+
+  private fun setMenuVisible(visible: Boolean) {
+    if (visible && menuIsVisible()) return
+    if (!visible && !menuIsVisible()) return
+
+    if (visible) {
+      if (animatingMenu) return
+      val btns =
+        if (dbHelper.isZWaveBridgeChannelAvailable) MenuItemsLayout.BTN_ALL else MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
+      menuLayout.setButtonsAvailable(btns)
+      menuLayout.y = (-menuLayout.btnAreaHeight).toFloat()
+      menuLayout.visibility = VISIBLE
+      animatingMenu = true
+      menuLayout.animate()
+        .translationY(0f)
+        .setDuration(200)
+        .setListener(
+          object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+              super.onAnimationEnd(animation)
+              animatingMenu = false
+            }
+          })
+    } else {
+      if (animatingMenu) return
+      animatingMenu = true
+      menuLayout
+        .animate()
+        .translationY(-menuLayout.btnAreaHeight.toFloat())
+        .setDuration(200)
+        .setListener(
+          object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+              super.onAnimationEnd(animation)
+              menuLayout.visibility = GONE
+              animatingMenu = false
+            }
+          })
+    }
+  }
+
   override fun onClick(v: View) {
     super.onClick(v)
     if (v.parent === NotificationView) {
@@ -290,7 +342,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   override fun onBackPressed() {
     if (menuIsVisible()) {
-      hideMenu(true)
+      setMenuVisible(false)
     } else if (!navigator.back()) {
       finishAffinity()
     }
@@ -299,6 +351,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   override fun onProfileChanged() {
     super.onProfileChanged()
     runDownloadTask()
+    setMenuVisible(false)
   }
 
   override fun setToolbarTitle(title: String) {
@@ -306,4 +359,20 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   }
 
   override fun getLoadingIndicator(): View = findViewById(R.id.loadingIndicator)
+
+  private fun handleMenuClicks(v: View) {
+    setMenuVisible(false)
+
+    when (MenuItemsLayout.getButtonId(v)) {
+      MenuItemsLayout.BTN_SETTINGS -> showCfg(this)
+      MenuItemsLayout.BTN_ABOUT -> showAbout()
+      MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
+      MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
+      MenuItemsLayout.BTN_DONATE -> donate()
+      MenuItemsLayout.BTN_HELP -> openForumpage()
+      MenuItemsLayout.BTN_CLOUD -> openCloud()
+      MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
+      MenuItemsLayout.BTN_PROFILE -> showProfile(this)
+    }
+  }
 }

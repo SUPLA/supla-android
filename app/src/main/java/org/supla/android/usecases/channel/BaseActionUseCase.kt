@@ -21,6 +21,9 @@ import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.ActionParameters
+import org.supla.android.lib.actions.SubjectType
 
 open class BaseActionUseCase<T : ChannelBase>(
   private val suplaClientProvider: SuplaClientProvider
@@ -35,16 +38,47 @@ open class BaseActionUseCase<T : ChannelBase>(
     }
 
     val client = suplaClientProvider.provide() ?: return
-    client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
+    if (isRGBW(channelBase.func)) {
+      client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+    } else if (isRollerShutter(channelBase.func)) {
+      client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+    } else {
+      client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
+    }
   }
 
   private fun isValveChannel(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ||
       function == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
 
+  private fun isRollerShutter(function: Int): Boolean =
+    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
+      function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+
+  private fun isRGBW(function: Int): Boolean =
+    function == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ||
+      function == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ||
+      function == SuplaConst.SUPLA_CHANNELFNC_DIMMER
+
   private fun getOnOffValue(buttonType: ButtonType): Int = when (buttonType) {
     ButtonType.LEFT -> 0
     ButtonType.RIGHT -> 1
+  }
+
+  private fun getTurnOnOffActionId(buttonType: ButtonType): ActionId = when (buttonType) {
+    ButtonType.LEFT -> ActionId.TURN_OFF
+    ButtonType.RIGHT -> ActionId.TURN_ON
+  }
+
+  private fun getRevealShutActionId(buttonType: ButtonType): ActionId = when (buttonType) {
+    ButtonType.LEFT -> ActionId.SHUT
+    ButtonType.RIGHT -> ActionId.REVEAL
+  }
+
+  private fun getSubjectType(group: Boolean) = if (group) {
+    SubjectType.GROUP
+  } else {
+    SubjectType.CHANNEL
   }
 }
 

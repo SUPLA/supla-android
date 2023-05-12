@@ -1,7 +1,7 @@
 package org.supla.android.ui.animations
 
 import android.animation.Animator
-import android.animation.Animator.AnimatorListener
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.view.View
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -26,18 +26,10 @@ fun animateFadeIn(bar: BottomAppBar, animationEndCallback: () -> Unit) {
   }
 }
 
-private class BottomBarAnimatorListener(private val animationEndCallback: () -> Unit) : AnimatorListener {
-  override fun onAnimationStart(p0: Animator?) {
-  }
+private class BottomBarAnimatorListener(private val animationEndCallback: () -> Unit) : AnimatorListenerAdapter() {
 
   override fun onAnimationEnd(p0: Animator?) {
     animationEndCallback()
-  }
-
-  override fun onAnimationCancel(p0: Animator?) {
-  }
-
-  override fun onAnimationRepeat(p0: Animator?) {
   }
 
 }

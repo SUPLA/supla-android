@@ -93,7 +93,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     private boolean RightButtonEnabled;
     private boolean LeftButtonEnabled;
-    private boolean DetailSliderEnabled;
 
     private float heightScaleFactor = 1f;
     private boolean shouldUpdateChannelStateLayout;
@@ -588,20 +587,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     }
 
     public boolean getDetailSliderEnabled() {
-		if(RightButtonEnabled) {
-			// Only enable detail slider if right button is
-			// already expanded.
-			if(Slided() == 200)
-				return DetailSliderEnabled;
-			else
-				return false;
-		} else {
-			return DetailSliderEnabled;
-		}
-    }
-
-    private void setDetailSliderEnabled(boolean detailSliderEnabled) {
-        DetailSliderEnabled = detailSliderEnabled;
+        return false;
     }
 
     public boolean getButtonsEnabled() {
@@ -716,12 +702,17 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
 
                     ridx = R.string.channel_btn_on;
                     lidx = R.string.channel_btn_off;
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
                     ridx = R.string.channel_btn_open;
                     lidx = R.string.channel_btn_close;
                     break;
@@ -735,7 +726,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         {
             boolean lenabled = false;
             boolean renabled = false;
-            boolean dslider = false;
 
             switch (mFunc) {
                 case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
@@ -752,23 +742,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
                 case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
                 case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-
-                    left_onlineStatus.setVisibility(View.VISIBLE);
-                    right_onlineStatus.setVisibility(View.VISIBLE);
-
-                    lenabled = true;
-                    renabled = true;
-
-                    if (cbase instanceof Channel && ((Channel)cbase).getValue() != null) {
-                        if (((Channel)cbase).getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
-                                || ((Channel)cbase).getValue().getSubValueType()
-                                == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS ) {
-                            dslider = true;
-                        }
-                    }
-
-                    break;
                 case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
 
                     left_onlineStatus.setVisibility(View.VISIBLE);
@@ -776,6 +749,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
                     lenabled = true;
                     renabled = true;
+
                     break;
 
                 case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
@@ -795,9 +769,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
                     break;
 
-                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
                 case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
                 case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
@@ -809,12 +780,22 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
                 case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
                 case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
 
                     left_onlineStatus.setVisibility(View.INVISIBLE);
                     right_onlineStatus.setVisibility(View.VISIBLE);
-                    dslider = true;
+                    break;
+
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+                case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+                case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+
+                    lenabled = true;
+                    renabled = true;
+
+                    left_onlineStatus.setVisibility(View.INVISIBLE);
+                    right_onlineStatus.setVisibility(View.VISIBLE);
                     break;
 
                 default:
@@ -825,9 +806,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
             setLeftButtonEnabled(lenabled && cbase.getOnLine());
             setRightButtonEnabled(renabled && cbase.getOnLine());
-            setDetailSliderEnabled(dslider && cbase.getOnLine());
-
-
         }
         caption_text.setText(cbase.getNotEmptyCaption(getContext()));
 

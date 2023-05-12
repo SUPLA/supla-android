@@ -55,7 +55,6 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     super(context, attrs, defStyleAttr);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public MenuItemsLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize();
@@ -79,7 +78,6 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
       mMainButtonsAreaLayout = new LinearLayout(getContext());
       LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-      params.topMargin = (int) getResources().getDimension(R.dimen.top_bar_height);
       mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
       mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));

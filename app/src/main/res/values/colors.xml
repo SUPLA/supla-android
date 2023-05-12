@@ -4,6 +4,7 @@
     <color name="supla_green">#12a71e</color>
 
     <color name="primary">@color/supla</color>
+    <color name="primaryVariant">@color/supla_green</color>
     <color name="on_primary">#ffffff</color>
 
     <color name="item_selected">#ffffff</color>
