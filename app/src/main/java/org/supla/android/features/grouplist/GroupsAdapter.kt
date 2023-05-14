@@ -21,6 +21,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
 import org.supla.android.db.Location
+import org.supla.android.ui.dialogs.ChannelGroupCaptionEditor
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
@@ -33,6 +34,8 @@ class GroupsAdapter @Inject constructor(
   override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x2) > 0)
 
   override fun onCaptionLongPress(groupId: Int) {
-    // no action
+    val editor = ChannelGroupCaptionEditor(context)
+    editor.captionChangedListener = reloadCallback
+    editor.edit(groupId)
   }
 }

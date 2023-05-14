@@ -787,19 +787,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     }
     caption_text.setText(cbase.getNotEmptyCaption(getContext()));
 
-    if (mGroup) {
-      caption_text.setOnLongClickListener(null);
-      caption_text.setClickable(false);
-      caption_text.setLongClickable(false);
-    } else {
-      caption_text.setOnLongClickListener(
-          v -> {
-            listener.onCaptionLongPress(mRemoteId);
-            return true;
-          });
-      caption_text.setClickable(true);
-      caption_text.setLongClickable(true);
-    }
+    caption_text.setOnLongClickListener(
+        v -> {
+          listener.onCaptionLongPress(mRemoteId);
+          return true;
+        });
+    caption_text.setClickable(true);
+    caption_text.setLongClickable(true);
   }
 
   private class AnimParams {

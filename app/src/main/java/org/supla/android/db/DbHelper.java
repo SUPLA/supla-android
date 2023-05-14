@@ -1283,6 +1283,10 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.updateChannelGroup(suplaChannelGroup);
   }
 
+  public void updateChannelGroup(ChannelGroup channelGroup) {
+    channelRepository.updateChannelGroup(channelGroup);
+  }
+
   public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
     return channelRepository.updateChannelGroupRelation(suplaChannelGroupRelation);
   }

@@ -74,6 +74,11 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
+  public void updateChannelGroup(ChannelGroup channelGroup) {
+    channelDao.update(channelGroup);
+  }
+
+  @Override
   public boolean updateChannel(SuplaChannel suplaChannel) {
     Location location = getLocation(suplaChannel.LocationID);
     if (location == null) {
