@@ -1,7 +1,6 @@
 package org.supla.android.features.channellist
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
@@ -12,25 +11,20 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.ActionException
-import org.supla.android.usecases.channel.ButtonType
-import org.supla.android.usecases.channel.ChannelActionUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.DetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.android.usecases.location.isCollapsed
 import javax.inject.Inject
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
-  private val profileManager: ProfileManager,
+  private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
@@ -51,7 +45,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   fun loadChannels() {
-    reloadObservable()
+    createProfileChannelsListUseCase()
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(channels = it) } }
@@ -61,7 +55,7 @@ class ChannelListViewModel @Inject constructor(
 
   fun toggleLocationCollapsed(location: Location) {
     toggleLocationUseCase(location, CollapsedFlag.CHANNEL)
-      .andThen(reloadObservable())
+      .andThen(createProfileChannelsListUseCase())
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(channels = it) } }
@@ -116,32 +110,6 @@ class ChannelListViewModel @Inject constructor(
     val detailType = provideDetailTypeUseCase(channel)
     if (detailType != null) {
       sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
-    }
-  }
-
-  private fun reloadObservable(): Observable<List<ListItem>> = Observable.fromCallable {
-    channelRepository.getAllProfileChannels(profileManager.getCurrentProfile().blockingGet()!!.id).use { cursor ->
-      val channels = mutableListOf<ListItem>()
-
-      var location: Location? = null
-      if (cursor.moveToFirst()) {
-        do {
-          val channel = Channel()
-          channel.AssignCursorData(cursor)
-
-          if (location == null || location.locationId != channel.locationId.toInt()) {
-            location = channelRepository.getLocation(channel.locationId.toInt())
-            channels.add(ListItem.LocationItem(location))
-          }
-
-          if (location?.isCollapsed(CollapsedFlag.CHANNEL) == false) {
-            channels.add(ListItem.ChannelItem(channel))
-          }
-        } while (cursor.moveToNext())
-      }
-      cursor.close()
-
-      return@use channels
     }
   }
 }

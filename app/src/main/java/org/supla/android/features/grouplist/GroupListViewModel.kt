@@ -18,7 +18,6 @@ package org.supla.android.features.grouplist
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
@@ -29,25 +28,20 @@ import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.ActionException
-import org.supla.android.usecases.channel.ButtonType
-import org.supla.android.usecases.channel.GroupActionUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.DetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.android.usecases.location.isCollapsed
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
-  private val profileManager: ProfileManager,
+  private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
   private val groupActionUseCase: GroupActionUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
@@ -57,7 +51,7 @@ class GroupListViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
+  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, groups = null)
 
   override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
 
@@ -68,7 +62,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   fun loadGroups() {
-    reloadObservable()
+    createProfileGroupsListUseCase()
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } }
@@ -78,7 +72,7 @@ class GroupListViewModel @Inject constructor(
 
   fun toggleLocationCollapsed(location: Location) {
     toggleLocationUseCase(location, CollapsedFlag.GROUP)
-      .andThen(reloadObservable())
+      .andThen(createProfileGroupsListUseCase())
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(groups = it) } }
@@ -92,14 +86,14 @@ class GroupListViewModel @Inject constructor(
     }
 
     channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
-      .attachSilent()
+      .attach()
       .subscribeBy()
       .disposeBySelf()
   }
 
   fun performAction(channelId: Int, buttonType: ButtonType) {
     groupActionUseCase(channelId, buttonType)
-      .attachSilent()
+      .attach()
       .subscribeBy(
         onError = { throwable ->
           when (throwable) {
@@ -135,31 +129,6 @@ class GroupListViewModel @Inject constructor(
       sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
     }
   }
-
-  private fun reloadObservable(): Observable<List<ListItem>> = Observable.fromCallable {
-    channelRepository.getAllProfileChannelGroups(profileManager.getCurrentProfile().blockingGet()!!.id).use { cursor ->
-      val channels = mutableListOf<ListItem>()
-
-      var location: Location? = null
-      if (cursor.moveToFirst()) {
-        do {
-          val group = ChannelGroup()
-          group.AssignCursorData(cursor)
-
-          if (location == null || location.locationId != group.locationId.toInt()) {
-            location = channelRepository.getLocation(group.locationId.toInt())
-            channels.add(ListItem.LocationItem(location))
-          }
-
-          if (location?.isCollapsed(CollapsedFlag.GROUP) == false) {
-            channels.add(ListItem.ChannelItem(group))
-          }
-        } while (cursor.moveToNext())
-      }
-
-      return@use channels
-    }
-  }
 }
 
 sealed class GroupListViewEvent : ViewEvent {
@@ -172,5 +141,5 @@ sealed class GroupListViewEvent : ViewEvent {
 
 data class GroupListViewState(
   override val loading: Boolean = false,
-  val groups: List<ListItem> = emptyList()
+  val groups: List<ListItem>? = null
 ) : ViewState(loading)

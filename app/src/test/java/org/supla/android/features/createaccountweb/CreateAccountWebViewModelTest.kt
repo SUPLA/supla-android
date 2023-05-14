@@ -11,7 +11,9 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.tools.SuplaSchedulers
 
 @RunWith(MockitoJUnitRunner::class)
-class CreateAccountWebViewModelTest : BaseViewModelTest<CreateAccountWebViewState, CreateAccountWebViewEvent>() {
+class CreateAccountWebViewModelTest : BaseViewModelTest<CreateAccountWebViewState, CreateAccountWebViewEvent>(
+  mockSchedulers = false
+) {
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers

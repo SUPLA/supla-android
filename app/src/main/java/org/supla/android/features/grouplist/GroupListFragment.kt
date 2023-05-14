@@ -82,7 +82,9 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   }
 
   override fun handleViewState(state: GroupListViewState) {
-    adapter.setItems(state.groups)
+    if (state.groups != null) {
+      adapter.setItems(state.groups)
+    }
   }
 
   private fun setupAdapter() {

@@ -121,13 +121,17 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   }
 
   fun <T : Any> Observable<T>.attach(): Observable<T> {
+    return attachSilent()
+      .doOnSubscribe { updateState { loadingState(true) } }
+      .doOnTerminate { updateState { loadingState(false) } }
+  }
+
+  fun <T : Any> Observable<T>.attachSilent(): Observable<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
   }
 
   private fun findStackEntryString(stack: Array<StackTraceElement>): String? {

@@ -38,7 +38,7 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected fun observeUpdates(updatesObservable: Observable<Any>) {
     updatesObservable
-      .attach()
+      .attachSilent()
       .subscribeBy(
         onNext = { reloadList() }
       )

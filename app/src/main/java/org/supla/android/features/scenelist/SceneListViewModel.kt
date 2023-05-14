@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Location
 import org.supla.android.db.Scene
@@ -33,20 +32,20 @@ import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.android.usecases.location.isCollapsed
+import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SceneListViewModel @Inject constructor(
   private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository,
   private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
   listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
+  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, scenes = null)
 
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 
@@ -57,33 +56,12 @@ class SceneListViewModel @Inject constructor(
   }
 
   fun loadScenes() {
-    sceneRepository.getAllProfileScenes()
-      .map(this::sceneToListItem)
+    createProfileScenesListUseCase()
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } }
       )
       .disposeBySelf()
-  }
-
-  private fun sceneToListItem(scenes: List<Scene>): List<ListItem> {
-    val result = mutableListOf<ListItem>()
-
-    var location: Location? = null
-    for (scene in scenes) {
-      if (location == null || location.locationId != scene.locationId) {
-        location = channelRepository.getLocation(scene.locationId)
-        result.add(ListItem.LocationItem(location))
-      }
-
-      if (location?.isCollapsed(CollapsedFlag.SCENE) == true) {
-        continue
-      }
-
-      result.add(ListItem.SceneItem(scene))
-    }
-
-    return result
   }
 
   fun onSceneOrderUpdate(scenes: List<Scene>) {
@@ -101,8 +79,7 @@ class SceneListViewModel @Inject constructor(
 
   fun toggleLocationCollapsed(location: Location) {
     toggleLocationUseCase(location, CollapsedFlag.SCENE)
-      .andThen(sceneRepository.getAllProfileScenes())
-      .map(this::sceneToListItem)
+      .andThen(createProfileScenesListUseCase())
       .attach()
       .subscribeBy(
         onNext = { updateState { state -> state.copy(scenes = it) } }
@@ -117,5 +94,5 @@ sealed class SceneListViewEvent : ViewEvent {
 
 data class SceneListViewState(
   override val loading: Boolean = false,
-  val scenes: List<ListItem> = emptyList()
+  val scenes: List<ListItem>? = null
 ) : ViewState(loading)

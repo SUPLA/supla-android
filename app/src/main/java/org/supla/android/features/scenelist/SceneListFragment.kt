@@ -62,7 +62,9 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   }
 
   override fun handleViewState(state: SceneListViewState) {
-    adapter.setItems(state.scenes)
+    if (state.scenes != null) {
+      adapter.setItems(state.scenes)
+    }
   }
 
   private fun setupAdapter() {
