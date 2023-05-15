@@ -27,7 +27,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.databinding.SceneListItemBinding
+import org.supla.android.databinding.LiSceneItemBinding
 import org.supla.android.db.Scene
 import org.supla.android.ui.dialogs.SceneCaptionEditor
 import org.supla.android.ui.layouts.SceneLayout
@@ -64,8 +64,8 @@ class ScenesAdapter @Inject constructor(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.scene_list_item -> {
-        val binding = SceneListItemBinding.inflate(inflater, parent, false)
+      R.layout.li_scene_item -> {
+        val binding = LiSceneItemBinding.inflate(inflater, parent, false)
         val holder = SceneListItemViewHolder(binding)
         holder
       }
@@ -101,9 +101,9 @@ class ScenesAdapter @Inject constructor(
 
   override fun getItemViewType(pos: Int): Int {
     return if (items[pos] is ListItem.SceneItem) {
-      R.layout.scene_list_item
+      R.layout.li_scene_item
     } else {
-      R.layout.location_list_item
+      R.layout.li_location_item
     }
   }
 
@@ -126,5 +126,5 @@ class ScenesAdapter @Inject constructor(
     return true
   }
 
-  inner class SceneListItemViewHolder(val binding: SceneListItemBinding) : ViewHolder(binding.root)
+  inner class SceneListItemViewHolder(val binding: LiSceneItemBinding) : ViewHolder(binding.root)
 }

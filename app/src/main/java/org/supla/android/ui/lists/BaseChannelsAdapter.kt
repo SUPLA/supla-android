@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.databinding.ChannelListItemBinding
+import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.features.channellist.ChannelsListCallback
@@ -64,8 +64,8 @@ abstract class BaseChannelsAdapter(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.channel_list_item -> {
-        val binding = ChannelListItemBinding.inflate(inflater, parent, false)
+      R.layout.li_channel_item -> {
+        val binding = LiChannelItemBinding.inflate(inflater, parent, false)
         val holder = ChannelListItemViewHolder(binding)
         holder
       }
@@ -104,9 +104,9 @@ abstract class BaseChannelsAdapter(
 
   override fun getItemViewType(pos: Int): Int {
     return if (items[pos] is ListItem.ChannelItem) {
-      R.layout.channel_list_item
+      R.layout.li_channel_item
     } else {
-      R.layout.location_list_item
+      R.layout.li_location_item
     }
   }
 
@@ -122,6 +122,6 @@ abstract class BaseChannelsAdapter(
     return true
   }
 
-  inner class ChannelListItemViewHolder(val binding: ChannelListItemBinding) :
+  inner class ChannelListItemViewHolder(val binding: LiChannelItemBinding) :
     ViewHolder(binding.root)
 }

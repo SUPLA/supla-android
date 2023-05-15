@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.databinding.LocationListItemBinding
+import org.supla.android.databinding.LiLocationItemBinding
 import org.supla.android.db.Location
 import org.supla.android.ui.dialogs.LocationCaptionEditor
 
@@ -50,11 +50,7 @@ abstract class BaseListAdapter<T, D>(
   ): RecyclerView.ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.location_list_item -> {
-        val binding = LocationListItemBinding.inflate(inflater, parent, false)
-        binding.tvSectionCaption.typeface = SuplaApp.getApp().typefaceQuicksandRegular
-        LocationListItemViewHolder(binding)
-      }
+      R.layout.li_location_item -> LocationListItemViewHolder(LiLocationItemBinding.inflate(inflater, parent, false))
       else -> throw IllegalArgumentException("unsupported view type $viewType")
     }
   }
@@ -111,6 +107,6 @@ abstract class BaseListAdapter<T, D>(
     return true
   }
 
-  class LocationListItemViewHolder(val binding: LocationListItemBinding) :
+  class LocationListItemViewHolder(val binding: LiLocationItemBinding) :
     RecyclerView.ViewHolder(binding.root)
 }

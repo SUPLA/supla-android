@@ -37,17 +37,17 @@ import org.supla.android.images.ImageCache
 class WidgetConfigurationChannelsSpinnerAdapter(
   context: Context,
   objects: MutableList<SpinnerItem<DbItem>>
-) : ArrayAdapter<SpinnerItem<DbItem>>(context, R.layout.widget_channel_spinner_item, objects) {
+) : ArrayAdapter<SpinnerItem<DbItem>>(context, R.layout.li_widget_channel_spinner, objects) {
 
   override fun getItemId(position: Int): Long =
     if ( position < count ) getItem(position)?.value?.id ?: 0 else 0
 
   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-    return createDropDownItemView(position, convertView, R.layout.spinner_display_item)
+    return createDropDownItemView(position, convertView, R.layout.li_widget_spinner_display_item)
   }
 
   override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-    return createItemView(position, convertView, R.layout.widget_channel_spinner_item)
+    return createItemView(position, convertView, R.layout.li_widget_channel_spinner)
   }
 
   fun postItems(channels: List<SpinnerItem<DbItem>>) {

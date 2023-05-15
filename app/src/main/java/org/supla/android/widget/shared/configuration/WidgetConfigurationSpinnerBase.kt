@@ -29,14 +29,14 @@ import org.supla.android.R
 abstract class WidgetConfigurationSpinnerBase<T>(
         context: Context,
         objects: MutableList<T>
-) : ArrayAdapter<T>(context, R.layout.spinner_item, objects) {
+) : ArrayAdapter<T>(context, R.layout.li_widget_spiner, objects) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createItemView(position, convertView, R.layout.spinner_display_item)
+        return createItemView(position, convertView, R.layout.li_widget_spinner_display_item)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createItemView(position, convertView, R.layout.spinner_item)
+        return createItemView(position, convertView, R.layout.li_widget_spiner)
     }
 
     abstract fun getItemText(item: T): String

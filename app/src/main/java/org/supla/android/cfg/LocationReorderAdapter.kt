@@ -122,7 +122,7 @@ class LocationReorderAdapter(private val ctx: Context,
 
         if(convertView == null) {
             val inflater = LayoutInflater.from(ctx)
-            rv = inflater.inflate(R.layout.listview_section_new,
+            rv = inflater.inflate(R.layout.li_location_reordering,
                                   container, false)
             dragHolder = rv?.findViewById(R.id.ivDragHolder)
             dragHolder?.setOnTouchListener {
