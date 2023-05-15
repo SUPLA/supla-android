@@ -70,6 +70,9 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   private val toolbar: Toolbar by lazy { findViewById(R.id.nav_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
 
+  private val rootDestinations = setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment)
+  private var lastDestinationId: Int? = null
+
   private val menuListener: Openable = object : Openable {
 
     override fun isOpen(): Boolean = menuIsVisible()
@@ -152,19 +155,18 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   }
 
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
+    lastDestinationId = destination.id
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
+
     if (destination.id == R.id.channel_list_fragment) {
       bottomNavigation.selectedItemId = R.id.channel_list_fragment
     }
 
     val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
     if (destination.id == R.id.legacy_detail_fragment) {
-      setAccountItemVisible(false)
-
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
       animateFadeOut(bottomBar, barHeight)
     } else {
-      setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
-
       animateFadeIn(bottomBar) {
         findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, barHeight.toInt())
       }
@@ -173,7 +175,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   override fun onResume() {
     super.onResume()
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
