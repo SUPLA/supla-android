@@ -7,7 +7,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton

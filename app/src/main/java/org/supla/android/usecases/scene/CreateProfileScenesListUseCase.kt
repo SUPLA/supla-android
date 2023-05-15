@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.Location
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.isCollapsed

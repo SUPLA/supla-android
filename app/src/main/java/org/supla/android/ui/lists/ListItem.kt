@@ -19,7 +19,7 @@ package org.supla.android.ui.lists
 
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 
 sealed interface ListItem {
   data class SceneItem(val scene: Scene) : ListItem

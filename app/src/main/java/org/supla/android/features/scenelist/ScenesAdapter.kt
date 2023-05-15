@@ -28,7 +28,7 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.LiSceneItemBinding
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.ui.dialogs.SceneCaptionEditor
 import org.supla.android.ui.layouts.SceneLayout
 import org.supla.android.ui.lists.BaseListAdapter

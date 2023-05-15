@@ -21,8 +21,9 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Trace
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.db.SuplaContract
+import org.supla.android.db.entity.LegacyScene
 import org.supla.android.extensions.TAG
 import java.util.ArrayList
 
@@ -74,11 +75,37 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return ids
   }
 
+  fun getAllScenes(): List<LegacyScene> {
+    sceneCursor(null).use { cursor ->
+      val list = mutableListOf<LegacyScene>()
+
+      if (!cursor.moveToFirst()) {
+        return list
+      }
+
+      while (!cursor.isAfterLast) {
+        val itm = LegacyScene()
+        itm.AssignCursorData(cursor)
+        list.add(itm)
+        cursor.moveToNext()
+      }
+
+      return list
+    }
+  }
+
   fun sceneCursor(profileId: Long? = cachedProfileId): Cursor {
     return read {
-      val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
-        "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
-      val selectionArgs = arrayOf(profileId.toString())
+      val selection: String?
+      val selectionArgs: Array<String>?
+      if (profileId == null) {
+        selection = null
+        selectionArgs = null
+      } else {
+        selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
+          "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
+        selectionArgs = arrayOf(profileId.toString())
+      }
       val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
         SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
         " COLLATE LOCALIZED, " +

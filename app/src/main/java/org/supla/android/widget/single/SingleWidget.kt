@@ -32,7 +32,7 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
