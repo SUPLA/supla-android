@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import dagger.hilt.android.EntryPointAccessors;
-import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -47,7 +46,7 @@ import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.db.SuplaContract.AuthProfileEntry;
-import org.supla.android.di.ProfileIdHolderEntryPoint;
+import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -56,7 +55,6 @@ import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
-import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileMigrator;
@@ -1285,6 +1283,10 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.updateChannelGroup(suplaChannelGroup);
   }
 
+  public void updateChannelGroup(ChannelGroup channelGroup) {
+    channelRepository.updateChannelGroup(channelGroup);
+  }
+
   public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
     return channelRepository.updateChannelGroupRelation(suplaChannelGroupRelation);
   }
@@ -1309,16 +1311,8 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.getChannelCount();
   }
 
-  public Cursor getChannelListCursor() {
-    return channelRepository.getChannelListCursorWithDefaultOrder();
-  }
-
   public Cursor getChannelListCursorForGroup(int groupId) {
     return channelRepository.getChannelListCursorForGroup(groupId);
-  }
-
-  public Cursor getGroupListCursor() {
-    return channelRepository.getChannelGroupListCursor();
   }
 
   public ColorListItem getColorListItem(int id, boolean group, int idx) {
@@ -1344,10 +1338,6 @@ public class DbHelper extends BaseDbHelper {
     return userIconRepository.addUserIcons(id, img1, img2, img3, img4);
   }
 
-  public void deleteUserIcons(long profileId) {
-    userIconRepository.deleteUserIcons(profileId);
-  }
-
   public void loadUserIconsIntoCache() {
     userIconRepository.loadUserIconsIntoCache();
   }
@@ -1358,23 +1348,6 @@ public class DbHelper extends BaseDbHelper {
 
   public List<Channel> getZWaveBridgeChannels() {
     return channelRepository.getZWaveBridgeChannels();
-  }
-
-  public Completable reorderChannels(
-      ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
-    if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
-      return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
-    }
-    return channelRepository.reorderChannels(firstItem.id, firstItem.locationId, secondItem.id);
-  }
-
-  public Completable reorderGroups(
-      ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
-    if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
-      return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
-    }
-    return channelRepository.reorderChannelGroups(
-        firstItem.id, firstItem.locationId, secondItem.id);
   }
 
   public ChannelRepository getChannelRepository() {

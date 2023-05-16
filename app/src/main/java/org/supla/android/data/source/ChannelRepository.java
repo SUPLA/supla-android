@@ -43,6 +43,8 @@ public interface ChannelRepository {
 
   void updateChannel(Channel channel);
 
+  void updateChannelGroup(ChannelGroup channelGroup);
+
   boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
 
   boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
@@ -65,10 +67,6 @@ public interface ChannelRepository {
   boolean setChannelsOffline();
 
   Cursor getChannelListCursorForGroup(int groupId);
-
-  Cursor getChannelListCursorWithDefaultOrder();
-
-  Cursor getChannelGroupListCursor();
 
   boolean isZWaveBridgeChannelAvailable();
 

@@ -18,21 +18,26 @@
       <item name="linkColor">#007AFF</item>
       <item name="labelColor">#7e8082</item>
       <item name="switcherBackgroundColor">@color/switcher_background_light</item>
+      <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
     </style>
+
+  <style name="AppTheme.ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+    <item name="color">@color/on_primary</item>
+  </style>
 
     <style name="AppTheme.Light.Widget" parent="AppTheme.Light">
         <item name="colorPrimary">@color/supla_green</item>
         <item name="colorPrimaryDark">@color/layout_background</item>
     </style>
 
-    <style name="MenuBarTitle">
+    <style name="MenuBarTitle" parent="AppTheme.TextAppearance.Subtitle1">
         <item name="android:textColor">?attr/brandPrimaryForegroundColor</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppBar">
-      <item name="titleTextAppearance">@style/title</item>
+      <item name="titleTextAppearance">@style/MenuBarTitle</item>
       <item name="android:background">?brandPrimaryBackgroundColor</item>
     </style>
 

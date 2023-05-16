@@ -357,12 +357,6 @@ public class ChannelDao extends BaseDao {
         "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
   }
 
-  public Cursor getChannelGroupListCursor() {
-    String profileId = SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID;
-    String where = "G." + profileId + " = " + getCachedProfileId();
-    return getChannelGroupListCursor(where);
-  }
-
   public boolean isZWaveBridgeChannelAvailable() {
     String[] projection = {SuplaContract.ChannelViewEntry._ID};
 

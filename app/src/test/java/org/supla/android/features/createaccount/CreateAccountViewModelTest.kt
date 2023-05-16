@@ -54,6 +54,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   override fun setUp() {
     super.setUp()
     whenever(schedulers.io).thenReturn(Schedulers.trampoline())
+    whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
   }
 
   @Test

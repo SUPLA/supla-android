@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import dagger.hilt.android.EntryPointAccessors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,6 +46,8 @@ import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
+import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -53,6 +56,7 @@ import org.supla.android.profile.ProfileManager;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
+
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
@@ -75,13 +79,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private String oneTimePassword;
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
+  private final ListsEventsManager listsEventsManager;
 
   public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
-
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
+    this.listsEventsManager =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
+            .provideListsEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -155,7 +163,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
-  private native boolean scSetChannelGroupCaption(long _supla_client, int ChannelGroupID, String Caption);
+  private native boolean scSetChannelGroupCaption(
+      long _supla_client, int ChannelGroupID, String Caption);
 
   private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
 
@@ -194,10 +203,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
-  private native boolean scRegisterPushNotificationClientToken(long _supla_client, int appId, String token);
-  
+  private native boolean scRegisterPushNotificationClientToken(
+      long _supla_client, int appId, String token);
+
   private void sendMessage(SuplaClientMsg msg) {
-    if (canceled()) return;
+    if (canceled()) {
+      return;
+    }
     SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
   }
 
@@ -281,7 +293,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public void reconnect() {
-    if (connected()) disconnect();
+    if (connected()) {
+      disconnect();
+    }
   }
 
   private boolean connected() {
@@ -574,7 +588,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public boolean setChannelGroupCaption(int ChannelGroupID, String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
+      return _supla_client_ptr != 0
+          && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
     } finally {
       unlockClientPtr();
     }
@@ -762,7 +777,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public boolean registerPushNotificationClientToken(int appId, String token) {
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
+      return _supla_client_ptr != 0
+          && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
     } finally {
       unlockClientPtr();
     }
@@ -947,8 +963,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = true;
     }
 
-    if (channel.EOL && DbH.setChannelsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel.EOL) {
+      listsEventsManager.emitChannelUpdate();
+      _DataChanged = DbH.setChannelsVisible(0, 2);
     }
 
     if (_DataChanged) {
@@ -985,8 +1002,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _DataChanged = true;
     }
 
-    if (channel_group.EOL && DbH.setChannelGroupsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel_group.EOL) {
+      listsEventsManager.emitGroupUpdate();
+      _DataChanged = DbH.setChannelGroupsVisible(0, 2);
     }
 
     if (channel_group.EOL) {
@@ -1046,9 +1064,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + scene.isEol());
 
     SceneRepository sr = DbH.getSceneRepository();
-    sr.updateSuplaScene(scene);
+    if (sr.updateSuplaScene(scene)) {
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
+      msg.setSceneId(scene.getId());
+      sendMessage(msg);
+    }
 
     if (scene.isEol()) {
+      listsEventsManager.emitSceneUpdate();
       sr.setScenesVisible(0, 2);
     }
   }
@@ -1072,7 +1095,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               + state.getInitiatorName()
               + " EOL: "
               + state.isEol());
-      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneStateChanged);
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
       msg.setSceneId(state.getSceneId());
       sendMessage(msg);
     }
@@ -1190,6 +1213,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     msg.setChannelGroupId(ChannelGroupID);
     sendMessage(msg);
   }
+
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onLocationCaptionSetResult);
     msg.setCode(ResultCode);

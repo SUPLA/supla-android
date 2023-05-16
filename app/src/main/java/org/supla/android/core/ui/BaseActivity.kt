@@ -1,17 +1,10 @@
 package org.supla.android.core.ui
 
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import org.supla.android.extensions.visibleIf
+import org.supla.android.ui.LoadableContent
 
-abstract class BaseActivity : AppCompatActivity() {
-
-  protected abstract fun getLoadingIndicator(): View
-
-  fun showLoading(isLoading: Boolean) {
-    getLoadingIndicator().visibleIf(isLoading)
-  }
+abstract class BaseActivity : AppCompatActivity(), LoadableContent {
 
   protected fun isBackHandledInChildFragment(): Boolean {
     for (fragment in supportFragmentManager.fragments) {

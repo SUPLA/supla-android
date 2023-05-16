@@ -24,7 +24,7 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.scenes.SceneEventsManager
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
 
 class MultiAccountProfileManager(
@@ -32,7 +32,7 @@ class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
   private val widgetVisibilityHandler: WidgetVisibilityHandler,
-  private val sceneEventsManager: SceneEventsManager,
+  private val listsEventsManager: ListsEventsManager,
   private val suplaAppProvider: SuplaAppProvider
 ) : ProfileManager {
 
@@ -78,7 +78,7 @@ class MultiAccountProfileManager(
     }
     initiateReconnect()
     dbHelper.loadUserIconsIntoCache()
-    sceneEventsManager.cleanup()
+    listsEventsManager.cleanup()
   }
 
   private fun initiateReconnect() {

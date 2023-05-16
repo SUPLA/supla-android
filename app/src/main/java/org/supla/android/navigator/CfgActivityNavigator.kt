@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class CfgActivityNavigator @Inject constructor(@ActivityContext private val activityContext: Context) {
 
   private val navController: NavController
-    get() = (activityContext as AppCompatActivity).findNavController(R.id.nav_host_fragment)
+    get() = (activityContext as Activity).findNavController(R.id.nav_host_fragment)
 
   fun navigateTo(@IdRes destinationId: Int, bundle: Bundle? = null) {
     navController.navigate(destinationId, bundle)

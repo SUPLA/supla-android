@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
@@ -55,7 +54,6 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     super(context, attrs, defStyleAttr);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public MenuItemsLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize();
@@ -78,8 +76,9 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       setOrientation(VERTICAL);
 
       mMainButtonsAreaLayout = new LinearLayout(getContext());
-      mMainButtonsAreaLayout.setLayoutParams(
-          new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+      LayoutParams params =
+          new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+      mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
       mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));
       addView(mMainButtonsAreaLayout);

@@ -34,6 +34,4 @@ interface SceneRepository {
   fun updateSuplaScene(suplaScene: SuplaScene): Boolean
   fun updateSuplaSceneState(suplaSceneState: SuplaSceneState): Boolean
   fun setScenesVisible(visible: Int, whereVisible: Int): Boolean
-
-  suspend fun reloadScenes()
 }

@@ -15,7 +15,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.scenes.SceneEventsManager
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.widget.WidgetVisibilityHandler
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,7 +31,7 @@ class MultiAccountProfileManagerTest {
   private lateinit var widgetVisibilityHandler: WidgetVisibilityHandler
 
   @Mock
-  private lateinit var sceneEventsManager: SceneEventsManager
+  private lateinit var listsEventsManager: ListsEventsManager
 
   @Mock
   private lateinit var profileIdHolder: ProfileIdHolder
@@ -48,7 +48,7 @@ class MultiAccountProfileManagerTest {
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
-      sceneEventsManager,
+      listsEventsManager,
       suplaAppProvider
     )
   }
@@ -233,7 +233,7 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).allProfiles
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(profileIdHolder, dbHelper, sceneEventsManager, suplaAppProvider)
+    verifyZeroInteractions(profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
   }
 
   @Test
@@ -274,9 +274,9 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).setProfileActive(newActiveProfileId)
     verify(profileIdHolder).profileId = newActiveProfileId
     verify(dbHelper).loadUserIconsIntoCache()
-    verify(sceneEventsManager).cleanup()
+    verify(listsEventsManager).cleanup()
     verify(suplaAppProvider).provide()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, sceneEventsManager, suplaAppProvider)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)
@@ -320,9 +320,9 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).setProfileActive(activeProfileId)
     verify(profileIdHolder).profileId = activeProfileId
     verify(dbHelper).loadUserIconsIntoCache()
-    verify(sceneEventsManager).cleanup()
+    verify(listsEventsManager).cleanup()
     verify(suplaAppProvider).provide()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, sceneEventsManager, suplaAppProvider)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)
