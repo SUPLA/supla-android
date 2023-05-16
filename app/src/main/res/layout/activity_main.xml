@@ -50,6 +50,8 @@
         android:layout_centerInParent="true"
         android:indeterminate="true" />
     </RelativeLayout>
+
+    <include layout="@layout/inc_new_gesture_info" />
   </FrameLayout>
 
   <com.google.android.material.bottomappbar.BottomAppBar

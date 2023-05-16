@@ -50,6 +50,7 @@ public class Preferences {
   private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
 
   private static final String pref_any_account_registered = "pref_any_account_registered";
+  private static final String pref_new_gesture_info = "pref_new_gesture_info";
 
   private final Context _context;
   private final ProfileManager profileManager;
@@ -269,6 +270,14 @@ public class Preferences {
 
   public void setAnyAccountRegistered(boolean isRegistered) {
     _prefs.edit().putBoolean(pref_any_account_registered, isRegistered).apply();
+  }
+
+  public boolean isNewGestureInfoPresented() {
+    return _prefs.getBoolean(pref_new_gesture_info, false);
+  }
+
+  public void setNewGestureInfoPresented(boolean presented) {
+    _prefs.edit().putBoolean(pref_new_gesture_info, presented).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {
