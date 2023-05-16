@@ -1,4 +1,4 @@
-package org.supla.android.db
+package org.supla.android.db.entity
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -21,11 +21,12 @@ package org.supla.android.db
 import android.content.ContentValues
 import android.database.Cursor
 import org.supla.android.R
+import org.supla.android.db.DbItem
+import org.supla.android.db.SuplaContract
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
-import java.text.DateFormat
 import java.util.Date
 
 data class Scene(
@@ -56,11 +57,11 @@ data class Scene(
 
     var idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     if (!cur.isNull(idx)) {
-      startedAt = dateFromString(cur.getString(idx))
+      startedAt = dateFromTimestamp(cur.getLong(idx))
     }
     idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE)
     if (!cur.isNull(idx)) {
-      estimatedEndDate = dateFromString(cur.getString(idx))
+      estimatedEndDate = dateFromTimestamp(cur.getLong(idx))
     }
     idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID)
     if (!cur.isNull(idx)) {
@@ -86,15 +87,12 @@ data class Scene(
     values.put(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION, caption)
     values.put(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER, sortOrder)
     if (startedAt != null) {
-      values.put(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT, dateToString(startedAt!!))
+      values.put(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT, dateToTimestamp(startedAt!!))
     } else {
       values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
     if (estimatedEndDate != null) {
-      values.put(
-        SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE,
-        dateToString(estimatedEndDate!!)
-      )
+      values.put(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE, dateToTimestamp(estimatedEndDate!!))
     } else {
       values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
     }
@@ -193,13 +191,11 @@ data class Scene(
     return getImageId(false)
   }
 
-  private fun dateFromString(str: String): Date {
-    val fmt = DateFormat.getDateTimeInstance()
-    return fmt.parse(str)!!
+  private fun dateFromTimestamp(timestamp: Long): Date {
+    return Date(timestamp)
   }
 
-  private fun dateToString(date: Date): String {
-    val fmt = DateFormat.getDateTimeInstance()
-    return fmt.format(date)
+  private fun dateToTimestamp(date: Date): Long {
+    return date.time
   }
 }

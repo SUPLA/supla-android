@@ -786,7 +786,9 @@ public class ChannelDetailEM extends DetailLayout
       demm.setDelegate(null);
     }
 
-    chartHelper.persistSpinners(getChannelBase().getFunc(), emSpinnerMaster, emSpinnerSlave);
+    if (emSpinnerMaster.getAdapter() != null) {
+      chartHelper.persistSpinners(getChannelBase().getFunc(), emSpinnerMaster, emSpinnerSlave);
+    }
   }
 
   @Override

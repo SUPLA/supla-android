@@ -32,7 +32,7 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
@@ -67,8 +67,11 @@ class SingleWidget : WidgetProviderBase() {
       views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
 
       if (configuration.itemType == ItemType.SCENE) {
-        val scene = Scene(profileId = configuration.profileId, altIcon = configuration.altIcon,
-          userIcon = configuration.userIcon)
+        val scene = Scene(
+          profileId = configuration.profileId,
+          altIcon = configuration.altIcon,
+          userIcon = configuration.userIcon
+        )
         views.setImageViewBitmap(
           R.id.single_widget_button,
           ImageCache.getBitmap(context, scene.getImageId(false))
@@ -83,7 +86,6 @@ class SingleWidget : WidgetProviderBase() {
           views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
         }
         views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
-
       } else {
         setChannelIcons(configuration, views, context)
       }
@@ -124,7 +126,7 @@ class SingleWidget : WidgetProviderBase() {
   private fun setChannelIcons(
     configuration: WidgetConfiguration,
     views: RemoteViews,
-    context: Context,
+    context: Context
   ) {
     val channel = Channel()
     channel.profileId = configuration.profileId

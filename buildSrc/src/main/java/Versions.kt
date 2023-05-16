@@ -5,7 +5,7 @@ object Versions {
     const val MinSdk = 21
     const val BuildTools = "30.0.3"
 
-    const val Kotlin = "1.5.20"
+    const val Kotlin = "1.6.20"
     const val Hilt = "2.40.1"
     const val Multidex = "2.0.1"
     const val AndroidChart = "v3.0.3"

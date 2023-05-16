@@ -27,7 +27,7 @@ import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager

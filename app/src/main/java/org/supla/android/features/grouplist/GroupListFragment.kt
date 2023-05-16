@@ -28,6 +28,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentGroupListBinding
+import org.supla.android.extensions.toPx
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
@@ -40,6 +41,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
 
   private val viewModel: GroupListViewModel by viewModels()
   private val binding by viewBinding(FragmentGroupListBinding::bind)
+  private var scrollDownOnReload = false
 
   @Inject
   lateinit var adapter: GroupsAdapter
@@ -84,6 +86,11 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   override fun handleViewState(state: GroupListViewState) {
     if (state.groups != null) {
       adapter.setItems(state.groups)
+
+      if (scrollDownOnReload) {
+        binding.groupsList.smoothScrollBy(0, 50.toPx())
+        scrollDownOnReload = false
+      }
     }
   }
 
@@ -98,7 +105,10 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     }
     adapter.swappedElementsCallback = { firstItem, secondItem -> viewModel.swapItems(firstItem, secondItem) }
     adapter.reloadCallback = { viewModel.loadGroups() }
-    adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
+    adapter.toggleLocationCallback = { location, scrollDown ->
+      viewModel.toggleLocationCollapsed(location)
+      scrollDownOnReload = scrollDown
+    }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 }

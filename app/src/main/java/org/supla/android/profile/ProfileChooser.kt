@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.cfg.ProfileItemViewModel
+import org.supla.android.databinding.LiProfileChooserBinding
 import org.supla.android.databinding.ProfileChooserBinding
-import org.supla.android.databinding.ProfileChooserListItemBinding
 import org.supla.android.db.AuthProfileItem
 
 class ProfileChooser(
@@ -71,7 +71,7 @@ class ProfileChooser(
     private val host: ProfileChooser
   ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class ItemViewHolder(val binding: ProfileChooserListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ItemViewHolder(val binding: LiProfileChooserBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(
       parent: ViewGroup,
@@ -79,7 +79,7 @@ class ProfileChooser(
     ): RecyclerView.ViewHolder {
       val type = SuplaApp.getApp().typefaceOpenSansRegular
       val inflater = LayoutInflater.from(parent.context)
-      val binding = ProfileChooserListItemBinding.inflate(
+      val binding = LiProfileChooserBinding.inflate(
         inflater,
         parent,
         false

@@ -463,4 +463,6 @@
  <string name="cancel">Abbrechen</string>
  <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
  <string translatable="false" name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
+
+ <string name="new_gesture_descirption">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
 </resources>

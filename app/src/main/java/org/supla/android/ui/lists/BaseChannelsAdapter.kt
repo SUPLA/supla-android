@@ -19,16 +19,13 @@ package org.supla.android.ui.lists
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View.GONE
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.databinding.ChannelListItemBinding
+import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
 import org.supla.android.features.channellist.ChannelsListCallback
 import org.supla.android.ui.layouts.ChannelLayout
 
@@ -64,8 +61,8 @@ abstract class BaseChannelsAdapter(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.channel_list_item -> {
-        val binding = ChannelListItemBinding.inflate(inflater, parent, false)
+      R.layout.li_channel_item -> {
+        val binding = LiChannelItemBinding.inflate(inflater, parent, false)
         val holder = ChannelListItemViewHolder(binding)
         holder
       }
@@ -83,30 +80,15 @@ abstract class BaseChannelsAdapter(
         vh.binding.channelLayout.setOnClickListener { listItemClickCallback(channelBase.remoteId) }
         vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(channelBase.remoteId) }
       }
-      is LocationListItemViewHolder -> {
-        val location = (items[pos] as ListItem.LocationItem).location
-        vh.binding.container.setOnClickListener {
-          callback.closeWhenSwiped(withAnimation = false)
-          toggleLocationCallback(location)
-        }
-        vh.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
-        vh.binding.tvSectionCaption.text = location.caption
-        vh.binding.ivSectionCollapsed.visibility = if (isLocationCollapsed(location)) {
-          VISIBLE
-        } else {
-          GONE
-        }
-      }
+      else -> super.onBindViewHolder(vh, pos)
     }
   }
 
-  protected abstract fun isLocationCollapsed(location: Location): Boolean
-
   override fun getItemViewType(pos: Int): Int {
     return if (items[pos] is ListItem.ChannelItem) {
-      R.layout.channel_list_item
+      R.layout.li_channel_item
     } else {
-      R.layout.location_list_item
+      R.layout.li_location_item
     }
   }
 
@@ -122,6 +104,6 @@ abstract class BaseChannelsAdapter(
     return true
   }
 
-  inner class ChannelListItemViewHolder(val binding: ChannelListItemBinding) :
+  inner class ChannelListItemViewHolder(val binding: LiChannelItemBinding) :
     ViewHolder(binding.root)
 }

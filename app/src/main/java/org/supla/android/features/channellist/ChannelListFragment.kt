@@ -12,6 +12,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
+import org.supla.android.extensions.toPx
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
@@ -27,6 +28,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   private val viewModel: ChannelListViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
   private lateinit var statePopup: ChannelStatePopup
+  private var scrollDownOnReload = false
 
   @Inject
   lateinit var adapter: ChannelsAdapter
@@ -72,6 +74,11 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   override fun handleViewState(state: ChannelListViewState) {
     if (state.channels != null) {
       adapter.setItems(state.channels)
+
+      if (scrollDownOnReload) {
+        binding.channelsList.smoothScrollBy(0, 50.toPx())
+        scrollDownOnReload = false
+      }
     }
   }
 
@@ -86,7 +93,10 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
     adapter.swappedElementsCallback = { first, second -> viewModel.swapItems(first, second) }
     adapter.reloadCallback = { viewModel.loadChannels() }
-    adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
+    adapter.toggleLocationCallback = { location, scrollDown ->
+      viewModel.toggleLocationCollapsed(location)
+      scrollDownOnReload = scrollDown
+    }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }

@@ -528,4 +528,6 @@
     <string translatable="false" name="form_profile_removal_failure">Removal of your account failed, please try again</string>
     <string translatable="false" name="general_failure">Action was not performed successfully</string>
     <string translatable="false" name="push_notification_limit_exceeded">The push notification limit of %1$s per hour has been exceeded.</string>
+
+    <string translatable="false" name="new_gesture_descirption">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
 </resources>

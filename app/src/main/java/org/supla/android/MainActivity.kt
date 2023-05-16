@@ -10,7 +10,9 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
@@ -69,6 +71,11 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   private val toolbar: Toolbar by lazy { findViewById(R.id.nav_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
+  private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
+  private val newGestureInfoClose: AppCompatImageView by lazy { findViewById(R.id.new_gesture_info_close) }
+
+  private val rootDestinations = setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment)
+  private var lastDestinationId: Int? = null
 
   private val menuListener: Openable = object : Openable {
 
@@ -77,6 +84,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     override fun close() = setMenuVisible(false)
 
     override fun open() {
+      newGestureInfo.visibility = View.GONE
+
       if (isOpen) {
         setMenuVisible(false)
       } else {
@@ -88,12 +97,22 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   @Inject
   lateinit var navigator: MainNavigator
 
+  @Inject
+  lateinit var preferences: Preferences
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     legacySetup()
     navigationSetup()
     toolbarSetup()
+
+    if (preferences.isNewGestureInfoPresented.not()) {
+      newGestureInfo.bringToFront()
+      newGestureInfo.visibility = View.VISIBLE
+      newGestureInfoClose.setOnClickListener { newGestureInfo.visibility = View.GONE }
+      preferences.isNewGestureInfoPresented = true
+    }
 
     menuLayout.setOnClickListener(this::handleMenuClicks)
   }
@@ -134,6 +153,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       )
     )
     bottomNavigation.setOnItemSelectedListener {
+      newGestureInfo.visibility = View.GONE
       return@setOnItemSelectedListener it.onNavDestinationSelected(navController) || super.onOptionsItemSelected(it)
     }
   }
@@ -142,6 +162,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     toolbar.inflateMenu(R.menu.toolbar)
     toolbar.menu.findItem(R.id.toolbar_accounts).isVisible = false
     toolbar.setOnMenuItemClickListener { item ->
+      newGestureInfo.visibility = View.GONE
+
       if (item.itemId == R.id.toolbar_accounts) {
         showProfileSelector()
         return@setOnMenuItemClickListener true
@@ -152,19 +174,18 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   }
 
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
+    lastDestinationId = destination.id
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
+
     if (destination.id == R.id.channel_list_fragment) {
       bottomNavigation.selectedItemId = R.id.channel_list_fragment
     }
 
     val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
     if (destination.id == R.id.legacy_detail_fragment) {
-      setAccountItemVisible(false)
-
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
       animateFadeOut(bottomBar, barHeight)
     } else {
-      setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
-
       animateFadeIn(bottomBar) {
         findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, barHeight.toInt())
       }
@@ -173,7 +194,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   override fun onResume() {
     super.onResume()
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1)
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return

@@ -44,7 +44,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
-import org.supla.android.db.Scene;
+import org.supla.android.db.entity.Scene;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;

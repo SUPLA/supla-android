@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/channel_section_height"
+    android:background="@color/channel_section_cell"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/tvSectionCaption"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:ellipsize="end"
+      android:gravity="center_vertical"
+      android:maxLines="1"
+      android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
+      android:textColor="@color/channel_section_text"
+      app:layout_constraintEnd_toStartOf="@+id/ivSectionCollapsed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+      android:id="@+id/ivSectionCollapsed"
+      android:layout_width="25dp"
+      android:layout_height="15dp"
+      android:layout_marginStart="27dp"
+      android:layout_marginEnd="27dp"
+      android:src="@drawable/collapsed"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+      android:id="@+id/view2"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/channel_separetor"
+      app:layout_constraintBottom_toBottomOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

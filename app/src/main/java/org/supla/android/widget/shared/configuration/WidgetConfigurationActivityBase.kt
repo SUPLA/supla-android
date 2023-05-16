@@ -30,7 +30,7 @@ import org.supla.android.Trace
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
-import org.supla.android.db.Scene
+import org.supla.android.db.entity.Scene
 
 abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
