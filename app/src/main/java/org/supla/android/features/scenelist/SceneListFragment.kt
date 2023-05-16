@@ -27,6 +27,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentSceneListBinding
+import org.supla.android.extensions.toPx
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,6 +35,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
 
   private val viewModel: SceneListViewModel by viewModels()
   private val binding by viewBinding(FragmentSceneListBinding::bind)
+  private var scrollDownOnReload = false
 
   @Inject
   lateinit var adapter: ScenesAdapter
@@ -64,6 +66,11 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   override fun handleViewState(state: SceneListViewState) {
     if (state.scenes != null) {
       adapter.setItems(state.scenes)
+
+      if (scrollDownOnReload) {
+        binding.scenesList.smoothScrollBy(0, 50.toPx())
+        scrollDownOnReload = false
+      }
     }
   }
 
@@ -78,6 +85,9 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
     }
     adapter.movementFinishedCallback = { viewModel.onSceneOrderUpdate(it) }
     adapter.reloadCallback = { viewModel.loadScenes() }
-    adapter.toggleLocationCallback = { viewModel.toggleLocationCollapsed(it) }
+    adapter.toggleLocationCallback = { location, scrollDown ->
+      viewModel.toggleLocationCollapsed(location)
+      scrollDownOnReload = scrollDown
+    }
   }
 }

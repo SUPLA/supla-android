@@ -85,6 +85,11 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xcontext-receivers")
+    }
 }
 
 repositories {

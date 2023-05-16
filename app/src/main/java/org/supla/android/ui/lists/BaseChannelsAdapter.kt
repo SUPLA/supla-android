@@ -18,6 +18,7 @@ package org.supla.android.ui.lists
  */
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
@@ -83,24 +84,9 @@ abstract class BaseChannelsAdapter(
         vh.binding.channelLayout.setOnClickListener { listItemClickCallback(channelBase.remoteId) }
         vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(channelBase.remoteId) }
       }
-      is LocationListItemViewHolder -> {
-        val location = (items[pos] as ListItem.LocationItem).location
-        vh.binding.container.setOnClickListener {
-          callback.closeWhenSwiped(withAnimation = false)
-          toggleLocationCallback(location)
-        }
-        vh.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
-        vh.binding.tvSectionCaption.text = location.caption
-        vh.binding.ivSectionCollapsed.visibility = if (isLocationCollapsed(location)) {
-          VISIBLE
-        } else {
-          GONE
-        }
-      }
+      else -> super.onBindViewHolder(vh, pos)
     }
   }
-
-  protected abstract fun isLocationCollapsed(location: Location): Boolean
 
   override fun getItemViewType(pos: Int): Int {
     return if (items[pos] is ListItem.ChannelItem) {

@@ -1,7 +1,9 @@
 package org.supla.android.ui.lists
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +26,7 @@ abstract class BaseListAdapter<T, D>(
   var movementFinishedCallback: (items: List<D>) -> Unit = { }
   var swappedElementsCallback: (firstItem: D?, secondItem: D?) -> Unit = { _, _ -> }
   var reloadCallback: () -> Unit = { }
-  var toggleLocationCallback: (location: Location) -> Unit = { }
+  var toggleLocationCallback: (location: Location, scrollDown: Boolean) -> Unit = { _, _ -> }
 
   var leftButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var rightButtonClickCallback: (id: Int) -> Unit = { _ -> }
@@ -54,6 +56,27 @@ abstract class BaseListAdapter<T, D>(
       else -> throw IllegalArgumentException("unsupported view type $viewType")
     }
   }
+
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    when (holder) {
+      is LocationListItemViewHolder -> {
+        val location = (items[position] as ListItem.LocationItem).location
+        holder.binding.container.setOnClickListener {
+          callback.closeWhenSwiped(withAnimation = false)
+          toggleLocationCallback(location, it.isLocationOnBottom())
+        }
+        holder.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
+        holder.binding.tvSectionCaption.text = location.caption
+        holder.binding.ivSectionCollapsed.visibility = if (isLocationCollapsed(location)) {
+          RecyclerView.VISIBLE
+        } else {
+          View.GONE
+        }
+      }
+    }
+  }
+
+  protected abstract fun isLocationCollapsed(location: Location): Boolean
 
   fun setItems(items: List<T>) {
     this.items.clear()
@@ -98,7 +121,7 @@ abstract class BaseListAdapter<T, D>(
     movedStartPosition = null
   }
 
-  protected fun changeLocationCaption(locationId: Int): Boolean {
+  private fun changeLocationCaption(locationId: Int): Boolean {
     SuplaApp.Vibrate(context)
     val editor = LocationCaptionEditor(context)
     editor.captionChangedListener = reloadCallback
@@ -109,4 +132,9 @@ abstract class BaseListAdapter<T, D>(
 
   class LocationListItemViewHolder(val binding: LiLocationItemBinding) :
     RecyclerView.ViewHolder(binding.root)
+
+  private fun View.isLocationOnBottom(): Boolean {
+    val parentAsGroup = parent as? ViewGroup ?: return false
+    return y + height >= parentAsGroup.height
+  }
 }

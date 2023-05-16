@@ -28,11 +28,13 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.LiSceneItemBinding
+import org.supla.android.db.Location
 import org.supla.android.db.entity.Scene
 import org.supla.android.ui.dialogs.SceneCaptionEditor
 import org.supla.android.ui.layouts.SceneLayout
 import org.supla.android.ui.lists.BaseListAdapter
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
 
 class ScenesAdapter @Inject constructor(
@@ -82,22 +84,11 @@ class ScenesAdapter @Inject constructor(
         vh.binding.sceneLayout.setScene(scene)
         vh.binding.sceneLayout.setOnLongClickListener { onLongPress(vh) }
       }
-      is LocationListItemViewHolder -> {
-        val location = (items[pos] as ListItem.LocationItem).location
-        vh.binding.container.setOnClickListener {
-          callback.closeWhenSwiped(withAnimation = false)
-          toggleLocationCallback(location)
-        }
-        vh.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
-        vh.binding.tvSectionCaption.text = location.caption
-        vh.binding.ivSectionCollapsed.visibility = if ((location.collapsed and 0x8) > 0) {
-          VISIBLE
-        } else {
-          GONE
-        }
-      }
+      else -> super.onBindViewHolder(vh, pos)
     }
   }
+
+  override fun isLocationCollapsed(location: Location) = ((location.collapsed and CollapsedFlag.SCENE.value) > 0)
 
   override fun getItemViewType(pos: Int): Int {
     return if (items[pos] is ListItem.SceneItem) {
