@@ -27,31 +27,31 @@ import androidx.annotation.LayoutRes
 import org.supla.android.R
 
 abstract class WidgetConfigurationSpinnerBase<T>(
-        context: Context,
-        objects: MutableList<T>
+  context: Context,
+  objects: MutableList<T>
 ) : ArrayAdapter<T>(context, R.layout.li_widget_spiner, objects) {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createItemView(position, convertView, R.layout.li_widget_spinner_display_item)
-    }
+  override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    return createItemView(position, convertView, R.layout.li_widget_spinner_display_item)
+  }
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createItemView(position, convertView, R.layout.li_widget_spiner)
-    }
+  override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+    return createItemView(position, convertView, R.layout.li_widget_spiner)
+  }
 
-    abstract fun getItemText(item: T): String
+  abstract fun getItemText(item: T): String
 
-    fun postItems(channels: List<T>) {
-        clear()
-        addAll(channels)
-        notifyDataSetChanged()
-    }
+  fun postItems(channels: List<T>) {
+    clear()
+    addAll(channels)
+    notifyDataSetChanged()
+  }
 
-    private fun createItemView(position: Int, convertView: View?, @LayoutRes layout: Int): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(layout, null)
-        val item = getItem(position) ?: return view
+  private fun createItemView(position: Int, convertView: View?, @LayoutRes layout: Int): View {
+    val view = convertView ?: LayoutInflater.from(context).inflate(layout, null)
+    val item = getItem(position) ?: return view
 
-        view.findViewById<TextView>(R.id.spinner_text)?.text = getItemText(item)
-        return view
-    }
+    view.findViewById<TextView>(R.id.spinner_text)?.text = getItemText(item)
+    return view
+  }
 }

@@ -81,7 +81,6 @@ class ProfilesAdapter(private val profilesVM: ProfilesViewModel) :
     notifyDataSetChanged()
   }
 
-
   inner class ItemViewHolder(val binding: LiProfileItemBinding) :
     RecyclerView.ViewHolder(binding.root)
 

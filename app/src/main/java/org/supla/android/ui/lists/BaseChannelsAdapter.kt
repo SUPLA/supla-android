@@ -18,18 +18,14 @@ package org.supla.android.ui.lists
  */
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View.GONE
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
 import org.supla.android.features.channellist.ChannelsListCallback
 import org.supla.android.ui.layouts.ChannelLayout
 

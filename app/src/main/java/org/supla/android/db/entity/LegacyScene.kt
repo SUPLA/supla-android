@@ -96,14 +96,8 @@ data class LegacyScene(
     throw IllegalStateException()
   }
 
-
   private fun dateFromString(str: String): Date {
     val fmt = DateFormat.getDateTimeInstance()
     return fmt.parse(str)!!
-  }
-
-  private fun dateToString(date: Date): String {
-    val fmt = DateFormat.getDateTimeInstance()
-    return fmt.format(date)
   }
 }

@@ -21,9 +21,9 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Trace
-import org.supla.android.db.entity.Scene
 import org.supla.android.db.SuplaContract
 import org.supla.android.db.entity.LegacyScene
+import org.supla.android.db.entity.Scene
 import org.supla.android.extensions.TAG
 import java.util.ArrayList
 

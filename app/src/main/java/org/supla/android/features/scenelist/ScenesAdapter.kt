@@ -19,9 +19,7 @@ package org.supla.android.features.scenelist
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View.GONE
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
