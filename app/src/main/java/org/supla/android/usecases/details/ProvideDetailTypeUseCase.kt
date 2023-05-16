@@ -15,42 +15,44 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SuplaConst.SUPLA_CHANNELFNC_DIMMER,
     SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
     SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ->
-      DetailType.RGBW
+      LegacyDetailType.RGBW
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-      DetailType.RS
+      LegacyDetailType.RS
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
       (channelBase as? Channel)?.run {
         when (value?.subValueType) {
-          SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort() -> DetailType.IC
-          SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> DetailType.EM
-          else -> null
+          SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort() -> LegacyDetailType.IC
+          SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> LegacyDetailType.EM
+          else -> StandardDetailType.SWITCH
         }
       }
     }
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
-      DetailType.EM
+      LegacyDetailType.EM
     SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER ->
-      DetailType.IC
+      LegacyDetailType.IC
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
-      DetailType.TEMPERATURE
+      LegacyDetailType.TEMPERATURE
     SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-      DetailType.TEMPERATURE_HUMIDITY
+      LegacyDetailType.TEMPERATURE_HUMIDITY
     SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
-      DetailType.THERMOSTAT_HP
+      LegacyDetailType.THERMOSTAT_HP
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
-      DetailType.DIGIGLASS
+      LegacyDetailType.DIGIGLASS
     else -> null
   }
 }
 
-enum class DetailType : Serializable {
+sealed interface DetailType: Serializable
+
+enum class LegacyDetailType : DetailType {
   RGBW,
   RS,
   IC,
@@ -59,4 +61,8 @@ enum class DetailType : Serializable {
   TEMPERATURE_HUMIDITY,
   THERMOSTAT_HP,
   DIGIGLASS
+}
+
+enum class StandardDetailType: DetailType {
+  SWITCH
 }

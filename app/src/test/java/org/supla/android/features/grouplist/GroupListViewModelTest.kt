@@ -28,7 +28,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -245,8 +245,8 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.func } returns groupFunction
     every { group.groupId } returns groupId
 
-    val detailType = DetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(group)).thenReturn(detailType)
+    val legacyDetailType = LegacyDetailType.TEMPERATURE
+    whenever(provideDetailTypeUseCase(group)).thenReturn(legacyDetailType)
 
     // when
     viewModel.onListItemClick(group)
@@ -254,7 +254,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenLegacyDetails(groupId, detailType)
+      GroupListViewEvent.OpenLegacyDetails(groupId, legacyDetailType)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

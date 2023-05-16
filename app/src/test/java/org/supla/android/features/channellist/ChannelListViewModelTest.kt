@@ -28,7 +28,7 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -269,8 +269,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
 
-    val detailType = DetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
+    val legacyDetailType = LegacyDetailType.TEMPERATURE
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(legacyDetailType)
 
     // when
     viewModel.onListItemClick(channel)
@@ -278,7 +278,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
+      ChannelListViewEvent.OpenLegacyDetails(channelId, legacyDetailType)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

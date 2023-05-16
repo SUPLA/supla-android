@@ -32,4 +32,8 @@
     android:id="@+id/location_ordering_fragment"
     android:name="org.supla.android.cfg.LocationOrderingFragment"
     android:label="@string/location_ordering" />
+
+  <fragment
+    android:id="@+id/switch_detail_fragment"
+    android:name="org.supla.android.features.switchdetail.SwitchDetailFragment" />
 </navigation>

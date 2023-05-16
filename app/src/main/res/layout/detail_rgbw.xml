@@ -3,7 +3,7 @@
     android:id="@+id/rlRgbRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_rgb_gb">
+    android:background="@color/details_background">
 
     <RelativeLayout
         android:id="@+id/rlRgbwMain"

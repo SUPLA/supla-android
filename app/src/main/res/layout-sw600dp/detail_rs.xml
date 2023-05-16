@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_rs_bg">
+    android:background="@color/details_background">
 
     <LinearLayout
         android:layout_width="match_parent"

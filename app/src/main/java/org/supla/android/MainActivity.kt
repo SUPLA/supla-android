@@ -208,7 +208,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     }
 
     val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
-    if (destination.id == R.id.legacy_detail_fragment) {
+    if (rootDestinations.contains(destination.id).not()) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
       animateFadeOut(bottomBar, barHeight)
     } else {

@@ -16,8 +16,9 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -112,9 +113,10 @@ class ChannelListViewModel @Inject constructor(
       return
     }
 
-    val detailType = provideDetailTypeUseCase(channel)
-    if (detailType != null) {
-      sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
+    when (val detailType = provideDetailTypeUseCase(channel)) {
+      StandardDetailType.SWITCH -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
+      else -> {} // no action
     }
   }
 
@@ -142,7 +144,8 @@ class ChannelListViewModel @Inject constructor(
 sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
-  data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : ChannelListViewEvent()
+  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
+  data class OpenSwitchDetails(val remoteId: Int) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
   data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()

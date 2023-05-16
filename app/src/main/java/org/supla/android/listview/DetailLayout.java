@@ -56,7 +56,6 @@ public abstract class DetailLayout extends FrameLayout {
     init();
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public DetailLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init();

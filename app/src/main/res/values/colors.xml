@@ -14,6 +14,8 @@
     <color name="supla_text_light">#000000</color>
     
     <color name="dialog_scrim">#80363738</color>
+
+    <color name="details_background">#ffededed</color>
     <!-- new color definitions end here -->
 
     <color name="splash_bg">#12a71e</color>
@@ -21,8 +23,6 @@
     <color name="channel_btn_pressed">#5ae966</color>
     <color name="channel_cell">#fafbfc</color>
     <color name="channel_section_cell">#edfbee</color>
-    <color name="detail_rgb_gb">#ffededed</color>
-    <color name="detail_rs_bg">#ffededed</color>
     <color name="detail_rs_marker">#12a71e</color>
     <color name="activity_bg">#fafbfc</color>
     <color name="activity_status_bg_err">#fee700</color>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/details_background">
+
+    <ImageView
+      android:id="@+id/switch_detail_icon"
+      android:layout_width="120dp"
+      android:layout_height="120dp"
+      android:scaleType="fitCenter"
+      app:layout_constraintBottom_toTopOf="@+id/switch_detail_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/ledon" />
+
+    <ImageButton
+      android:id="@+id/switch_detail_button"
+      android:layout_width="240dp"
+      android:layout_height="240dp"
+      android:layout_marginTop="16dp"
+      android:background="@android:color/transparent"
+      android:scaleType="fitCenter"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/rgbwpoweron" />
+
+    <ImageButton
+      android:id="@+id/switch_detail_info_button"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginBottom="16dp"
+      android:background="@android:color/transparent"
+      android:scaleType="fitCenter"
+      android:src="@drawable/channelstateinfo"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

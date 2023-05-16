@@ -32,7 +32,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -128,9 +128,10 @@ class GroupListViewModel @Inject constructor(
       return
     }
 
-    val detailType = provideDetailTypeUseCase(group)
-    if (detailType != null) {
-      sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+    when (val detailType = provideDetailTypeUseCase(group)) {
+      //StandardDetailType.SWITCH -> sendEvent(GroupListViewEvent.OpenSwitchDetails(channel.remoteId))
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+      else -> {} // no action
     }
   }
 }
@@ -138,7 +139,7 @@ class GroupListViewModel @Inject constructor(
 sealed class GroupListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
-  data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : GroupListViewEvent()
+  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
   data class UpdateGroup(val channelGroup: ChannelGroup) : GroupListViewEvent()
