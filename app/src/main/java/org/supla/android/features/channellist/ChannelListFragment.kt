@@ -12,6 +12,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
+import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.lib.SuplaChannelState
@@ -98,7 +99,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
-    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it as Channel) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {

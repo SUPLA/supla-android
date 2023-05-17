@@ -275,9 +275,6 @@ public class ChannelDetailEM extends DetailLayout
   }
 
   private void showChart(boolean show) {
-
-    int bg;
-
     if (show) {
       llDetails.setVisibility(GONE);
       boolean wasVisible = chartHelper.isVisible();
@@ -359,7 +356,7 @@ public class ChannelDetailEM extends DetailLayout
     } else if (energy >= 10000) {
       precision = 2;
     }
-    return format("%." + Integer.toString(precision) + "f kWh", energy);
+    return format("%." + precision + "f kWh", energy);
   }
 
   private void displayMeasurementDetail(long vars, int var1, int var2, TextView tv1, TextView tv2) {
@@ -452,10 +449,7 @@ public class ChannelDetailEM extends DetailLayout
     }
   }
 
-  public void channelDataToViews() {
-
-    Channel channel = (Channel) getChannelFromDatabase();
-
+  public void channelDataToViews(Channel channel) {
     if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
       emImgIcon.setBackgroundColor(Color.TRANSPARENT);
       emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
@@ -647,7 +641,7 @@ public class ChannelDetailEM extends DetailLayout
     mBalanceAvailable = false;
     emImgIcon.setTag(-1);
     showChart(ivGraph.getTag() != null);
-    channelDataToViews();
+    channelDataToViews((Channel) channel);
   }
 
   @Override
@@ -657,7 +651,7 @@ public class ChannelDetailEM extends DetailLayout
 
   @Override
   public void OnChannelDataChanged() {
-    channelDataToViews();
+    channelDataToViews((Channel) getChannelFromDatabase());
   }
 
   private void setBtnBackground(Button btn, int i) {
@@ -697,7 +691,7 @@ public class ChannelDetailEM extends DetailLayout
       setProductionDataSource(!chartHelper.isProductionDataSource(), true);
     } else if (v instanceof Button && v.getTag() instanceof Integer) {
       phase = (Integer) v.getTag();
-      channelDataToViews();
+      channelDataToViews((Channel) getChannelFromDatabase());
     }
   }
 

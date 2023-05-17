@@ -393,34 +393,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     UpdateRightBtn();
   }
 
-  public void hideButtonImmediately() {
-    if (Slided() > 0) {
-      slide(content.getLeft() * -1);
-    }
-  }
-
-  public float percentOfSliding() {
-    if (content.getLeft() < 0)
-      return right_btn.getWidth() > 0 ? content.getLeft() * -100f / right_btn.getWidth() : 0;
-
-    return left_btn.getWidth() > 0 ? content.getLeft() * 100f / left_btn.getWidth() : 0;
-  }
-
-  public boolean Sliding() {
-    return Anim || percentOfSliding() > 0;
-  }
-
-  public int Slided() {
-
-    if (Anim) return 10;
-
-    if (content.getLeft() > 0) return content.getLeft() == right_btn.getWidth() ? 100 : 1;
-
-    if (content.getLeft() < 0) return content.getLeft() == left_btn.getWidth() * -1 ? 200 : 2;
-
-    return 0;
-  }
-
   private void UpdateLeftBtn() {
 
     float pr = content.getLeft() * 100 / left_btn.getWidth();
@@ -573,14 +545,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
       AnimateToRestingPosition(true);
       LeftButtonEnabled = leftButtonEnabled;
     }
-  }
-
-  public boolean getDetailSliderEnabled() {
-    return false;
-  }
-
-  public boolean getButtonsEnabled() {
-    return LeftButtonEnabled || RightButtonEnabled;
   }
 
   public String getCaption() {
@@ -792,7 +756,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
           listener.onCaptionLongPress(mRemoteId);
           return true;
         });
-    caption_text.setClickable(true);
+    caption_text.setClickable(false);
     caption_text.setLongClickable(true);
   }
 

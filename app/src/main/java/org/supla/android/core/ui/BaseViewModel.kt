@@ -56,7 +56,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun isLoadingEvent(): Flow<Boolean> = viewState
     .map { it.loading }
     .distinctUntilChanged()
-    .debounce(timeoutMillis = 500)
+    .debounce(timeoutMillis = 350)
 
   private val compositeDisposable = CompositeDisposable()
 

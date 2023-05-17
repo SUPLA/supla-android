@@ -26,7 +26,6 @@ class ChannelListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   listsEventsManager: ListsEventsManager,
@@ -88,13 +87,8 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channelId: Int) {
-    readChannelByRemoteIdUseCase(channelId)
-      .attach()
-      .subscribeBy(
-        onSuccess = { openDetailsByChannelFunction(it) }
-      )
-      .disposeBySelf()
+  fun onListItemClick(channel: Channel) {
+    openDetailsByChannelFunction(channel)
   }
 
   private fun openDetailsByChannelFunction(channel: Channel) {

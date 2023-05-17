@@ -35,7 +35,7 @@ abstract class BaseChannelsAdapter(
 ) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
-  var listItemClickCallback: (id: Int) -> Unit = { _ -> }
+  var listItemClickCallback: (channelBase: ChannelBase) -> Unit = { _ -> }
 
   override val callback = ChannelsListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }
@@ -77,7 +77,7 @@ abstract class BaseChannelsAdapter(
         vh.binding.channelLayout.setChannelData(channelBase)
         vh.binding.channelLayout.setChannelListener(this)
         vh.binding.channelLayout.setOnLongClickListener { onLongPress(vh) }
-        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(channelBase.remoteId) }
+        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(channelBase) }
         vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(channelBase.remoteId) }
       }
       else -> super.onBindViewHolder(vh, pos)

@@ -31,7 +31,10 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.channel.ActionException
+import org.supla.android.usecases.channel.ButtonType
+import org.supla.android.usecases.channel.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.details.DetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -43,7 +46,6 @@ class GroupListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
   private val groupActionUseCase: GroupActionUseCase,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   listsEventsManager: ListsEventsManager,
@@ -105,13 +107,8 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channelId: Int) {
-    readChannelGroupByRemoteIdUseCase(channelId)
-      .attach()
-      .subscribeBy(
-        onSuccess = { openDetailsByChannelFunction(it) }
-      )
-      .disposeBySelf()
+  fun onListItemClick(channelGroup: ChannelGroup) {
+    openDetailsByChannelFunction(channelGroup)
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroup) {

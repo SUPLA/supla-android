@@ -28,6 +28,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentGroupListBinding
+import org.supla.android.db.ChannelGroup
 import org.supla.android.extensions.toPx
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.navigator.MainNavigator
@@ -109,6 +110,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
-    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it as ChannelGroup) }
   }
 }

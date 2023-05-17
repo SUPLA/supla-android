@@ -46,9 +46,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var channelActionUseCase: ChannelActionUseCase
 
   @Mock
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
-
-  @Mock
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @Mock
@@ -68,7 +65,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelRepository,
       createProfileChannelsListUseCase,
       channelActionUseCase,
-      readChannelByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       listsEventsManager,
@@ -205,46 +201,34 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should not open details when item is offline`() {
     // given
-    val channelId = 123
     val channel = mockk<Channel>()
     every { channel.onLine } returns false
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   @Test
   fun `should open thermostat details for channel with thermostat function`() {
     // given
-    val channelId = 123
     val channel = mockk<Channel>()
     every { channel.onLine } returns true
     every { channel.func } returns SUPLA_CHANNELFNC_THERMOSTAT
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetails
     )
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   @Test
@@ -256,24 +240,19 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.onLine } returns true
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     val detailType = DetailType.TEMPERATURE
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
     )
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -285,19 +264,14 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.onLine } returns true
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -325,7 +299,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelRepository,
       createProfileChannelsListUseCase,
       channelActionUseCase,
-      readChannelByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase
     )
