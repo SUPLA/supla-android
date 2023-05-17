@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+id/detail_general"
+    android:icon="@drawable/ic_general"
+    android:title="@string/details_general" />
+
+  <item
+    android:id="@+id/detail_schedule"
+    android:icon="@drawable/ic_schedule"
+    android:title="@string/details_schedule" />
+
+  <item
+    android:id="@+id/detail_history"
+    android:icon="@drawable/ic_history"
+    android:title="@string/details_history" />
+
+  <item
+    android:id="@+id/detail_settings"
+    android:icon="@drawable/ic_settings"
+    android:title="@string/details_settings" />
+</menu>

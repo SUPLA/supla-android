@@ -37,8 +37,10 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
-import org.supla.android.ui.ChangeableToolbarTitle
 import org.supla.android.ui.LoadableContent
+import org.supla.android.ui.ToolbarItemsClickHandler
+import org.supla.android.ui.ToolbarItemsController
+import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.animations.animateFadeIn
 import org.supla.android.ui.animations.animateFadeOut
 import java.text.SimpleDateFormat
@@ -64,7 +66,7 @@ syays GNU General Public License for more details.
  */
 
 @AndroidEntryPoint
-class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableContent {
+class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableContent, ToolbarItemsController {
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var NotificationView: RelativeLayout? = null
@@ -78,6 +80,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   private val toolbar: Toolbar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
+  private val toolbarItemsClickHandlers = mutableListOf<ToolbarItemsClickHandler>()
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
   private val newGestureInfoClose: AppCompatImageView by lazy { findViewById(R.id.new_gesture_info_close) }
 
@@ -137,6 +140,14 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     menuLayout.setOnClickListener(this::handleMenuClicks)
   }
 
+  fun registerMenuItemClickHandler(handler: ToolbarItemsClickHandler) {
+    toolbarItemsClickHandlers.add(handler)
+  }
+
+  fun unregisterMenuItemClickHandler(handler: ToolbarItemsClickHandler) {
+    toolbarItemsClickHandlers.remove(handler)
+  }
+
   private fun legacySetup() {
     notif_handler = null
     notif_nrunnable = null
@@ -180,13 +191,17 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   private fun toolbarSetup() {
     toolbar.inflateMenu(R.menu.toolbar)
-    toolbar.menu.findItem(R.id.toolbar_accounts).isVisible = false
     toolbar.setOnMenuItemClickListener { item ->
       newGestureInfo.visibility = View.GONE
 
       if (item.itemId == R.id.toolbar_accounts) {
         showProfileSelector()
         return@setOnMenuItemClickListener true
+      }
+      for (handler in toolbarItemsClickHandlers) {
+        if (handler.onMenuItemClick(item)) {
+          return@setOnMenuItemClickListener true
+        }
       }
 
       false
@@ -210,7 +225,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
     if (rootDestinations.contains(destination.id).not()) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
-      animateFadeOut(bottomBar, barHeight)
+      animateFadeOut(bottomBar)
     } else {
       animateFadeIn(bottomBar) {
         findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, barHeight.toInt())
@@ -423,5 +438,9 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
     }
+  }
+
+  override fun setToolbarItemVisible(itemId: Int, visible: Boolean) {
+    toolbar.menu.findItem(itemId).isVisible = visible
   }
 }

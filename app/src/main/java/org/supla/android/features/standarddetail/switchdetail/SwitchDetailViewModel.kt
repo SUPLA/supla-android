@@ -1,4 +1,4 @@
-package org.supla.android.features.switchdetail
+package org.supla.android.features.standarddetail.switchdetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable

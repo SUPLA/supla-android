@@ -5,5 +5,13 @@
     android:id="@+id/toolbar_accounts"
     android:icon="@drawable/account"
     android:title="@string/edit_account"
+    android:visible="false"
+    app:showAsAction="always" />
+
+  <item
+    android:id="@+id/toolbar_info"
+    android:icon="@drawable/info"
+    android:title=""
+    android:visible="false"
     app:showAsAction="always" />
 </menu>

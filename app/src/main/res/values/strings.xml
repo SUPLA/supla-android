@@ -544,4 +544,9 @@
     <string translatable="false" name="settings_localization">Localization</string>
     <string translatable="false" name="settings_permissions">Permissions</string>
     <string translatable="false" name="turn_on">Turn on</string>
+
+    <string translatable="false" name="details_general">General</string>
+    <string translatable="false" name="details_schedule">Schedule</string>
+    <string translatable="false" name="details_history">History</string>
+    <string translatable="false" name="details_settings">Settings</string>
 </resources>

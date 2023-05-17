@@ -35,5 +35,5 @@
 
   <fragment
     android:id="@+id/switch_detail_fragment"
-    android:name="org.supla.android.features.switchdetail.SwitchDetailFragment" />
+    android:name="org.supla.android.features.standarddetail.StandardDetailFragment" />
 </navigation>

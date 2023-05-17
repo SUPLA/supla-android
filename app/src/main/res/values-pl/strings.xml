@@ -530,4 +530,9 @@
   <string name="settings_localization">Lokalizacja</string>
   <string name="settings_permissions">Uprawnienia</string>
   <string name="turn_on">Włącz</string>
+
+  <string translatable="false" name="details_general">Ogólne</string>
+  <string translatable="false" name="details_schedule">Harmonogram</string>
+  <string translatable="false" name="details_history">Historia</string>
+  <string translatable="false" name="details_settings">Ustawienia</string>
 </resources>

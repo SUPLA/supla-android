@@ -14,7 +14,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
-import org.supla.android.features.switchdetail.SwitchDetailFragment
+import org.supla.android.features.standarddetail.StandardDetailFragment
 import org.supla.android.model.ItemType
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
@@ -76,7 +76,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       is ChannelListViewEvent.UpdateChannel -> adapter.updateListItem(event.channel)
       is ChannelListViewEvent.OpenSwitchDetails -> navigator.navigateTo(
         R.id.switch_detail_fragment,
-        SwitchDetailFragment.bundle(event.remoteId, ItemType.CHANNEL)
+        StandardDetailFragment.bundle(event.remoteId, ItemType.CHANNEL)
       )
       else -> {}
     }
