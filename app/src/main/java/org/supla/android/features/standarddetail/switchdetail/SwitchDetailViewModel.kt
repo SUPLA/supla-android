@@ -25,8 +25,6 @@ class SwitchDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SwitchDetailViewState, SwitchDetailViewEvent>(SwitchDetailViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
   fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
       .attach()
@@ -41,10 +39,18 @@ class SwitchDetailViewModel @Inject constructor(
     ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
   }
 
-  fun toggle(remoteId: Int) {
+  fun turnOn(remoteId: Int) {
+    performAction(remoteId, ActionId.TURN_ON)
+  }
+
+  fun turnOff(remoteId: Int) {
+    performAction(remoteId, ActionId.TURN_OFF)
+  }
+
+  private fun performAction(remoteId: Int, actionId: ActionId) {
     Completable.fromRunnable {
       suplaClientProvider.provide()?.run {
-        executeAction(ActionParameters(ActionId.TOGGLE, SubjectType.CHANNEL, remoteId))
+        executeAction(ActionParameters(actionId, SubjectType.CHANNEL, remoteId))
       }
     }
       .attach()
@@ -58,5 +64,4 @@ sealed class SwitchDetailViewEvent : ViewEvent {
 
 data class SwitchDetailViewState(
   val channelBase: ChannelBase? = null,
-  override val loading: Boolean = false
-) : ViewState(loading)
+) : ViewState()

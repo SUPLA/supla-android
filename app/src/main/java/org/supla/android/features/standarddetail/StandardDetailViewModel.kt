@@ -21,11 +21,8 @@ import javax.inject.Inject
 class StandardDetailViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  private val suplaClientProvider: SuplaClientProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<StandardDetailViewState, StandardDetailViewEvent>(StandardDetailViewState(), schedulers) {
-
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
 
   fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
@@ -47,5 +44,4 @@ sealed class StandardDetailViewEvent : ViewEvent {
 
 data class StandardDetailViewState(
   val channelBase: ChannelBase? = null,
-  override val loading: Boolean = false
-) : ViewState(loading)
+) : ViewState()

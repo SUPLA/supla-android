@@ -3,20 +3,30 @@
   <item
     android:id="@+id/detail_general"
     android:icon="@drawable/ic_general"
-    android:title="@string/details_general" />
+    android:title="@string/details_general"
+    android:visible="false" />
 
   <item
     android:id="@+id/detail_schedule"
     android:icon="@drawable/ic_schedule"
-    android:title="@string/details_schedule" />
+    android:title="@string/details_schedule"
+    android:visible="false" />
+
+  <item
+    android:id="@+id/detail_timer"
+    android:icon="@drawable/ic_timer"
+    android:title="@string/details_timer"
+    android:visible="false" />
 
   <item
     android:id="@+id/detail_history"
     android:icon="@drawable/ic_history"
-    android:title="@string/details_history" />
+    android:title="@string/details_history"
+    android:visible="false" />
 
   <item
     android:id="@+id/detail_settings"
     android:icon="@drawable/ic_settings"
-    android:title="@string/details_settings" />
+    android:title="@string/details_settings"
+    android:visible="false" />
 </menu>

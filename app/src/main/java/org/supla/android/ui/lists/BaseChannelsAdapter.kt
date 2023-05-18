@@ -97,17 +97,6 @@ abstract class BaseChannelsAdapter(
     return position.toLong()
   }
 
-  /**
-   * Whole list is not refreshed for every channel/channel group change.
-   * So when item goes for ex. online or offline we need to update this item
-   * so the navigation to details works properly
-   */
-  fun updateListItem(channelBase: ChannelBase) {
-    items.filterIsInstance<ListItem.ChannelItem>()
-      .firstOrNull { item -> item.channelBase.remoteId == channelBase.remoteId }
-      ?.apply { this.channelBase = channelBase }
-  }
-
   private fun onLongPress(viewHolder: ViewHolder): Boolean {
     SuplaApp.Vibrate(context)
     callback.closeWhenSwiped()

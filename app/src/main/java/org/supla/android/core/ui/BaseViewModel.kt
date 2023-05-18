@@ -36,6 +36,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   private val schedulers: SuplaSchedulers
 ) : ViewModel() {
 
+  private val loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)
   private val viewState: MutableStateFlow<S> = MutableStateFlow(defaultState)
   fun getViewState(): StateFlow<S> = viewState
 
@@ -53,8 +54,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     }
 
   @FlowPreview
-  fun isLoadingEvent(): Flow<Boolean> = viewState
-    .map { it.loading }
+  fun isLoadingEvent(): Flow<Boolean> = loadingState
+    .map { it }
     .distinctUntilChanged()
     .debounce(timeoutMillis = 350)
 
@@ -76,16 +77,14 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return viewState.value
   }
 
-  protected abstract fun loadingState(isLoading: Boolean): S
-
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)
   }
 
   fun <T> Maybe<T>.attach(): Maybe<T> {
     return attachSilent()
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
+      .doOnSubscribe { loadingState.tryEmit(true) }
+      .doOnTerminate { loadingState.tryEmit(false) }
   }
 
   fun <T> Maybe<T>.attachSilent(): Maybe<T> {
@@ -102,8 +101,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Completable called at '$calledAt' failed with ${it.message}", it) }
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
+      .doOnSubscribe { loadingState.tryEmit(true) }
+      .doOnTerminate { loadingState.tryEmit(false) }
   }
 
   fun Completable.attachSilent(): Completable {
@@ -120,14 +119,14 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
+      .doOnSubscribe { loadingState.tryEmit(true) }
+      .doOnTerminate { loadingState.tryEmit(false) }
   }
 
   fun <T : Any> Observable<T>.attach(): Observable<T> {
     return attachSilent()
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
+      .doOnSubscribe { loadingState.tryEmit(true) }
+      .doOnTerminate { loadingState.tryEmit(false) }
   }
 
   fun <T : Any> Observable<T>.attachSilent(): Observable<T> {

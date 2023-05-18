@@ -12,13 +12,9 @@ class ScheduleDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
 }
 
 sealed class ScheduleDetailViewEvent : ViewEvent {
 }
 
-data class ScheduleDetailViewState(
-  override val loading: Boolean = false
-) : ViewState(loading)
+class ScheduleDetailViewState : ViewState()

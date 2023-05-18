@@ -22,9 +22,7 @@ data class CreateAccountViewState(
   //
   val profileNameVisible: Boolean = false,
   val deleteButtonVisible: Boolean = false,
-
-  override val loading: Boolean = false
-) : ViewState(loading) {
+) : ViewState() {
 
   fun toProfileItem() = AuthProfileItem(
     name = accountName,

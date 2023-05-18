@@ -26,9 +26,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
-import androidx.lifecycle.ViewModelProvider
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentLocationReorderBinding
 
 class LocationOrderingFragment : Fragment(), HasDefaultViewModelProviderFactory {
@@ -58,9 +56,6 @@ class LocationOrderingFragment : Fragment(), HasDefaultViewModelProviderFactory 
     )
     binding.locationList.adapter = adapter
 
-    return binding.root
-  }
-  override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-    return LocationReorderViewModelFactory(activity ?: SuplaApp.getApp())
-  }
+        return binding.root
+    }
 }

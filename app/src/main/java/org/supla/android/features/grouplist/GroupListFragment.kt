@@ -86,29 +86,16 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
         binding.groupsList.adapter = null
         binding.groupsList.adapter = adapter
       }
-      is GroupListViewEvent.UpdateGroup -> adapter.updateListItem(event.channelGroup)
       else -> {}
     }
   }
 
   override fun handleViewState(state: GroupListViewState) {
-    if (state.groups != null) {
-      adapter.setItems(state.groups)
+    adapter.setItems(state.groups)
 
-      if (scrollDownOnReload) {
-        binding.groupsList.smoothScrollBy(0, 50.toPx())
-        scrollDownOnReload = false
-      }
-    }
-  }
-
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelGroupId > 0) {
-          viewModel.onGroupUpdate(message.channelGroupId)
-        }
-      }
+    if (scrollDownOnReload) {
+      binding.groupsList.smoothScrollBy(0, 50.toPx())
+      scrollDownOnReload = false
     }
   }
 

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+      android:layout_width="0dp"
+      android:layout_height="40dp"
+      android:background="@drawable/bg_detail_timer_picker"
+      app:layout_constraintBottom_toBottomOf="@+id/details_timer_minute"
+      app:layout_constraintEnd_toEndOf="@+id/details_timer_second"
+      app:layout_constraintStart_toStartOf="@+id/details_timer_hour"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+    <org.supla.android.ui.views.SegmentedComponent
+      android:id="@+id/details_timer_action_switch"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      app:layout_constraintEnd_toStartOf="@+id/details_timer_action_text"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/details_timer_action_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:gravity="center"
+      android:text="for: "
+      android:textAppearance="@style/AppTheme.TextAppearance.Body1"
+      app:layout_constraintBottom_toBottomOf="@+id/details_timer_action_switch"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/details_timer_action_switch"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_action_switch"
+      tools:text="When timer ends, switch OFF item" />
+
+    <NumberPicker
+      android:id="@+id/details_timer_hour"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:theme="@style/SuplaNumberPicker"
+      app:layout_constraintEnd_toStartOf="@+id/details_timer_separator_hour"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+    <TextView
+      android:id="@+id/details_timer_separator_hour"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:text=":"
+      app:layout_constraintBottom_toBottomOf="@+id/details_timer_minute"
+      app:layout_constraintEnd_toStartOf="@+id/details_timer_minute"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+    <NumberPicker
+      android:id="@+id/details_timer_minute"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:theme="@style/SuplaNumberPicker"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/details_timer_action_text" />
+
+    <TextView
+      android:id="@+id/details_timer_separator_minute"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:text=":"
+      app:layout_constraintBottom_toBottomOf="@+id/details_timer_minute"
+      app:layout_constraintStart_toEndOf="@+id/details_timer_minute"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+    <NumberPicker
+      android:id="@+id/details_timer_second"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:theme="@style/SuplaNumberPicker"
+      app:layout_constraintStart_toEndOf="@+id/details_timer_separator_minute"
+      app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+    <org.supla.android.ui.views.DetailStartButton
+      android:id="@+id/details_timer_button"
+      android:layout_width="130dp"
+      android:layout_height="130dp"
+      android:layout_marginTop="24dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_timer_minute" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

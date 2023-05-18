@@ -73,7 +73,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
-      is ChannelListViewEvent.UpdateChannel -> adapter.updateListItem(event.channel)
       is ChannelListViewEvent.OpenSwitchDetails -> navigator.navigateTo(
         R.id.switch_detail_fragment,
         StandardDetailFragment.bundle(event.remoteId, ItemType.CHANNEL)
@@ -83,13 +82,11 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   override fun handleViewState(state: ChannelListViewState) {
-    if (state.channels != null) {
-      adapter.setItems(state.channels)
+    adapter.setItems(state.channels)
 
-      if (scrollDownOnReload) {
-        binding.channelsList.smoothScrollBy(0, 50.toPx())
-        scrollDownOnReload = false
-      }
+    if (scrollDownOnReload) {
+      binding.channelsList.smoothScrollBy(0, 50.toPx())
+      scrollDownOnReload = false
     }
   }
 
@@ -126,9 +123,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   private fun handleChannelChange(channelId: Int) {
-    if (channelId > 0) {
-      viewModel.onChannelUpdate(channelId)
-    }
     if (statePopup.isVisible && statePopup.remoteId == channelId) {
       statePopup.update(channelId)
     }

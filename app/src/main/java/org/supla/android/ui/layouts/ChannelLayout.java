@@ -24,6 +24,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.Date;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
@@ -47,18 +49,22 @@ import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem {
 
   @Inject ListsEventsManager eventsManager;
+  @Inject DurationTimerHelper durationTimerHelper;
 
   private int mRemoteId;
   private int mFunc;
@@ -100,6 +106,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   private Listener listener;
 
   private Disposable changesDisposable = null;
+
+  private TextView durationTimer;
+  private CountDownTimer countDownTimer;
 
   public interface Listener {
 
@@ -185,6 +194,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     left_onlineStatus = newOnlineStatus(context, false);
     left_onlineStatus.setId(ViewHelper.generateViewId());
     content.addView(left_onlineStatus);
+
+    durationTimer = durationTimerHelper.createTimerView(context);
+    content.addView(durationTimer);
+    durationTimer.setLayoutParams(
+        durationTimerHelper.getTimerViewLayoutParams(context, right_onlineStatus.getId(), right_onlineStatus.getId()));
+
 
     channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
@@ -761,6 +776,56 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         });
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
+
+    setupTimer(cbase);
+  }
+
+  private void setupTimer(ChannelBase cbase) {
+    if (!(cbase instanceof Channel)) {
+      return;
+    }
+
+    if (countDownTimer != null) {
+      countDownTimer.cancel();
+      durationTimer.setVisibility(GONE);
+    }
+
+    ChannelExtendedValue extendedValue = ((Channel) cbase).getExtendedValue();
+    if (extendedValue == null) {
+      return;
+    }
+    SuplaChannelExtendedValue suplaExtendedValue = extendedValue.getExtendedValue();
+    if (suplaExtendedValue == null) {
+      return;
+    }
+    SuplaTimerState timerState = suplaExtendedValue.TimerStateValue;
+    if (timerState == null) {
+      return;
+    }
+    Date endsAt = timerState.getCountdownEndsAt();
+    if (endsAt == null) {
+      return;
+    }
+    Date now = new Date();
+    if (endsAt.before(now)) {
+      return;
+    }
+    Long leftTime = endsAt.getTime() - now.getTime();
+
+    durationTimer.setVisibility(VISIBLE);
+    countDownTimer = new CountDownTimer(leftTime, 100) {
+      @Override
+      public void onTick(long millisUntilFinished) {
+        durationTimer.setText(durationTimerHelper.formatMillis(millisUntilFinished));
+      }
+
+      @Override
+      public void onFinish() {
+        countDownTimer = null;
+        durationTimer.setVisibility(GONE);
+      }
+    };
+    countDownTimer.start();
   }
 
   private class AnimParams {

@@ -19,8 +19,6 @@ class LegacyDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
   fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
       .attach()
@@ -40,4 +38,4 @@ sealed class LegacyDetailViewEvent : ViewEvent {
   data class LoadDetailView(val channelBase: ChannelBase) : LegacyDetailViewEvent()
 }
 
-data class LegacyDetailViewState(override val loading: Boolean = false) : ViewState(loading)
+class LegacyDetailViewState : ViewState()

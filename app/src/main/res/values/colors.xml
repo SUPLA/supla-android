@@ -16,6 +16,7 @@
     <color name="dialog_scrim">#80363738</color>
 
     <color name="details_background">#ffededed</color>
+    <color name="on_background">#000000</color>
     <!-- new color definitions end here -->
 
     <color name="splash_bg">#12a71e</color>

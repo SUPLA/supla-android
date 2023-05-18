@@ -11,6 +11,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaChannelValue
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
@@ -35,8 +36,6 @@ class ChannelListViewModel @Inject constructor(
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(preferences, ChannelListViewState(), schedulers) {
-
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, channels = null)
 
   override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
 
@@ -94,13 +93,26 @@ class ChannelListViewModel @Inject constructor(
     openDetailsByChannelFunction(channel)
   }
 
-  fun onChannelUpdate(remoteId: Int) {
-    findChannelByRemoteIdUseCase(remoteId = remoteId)
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { sendEvent(ChannelListViewEvent.UpdateChannel(it)) }
-      )
-      .disposeBySelf()
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onDataChanged -> updateChannel(message.channelId)
+    }
+  }
+
+  private fun updateChannel(remoteId: Int) {
+    if (remoteId > 0) {
+      findChannelByRemoteIdUseCase(remoteId = remoteId)
+        .attachSilent()
+        .subscribeBy(
+          onSuccess = { channel ->
+            currentState().channels
+              .filterIsInstance(ListItem.ChannelItem::class.java)
+              .first { it.channelBase.remoteId == channel.remoteId }
+              .channelBase = channel
+          }
+        )
+        .disposeBySelf()
+    }
   }
 
   private fun openDetailsByChannelFunction(channel: Channel) {
@@ -152,6 +164,5 @@ sealed class ChannelListViewEvent : ViewEvent {
 }
 
 data class ChannelListViewState(
-  override val loading: Boolean = false,
-  val channels: List<ListItem>? = null
-) : ViewState(loading)
+  val channels: List<ListItem> = emptyList()
+) : ViewState()

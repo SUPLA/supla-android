@@ -5,6 +5,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.standarddetail.scheduledetail.ScheduleDetailFragment
 import org.supla.android.features.standarddetail.switchdetail.SwitchDetailFragment
+import org.supla.android.features.standarddetail.timersdetail.TimersDetailFragment
 import org.supla.android.model.ItemType
 
 
@@ -20,10 +21,11 @@ class StandardDetailPagerAdapter(
 
   override fun createFragment(position: Int): Fragment = when (pages[position]) {
     DetailPage.GENERAL -> SwitchDetailFragment().apply { arguments = SwitchDetailFragment.bundle(remoteId, itemType) }
+    DetailPage.TIMER -> TimersDetailFragment().apply { arguments = TimersDetailFragment.bundle(remoteId) }
     else -> ScheduleDetailFragment()
   }
 }
 
 enum class DetailPage(val menuId: Int) {
-  GENERAL(R.id.detail_general), SCHEDULE(R.id.detail_schedule), HISTORY(R.id.detail_history), SETTINGS(R.id.detail_settings)
+  GENERAL(R.id.detail_general), TIMER(R.id.detail_timer), SCHEDULE(R.id.detail_schedule), HISTORY(R.id.detail_history), SETTINGS(R.id.detail_settings)
 }

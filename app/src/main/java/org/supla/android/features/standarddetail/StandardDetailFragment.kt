@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.children
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -31,7 +32,7 @@ class StandardDetailFragment : BaseFragment<StandardDetailViewState, StandardDet
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
 
-  private val menuItems by lazy { listOf(DetailPage.GENERAL, DetailPage.SCHEDULE, DetailPage.HISTORY, DetailPage.SETTINGS) }
+  private val menuItems by lazy { listOf(DetailPage.GENERAL, DetailPage.TIMER) }
 
   override fun getViewModel(): BaseViewModel<StandardDetailViewState, StandardDetailViewEvent> = viewModel
 
@@ -40,6 +41,9 @@ class StandardDetailFragment : BaseFragment<StandardDetailViewState, StandardDet
 
     statePopup = ChannelStatePopup(requireActivity())
     binding.detailBottomBar.inflateMenu(R.menu.detail_bottom)
+    for (item in binding.detailBottomBar.menu.children) {
+      item.isVisible = menuItems.map { it.menuId }.contains(item.itemId)
+    }
     binding.detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
     binding.detailViewPager.adapter = StandardDetailPagerAdapter(menuItems, remoteId, itemType, this)
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
@@ -84,12 +88,7 @@ class StandardDetailFragment : BaseFragment<StandardDetailViewState, StandardDet
   }
 
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
-    when (menuItem.itemId) {
-      R.id.detail_general -> binding.detailViewPager.currentItem = 0
-      R.id.detail_schedule -> binding.detailViewPager.currentItem = 1
-      R.id.detail_history -> binding.detailViewPager.currentItem = 2
-      R.id.detail_settings -> binding.detailViewPager.currentItem = 3
-    }
+    binding.detailViewPager.currentItem = menuItems.map { it.menuId }.indexOf(menuItem.itemId)
     return true
   }
 

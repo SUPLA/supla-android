@@ -2,6 +2,7 @@ package org.supla.android.features.standarddetail.switchdetail
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -9,8 +10,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.theme.SuplaLightColors
 import org.supla.android.databinding.FragmentSwitchDetailBinding
-import org.supla.android.db.Channel
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
 
@@ -30,7 +31,9 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.switchDetailButton.setOnClickListener { viewModel.toggle(remoteId) }
+    binding.root.setBackgroundColor(SuplaLightColors.Background.toArgb())
+    binding.switchDetailButtonOn.setOnClickListener { viewModel.turnOn(remoteId) }
+    binding.switchDetailButtonOff.setOnClickListener { viewModel.turnOff(remoteId) }
     viewModel.loadData(remoteId, itemType)
   }
 
@@ -41,13 +44,6 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
     if (state.channelBase != null) {
       setToolbarTitle(state.channelBase.getNotEmptyCaption(context))
       binding.switchDetailIcon.setImageResource(state.channelBase.imageIdx.id)
-
-      val channel = state.channelBase as? Channel ?: return
-      if (channel.value.hiValue()) {
-        binding.switchDetailButton.setImageResource(R.drawable.rgbwpoweroff)
-      } else {
-        binding.switchDetailButton.setImageResource(R.drawable.rgbwpoweron)
-      }
     }
   }
 

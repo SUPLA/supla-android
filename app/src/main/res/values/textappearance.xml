@@ -80,4 +80,10 @@
     <item name="android:letterSpacing">0.15</item>
     <item name="android:textAllCaps">true</item>
   </style>
+
+  <style name="AppTheme.TextAppearance.OnOffButton">
+    <item name="android:fontFamily">@font/quicksand_bold</item>
+    <item name="android:textSize">34sp</item>
+    <item name="android:letterSpacing">0.025</item>
+  </style>
 </resources>

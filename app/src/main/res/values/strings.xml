@@ -547,6 +547,7 @@
 
     <string translatable="false" name="details_general">General</string>
     <string translatable="false" name="details_schedule">Schedule</string>
+    <string translatable="false" name="details_timer">Timer</string>
     <string translatable="false" name="details_history">History</string>
     <string translatable="false" name="details_settings">Settings</string>
 </resources>
