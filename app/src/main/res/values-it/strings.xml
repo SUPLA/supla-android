@@ -464,4 +464,11 @@
     <string name="status_accessid_inactive">Identificatore dell’accesso non attivo</string>
     <string name="profile_default_name">Default</string>
 
+    <string name="navbar_channels">Canali</string>
+    <string name="navbar_groups">Gruppi</string>
+    <string name="navbar_scenes">Scenari</string>
+    <string name="btn_execute">Start</string>
+    <string name="btn_abort">Stop</string>
+    <string  name="btn_abort_and_execute">Stop &amp; start</string>
+
 </resources>
