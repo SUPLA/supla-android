@@ -138,7 +138,8 @@ public class ChannelDetailIC extends DetailLayout
     icSpinnerSlave.setAdapter(adapter);
     icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
-    slaveLastSelectedIdx = chartHelper.getSlaveSpinnerPosition(icSpinnerMaster, previousSelection, itemsList);
+    slaveLastSelectedIdx =
+        chartHelper.getSlaveSpinnerPosition(icSpinnerMaster, previousSelection, itemsList);
     icSpinnerSlave.setSelection(slaveLastSelectedIdx);
 
     slaveNumItems = items.length;

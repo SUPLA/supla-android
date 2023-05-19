@@ -115,7 +115,6 @@ class ChannelListViewModel @Inject constructor(
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER -> true
     else -> false
   }
-
 }
 
 sealed class ChannelListViewEvent : ViewEvent {

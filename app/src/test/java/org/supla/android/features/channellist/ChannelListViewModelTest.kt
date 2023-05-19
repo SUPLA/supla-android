@@ -3,7 +3,6 @@ package org.supla.android.features.channellist
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -199,10 +198,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should not open details when item is offline`() {
+  fun `should not open RGB details when item is offline`() {
     // given
     val channel = mockk<Channel>()
     every { channel.onLine } returns false
+    every { channel.func } returns SUPLA_CHANNELFNC_RGBLIGHTING
 
     // when
     viewModel.onListItemClick(channel)
@@ -211,6 +211,29 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept()
+  }
+
+  @Test
+  fun `should open EM details when item is offline`() {
+    // given
+    val channelId = 123
+    val channel = mockk<Channel>()
+    every { channel.onLine } returns false
+    every { channel.func } returns SUPLA_CHANNELFNC_ELECTRICITY_METER
+    every { channel.channelId } returns channelId
+
+    val detailType = DetailType.EM
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
+
+    // when
+    viewModel.onListItemClick(channel)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test

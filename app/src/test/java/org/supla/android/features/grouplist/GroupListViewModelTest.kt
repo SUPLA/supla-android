@@ -3,7 +3,6 @@ package org.supla.android.features.grouplist
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject

@@ -248,7 +248,8 @@ public class ChannelDetailEM extends DetailLayout
     emSpinnerSlave.setAdapter(adapter);
     emSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
-    slaveLastSelectedIdx = chartHelper.getSlaveSpinnerPosition(emSpinnerMaster, previousSelection, itemsList);
+    slaveLastSelectedIdx =
+        chartHelper.getSlaveSpinnerPosition(emSpinnerMaster, previousSelection, itemsList);
     emSpinnerSlave.setSelection(slaveLastSelectedIdx);
 
     slaveNumItems = items.length;

@@ -87,7 +87,7 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
       ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     detailView.visibility = View.VISIBLE
-    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, 2*DEFAULT_ANIMATION_DURATION)
+    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, 2 * DEFAULT_ANIMATION_DURATION)
   }
 
   private fun getDetailView(): DetailLayout = when (detailType) {
