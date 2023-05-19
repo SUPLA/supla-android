@@ -161,7 +161,9 @@ public class DefaultChannelRepository implements ChannelRepository {
       return true;
     } else if (value.Diff(channelValue) || value.getOnLine() != online) {
 
-      value.AssignSuplaChannelValue(channelValue);
+      if (online) {
+        value.AssignSuplaChannelValue(channelValue);
+      }
       value.setOnLine(online);
 
       channelDao.update(value);

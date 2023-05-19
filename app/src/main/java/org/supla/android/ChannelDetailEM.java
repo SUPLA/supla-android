@@ -122,9 +122,8 @@ public class ChannelDetailEM extends DetailLayout
   private boolean mBalanceAvailable;
   private int masterLastSelectedIdx = -1;
   private int slaveLastSelectedIdx = -1;
-  private int slaveNumItems = -1;
-  private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
   private boolean mArrowsVisible = false;
+  private boolean online = false;
 
   @Inject ProfileIdHolder profileIdHolder;
 
@@ -254,7 +253,6 @@ public class ChannelDetailEM extends DetailLayout
         chartHelper.getSlaveSpinnerPosition(emSpinnerMaster, previousSelection, itemsList);
     emSpinnerSlave.setSelection(slaveLastSelectedIdx);
 
-    slaveNumItems = items.length;
     emSpinnerSlave.setOnItemSelectedListener(this);
   }
 
@@ -271,6 +269,7 @@ public class ChannelDetailEM extends DetailLayout
   private void showChart(boolean show) {
     if (show) {
       llDetails.setVisibility(GONE);
+      llOffline.setVisibility(GONE);
       boolean wasVisible = chartHelper.isVisible();
       chartHelper.setVisibility(VISIBLE);
       rlButtons1.setVisibility(INVISIBLE);
@@ -281,11 +280,9 @@ public class ChannelDetailEM extends DetailLayout
       if (wasVisible) {
         // Don't reinitialize spinners, just trigger data reload
         postDelayed(
-            new Runnable() {
-              public void run() {
-                chartHelper.load(getRemoteId(), emSpinnerMaster.getSelectedItemPosition());
-                chartHelper.animate();
-              }
+            () -> {
+              chartHelper.load(getRemoteId(), emSpinnerMaster.getSelectedItemPosition());
+              chartHelper.animate();
             },
             50);
 
@@ -301,27 +298,22 @@ public class ChannelDetailEM extends DetailLayout
         emSpinnerSlave.setOnItemSelectedListener(null);
 
         postDelayed(
-            new Runnable() {
-              public void run() {
-                chartHelper.restoreSpinners(
-                    getChannelBase().getFunc(),
-                    emSpinnerMaster,
-                    emSpinnerSlave,
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
-                        updateSlaveSpinnerItems();
-                      }
-                    });
-                emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
-                onItemSelected(
-                    emSpinnerSlave,
-                    null,
-                    emSpinnerSlave.getSelectedItemPosition(),
-                    emSpinnerSlave.getSelectedItemId());
-                emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
-              }
+            () -> {
+              chartHelper.restoreSpinners(
+                  getChannelBase().getFunc(),
+                  emSpinnerMaster,
+                  emSpinnerSlave,
+                  () -> {
+                    masterLastSelectedIdx = emSpinnerMaster.getSelectedItemPosition();
+                    updateSlaveSpinnerItems();
+                  });
+              emSpinnerMaster.setOnItemSelectedListener(ChannelDetailEM.this);
+              onItemSelected(
+                  emSpinnerSlave,
+                  null,
+                  emSpinnerSlave.getSelectedItemPosition(),
+                  emSpinnerSlave.getSelectedItemId());
+              emSpinnerSlave.setOnItemSelectedListener(ChannelDetailEM.this);
             },
             50);
       }
@@ -331,6 +323,7 @@ public class ChannelDetailEM extends DetailLayout
           (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
               && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
       llDetails.setVisibility(VISIBLE);
+      llOffline.setVisibility(online ? View.GONE : View.VISIBLE);
       chartHelper.setVisibility(GONE);
       chartHelper.clearData();
       rlButtons1.setVisibility(singlePhase ? GONE : VISIBLE);
@@ -444,7 +437,9 @@ public class ChannelDetailEM extends DetailLayout
   }
 
   public void channelDataToViews(Channel channel) {
-    llOffline.setVisibility(channel.getOnLine() ? View.GONE : View.VISIBLE);
+    online = channel.getOnLine();
+    llOffline.setVisibility(online ? View.GONE : View.VISIBLE);
+
     if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
       emImgIcon.setBackgroundColor(Color.TRANSPARENT);
       emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
@@ -605,24 +600,28 @@ public class ChannelDetailEM extends DetailLayout
       SuplaFormatter formatter = SuplaFormatter.sharedFormatter();
 
       setBtnBackground(
-          btn, voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
-      tvFreq.setText(formatter.doubleToStringWithUnit(freq, "Hz", 2));
-      tvVoltage.setText(formatter.doubleToStringWithUnit(voltage, "V", 2));
-      tvCurrent.setText(formatter.doubleToStringWithUnit(current, "A", 3));
-      tvPowerActive.setText(formatter.doubleToStringWithUnit(powerActive, "W", 5));
-      tvPowerReactive.setText(formatter.doubleToStringWithUnit(powerReactive, "var", 5));
-      tvPowerApparent.setText(formatter.doubleToStringWithUnit(powerApparent, "VA", 5));
-      tvPowerFactor.setText(formatter.doubleToStringWithUnit(powerFactor, null, 3));
-      tvPhaseAngle.setText(formatter.doubleToStringWithUnit(phaseAngle, "\u00B0", 2));
-      tvPhaseForwardActiveEnergy.setText(formatter.doubleToStringWithUnit(totalFAE, "kWh", 5));
-      tvPhaseReverseActiveEnergy.setText(formatter.doubleToStringWithUnit(totalRAE, "kWh", 5));
-      tvPhaseForwardReactiveEnergy.setText(formatter.doubleToStringWithUnit(totalFRE, "kvarh", 5));
-      tvPhaseReverseReactiveEnergy.setText(formatter.doubleToStringWithUnit(totalRRE, "kvarh", 5));
+          btn, online && voltage > 0 ? R.drawable.em_phase_btn_green : R.drawable.em_phase_btn_red);
+      if (online) {
+        tvFreq.setText(formatter.doubleToStringWithUnit(freq, "Hz", 2));
+        tvVoltage.setText(formatter.doubleToStringWithUnit(voltage, "V", 2));
+        tvCurrent.setText(formatter.doubleToStringWithUnit(current, "A", 3));
+        tvPowerActive.setText(formatter.doubleToStringWithUnit(powerActive, "W", 5));
+        tvPowerReactive.setText(formatter.doubleToStringWithUnit(powerReactive, "var", 5));
+        tvPowerApparent.setText(formatter.doubleToStringWithUnit(powerApparent, "VA", 5));
+        tvPowerFactor.setText(formatter.doubleToStringWithUnit(powerFactor, null, 3));
+        tvPhaseAngle.setText(formatter.doubleToStringWithUnit(phaseAngle, "\u00B0", 2));
+        tvPhaseForwardActiveEnergy.setText(formatter.doubleToStringWithUnit(totalFAE, "kWh", 5));
+        tvPhaseReverseActiveEnergy.setText(formatter.doubleToStringWithUnit(totalRAE, "kWh", 5));
+        tvPhaseForwardReactiveEnergy.setText(
+            formatter.doubleToStringWithUnit(totalFRE, "kvarh", 5));
+        tvPhaseReverseReactiveEnergy.setText(
+            formatter.doubleToStringWithUnit(totalRRE, "kvarh", 5));
 
-      tvPhaseForwardActiveEnergyBalanced.setText(
-          formatter.doubleToStringWithUnit(em.getTotalForwardActiveEnergyBalanced(), "kWh", 5));
-      tvPhaseReverseActiveEnergyBalanced.setText(
-          formatter.doubleToStringWithUnit(em.getTotalReverseActiveEnergyBalanced(), "kWh", 5));
+        tvPhaseForwardActiveEnergyBalanced.setText(
+            formatter.doubleToStringWithUnit(em.getTotalForwardActiveEnergyBalanced(), "kWh", 5));
+        tvPhaseReverseActiveEnergyBalanced.setText(
+            formatter.doubleToStringWithUnit(em.getTotalReverseActiveEnergyBalanced(), "kWh", 5));
+      }
 
       chartHelper.setTotalActiveEnergy(
           em.getTotalActiveEnergyForAllPhases(chartHelper.isProductionDataSource()));

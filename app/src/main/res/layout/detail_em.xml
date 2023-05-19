@@ -273,6 +273,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"
+          android:layout_marginBottom="16dp"
           android:orientation="vertical"
           android:gravity="center_horizontal"
           android:visibility="gone"
@@ -294,7 +295,7 @@
             android:id="@+id/emllDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/emOfflineText"
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
             android:visibility="visible">

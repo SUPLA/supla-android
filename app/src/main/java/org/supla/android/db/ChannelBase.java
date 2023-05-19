@@ -841,8 +841,11 @@ public abstract class ChannelBase extends DbItem {
           break;
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-          Id = new ImageId(getUserIconId(),
-              (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1), profileId);
+          Id =
+              new ImageId(
+                  getUserIconId(),
+                  (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1),
+                  profileId);
           break;
         default:
           Id = new ImageId(getUserIconId(), active + 1, profileId);
@@ -986,7 +989,8 @@ public abstract class ChannelBase extends DbItem {
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-        if (getOnLine()) {
+        double doubleValue = value.getTotalForwardActiveEnergy();
+        if (doubleValue > 0) {
           return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
         } else {
           return "--- kWh";

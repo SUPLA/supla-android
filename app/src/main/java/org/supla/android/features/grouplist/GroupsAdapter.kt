@@ -20,6 +20,7 @@ package org.supla.android.features.grouplist
 import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
+import org.supla.android.SuplaApp
 import org.supla.android.db.Location
 import org.supla.android.ui.dialogs.ChannelGroupCaptionEditor
 import org.supla.android.ui.layouts.ChannelLayout
@@ -34,6 +35,7 @@ class GroupsAdapter @Inject constructor(
   override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x2) > 0)
 
   override fun onCaptionLongPress(groupId: Int) {
+    SuplaApp.Vibrate(context)
     val editor = ChannelGroupCaptionEditor(context)
     editor.captionChangedListener = reloadCallback
     editor.edit(groupId)
