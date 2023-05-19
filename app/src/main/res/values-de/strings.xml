@@ -170,7 +170,7 @@
     <string name="last90days">Die letzten 90 Tage</string>
     <string name="all_available_history">Gesamte verfügbare Geschichte</string>
     <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen...</string>
-    <string name="no_chart_data_available">Keine Daten für das Diagramm.</string>
+    <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>
     <string name="comparsion_minmin">Vergleich Minute zu Minute</string>
     <string name="comparsion_hourhour">Vergleich Stunde zu Stunde</string>
     <string name="comparsion_dayday">Vergleich Tag zu Tag</string>
@@ -465,4 +465,5 @@
  <string translatable="false" name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
  <string name="new_gesture_descirption">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
+  <string name="channel_offline">Das Kanal is offline</string>
 </resources>

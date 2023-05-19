@@ -60,15 +60,20 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     when (event) {
       is ChannelListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
-      is ChannelListViewEvent.OpenLegacyDetails -> navigator.navigateToLegacyDetails(
-        event.remoteId,
-        event.type,
-        LegacyDetailFragment.ItemType.CHANNEL
-      )
+      is ChannelListViewEvent.OpenLegacyDetails -> {
+        setToolbarTitle("")
+        navigator.navigateToLegacyDetails(
+          event.remoteId,
+          event.type,
+          LegacyDetailFragment.ItemType.CHANNEL
+        )
+      }
       is ChannelListViewEvent.ReassignAdapter -> {
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
+      is ChannelListViewEvent.UpdateChannel -> adapter.updateListItem(event.channel)
+      else -> {}
     }
   }
 
@@ -116,6 +121,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   private fun handleChannelChange(channelId: Int) {
+    if (channelId > 0) {
+      viewModel.onChannelUpdate(channelId)
+    }
     if (statePopup.isVisible && statePopup.remoteId == channelId) {
       statePopup.update(channelId)
     }

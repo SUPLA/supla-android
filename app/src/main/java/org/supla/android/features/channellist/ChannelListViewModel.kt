@@ -28,6 +28,7 @@ class ChannelListViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -91,8 +92,17 @@ class ChannelListViewModel @Inject constructor(
     openDetailsByChannelFunction(channel)
   }
 
+  fun onChannelUpdate(remoteId: Int) {
+    findChannelByRemoteIdUseCase(remoteId = remoteId)
+      .attachSilent()
+      .subscribeBy(
+        onSuccess = { sendEvent(ChannelListViewEvent.UpdateChannel(it)) }
+      )
+      .disposeBySelf()
+  }
+
   private fun openDetailsByChannelFunction(channel: Channel) {
-    if (isEmOrIc(channel.func).not() && channel.onLine.not()) {
+    if (isAvailableInOffline(channel.func).not() && channel.onLine.not()) {
       return // do not open details for offline channels
     }
 
@@ -107,7 +117,10 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  private fun isEmOrIc(channelFunction: Int) = when (channelFunction) {
+  private fun isAvailableInOffline(channelFunction: Int) = when (channelFunction) {
+    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
+    SuplaConst.SUPLA_CHANNELFNC_HUMIDITY,
+    SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
@@ -123,6 +136,7 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
+  data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(

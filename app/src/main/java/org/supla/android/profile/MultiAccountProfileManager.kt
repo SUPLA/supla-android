@@ -78,7 +78,11 @@ class MultiAccountProfileManager(
     }
     initiateReconnect()
     dbHelper.loadUserIconsIntoCache()
+
     listsEventsManager.cleanup()
+    listsEventsManager.emitChannelUpdate()
+    listsEventsManager.emitGroupUpdate()
+    listsEventsManager.emitSceneUpdate()
   }
 
   private fun initiateReconnect() {

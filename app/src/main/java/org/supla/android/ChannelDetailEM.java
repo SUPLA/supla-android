@@ -108,6 +108,7 @@ public class ChannelDetailEM extends DetailLayout
   private ImageView ivGraph;
   private ImageView ivDirection;
   private LinearLayout llDetails;
+  private TextView llOffline;
   private RelativeLayout rlButtons1;
   private RelativeLayout rlButtons2;
   private Spinner emSpinnerMaster;
@@ -210,6 +211,7 @@ public class ChannelDetailEM extends DetailLayout
     btnPhase123.setTag(0);
 
     llDetails = findViewById(R.id.emllDetails);
+    llOffline = findViewById(R.id.emOfflineText);
     rlButtons1 = findViewById(R.id.emrlButtons1);
     rlButtons2 = findViewById(R.id.emrlButtons2);
 
@@ -442,6 +444,7 @@ public class ChannelDetailEM extends DetailLayout
   }
 
   public void channelDataToViews(Channel channel) {
+    llOffline.setVisibility(channel.getOnLine() ? View.GONE : View.VISIBLE);
     if (!emImgIcon.getTag().equals(channel.getImageIdx())) {
       emImgIcon.setBackgroundColor(Color.TRANSPARENT);
       emImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));

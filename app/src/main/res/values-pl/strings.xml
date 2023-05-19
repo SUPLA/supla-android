@@ -228,7 +228,7 @@
     <string name="last90days">Ostatnie 90 dni</string>
     <string name="all_available_history">Cała dostępna historia</string>
     <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
-    <string name="no_chart_data_available">Brak danych dla wykresu.</string>
+    <string name="no_chart_data_available">Brak danych w wybranym okreisie czasu.</string>
     <string name="em_chart_phase_n">Faza %d</string>
     <string name="em_chart_all_phases">Fazy 1+2+3</string>
     <string name="comparsion_minmin">Porównanie minuta do minuty</string>
@@ -520,4 +520,5 @@
   <string name="push_notification_limit_exceeded">Przekroczono limit powiadomień PUSH, który wynosi %1$s na godzinę.</string>
 
   <string name="new_gesture_descirption">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
+  <string name="channel_offline">Kanał jest offline</string>
 </resources>

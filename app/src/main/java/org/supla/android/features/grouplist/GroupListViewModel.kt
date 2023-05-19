@@ -31,10 +31,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.ActionException
-import org.supla.android.usecases.channel.ButtonType
-import org.supla.android.usecases.channel.CreateProfileGroupsListUseCase
-import org.supla.android.usecases.channel.GroupActionUseCase
+import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.DetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -48,6 +45,7 @@ class GroupListViewModel @Inject constructor(
   private val groupActionUseCase: GroupActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -111,6 +109,15 @@ class GroupListViewModel @Inject constructor(
     openDetailsByChannelFunction(channelGroup)
   }
 
+  fun onGroupUpdate(remoteId: Int) {
+    findGroupByRemoteIdUseCase(remoteId = remoteId)
+      .attachSilent()
+      .subscribeBy(
+        onSuccess = { sendEvent(GroupListViewEvent.UpdateGroup(it)) }
+      )
+      .disposeBySelf()
+  }
+
   private fun openDetailsByChannelFunction(group: ChannelGroup) {
     if (group.onLine.not()) {
       return // do not open details for offline channels
@@ -134,6 +141,7 @@ sealed class GroupListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : GroupListViewEvent()
   object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
+  data class UpdateGroup(val channelGroup: ChannelGroup) : GroupListViewEvent()
 }
 
 data class GroupListViewState(

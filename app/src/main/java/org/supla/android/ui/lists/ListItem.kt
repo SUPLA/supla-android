@@ -23,6 +23,6 @@ import org.supla.android.db.entity.Scene
 
 sealed interface ListItem {
   data class SceneItem(val scene: Scene) : ListItem
-  data class ChannelItem(val channelBase: ChannelBase) : ListItem
+  data class ChannelItem(var channelBase: ChannelBase) : ListItem
   data class LocationItem(val location: Location) : ListItem
 }

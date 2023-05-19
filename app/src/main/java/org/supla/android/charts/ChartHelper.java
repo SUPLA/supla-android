@@ -847,6 +847,17 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         case Bar_VectorBalance_Days:
           position++;
           break;
+        case Bar_Months:
+        case Bar_Comparsion_MonthMonth:
+        case Bar_AritmeticBalance_Months:
+        case Bar_VectorBalance_Months:
+        case Bar_Years:
+        case Bar_Comparsion_YearYear:
+        case Bar_AritmeticBalance_Years:
+        case Bar_VectorBalance_Years:
+        case Pie_MonthRank:
+          position = 4;
+          break;
       }
     }
 

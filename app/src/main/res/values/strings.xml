@@ -227,7 +227,7 @@
     <string name="last90days">Last 90 days</string>
     <string name="all_available_history">All available history</string>
     <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
-    <string name="no_chart_data_available">No chart data available.</string>
+    <string name="no_chart_data_available">No chart data available in selected time period.</string>
     <string name="em_chart_phase_n">Phase %d</string>
     <string name="em_chart_all_phases">Phase 1+2+3</string>
     <string name="comparsion_minmin">Minute to minute comparison</string>
@@ -530,4 +530,5 @@
     <string translatable="false" name="push_notification_limit_exceeded">The push notification limit of %1$s per hour has been exceeded.</string>
 
     <string translatable="false" name="new_gesture_descirption">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
+    <string translatable="false" name="channel_offline">Channel is offline</string>
 </resources>
