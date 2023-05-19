@@ -1,6 +1,8 @@
 package org.supla.android.features.legacydetail
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,6 +17,7 @@ import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.listview.DetailLayout
+import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
 import org.supla.android.usecases.details.DetailType
 import java.io.Serializable
 
@@ -84,7 +87,7 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
       ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     detailView.visibility = View.VISIBLE
-    detailView.onDetailShow()
+    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, 2*DEFAULT_ANIMATION_DURATION)
   }
 
   private fun getDetailView(): DetailLayout = when (detailType) {

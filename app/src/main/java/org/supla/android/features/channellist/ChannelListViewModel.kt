@@ -92,7 +92,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(channel: Channel) {
-    if (channel.onLine.not()) {
+    if (isEmOrIc(channel.func).not() && channel.onLine.not()) {
       return // do not open details for offline channels
     }
 
@@ -106,6 +106,16 @@ class ChannelListViewModel @Inject constructor(
       sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
     }
   }
+
+  private fun isEmOrIc(channelFunction: Int) = when (channelFunction) {
+    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER -> true
+    else -> false
+  }
+
 }
 
 sealed class ChannelListViewEvent : ViewEvent {

@@ -46,6 +46,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.List;
 import org.supla.android.R;
 import org.supla.android.Preferences;
 import org.supla.android.db.MeasurementsDbHelper;
@@ -698,7 +699,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         return ElectricityChartHelper.ChartType.Bar_Minutes;
     }
 
-    public String[] getSlaveSpinnerItems(Spinner master) {
+    public List<String> getSlaveSpinnerItems(Spinner master) {
 
         ArrayList<String> result = new ArrayList<>();
         Resources r = context.getResources();
@@ -712,13 +713,14 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         if (master != null) {
             switch (chartTypeByIndex(master.getSelectedItemPosition())) {
                 case Bar_Minutes:
-                case Bar_Hours:
                 case Bar_Comparsion_MinMin:
-                case Bar_Comparsion_HourHour:
                 case Bar_AritmeticBalance_Minutes:
-                case Bar_AritmeticBalance_Hours:
                 case Bar_VectorBalance_Minutes:
+                case Bar_Hours:
+                case Bar_Comparsion_HourHour:
+                case Bar_AritmeticBalance_Hours:
                 case Bar_VectorBalance_Hours:
+                    result.remove(4);
                     break;
                 case Bar_Days:
                 case Bar_Comparsion_DayDay:
@@ -731,7 +733,54 @@ public abstract class ChartHelper implements IAxisValueFormatter {
             }
         }
 
-        return result.toArray(new String[0]);
+        return result;
+    }
+
+    public int getSlaveSpinnerPosition(Spinner master, Object lastSelection, List<String> newItems) {
+        Resources r = context.getResources();
+        if (master != null) {
+            switch (chartTypeByIndex(master.getSelectedItemPosition())) {
+                case Bar_Minutes:
+                case Bar_Comparsion_MinMin:
+                case Bar_AritmeticBalance_Minutes:
+                case Bar_VectorBalance_Minutes:
+                    if (lastSelection == null || lastSelection.equals(r.getString(R.string.all_available_history)) || newItems == null) {
+                        return 0;
+                    } else {
+                        return getMappedPosition(newItems, lastSelection, 0);
+                    }
+                case Bar_Hours:
+                case Bar_Comparsion_HourHour:
+                case Bar_AritmeticBalance_Hours:
+                case Bar_VectorBalance_Hours:
+                    if (lastSelection == null || lastSelection.equals(r.getString(R.string.last24hours)) || lastSelection.equals(
+                        r.getString(R.string.all_available_history)) || newItems == null) {
+                        return 1;
+                    } else {
+                        return getMappedPosition(newItems, lastSelection, 1);
+                    }
+                case Bar_Days:
+                case Bar_Comparsion_DayDay:
+                case Bar_AritmeticBalance_Days:
+                case Bar_VectorBalance_Days:
+                    if (lastSelection == null || lastSelection.equals(r.getString(R.string.last24hours)) || lastSelection.equals(
+                        r.getString(R.string.all_available_history)) || newItems == null) {
+                        return 0;
+                    } else {
+                        return getMappedPosition(newItems, lastSelection, 0);
+                    }
+            }
+        }
+
+        return 0;
+    }
+
+    private int getMappedPosition(List<String> newItems, Object lastSelection, int defaultPosition) {
+        int newPosition = newItems.indexOf(lastSelection);
+        if (newPosition < 0) {
+            return defaultPosition;
+        }
+        return newPosition;
     }
 
     public void load(int channelId, int chartTypeIdx) {
