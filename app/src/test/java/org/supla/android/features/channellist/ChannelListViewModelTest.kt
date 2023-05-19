@@ -3,6 +3,7 @@ package org.supla.android.features.channellist
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -51,6 +52,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var provideDetailTypeUseCase: ProvideDetailTypeUseCase
 
   @Mock
+  private lateinit var findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+
+  @Mock
   private lateinit var listsEventsManager: ListsEventsManager
 
   @Mock
@@ -66,6 +70,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelActionUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase,
+      findChannelByRemoteIdUseCase,
       listsEventsManager,
       preferences,
       schedulers
@@ -313,6 +318,41 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(loading = true, channels = list),
       state.copy()
     )
+    assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+  }
+
+  @Test
+  fun `should load channel on update`() {
+    // given
+    val channelId = 223
+    val channel: Channel = mockk()
+
+    whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.onChannelUpdate(channelId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.UpdateChannel(channel)
+    )
+    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+  }
+
+  @Test
+  fun `should do nothing when channel not found on update`() {
+    // given
+    val channelId = 223
+
+    whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.empty())
+
+    // when
+    viewModel.onChannelUpdate(channelId)
+
+    // then
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
   }

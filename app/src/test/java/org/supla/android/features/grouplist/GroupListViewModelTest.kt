@@ -3,6 +3,7 @@ package org.supla.android.features.grouplist
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -51,6 +52,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var provideDetailTypeUseCase: ProvideDetailTypeUseCase
 
   @Mock
+  private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+
+  @Mock
   private lateinit var listsEventsManager: ListsEventsManager
 
   @Mock
@@ -66,6 +70,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       groupActionUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase,
+      findGroupByRemoteIdUseCase,
       listsEventsManager,
       preferences,
       schedulers
@@ -291,6 +296,41 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
+  }
+
+  @Test
+  fun `should load group on update`() {
+    // given
+    val groupId = 223
+    val group: ChannelGroup = mockk()
+
+    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
+
+    // when
+    viewModel.onGroupUpdate(groupId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(
+      GroupListViewEvent.UpdateGroup(group)
+    )
+    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `should do nothing when group not found on update`() {
+    // given
+    val groupId = 223
+
+    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.empty())
+
+    // when
+    viewModel.onGroupUpdate(groupId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
   }
 
   private fun verifyZeroInteractionsExcept(vararg except: Any) {
