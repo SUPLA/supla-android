@@ -74,7 +74,9 @@ public class SuplaConst {
     public final static int SUPLA_RESULTCODE_INCORRECT_PARAMETERS = 35;
     public final static int SUPLA_RESULTCODE_CLIENT_NOT_EXISTS = 36;
     public final static int SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE = 38;
-
+    public final static int SUPLA_RESULTCODE_NOT_REGISTERED = 40;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_VBT = 41;
+    public final static int SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_PUSH = 42;
     public final static int SUPLA_CHANNELFNC_NONE = 0;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK = 10;
     public final static int SUPLA_CHANNELFNC_CONTROLLINGTHEGATE = 20;

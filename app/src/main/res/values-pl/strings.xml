@@ -498,6 +498,8 @@
     <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
     <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
     <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
+    <string translatable="false" name="associeted_with_push_error">Nie można zmienić funkcji kanału powiązanego z powiadomieniami PUSH.</string>
+    <string translatable="false" name="associeted_with_vbt_error">Nie można zmienić funkcji kanału powiązanego z reakcjami.</string>
     <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
     <string translatable="false" name="rs_display_mode">Rolety %</string>
     <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
