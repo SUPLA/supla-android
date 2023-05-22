@@ -108,5 +108,4 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
       ARG_ITEM_TYPE to itemType
     )
   }
-
 }

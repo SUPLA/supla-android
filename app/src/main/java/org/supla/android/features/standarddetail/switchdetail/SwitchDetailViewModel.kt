@@ -59,9 +59,8 @@ class SwitchDetailViewModel @Inject constructor(
   }
 }
 
-sealed class SwitchDetailViewEvent : ViewEvent {
-}
+sealed class SwitchDetailViewEvent : ViewEvent
 
 data class SwitchDetailViewState(
-  val channelBase: ChannelBase? = null,
+  val channelBase: ChannelBase? = null
 ) : ViewState()

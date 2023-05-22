@@ -111,7 +111,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
 
   companion object {
     fun bundle(remoteId: Int) = bundleOf(
-      ARG_REMOTE_ID to remoteId,
+      ARG_REMOTE_ID to remoteId
     )
   }
 }

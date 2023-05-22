@@ -26,5 +26,5 @@ val SuplaTypography = Typography(
   body2 = TextStyle(fontSize = 14.sp, letterSpacing = 0.025.sp, fontWeight = FontWeight.Normal),
   button = TextStyle(fontSize = 14.sp, letterSpacing = 0.125.sp, fontWeight = FontWeight.Medium),
   caption = TextStyle(fontSize = 12.sp, letterSpacing = 0.04.sp, fontWeight = FontWeight.Normal),
-  overline = TextStyle(fontSize = 10.sp, letterSpacing = 0.15.sp, fontWeight = FontWeight.Normal),
+  overline = TextStyle(fontSize = 10.sp, letterSpacing = 0.15.sp, fontWeight = FontWeight.Normal)
 )

@@ -84,8 +84,6 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
     // then
     assertThat(states).containsExactly(
-      CreateAccountViewState(loading = true),
-      CreateAccountViewState(),
       CreateAccountViewState(
         profileNameVisible = false,
         deleteButtonVisible = false,
@@ -322,8 +320,6 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
     // then
     assertThat(states).containsExactly(
-      CreateAccountViewState(emailAddress = email),
-      CreateAccountViewState(emailAddress = email, loading = true),
       CreateAccountViewState(emailAddress = email)
     )
     assertThat(events).containsExactly(
@@ -355,8 +351,6 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // then
     assertThat(states).containsExactly(
       CreateAccountViewState(profileNameVisible = true),
-      CreateAccountViewState(profileNameVisible = true, emailAddress = email),
-      CreateAccountViewState(profileNameVisible = true, emailAddress = email, loading = true),
       CreateAccountViewState(profileNameVisible = true, emailAddress = email)
     )
     assertThat(events).containsExactly(
@@ -391,15 +385,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     val state = CreateAccountViewState(profileNameVisible = true, deleteButtonVisible = true)
     assertThat(states).containsExactly(
       state,
-      state.copy(loading = true),
-      state,
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = originalName),
-      state.copy(emailAddress = profile.authInfo.emailAddress, accountName = newName),
-      state.copy(
-        emailAddress = profile.authInfo.emailAddress,
-        accountName = newName,
-        loading = true
-      ),
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = newName)
     )
     assertThat(events).containsExactly(
@@ -434,11 +420,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     val state = CreateAccountViewState(profileNameVisible = true, deleteButtonVisible = true)
     assertThat(states).containsExactly(
       state,
-      state.copy(loading = true),
-      state,
       state.copy(emailAddress = originalEmail, accountName = profile.name),
-      state.copy(emailAddress = newEmail, accountName = profile.name),
-      state.copy(emailAddress = newEmail, accountName = profile.name, loading = true),
       state.copy(emailAddress = newEmail, accountName = profile.name)
     )
     assertThat(events).containsExactly(
@@ -532,7 +514,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     viewModel.saveProfile(profileId, "default name")
 
     // then
-    assertThat(states).hasSize(7)
+    assertThat(states).hasSize(3)
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Reconnect
     )
@@ -588,10 +570,6 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     val state = CreateAccountViewState(profileNameVisible = true, deleteButtonVisible = true)
     assertThat(states).containsExactly(
       state,
-      state.copy(loading = true),
-      state,
-      state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name),
-      state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name, loading = true),
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name)
     )
     assertThat(events).containsExactly(expectedEvent)
@@ -628,11 +606,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     viewModel.deleteProfile(profileId)
 
     // then
-    val state = CreateAccountViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
     verify(deleteAccountUseCase, times(1)).invoke(profileId)
   }
@@ -684,11 +658,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     viewModel.deleteProfileWithCloud(profileId)
 
     // then
-    val state = CreateAccountViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
     verify(deleteAccountUseCase, times(1)).invoke(profileId)
   }

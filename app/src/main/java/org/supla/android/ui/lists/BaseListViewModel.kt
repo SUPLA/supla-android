@@ -2,6 +2,7 @@ package org.supla.android.ui.lists
 
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CallSuper
+import androidx.annotation.VisibleForTesting
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -25,7 +26,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   }
   private val suplaMessageListener: OnSuplaClientMessageListener = OnSuplaClientMessageListener { onSuplaMessage(it) }
 
-
   init {
     preferences.registerChangeListener(preferencesChangeListener)
   }
@@ -40,7 +40,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected abstract fun reloadList()
 
-  protected open fun onSuplaMessage(message: SuplaClientMsg) {
+  @VisibleForTesting
+  open fun onSuplaMessage(message: SuplaClientMsg) {
   }
 
   protected fun observeUpdates(updatesObservable: Observable<Any>) {

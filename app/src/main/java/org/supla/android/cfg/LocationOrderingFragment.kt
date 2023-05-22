@@ -56,6 +56,6 @@ class LocationOrderingFragment : Fragment(), HasDefaultViewModelProviderFactory 
     )
     binding.locationList.adapter = adapter
 
-        return binding.root
-    }
+    return binding.root
+  }
 }

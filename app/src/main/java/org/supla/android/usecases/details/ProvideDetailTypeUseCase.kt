@@ -50,7 +50,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
   }
 }
 
-sealed interface DetailType: Serializable
+sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
   RGBW,
@@ -63,6 +63,6 @@ enum class LegacyDetailType : DetailType {
   DIGIGLASS
 }
 
-enum class StandardDetailType: DetailType {
+enum class StandardDetailType : DetailType {
   SWITCH
 }

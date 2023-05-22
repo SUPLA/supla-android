@@ -141,7 +141,6 @@ class GroupListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(group)) {
-      //StandardDetailType.SWITCH -> sendEvent(GroupListViewEvent.OpenSwitchDetails(channel.remoteId))
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
       else -> {} // no action
     }

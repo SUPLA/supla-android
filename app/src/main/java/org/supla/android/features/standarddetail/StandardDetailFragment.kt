@@ -22,7 +22,8 @@ private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
 
 @AndroidEntryPoint
-class StandardDetailFragment : BaseFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail),
+class StandardDetailFragment :
+  BaseFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail),
   ToolbarItemsClickHandler {
 
   private val viewModel: StandardDetailViewModel by viewModels()

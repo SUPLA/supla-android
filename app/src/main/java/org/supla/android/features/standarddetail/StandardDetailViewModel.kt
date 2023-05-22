@@ -1,16 +1,11 @@
 package org.supla.android.features.standarddetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.ChannelBase
-import org.supla.android.lib.actions.ActionId
-import org.supla.android.lib.actions.ActionParameters
-import org.supla.android.lib.actions.SubjectType
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -39,9 +34,8 @@ class StandardDetailViewModel @Inject constructor(
   }
 }
 
-sealed class StandardDetailViewEvent : ViewEvent {
-}
+sealed class StandardDetailViewEvent : ViewEvent
 
 data class StandardDetailViewState(
-  val channelBase: ChannelBase? = null,
+  val channelBase: ChannelBase? = null
 ) : ViewState()

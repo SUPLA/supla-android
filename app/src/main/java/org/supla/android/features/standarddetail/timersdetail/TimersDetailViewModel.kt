@@ -69,13 +69,12 @@ class TimersDetailViewModel @Inject constructor(
   }
 }
 
-sealed class TimersDetailViewEvent : ViewEvent {
-}
+sealed class TimersDetailViewEvent : ViewEvent
 
 data class TimersDetailViewState(
   val isTimerOn: Boolean = false,
   val leftTimeMillis: Long? = null,
-  val timerValues: TimerValues? = null,
+  val timerValues: TimerValues? = null
 ) : ViewState()
 
 data class TimerValues(val hours: Int, val minutes: Int, val seconds: Int) {

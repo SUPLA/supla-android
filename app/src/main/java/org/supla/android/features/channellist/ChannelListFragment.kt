@@ -15,9 +15,9 @@ import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
 import org.supla.android.features.standarddetail.StandardDetailFragment
-import org.supla.android.model.ItemType
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.model.ItemType
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog

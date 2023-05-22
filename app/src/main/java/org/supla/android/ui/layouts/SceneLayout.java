@@ -18,7 +18,6 @@ package org.supla.android.ui.layouts;
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -156,7 +155,8 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     sceneDurationTimer = durationTimerHelper.createTimerView(context);
     content.addView(sceneDurationTimer);
     sceneDurationTimer.setLayoutParams(
-        durationTimerHelper.getTimerViewLayoutParams(context, right_onlineStatus.getId(), right_onlineStatus.getId()));
+        durationTimerHelper.getTimerViewLayoutParams(
+            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);

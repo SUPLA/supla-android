@@ -53,11 +53,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     viewModel.loadData(channelId, itemType)
 
     // then
-    val state = LegacyDetailViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(channel)
     )
@@ -77,11 +73,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     viewModel.loadData(groupId, itemType)
 
     // then
-    val state = LegacyDetailViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(group)
     )

@@ -198,8 +198,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     durationTimer = durationTimerHelper.createTimerView(context);
     content.addView(durationTimer);
     durationTimer.setLayoutParams(
-        durationTimerHelper.getTimerViewLayoutParams(context, right_onlineStatus.getId(), right_onlineStatus.getId()));
-
+        durationTimerHelper.getTimerViewLayoutParams(
+            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
 
     channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
@@ -813,18 +813,19 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     Long leftTime = endsAt.getTime() - now.getTime();
 
     durationTimer.setVisibility(VISIBLE);
-    countDownTimer = new CountDownTimer(leftTime, 100) {
-      @Override
-      public void onTick(long millisUntilFinished) {
-        durationTimer.setText(durationTimerHelper.formatMillis(millisUntilFinished));
-      }
+    countDownTimer =
+        new CountDownTimer(leftTime, 100) {
+          @Override
+          public void onTick(long millisUntilFinished) {
+            durationTimer.setText(durationTimerHelper.formatMillis(millisUntilFinished));
+          }
 
-      @Override
-      public void onFinish() {
-        countDownTimer = null;
-        durationTimer.setVisibility(GONE);
-      }
-    };
+          @Override
+          public void onFinish() {
+            countDownTimer = null;
+            durationTimer.setVisibility(GONE);
+          }
+        };
     countDownTimer.start();
   }
 

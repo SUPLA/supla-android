@@ -24,6 +24,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
@@ -88,7 +89,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should load groups`() {
     // given
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -97,9 +98,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     val state = GroupListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, groups = list),
-      state.copy()
+      state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
@@ -110,7 +109,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val location = mockk<Location>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.GROUP)).thenReturn(Completable.complete())
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -119,9 +118,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     val state = GroupListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, groups = list),
-      state.copy()
+      state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileGroupsListUseCase, toggleLocationUseCase)
@@ -146,11 +143,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     viewModel.swapItems(firstItem, secondItem)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
     verify(channelRepository).reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId)
@@ -169,11 +162,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     viewModel.performAction(groupId, buttonType)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.ShowValveDialog(groupId)
     )
@@ -191,11 +180,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     viewModel.performAction(groupId, buttonType)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.ShowAmperageExceededDialog(groupId)
     )
@@ -281,7 +266,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should reload list on update`() {
     // given
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -290,9 +275,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     val state = GroupListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, groups = list),
-      state.copy()
+      state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
@@ -303,34 +286,43 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val groupId = 223
     val group: ChannelGroup = mockk()
-
+    every { group.remoteId } returns groupId
     whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
+    val suplaMessage: SuplaClientMsg = mockk()
+    every { suplaMessage.channelGroupId } returns groupId
+    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
+
+    val list = listOf(mockk<ListItem.ChannelItem>())
+    every { list[0].channelBase } returns group
+    every { list[0].channelBase = group } answers { }
+    whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
+
     // when
-    viewModel.onGroupUpdate(groupId)
+    viewModel.loadGroups()
+    viewModel.onSuplaMessage(suplaMessage)
 
     // then
-    Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.UpdateGroup(group)
-    )
-    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
+    Assertions.assertThat(states).containsExactly(GroupListViewState(groups = list))
+    Assertions.assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase, createProfileGroupsListUseCase)
+    io.mockk.verify { list[0].channelBase = group }
   }
 
   @Test
-  fun `should do nothing when group not found on update`() {
+  fun `should do nothing when update is not for group`() {
     // given
-    val groupId = 223
-
-    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.empty())
+    val suplaMessage: SuplaClientMsg = mockk()
+    every { suplaMessage.channelGroupId } returns 0
+    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
 
     // when
-    viewModel.onGroupUpdate(groupId)
+    viewModel.onSuplaMessage(suplaMessage)
 
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   private fun verifyZeroInteractionsExcept(vararg except: Any) {

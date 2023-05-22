@@ -8,14 +8,12 @@ import org.supla.android.features.standarddetail.switchdetail.SwitchDetailFragme
 import org.supla.android.features.standarddetail.timersdetail.TimersDetailFragment
 import org.supla.android.model.ItemType
 
-
 class StandardDetailPagerAdapter(
   private val pages: List<DetailPage>,
   private val remoteId: Int,
   private val itemType: ItemType,
   fragment: Fragment
 ) : FragmentStateAdapter(fragment) {
-
 
   override fun getItemCount(): Int = pages.size
 
@@ -27,5 +25,7 @@ class StandardDetailPagerAdapter(
 }
 
 enum class DetailPage(val menuId: Int) {
-  GENERAL(R.id.detail_general), TIMER(R.id.detail_timer), SCHEDULE(R.id.detail_schedule), HISTORY(R.id.detail_history), SETTINGS(R.id.detail_settings)
+  GENERAL(R.id.detail_general), TIMER(R.id.detail_timer), SCHEDULE(R.id.detail_schedule), HISTORY(R.id.detail_history), SETTINGS(
+    R.id.detail_settings
+  )
 }

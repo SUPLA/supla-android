@@ -10,11 +10,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
-) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers) {
+) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers)
 
-}
-
-sealed class ScheduleDetailViewEvent : ViewEvent {
-}
+sealed class ScheduleDetailViewEvent : ViewEvent
 
 class ScheduleDetailViewState : ViewState()
