@@ -64,9 +64,16 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (this::detailView.isInitialized) {
-          detailView.OnChannelDataChanged()
+        if (this::detailView.isInitialized.not()) {
+          return // view will not handle updates because it's not initialized
         }
+        if (itemType == ItemType.CHANNEL && message.channelId != remoteId) {
+          return // message for another channel
+        }
+        if (itemType == ItemType.GROUP && message.channelGroupId != remoteId) {
+          return // message for another group
+        }
+        detailView.OnChannelDataChanged()
       }
     }
   }
@@ -80,8 +87,7 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
       ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     )
     detailView.visibility = View.VISIBLE
-
-    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, DEFAULT_ANIMATION_DURATION)
+    Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, 2 * DEFAULT_ANIMATION_DURATION)
   }
 
   private fun getDetailView(): DetailLayout = when (detailType) {

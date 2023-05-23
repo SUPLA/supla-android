@@ -43,7 +43,6 @@
 
       <org.supla.android.ui.AppBar
         android:id="@+id/nav_toolbar"
-        style="@style/AppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height" />
     </com.google.android.material.appbar.AppBarLayout>

@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import dagger.hilt.android.AndroidEntryPoint;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.inject.Inject;
@@ -128,30 +129,20 @@ public class ChannelDetailIC extends DetailLayout
   private void updateSlaveSpinnerItems() {
     icSpinnerSlave.setOnItemSelectedListener(null);
 
-    String[] items = chartHelper.getSlaveSpinnerItems(icSpinnerMaster);
+    List<String> itemsList = chartHelper.getSlaveSpinnerItems(icSpinnerMaster);
+    String[] items = itemsList.toArray(new String[0]);
+    Object previousSelection = icSpinnerSlave.getSelectedItem();
+
     ArrayAdapter<String> adapter =
         new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, items);
     icSpinnerSlave.setAdapter(adapter);
     icSpinnerSlave.setVisibility(items.length > 0 ? VISIBLE : GONE);
 
-    if (slaveLastSelectedIdx > -1
-        && items.length > slaveLastSelectedIdx
-        && slaveNumItems > 0
-        && items.length != slaveNumItems) {
-      slaveLastSelectedIdx += items.length - slaveNumItems;
-      icSpinnerSlave.setSelection(slaveLastSelectedIdx);
-    } else if (slaveNumItems == 0 && items.length > 0) {
-      int indexMaybe = slaveLastSelectedIdx - slaveMaxItems + items.length;
+    slaveLastSelectedIdx =
+        chartHelper.getSlaveSpinnerPosition(icSpinnerMaster, previousSelection, itemsList);
+    icSpinnerSlave.setSelection(slaveLastSelectedIdx);
 
-      if (indexMaybe < items.length) {
-        icSpinnerSlave.setSelection(indexMaybe);
-        slaveLastSelectedIdx = indexMaybe;
-      }
-    } else if (items.length == 0) {
-      slaveLastSelectedIdx += slaveMaxItems - slaveNumItems;
-    }
     slaveNumItems = items.length;
-
     icSpinnerSlave.setOnItemSelectedListener(this);
   }
 

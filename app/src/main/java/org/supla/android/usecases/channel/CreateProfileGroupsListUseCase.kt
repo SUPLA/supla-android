@@ -23,7 +23,7 @@ class CreateProfileGroupsListUseCase @Inject constructor(
   private fun groupsObservable(currentProfile: AuthProfileItem): Observable<List<ListItem>> =
     Observable.fromCallable {
       channelRepository.getAllProfileChannelGroups(currentProfile.id).use { cursor ->
-        val channels = mutableListOf<ListItem>()
+        val groups = mutableListOf<ListItem>()
 
         var location: Location? = null
         if (cursor.moveToFirst()) {
@@ -33,16 +33,16 @@ class CreateProfileGroupsListUseCase @Inject constructor(
 
             if (location == null || location.locationId != group.locationId.toInt()) {
               location = channelRepository.getLocation(group.locationId.toInt())
-              channels.add(ListItem.LocationItem(location))
+              groups.add(ListItem.LocationItem(location))
             }
 
             if (location?.isCollapsed(CollapsedFlag.GROUP) == false) {
-              channels.add(ListItem.ChannelItem(group))
+              groups.add(ListItem.ChannelItem(group))
             }
           } while (cursor.moveToNext())
         }
 
-        return@use channels
+        return@use groups
       }
     }
 }

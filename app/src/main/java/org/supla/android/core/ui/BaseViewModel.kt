@@ -56,7 +56,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   fun isLoadingEvent(): Flow<Boolean> = viewState
     .map { it.loading }
     .distinctUntilChanged()
-    .debounce(timeoutMillis = 500)
+    .debounce(timeoutMillis = 350)
 
   private val compositeDisposable = CompositeDisposable()
 
@@ -83,13 +83,17 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   }
 
   fun <T> Maybe<T>.attach(): Maybe<T> {
+    return attachSilent()
+      .doOnSubscribe { updateState { loadingState(true) } }
+      .doOnTerminate { updateState { loadingState(false) } }
+  }
+
+  fun <T> Maybe<T>.attachSilent(): Maybe<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, "Maybe called at '$calledAt' failed with ${it.message}", it) }
-      .doOnSubscribe { updateState { loadingState(true) } }
-      .doOnTerminate { updateState { loadingState(false) } }
   }
 
   fun Completable.attach(): Completable {

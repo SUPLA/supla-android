@@ -12,6 +12,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentChannelListBinding
+import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.lib.SuplaChannelState
@@ -59,15 +60,20 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     when (event) {
       is ChannelListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
-      is ChannelListViewEvent.OpenLegacyDetails -> navigator.navigateToLegacyDetails(
-        event.remoteId,
-        event.type,
-        LegacyDetailFragment.ItemType.CHANNEL
-      )
+      is ChannelListViewEvent.OpenLegacyDetails -> {
+        setToolbarTitle("")
+        navigator.navigateToLegacyDetails(
+          event.remoteId,
+          event.type,
+          LegacyDetailFragment.ItemType.CHANNEL
+        )
+      }
       is ChannelListViewEvent.ReassignAdapter -> {
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
+      is ChannelListViewEvent.UpdateChannel -> adapter.updateListItem(event.channel)
+      else -> {}
     }
   }
 
@@ -98,7 +104,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
-    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it as Channel) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
@@ -115,6 +121,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   private fun handleChannelChange(channelId: Int) {
+    if (channelId > 0) {
+      viewModel.onChannelUpdate(channelId)
+    }
     if (statePopup.isVisible && statePopup.remoteId == channelId) {
       statePopup.update(channelId)
     }

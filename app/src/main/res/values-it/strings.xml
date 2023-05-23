@@ -383,7 +383,7 @@
     <string name="channel_caption_digiglass">Digiglass</string>
     <string name="channel_func_digiglass">Digiglass</string>
     <string name="wizard_done_explentations">Se il tuo nuovo dispositivo I/O non viene visualizzato nell\'app Comelit WiFree, esegui nuovamente la procedura guidata \"Aggiungi dispositivo I/O\" e fai riferimento alle informazioni sullo \"Stato precedente\" in questa pagina per la risoluzione dei problemi. Viene visualizzato \"SSID non trovato\" quando la rete WiFi scelta non è disponibile o il suo nome non è corretto.</string>
-    <string name="incorrect_email_or_password">Se il tuo nuovo dispositivo I/O non viene visualizzato nell\'app Comelit WiFree, esegui nuovamente la procedura guidata \"Aggiungi dispositivo I/O\" e fai riferimento alle informazioni sullo \"Stato precedente\" in questa pagina per la risoluzione dei problemi. Viene visualizzato \"SSID non trovato\" quando la rete WiFi scelta non è disponibile o il suo nome non è corretto.</string>
+    <string name="incorrect_email_or_password">Indirizzo Mail o Password errato</string>
     <string name="channel_name">Nome Canale</string>
     <string name="location_name">Nome Ambiente</string>
     <string name="str_default">Default</string>

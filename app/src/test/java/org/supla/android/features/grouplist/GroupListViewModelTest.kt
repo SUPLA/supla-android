@@ -46,13 +46,13 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var groupActionUseCase: GroupActionUseCase
 
   @Mock
-  private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
-
-  @Mock
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @Mock
   private lateinit var provideDetailTypeUseCase: ProvideDetailTypeUseCase
+
+  @Mock
+  private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @Mock
   private lateinit var listsEventsManager: ListsEventsManager
@@ -68,9 +68,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       channelRepository,
       createProfileGroupsListUseCase,
       groupActionUseCase,
-      readChannelGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase,
+      findGroupByRemoteIdUseCase,
       listsEventsManager,
       preferences,
       schedulers
@@ -205,46 +205,34 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should not open details when item is offline`() {
     // given
-    val groupId = 123
     val group = mockk<ChannelGroup>()
     every { group.onLine } returns false
-    whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
     // when
-    viewModel.onListItemClick(groupId)
+    viewModel.onListItemClick(group)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelGroupByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   @Test
   fun `should open thermostat details for channel with thermostat function`() {
     // given
-    val groupId = 123
     val group = mockk<ChannelGroup>()
     every { group.onLine } returns true
     every { group.func } returns SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-    whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
     // when
-    viewModel.onListItemClick(groupId)
+    viewModel.onListItemClick(group)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.OpenThermostatDetails
     )
-    verifyZeroInteractionsExcept(readChannelGroupByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   @Test
@@ -256,24 +244,19 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.onLine } returns true
     every { group.func } returns groupFunction
     every { group.groupId } returns groupId
-    whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
     val detailType = DetailType.TEMPERATURE
     whenever(provideDetailTypeUseCase(group)).thenReturn(detailType)
 
     // when
-    viewModel.onListItemClick(groupId)
+    viewModel.onListItemClick(group)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.OpenLegacyDetails(groupId, detailType)
     )
-    verifyZeroInteractionsExcept(readChannelGroupByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -285,19 +268,14 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.onLine } returns true
     every { group.func } returns groupFunction
     every { group.groupId } returns groupId
-    whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
     // when
-    viewModel.onListItemClick(groupId)
+    viewModel.onListItemClick(group)
 
     // then
-    val state = GroupListViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelGroupByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -320,12 +298,46 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
   }
 
+  @Test
+  fun `should load group on update`() {
+    // given
+    val groupId = 223
+    val group: ChannelGroup = mockk()
+
+    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
+
+    // when
+    viewModel.onGroupUpdate(groupId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(
+      GroupListViewEvent.UpdateGroup(group)
+    )
+    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `should do nothing when group not found on update`() {
+    // given
+    val groupId = 223
+
+    whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.empty())
+
+    // when
+    viewModel.onGroupUpdate(groupId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase)
+  }
+
   private fun verifyZeroInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       channelRepository,
       createProfileGroupsListUseCase,
       groupActionUseCase,
-      readChannelGroupByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase
     )

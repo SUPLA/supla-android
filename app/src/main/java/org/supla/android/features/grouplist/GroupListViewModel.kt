@@ -43,9 +43,9 @@ class GroupListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
   private val groupActionUseCase: GroupActionUseCase,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   listsEventsManager: ListsEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -105,11 +105,15 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channelId: Int) {
-    readChannelGroupByRemoteIdUseCase(channelId)
-      .attach()
+  fun onListItemClick(channelGroup: ChannelGroup) {
+    openDetailsByChannelFunction(channelGroup)
+  }
+
+  fun onGroupUpdate(remoteId: Int) {
+    findGroupByRemoteIdUseCase(remoteId = remoteId)
+      .attachSilent()
       .subscribeBy(
-        onSuccess = { openDetailsByChannelFunction(it) }
+        onSuccess = { sendEvent(GroupListViewEvent.UpdateGroup(it)) }
       )
       .disposeBySelf()
   }
@@ -137,6 +141,7 @@ sealed class GroupListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : GroupListViewEvent()
   object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
+  data class UpdateGroup(val channelGroup: ChannelGroup) : GroupListViewEvent()
 }
 
 data class GroupListViewState(

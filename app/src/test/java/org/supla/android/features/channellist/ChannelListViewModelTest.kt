@@ -46,13 +46,13 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var channelActionUseCase: ChannelActionUseCase
 
   @Mock
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
-
-  @Mock
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @Mock
   private lateinit var provideDetailTypeUseCase: ProvideDetailTypeUseCase
+
+  @Mock
+  private lateinit var findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
   @Mock
   private lateinit var listsEventsManager: ListsEventsManager
@@ -68,9 +68,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelRepository,
       createProfileChannelsListUseCase,
       channelActionUseCase,
-      readChannelByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase,
+      findChannelByRemoteIdUseCase,
       listsEventsManager,
       preferences,
       schedulers
@@ -203,48 +203,60 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should not open details when item is offline`() {
+  fun `should not open RGB details when item is offline`() {
+    // given
+    val channel = mockk<Channel>()
+    every { channel.onLine } returns false
+    every { channel.func } returns SUPLA_CHANNELFNC_RGBLIGHTING
+
+    // when
+    viewModel.onListItemClick(channel)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept()
+  }
+
+  @Test
+  fun `should open EM details when item is offline`() {
     // given
     val channelId = 123
     val channel = mockk<Channel>()
     every { channel.onLine } returns false
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
+    every { channel.func } returns SUPLA_CHANNELFNC_ELECTRICITY_METER
+    every { channel.channelId } returns channelId
+
+    val detailType = DetailType.EM
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
     )
-    assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
   fun `should open thermostat details for channel with thermostat function`() {
     // given
-    val channelId = 123
     val channel = mockk<Channel>()
     every { channel.onLine } returns true
     every { channel.func } returns SUPLA_CHANNELFNC_THERMOSTAT
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetails
     )
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   @Test
@@ -256,24 +268,19 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.onLine } returns true
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     val detailType = DetailType.TEMPERATURE
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
     )
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -285,19 +292,14 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.onLine } returns true
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.onListItemClick(channelId)
+    viewModel.onListItemClick(channel)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(readChannelByRemoteIdUseCase, provideDetailTypeUseCase)
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -320,12 +322,46 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
   }
 
+  @Test
+  fun `should load channel on update`() {
+    // given
+    val channelId = 223
+    val channel: Channel = mockk()
+
+    whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.onChannelUpdate(channelId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.UpdateChannel(channel)
+    )
+    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+  }
+
+  @Test
+  fun `should do nothing when channel not found on update`() {
+    // given
+    val channelId = 223
+
+    whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.empty())
+
+    // when
+    viewModel.onChannelUpdate(channelId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+  }
+
   private fun verifyZeroInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       channelRepository,
       createProfileChannelsListUseCase,
       channelActionUseCase,
-      readChannelByRemoteIdUseCase,
       toggleLocationUseCase,
       provideDetailTypeUseCase
     )

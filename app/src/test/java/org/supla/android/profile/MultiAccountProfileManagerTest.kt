@@ -275,6 +275,9 @@ class MultiAccountProfileManagerTest {
     verify(profileIdHolder).profileId = newActiveProfileId
     verify(dbHelper).loadUserIconsIntoCache()
     verify(listsEventsManager).cleanup()
+    verify(listsEventsManager).emitSceneUpdate()
+    verify(listsEventsManager).emitGroupUpdate()
+    verify(listsEventsManager).emitChannelUpdate()
     verify(suplaAppProvider).provide()
     verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
 
@@ -321,6 +324,9 @@ class MultiAccountProfileManagerTest {
     verify(profileIdHolder).profileId = activeProfileId
     verify(dbHelper).loadUserIconsIntoCache()
     verify(listsEventsManager).cleanup()
+    verify(listsEventsManager).emitSceneUpdate()
+    verify(listsEventsManager).emitGroupUpdate()
+    verify(listsEventsManager).emitChannelUpdate()
     verify(suplaAppProvider).provide()
     verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
 
