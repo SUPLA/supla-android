@@ -15,8 +15,8 @@
     <item name="brandPrimaryForegroundColor">#ffffff</item>
     <item name="brandPrimaryBackgroundColor">@color/supla_green</item>
     <item name="linkColor">#007AFF</item>
-    <item name="labelColor">#7e8082</item>
-    <item name="switcherBackgroundColor">@color/switcher_background_light</item>
+    <item name="labelColor">@color/gray</item>
+    <item name="switcherBackgroundColor">@color/gray_light</item>
     <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
   </style>
 

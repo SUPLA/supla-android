@@ -155,7 +155,7 @@ sealed class SettingItem(val viewResource: Int) {
         settingsPermissionLabel.setText(R.string.settings_notifications)
         if (allowed) {
           settingsPermissionsStatus.setText(R.string.notifications_active)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primaryVariant, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary_variant, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))
@@ -174,7 +174,7 @@ sealed class SettingItem(val viewResource: Int) {
         settingsPermissionLabel.setText(R.string.settings_localization)
         if (allowed) {
           settingsPermissionsStatus.setText(R.string.notifications_active)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primaryVariant, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary_variant, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))

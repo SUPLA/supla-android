@@ -11,20 +11,26 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.ChannelStatePopup
 import org.supla.android.R
+import org.supla.android.core.storage.InternalPreferences
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentStandardDetailBinding
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
 import org.supla.android.ui.ToolbarItemsClickHandler
+import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
+private const val ARG_PAGES = "ARG_PAGES"
 
 @AndroidEntryPoint
 class StandardDetailFragment :
   BaseFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail),
   ToolbarItemsClickHandler {
+
+  @Inject
+  lateinit var internalPreferences: InternalPreferences
 
   private val viewModel: StandardDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
@@ -32,8 +38,8 @@ class StandardDetailFragment :
 
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
-
-  private val menuItems by lazy { listOf(DetailPage.GENERAL, DetailPage.TIMER) }
+  @Suppress("UNCHECKED_CAST")
+  private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
 
   override fun getViewModel(): BaseViewModel<StandardDetailViewState, StandardDetailViewEvent> = viewModel
 
@@ -41,13 +47,18 @@ class StandardDetailFragment :
     super.onViewCreated(view, savedInstanceState)
 
     statePopup = ChannelStatePopup(requireActivity())
+    val openedPage = getOpenedPage()
     binding.detailBottomBar.inflateMenu(R.menu.detail_bottom)
     for (item in binding.detailBottomBar.menu.children) {
-      item.isVisible = menuItems.map { it.menuId }.contains(item.itemId)
+      item.isVisible = pages.map { it.menuId }.contains(item.itemId)
     }
+    binding.detailBottomBar.selectedItemId = pages[openedPage].menuId
     binding.detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
-    binding.detailViewPager.adapter = StandardDetailPagerAdapter(menuItems, remoteId, itemType, this)
+
+    binding.detailViewPager.adapter = StandardDetailPagerAdapter(pages, remoteId, itemType, this)
+    binding.detailViewPager.setCurrentItem(openedPage, false)
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
+
     viewModel.loadData(remoteId, itemType)
   }
 
@@ -89,21 +100,15 @@ class StandardDetailFragment :
   }
 
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
-    binding.detailViewPager.currentItem = menuItems.map { it.menuId }.indexOf(menuItem.itemId)
+    binding.detailViewPager.currentItem = pages.map { it.menuId }.indexOf(menuItem.itemId)
     return true
   }
 
   private val pagerCallback = object : OnPageChangeCallback() {
     override fun onPageSelected(position: Int) {
-      binding.detailBottomBar.selectedItemId = menuItems[position].menuId
+      binding.detailBottomBar.selectedItemId = pages[position].menuId
+      internalPreferences.setDetailOpenedPage(remoteId, position)
     }
-  }
-
-  companion object {
-    fun bundle(remoteId: Int, itemType: ItemType) = bundleOf(
-      ARG_REMOTE_ID to remoteId,
-      ARG_ITEM_TYPE to itemType
-    )
   }
 
   override fun onMenuItemClick(menuItem: MenuItem): Boolean {
@@ -113,5 +118,22 @@ class StandardDetailFragment :
     }
 
     return false
+  }
+
+  private fun getOpenedPage(): Int {
+    val openedPage = internalPreferences.getDetailOpenedPage(remoteId)
+    return if (openedPage < 0 || openedPage >= pages.size) {
+      0
+    } else {
+      openedPage
+    }
+  }
+
+  companion object {
+    fun bundle(remoteId: Int, itemType: ItemType, pages: Array<DetailPage>) = bundleOf(
+      ARG_REMOTE_ID to remoteId,
+      ARG_ITEM_TYPE to itemType,
+      ARG_PAGES to pages
+    )
   }
 }

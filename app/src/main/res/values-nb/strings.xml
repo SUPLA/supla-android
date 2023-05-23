@@ -456,4 +456,5 @@
     <string name="rs_display_mode_opening">Åpning</string>
     <string name="rs_display_mode_closing">Nedleggelser</string>
     <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

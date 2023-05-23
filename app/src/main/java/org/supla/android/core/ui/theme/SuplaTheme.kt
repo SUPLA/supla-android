@@ -3,6 +3,7 @@ package org.supla.android.core.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun SuplaTheme(
@@ -10,7 +11,7 @@ fun SuplaTheme(
   content: @Composable () -> Unit
 ) {
   MaterialTheme(
-    colors = if (darkMode) SuplaDarkColors.toMaterial() else SuplaLightColors.toMaterial(),
+    colors = if (darkMode) SuplaDarkColors.toMaterial() else SuplaLightColors(LocalContext.current).toMaterial(),
     typography = SuplaTypography,
     content = content
   )

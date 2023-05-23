@@ -92,7 +92,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, "Maybe called at '$calledAt' failed with ${it.message}", it) }
+      .doOnError { Trace.e(TAG, errorMessage("Maybe", calledAt, it.message), it) }
   }
 
   fun Completable.attach(): Completable {
@@ -100,7 +100,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, "Completable called at '$calledAt' failed with ${it.message}", it) }
+      .doOnError { Trace.e(TAG, errorMessage("Completable", calledAt, it.message), it) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
   }
@@ -110,7 +110,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, "Completable called at '$calledAt' failed with ${it.message}", it) }
+      .doOnError { Trace.e(TAG, errorMessage("Completable", calledAt, it.message), it) }
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
@@ -118,7 +118,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
+      .doOnError { Trace.e(TAG, errorMessage("Single", calledAt, it.message), it) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
   }
@@ -134,8 +134,11 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, "Single called at '$calledAt' failed with ${it.message}", it) }
+      .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
   }
+
+  private fun errorMessage(type: String, calledAt: String?, throwableMessage: String?) =
+    "$type called at '$calledAt' failed with message: '$throwableMessage'"
 
   private fun findStackEntryString(stack: Array<StackTraceElement>): String? {
     for (entry in stack) {

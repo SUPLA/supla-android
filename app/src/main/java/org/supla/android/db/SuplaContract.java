@@ -80,6 +80,7 @@ public class SuplaContract {
     public static final String _ID = "_channel_extendedvalue_id"; // Primary Key
     public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
     public static final String COLUMN_NAME_VALUE = "extendedvalue";
+    public static final String COLUMN_NAME_TIMER_START_TIME = "timer_start_time";
     public static final String COLUMN_NAME_PROFILEID = "profileid";
   }
 
@@ -198,6 +199,8 @@ public class SuplaContract {
     public static final String COLUMN_NAME_VALUE = ChannelValueEntry.COLUMN_NAME_VALUE;
     public static final String COLUMN_NAME_EXTENDEDVALUE =
         ChannelExtendedValueEntry.COLUMN_NAME_VALUE;
+    public static final String COLUMN_NAME_TIMER_START_TIME =
+        ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME;
     public static final String COLUMN_NAME_TYPE = ChannelEntry.COLUMN_NAME_TYPE;
     public static final String COLUMN_NAME_FUNC = ChannelEntry.COLUMN_NAME_FUNC;
     public static final String COLUMN_NAME_VISIBLE = ChannelEntry.COLUMN_NAME_VISIBLE;

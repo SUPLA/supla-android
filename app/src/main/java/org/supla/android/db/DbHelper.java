@@ -45,6 +45,7 @@ import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.db.SuplaContract.ChannelExtendedValueEntry;
 import org.supla.android.db.versions.MigratorV27;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
@@ -60,7 +61,7 @@ import org.supla.android.profile.ProfileMigrator;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 27;
+  public static final int DATABASE_VERSION = 28;
   private static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -349,7 +350,10 @@ public class DbHelper extends BaseDbHelper {
             + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE
-            + " BLOB)";
+            + " BLOB,"
+            + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME
+            + " INTEGER"
+            + ")";
 
     execSQL(db, SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE);
     createIndex(
@@ -432,6 +436,9 @@ public class DbHelper extends BaseDbHelper {
             + ", "
             + "CEV."
             + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE
+            + ", "
+            + "CEV."
+            + SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME
             + ", "
             + "C."
             + SuplaContract.ChannelEntry.COLUMN_NAME_TYPE
@@ -1120,6 +1127,18 @@ public class DbHelper extends BaseDbHelper {
         });
   }
 
+  private void upgradeToV28(SQLiteDatabase db) {
+    addColumn(
+        db,
+        "ALTER TABLE "
+            + ChannelExtendedValueEntry.TABLE_NAME
+            + " ADD COLUMN "
+            + ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME
+            + " INTEGER");
+    execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelViewEntry.VIEW_NAME);
+    createChannelView(db);
+  }
+
   private void dropViews(SQLiteDatabase db) {
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelViewEntry.VIEW_NAME);
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
@@ -1198,6 +1217,9 @@ public class DbHelper extends BaseDbHelper {
             break;
           case 26:
             upgradeToV27(db);
+            break;
+          case 27:
+            upgradeToV28(db);
             break;
         }
       }

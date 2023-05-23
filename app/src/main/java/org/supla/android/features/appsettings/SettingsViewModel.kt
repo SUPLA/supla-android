@@ -53,8 +53,6 @@ class SettingsViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
   private fun configObservable() = Observable.fromCallable {
     return@fromCallable listOf(
       SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
@@ -116,5 +114,4 @@ sealed class SettingsViewEvent : ViewEvent {
 
 data class SettingsViewState(
   val settingsItems: List<SettingItem> = emptyList(),
-  override val loading: Boolean = false
-) : ViewState(loading)
+) : ViewState()

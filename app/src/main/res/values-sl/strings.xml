@@ -456,4 +456,5 @@
     <string name="rs_display_mode_opening">Odpiranja</string>
     <string name="rs_display_mode_closing">Zapiranja</string>
     <string name="status_accessid_inactive">Identifikator dostopa ni aktiven</string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

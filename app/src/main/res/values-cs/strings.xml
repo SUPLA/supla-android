@@ -436,4 +436,5 @@
     <string name="rs_display_mode_opening">Otevření</string>
     <string name="rs_display_mode_closing">Zavření</string>
     <string name="status_accessid_inactive">Identifikátor přístupu není aktivní</string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

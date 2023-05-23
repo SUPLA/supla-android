@@ -17,28 +17,22 @@ package org.supla.android.db;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.annotation.SuppressLint;
-
-import org.supla.android.lib.SuplaChannelAndTimerState;
-import org.supla.android.lib.SuplaChannelElectricityMeterValue;
-import org.supla.android.lib.SuplaChannelExtendedValue;
-import org.supla.android.lib.SuplaChannelImpulseCounterValue;
-import org.supla.android.lib.SuplaChannelState;
-import org.supla.android.lib.SuplaChannelThermostatValue;
-import org.supla.android.lib.SuplaConst;
-import org.supla.android.lib.SuplaTimerState;
-
+import androidx.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.supla.android.db.SuplaContract.ChannelExtendedValueEntry;
+import org.supla.android.lib.SuplaChannelExtendedValue;
 
 public class ChannelExtendedValue extends DbItem {
     private int ChannelId;
     private long profileId;
+    private Long timerStartTimestamp;
     
     private SuplaChannelExtendedValue ExtendedValue;
 
@@ -67,8 +61,28 @@ public class ChannelExtendedValue extends DbItem {
         profileId = pid;
     }
 
+    @Nullable
+    public Long getTimerStartTimestamp() {
+        return timerStartTimestamp;
+    }
+
+    public void setTimerStartTimestamp(@Nullable Long timestamp) {
+        timerStartTimestamp = timestamp;
+    }
+
     public SuplaChannelExtendedValue getExtendedValue() {
         return ExtendedValue;
+    }
+
+    public boolean hasTimerSet() {
+        if (ExtendedValue == null) {
+            return false;
+        }
+        if (ExtendedValue.TimerStateValue == null) {
+            return false;
+        }
+
+        return ExtendedValue.TimerStateValue.getCountdownEndsAt() != null;
     }
 
     public void setExtendedValue(SuplaChannelExtendedValue extendedValue) {
@@ -94,6 +108,11 @@ public class ChannelExtendedValue extends DbItem {
         setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
         setChannelId(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
         setProfileId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID)));
+        try {
+            setTimerStartTimestamp(cursor.getLong(cursor.getColumnIndex(ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME)));
+        } catch (Exception ex) {
+            setTimerStartTimestamp(null);
+        }
 
         byte[] value = cursor.getBlob(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
         Object obj = ByteArrayToObject(value);
@@ -129,6 +148,7 @@ public class ChannelExtendedValue extends DbItem {
                 ObjectToByteArray(ExtendedValue));
         values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID,
                    getProfileId());
+        values.put(ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME, getTimerStartTimestamp());
         
         return values;
     }

@@ -17,10 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.core.ui.theme.SuplaTypography
 
 class SegmentedComponent @JvmOverloads constructor(
   context: Context,
@@ -32,24 +34,27 @@ class SegmentedComponent @JvmOverloads constructor(
 
   var items by mutableStateOf(listOf<String>())
   var activeItem by mutableStateOf(0)
+  var disabled by mutableStateOf(false)
 
   @Composable
   override fun Content() {
     SuplaTheme {
-      SegmentedComponentContent(items, activeItem) {
-        activeItem = it
-        selectedItemListener(it)
+      SegmentedComponentContent(items, activeItem, disabled) {
+        if (disabled.not()) {
+          activeItem = it
+          selectedItemListener(it)
+        }
       }
     }
   }
 }
 
 @Composable
-private fun SegmentedComponentContent(items: List<String>, activeItem: Int, onClick: (Int) -> Unit = {}) {
+private fun SegmentedComponentContent(items: List<String>, activeItem: Int, disabled: Boolean, onClick: (Int) -> Unit = {}) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .background(color = colorResource(id = R.color.switcher_background_light), shape = RoundedCornerShape(6.dp))
+      .background(color = colorResource(id = R.color.gray_light), shape = RoundedCornerShape(6.dp))
       .padding(2.dp)
   ) {
     for ((i, item) in items.withIndex()) {
@@ -59,16 +64,27 @@ private fun SegmentedComponentContent(items: List<String>, activeItem: Int, onCl
       if (activeItem == i) {
         ClickableText(
           text = AnnotatedString(item.uppercase()),
+          style = SuplaTypography.button.copy(
+            color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
+            textAlign = TextAlign.Center
+          ),
           onClick = { },
           modifier = Modifier
             .background(MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(6.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
+            .weight(1f)
         )
       } else {
         ClickableText(
           text = AnnotatedString(item.uppercase()),
+          style = SuplaTypography.button.copy(
+            color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
+            textAlign = TextAlign.Center
+          ),
           onClick = { onClick(i) },
-          modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+          modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .weight(1f)
         )
       }
     }
@@ -80,7 +96,10 @@ private fun SegmentedComponentContent(items: List<String>, activeItem: Int, onCl
 private fun Preview() {
   Box(modifier = Modifier.background(Color.White)) {
     SuplaTheme {
-      SegmentedComponentContent(listOf("Turn on", "Turn off"), 1)
+      Column {
+        SegmentedComponentContent(listOf("Turn on", "Turn off"), 1, true)
+        SegmentedComponentContent(listOf("Turn on", "Turn off"), 0, false)
+      }
     }
   }
 }

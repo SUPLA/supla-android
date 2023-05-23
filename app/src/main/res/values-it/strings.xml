@@ -470,5 +470,6 @@
     <string name="btn_execute">Start</string>
     <string name="btn_abort">Stop</string>
     <string  name="btn_abort_and_execute">Stop &amp; start</string>
+ <string name="hour_string_format">HH:mm:ss</string>
 
 </resources>

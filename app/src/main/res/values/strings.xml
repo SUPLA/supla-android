@@ -140,10 +140,10 @@
     <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
-    <string name="start">START</string><![CDATA[>
-
-
-    ]]>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="turn_on">Turn on</string>
+    <string name="turn_off">Turn off</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
     <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
@@ -543,11 +543,45 @@
     <string translatable="false" name="notifications_inactive">𐄂</string>
     <string translatable="false" name="settings_localization">Localization</string>
     <string translatable="false" name="settings_permissions">Permissions</string>
-    <string translatable="false" name="turn_on">Turn on</string>
 
     <string translatable="false" name="details_general">General</string>
     <string translatable="false" name="details_schedule">Schedule</string>
     <string translatable="false" name="details_timer">Timer</string>
     <string translatable="false" name="details_history">History</string>
     <string translatable="false" name="details_settings">Settings</string>
+    <string name="details_timer_wrong_time">Time should be bigger than 0</string>
+    <string name="details_timer_text">Define time for each device should stay turned on or off</string>
+    <string name="details_timer_turn_on_for">Turn on for</string>
+    <string name="details_timer_turn_off_for">Turn off for</string>
+    <string name="details_timer_info">Device will be %1$s for %2$s, and then turn %3$s</string>
+  <string name="details_timer_leave_it">Leave it %1$s</string>
+    <string name="details_timer_cancel_and">Cancel and turn %1$s</string>
+    <string name="details_timer_format">%1$02d:%2$02d:%3$02d</string>
+    <string name="details_timer_end_hour">until %1$s</string>
+    <string name="hour_string_format">hh:mm:ss a</string>
+    <string name="details_timer_state_label">Current state:</string>
+    <string name="details_timer_device_on">turned on</string>
+    <string name="details_timer_device_off">turned off</string>
+    <string name="details_timer_edit_time">Edit time</string>
+    <string name="details_timer_edit_header">Edit turned %1$s time</string>
+    <string name="details_timer_start">Start</string>
+    <string name="details_timer_edit_cancel">Cancel editing</string>
+    <string name="details_timer_save">Save</string>
+    <plurals name="details_timer_info_on">
+        <item quantity="other">on</item>
+    </plurals>
+    <plurals name="details_timer_info_off">
+        <item quantity="other">off</item>
+    </plurals>
+    <plurals name="hour_pattern">
+        <item quantity="zero">%1$d hours</item>
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="minute_pattern">
+        <item quantity="other">%1$d min</item>
+    </plurals>
+    <plurals name="second_pattern">
+        <item quantity="other">%1$d sec</item>
+    </plurals>
 </resources>

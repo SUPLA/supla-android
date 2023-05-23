@@ -75,7 +75,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       }
       is ChannelListViewEvent.OpenSwitchDetails -> navigator.navigateTo(
         R.id.switch_detail_fragment,
-        StandardDetailFragment.bundle(event.remoteId, ItemType.CHANNEL)
+        StandardDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.pages.toTypedArray())
       )
       else -> {}
     }

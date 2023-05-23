@@ -2,8 +2,10 @@ package org.supla.android.usecases.details
 
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
 import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,13 +24,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      (channelBase as? Channel)?.run {
-        when (value?.subValueType) {
-          SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort() -> LegacyDetailType.IC
-          SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> LegacyDetailType.EM
-          else -> StandardDetailType.SWITCH
-        }
-      }
+      StandardDetailType(getSwitchDetailPages(channelBase))
     }
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
       LegacyDetailType.EM
@@ -48,6 +44,23 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       LegacyDetailType.DIGIGLASS
     else -> null
   }
+
+  private fun getSwitchDetailPages(channelBase: ChannelBase): List<DetailPage> {
+    return if (channelBase is Channel) {
+      val list = mutableListOf(DetailPage.GENERAL)
+      if (channelBase.value?.subValueType == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
+        list.add(DetailPage.HISTORY_IC)
+      } else if (channelBase.value?.subValueType == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
+        list.add(DetailPage.HISTORY_EM)
+      }
+      if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0) {
+        list.add(DetailPage.TIMER)
+      }
+      list
+    } else {
+      listOf(DetailPage.GENERAL)
+    }
+  }
 }
 
 sealed interface DetailType : Serializable
@@ -63,6 +76,6 @@ enum class LegacyDetailType : DetailType {
   DIGIGLASS
 }
 
-enum class StandardDetailType : DetailType {
-  SWITCH
-}
+data class StandardDetailType(
+  val pages: List<DetailPage>
+) : DetailType

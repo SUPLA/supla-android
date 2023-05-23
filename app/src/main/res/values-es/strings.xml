@@ -457,4 +457,5 @@
     <string name="rs_display_mode_opening">Aperturas</string>
     <string name="rs_display_mode_closing">Cierres</string>
     <string name="status_accessid_inactive">Identificación de acceso inactiva</string>
+ <string name="hour_string_format">HH:mm:ss</string>
 </resources>

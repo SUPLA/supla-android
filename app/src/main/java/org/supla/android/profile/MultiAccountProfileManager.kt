@@ -74,7 +74,7 @@ class MultiAccountProfileManager(
   }
 
   override fun getCurrentProfile(): Maybe<AuthProfileItem> = Maybe.fromCallable {
-    profileRepository.allProfiles.firstOrNull { it.isActive }!!
+    profileRepository.allProfiles.firstOrNull { it.isActive }
   }
 
   override fun activateProfile(id: Long, force: Boolean): Completable = Completable.fromRunnable {

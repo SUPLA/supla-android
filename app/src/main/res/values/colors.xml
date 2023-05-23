@@ -4,13 +4,17 @@
     <color name="supla_green">#12a71e</color>
 
     <color name="primary">@color/supla</color>
-    <color name="primaryVariant">@color/supla_green</color>
+    <color name="primary_variant">@color/supla_green</color>
     <color name="on_primary">#ffffff</color>
+    <color name="surface">#ffffff</color>
+    <color name="background">#F5F6F7</color>
+
+    <color name="gray">#7E8082</color>
+    <color name="gray_light">#EFEFF0</color>
 
     <color name="item_selected">#ffffff</color>
     <color name="item_unselected">#dadbdc</color>
 
-    <color name="supla_background_light">#F5F6F7</color>
     <color name="supla_text_light">#000000</color>
     
     <color name="dialog_scrim">#80363738</color>
@@ -69,7 +73,7 @@
     <color name="zwave_btn_separator">#B4B7BA</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
-    <color name="zwave_info_table_bg">@color/supla_background_light</color>
+    <color name="zwave_info_table_bg">@color/background</color>
     <color name="zwave_info_table_text">#000000</color>
     <color name="zwave_info_table_separator">#B4B7BA</color>
 
@@ -86,31 +90,26 @@
     <color name="wake_up_settings_infotext">#000000</color>
     <color name="wake_up_settings_infoline">#B4B7BA</color>
 
-    <color name="switcher_background_light">#1F767880</color>
-    <color name="switcher_border_light">#7678801F</color>
-
     <color name="list_separator_bg">#AAAAAA</color>
     <color name="red_alert">#EB3A28</color>
-    <color name="label_grey">#7e8082</color>
-    <color name="holder_grey">#7e8082</color>
 
-    <color name="activity_bg_new">#E5E5E5</color>
     <color name="cell_bg_new">#FAFBFC</color>
     <color name="popup_profile_cell_bg">#FFFFFF</color>
     <color name="supla">#00d151</color>
-    <color name="ripple">#5112a71e</color>
+    <color name="ripple_light">#4400d151</color>
+    <color name="ripple_dark">#AB00d151</color>
     <color name="supla_stroke">#00BD59</color>
 
     <!-- New colors with day/night support -->
 
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
-    <color name="button_background">@color/supla</color>
+    <color name="button_background">@color/supla_green</color>
     <color name="button_background_disabled">#B4B7BA</color>
 
     <color name="widget_text">@color/supla_text_light</color>
-    <color name="widget_background">@color/supla_background_light</color>
+    <color name="widget_background">@color/background</color>
     <color name="widget_fields_border">#3078801F</color>
     <color name="widget_spinner_location_background">@color/channel_section_cell</color>
-    <color name="widget_spinner_item_background">@color/supla_background_light</color>
+    <color name="widget_spinner_item_background">@color/background</color>
 </resources>

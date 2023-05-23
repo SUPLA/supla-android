@@ -10,6 +10,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
@@ -126,7 +127,7 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(channel)) {
-      StandardDetailType.SWITCH -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId))
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId, detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -157,7 +158,7 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetails(val remoteId: Int) : ChannelListViewEvent()
+  data class OpenSwitchDetails(val remoteId: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
   data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()

@@ -29,20 +29,20 @@ class DetailStartButton @JvmOverloads constructor(
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
   var buttonText by mutableStateOf("")
-  var disabled by mutableStateOf(false)
+  var running by mutableStateOf(false)
 
   @Composable
   override fun Content() {
     SuplaTheme {
-      DetailStartButtonContent(buttonText, disabled)
+      DetailStartButtonContent(buttonText, running)
     }
   }
 }
 
 @Composable
-internal fun DetailStartButtonContent(text: String, disabled: Boolean) {
+internal fun DetailStartButtonContent(text: String, running: Boolean) {
   Box(contentAlignment = Alignment.Center) {
-    val color = if (disabled) { colorResource(id = R.color.button_background_disabled) } else { MaterialTheme.colors.primary }
+    val color = if (running) { colorResource(id = R.color.red_alert) } else { MaterialTheme.colors.primary }
     Canvas(modifier = Modifier.size(128.dp)) {
       drawCircle(
         color = color,

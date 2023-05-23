@@ -2,18 +2,24 @@ package org.supla.android.features.standarddetail.timersdetail
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.format.DateFormat
+import android.util.Log
 import android.view.View
-import androidx.compose.ui.graphics.toArgb
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.Trace
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.theme.SuplaLightColors
 import org.supla.android.databinding.FragmentTimersDetailBinding
+import org.supla.android.extensions.TAG
+import org.supla.android.extensions.visibleIf
+import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaClientMsg
+import java.util.*
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
@@ -25,27 +31,26 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
 
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
   private var timer: CountDownTimer? = null
+  private var leftTimeInSecs: Int = 0
 
-  private var selectedSwitchPosition: Int = 0
+  // Not always timer.cancel() stops timer, this flag is to handle this problem
+  private var timerActive = false
 
   override fun getViewModel(): BaseViewModel<TimersDetailViewState, TimersDetailViewEvent> = viewModel
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    binding.root.setBackgroundColor(SuplaLightColors.Background.toArgb())
-
-    binding.detailsTimerHour.maxValue = 23
-    binding.detailsTimerMinute.maxValue = 59
-    binding.detailsTimerSecond.maxValue = 59
-
-    binding.detailsTimerButton.buttonText = "Start"
-    binding.detailsTimerButton.setOnClickListener {
-      val time = binding.detailsTimerSecond.value + binding.detailsTimerMinute.value * 60 + binding.detailsTimerHour.value * 3600
-      viewModel.startTimer(remoteId, selectedSwitchPosition == 0, time * 1000)
+    binding.detailsTimerConfiguration.onStartClickListener = { timeInSeconds, action ->
+      viewModel.startTimer(remoteId, action == TimerTargetAction.TURN_ON, timeInSeconds)
     }
-    binding.detailsTimerActionSwitch.items = listOf("Turn on", "Turn off")
-    binding.detailsTimerActionSwitch.selectedItemListener = { selectedSwitchPosition = it }
+    binding.detailsTimerConfiguration.onEditCancelClickListener = { viewModel.cancelEditMode() }
+    binding.detailsTimerStopButton.setOnClickListener { viewModel.stopTimer(remoteId) }
+    binding.detailsTimerCancelButton.setOnClickListener { viewModel.cancelTimer(remoteId) }
+    binding.detailsTimerEditTime.setOnClickListener {
+      binding.detailsTimerConfiguration.timeInSeconds = leftTimeInSecs
+      viewModel.startEditMode()
+    }
   }
 
   override fun onStart() {
@@ -59,51 +64,97 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   }
 
   override fun handleEvents(event: TimersDetailViewEvent) {
+    when (event) {
+      TimersDetailViewEvent.ShowInvalidTimeToast -> Toast.makeText(context, R.string.details_timer_wrong_time, Toast.LENGTH_LONG).show()
+    }
   }
 
   override fun handleViewState(state: TimersDetailViewState) {
-    binding.detailsTimerButton.disabled = state.isTimerOn
+    state.channel?.let {
+      binding.detailsTimerConfiguration.deviceStateOn = it.value.hiValue()
+      binding.detailsTimerState.deviceStateIcon.setImageBitmap(ImageCache.getBitmap(requireContext(), it.imageIdx))
+      binding.detailsTimerState.deviceStateValue.text = if (it.value.hiValue()) {
+        getString(R.string.details_timer_device_on)
+      } else {
+        getString(R.string.details_timer_device_off)
+      }
+    }
 
-    if (state.isTimerOn) {
-      setupTimer(state.leftTimeMillis!!)
+    val showTimer = state.timerData != null
+    binding.detailsTimerConfiguration.visibleIf(showTimer.not() || state.editMode)
+    binding.detailsTimerConfiguration.editMode = state.editMode
+    binding.detailsTimerProgress.visibleIf(showTimer)
+
+    handleTimerState(state)
+  }
+
+  private fun handleTimerState(state: TimersDetailViewState) {
+    Trace.d(TAG, "Handling timer state: ${state.timerData}")
+    if (state.timerData != null) {
+      setupTimer(state.timerData.startTime, state.timerData.endTime)
+      setTimerValues(state.timerData.startTime, state.timerData.endTime)
+      binding.detailsTimerProgress.indeterminate = state.timerData.indeterminate
+
+      val formatString = getString(R.string.hour_string_format)
+      binding.detailsTimerProgressEndHour.text = getString(
+        R.string.details_timer_end_hour,
+        DateFormat.format(formatString, state.timerData.endTime)
+      )
+      binding.detailsTimerStopButton.text = getString(
+        R.string.details_timer_leave_it,
+        resources.getQuantityString(if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_on else R.plurals.details_timer_info_off, 1)
+      )
+      binding.detailsTimerCancelButton.text = getString(
+        R.string.details_timer_cancel_and,
+        resources.getQuantityString(if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_off else R.plurals.details_timer_info_on, 3)
+      )
     } else {
       timer?.cancel()
-    }
-
-    setupTimerValues(state.timerValues)
-  }
-
-  private fun setupTimerValues(timerValues: TimerValues?) {
-    binding.detailsTimerHour.isEnabled = timerValues == null
-    binding.detailsTimerMinute.isEnabled = timerValues == null
-    binding.detailsTimerSecond.isEnabled = timerValues == null
-
-    timerValues?.also {
-      binding.detailsTimerHour.value = it.hours
-      binding.detailsTimerMinute.value = it.minutes
-      binding.detailsTimerSecond.value = it.seconds
+      timer = null
     }
   }
 
-  private fun setupTimer(leftTime: Long) {
+  private fun setTimerValues(startTime: Date, endTime: Date) {
+    val data = viewModel.calculateProgressViewData(startTime, endTime)
+    binding.detailsTimerProgress.progress = data.progress
+    binding.detailsTimerProgressTime.text = getString(
+      R.string.details_timer_format,
+      data.leftTimeValues.hours,
+      data.leftTimeValues.minutes,
+      data.leftTimeValues.seconds
+    )
+  }
+
+  private fun setupTimer(startTime: Date, endTime: Date) {
     timer?.cancel()
 
-    timer = object : CountDownTimer(leftTime, 100) {
-      override fun onTick(millisUntilFinished: Long) {
-        setupTimerValues(TimerValues.of(millisUntilFinished / 1000))
-      }
+    val leftTime = endTime.time - Date().time
+    if (leftTime > 0) {
+      timerActive = true
+      timer = object : CountDownTimer(leftTime, 100) {
+        override fun onTick(millisUntilFinished: Long) {
+          leftTimeInSecs = millisUntilFinished.div(1000).toInt()
+          if (timerActive) {
+            setTimerValues(startTime, endTime)
+          }
+        }
 
-      override fun onFinish() {
-        timer = null
-      }
+        override fun onFinish() {
+          timer?.cancel()
+          timer = null
+          viewModel.loadData(remoteId)
+        }
+      }.start()
     }
-    timer?.start()
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     super.onSuplaMessage(message)
     when (message.type) {
       SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId) {
+        Trace.i(TAG, "Detail got data changed event")
+        timer?.cancel()
+        timerActive = false
         viewModel.loadData(remoteId)
       }
     }

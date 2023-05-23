@@ -20,6 +20,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   private val suplaMessageListener: OnSuplaClientMessageListener = OnSuplaClientMessageListener { onSuplaMessage(it) }
 
+  constructor() : this(0)
+
   protected abstract fun getViewModel(): BaseViewModel<S, E>
 
   @CallSuper

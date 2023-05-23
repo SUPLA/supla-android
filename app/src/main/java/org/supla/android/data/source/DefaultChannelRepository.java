@@ -20,9 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -181,10 +183,20 @@ public class DefaultChannelRepository implements ChannelRepository {
       value = new ChannelExtendedValue();
       value.setExtendedValue(suplaChannelExtendedValue);
       value.setChannelId(channelId);
+      if (value.hasTimerSet()) {
+        value.setTimerStartTimestamp(new Date().getTime());
+      } else {
+        value.setTimerStartTimestamp(null);
+      }
 
       channelDao.insert(value);
     } else {
       value.setExtendedValue(suplaChannelExtendedValue);
+      if (value.getTimerStartTimestamp() == null && value.hasTimerSet()) {
+        value.setTimerStartTimestamp(new Date().getTime());
+      } else if (value.getTimerStartTimestamp() != null && !value.hasTimerSet()) {
+        value.setTimerStartTimestamp(null);
+      }
       channelDao.update(value);
     }
     return true;
@@ -395,6 +407,12 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public Cursor getAllProfileChannelGroups(Long profileId) {
     return channelDao.getAllChannelGroupsForProfileId(profileId);
+  }
+
+  @NonNull
+  @Override
+  public List<Location> getAllLocations() {
+    return locationDao.getLocations();
   }
 
   private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {

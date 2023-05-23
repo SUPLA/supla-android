@@ -5,7 +5,7 @@
     android:id="@+id/locationList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg_new"
+    android:background="@color/background"
     android:clipToPadding="false"
     android:paddingTop="@dimen/new_screen_margin"
     android:paddingBottom="@dimen/new_screen_margin" />

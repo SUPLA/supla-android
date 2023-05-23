@@ -17,7 +17,7 @@ class DurationTimerHelper @Inject constructor() {
     val timerView = TextView(context)
     timerView.typeface = SuplaApp.getApp().typefaceQuicksandRegular
     timerView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.default_text_size))
-    timerView.setTextColor(context.resources.getColor(R.color.label_grey))
+    timerView.setTextColor(context.resources.getColor(R.color.gray))
     timerView.gravity = Gravity.BOTTOM or Gravity.END
 
     return timerView

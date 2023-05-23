@@ -12,6 +12,8 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.theme.SuplaLightColors
 import org.supla.android.databinding.FragmentSwitchDetailBinding
+import org.supla.android.db.Channel
+import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
 
@@ -31,7 +33,6 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.root.setBackgroundColor(SuplaLightColors.Background.toArgb())
     binding.switchDetailButtonOn.setOnClickListener { viewModel.turnOn(remoteId) }
     binding.switchDetailButtonOff.setOnClickListener { viewModel.turnOff(remoteId) }
     viewModel.loadData(remoteId, itemType)
@@ -43,7 +44,15 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   override fun handleViewState(state: SwitchDetailViewState) {
     if (state.channelBase != null) {
       setToolbarTitle(state.channelBase.getNotEmptyCaption(context))
-      binding.switchDetailIcon.setImageResource(state.channelBase.imageIdx.id)
+      binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(ImageCache.getBitmap(context, state.channelBase.imageIdx))
+
+      (state.channelBase as? Channel)?.let {
+        binding.switchDetailDeviceState.deviceStateValue.text = if (it.value.hiValue()) {
+          getString(R.string.details_timer_device_on)
+        } else {
+          getString(R.string.details_timer_device_off)
+        }
+      }
     }
   }
 
