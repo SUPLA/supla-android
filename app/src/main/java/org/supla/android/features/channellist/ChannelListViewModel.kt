@@ -10,6 +10,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
@@ -102,7 +103,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(channel: Channel) {
-    if (isAvailableInOffline(channel.func).not() && channel.onLine.not()) {
+    if (isAvailableInOffline(channel).not() && channel.onLine.not()) {
       return // do not open details for offline channels
     }
 
@@ -117,15 +118,23 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  private fun isAvailableInOffline(channelFunction: Int) = when (channelFunction) {
+  private fun isAvailableInOffline(channel: Channel) = when (channel.func) {
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_HUMIDITY,
     SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER -> true
+    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
+      when (channel.value?.subValueType) {
+        SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
+        SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
+        else -> false
+      }
+    }
     else -> false
   }
 }

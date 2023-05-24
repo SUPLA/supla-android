@@ -36,16 +36,7 @@
       </RelativeLayout>
     </FrameLayout>
 
-    <com.google.android.material.appbar.AppBarLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:animateLayoutChanges="true">
-
-      <org.supla.android.ui.AppBar
-        android:id="@+id/nav_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height" />
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/inc_toolbar" android:id="@+id/inc_toolbar" />
 
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
