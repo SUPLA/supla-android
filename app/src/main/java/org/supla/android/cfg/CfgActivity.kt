@@ -61,7 +61,7 @@ class CfgActivity : BaseActivity() {
   private var shouldShowBack = false
 
   private val navToolbar: AppBar
-    get() = binding.navToolbar
+    get() = binding.incToolbar.suplaToolbar
 
   override fun getLoadingIndicator() = binding.loadingIndicator
 
@@ -133,8 +133,8 @@ class CfgActivity : BaseActivity() {
     if (sender != null && sender == INTENTSENDER_MAIN) {
       // show back button
       shouldShowBack = true
-      binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
-      binding.navToolbar.setNavigationOnClickListener {
+      binding.incToolbar.suplaToolbar.setNavigationIcon(R.drawable.navbar_back)
+      binding.incToolbar.suplaToolbar.setNavigationOnClickListener {
         onBackPressed()
       }
     }
@@ -142,7 +142,7 @@ class CfgActivity : BaseActivity() {
 
   private fun configureNavBar() {
     if (shouldShowBack) {
-      binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
+      binding.incToolbar.suplaToolbar.setNavigationIcon(R.drawable.navbar_back)
     }
   }
 

@@ -11,9 +11,11 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.children
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -69,7 +71,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   private lateinit var bottomBar: BottomAppBar
   private var animatingMenu = false
 
-  private val toolbar: Toolbar by lazy { findViewById(R.id.nav_toolbar) }
+  private val toolbar: Toolbar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
   private val newGestureInfoClose: AppCompatImageView by lazy { findViewById(R.id.new_gesture_info_close) }
@@ -170,6 +172,12 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       }
 
       false
+    }
+
+    for (child in toolbar.children) {
+      if (child is AppCompatTextView && child.id != R.id.supla_toolbar_title) {
+        child.visibility = View.GONE
+      }
     }
   }
 

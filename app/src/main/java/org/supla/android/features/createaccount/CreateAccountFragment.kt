@@ -20,6 +20,7 @@ package org.supla.android.features.createaccount
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
@@ -32,6 +33,7 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentCreateAccountBinding
 import org.supla.android.extensions.getLongOrNull
+import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.createaccount.dialogs.RemoveConfirmationDialogFragment
 import org.supla.android.navigator.CfgActivityNavigator
@@ -52,6 +54,14 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
 
   private val binding by viewBinding(FragmentCreateAccountBinding::bind)
 
+  private var cloudInfoVisible = false
+  private val layoutListener = OnGlobalLayoutListener {
+    if (cloudInfoVisible) {
+      binding.cfgCreateAccount.visibleIf(binding.root.height > 400.toPx())
+      binding.dontHaveAccountText.visibleIf(binding.root.height > 400.toPx())
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     viewModel.loadProfile(profileId)
@@ -69,6 +79,16 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
     lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     setupView()
+  }
+
+  override fun onStart() {
+    super.onStart()
+    binding.root.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+  }
+
+  override fun onStop() {
+    binding.root.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    super.onStop()
   }
 
   override fun handleEvents(event: CreateAccountViewEvent) {
@@ -111,6 +131,7 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
 
       cfgCreateAccount.visibleIf(state.profileNameVisible.not())
       dontHaveAccountText.visibleIf(state.profileNameVisible.not())
+      cloudInfoVisible = state.profileNameVisible.not()
     }
   }
 

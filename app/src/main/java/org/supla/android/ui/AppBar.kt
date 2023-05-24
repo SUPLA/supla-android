@@ -19,14 +19,9 @@ package org.supla.android.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import org.supla.android.R
-import org.supla.android.SuplaApp
-import org.supla.android.databinding.AppBarBinding
 
 class AppBar @JvmOverloads constructor(
   ctx: Context,
@@ -34,33 +29,13 @@ class AppBar @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : Toolbar(ctx, attrs, defStyleAttr) {
 
-  private val binding: AppBarBinding
-
-  init {
-    val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    binding = DataBindingUtil.inflate(
-      inflater,
-      R.layout.app_bar,
-      this,
-      false
-    )
-    val params = LayoutParams(Gravity.CENTER_HORIZONTAL)
-
-    arrayOf(binding.title, binding.subtitle).forEach {
-      it.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
-    }
-    addView(binding.root, params)
-  }
+  private val toolbarTitle: TextView by lazy { findViewById(R.id.supla_toolbar_title) }
 
   override fun setTitle(title: CharSequence) {
-    binding.title.text = title
-    binding.title.visibility = View.VISIBLE
-    binding.subtitle.visibility = View.INVISIBLE
+    toolbarTitle.text = title
   }
 
-  override fun setSubtitle(subtitle: CharSequence) {
-    binding.subtitle.visibility = View.VISIBLE
-    binding.title.visibility = View.INVISIBLE
-    binding.subtitle.text = subtitle
+  override fun setSubtitle(subtitle: CharSequence?) {
+    toolbarTitle.text = subtitle
   }
 }
