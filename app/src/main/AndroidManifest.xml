@@ -95,11 +95,6 @@
             android:screenOrientation="sensorPortrait"></activity>
 
         <activity
-            android:name=".CreateAccountActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
-
-        <activity
             android:name=".AddDeviceWizardActivity"
             android:launchMode="singleTop"
             android:screenOrientation="sensorPortrait"></activity>

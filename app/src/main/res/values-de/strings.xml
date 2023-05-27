@@ -4,6 +4,7 @@
     <string name="settings">Einstellungen</string>
     <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
     <string name="create_url">https://cloud.supla.org/register?lang=de</string>
+    <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=de</string>
     <string name="forumpage_url">https://de-forum.supla.org/</string>
 
     <string name="version">version</string>
@@ -169,7 +170,7 @@
     <string name="last90days">Die letzten 90 Tage</string>
     <string name="all_available_history">Gesamte verfügbare Geschichte</string>
     <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen...</string>
-    <string name="no_chart_data_available">Keine Daten für das Diagramm.</string>
+    <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>
     <string name="comparsion_minmin">Vergleich Minute zu Minute</string>
     <string name="comparsion_hourhour">Vergleich Stunde zu Stunde</string>
     <string name="comparsion_dayday">Vergleich Tag zu Tag</string>
@@ -387,7 +388,7 @@
     <string name="profile_act_info">Konto antippen, um sich anzumelden</string>
     <string name="form_error">Fehler</string>
     <string name="form_profile_name_missing">Kontoname angeben</string>
-    <string name="form_profile_required_data_missing">Erforderliche Angaben vervollständigen</string>
+    <string name="form_profile_required_data_missing">Bitte die erforderliche Angaben vervollständigen</string>
     <string name="form_profile_duplicate">Es gibt schon ein Konto mit diesem Namen</string>
     <string name="add_account">Konto hinzufügen</string>
     <string name="edit_account">Konto bearbeiten</string>
@@ -455,4 +456,14 @@
     <string name="rs_display_mode_opening">Öffnungen</string>
     <string name="rs_display_mode_closing">Schließungen</string>
     <string name="status_accessid_inactive">Zugriffskennung nicht aktiv</string>
+
+ <string name="remove_account_title">Das Konto löschen?</string>
+ <string name="remove_account_locally">Vergiss auf diesem Gerät</string>
+ <string name="remove_account_remotely">Vergiss und lösch im Cloud</string>
+ <string name="cancel">Abbrechen</string>
+ <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
+ <string translatable="false" name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
+
+ <string name="new_gesture_descirption">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
+  <string name="channel_offline">Das Kanal is offline</string>
 </resources>

@@ -312,7 +312,8 @@ public class Channel extends ChannelBase {
     // TODO: Remove channel type checking in future versions. Check function instead of type. #
     // 140-issue
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-      return getOnLine()
+      double doubleValue = value.getImpulseCounterCalculatedValue();
+      return doubleValue > 0
           ? String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue())
           : "--- " + getUnit();
     }

@@ -34,7 +34,6 @@ import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -242,7 +241,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelId = 234;
-    int channelDbId = 345;
+    Long channelDbId = 345L;
 
     SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
     SuplaChannel suplaChannel =
@@ -305,7 +304,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelId = 234;
-    int channelDbId = 345;
+    Long channelDbId = 345L;
     int channelsCount = 12;
 
     SuplaChannelValue suplaChannelValue = suplaChannelValue(14L);
@@ -374,7 +373,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelId = 234;
-    int channelDbId = 345;
+    Long channelDbId = 345L;
 
     SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
     SuplaChannel suplaChannel =
@@ -551,7 +550,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption", 1, 2, 3, 4);
@@ -588,7 +587,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption1", 9, 8, 7, 6);
@@ -626,7 +625,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption", 9, 8, 7, 6);
@@ -958,39 +957,6 @@ public class DefaultChannelRepositoryTest {
     // then
     assertEquals(expectedResult, result);
     verify(channelDao).setChannelsOffline();
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldGetChannelListCursorWithDefaultOrder() {
-    // given
-    String where = SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 ";
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelListCursorWithDefaultOrder(where)).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelListCursorWithDefaultOrder();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelListCursorWithDefaultOrder(where);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldGetChannelGroupListCursor() {
-    // given
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelGroupListCursor()).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelGroupListCursor();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelGroupListCursor();
     verifyNoMoreInteractions(channelDao);
     verifyNoInteractions(locationDao);
   }

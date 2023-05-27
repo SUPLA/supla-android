@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import dagger.hilt.android.EntryPointAccessors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,9 +41,13 @@ import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.core.networking.suplaclient.SuplaClientApi;
 import org.supla.android.data.source.SceneRepository;
+import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
+import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -50,7 +55,8 @@ import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
 
 @SuppressWarnings("unused")
-public class SuplaClient extends Thread {
+public class SuplaClient extends Thread implements SuplaClientApi {
+
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
@@ -73,13 +79,17 @@ public class SuplaClient extends Thread {
   private String oneTimePassword;
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
+  private final ListsEventsManager listsEventsManager;
 
   public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
-
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
+    this.listsEventsManager =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
+            .provideListsEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -153,11 +163,14 @@ public class SuplaClient extends Thread {
 
   private native boolean scSetChannelCaption(long _supla_client, int ChannelID, String Caption);
 
+  private native boolean scSetChannelGroupCaption(
+      long _supla_client, int ChannelGroupID, String Caption);
+
   private native boolean scSetLocationCaption(long _supla_client, int LocationID, String Caption);
 
   private native boolean scSetSceneCaption(long _supla_client, int SceneID, String Caption);
 
-    private native boolean scReconnectAllClients(long _supla_client);
+  private native boolean scReconnectAllClients(long _supla_client);
 
   private native boolean scSetRegistrationEnabled(
       long _supla_client, int ioDeviceRegTimeSec, int clientRegTimeSec);
@@ -190,8 +203,13 @@ public class SuplaClient extends Thread {
 
   private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
+  private native boolean scRegisterPushNotificationClientToken(
+      long _supla_client, int appId, String token);
+
   private void sendMessage(SuplaClientMsg msg) {
-    if (canceled()) return;
+    if (canceled()) {
+      return;
+    }
     SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
   }
 
@@ -233,6 +251,8 @@ public class SuplaClient extends Thread {
           scFree(_supla_client_ptr);
           _supla_client_ptr = 0;
           freed = true;
+        } else if (_supla_client_ptr == 0 && _supla_client_ptr_counter == 0) {
+          freed = true;
         }
       }
 
@@ -273,7 +293,9 @@ public class SuplaClient extends Thread {
   }
 
   public void reconnect() {
-    if (connected()) disconnect();
+    if (connected()) {
+      disconnect();
+    }
   }
 
   private boolean connected() {
@@ -563,6 +585,16 @@ public class SuplaClient extends Thread {
     }
   }
 
+  public boolean setChannelGroupCaption(int ChannelGroupID, String Caption) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0
+          && scSetChannelGroupCaption(_supla_client_ptr, ChannelGroupID, Caption);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
   public boolean setLocationCaption(int LocationID, String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
@@ -573,14 +605,13 @@ public class SuplaClient extends Thread {
   }
 
   public boolean setSceneCaption(int SceneID, String Caption) {
-        long _supla_client_ptr = lockClientPtr();
-        try {
-            return _supla_client_ptr != 0
-                && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
-        } finally {
-            unlockClientPtr();
-        }
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
+    } finally {
+      unlockClientPtr();
     }
+  }
 
   public boolean setDfgTransparency(int ChannelID, short mask, short active_bits) {
     long _supla_client_ptr = lockClientPtr();
@@ -743,6 +774,16 @@ public class SuplaClient extends Thread {
     }
   }
 
+  public boolean registerPushNotificationClientToken(int appId, String token) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0
+          && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
   private void onVersionError(SuplaVersionError versionError) {
     Trace.d(
         log_tag,
@@ -754,15 +795,15 @@ public class SuplaClient extends Thread {
 
     regTryCounter = 0;
 
-    AuthInfo info = profileManager.getCurrentAuthInfo();
+    AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
 
     if (versionError.RemoteVersion >= 7
         && versionError.Version > versionError.RemoteVersion
-        && info.getPreferredProtocolVersion() != versionError.RemoteVersion) {
+        && profile.getAuthInfo().getPreferredProtocolVersion() != versionError.RemoteVersion) {
 
       // set prefered to lower
-      info.setPreferredProtocolVersion(versionError.RemoteVersion);
-      profileManager.updateCurrentAuthInfo(info);
+      profile.getAuthInfo().setPreferredProtocolVersion(versionError.RemoteVersion);
+      profileManager.update(profile).blockingSubscribe();
 
       reconnect();
       return;
@@ -818,14 +859,14 @@ public class SuplaClient extends Thread {
     Trace.d(log_tag, "registered");
 
     regTryCounter = 0;
-    AuthInfo info = profileManager.getCurrentAuthInfo();
+    AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
 
     if (getMaxProtoVersion() > 0
-        && info.getPreferredProtocolVersion() < getMaxProtoVersion()
-        && registerResult.Version > info.getPreferredProtocolVersion()
+        && profile.getAuthInfo().getPreferredProtocolVersion() < getMaxProtoVersion()
+        && registerResult.Version > profile.getAuthInfo().getPreferredProtocolVersion()
         && registerResult.Version <= getMaxProtoVersion()) {
-      info.setPreferredProtocolVersion(registerResult.Version);
-      profileManager.updateCurrentAuthInfo(info);
+      profile.getAuthInfo().setPreferredProtocolVersion(registerResult.Version);
+      profileManager.update(profile).blockingSubscribe();
     }
 
     _client_id = registerResult.ClientID;
@@ -922,8 +963,9 @@ public class SuplaClient extends Thread {
       _DataChanged = true;
     }
 
-    if (channel.EOL && DbH.setChannelsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel.EOL) {
+      listsEventsManager.emitChannelUpdate();
+      _DataChanged = DbH.setChannelsVisible(0, 2);
     }
 
     if (_DataChanged) {
@@ -960,8 +1002,9 @@ public class SuplaClient extends Thread {
       _DataChanged = true;
     }
 
-    if (channel_group.EOL && DbH.setChannelGroupsVisible(0, 2)) {
-      _DataChanged = true;
+    if (channel_group.EOL) {
+      listsEventsManager.emitGroupUpdate();
+      _DataChanged = DbH.setChannelGroupsVisible(0, 2);
     }
 
     if (channel_group.EOL) {
@@ -1003,7 +1046,6 @@ public class SuplaClient extends Thread {
     }
   }
 
-
   private void sceneUpdate(SuplaScene scene) {
     boolean dataChanged = false;
     Trace.d(
@@ -1022,9 +1064,14 @@ public class SuplaClient extends Thread {
             + scene.isEol());
 
     SceneRepository sr = DbH.getSceneRepository();
-    sr.updateSuplaScene(scene);
+    if (sr.updateSuplaScene(scene)) {
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
+      msg.setSceneId(scene.getId());
+      sendMessage(msg);
+    }
 
     if (scene.isEol()) {
+      listsEventsManager.emitSceneUpdate();
       sr.setScenesVisible(0, 2);
     }
   }
@@ -1048,7 +1095,7 @@ public class SuplaClient extends Thread {
               + state.getInitiatorName()
               + " EOL: "
               + state.isEol());
-      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneStateChanged);
+      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
       msg.setSceneId(state.getSceneId());
       sendMessage(msg);
     }
@@ -1098,7 +1145,7 @@ public class SuplaClient extends Thread {
     Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
 
     if (token != null && token.getUrl() == null) {
-      AuthInfo info = profileManager.getCurrentAuthInfo();
+      AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
       try {
         token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
       } catch (MalformedURLException ignored) {
@@ -1159,6 +1206,14 @@ public class SuplaClient extends Thread {
     sendMessage(msg);
   }
 
+  private void onChannelGroupCaptionSetResult(int ChannelGroupID, String Caption, int ResultCode) {
+    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelGroupCaptionSetResult);
+    msg.setCode(ResultCode);
+    msg.setText(Caption);
+    msg.setChannelGroupId(ChannelGroupID);
+    sendMessage(msg);
+  }
+
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onLocationCaptionSetResult);
     msg.setCode(ResultCode);
@@ -1167,14 +1222,13 @@ public class SuplaClient extends Thread {
     sendMessage(msg);
   }
 
-    private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
-        SuplaClientMsg msg = new SuplaClientMsg(this,
-            SuplaClientMsg.onSceneCaptionSetResult);
-        msg.setCode(ResultCode);
-        msg.setText(Caption);
-        msg.setSceneId(SceneID);
-        sendMessage(msg);
-    }
+  private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
+    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneCaptionSetResult);
+    msg.setCode(ResultCode);
+    msg.setText(Caption);
+    msg.setSceneId(SceneID);
+    sendMessage(msg);
+  }
 
   private void onClientsReconnectResult(int ResultCode) {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onClientsReconnectResult);
@@ -1380,43 +1434,46 @@ public class SuplaClient extends Thread {
           cfgInit(cfg);
 
           Preferences prefs = new Preferences(_context);
-          AuthInfo info = profileManager.getCurrentAuthInfo();
+          AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
+          if (profile != null) {
+            AuthInfo info = profile.getAuthInfo();
 
-          cfg.Host = info.getServerForCurrentAuthMethod();
-          cfg.clientGUID = info.getDecryptedGuid(_context);
-          cfg.AuthKey = info.getDecryptedAuthKey(_context);
-          cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
-          cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
+            cfg.Host = info.getServerForCurrentAuthMethod();
+            cfg.clientGUID = info.getDecryptedGuid(_context);
+            cfg.AuthKey = info.getDecryptedAuthKey(_context);
+            cfg.Name = Build.MANUFACTURER + " " + Build.MODEL;
+            cfg.SoftVer = "Android" + Build.VERSION.RELEASE + "/" + BuildConfig.VERSION_NAME;
 
-          if (isAccessIDAuthentication()) {
-            cfg.AccessID = info.getAccessID();
-            cfg.AccessIDpwd = info.getAccessIDpwd();
+            if (isAccessIDAuthentication()) {
+              cfg.AccessID = info.getAccessID();
+              cfg.AccessIDpwd = info.getAccessIDpwd();
 
-            if (regTryCounter >= 2) {
-              // supla-server v1.0 for Raspberry Compatibility fix
-              info.setPreferredProtocolVersion(4);
-              profileManager.updateCurrentAuthInfo(info);
-            }
-
-          } else {
-            cfg.Email = info.getEmailAddress();
-            if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
-              cfg.Host = autodiscoverGetHost(cfg.Email);
-
-              if (cfg.Host.isEmpty()) {
-                onConnError(new SuplaConnError(SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
-              } else {
-                info.setServerForEmail(cfg.Host);
-                profileManager.updateCurrentAuthInfo(info);
+              if (regTryCounter >= 2) {
+                // supla-server v1.0 for Raspberry Compatibility fix
+                info.setPreferredProtocolVersion(4);
+                profileManager.update(profile);
               }
+
+            } else {
+              cfg.Email = info.getEmailAddress();
+              if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
+                cfg.Host = autodiscoverGetHost(cfg.Email);
+
+                if (cfg.Host.isEmpty()) {
+                  onConnError(new SuplaConnError(SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
+                } else {
+                  info.setServerForEmail(cfg.Host);
+                  profileManager.update(profile);
+                }
+              }
+
+              cfg.setPassword(oneTimePassword);
             }
 
-            cfg.setPassword(oneTimePassword);
+            oneTimePassword = "";
+            cfg.protocol_version = info.getPreferredProtocolVersion();
+            init(cfg);
           }
-
-          oneTimePassword = "";
-          cfg.protocol_version = info.getPreferredProtocolVersion();
-          init(cfg);
         }
 
         if (connect()) {
@@ -1444,11 +1501,11 @@ public class SuplaClient extends Thread {
   }
 
   private boolean isAccessIDAuthentication() {
-    return !profileManager.getCurrentAuthInfo().getEmailAuth();
+    return !profileManager.getCurrentProfile().blockingGet().getAuthInfo().getEmailAuth();
   }
 
   private boolean shouldAutodiscoverHost() {
-    return profileManager.getCurrentAuthInfo().getServerAutoDetect();
+    return profileManager.getCurrentProfile().blockingGet().getAuthInfo().getServerAutoDetect();
   }
 
   public void startScene(int sceneId) {
@@ -1466,9 +1523,8 @@ public class SuplaClient extends Thread {
   }
 
   public void renameScene(int sceneId, String newName) {
-    if(!setSceneCaption(sceneId, newName)) {
+    if (!setSceneCaption(sceneId, newName)) {
       Trace.w(log_tag, "Failed to rename scene " + sceneId);
     }
-      
   }
 }

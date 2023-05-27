@@ -1076,6 +1076,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity implements 
                 case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_ACTION_TRIGGER:
                     msgErrResId = R.string.associeted_with_at_error;
                     break;
+                case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_VBT:
+                    msgErrResId = R.string.associeted_with_vbt_error;
+                    break;
+                case SuplaConst.SUPLA_RESULTCODE_DENY_CHANNEL_IS_ASSOCIETED_WITH_PUSH:
+                    msgErrResId = R.string.associeted_with_push_error;
+                    break;
             }
 
             if (msgErrResId == null) {

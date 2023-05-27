@@ -29,6 +29,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.db.*
+import org.supla.android.db.entity.Scene
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.singlecall.SingleCall
@@ -142,10 +143,10 @@ abstract class WidgetConfigurationViewModelBase(
   private fun triggerDataLoad() {
     viewModelScope.launch {
       withContext(dispatchers.io()) {
-        val configSet = preferences.configIsSet()
+        val configSet = preferences.isAnyAccountRegistered
         if (configSet) {
-          _profilesList.postValue(profileManager.getAllProfiles())
-          selectedProfile = profileManager.getCurrentProfile()
+          _profilesList.postValue(profileManager.getAllProfiles().blockingFirst())
+          selectedProfile = profileManager.getCurrentProfile().blockingGet()
 
           loadItems()
         }

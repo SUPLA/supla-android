@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import dagger.hilt.android.EntryPointAccessors;
-import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,7 +45,8 @@ import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
-import org.supla.android.di.ProfileIdHolderEntryPoint;
+import org.supla.android.db.versions.MigratorV27;
+import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -55,13 +55,12 @@ import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaChannelValueUpdate;
 import org.supla.android.lib.SuplaLocation;
-import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileMigrator;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 26;
+  public static final int DATABASE_VERSION = 27;
   private static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -78,7 +77,8 @@ public class DbHelper extends BaseDbHelper {
         new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
-        new DefaultUserIconRepository(new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
+        new DefaultUserIconRepository(
+            new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
   }
 
@@ -161,9 +161,9 @@ public class DbHelper extends BaseDbHelper {
             + SuplaContract.SceneEntry.COLUMN_NAME_CAPTION
             + " TEXT NOT NULL, "
             + SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT
-            + " TEXT NULL, "
+            + " INTEGER NULL, "
             + SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE
-            + " TEXT NULL, "
+            + " INTEGER NULL, "
             + SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID
             + " INTEGER NULL, "
             + SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME
@@ -745,7 +745,9 @@ public class DbHelper extends BaseDbHelper {
   private void insertDefaultProfile(SQLiteDatabase db) {
     ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
     AuthProfileItem itm = migrator.makeProfileUsingPreferences();
-    db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    if (itm != null) {
+      db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null, itm.getContentValuesV22());
+    }
   }
 
   private void alterTablesToReferProfile(SQLiteDatabase db) {
@@ -1022,8 +1024,11 @@ public class DbHelper extends BaseDbHelper {
     byte[] encrypted;
     String key = Preferences.getDeviceID(getContext());
 
-    if (payload == null) encrypted = null;
-    else encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    if (payload == null) {
+      encrypted = null;
+    } else {
+      encrypted = Encryption.encryptDataWithNullOnException(payload, key);
+    }
     if (encrypted == null) {
       cv.putNull(column);
     } else {
@@ -1102,6 +1107,16 @@ public class DbHelper extends BaseDbHelper {
     createSceneView(db);
   }
 
+  private void upgradeToV27(SQLiteDatabase db) {
+    MigratorV27 migrator = new MigratorV27(db, getContext());
+    migrator.migrateUserProfiles();
+    migrator.migrateScenesDates(
+        () -> {
+          createSceneTable(db);
+          createSceneView(db);
+        });
+  }
+
   private void dropViews(SQLiteDatabase db) {
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelViewEntry.VIEW_NAME);
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
@@ -1177,6 +1192,9 @@ public class DbHelper extends BaseDbHelper {
           case 25:
             upgradeToV26(db);
             break;
+          case 26:
+            upgradeToV27(db);
+            break;
         }
       }
 
@@ -1232,6 +1250,10 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.updateChannelGroup(suplaChannelGroup);
   }
 
+  public void updateChannelGroup(ChannelGroup channelGroup) {
+    channelRepository.updateChannelGroup(channelGroup);
+  }
+
   public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {
     return channelRepository.updateChannelGroupRelation(suplaChannelGroupRelation);
   }
@@ -1256,16 +1278,8 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.getChannelCount();
   }
 
-  public Cursor getChannelListCursor() {
-    return channelRepository.getChannelListCursorWithDefaultOrder();
-  }
-
   public Cursor getChannelListCursorForGroup(int groupId) {
     return channelRepository.getChannelListCursorForGroup(groupId);
-  }
-
-  public Cursor getGroupListCursor() {
-    return channelRepository.getChannelGroupListCursor();
   }
 
   public ColorListItem getColorListItem(int id, boolean group, int idx) {
@@ -1291,10 +1305,6 @@ public class DbHelper extends BaseDbHelper {
     return userIconRepository.addUserIcons(id, img1, img2, img3, img4);
   }
 
-  public void deleteUserIcons(long profileId) {
-    userIconRepository.deleteUserIcons(profileId);
-  }
-
   public void loadUserIconsIntoCache() {
     userIconRepository.loadUserIconsIntoCache();
   }
@@ -1305,23 +1315,6 @@ public class DbHelper extends BaseDbHelper {
 
   public List<Channel> getZWaveBridgeChannels() {
     return channelRepository.getZWaveBridgeChannels();
-  }
-
-  public Completable reorderChannels(
-      ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
-    if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
-      return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
-    }
-    return channelRepository.reorderChannels(firstItem.id, firstItem.locationId, secondItem.id);
-  }
-
-  public Completable reorderGroups(
-      ListViewCursorAdapter.Item firstItem, ListViewCursorAdapter.Item secondItem) {
-    if (firstItem.id == secondItem.id || firstItem.locationId != secondItem.locationId) {
-      return Completable.error(new IllegalArgumentException("Swap with yourself not possible"));
-    }
-    return channelRepository.reorderChannelGroups(
-        firstItem.id, firstItem.locationId, secondItem.id);
   }
 
   public ChannelRepository getChannelRepository() {

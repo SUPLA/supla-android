@@ -21,47 +21,51 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.profile.ProfileManager
-import org.supla.android.profile.PROFILE_ID_NEW
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.profile.ProfileManager
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfilesViewModel @Inject constructor(private val profileManager: ProfileManager)
-    : ViewModel(), EditableProfileItemViewModel.EditActionHandler {
+class ProfilesViewModel @Inject constructor(private val profileManager: ProfileManager) :
+  ViewModel(), EditableProfileItemViewModel.EditActionHandler {
 
-    private val _uiState: MutableLiveData<ProfilesUiState> = 
-        MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
-    val uiState: LiveData<ProfilesUiState> = _uiState
-    val profilesAdapter = ProfilesAdapter(this)
+  private val _uiState: MutableLiveData<ProfilesUiState> = MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
+  val uiState: LiveData<ProfilesUiState> = _uiState
+  val profilesAdapter = ProfilesAdapter(this)
 
-    init {
-        reload()
+  init {
+    reload()
+  }
+
+  fun onNewProfile() {
+    _uiState.value = ProfilesUiState.EditProfile(null)
+  }
+
+  override fun onEditProfile(profileId: Long) {
+    _uiState.value = ProfilesUiState.EditProfile(profileId)
+  }
+
+  fun onActivateProfile(profileId: Long) {
+    val activated = try {
+      profileManager.activateProfile(profileId, true).blockingAwait()
+      true
+    } catch (throwable: Throwable) {
+      false
     }
 
-    fun onNewProfile() {
-        _uiState.value = ProfilesUiState.EditProfile(PROFILE_ID_NEW)
+    if (activated) {
+      _uiState.value = ProfilesUiState.ProfileActivation(profileId)
     }
+  }
 
-    override fun onEditProfile(profileId: Long) {
-        _uiState.value = ProfilesUiState.EditProfile(profileId)
-    }
-
-    fun onActivateProfile(profileId: Long) {
-        if(profileManager.activateProfile(profileId, true)) {
-            _uiState.value = ProfilesUiState.ProfileActivation(profileId)
-        }
-    }
-
-    fun reload() {
-        val profiles = profileManager.getAllProfiles()
-        _uiState.value = ProfilesUiState.ListProfiles(profiles)
-    }
+  fun reload() {
+    val profiles = profileManager.getAllProfiles().blockingFirst()
+    _uiState.value = ProfilesUiState.ListProfiles(profiles)
+  }
 }
 
 sealed class ProfilesUiState {
-    data class ListProfiles(val profiles: List<AuthProfileItem>): ProfilesUiState()
-    data class EditProfile(val profileId: Long): ProfilesUiState()
-    data class ProfileActivation(val profileId: Long): ProfilesUiState()
+  data class ListProfiles(val profiles: List<AuthProfileItem>) : ProfilesUiState()
+  data class EditProfile(val profileId: Long?) : ProfilesUiState()
+  data class ProfileActivation(val profileId: Long) : ProfilesUiState()
 }
-

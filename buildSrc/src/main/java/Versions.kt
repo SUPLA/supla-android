@@ -5,7 +5,7 @@ object Versions {
     const val MinSdk = 21
     const val BuildTools = "30.0.3"
 
-    const val Kotlin = "1.5.20"
+    const val Kotlin = "1.6.20"
     const val Hilt = "2.40.1"
     const val Multidex = "2.0.1"
     const val AndroidChart = "v3.0.3"
@@ -14,6 +14,8 @@ object Versions {
 
     const val Spotless = "6.10.0"
     const val KtLint = "0.46.1"
+
+    const val FragmentViewBinding = "1.0.2"
 
     object Androidx {
         const val Fragment = "1.4.1"
@@ -30,6 +32,7 @@ object Versions {
     object RxJava {
         const val RxJava = "3.0.8"
         const val RxAndroid = "3.0.0"
+        const val RxKotlin = "3.0.1"
     }
 
     object Testing {
@@ -39,6 +42,7 @@ object Versions {
         const val Hamcrest = "1.3"
         const val Coroutines = "1.3.2"
         const val Mockk = "1.12.4"
+        const val AssertJ = "3.11.1"
 
         object Mockito {
             const val Core = "3.9.0"

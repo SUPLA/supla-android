@@ -38,7 +38,9 @@ import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import org.supla.android.core.SuplaAppApi;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -46,11 +48,16 @@ import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.usecases.channel.ChannelGroupStateObserverUseCase;
+import org.supla.android.usecases.channel.ChannelStateObserverUseCase;
+import org.supla.android.usecases.scene.SceneStateObserverUseCase;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+        ValuesFormatterProvider,
+        SuplaAppApi {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -61,13 +68,15 @@ public class SuplaApp extends MultiDexApplication
   private Typeface mTypefaceOpenSansRegular;
   private Typeface mTypefaceOpenSansBold;
   private SuplaOAuthToken _OAuthToken;
-  private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks =
-      new ArrayList<SuplaRestApiClientTask>();
+  private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
   private static long lastWifiScanTime;
 
   @Inject ProfileManager profileManager;
   @Inject ProfileIdHolder profileIdHolder;
   @Inject ValuesFormatter valuesFormatter;
+  @Inject SceneStateObserverUseCase sceneStateObserver;
+  @Inject ChannelStateObserverUseCase channelStateObserver;
+  @Inject ChannelGroupStateObserverUseCase groupStateObserver;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -81,13 +90,27 @@ public class SuplaApp extends MultiDexApplication
   public void onCreate() {
     super.onCreate();
     SuplaApp._SuplaApp = this;
-    profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
+    AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
+    if (currentProfile != null) {
+      profileIdHolder.setProfileId(currentProfile.getId());
+    }
+    sceneStateObserver.register();
+    channelStateObserver.register();
+    groupStateObserver.register();
 
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
     enqueueWidgetRefresh();
+  }
+
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+    sceneStateObserver.unregister();
+    channelStateObserver.unregister();
+    groupStateObserver.unregister();
   }
 
   public static void Vibrate(Context context) {

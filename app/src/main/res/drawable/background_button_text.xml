@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_enabled="false">
+    <layer-list>
+      <item>
+        <shape android:shape="rectangle">
+          <corners android:radius="@dimen/widget_configuration_radius" />
+        </shape>
+      </item>
+    </layer-list>
+  </item>
+  <item>
+    <layer-list>
+      <item>
+        <ripple android:color="@color/ripple">
+          <item>
+            <shape android:shape="rectangle">
+              <corners android:radius="@dimen/widget_configuration_radius" />
+            </shape>
+          </item>
+        </ripple>
+      </item>
+    </layer-list>
+  </item>
+</selector>

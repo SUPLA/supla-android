@@ -27,11 +27,7 @@ import org.supla.android.Trace
 import org.supla.android.db.DbHelper
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.images.ImageCache
-import org.supla.android.profile.INVALID_PROFILE_ID
-import org.supla.android.widget.INVALID_CHANNEL_ID
-import org.supla.android.widget.RemoveWidgetsWorker
-import org.supla.android.widget.WidgetConfiguration
-import org.supla.android.widget.WidgetPreferences
+import org.supla.android.widget.*
 
 private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
 

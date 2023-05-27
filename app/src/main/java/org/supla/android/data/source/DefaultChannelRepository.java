@@ -74,6 +74,11 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
+  public void updateChannelGroup(ChannelGroup channelGroup) {
+    channelDao.update(channelGroup);
+  }
+
+  @Override
   public boolean updateChannel(SuplaChannel suplaChannel) {
     Location location = getLocation(suplaChannel.LocationID);
     if (location == null) {
@@ -156,7 +161,9 @@ public class DefaultChannelRepository implements ChannelRepository {
       return true;
     } else if (value.Diff(channelValue) || value.getOnLine() != online) {
 
-      value.AssignSuplaChannelValue(channelValue);
+      if (online) {
+        value.AssignSuplaChannelValue(channelValue);
+      }
       value.setOnLine(online);
 
       channelDao.update(value);
@@ -304,17 +311,6 @@ public class DefaultChannelRepository implements ChannelRepository {
             + " > 0 ) ";
 
     return channelDao.getChannelListCursorWithDefaultOrder(where);
-  }
-
-  @Override
-  public Cursor getChannelListCursorWithDefaultOrder() {
-    return channelDao.getChannelListCursorWithDefaultOrder(
-        SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 ");
-  }
-
-  @Override
-  public Cursor getChannelGroupListCursor() {
-    return channelDao.getChannelGroupListCursor();
   }
 
   @Override

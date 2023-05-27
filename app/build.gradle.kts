@@ -20,8 +20,8 @@ android {
         minSdk = Versions.MinSdk
         targetSdk = Versions.TargetSdk
         multiDexEnabled = true
-        versionCode = 174
-        versionName = "23.03.01"
+        versionCode = 178
+        versionName = "23.05"
 
         ndk {
             moduleName = "suplaclient"
@@ -85,6 +85,11 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xcontext-receivers")
+    }
 }
 
 repositories {
@@ -97,6 +102,7 @@ dependencies {
     implementation(Deps.AndroidChart)
     implementation(Deps.RxJava.RxJava)
     implementation(Deps.RxJava.RxAndroid)
+    implementation(Deps.RxJava.RxKotlin)
     implementation(Deps.GoogleMaterial)
     implementation(Deps.Androidx.ConstraintLayout)
     implementation(Deps.Androidx.Core.Core)
@@ -114,6 +120,7 @@ dependencies {
     implementation(Deps.Androidx.Worker)
     implementation(Deps.Androidx.RecyclerView)
     implementation(Deps.Hilt.Hilt)
+    implementation(Deps.FragmentViewBinding)
     kapt(Deps.Hilt.Kapt)
 
     testImplementation(Deps.Testing.Androidx.Core)
@@ -128,6 +135,7 @@ dependencies {
     testImplementation(Deps.Testing.Hamcrest)
     testImplementation(Deps.Testing.Coroutines)
     testImplementation(Deps.Testing.Mockk)
+    testImplementation(Deps.Testing.AssertJ)
     androidTestImplementation(Deps.Testing.Androidx.Navigation)
 
     implementation(files("src/main/libs/jsoup-1.13.1.jar"))
@@ -151,8 +159,8 @@ spotless {
     kotlin {
         target(fileTree("dir" to "src", "include" to "**/*.kt"))
         ktlint(Versions.KtLint).editorConfigOverride(mapOf(
-                "disabled_rules" to "no-wildcard-imports",
-                "max_line_length" to "100",
+                "disabled_rules" to "no-wildcard-imports, filename",
+                "max_line_length" to "140",
                 "indent_size" to "2"
         ))
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="AppTheme.TextAppearance">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline1">
+    <item name="android:fontFamily">@font/quicksand_light</item>
+    <item name="android:textSize">96sp</item>
+    <item name="android:letterSpacing">-0.15</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline2">
+    <item name="android:fontFamily">@font/quicksand_light</item>
+    <item name="android:textSize">60sp</item>
+    <item name="android:letterSpacing">-0.05</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline3">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">48sp</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline4">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">34sp</item>
+    <item name="android:letterSpacing">0.025</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline5">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">24sp</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Headline6">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">20sp</item>
+    <item name="android:letterSpacing">0.015</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Subtitle1">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing">0.015</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Subtitle2">
+    <item name="android:fontFamily">@font/quicksand_medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.01</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Body1">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing">0.05</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Body2">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.025</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Button">
+    <item name="android:fontFamily">@font/quicksand_medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.125</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Caption">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">12sp</item>
+    <item name="android:letterSpacing">0.04</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Overline">
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textSize">10sp</item>
+    <item name="android:letterSpacing">0.15</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+</resources>
