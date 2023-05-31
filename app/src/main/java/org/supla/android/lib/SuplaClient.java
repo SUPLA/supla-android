@@ -876,8 +876,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Trace.d(log_tag, "registerResult.ChannelGroupCount=" + registerResult.ChannelGroupCount);
 
     if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
-
       onDataChanged();
+      listsEventsManager.emitChannelUpdate();
+    }
+    if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
+      onDataChanged();
+      listsEventsManager.emitGroupUpdate();
+    }
+    if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
+      onDataChanged();
+      listsEventsManager.emitSceneUpdate();
     }
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
@@ -1451,7 +1459,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               if (regTryCounter >= 2) {
                 // supla-server v1.0 for Raspberry Compatibility fix
                 info.setPreferredProtocolVersion(4);
-                profileManager.update(profile);
+                profileManager.update(profile).blockingSubscribe();
               }
 
             } else {
@@ -1463,7 +1471,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
                   onConnError(new SuplaConnError(SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
                 } else {
                   info.setServerForEmail(cfg.Host);
-                  profileManager.update(profile);
+                  profileManager.update(profile).blockingSubscribe();
                 }
               }
 
