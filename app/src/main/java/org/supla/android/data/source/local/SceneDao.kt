@@ -25,7 +25,6 @@ import org.supla.android.db.SuplaContract
 import org.supla.android.db.entity.LegacyScene
 import org.supla.android.db.entity.Scene
 import org.supla.android.extensions.TAG
-import java.util.ArrayList
 
 class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
@@ -107,8 +106,8 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
         selectionArgs = arrayOf(profileId.toString())
       }
       val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
-        SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
-        " COLLATE LOCALIZED, " +
+        SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + " COLLATE LOCALIZED, " +
+        SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID + ", " +
         SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
         SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
         SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
