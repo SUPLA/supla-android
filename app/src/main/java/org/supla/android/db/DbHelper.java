@@ -770,6 +770,7 @@ public class DbHelper extends BaseDbHelper {
     upgradeToV24(db);
     // Do not call upgradeToV25(db) here, it relates only for migration (see onUpgrade)
     upgradeToV26(db);
+    upgradeToV27(db);
 
     // Create views at the end
     createChannelView(db);

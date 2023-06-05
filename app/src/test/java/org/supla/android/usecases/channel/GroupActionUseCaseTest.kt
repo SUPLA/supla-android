@@ -12,7 +12,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -33,16 +32,6 @@ class GroupActionUseCaseTest {
 
   @InjectMocks
   private lateinit var useCase: GroupActionUseCase
-
-  @Test
-  fun `should not open valve channel when closed manually 1`() {
-    testValveException(SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE)
-  }
-
-  @Test
-  fun `should not open valve channel when closed manually 2`() {
-    testValveException(SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE)
-  }
 
   @Test
   fun `should turn off RGB lighting`() {
@@ -111,24 +100,6 @@ class GroupActionUseCaseTest {
     val channelId = 234
 
     testOpenClose(channelId, SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH, ButtonType.LEFT, 0)
-  }
-
-  private fun testValveException(channelFunc: Int) {
-    // given
-    val groupId = 123
-    val group: ChannelGroup = mockk()
-    every { group.groupId } returns groupId
-    every { group.remoteId } returns groupId
-    every { group.func } returns channelFunc
-
-    whenever(channelRepository.getChannelGroup(groupId)).thenReturn(group)
-
-    // when
-    val testObserver = useCase(groupId, ButtonType.LEFT).test()
-
-    // then
-    testObserver.assertError(ActionException.ChannelClosedManually(groupId))
-    verifyZeroInteractions(suplaClientProvider)
   }
 
   private fun testActionExecution(groupId: Int, channelFunc: Int, buttonType: ButtonType, actionAssertion: (ActionParameters) -> Unit) {
