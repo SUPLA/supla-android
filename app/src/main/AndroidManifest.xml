@@ -23,7 +23,7 @@
 
     <application
         android:name="org.supla.android.SuplaApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
