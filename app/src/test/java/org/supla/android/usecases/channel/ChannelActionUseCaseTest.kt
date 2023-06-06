@@ -50,13 +50,18 @@ class ChannelActionUseCaseTest {
   }
 
   @Test
-  fun `should not open valve channel when closed manually 1`() {
-    testValveException(SUPLA_CHANNELFNC_VALVE_OPENCLOSE)
+  fun `should not open valve channel when closed and flooding`() {
+    testValveException(SUPLA_CHANNELFNC_VALVE_OPENCLOSE) {
+      every { it.flooding() } returns true
+    }
   }
 
   @Test
-  fun `should not open valve channel when closed manually 2`() {
-    testValveException(SUPLA_CHANNELFNC_VALVE_PERCENTAGE)
+  fun `should not open valve channel when closed and closed manually`() {
+    testValveException(SUPLA_CHANNELFNC_VALVE_PERCENTAGE) {
+      every { it.flooding() } returns false
+      every { it.isManuallyClosed } returns true
+    }
   }
 
   @Test
@@ -150,13 +155,18 @@ class ChannelActionUseCaseTest {
     verifyZeroInteractions(suplaClientProvider)
   }
 
-  private fun testValveException(channelFunc: Int) {
+  private fun testValveException(channelFunc: Int, channelValueSetup: (ChannelValue) -> Unit) {
     // given
     val channelId = 123
     val channel: Channel = mockk()
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
     every { channel.func } returns channelFunc
+
+    val channelValue: ChannelValue = mockk()
+    every { channelValue.isClosed } returns true
+    channelValueSetup(channelValue)
+    every { channel.value } returns channelValue
 
     whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
 

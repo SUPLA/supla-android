@@ -33,10 +33,6 @@ open class BaseActionUseCase<T : ChannelBase>(
     Completable.fromRunnable { performAction(channelBase, buttonType, forGroup) }
 
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
-    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.func)) {
-      throw ActionException.ChannelClosedManually(channelBase.remoteId)
-    }
-
     val client = suplaClientProvider.provide() ?: return
     if (isRGBW(channelBase.func)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
@@ -46,10 +42,6 @@ open class BaseActionUseCase<T : ChannelBase>(
       client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
     }
   }
-
-  private fun isValveChannel(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ||
-      function == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
 
   private fun isRollerShutter(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||

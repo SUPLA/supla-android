@@ -40,6 +40,10 @@ class ChannelActionUseCase @Inject constructor(
       throw ActionException.ChannelExceedAmperage(channel.channelId)
     }
 
+    if (buttonType == ButtonType.LEFT && isValveChannel(channel.func) && isChannelManuallyClosedOrIsFlooding(channel)) {
+      throw ActionException.ChannelClosedManually(channel.remoteId)
+    }
+
     super.performAction(channel, buttonType, forGroup)
   }
 
@@ -49,4 +53,11 @@ class ChannelActionUseCase @Inject constructor(
     channelFunction == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH ||
       channelFunction == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ||
       channelFunction == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+
+  private fun isValveChannel(function: Int): Boolean =
+    function == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ||
+      function == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
+
+  private fun isChannelManuallyClosedOrIsFlooding(channel: Channel): Boolean =
+    channel.value.isClosed && (channel.value.flooding() || channel.value.isManuallyClosed)
 }

@@ -33,6 +33,7 @@ import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.db.SuplaContract;
+import org.supla.android.db.SuplaContract.LocationEntry;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelDao extends BaseDao {
@@ -339,6 +340,9 @@ public class ChannelDao extends BaseDao {
             + "L."
             + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
             + " COLLATE LOCALIZED, "
+            + "L."
+            + LocationEntry.COLUMN_NAME_LOCATIONID
+            + ", "
             + "C."
             + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
             + ", "
@@ -922,6 +926,9 @@ public class ChannelDao extends BaseDao {
                   + "L."
                   + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
                   + " COLLATE LOCALIZED, "
+                  + "L."
+                  + LocationEntry.COLUMN_NAME_LOCATIONID
+                  + ", "
                   + "G."
                   + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
                   + ", "
