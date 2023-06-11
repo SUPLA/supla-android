@@ -33,12 +33,16 @@ class CreateProfileChannelsListUseCase @Inject constructor(
             channel.AssignCursorData(cursor)
 
             if (location == null || location.locationId != channel.locationId.toInt()) {
-              location = channelRepository.getLocation(channel.locationId.toInt())
-              channels.add(ListItem.LocationItem(location))
+              val newLocation = channelRepository.getLocation(channel.locationId.toInt())
+
+              if (location == null || newLocation.caption != location.caption) {
+                location = newLocation
+                channels.add(ListItem.LocationItem(location))
+              }
             }
 
             if (location?.isCollapsed(CollapsedFlag.CHANNEL) == false) {
-              channels.add(ListItem.ChannelItem(channel))
+              channels.add(ListItem.ChannelItem(channel, location))
             }
           } while (cursor.moveToNext())
         }

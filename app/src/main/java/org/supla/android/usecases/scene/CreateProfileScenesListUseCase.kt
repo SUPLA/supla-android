@@ -26,15 +26,17 @@ class CreateProfileScenesListUseCase @Inject constructor(
     var location: Location? = null
     for (scene in scenes) {
       if (location == null || location.locationId != scene.locationId) {
-        location = channelRepository.getLocation(scene.locationId)
-        result.add(ListItem.LocationItem(location))
+        val newLocation = channelRepository.getLocation(scene.locationId)
+
+        if (location == null || newLocation.caption != location.caption) {
+          location = newLocation
+          result.add(ListItem.LocationItem(location))
+        }
       }
 
-      if (location?.isCollapsed(CollapsedFlag.SCENE) == true) {
-        continue
+      if (location?.isCollapsed(CollapsedFlag.SCENE) == false) {
+        result.add(ListItem.SceneItem(scene, location))
       }
-
-      result.add(ListItem.SceneItem(scene))
     }
 
     return result

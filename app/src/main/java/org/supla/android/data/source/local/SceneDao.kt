@@ -107,7 +107,6 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       }
       val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
         SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME + " COLLATE LOCALIZED, " +
-        SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID + ", " +
         SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
         SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
         SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
