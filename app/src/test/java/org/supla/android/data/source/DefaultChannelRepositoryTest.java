@@ -430,12 +430,17 @@ public class DefaultChannelRepositoryTest {
   public void shouldReorderChannels() {
     // given
     int locationId = 2;
+    String locationCaption = "Location";
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(anyInt())).thenReturn(15L, 12L, 18L, 13L, 14L);
     when(cursor.moveToNext()).thenReturn(true, true, true, true, false);
-    when(channelDao.getSortedChannelIdsForLocationCursor(locationId)).thenReturn(cursor);
+    when(channelDao.getSortedChannelIdsForLocationCursor(locationCaption)).thenReturn(cursor);
+
+    Location location = mock(Location.class);
+    when(location.getCaption()).thenReturn(locationCaption);
+    when(locationDao.getLocation(locationId)).thenReturn(location);
 
     // when
     defaultChannelRepository.reorderChannels(15L, locationId, 13L).blockingAwait();
@@ -1133,12 +1138,17 @@ public class DefaultChannelRepositoryTest {
   public void shouldReorderChannelGroups() {
     // given
     int locationId = 2;
+    String locationCaption = "Caption";
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(anyInt())).thenReturn(15L, 12L, 18L, 13L, 14L);
     when(cursor.moveToNext()).thenReturn(true, true, true, true, false);
-    when(channelDao.getSortedChannelGroupIdsForLocationCursor(locationId)).thenReturn(cursor);
+    when(channelDao.getSortedChannelGroupIdsForLocationCursor(locationCaption)).thenReturn(cursor);
+
+    Location location = mock(Location.class);
+    when(location.getCaption()).thenReturn(locationCaption);
+    when(locationDao.getLocation(locationId)).thenReturn(location);
 
     // when
     defaultChannelRepository.reorderChannelGroups(15L, locationId, 13L).blockingAwait();

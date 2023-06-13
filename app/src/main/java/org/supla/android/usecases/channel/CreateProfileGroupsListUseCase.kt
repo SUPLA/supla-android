@@ -32,12 +32,16 @@ class CreateProfileGroupsListUseCase @Inject constructor(
             group.AssignCursorData(cursor)
 
             if (location == null || location.locationId != group.locationId.toInt()) {
-              location = channelRepository.getLocation(group.locationId.toInt())
-              groups.add(ListItem.LocationItem(location))
+              val newLocation = channelRepository.getLocation(group.locationId.toInt())
+
+              if (location == null || newLocation.caption != location.caption) {
+                location = newLocation
+                groups.add(ListItem.LocationItem(location))
+              }
             }
 
             if (location?.isCollapsed(CollapsedFlag.GROUP) == false) {
-              groups.add(ListItem.ChannelItem(group))
+              groups.add(ListItem.ChannelItem(group, location))
             }
           } while (cursor.moveToNext())
         }

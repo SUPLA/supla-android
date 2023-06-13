@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.db.SuplaContract;
-import org.supla.android.db.SuplaContract.LocationEntry;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelDao extends BaseDao {
@@ -340,9 +340,6 @@ public class ChannelDao extends BaseDao {
             + "L."
             + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
             + " COLLATE LOCALIZED, "
-            + "L."
-            + LocationEntry.COLUMN_NAME_LOCATIONID
-            + ", "
             + "C."
             + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
             + ", "
@@ -437,21 +434,24 @@ public class ChannelDao extends BaseDao {
     return result;
   }
 
-  public Cursor getSortedChannelIdsForLocationCursor(int locationId) {
+  public Cursor getSortedChannelIdsForLocationCursor(String locationCaption) {
     return getChannelListCursorWithDefaultOrder(
-        "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+        "L."
+            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+            + " = "
+            + DatabaseUtils.sqlEscapeString(locationCaption));
   }
 
-  public Cursor getSortedChannelGroupIdsForLocationCursor(int locationId) {
+  public Cursor getSortedChannelGroupIdsForLocationCursor(String locationCaption) {
     String where =
         "G."
             + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
             + " = "
             + getCachedProfileId()
-            + " AND G."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+            + " AND L."
+            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
             + " = "
-            + locationId;
+            + DatabaseUtils.sqlEscapeString(locationCaption);
     return getChannelGroupListCursor(where);
   }
 
@@ -926,9 +926,6 @@ public class ChannelDao extends BaseDao {
                   + "L."
                   + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
                   + " COLLATE LOCALIZED, "
-                  + "L."
-                  + LocationEntry.COLUMN_NAME_LOCATIONID
-                  + ", "
                   + "G."
                   + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
                   + ", "

@@ -38,6 +38,6 @@ class SceneListCallback(
     if (currentView !is SceneLayout || targetView !is SceneLayout) {
       return false
     }
-    return currentView.locationId == targetView.locationId
+    return currentView.locationCaption == targetView.locationCaption
   }
 }

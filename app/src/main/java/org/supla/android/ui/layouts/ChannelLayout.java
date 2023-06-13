@@ -65,7 +65,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   private boolean mMeasurementSubChannel;
   private boolean mGroup;
 
-  public long locationId;
+  public String locationCaption;
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -563,12 +563,15 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     observeChanges();
   }
 
+  public void setLocationCaption(String locationCaption) {
+    this.locationCaption = locationCaption;
+  }
+
   private void configureBasedOnData(ChannelBase cbase) {
 
     int OldFunc = mFunc;
     mFunc = cbase.getFunc();
     mRemoteId = cbase.getRemoteId();
-    locationId = cbase.getLocationId();
     boolean OldGroup = mGroup;
     mGroup = cbase instanceof ChannelGroup;
 
