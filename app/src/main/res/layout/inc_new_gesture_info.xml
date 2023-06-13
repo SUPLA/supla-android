@@ -35,7 +35,7 @@
     android:layout_marginTop="24dp"
     android:layout_marginEnd="16dp"
     android:gravity="center"
-    android:text="Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał."
+    android:text="@string/new_gesture_description"
     android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
     android:textColor="@color/on_primary"
     app:layout_constraintBottom_toBottomOf="parent"

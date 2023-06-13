@@ -14,12 +14,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.model.appsettings.ChannelHeight
 import org.supla.android.model.appsettings.TemperatureUnit
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.R
-import org.supla.android.model.appsettings.ChannelHeight
 
 @RunWith(MockitoJUnitRunner::class)
 class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewEvent>() {

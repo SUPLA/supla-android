@@ -127,7 +127,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       NotificationInfoDialog.create().show(supportFragmentManager, null)
     }
 
-    if (preferences.isNewGestureInfoPresented.not()) {
+    if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
       newGestureInfo.visibility = View.VISIBLE
       newGestureInfoClose.setOnClickListener { newGestureInfo.visibility = View.GONE }

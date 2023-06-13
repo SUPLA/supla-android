@@ -43,6 +43,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import dagger.hilt.android.EntryPointAccessors;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,8 @@ import java.util.List;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.db.MeasurementsDbHelper;
+import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
+import org.supla.android.profile.ProfileManager;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
 
@@ -69,24 +72,20 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   private LineDataSet lineDataSet;
   private Double downloadProgress;
   private Preferences prefs;
-  private int channelId;
   private ZoomSettings persistedZoom;
+  private final ProfileManager profileManager;
 
   public ChartHelper(Context context) {
     this.context = context;
     this.prefs = new Preferences(context);
-  }
-
-  public CombinedChart getCombinedChart() {
-    return combinedChart;
+    this.profileManager =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ProfileManagerEntryPoint.class)
+            .provideProfileManager();
   }
 
   public void setCombinedChart(CombinedChart chart) {
     combinedChart = chart;
-  }
-
-  public PieChart getPieChart() {
-    return pieChart;
   }
 
   public void setPieChart(PieChart chart) {
@@ -509,12 +508,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     updateDescription();
   }
 
-  public long getMinTimestamp() {
-    return minTimestamp;
-  }
-
   public void load(int channelId, ChartType ctype) {
-    this.channelId = channelId;
     this.ctype = ctype;
 
     if (isPieChartType(ctype)) {
@@ -790,16 +784,19 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   public void persistSpinners(int func, Spinner master, Spinner slave) {
-    prefs.setChartType(func, 0, master.getSelectedItemPosition());
-    prefs.setChartType(func, 1, slave.getSelectedItemPosition());
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    prefs.setChartType(profileId, func, 0, master.getSelectedItemPosition());
+    prefs.setChartType(profileId, func, 1, slave.getSelectedItemPosition());
   }
 
   public void persistSpinner(int func, Spinner master) {
-    prefs.setChartType(func, 3, master.getSelectedItemPosition());
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    prefs.setChartType(profileId, func, 3, master.getSelectedItemPosition());
   }
 
   public void restoreSpinner(int func, Spinner master) {
-    int mct = prefs.getChartType(func, 3, -1);
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    int mct = prefs.getChartType(profileId, func, 3, -1);
     if (mct > -1) {
       master.setSelection(mct);
     }
@@ -820,9 +817,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   public void restoreSpinners(int func, Spinner master, Spinner slave, Runnable slaveReload) {
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+
     int mct, sct;
-    mct = prefs.getChartType(func, 0, -1);
-    sct = prefs.getChartType(func, 1, -1);
+    mct = prefs.getChartType(profileId, func, 0, -1);
+    sct = prefs.getChartType(profileId, func, 1, -1);
 
     master.setSelection(getCorrectPosition(master, mct));
     slaveReload.run();

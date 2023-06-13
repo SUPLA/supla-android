@@ -25,12 +25,9 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
-import dagger.hilt.android.EntryPointAccessors;
 import java.util.Random;
-import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.model.appsettings.TemperatureUnit;
-import org.supla.android.profile.ProfileManager;
 
 public class Preferences {
 
@@ -52,19 +49,15 @@ public class Preferences {
   private static final String pref_any_account_registered = "pref_any_account_registered";
   private static final String pref_new_gesture_info = "pref_new_gesture_info";
   private static final String pref_notifications_asked = "pref_notifications_asked";
+  private static final String pref_should_show_new_gesture_info =
+      "pref_should_show_new_gesture_info";
 
   private final Context _context;
-  private final ProfileManager profileManager;
   private final SharedPreferences _prefs;
 
   public Preferences(Context context) {
     _prefs = PreferenceManager.getDefaultSharedPreferences(context);
     _context = context;
-    profileManager =
-        EntryPointAccessors.fromApplication(
-                context.getApplicationContext(), ProfileManagerEntryPoint.class)
-            .provideProfileManager();
-
     context.getContentResolver();
   }
 
@@ -250,18 +243,17 @@ public class Preferences {
     ed.apply();
   }
 
-  private String getChartTypeKey(int channel, int idx) {
-    int pid = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-    return String.format(pref_chart_type, channel, pid, idx);
+  private String getChartTypeKey(int profileId, int channel, int idx) {
+    return String.format(pref_chart_type, channel, profileId, idx);
   }
 
-  public int getChartType(int channel, int idx, int def) {
-    return _prefs.getInt(getChartTypeKey(channel, idx), def);
+  public int getChartType(int profileId, int channel, int idx, int def) {
+    return _prefs.getInt(getChartTypeKey(profileId, channel, idx), def);
   }
 
-  public void setChartType(int channel, int idx, int charttype) {
+  public void setChartType(int profileId, int channel, int idx, int charttype) {
     SharedPreferences.Editor ed = _prefs.edit();
-    ed.putInt(getChartTypeKey(channel, idx), charttype);
+    ed.putInt(getChartTypeKey(profileId, channel, idx), charttype);
     ed.apply();
   }
 
@@ -287,6 +279,14 @@ public class Preferences {
 
   public void setNotificationsPopupDisplayed(boolean displayed) {
     _prefs.edit().putBoolean(pref_notifications_asked, displayed).apply();
+  }
+
+  public boolean shouldShowNewGestureInfo() {
+    return _prefs.getBoolean(pref_should_show_new_gesture_info, false);
+  }
+
+  public void setShouldShowNewGestureInfo() {
+    _prefs.edit().putBoolean(pref_should_show_new_gesture_info, true).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {
