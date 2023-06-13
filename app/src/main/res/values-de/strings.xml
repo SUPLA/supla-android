@@ -466,4 +466,10 @@
 
  <string name="new_gesture_descirption">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal is offline</string>
+  <string name="notification_info_title">Halte auf dem Laufenden!</string>
+ <string name="notification_info_message">Wir führen die Notifikationen ein, um Sie auf dem Laufenden zu halten. Um sie zu zeigen, brauchen wir Ihre Zustimmung.</string>
+ <string name="skip">Überspringen</string>
+  <string name="settings_notifications">Notifikationen</string>
+ <string name="settings_localization">Lokalization</string>
+  <string name="settings_permissions">Berechtigungen</string>
 </resources>

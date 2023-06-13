@@ -27,9 +27,9 @@ import android.provider.Settings;
 import android.util.Base64;
 import dagger.hilt.android.EntryPointAccessors;
 import java.util.Random;
-import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.model.appsettings.TemperatureUnit;
 import org.supla.android.profile.ProfileManager;
 
 public class Preferences {
@@ -51,6 +51,7 @@ public class Preferences {
 
   private static final String pref_any_account_registered = "pref_any_account_registered";
   private static final String pref_new_gesture_info = "pref_new_gesture_info";
+  private static final String pref_notifications_asked = "pref_notifications_asked";
 
   private final Context _context;
   private final ProfileManager profileManager;
@@ -278,6 +279,14 @@ public class Preferences {
 
   public void setNewGestureInfoPresented(boolean presented) {
     _prefs.edit().putBoolean(pref_new_gesture_info, presented).apply();
+  }
+
+  public boolean isNotificationsPopupDisplayed() {
+    return _prefs.getBoolean(pref_notifications_asked, false);
+  }
+
+  public void setNotificationsPopupDisplayed(boolean displayed) {
+    _prefs.edit().putBoolean(pref_notifications_asked, displayed).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {

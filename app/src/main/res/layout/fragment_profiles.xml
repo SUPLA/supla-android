@@ -6,9 +6,6 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.supla.android.cfg.CfgViewModel" />
-        <variable
-            name="profilesVM"
             type="org.supla.android.cfg.ProfilesViewModel" />
     </data>
     <LinearLayout
@@ -58,6 +55,6 @@
 	          android:layout_height="wrap_content"
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:adapter="@{profilesVM.profilesAdapter}"/>
+            app:adapter="@{viewModel.profilesAdapter}"/>
   </LinearLayout>
 </layout>

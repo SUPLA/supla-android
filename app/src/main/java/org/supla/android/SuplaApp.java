@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
+import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
@@ -77,6 +78,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject SceneStateObserverUseCase sceneStateObserver;
   @Inject ChannelStateObserverUseCase channelStateObserver;
   @Inject ChannelGroupStateObserverUseCase groupStateObserver;
+  @Inject NotificationsHelper notificationsHelper;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -97,6 +99,7 @@ public class SuplaApp extends MultiDexApplication
     sceneStateObserver.register();
     channelStateObserver.register();
     groupStateObserver.register();
+    notificationsHelper.registerForToken();
 
     SuplaFormatter.sharedFormatter();
 

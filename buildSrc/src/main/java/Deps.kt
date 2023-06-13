@@ -5,6 +5,7 @@ object Deps {
     const val AndroidChart = "com.github.PhilJay:MPAndroidChart:${Versions.AndroidChart}"
     const val Coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Coroutines}"
     const val GoogleMaterial = "com.google.android.material:material:${Versions.GoogleMaterial}"
+    const val GoogleServices = "com.google.gms:google-services:${Versions.GoogleServices}"
 
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
     const val AndroidBuildTools = "com.android.tools.build:gradle:7.4.2"
@@ -37,6 +38,7 @@ object Deps {
             const val Livedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.Androidx.Lifecycle}"
             const val Extensions = "androidx.lifecycle:lifecycle-extensions:${Versions.Androidx.LifecycleExtensions}"
         }
+
         object Navigation {
             const val Fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.Androidx.Navigation}"
             const val UI = "androidx.navigation:navigation-ui-ktx:${Versions.Androidx.Navigation}"
@@ -44,12 +46,21 @@ object Deps {
 
             const val SafeArgsGradlePlugin = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.Androidx.Navigation}"
         }
+
+        object Security {
+            const val Crypto = "androidx.security:security-crypto:${Versions.Androidx.Security}"
+        }
     }
 
     object RxJava {
         const val RxJava = "io.reactivex.rxjava3:rxjava:${Versions.RxJava.RxJava}"
         const val RxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.RxJava.RxAndroid}"
         const val RxKotlin = "com.github.reactivex:rxkotlin:${Versions.RxJava.RxKotlin}"
+    }
+
+    object Firebase {
+        const val Bom = "com.google.firebase:firebase-bom:${Versions.Firebase}"
+        const val Messaging = "com.google.firebase:firebase-messaging-ktx"
     }
 
     object Testing {

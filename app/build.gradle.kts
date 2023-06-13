@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -121,6 +122,9 @@ dependencies {
     implementation(Deps.Androidx.RecyclerView)
     implementation(Deps.Hilt.Hilt)
     implementation(Deps.FragmentViewBinding)
+    implementation(platform(Deps.Firebase.Bom))
+    implementation(Deps.Firebase.Messaging)
+    implementation(Deps.Androidx.Security.Crypto)
     kapt(Deps.Hilt.Kapt)
 
     testImplementation(Deps.Testing.Androidx.Core)
