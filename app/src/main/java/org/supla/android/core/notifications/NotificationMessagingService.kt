@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
       val title = if (it.titleLocalizationKey != null) {
         getLocalizedString(it.titleLocalizationKey!!, it.titleLocalizationArgs)
       } else {
-        it.title
+        it.title ?: baseContext.getString(R.string.app_name)
       }
 
       val text = if (it.bodyLocalizationKey != null) {
@@ -30,7 +31,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
         it.body
       }
 
-      if (title != null && text != null) {
+      if (text != null) {
         notificationsHelper.showNotification(baseContext, title, text)
       }
     }
