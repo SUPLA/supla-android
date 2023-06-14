@@ -42,7 +42,7 @@
     style="@style/AppTheme.Button.Contained"
     android:layout_marginTop="24dp"
     android:gravity="center"
-    android:text="@string/ok"
+    android:text="@string/turn_on"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/notification_info_message" />
 

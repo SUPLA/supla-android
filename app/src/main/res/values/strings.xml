@@ -534,7 +534,7 @@
     <string translatable="false" name="new_gesture_description">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
     <string translatable="false" name="channel_offline">Channel is offline</string>
     <string name="notification_info_title">Get notified!</string>
-    <string name="notification_info_message">We\'re introducing notifications! If you want to stay up to date, let us showing them.\n\nYou can setup your notifications in Supla Cloud.</string>
+    <string name="notification_info_message">Turn on notifications if you want to be notified!\n\nYou can setup your notifications in Supla Cloud.</string>
     <string name="skip">Skip</string>
 
     <string translatable="false" name="default_notification_channel_id">org.supla.android.main_channel</string>
@@ -543,4 +543,5 @@
     <string name="notifications_inactive" translatable="false">𐄂</string>
     <string name="settings_localization">Localization</string>
     <string name="settings_permissions">Permissions</string>
+    <string name="turn_on">Turn on</string>
 </resources>
