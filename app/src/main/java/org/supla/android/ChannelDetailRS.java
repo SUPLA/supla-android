@@ -22,10 +22,10 @@ import static org.supla.android.lib.SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_CLOSE;
 import static org.supla.android.lib.SuplaConst.SUPLA_CTR_ROLLER_SHUTTER_OPEN;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,6 +65,7 @@ public class ChannelDetailRS extends DetailLayout
   private TextView rsTvPressTime;
   private SuplaWarningIcon warningIcon;
   private Timer delayTimer1;
+  private Handler uiHandler;
   private SuperuserAuthorizationDialog authDialog;
   private long btnUpDownTouchedAt;
   private boolean showOpening;
@@ -87,8 +88,9 @@ public class ChannelDetailRS extends DetailLayout
   }
 
   protected void init() {
-
     super.init();
+
+    uiHandler = new Handler();
 
     percentageCaption = findViewById(R.id.rsDetailPercentCaption);
     readShowOpeningValue();
@@ -177,8 +179,7 @@ public class ChannelDetailRS extends DetailLayout
         tvPercent.setText(R.string.calibration);
         rsTvPressTime.setVisibility(VISIBLE);
       } else {
-        tvPercent.setText(
-            Integer.toString((int) mappedPercentage(rsValue.getClosingPercentage())) + "%");
+        tvPercent.setText((int) mappedPercentage(rsValue.getClosingPercentage()) + "%");
       }
 
       if ((channel.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE) > 0) {
@@ -224,21 +225,14 @@ public class ChannelDetailRS extends DetailLayout
             new DelayTask(percent) {
               @Override
               public void run() {
-                if (getContext() instanceof Activity) {
-                  ((Activity) getContext())
-                      .runOnUiThread(
-                          new Runnable() {
-
-                            @Override
-                            public void run() {
-                              rollerShutter.setMarkers(null);
-                              rollerShutter.setPercent(percent);
-                              roofWindow.setMarkers(null);
-                              roofWindow.setClosingPercentage(percent);
-                              tvPercent.setText(Integer.toString(mappedPercentage(percent)) + "%");
-                            }
-                          });
-                }
+                uiHandler.post(
+                    () -> {
+                      rollerShutter.setMarkers(null);
+                      rollerShutter.setPercent(percent);
+                      roofWindow.setMarkers(null);
+                      roofWindow.setClosingPercentage(percent);
+                      tvPercent.setText(mappedPercentage(percent) + "%");
+                    });
               }
             },
             withoutDelay ? 0 : 2000);
@@ -285,7 +279,7 @@ public class ChannelDetailRS extends DetailLayout
   }
 
   public void onPercentChangeing(float percent) {
-    tvPercent.setText(Integer.toString(mappedPercentage((int) percent)) + "%");
+    tvPercent.setText(mappedPercentage((int) percent) + "%");
   }
 
   @SuppressLint("SetTextI18n")
