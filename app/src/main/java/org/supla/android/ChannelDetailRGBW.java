@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -27,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -70,6 +70,7 @@ public class ChannelDetailRGBW extends DetailLayout
   private long changeFinishedTime;
   private Timer delayTimer1;
   private Timer delayTimer2;
+  private Handler uiHandler;
   private SuplaChannelStatus status;
   private int lastColor;
   private int lastColorBrightness;
@@ -96,8 +97,9 @@ public class ChannelDetailRGBW extends DetailLayout
   }
 
   protected void init() {
-
     super.init();
+
+    uiHandler = new Handler();
 
     tabs = findViewById(R.id.llTabs);
     pickerTypeTabs = findViewById(R.id.llPickerTypeTabs);
@@ -442,18 +444,7 @@ public class ChannelDetailRGBW extends DetailLayout
           new TimerTask() {
             @Override
             public void run() {
-
-              if (getContext() instanceof Activity) {
-                ((Activity) getContext())
-                    .runOnUiThread(
-                        new Runnable() {
-
-                          @Override
-                          public void run() {
-                            sendNewValues();
-                          }
-                        });
-              }
+              uiHandler.post(() -> sendNewValues());
             }
           },
           delayTime,
@@ -599,18 +590,7 @@ public class ChannelDetailRGBW extends DetailLayout
           new TimerTask() {
             @Override
             public void run() {
-
-              if (getContext() instanceof Activity) {
-                ((Activity) getContext())
-                    .runOnUiThread(
-                        new Runnable() {
-
-                          @Override
-                          public void run() {
-                            refreshViewsWithDelay();
-                          }
-                        });
-              }
+              uiHandler.post(() -> refreshViewsWithDelay());
             }
           },
           delayTime,

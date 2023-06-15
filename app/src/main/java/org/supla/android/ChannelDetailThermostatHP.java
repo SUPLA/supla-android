@@ -18,11 +18,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -88,6 +88,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private List<CfgItem> cfgItems;
   private Timer delayTimer1;
   private Timer refreshTimer1;
+  private Handler uiHandler;
   private LinearLayout llChart;
   private ListView lvChannelList;
   private TextView tvErrorMessage;
@@ -114,6 +115,8 @@ public class ChannelDetailThermostatHP extends DetailLayout
   @Override
   protected void init() {
     super.init();
+
+    uiHandler = new Handler();
 
     rlMain = findViewById(R.id.hpMain);
     rlMain.setVisibility(VISIBLE);
@@ -508,18 +511,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
         new TimerTask() {
           @Override
           public void run() {
-
-            if (getContext() instanceof Activity) {
-              ((Activity) getContext())
-                  .runOnUiThread(
-                      new Runnable() {
-
-                        @Override
-                        public void run() {
-                          OnChannelDataChanged();
-                        }
-                      });
-            }
+            uiHandler.post(() -> OnChannelDataChanged());
           }
         },
         100,
@@ -766,18 +758,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
         new TimerTask() {
           @Override
           public void run() {
-
-            if (getContext() instanceof Activity) {
-              ((Activity) getContext())
-                  .runOnUiThread(
-                      new Runnable() {
-
-                        @Override
-                        public void run() {
-                          sendScheduleValues();
-                        }
-                      });
-            }
+            uiHandler.post(() -> sendScheduleValues());
           }
         },
         2000,
