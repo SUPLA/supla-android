@@ -38,6 +38,6 @@ class ChannelsListCallback(
     if (currentView !is ChannelLayout || targetView !is ChannelLayout) {
       return false
     }
-    return currentView.locationId == targetView.locationId
+    return currentView.locationCaption == targetView.locationCaption
   }
 }

@@ -409,7 +409,9 @@ public class DefaultChannelRepository implements ChannelRepository {
   private List<Long> getSortedChannelIdsForLocation(int locationId) {
     ArrayList<Long> orderedItems = new ArrayList<>();
 
-    try (Cursor channelListCursor = channelDao.getSortedChannelIdsForLocationCursor(locationId)) {
+    Location location = locationDao.getLocation(locationId);
+    try (Cursor channelListCursor =
+        channelDao.getSortedChannelIdsForLocationCursor(location.getCaption())) {
       if (channelListCursor.moveToFirst()) {
         do {
           orderedItems.add(
@@ -435,8 +437,9 @@ public class DefaultChannelRepository implements ChannelRepository {
   private List<Long> getSortedChannelGroupIdsForLocation(int locationId) {
     ArrayList<Long> orderedItems = new ArrayList<>();
 
+    Location location = locationDao.getLocation(locationId);
     try (Cursor channelListCursor =
-        channelDao.getSortedChannelGroupIdsForLocationCursor(locationId)) {
+        channelDao.getSortedChannelGroupIdsForLocationCursor(location.getCaption())) {
       if (channelListCursor.moveToFirst()) {
         do {
           orderedItems.add(

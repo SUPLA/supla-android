@@ -74,7 +74,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
   private Listener listener;
 
   private int sceneId;
-  private int locationId;
+  private String locationCaption;
   private Disposable sceneChangesDisposable = null;
 
   public interface Listener {
@@ -92,8 +92,8 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     init(context);
   }
 
-  public int getLocationId() {
-    return locationId;
+  public String getLocationCaption() {
+    return locationCaption;
   }
 
   public int getSceneId() {
@@ -377,9 +377,12 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     return caption_text.getText().toString();
   }
 
+  public void setLocationCaption(String locationCaption) {
+    this.locationCaption = locationCaption;
+  }
+
   public void setScene(Scene scene) {
     sceneId = scene.getSceneId();
-    locationId = scene.getLocationId();
 
     setupLayout(scene);
     observeStateChanges();

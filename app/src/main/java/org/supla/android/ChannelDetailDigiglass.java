@@ -1,7 +1,7 @@
 package org.supla.android;
 
-import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +24,7 @@ public class ChannelDetailDigiglass extends DetailLayout
   private DigiglassController controller;
   private long refreshHold;
   private Timer delayTimer;
+  private Handler uiHandler;
 
   public ChannelDetailDigiglass(Context context) {
     super(context);
@@ -45,6 +46,7 @@ public class ChannelDetailDigiglass extends DetailLayout
   @Override
   protected void init() {
     super.init();
+    uiHandler = new Handler();
     btnAllTransparent = findViewById(R.id.btnDgfTransparent);
     btnAllOpaque = findViewById(R.id.btnDgfOpaque);
     controller = findViewById(R.id.dgfController);
@@ -88,19 +90,11 @@ public class ChannelDetailDigiglass extends DetailLayout
           new TimerTask() {
             @Override
             public void run() {
-              if (getContext() instanceof Activity) {
-                ((Activity) getContext())
-                    .runOnUiThread(
-                        new Runnable() {
-
-                          @Override
-                          public void run() {
-                            delayTimerCancel();
-                            Channel channel = (Channel) getChannelFromDatabase();
-                            channelToViews(channel);
-                          }
-                        });
-              }
+              uiHandler.post(
+                  () -> {
+                    delayTimerCancel();
+                    channelToViews((Channel) getChannelFromDatabase());
+                  });
             }
           },
           dimeDiff,

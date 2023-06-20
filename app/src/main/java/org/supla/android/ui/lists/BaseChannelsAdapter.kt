@@ -75,6 +75,7 @@ abstract class BaseChannelsAdapter(
       is ChannelListItemViewHolder -> {
         val item = (items[pos] as ListItem.ChannelItem)
         vh.binding.channelLayout.setChannelData(item.channelBase)
+        vh.binding.channelLayout.setLocationCaption(item.location.caption)
         vh.binding.channelLayout.setChannelListener(this)
         vh.binding.channelLayout.setOnLongClickListener { onLongPress(vh) }
         vh.binding.channelLayout.setOnClickListener { listItemClickCallback(item.channelBase) }
