@@ -20,7 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 public class SuplaChannel extends SuplaChannelBase {
 
-  public int Type;
+  public int ParantChannel1Id;
+  public int ParantChannel2Id;public int Type;
   public int ProtocolVersion;
   public short ManufacturerID;
   public short ProductID;
