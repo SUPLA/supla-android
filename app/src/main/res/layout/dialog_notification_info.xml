@@ -7,10 +7,11 @@
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/notification_info_icon"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
     android:layout_marginTop="16dp"
     android:src="@drawable/notification_info"
+    android:scaleType="fitCenter"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +49,7 @@
 
   <androidx.appcompat.widget.AppCompatButton
     android:id="@+id/notification_info_skip"
-    style="@style/AppTheme.Button.Text"
+    style="@style/AppTheme.Button.Outlined"
     android:gravity="end|center_vertical"
     android:layout_marginTop="24dp"
     android:text="@string/skip"
