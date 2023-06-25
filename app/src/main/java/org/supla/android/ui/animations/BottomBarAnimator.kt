@@ -28,7 +28,7 @@ fun animateFadeIn(bar: BottomAppBar, animationEndCallback: () -> Unit) {
 
 private class BottomBarAnimatorListener(private val animationEndCallback: () -> Unit) : AnimatorListenerAdapter() {
 
-  override fun onAnimationEnd(p0: Animator?) {
+  override fun onAnimationEnd(p0: Animator) {
     animationEndCallback()
   }
 }

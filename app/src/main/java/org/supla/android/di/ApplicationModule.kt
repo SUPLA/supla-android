@@ -1,5 +1,6 @@
 package org.supla.android.di
 
+import android.app.NotificationManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import dagger.Module
@@ -83,4 +84,8 @@ class ApplicationModule {
   @Singleton
   fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
     SuplaClientMessageHandler.getGlobalInstance()
+
+  @Provides
+  fun provideNotificationManager(@ApplicationContext context: Context) =
+    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }

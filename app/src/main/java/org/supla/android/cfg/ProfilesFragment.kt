@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.databinding.FragmentProfilesBinding
+import org.supla.android.features.appsettings.SettingsViewModel
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.profile.ProfileManager
@@ -41,7 +42,7 @@ class ProfilesFragment : Fragment() {
   @Inject
   internal lateinit var navigator: CfgActivityNavigator
 
-  private val viewModel: CfgViewModel by activityViewModels()
+  private val viewModel: SettingsViewModel by activityViewModels()
   private val profilesVM: ProfilesViewModel by viewModels()
   private lateinit var binding: FragmentProfilesBinding
 
@@ -79,8 +80,7 @@ class ProfilesFragment : Fragment() {
       false
     )
     binding.lifecycleOwner = requireActivity()
-    binding.viewModel = viewModel
-    binding.profilesVM = profilesVM
+    binding.viewModel = profilesVM
 
     return binding.root
   }

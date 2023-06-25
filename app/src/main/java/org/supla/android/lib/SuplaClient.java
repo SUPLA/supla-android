@@ -42,10 +42,12 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.di.entrypoints.EncryptedPreferencesEntryPoint;
 import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
@@ -58,6 +60,7 @@ import org.supla.android.profile.ProfileManager;
 public class SuplaClient extends Thread implements SuplaClientApi {
 
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
+  public static final int SUPLA_APP_ID = 1;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
   private static SuplaRegisterError lastRegisterError = null;
@@ -80,6 +83,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
   private final ListsEventsManager listsEventsManager;
+  private final EncryptedPreferences preferences;
 
   public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
     super();
@@ -90,6 +94,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         EntryPointAccessors.fromApplication(
                 context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
             .provideListsEventsManager();
+    this.preferences =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), EncryptedPreferencesEntryPoint.class)
+            .provideEncryptedPreferences();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -891,6 +899,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
     msg.setRegisterResult(registerResult);
     sendMessage(msg);
+
+    String token = preferences.getFcmToken();
+    if (token != null) {
+      registerPushNotificationClientToken(SUPLA_APP_ID, token);
+    }
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {

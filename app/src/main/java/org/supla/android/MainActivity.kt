@@ -3,6 +3,7 @@ package org.supla.android
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -10,6 +11,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
@@ -25,7 +28,9 @@ import androidx.navigation.ui.onNavDestinationSelected
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.db.MeasurementsDbHelper
+import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
@@ -102,14 +107,27 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   @Inject
   lateinit var preferences: Preferences
 
+  @Inject
+  lateinit var notificationsHelper: NotificationsHelper
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+    if (isGranted) {
+      notificationsHelper.setupNotificationChannel(this)
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     legacySetup()
     navigationSetup()
     toolbarSetup()
+    notificationsHelper.setup(this) {
+      NotificationInfoDialog.create().show(supportFragmentManager, null)
+    }
 
-    if (preferences.isNewGestureInfoPresented.not()) {
+    if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
       newGestureInfo.visibility = View.VISIBLE
       newGestureInfoClose.setOnClickListener { newGestureInfo.visibility = View.GONE }
@@ -395,7 +413,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     setMenuVisible(false)
 
     when (MenuItemsLayout.getButtonId(v)) {
-      MenuItemsLayout.BTN_SETTINGS -> showCfg(this)
+      MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
       MenuItemsLayout.BTN_ABOUT -> showAbout()
       MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)

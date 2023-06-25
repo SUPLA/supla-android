@@ -22,4 +22,14 @@
   <fragment
     android:id="@+id/legacy_detail_fragment"
     android:name="org.supla.android.features.legacydetail.LegacyDetailFragment" />
+
+  <fragment
+    android:id="@+id/application_settings_fragment"
+    android:name="org.supla.android.features.appsettings.SettingsFragment"
+    android:label="@string/menubar_appsettings" />
+
+  <fragment
+    android:id="@+id/location_ordering_fragment"
+    android:name="org.supla.android.cfg.LocationOrderingFragment"
+    android:label="@string/location_ordering" />
 </navigation>

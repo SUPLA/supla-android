@@ -44,7 +44,6 @@ import javax.inject.Inject
 class CfgActivity : BaseActivity() {
 
   companion object {
-    const val ACTION_CONFIG = "org.supla.android.CfgActivity.CONFIG"
     const val ACTION_AUTH = "org.supla.android.CfgActivity.AUTH"
   }
 
@@ -90,7 +89,6 @@ class CfgActivity : BaseActivity() {
 
     val action = intent.action
     val startLoc = when (action) {
-      ACTION_CONFIG -> R.id.cfgMain
       ACTION_AUTH -> R.id.cfgAuth
       else -> null
     }

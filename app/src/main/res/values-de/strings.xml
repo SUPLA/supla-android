@@ -464,6 +464,13 @@
  <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
  <string translatable="false" name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
- <string name="new_gesture_descirption">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
+ <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal is offline</string>
+  <string name="notification_info_title">Benachrichtigungen!</string>
+ <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie in Supla Cloud konfigurieren.</string>
+ <string name="skip">Überspringen</string>
+  <string name="settings_notifications">Notifikationen</string>
+ <string name="settings_localization">Lokalization</string>
+  <string name="settings_permissions">Berechtigungen</string>
+ <string name="turn_on">Einschalten</string>
 </resources>

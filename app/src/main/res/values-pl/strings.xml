@@ -521,6 +521,13 @@
   <string name="general_failure">Wykonanie akcji nie powiodło się</string>
   <string name="push_notification_limit_exceeded">Przekroczono limit powiadomień PUSH, który wynosi %1$s na godzinę.</string>
 
-  <string name="new_gesture_descirption">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
+  <string name="new_gesture_description">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
   <string name="channel_offline">Kanał jest offline</string>
+  <string name="notification_info_title">Powiadomienia!</string>
+  <string name="notification_info_message">Włącz powiadomienia, aby być na bieżąco z informacjami z Twojego domu! Potrzebujemy Twojej zgody, aby wyświetlać je na Twoim urządzeniu.\n\nPowiadomienia możesz skonfigurować w Supla Cloud.</string>
+  <string name="skip">Pomiń</string>
+  <string name="settings_notifications">Powiadomienia</string>
+  <string name="settings_localization">Lokalizacja</string>
+  <string name="settings_permissions">Uprawnienia</string>
+  <string name="turn_on">Włącz</string>
 </resources>

@@ -70,6 +70,7 @@ public class DbHelper extends BaseDbHelper {
   private final ColorListRepository colorListRepository;
   private final UserIconRepository userIconRepository;
   private final SceneRepository sceneRepository;
+  private final Preferences preferences;
 
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
@@ -80,6 +81,7 @@ public class DbHelper extends BaseDbHelper {
         new DefaultUserIconRepository(
             new UserIconDao(this), new ImageCacheProvider(), profileIdProvider);
     this.sceneRepository = new DefaultSceneRepository(new SceneDao(this));
+    this.preferences = new Preferences(context);
   }
 
   /**
@@ -1191,6 +1193,7 @@ public class DbHelper extends BaseDbHelper {
             upgradeToV25(db);
             break;
           case 25:
+            preferences.setShouldShowNewGestureInfo();
             upgradeToV26(db);
             break;
           case 26:
