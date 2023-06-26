@@ -10,9 +10,9 @@ import org.supla.android.R
 
 val SuplaTypography = Typography(
   defaultFontFamily = FontFamily(
-    Font(R.font.quicksand_light, FontWeight.Light),
-    Font(R.font.quicksand_regular, FontWeight.Normal),
-    Font(R.font.quicksand_medium, FontWeight.Medium)
+    Font(R.font.open_sans_light, FontWeight.Light),
+    Font(R.font.open_sans_regular, FontWeight.Normal),
+    Font(R.font.open_sans_medium, FontWeight.Medium)
   ),
   h1 = TextStyle(fontSize = 96.sp, letterSpacing = 0.15.sp, fontWeight = FontWeight.Light),
   h2 = TextStyle(fontSize = 60.sp, letterSpacing = 0.05.sp, fontWeight = FontWeight.Light),

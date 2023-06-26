@@ -25,17 +25,17 @@ import org.supla.android.db.Location
 import javax.inject.Inject
 
 @HiltViewModel
-class LocationReorderViewModel @Inject constructor(private val channelRepository: ChannelRepository): ViewModel() {
+class LocationReorderViewModel @Inject constructor(private val channelRepository: ChannelRepository) : ViewModel() {
 
-    fun getLocations(): Array<Location> {
-        return channelRepository.allLocations.toTypedArray()
-    }
+  fun getLocations(): Array<Location> {
+    return channelRepository.allLocations.toTypedArray()
+  }
 
-    fun onLocationsUpdate(locations: Array<Location>) {
-        var si = 0
-        for(loc in locations) {
-            loc.sortOrder = si++
-            channelRepository.updateLocation(loc)
-        }
+  fun onLocationsUpdate(locations: Array<Location>) {
+    var si = 0
+    for (loc in locations) {
+      loc.sortOrder = si++
+      channelRepository.updateLocation(loc)
     }
+  }
 }

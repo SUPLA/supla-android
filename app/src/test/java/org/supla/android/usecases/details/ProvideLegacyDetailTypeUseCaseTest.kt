@@ -9,6 +9,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.*
@@ -46,76 +47,142 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for light switch with impulse counter`() {
-    testDetailType(SUPLA_CHANNELFNC_LIGHTSWITCH, LegacyDetailType.IC) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_IC))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for power switch with impulse counter`() {
-    testDetailType(SUPLA_CHANNELFNC_POWERSWITCH, LegacyDetailType.IC) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_POWERSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_IC))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for stair case timer with impulse counter`() {
-    testDetailType(SUPLA_CHANNELFNC_STAIRCASETIMER, LegacyDetailType.IC) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_STAIRCASETIMER,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_IC))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for light switch with measurement`() {
-    testDetailType(SUPLA_CHANNELFNC_LIGHTSWITCH, LegacyDetailType.EM) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for power switch with measurement`() {
-    testDetailType(SUPLA_CHANNELFNC_POWERSWITCH, LegacyDetailType.EM) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_POWERSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
+      every { channel.value } returns channelValue
+    }
+  }
+
+  @Test
+  fun `should provide detail for stair case timer with measurement and timer support`() {
+    testDetailType(
+      SUPLA_CHANNELFNC_STAIRCASETIMER,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM, DetailPage.TIMER))
+    ) { channel ->
+      val channelValue: ChannelValue = mockk()
+      every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
+      every { channel.value } returns channelValue
+    }
+  }
+
+  @Test
+  fun `should provide detail for light switch with measurement and timer support`() {
+    testDetailType(
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM, DetailPage.TIMER))
+    ) { channel ->
+      val channelValue: ChannelValue = mockk()
+      every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
+      every { channel.value } returns channelValue
+    }
+  }
+
+  @Test
+  fun `should provide detail for power switch with measurement and timer support`() {
+    testDetailType(
+      SUPLA_CHANNELFNC_POWERSWITCH,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM, DetailPage.TIMER))
+    ) { channel ->
+      val channelValue: ChannelValue = mockk()
+      every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for stair case timer with measurement`() {
-    testDetailType(SUPLA_CHANNELFNC_STAIRCASETIMER, LegacyDetailType.EM) { channel ->
+    testDetailType(
+      SUPLA_CHANNELFNC_STAIRCASETIMER,
+      StandardDetailType(listOf(DetailPage.GENERAL, DetailPage.HISTORY_EM))
+    ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+      every { channel.flags } returns 0
       every { channel.value } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for light switch`() {
-    testDetailType(SUPLA_CHANNELFNC_LIGHTSWITCH, StandardDetailType.SWITCH) { channel ->
+    testDetailType(SUPLA_CHANNELFNC_LIGHTSWITCH, StandardDetailType(listOf(DetailPage.GENERAL))) { channel ->
       every { channel.value } returns null
+      every { channel.flags } returns 0
     }
   }
 
   @Test
   fun `should provide detail for power switch`() {
-    testDetailType(SUPLA_CHANNELFNC_POWERSWITCH, StandardDetailType.SWITCH) { channel ->
+    testDetailType(SUPLA_CHANNELFNC_POWERSWITCH, StandardDetailType(listOf(DetailPage.GENERAL))) { channel ->
       every { channel.value } returns null
+      every { channel.flags } returns 0
     }
   }
 
   @Test
   fun `should provide detail for stair case timer`() {
-    testDetailType(SUPLA_CHANNELFNC_STAIRCASETIMER, StandardDetailType.SWITCH) { channel ->
+    testDetailType(SUPLA_CHANNELFNC_STAIRCASETIMER, StandardDetailType(listOf(DetailPage.GENERAL))) { channel ->
       every { channel.value } returns null
+      every { channel.flags } returns 0
     }
   }
 

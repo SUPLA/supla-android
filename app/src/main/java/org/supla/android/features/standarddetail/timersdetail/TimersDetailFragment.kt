@@ -1,9 +1,25 @@
 package org.supla.android.features.standarddetail.timersdetail
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -12,6 +28,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentTimersDetailBinding
@@ -20,11 +37,15 @@ import org.supla.android.extensions.visibleIf
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaClientMsg
 import java.util.*
+import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
 @AndroidEntryPoint
 class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailViewEvent>(R.layout.fragment_timers_detail) {
+
+  @Inject
+  internal lateinit var stateHolder: RuntimeStateHolder
 
   private val viewModel: TimersDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentTimersDetailBinding::bind)
@@ -42,9 +63,11 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     super.onViewCreated(view, savedInstanceState)
 
     binding.detailsTimerConfiguration.onStartClickListener = { timeInSeconds, action ->
+      stateHolder.setLastTimerValue(remoteId, timeInSeconds)
       viewModel.startTimer(remoteId, action == TimerTargetAction.TURN_ON, timeInSeconds)
     }
     binding.detailsTimerConfiguration.onEditCancelClickListener = { viewModel.cancelEditMode() }
+    binding.detailsTimerConfiguration.timeInSeconds = stateHolder.getLastTimerValue(remoteId)
     binding.detailsTimerStopButton.setOnClickListener { viewModel.stopTimer(remoteId) }
     binding.detailsTimerCancelButton.setOnClickListener { viewModel.cancelTimer(remoteId) }
     binding.detailsTimerEditTime.setOnClickListener {
@@ -102,11 +125,17 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
       )
       binding.detailsTimerStopButton.text = getString(
         R.string.details_timer_leave_it,
-        resources.getQuantityString(if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_on else R.plurals.details_timer_info_off, 1)
+        resources.getQuantityString(
+          if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_on else R.plurals.details_timer_info_off,
+          1
+        )
       )
       binding.detailsTimerCancelButton.text = getString(
         R.string.details_timer_cancel_and,
-        resources.getQuantityString(if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_off else R.plurals.details_timer_info_on, 3)
+        resources.getQuantityString(
+          if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_off else R.plurals.details_timer_info_on,
+          3
+        )
       )
     } else {
       timer?.cancel()

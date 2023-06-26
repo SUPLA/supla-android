@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.legacydetail.LegacyDetailFragment
-import org.supla.android.features.standarddetail.scheduledetail.ScheduleDetailFragment
 import org.supla.android.features.standarddetail.switchdetail.SwitchDetailFragment
 import org.supla.android.features.standarddetail.timersdetail.TimersDetailFragment
 import org.supla.android.model.ItemType

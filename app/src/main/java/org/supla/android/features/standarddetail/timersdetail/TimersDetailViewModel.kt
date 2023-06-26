@@ -1,11 +1,27 @@
 package org.supla.android.features.standarddetail.timersdetail
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import android.util.Log
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Trace
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -13,19 +29,21 @@ import org.supla.android.db.Channel
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.asDate
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.client.StartTimerUseCase
+import org.supla.android.usecases.client.StartTimerUseCase.InvalidTimeException
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class TimersDetailViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val suplaClientProvider: SuplaClientProvider,
-  private val vibrationHelper: VibrationHelper,
+  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val startTimerUseCase: StartTimerUseCase,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<TimersDetailViewState, TimersDetailViewEvent>(TimersDetailViewState(), schedulers) {
 
@@ -39,7 +57,7 @@ class TimersDetailViewModel @Inject constructor(
   }
 
   fun startTimer(remoteId: Int, turnOn: Boolean, durationInSecs: Int) {
-    startCompletable(remoteId, turnOn, durationInSecs)
+    startTimerUseCase(remoteId, turnOn, durationInSecs)
       .attach()
       .subscribeBy(
         onError = {
@@ -55,13 +73,7 @@ class TimersDetailViewModel @Inject constructor(
     readChannelByRemoteIdUseCase(remoteId)
       .flatMapCompletable { abortCompletable(remoteId, it.value.hiValue()) }
       .attach()
-      .subscribeBy(
-        onError = {
-          if (it is InvalidTimeException) {
-            sendEvent(TimersDetailViewEvent.ShowInvalidTimeToast)
-          }
-        }
-      )
+      .subscribeBy()
       .disposeBySelf()
   }
 
@@ -69,13 +81,7 @@ class TimersDetailViewModel @Inject constructor(
     readChannelByRemoteIdUseCase(remoteId)
       .flatMapCompletable { abortCompletable(remoteId, it.value.hiValue().not()) }
       .attach()
-      .subscribeBy(
-        onError = {
-          if (it is InvalidTimeException) {
-            sendEvent(TimersDetailViewEvent.ShowInvalidTimeToast)
-          }
-        }
-      )
+      .subscribeBy()
       .disposeBySelf()
   }
 
@@ -97,31 +103,15 @@ class TimersDetailViewModel @Inject constructor(
     )
   }
 
-  private fun calculateLeftTime(endTime: Date) = endTime.time.minus(Date().time)
+  private fun calculateLeftTime(endTime: Date) = endTime.time.minus(dateProvider.currentTimestamp())
 
-  private fun startCompletable(remoteId: Int, turnOn: Boolean, durationInSecs: Int) = Completable.fromRunnable {
-    if (durationInSecs <= 0) {
-      throw InvalidTimeException()
-    }
-    suplaClientProvider.provide()?.run {
-      vibrationHelper.vibrate()
-      timerArm(remoteId, turnOn, durationInSecs.times(1000))
-    }
-  }
-
-  private fun abortCompletable(remoteId: Int, turnOn: Boolean) = Completable.fromRunnable {
-    suplaClientProvider.provide()?.run {
-      vibrationHelper.vibrate()
-      if (turnOn) {
-        executeAction(ActionParameters(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId))
-      } else {
-        executeAction(ActionParameters(ActionId.TURN_OFF, SubjectType.CHANNEL, remoteId))
-      }
-    }
+  private fun abortCompletable(remoteId: Int, turnOn: Boolean): Completable {
+    val actionId = if (turnOn) ActionId.TURN_ON else ActionId.TURN_OFF
+    return executeSimpleActionUseCase(actionId, SubjectType.CHANNEL, remoteId)
   }
 
   private fun handleChannel(channel: Channel) {
-    val currentTime = Date()
+    val currentTime = dateProvider.currentDate()
     val timerState = channel.extendedValue?.extendedValue?.TimerStateValue
     val isTimerOn = timerState != null && timerState.countdownEndsAt != null && timerState.countdownEndsAt.after(currentTime)
     val startDate = channel.extendedValue?.timerStartTimestamp?.asDate()
@@ -150,8 +140,6 @@ class TimersDetailViewModel @Inject constructor(
       )
     }
   }
-
-  private class InvalidTimeException : Exception()
 }
 
 sealed class TimersDetailViewEvent : ViewEvent {
@@ -161,7 +149,7 @@ sealed class TimersDetailViewEvent : ViewEvent {
 data class TimersDetailViewState(
   val timerData: TimerProgressData? = null,
   val channel: Channel? = null,
-  val editMode: Boolean = false,
+  val editMode: Boolean = false
 ) : ViewState()
 
 data class TimerProgressData(

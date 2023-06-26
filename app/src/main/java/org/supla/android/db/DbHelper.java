@@ -32,6 +32,7 @@ import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
+import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -76,7 +77,8 @@ public class DbHelper extends BaseDbHelper {
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
-        new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
+        new DefaultChannelRepository(
+            new ChannelDao(this), new LocationDao(this), new DateProvider());
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
         new DefaultUserIconRepository(

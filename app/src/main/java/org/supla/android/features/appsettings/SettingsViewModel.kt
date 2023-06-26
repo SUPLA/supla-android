@@ -113,5 +113,5 @@ sealed class SettingsViewEvent : ViewEvent {
 }
 
 data class SettingsViewState(
-  val settingsItems: List<SettingItem> = emptyList(),
+  val settingsItems: List<SettingItem> = emptyList()
 ) : ViewState()

@@ -1,4 +1,21 @@
 package org.supla.android.features.standarddetail
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,7 +28,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.ChannelStatePopup
 import org.supla.android.R
-import org.supla.android.core.storage.InternalPreferences
+import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentStandardDetailBinding
@@ -30,7 +47,7 @@ class StandardDetailFragment :
   ToolbarItemsClickHandler {
 
   @Inject
-  lateinit var internalPreferences: InternalPreferences
+  lateinit var runtimeStateHolder: RuntimeStateHolder
 
   private val viewModel: StandardDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
@@ -38,6 +55,7 @@ class StandardDetailFragment :
 
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+
   @Suppress("UNCHECKED_CAST")
   private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
 
@@ -76,8 +94,8 @@ class StandardDetailFragment :
   }
 
   override fun handleViewState(state: StandardDetailViewState) {
-    if (state.channelBase != null) {
-      setToolbarTitle(state.channelBase.getNotEmptyCaption(context))
+    state.channelBase?.let {
+      setToolbarTitle(it.getNotEmptyCaption(context))
     }
   }
 
@@ -107,7 +125,7 @@ class StandardDetailFragment :
   private val pagerCallback = object : OnPageChangeCallback() {
     override fun onPageSelected(position: Int) {
       binding.detailBottomBar.selectedItemId = pages[position].menuId
-      internalPreferences.setDetailOpenedPage(remoteId, position)
+      runtimeStateHolder.setDetailOpenedPage(remoteId, position)
     }
   }
 
@@ -121,7 +139,7 @@ class StandardDetailFragment :
   }
 
   private fun getOpenedPage(): Int {
-    val openedPage = internalPreferences.getDetailOpenedPage(remoteId)
+    val openedPage = runtimeStateHolder.getDetailOpenedPage(remoteId)
     return if (openedPage < 0 || openedPage >= pages.size) {
       0
     } else {

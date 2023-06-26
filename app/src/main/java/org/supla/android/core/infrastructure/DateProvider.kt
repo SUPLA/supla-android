@@ -1,4 +1,4 @@
-package org.supla.android.model
+package org.supla.android.core.infrastructure
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,9 +17,14 @@ package org.supla.android.model
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.lib.actions.SubjectType
-import java.io.Serializable
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-enum class ItemType(val subjectType: SubjectType) : Serializable {
-  CHANNEL(SubjectType.CHANNEL), GROUP(SubjectType.GROUP)
+@Singleton
+class DateProvider @Inject constructor() {
+
+  fun currentDate() = Date()
+
+  fun currentTimestamp() = currentDate().time
 }
