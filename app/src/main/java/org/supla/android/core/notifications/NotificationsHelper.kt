@@ -4,7 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.NotificationManager.IMPORTANCE_DEFAULT
+import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
@@ -59,7 +59,7 @@ class NotificationsHelper @Inject constructor(
 
     if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
       val name = context.getString(R.string.app_name)
-      val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, IMPORTANCE_DEFAULT)
+      val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, IMPORTANCE_HIGH)
       notificationManager.createNotificationChannel(channel)
     }
   }
