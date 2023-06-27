@@ -66,9 +66,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   @Inject ListsEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
 
-  private int mRemoteId;
+  private ChannelBase channelBase;
   private int mFunc;
-  private boolean mMeasurementSubChannel;
   private boolean mGroup;
 
   public String locationCaption;
@@ -241,8 +240,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
     channelIconContainer.addView(caption_text);
 
-    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(mRemoteId));
-    right_btn.setOnClickListener(v -> listener.onRightButtonClick(mRemoteId));
+    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(channelBase.getRemoteId()));
+    right_btn.setOnClickListener(v -> listener.onRightButtonClick(channelBase.getRemoteId()));
 
     right_onlineStatus.setVisibility(INVISIBLE);
     left_onlineStatus.setVisibility(INVISIBLE);
@@ -272,14 +271,14 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     if (mGroup) {
       changesDisposable =
           eventsManager
-              .observeGroup(mRemoteId)
+              .observeGroup(channelBase.getRemoteId())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
               .subscribe(this::configureBasedOnData);
     } else {
       changesDisposable =
           eventsManager
-              .observeChannel(mRemoteId)
+              .observeChannel(channelBase.getRemoteId())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
               .subscribe(this::configureBasedOnData);
@@ -573,6 +572,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     if (content != null) content.setBackgroundColor(color);
   }
 
+  public ChannelBase getChannelBase() {
+    return channelBase;
+  }
+
   public void setChannelData(ChannelBase cbase) {
     configureBasedOnData(cbase);
     observeChanges();
@@ -583,10 +586,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   }
 
   private void configureBasedOnData(ChannelBase cbase) {
-
     int OldFunc = mFunc;
     mFunc = cbase.getFunc();
-    mRemoteId = cbase.getRemoteId();
     boolean OldGroup = mGroup;
     mGroup = cbase instanceof ChannelGroup;
 
@@ -600,18 +601,25 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     channelStateIcon.setVisibility(INVISIBLE);
     channelWarningIcon.setChannel(cbase);
 
-    boolean _mMeasurementSubChannel =
+    boolean isMeasurementChannel =
         !mGroup
             && (((Channel) cbase).getValue().getSubValueType()
                     == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
                 || ((Channel) cbase).getValue().getSubValueType()
                     == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+    boolean wasMeasurementChannel =
+        !mGroup && channelBase != null
+            && (((Channel) channelBase).getValue().getSubValueType()
+            == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+            || ((Channel) channelBase).getValue().getSubValueType()
+            == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
 
-    if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
-      mMeasurementSubChannel = _mMeasurementSubChannel;
+    if (OldFunc != mFunc || isMeasurementChannel != wasMeasurementChannel) {
       imgl.SetDimensions();
       shouldUpdateChannelStateLayout = true;
     }
+
+    channelBase = cbase;
 
     {
       SuplaChannelStatus.ShapeType shapeType =
@@ -771,7 +779,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     caption_text.setOnLongClickListener(
         v -> {
-          listener.onCaptionLongPress(mRemoteId);
+          listener.onCaptionLongPress(channelBase.getRemoteId());
           return true;
         });
     caption_text.setClickable(false);
@@ -1067,32 +1075,5 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     public void setText2(CharSequence text) {
       setText(text, Text2);
     }
-  }
-
-  private boolean iconTouched(int x, int y, ImageView icon) {
-    if (icon.getVisibility() == VISIBLE) {
-      Rect rect1 = new Rect();
-      Rect rect2 = new Rect();
-
-      getHitRect(rect1);
-      icon.getHitRect(rect2);
-
-      rect2.left += rect1.left;
-      rect2.right += rect1.left;
-      rect2.top += rect1.top;
-      rect2.bottom += rect1.top;
-
-      return rect2.contains(x, y);
-    }
-
-    return false;
-  }
-
-  public Point stateIconTouched(int x, int y) {
-    return iconTouched(x, y, channelStateIcon) ? new Point(x, y) : null;
-  }
-
-  public int getRemoteId() {
-    return mRemoteId;
   }
 }

@@ -80,7 +80,7 @@ class ScenesAdapter @Inject constructor(
         vh.binding.sceneLayout.tag = item.scene.sceneId
         vh.binding.sceneLayout.setSceneListener(this)
         vh.binding.sceneLayout.setScene(item.scene)
-        vh.binding.sceneLayout.setLocationCaption(item.location.caption)
+        vh.binding.sceneLayout.locationCaption = item.location.caption
         vh.binding.sceneLayout.setOnLongClickListener { onLongPress(vh) }
       }
       else -> super.onBindViewHolder(vh, pos)

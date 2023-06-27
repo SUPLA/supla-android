@@ -78,7 +78,7 @@ abstract class BaseChannelsAdapter(
         vh.binding.channelLayout.setLocationCaption(item.location.caption)
         vh.binding.channelLayout.setChannelListener(this)
         vh.binding.channelLayout.setOnLongClickListener { onLongPress(vh) }
-        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(item.channelBase) }
+        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(vh.binding.channelLayout.channelBase) }
         vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(item.channelBase.remoteId) }
       }
       else -> super.onBindViewHolder(vh, pos)
