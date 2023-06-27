@@ -715,6 +715,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
         case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
           left_onlineStatus.setVisibility(View.VISIBLE);
           right_onlineStatus.setVisibility(View.VISIBLE);
 
@@ -732,6 +735,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
           left_onlineStatus.setVisibility(View.VISIBLE);
           left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
           right_onlineStatus.setVisibility(View.VISIBLE);
@@ -744,10 +750,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
         case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
         case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
           left_onlineStatus.setVisibility(View.INVISIBLE);
@@ -756,9 +759,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
           lenabled = true;
           renabled = true;
 
