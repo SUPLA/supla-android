@@ -869,11 +869,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     regTryCounter = 0;
     AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
 
-    if (getMaxProtoVersion() > 0
-        && profile.getAuthInfo().getPreferredProtocolVersion() < getMaxProtoVersion()
-        && registerResult.Version > profile.getAuthInfo().getPreferredProtocolVersion()
-        && registerResult.Version <= getMaxProtoVersion()) {
-      profile.getAuthInfo().setPreferredProtocolVersion(registerResult.Version);
+    int maxVersionSupportedByLibrary = getMaxProtoVersion();
+    int storedVersion = profile.getAuthInfo().getPreferredProtocolVersion();
+    int serverVersion = registerResult.Version;
+    if (maxVersionSupportedByLibrary > 0
+        && storedVersion < maxVersionSupportedByLibrary
+        && serverVersion > storedVersion) {
+      int newVersion = serverVersion;
+      if (newVersion > maxVersionSupportedByLibrary) {
+        newVersion = maxVersionSupportedByLibrary;
+      }
+
+      profile.getAuthInfo().setPreferredProtocolVersion(newVersion);
       profileManager.update(profile).blockingSubscribe();
     }
 
