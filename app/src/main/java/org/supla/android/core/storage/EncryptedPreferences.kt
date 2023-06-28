@@ -22,10 +22,12 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val FCM_TOKEN_KEY = "FCM_TOKEN_KEY"
+private const val FCM_TOKEN_LAST_UPDATE_KEY = "FCM_TOKEN_LAST_UPDATE_KEY"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
@@ -44,6 +46,19 @@ class EncryptedPreferences @Inject constructor(
     get() = preferences.getString(FCM_TOKEN_KEY, null)
     set(value) = with(preferences.edit()) {
       putString(FCM_TOKEN_KEY, value)
+      apply()
+    }
+
+  var fcmTokenLastUpdate: Date?
+    get() = with(preferences.getLong(FCM_TOKEN_LAST_UPDATE_KEY, -1)) {
+      if (this > 0) {
+        Date(this)
+      } else {
+        null
+      }
+    }
+    set(value) = with(preferences.edit()) {
+      putLong(FCM_TOKEN_LAST_UPDATE_KEY, value!!.time)
       apply()
     }
 }
