@@ -16,6 +16,7 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.WidgetVisibilityHandler
 
 @RunWith(MockitoJUnitRunner::class)
@@ -39,6 +40,9 @@ class MultiAccountProfileManagerTest {
   @Mock
   private lateinit var suplaAppProvider: SuplaAppProvider
 
+  @Mock
+  private lateinit var singleCallProvider: SingleCall.Provider
+
   private lateinit var profileManager: MultiAccountProfileManager
 
   @Before
@@ -49,7 +53,8 @@ class MultiAccountProfileManagerTest {
       profileIdHolder,
       widgetVisibilityHandler,
       listsEventsManager,
-      suplaAppProvider
+      suplaAppProvider,
+      singleCallProvider
     )
   }
 

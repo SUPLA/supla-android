@@ -18,6 +18,7 @@ import org.supla.android.db.DbHelper
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
@@ -41,7 +42,8 @@ class ApplicationModule {
     profileIdHolder: ProfileIdHolder,
     widgetVisibilityHandler: WidgetVisibilityHandler,
     listsEventsManager: ListsEventsManager,
-    suplaAppProvider: SuplaAppProvider
+    suplaAppProvider: SuplaAppProvider,
+    singleCallProvider: SingleCall.Provider
   ): ProfileManager {
     return MultiAccountProfileManager(
       dbHelper,
@@ -49,7 +51,8 @@ class ApplicationModule {
       profileIdHolder,
       widgetVisibilityHandler,
       listsEventsManager,
-      suplaAppProvider
+      suplaAppProvider,
+      singleCallProvider
     )
   }
 

@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.BuildConfig
@@ -26,7 +27,9 @@ import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.extensions.TAG
+import org.supla.android.features.updatetoken.UpdateTokenWorker
 import org.supla.android.lib.SuplaClient
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -76,18 +79,22 @@ class NotificationsHelper @Inject constructor(
   }
 
   fun updateToken(token: String) {
-    if (token == encryptedPreferences.fcmToken) {
-      Trace.d(TAG, "Token update skipped. Tokens are equal ($token)")
+    if (token == encryptedPreferences.fcmToken && tokenUpdateNotNeeded()) {
+      Trace.d(TAG, "Token update skipped. Tokens are equal")
       return
     }
     Trace.i(TAG, "Updating FCM Token: $token")
     encryptedPreferences.fcmToken = token
 
+    var currentProfileUpdated = false
     suplaClientProvider.provide()?.let {
       if (it.registered()) {
-        it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
+        currentProfileUpdated = it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
       }
     }
+
+    val workRequest = UpdateTokenWorker.build(token, currentProfileUpdated.not())
+    WorkManager.getInstance(context).enqueue(workRequest)
   }
 
   @RequiresApi(VERSION_CODES.TIRAMISU)
@@ -131,4 +138,13 @@ class NotificationsHelper @Inject constructor(
 
     notificationManager.notify(notificationIdRandomizer.nextInt(), notification)
   }
+
+  private fun tokenUpdateNotNeeded(): Boolean {
+    return encryptedPreferences.fcmTokenLastUpdate?.let {
+      val pauseTimeInMillis = UpdateTokenWorker.UPDATE_PAUSE_IN_DAYS.times(ONE_DAY_MILLIS)
+      it.time.plus(pauseTimeInMillis) > Date().time
+    } ?: false
+  }
 }
+
+private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000
