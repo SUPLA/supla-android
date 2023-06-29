@@ -27,6 +27,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentSwitchDetailBinding
+import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCache.getBitmap
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
@@ -47,8 +48,8 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.switchDetailButtonOn.setOnClickListener { viewModel.turnOn(remoteId, itemType) }
-    binding.switchDetailButtonOff.setOnClickListener { viewModel.turnOff(remoteId, itemType) }
+    binding.switchDetailButtonOn.clickListener = { viewModel.turnOn(remoteId, itemType) }
+    binding.switchDetailButtonOff.clickListener = { viewModel.turnOff(remoteId, itemType) }
     viewModel.loadData(remoteId, itemType)
   }
 
@@ -56,8 +57,10 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   }
 
   override fun handleViewState(state: SwitchDetailViewState) {
-    state.imageId?.let {
-      binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(getBitmap(context, it))
+    state.channelBase?.let {
+      binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(getBitmap(context, it.imageIdx))
+      binding.switchDetailButtonOn.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 1))
+      binding.switchDetailButtonOff.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 0))
     }
     binding.switchDetailDeviceState.deviceStateValue.text = if (state.isOn) {
       getString(R.string.details_timer_device_on)

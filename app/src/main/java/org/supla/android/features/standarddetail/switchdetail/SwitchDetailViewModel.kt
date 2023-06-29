@@ -23,7 +23,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
-import org.supla.android.images.ImageId
+import org.supla.android.db.ChannelBase
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
@@ -47,7 +47,7 @@ class SwitchDetailViewModel @Inject constructor(
         onSuccess = { channel ->
           updateState {
             it.copy(
-              imageId = channel.imageIdx,
+              channelBase = channel,
               isOn = (channel as? Channel)?.value?.hiValue() ?: false
             )
           }
@@ -80,6 +80,6 @@ class SwitchDetailViewModel @Inject constructor(
 sealed class SwitchDetailViewEvent : ViewEvent
 
 data class SwitchDetailViewState(
-  val imageId: ImageId? = null,
+  val channelBase: ChannelBase? = null,
   val isOn: Boolean = false
 ) : ViewState()

@@ -11,37 +11,28 @@
       android:id="@+id/switch_detail_device_state"
       layout="@layout/inc_device_state" />
 
-    <Button
+    <org.supla.android.ui.views.PowerButtonView
       android:id="@+id/switch_detail_button_off"
-      android:layout_width="120dp"
-      android:layout_height="120dp"
-      android:layout_marginTop="24dp"
-      android:layout_marginEnd="24dp"
-      android:background="@drawable/bg_detail_on_off_button"
-      android:backgroundTint="@color/red_alert"
-      android:text="OFF"
-      android:textAppearance="@style/AppTheme.TextAppearance.OnOffButton"
-      android:textColor="@color/red_alert"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="14dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/switch_detail_button_on"
       app:layout_constraintHorizontal_chainStyle="packed"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:text="@string/channel_btn_off"
+      app:type="negative" />
 
-    <Button
+    <org.supla.android.ui.views.PowerButtonView
       android:id="@+id/switch_detail_button_on"
-      android:layout_width="120dp"
-      android:layout_height="120dp"
-      android:layout_marginTop="24dp"
-      android:background="@drawable/bg_detail_on_off_button"
-      android:backgroundTint="@color/supla_green"
-      android:text="ON"
-      android:textAppearance="@style/AppTheme.TextAppearance.OnOffButton"
-      android:textColor="@color/supla_green"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="14dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/switch_detail_button_off"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:text="@string/channel_btn_on"
+      app:type="positive" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,7 +11,7 @@ fun SuplaTheme(
   content: @Composable () -> Unit
 ) {
   MaterialTheme(
-    colors = if (darkMode) SuplaDarkColors.toMaterial() else SuplaLightColors(LocalContext.current).toMaterial(),
+    colors = if (darkMode) SuplaDarkColors(LocalContext.current).toMaterial() else SuplaLightColors(LocalContext.current).toMaterial(),
     typography = SuplaTypography,
     content = content
   )

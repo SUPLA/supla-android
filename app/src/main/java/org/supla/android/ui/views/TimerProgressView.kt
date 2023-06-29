@@ -65,8 +65,8 @@ val indeterminatePaint = Paint().asFrameworkPaint().apply {
   strokeCap = android.graphics.Paint.Cap.ROUND
 }
 
-val viewSize = 232.dp
-val progressRadius = 100.dp
+private val viewSize = 232.dp
+private val progressRadius = 100.dp
 
 @Composable
 fun TimerProgressView(progress: Float, indeterminate: Boolean) {
@@ -232,10 +232,10 @@ private fun convertProgressToAngle(progress: Float): Float =
 private fun Preview() {
   SuplaTheme {
     Column {
-      Box(modifier = Modifier.background(color = Color(0xFFEDEDED))) {
+      Box(modifier = Modifier.background(color = Color(0xFFF5F6F7))) {
         TimerProgressView(0.55f, false)
       }
-      Box(modifier = Modifier.background(color = Color(0xFFEDEDED))) {
+      Box(modifier = Modifier.background(color = Color(0xFFF5F6F7))) {
         TimerProgressView(0.55f, true)
       }
     }
