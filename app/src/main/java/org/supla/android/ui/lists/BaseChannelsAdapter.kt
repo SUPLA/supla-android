@@ -78,7 +78,7 @@ abstract class BaseChannelsAdapter(
         vh.binding.channelLayout.setLocationCaption(item.location.caption)
         vh.binding.channelLayout.setChannelListener(this)
         vh.binding.channelLayout.setOnLongClickListener { onLongPress(vh) }
-        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(item.channelBase) }
+        vh.binding.channelLayout.setOnClickListener { listItemClickCallback(vh.binding.channelLayout.channelBase) }
         vh.binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(item.channelBase.remoteId) }
       }
       else -> super.onBindViewHolder(vh, pos)
@@ -95,17 +95,6 @@ abstract class BaseChannelsAdapter(
 
   override fun getItemId(position: Int): Long {
     return position.toLong()
-  }
-
-  /**
-   * Whole list is not refreshed for every channel/channel group change.
-   * So when item goes for ex. online or offline we need to update this item
-   * so the navigation to details works properly
-   */
-  fun updateListItem(channelBase: ChannelBase) {
-    items.filterIsInstance<ListItem.ChannelItem>()
-      .firstOrNull { item -> item.channelBase.remoteId == channelBase.remoteId }
-      ?.apply { this.channelBase = channelBase }
   }
 
   private fun onLongPress(viewHolder: ViewHolder): Boolean {

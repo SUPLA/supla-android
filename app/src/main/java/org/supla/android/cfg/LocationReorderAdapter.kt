@@ -52,7 +52,7 @@ class LocationReorderAdapter(
     listView.setOnDragListener(dl)
   }
 
-  val orderedLocations: Array<Location> = locations
+  private val orderedLocations: Array<Location> = locations
 
   private var destPosition: Int? = null
   private var srcPosition: Int? = null
@@ -68,8 +68,8 @@ class LocationReorderAdapter(
     override fun onDrawShadow(c: Canvas) {
       super.onDrawShadow(c)
       val p = Paint()
-      p.setStyle(Paint.Style.STROKE)
-      c.drawRect(c.getClipBounds(), p)
+      p.style = Paint.Style.STROKE
+      c.drawRect(c.clipBounds, p)
     }
 
     override fun onProvideShadowMetrics(
@@ -77,7 +77,7 @@ class LocationReorderAdapter(
       outShadowTouchPoint: Point
     ) {
       super.onProvideShadowMetrics(outShadowSize, outShadowTouchPoint)
-      val k = ctx.getResources().getDisplayMetrics().densityDpi /
+      val k = ctx.resources.displayMetrics.densityDpi /
         DisplayMetrics.DENSITY_DEFAULT
       outShadowTouchPoint.x = outShadowSize.x - 22 * k
     }
@@ -136,11 +136,10 @@ class LocationReorderAdapter(
         false
       )
       dragHolder = rv?.findViewById(R.id.ivDragHolder)
-      dragHolder?.setOnTouchListener {
-          v, event ->
+      dragHolder?.setOnTouchListener { v, event ->
         val pos = v.tag as? Int
-        if (event.getAction() == MotionEvent.ACTION_DOWN && !isDragging && pos != null) {
-          val itmView = listView.getChildAt(pos - listView.getFirstVisiblePosition())
+        if (event.action == MotionEvent.ACTION_DOWN && !isDragging && pos != null) {
+          val itmView = listView.getChildAt(pos - listView.firstVisiblePosition)
           enableDrag(itmView, pos)
           true
         } else {
@@ -149,11 +148,11 @@ class LocationReorderAdapter(
       }
     } else {
       rv = convertView
-      dragHolder = rv?.findViewById(R.id.ivDragHolder)
+      dragHolder = rv.findViewById(R.id.ivDragHolder)
     }
     val caption: TextView? = rv?.findViewById(R.id.tvSectionCaption)
-    caption?.text = obj?.getCaption() ?: ""
-    caption?.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular())
+    caption?.text = obj?.caption ?: ""
+    caption?.typeface = SuplaApp.getApp().typefaceQuicksandRegular
 
     dragHolder?.tag = pos
 
@@ -186,9 +185,9 @@ class LocationReorderAdapter(
     return rv
   }
 
-  private fun updateDrag(source: Int, dest: Int) {
-    val lastVisiblePosition = listView.getLastVisiblePosition()
-    val firstVisiblePosition = listView.getFirstVisiblePosition()
+  private fun updateDrag(dest: Int) {
+    val lastVisiblePosition = listView.lastVisiblePosition
+    val firstVisiblePosition = listView.firstVisiblePosition
     if (dest == ListViewDragListener.INVALID_POSITION ||
       srcPosition == null
     ) { return }
@@ -211,7 +210,7 @@ class LocationReorderAdapter(
   private fun viewMoved(pos: Int) {
     val start = srcPosition
     if (start != null) {
-      updateDrag(start, pos)
+      updateDrag(pos)
     }
   }
 }

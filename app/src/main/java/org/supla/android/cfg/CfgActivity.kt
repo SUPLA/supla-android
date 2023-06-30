@@ -145,7 +145,7 @@ class CfgActivity : BaseActivity() {
   }
 
   override fun onBackPressed() {
-    if (isBackHandledInChildFragment() || navigator.back()) {
+    if (isBackHandledInChildFragment(supportFragmentManager) || navigator.back()) {
       return
     }
 

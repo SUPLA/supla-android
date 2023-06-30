@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:id="@+id/channel_list_fragment"
+  <item android:id="@+id/channel_list"
         android:title="@string/navbar_channels"
         android:icon="@drawable/list" />
 
-  <item android:id="@+id/group_list_fragment"
+  <item android:id="@+id/group_list"
         android:title="@string/navbar_groups"
         android:icon="@drawable/groupon" />
 
-  <item android:id="@+id/scene_list_fragment"
+  <item android:id="@+id/scene_list"
         android:title="@string/navbar_scenes"
         android:icon="@drawable/coffee" />
 </menu>

@@ -19,20 +19,23 @@ package org.supla.android.cfg
  */
 
 import androidx.lifecycle.ViewModel
-import org.supla.android.data.source.local.LocationDao
+import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Location
+import javax.inject.Inject
 
-class LocationReorderViewModel(private val dao: LocationDao): ViewModel() {
-    fun getLocations(): Array<Location> {
-        return dao.getLocations().toTypedArray()
+@HiltViewModel
+class LocationReorderViewModel @Inject constructor(private val channelRepository: ChannelRepository) : ViewModel() {
+
+  fun getLocations(): Array<Location> {
+    return channelRepository.allLocations.toTypedArray()
+  }
+
+  fun onLocationsUpdate(locations: Array<Location>) {
+    var si = 0
+    for (loc in locations) {
+      loc.sortOrder = si++
+      channelRepository.updateLocation(loc)
     }
-
-
-    fun onLocationsUpdate(locs: Array<Location>) {
-        var si = 0
-        for(loc in locs) {
-            loc.sortOrder = si++
-            dao.update(loc)
-        }
-    }
+  }
 }

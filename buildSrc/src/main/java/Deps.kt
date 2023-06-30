@@ -50,6 +50,12 @@ object Deps {
         object Security {
             const val Crypto = "androidx.security:security-crypto:${Versions.Androidx.Security}"
         }
+
+        object Compose {
+            const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose}"
+            const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose}"
+            const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose}"
+        }
     }
 
     object RxJava {

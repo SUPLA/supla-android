@@ -469,4 +469,5 @@
    <string name="rs_display_mode_opening">Otvorenia</string>
    <string name="rs_display_mode_closing">Zatvorenia</string>
    <string name="status_accessid_inactive">Prístupový identifikátor nie je aktívny</string>
+  <string name="hour_string_format">HH:mm:ss</string>
 </resources>

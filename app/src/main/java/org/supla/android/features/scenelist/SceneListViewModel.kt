@@ -45,8 +45,6 @@ class SceneListViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, scenes = null)
-
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 
   override fun reloadList() = loadScenes()
@@ -93,6 +91,5 @@ sealed class SceneListViewEvent : ViewEvent {
 }
 
 data class SceneListViewState(
-  override val loading: Boolean = false,
   val scenes: List<ListItem>? = null
-) : ViewState(loading)
+) : ViewState()

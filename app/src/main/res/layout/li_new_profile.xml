@@ -12,7 +12,7 @@
   <RelativeLayout
       android:paddingLeft="@dimen/new_screen_margin"
       android:paddingRight="@dimen/new_screen_margin"
-      android:background="@color/activity_bg_new"
+      android:background="@color/background"
       android:layout_width="match_parent"
       android:layout_height="@dimen/settings_cell_height">
 

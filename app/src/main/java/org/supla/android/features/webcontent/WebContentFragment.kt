@@ -10,10 +10,9 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
 import org.supla.android.databinding.FragmentWebContentBinding
 
-abstract class WebContentFragment<S : ViewState, E : ViewEvent> : BaseFragment<S, E>(R.layout.fragment_web_content) {
+abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : BaseFragment<S, E>(R.layout.fragment_web_content) {
 
   protected abstract val url: String
 

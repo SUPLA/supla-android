@@ -434,4 +434,5 @@
     <string name="rs_display_mode_opening">Atidarymo</string>
     <string name="rs_display_mode_closing">Uždarymo</string>
     <string name="status_accessid_inactive">Prieigos identifikatorius neaktyvus</string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

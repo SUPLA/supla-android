@@ -17,9 +17,9 @@ import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.listview.DetailLayout
+import org.supla.android.model.ItemType
 import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
-import org.supla.android.usecases.details.DetailType
-import java.io.Serializable
+import org.supla.android.usecases.details.LegacyDetailType
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_DETAIL_TYPE = "ARG_DETAIL_TYPE"
@@ -31,7 +31,7 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val viewModel: LegacyDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentLegacyDetailBinding::bind)
 
-  private val detailType: DetailType by lazy { arguments!!.getSerializable(ARG_DETAIL_TYPE) as DetailType }
+  private val legacyDetailType: LegacyDetailType by lazy { arguments!!.getSerializable(ARG_DETAIL_TYPE) as LegacyDetailType }
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
 
@@ -90,26 +90,22 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
     Handler(Looper.getMainLooper()).postDelayed({ detailView.onDetailShow() }, 2 * DEFAULT_ANIMATION_DURATION)
   }
 
-  private fun getDetailView(): DetailLayout = when (detailType) {
-    DetailType.RGBW -> ChannelDetailRGBW(context)
-    DetailType.RS -> ChannelDetailRS(context)
-    DetailType.IC -> ChannelDetailIC(context)
-    DetailType.EM -> ChannelDetailEM(context)
-    DetailType.TEMPERATURE -> ChannelDetailTemperature(context)
-    DetailType.TEMPERATURE_HUMIDITY -> ChannelDetailTempHumidity(context)
-    DetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context)
-    DetailType.DIGIGLASS -> ChannelDetailDigiglass(context)
+  private fun getDetailView(): DetailLayout = when (legacyDetailType) {
+    LegacyDetailType.RGBW -> ChannelDetailRGBW(context)
+    LegacyDetailType.RS -> ChannelDetailRS(context)
+    LegacyDetailType.IC -> ChannelDetailIC(context)
+    LegacyDetailType.EM -> ChannelDetailEM(context)
+    LegacyDetailType.TEMPERATURE -> ChannelDetailTemperature(context)
+    LegacyDetailType.TEMPERATURE_HUMIDITY -> ChannelDetailTempHumidity(context)
+    LegacyDetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context)
+    LegacyDetailType.DIGIGLASS -> ChannelDetailDigiglass(context)
   }
 
   companion object {
-    fun bundle(remoteId: Int, detailType: DetailType, itemType: ItemType) = bundleOf(
+    fun bundle(remoteId: Int, legacyDetailType: LegacyDetailType, itemType: ItemType) = bundleOf(
       ARG_REMOTE_ID to remoteId,
-      ARG_DETAIL_TYPE to detailType,
+      ARG_DETAIL_TYPE to legacyDetailType,
       ARG_ITEM_TYPE to itemType
     )
-  }
-
-  enum class ItemType : Serializable {
-    CHANNEL, GROUP
   }
 }

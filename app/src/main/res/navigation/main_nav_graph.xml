@@ -2,21 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/main_nav_graph"
-  app:startDestination="@id/channel_list_fragment">
+  app:startDestination="@id/main_fragment">
 
   <fragment
-    android:id="@+id/channel_list_fragment"
-    android:name="org.supla.android.features.channellist.ChannelListFragment"
-    android:label="@string/menubar_title" />
-
-  <fragment
-    android:id="@+id/group_list_fragment"
-    android:name="org.supla.android.features.grouplist.GroupListFragment"
-    android:label="@string/menubar_title" />
-
-  <fragment
-    android:id="@+id/scene_list_fragment"
-    android:name="org.supla.android.features.scenelist.SceneListFragment"
+    android:id="@+id/main_fragment"
+    android:name="org.supla.android.features.main.MainFragment"
     android:label="@string/menubar_title" />
 
   <fragment
@@ -32,4 +22,8 @@
     android:id="@+id/location_ordering_fragment"
     android:name="org.supla.android.cfg.LocationOrderingFragment"
     android:label="@string/location_ordering" />
+
+  <fragment
+    android:id="@+id/switch_detail_fragment"
+    android:name="org.supla.android.features.standarddetail.StandardDetailFragment" />
 </navigation>

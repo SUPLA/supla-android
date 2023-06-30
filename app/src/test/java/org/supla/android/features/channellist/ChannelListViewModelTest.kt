@@ -1,4 +1,21 @@
 package org.supla.android.features.channellist
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import io.mockk.every
 import io.mockk.mockk
@@ -22,14 +39,18 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.db.ChannelValue
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
@@ -88,7 +109,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should load channels`() {
     // given
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -97,9 +118,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     val state = ChannelListViewState()
     assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, channels = list),
-      state.copy()
+      state.copy(channels = list)
     )
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
@@ -110,7 +129,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val location = mockk<Location>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.CHANNEL)).thenReturn(Completable.complete())
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -119,9 +138,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     val state = ChannelListViewState()
     assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, channels = list),
-      state.copy()
+      state.copy(channels = list)
     )
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase, toggleLocationUseCase)
@@ -146,11 +163,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     viewModel.swapItems(firstItem, secondItem)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
     verify(channelRepository).reorderChannels(firstItemId, firstItemLocationId, secondItemId)
@@ -169,11 +182,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     viewModel.performAction(channelId, buttonType)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.ShowValveDialog(channelId)
     )
@@ -191,11 +200,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     viewModel.performAction(channelId, buttonType)
 
     // then
-    val state = ChannelListViewState()
-    assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.ShowAmperageExceededDialog(channelId)
     )
@@ -227,7 +232,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.func } returns SUPLA_CHANNELFNC_ELECTRICITY_METER
     every { channel.channelId } returns channelId
 
-    val detailType = DetailType.EM
+    val detailType = LegacyDetailType.EM
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
@@ -237,6 +242,34 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open details of switch with EM when item is offline`() {
+    // given
+    val channelId = 123
+    val channelValue = mockk<ChannelValue>()
+    every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
+
+    val channel = mockk<Channel>()
+    every { channel.onLine } returns false
+    every { channel.func } returns SUPLA_CHANNELFNC_LIGHTSWITCH
+    every { channel.channelId } returns channelId
+    every { channel.remoteId } returns channelId
+    every { channel.value } returns channelValue
+
+    val detailType = StandardDetailType(listOf())
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
+
+    // when
+    viewModel.onListItemClick(channel)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenSwitchDetails(channelId, detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -269,8 +302,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.func } returns channelFunction
     every { channel.channelId } returns channelId
 
-    val detailType = DetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
+    val legacyDetailType = LegacyDetailType.TEMPERATURE
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(legacyDetailType)
 
     // when
     viewModel.onListItemClick(channel)
@@ -278,7 +311,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
+      ChannelListViewEvent.OpenLegacyDetails(channelId, legacyDetailType)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -305,7 +338,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should reload list on update`() {
     // given
-    val list = emptyList<ListItem.ChannelItem>()
+    val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -314,9 +347,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     val state = ChannelListViewState()
     assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, channels = list),
-      state.copy()
+      state.copy(channels = list)
     )
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
@@ -327,34 +358,43 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val channelId = 223
     val channel: Channel = mockk()
-
+    every { channel.remoteId } returns channelId
     whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
 
+    val suplaMessage: SuplaClientMsg = mockk()
+    every { suplaMessage.channelId } returns channelId
+    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
+
+    val list = listOf(mockk<ListItem.ChannelItem>())
+    every { list[0].channelBase } returns channel
+    every { list[0].channelBase = channel } answers { }
+    whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
+
     // when
-    viewModel.onChannelUpdate(channelId)
+    viewModel.loadChannels()
+    viewModel.onSuplaMessage(suplaMessage)
 
     // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.UpdateChannel(channel)
-    )
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+    assertThat(states).containsExactly(ChannelListViewState(channels = list))
+    assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(createProfileChannelsListUseCase, findChannelByRemoteIdUseCase)
+    io.mockk.verify { list[0].channelBase = channel }
   }
 
   @Test
-  fun `should do nothing when channel not found on update`() {
+  fun `should do nothing when update is not for channel`() {
     // given
-    val channelId = 223
-
-    whenever(findChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.empty())
+    val suplaMessage: SuplaClientMsg = mockk()
+    every { suplaMessage.channelId } returns 0
+    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
 
     // when
-    viewModel.onChannelUpdate(channelId)
+    viewModel.onSuplaMessage(suplaMessage)
 
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+    verifyZeroInteractionsExcept()
   }
 
   private fun verifyZeroInteractionsExcept(vararg except: Any) {

@@ -30,4 +30,6 @@ interface SuplaClientApi {
   fun registerPushNotificationClientToken(appId: Int, token: String): Boolean
 
   fun registered(): Boolean
+
+  fun timerArm(remoteId: Int, setOn: Boolean, durationInMs: Int): Boolean
 }

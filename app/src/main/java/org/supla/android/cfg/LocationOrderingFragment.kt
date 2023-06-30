@@ -19,36 +19,23 @@ package org.supla.android.cfg
  */
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.HasDefaultViewModelProviderFactory
-import androidx.lifecycle.ViewModelProvider
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentLocationReorderBinding
 
-class LocationOrderingFragment : Fragment(), HasDefaultViewModelProviderFactory {
+@AndroidEntryPoint
+class LocationOrderingFragment : Fragment(R.layout.fragment_location_reorder) {
 
-  private lateinit var binding: FragmentLocationReorderBinding
+  private val binding by viewBinding(FragmentLocationReorderBinding::bind)
   private val viewModel: LocationReorderViewModel by viewModels()
   private lateinit var adapter: LocationReorderAdapter
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    binding = DataBindingUtil.inflate(
-      inflater,
-      R.layout.fragment_location_reorder,
-      container,
-      false
-    )
-    binding.lifecycleOwner = this
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     adapter = LocationReorderAdapter(
       requireActivity(),
@@ -57,10 +44,5 @@ class LocationOrderingFragment : Fragment(), HasDefaultViewModelProviderFactory 
       viewModel
     )
     binding.locationList.adapter = adapter
-
-    return binding.root
-  }
-  override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-    return LocationReorderViewModelFactory(activity ?: SuplaApp.getApp())
   }
 }

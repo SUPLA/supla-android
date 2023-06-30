@@ -5,4 +5,12 @@
   <attr name="linkColor" format="color" />
   <attr name="labelColor" format="color" />
   <attr name="switcherBackgroundColor" format="reference" />
+
+  <declare-styleable name="PowerButtonView">
+    <attr name="text" format="string" />
+    <attr name="type" format="enum">
+      <enum name="positive" value="0" />
+      <enum name="negative" value="1" />
+    </attr>
+  </declare-styleable>
 </resources>

@@ -60,10 +60,10 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     viewModel.loadSettings()
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
 
-    val settingsList = states[1].settingsItems
+    val settingsList = states[0].settingsItems
     assertThat(settingsList).extracting({ it::class.java }).containsExactly(
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.ChannelHeightItem::class.java),
@@ -96,11 +96,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[1] as SettingItem.ChannelHeightItem
+    val channelSettingItem = states[0].settingsItems[1] as SettingItem.ChannelHeightItem
     channelSettingItem.callback(2)
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify(preferences).channelHeight = 150
@@ -115,11 +115,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[3] as SettingItem.ButtonAutoHide
+    val channelSettingItem = states[0].settingsItems[3] as SettingItem.ButtonAutoHide
     channelSettingItem.callback(false)
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify(preferences).isButtonAutohide = false
@@ -134,11 +134,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[2] as SettingItem.TemperatureUnitItem
+    val channelSettingItem = states[0].settingsItems[2] as SettingItem.TemperatureUnitItem
     channelSettingItem.callback(0)
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify(preferences).temperatureUnit = TemperatureUnit.CELSIUS
@@ -153,11 +153,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[4] as SettingItem.InfoButton
+    val channelSettingItem = states[0].settingsItems[4] as SettingItem.InfoButton
     channelSettingItem.callback(true)
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify(preferences).isShowChannelInfo = true
@@ -172,11 +172,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[5] as SettingItem.RollerShutterOpenClose
+    val channelSettingItem = states[0].settingsItems[5] as SettingItem.RollerShutterOpenClose
     channelSettingItem.callback(false)
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
     verify(preferences).isShowOpeningPercent = false
@@ -190,11 +190,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[6] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[6] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToLocalizationsOrdering)
     verifyPreferencesMockedCalls()
     verifyNoMoreInteractions(preferences)
@@ -207,11 +207,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[8] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[8] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToSettings)
     verifyPreferencesMockedCalls()
     verifyNoMoreInteractions(preferences)
@@ -224,11 +224,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[1].settingsItems[9] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[9] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
-    assertThat(states.size).isEqualTo(3)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).containsExactly(SettingsViewEvent.NavigateToSettings)
     verifyPreferencesMockedCalls()
     verifyNoMoreInteractions(preferences)

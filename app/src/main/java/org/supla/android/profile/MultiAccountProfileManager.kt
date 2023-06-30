@@ -49,7 +49,7 @@ class MultiAccountProfileManager(
   }
 
   override fun read(id: Long): Maybe<AuthProfileItem> = Maybe.fromCallable {
-    profileRepository.getProfile(id)
+    profileRepository.getProfile(id)!!
   }
 
   override fun update(profile: AuthProfileItem): Completable = Completable.fromRunnable {

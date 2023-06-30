@@ -15,6 +15,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
+import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
@@ -43,7 +44,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
   fun `should load channel data`() {
     // given
     val channelId = 123
-    val itemType = LegacyDetailFragment.ItemType.CHANNEL
+    val itemType = ItemType.CHANNEL
 
     val channel: Channel = mockk()
     whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
@@ -52,11 +53,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     viewModel.loadData(channelId, itemType)
 
     // then
-    val state = LegacyDetailViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(channel)
     )
@@ -67,7 +64,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
   fun `should load group data`() {
     // given
     val groupId = 234
-    val itemType = LegacyDetailFragment.ItemType.GROUP
+    val itemType = ItemType.GROUP
 
     val group: ChannelGroup = mockk()
     whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
@@ -76,11 +73,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     viewModel.loadData(groupId, itemType)
 
     // then
-    val state = LegacyDetailViewState()
-    Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy()
-    )
+    Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(group)
     )

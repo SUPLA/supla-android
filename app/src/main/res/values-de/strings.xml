@@ -107,6 +107,9 @@
     <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
     <string name="wizard_location_error">Damit der Assistent zum Hinzufügen ordnungsgemäß funktioniert, muss der Ortungsdienst auf diesem Gerät aktiviert sein. Gehen Sie zu Ihren Systemeinstellungen, wählen Sie dann „Standort“ und vergewissern Sie sich, dass die Standortfunktion aktiviert ist.</string>
     <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="turn_on">Einschalten</string>
+    <string name="turn_off">Ausschalten</string>
     <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
     <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
     <string name="device_reg_request_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
@@ -338,7 +341,7 @@
     <string name="zwave_error_set_caption_timeout">Die Wartezeit auf Änderung der Kanalsignatur wurde überschritten</string>
     <string name="zwave_error_set_function_timeout">Die Wartezeit auf Änderung der Kanalfunktion wurde überschritten</string>
     <string name="zwave_error_slave_mode">Diese Funktion ist nicht verfügbar, wenn die Brücke in einem untergeordneten Modus betrieben wird.</string>
-    <string name="zwave_error_unexpected_response">Geräteantwort nicht wie erwartet. Methode:% 1$s Code:%2$s</string>
+    <string name="zwave_error_unexpected_response">Geräteantwort nicht wie erwartet. Methode:%1$s Code:%2$s</string>
     <string name="zwave_network">Z-Wave-Netzwerk</string>
     <string name="zwave_node_assign_confirm_question">Das ausgewählte Z-Wave-Gerät ist bereits einem anderen Kanal zugewiesen. Sind Sie sicher, dass Sie dieses Gerät auf diesen Kanal übertragen möchten?</string>
     <string name="zwave_node_searching">Das Z-Wave-Netzwerk wird durchgesucht, um eine Geräteliste zu erstellen.</string>
@@ -472,5 +475,45 @@
   <string name="settings_notifications">Notifikationen</string>
  <string name="settings_localization">Lokalization</string>
   <string name="settings_permissions">Berechtigungen</string>
- <string name="turn_on">Einschalten</string>
+
+ <string translatable="false" name="details_general">Allgemain</string>
+ <string translatable="false" name="details_history">Messungen</string>
+ <string translatable="false" name="details_settings">Einstellungen</string>
+ <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
+ <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
+ <string name="details_timer_turn_on_for">Einschalten für</string>
+ <string name="details_timer_turn_off_for">Ausschalten für</string>
+ <string name="details_timer_info">Das Gerät wird für %2$s Uhr %1$s und dann %3$s</string>
+  <string name="details_timer_leave_it">Lass es %1$s</string>
+ <string name="details_timer_cancel_and">Abbrechen und %1$s</string>
+ <string name="details_timer_end_hour">do godz. %1$s</string>
+ <string name="hour_string_format">HH:mm:ss</string>
+ <string name="details_timer_state_label">Aktuellen Zustand:</string>
+ <string name="details_timer_state_label_for_timer">Zustand bis zum %s Uhr:</string>
+ <string name="details_timer_device_on">Eingeschaltet</string>
+ <string name="details_timer_device_off">Ausgeschaltet</string>
+ <string name="details_timer_edit_time">Zeit ändern</string>
+  <string name="details_timer_edit_header">Bearbeiten Sie die Zeit, zu der das Gerät %1$s wird</string>
+ <string name="details_timer_start">Start</string>
+ <string name="details_timer_edit_cancel">Änderung abbrechen</string>
+ <string name="details_timer_save">Speichern</string>
+ <string name="details_timer_cancel_turn_off">auschalten</string>
+ <string name="details_timer_cancel_turn_on">einschalten</string>
+ <plurals name="details_timer_info_on">
+  <item quantity="one">eingeschaltet</item>
+  <item quantity="other">eingeschaltet</item>
+ </plurals>
+ <plurals name="details_timer_info_off">
+  <item quantity="one">ausgeschaltet</item>
+  <item quantity="other">ausgeschaltet</item>
+ </plurals>
+ <plurals name="hour_pattern">
+  <item quantity="other">%1$d Std.</item>
+ </plurals>
+ <plurals name="minute_pattern">
+  <item quantity="other">%1$d Min.</item>
+ </plurals>
+ <plurals name="second_pattern">
+  <item quantity="other">%1$d Sek.</item>
+ </plurals>
 </resources>

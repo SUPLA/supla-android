@@ -10,14 +10,17 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.StandardDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -34,8 +37,6 @@ class ChannelListViewModel @Inject constructor(
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(preferences, ChannelListViewState(), schedulers) {
-
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, channels = null)
 
   override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
 
@@ -93,13 +94,26 @@ class ChannelListViewModel @Inject constructor(
     openDetailsByChannelFunction(channel)
   }
 
-  fun onChannelUpdate(remoteId: Int) {
-    findChannelByRemoteIdUseCase(remoteId = remoteId)
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { sendEvent(ChannelListViewEvent.UpdateChannel(it)) }
-      )
-      .disposeBySelf()
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onDataChanged -> updateChannel(message.channelId)
+    }
+  }
+
+  private fun updateChannel(remoteId: Int) {
+    if (remoteId > 0) {
+      findChannelByRemoteIdUseCase(remoteId = remoteId)
+        .attachSilent()
+        .subscribeBy(
+          onSuccess = { channel ->
+            currentState().channels
+              .filterIsInstance(ListItem.ChannelItem::class.java)
+              .first { it.channelBase.remoteId == channel.remoteId }
+              .channelBase = channel
+          }
+        )
+        .disposeBySelf()
+    }
   }
 
   private fun openDetailsByChannelFunction(channel: Channel) {
@@ -112,9 +126,10 @@ class ChannelListViewModel @Inject constructor(
       return
     }
 
-    val detailType = provideDetailTypeUseCase(channel)
-    if (detailType != null) {
-      sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
+    when (val detailType = provideDetailTypeUseCase(channel)) {
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId, detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
+      else -> {} // no action
     }
   }
 
@@ -142,13 +157,13 @@ class ChannelListViewModel @Inject constructor(
 sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
-  data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : ChannelListViewEvent()
+  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
+  data class OpenSwitchDetails(val remoteId: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
   data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(
-  override val loading: Boolean = false,
-  val channels: List<ListItem>? = null
-) : ViewState(loading)
+  val channels: List<ListItem> = emptyList()
+) : ViewState()
