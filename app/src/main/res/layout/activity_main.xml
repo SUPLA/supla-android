@@ -12,8 +12,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/top_bar_height"
-    android:paddingBottom="@dimen/bottom_bar_height">
+    android:layout_marginTop="@dimen/top_bar_height">
 
     <androidx.fragment.app.FragmentContainerView
       android:id="@+id/nav_host_fragment"
@@ -43,27 +42,5 @@
 
     <include layout="@layout/inc_new_gesture_info" />
   </FrameLayout>
-
-  <com.google.android.material.bottomappbar.BottomAppBar
-    android:id="@+id/bottombar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    app:contentInsetEnd="0dp"
-    app:contentInsetLeft="0dp"
-    app:contentInsetRight="0dp"
-    app:contentInsetStart="0dp">
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-      android:id="@+id/bottomnavbar"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/bottom_bar_height"
-      android:layout_gravity="start"
-      android:background="@color/channel_cell"
-      app:itemIconTint="@drawable/bottom_nav_bar_selector"
-      app:itemTextColor="@drawable/bottom_nav_bar_selector"
-      app:labelVisibilityMode="labeled"
-      app:menu="@menu/bottom_dashboard" />
-  </com.google.android.material.bottomappbar.BottomAppBar>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
