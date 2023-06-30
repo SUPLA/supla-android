@@ -48,4 +48,3 @@ import org.supla.android.tools.UsedFromNativeCode
 
 @UsedFromNativeCode
 class ResultException(val result: Int) : Exception("The server returned a result number $result")
-

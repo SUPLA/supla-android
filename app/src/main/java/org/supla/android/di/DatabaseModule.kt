@@ -13,7 +13,6 @@ import org.supla.android.data.source.local.LocalProfileRepository
 import org.supla.android.db.DbHelper
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {

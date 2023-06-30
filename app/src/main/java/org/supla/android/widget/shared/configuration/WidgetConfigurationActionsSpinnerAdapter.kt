@@ -20,13 +20,13 @@ package org.supla.android.widget.shared.configuration
 import android.content.Context
 
 class WidgetConfigurationActionsSpinnerAdapter(
-        context: Context,
-        objects: MutableList<WidgetAction>
+  context: Context,
+  objects: MutableList<WidgetAction>
 ) : WidgetConfigurationSpinnerBase<WidgetAction>(context, objects) {
 
-    override fun getItemText(item: WidgetAction): String =
-            context.resources.getString(item.text)
+  override fun getItemText(item: WidgetAction): String =
+    context.resources.getString(item.text)
 
-    override fun getItemId(position: Int): Long =
-            getItem(position)!!.actionId
+  override fun getItemId(position: Int): Long =
+    getItem(position)!!.actionId
 }

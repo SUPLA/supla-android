@@ -18,10 +18,10 @@ package org.supla.android.db
  */
 
 interface ProfileIdProvider {
-    /**
-     * Provides in memory cached profile ID.
-     *
-     * @return profile ID or null during the app startup before it's loaded.
-     */
-    fun getCachedProfileId(): Long?
+  /**
+   * Provides in memory cached profile ID.
+   *
+   * @return profile ID or null during the app startup before it's loaded.
+   */
+  fun getCachedProfileId(): Long?
 }
