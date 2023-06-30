@@ -1,7 +1,15 @@
 package org.supla.android.data.source;
 
-import android.database.Cursor;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
+import android.database.Cursor;
+import java.util.Date;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,515 +26,562 @@ import org.supla.android.db.TempHumidityMeasurementItem;
 import org.supla.android.db.TemperatureMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
-import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultMeasurableItemsRepositoryTest {
 
-    private static final double DELTA = 1e-15;
-
-    @Mock
-    private ImpulseCounterLogDao impulseCounterLogDao;
-    @Mock
-    private ElectricityMeterLogDao electricityMeterLogDao;
-    @Mock
-    private ThermostatLogDao thermostatLogDao;
-    @Mock
-    private TempHumidityLogDao tempHumidityLogDao;
-    @Mock
-    private TemperatureLogDao temperatureLogDao;
-    @InjectMocks
-    private DefaultMeasurableItemsRepository measurableItemsRepository;
-
-    @Test
-    public void shouldGetLastImpulseCounterMeasurementValue() {
-        // given
-        int monthOffset = 1;
-        int channelId = 2;
-        double expected = 4.5;
-        when(impulseCounterLogDao.getLastImpulseCounterMeasurementValue(monthOffset, channelId)).thenReturn(expected);
-
-        // when
-        double result = measurableItemsRepository.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
-
-        // then
-        assertEquals(expected, result, DELTA);
-
-        verify(impulseCounterLogDao).getLastImpulseCounterMeasurementValue(monthOffset, channelId);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetLastElectricityMeterMeasurementValue() {
-        // given
-        int monthOffset = 1;
-        int channelId = 2;
-        boolean production = true;
-        double expected = 4.5;
-        when(electricityMeterLogDao.getLastElectricityMeterMeasurementValue(monthOffset, channelId, production)).thenReturn(expected);
-
-        // when
-        double result = measurableItemsRepository.getLastElectricityMeterMeasurementValue(monthOffset, channelId, production);
-
-        // then
-        assertEquals(expected, result, DELTA);
-
-        verify(electricityMeterLogDao).getLastElectricityMeterMeasurementValue(monthOffset, channelId, production);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetElectricityMeterMeasurementTimestamp() {
-        // given
-        int channelId = 2;
-        boolean min = true;
-        int expected = 4;
-        when(electricityMeterLogDao.getElectricityMeterMeasurementTimestamp(channelId, min)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getElectricityMeterMeasurementTimestamp(channelId, min);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(electricityMeterLogDao).getElectricityMeterMeasurementTimestamp(channelId, min);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetElectricityMeterMeasurementTotalCount() {
-        // given
-        int channelId = 2;
-        boolean withoutComplement = true;
-        int expected = 4;
-        when(electricityMeterLogDao.getElectricityMeterMeasurementTotalCount(channelId, withoutComplement)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(electricityMeterLogDao).getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldAddElectricityMeasurement() {
-        // given
-        ElectricityMeasurementItem item = mock(ElectricityMeasurementItem.class);
-
-        // when
-        measurableItemsRepository.addElectricityMeasurement(item);
-
-        // then
-        verify(electricityMeterLogDao).addElectricityMeasurement(item);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetElectricityMeasurementsCursor() {
-        // given
-        int channelId = 2;
-        String groupByDateFormat = "format";
-        Date dateFrom = mock(Date.class);
-        Date dateTo = mock(Date.class);
-        Cursor expected = mock(Cursor.class);
-        when(electricityMeterLogDao.getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo)).thenReturn(expected);
-
-        // when
-        Cursor result = measurableItemsRepository.getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo);
-
-        // then
-        assertSame(expected, result);
-
-        verify(electricityMeterLogDao).getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteElectricityMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteElectricityMeasurements(channelId);
-
-        // then
-        verify(electricityMeterLogDao).deleteElectricityMeasurements(channelId);
-        verifyNoMoreInteractions(electricityMeterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetThermostatMeasurementTimestamp() {
-        // given
-        int channelId = 2;
-        boolean min = true;
-        int expected = 4;
-        when(thermostatLogDao.getThermostatMeasurementTimestamp(channelId, min)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getThermostatMeasurementTimestamp(channelId, min);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(thermostatLogDao).getThermostatMeasurementTimestamp(channelId, min);
-        verifyNoMoreInteractions(thermostatLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetThermostatMeasurementTotalCount() {
-        // given
-        int channelId = 2;
-        int expected = 4;
-        when(thermostatLogDao.getThermostatMeasurementTotalCount(channelId)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getThermostatMeasurementTotalCount(channelId);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(thermostatLogDao).getThermostatMeasurementTotalCount(channelId);
-        verifyNoMoreInteractions(thermostatLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteThermostatMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteThermostatMeasurements(channelId);
-
-        // then
-        verify(thermostatLogDao).deleteThermostatMeasurements(channelId);
-        verifyNoMoreInteractions(thermostatLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldAddThermostatMeasurement() {
-        // given
-        ThermostatMeasurementItem item = mock(ThermostatMeasurementItem.class);
-
-        // when
-        measurableItemsRepository.addThermostatMeasurement(item);
-
-        // then
-        verify(thermostatLogDao).addThermostatMeasurement(item);
-        verifyNoMoreInteractions(thermostatLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetThermostatMeasurementsCursor() {
-        // given
-        int channelId = 2;
-        Cursor expected = mock(Cursor.class);
-        when(thermostatLogDao.getThermostatMeasurements(channelId)).thenReturn(expected);
-
-        // when
-        Cursor result = measurableItemsRepository.getThermostatMeasurements(channelId);
-
-        // then
-        assertSame(expected, result);
-
-        verify(thermostatLogDao).getThermostatMeasurements(channelId);
-        verifyNoMoreInteractions(thermostatLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetTempHumidityMeasurementTimestamp() {
-        // given
-        int channelId = 2;
-        boolean min = true;
-        int expected = 4;
-        when(tempHumidityLogDao.getTempHumidityMeasurementTimestamp(channelId, min)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getTempHumidityMeasurementTimestamp(channelId, min);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(tempHumidityLogDao).getTempHumidityMeasurementTimestamp(channelId, min);
-        verifyNoMoreInteractions(tempHumidityLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetTempHumidityMeasurementTotalCount() {
-        // given
-        int channelId = 2;
-        int expected = 4;
-        when(tempHumidityLogDao.getTempHumidityMeasurementTotalCount(channelId)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getTempHumidityMeasurementTotalCount(channelId);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(tempHumidityLogDao).getTempHumidityMeasurementTotalCount(channelId);
-        verifyNoMoreInteractions(tempHumidityLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteTempHumidityMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteTempHumidityMeasurements(channelId);
-
-        // then
-        verify(tempHumidityLogDao).deleteTempHumidityMeasurements(channelId);
-        verifyNoMoreInteractions(tempHumidityLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldAddTempHumidityMeasurement() {
-        // given
-        TempHumidityMeasurementItem item = mock(TempHumidityMeasurementItem.class);
-
-        // when
-        measurableItemsRepository.addTempHumidityMeasurement(item);
-
-        // then
-        verify(tempHumidityLogDao).addTempHumidityMeasurement(item);
-        verifyNoMoreInteractions(tempHumidityLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetTempHumidityMeasurementsCursor() {
-        // given
-        int channelId = 2;
-        Date dateFrom = mock(Date.class);
-        Date dateTo = mock(Date.class);
-        Cursor expected = mock(Cursor.class);
-        when(tempHumidityLogDao.getTempHumidityMeasurements(channelId, dateFrom, dateTo)).thenReturn(expected);
-
-        // when
-        Cursor result = measurableItemsRepository.getTempHumidityMeasurements(channelId, dateFrom, dateTo);
-
-        // then
-        assertSame(expected, result);
-
-        verify(tempHumidityLogDao).getTempHumidityMeasurements(channelId, dateFrom, dateTo);
-        verifyNoMoreInteractions(tempHumidityLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldGetTemperatureMeasurementTimestamp() {
-        // given
-        int channelId = 2;
-        boolean min = true;
-        int expected = 4;
-        when(temperatureLogDao.getTemperatureMeasurementTimestamp(channelId, min)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getTemperatureMeasurementTimestamp(channelId, min);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(temperatureLogDao).getTemperatureMeasurementTimestamp(channelId, min);
-        verifyNoMoreInteractions(temperatureLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetTemperatureMeasurementTotalCount() {
-        // given
-        int channelId = 2;
-        int expected = 4;
-        when(temperatureLogDao.getTemperatureMeasurementTotalCount(channelId)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getTemperatureMeasurementTotalCount(channelId);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(temperatureLogDao).getTemperatureMeasurementTotalCount(channelId);
-        verifyNoMoreInteractions(temperatureLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldDeleteTemperatureMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteTemperatureMeasurements(channelId);
-
-        // then
-        verify(temperatureLogDao).deleteTemperatureMeasurements(channelId);
-        verifyNoMoreInteractions(temperatureLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldAddTemperatureMeasurement() {
-        // given
-        TemperatureMeasurementItem item = mock(TemperatureMeasurementItem.class);
-
-        // when
-        measurableItemsRepository.addTemperatureMeasurement(item);
-
-        // then
-        verify(temperatureLogDao).addTemperatureMeasurement(item);
-        verifyNoMoreInteractions(temperatureLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetTemperatureMeasurementsCursor() {
-        // given
-        int channelId = 2;
-        Date dateFrom = mock(Date.class);
-        Date dateTo = mock(Date.class);
-        Cursor expected = mock(Cursor.class);
-        when(temperatureLogDao.getTemperatureMeasurements(channelId, dateFrom, dateTo)).thenReturn(expected);
-
-        // when
-        Cursor result = measurableItemsRepository.getTemperatureMeasurements(channelId, dateFrom, dateTo);
-
-        // then
-        assertSame(expected, result);
-
-        verify(temperatureLogDao).getTemperatureMeasurements(channelId, dateFrom, dateTo);
-        verifyNoMoreInteractions(temperatureLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldAddImpulseCounterMeasurement() {
-        // given
-        ImpulseCounterMeasurementItem item = mock(ImpulseCounterMeasurementItem.class);
-
-        // when
-        measurableItemsRepository.addImpulseCounterMeasurement(item);
-
-        // then
-        verify(impulseCounterLogDao).addImpulseCounterMeasurement(item);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetImpulseCounterMeasurementTimestamp() {
-        // given
-        int channelId = 2;
-        boolean min = true;
-        int expected = 4;
-        when(impulseCounterLogDao.getImpulseCounterMeasurementTimestamp(channelId, min)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getImpulseCounterMeasurementTimestamp(channelId, min);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(impulseCounterLogDao).getImpulseCounterMeasurementTimestamp(channelId, min);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetImpulseCounterMeasurementsStartsWithTheCurrentMonth() {
-        // given
-        int channelId = 2;
-        boolean expected = true;
-        when(impulseCounterLogDao.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId)).thenReturn(expected);
-
-        // when
-        boolean result = measurableItemsRepository.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(impulseCounterLogDao).impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetImpulseCounterMeasurementTotalCount() {
-        // given
-        int channelId = 2;
-        boolean withoutComplement = true;
-        int expected = 4;
-        when(impulseCounterLogDao.getImpulseCounterMeasurementTotalCount(channelId, withoutComplement)).thenReturn(expected);
-
-        // when
-        int result = measurableItemsRepository.getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
-
-        // then
-        assertEquals(expected, result);
-
-        verify(impulseCounterLogDao).getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
-    }
-
-    @Test
-    public void shouldGetImpulseCounterMeasurementsCursor() {
-        // given
-        int channelId = 2;
-        String groupByDateFormat = "format";
-        Date dateFrom = mock(Date.class);
-        Date dateTo = mock(Date.class);
-        Cursor expected = mock(Cursor.class);
-        when(impulseCounterLogDao.getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo)).thenReturn(expected);
-
-        // when
-        Cursor result = measurableItemsRepository.getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
-
-        // then
-        assertSame(expected, result);
-
-        verify(impulseCounterLogDao).getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
-
-    @Test
-    public void shouldDeleteImpulseCounterMeasurements() {
-        // given
-        int channelId = 1;
-
-        // when
-        measurableItemsRepository.deleteImpulseCounterMeasurements(channelId);
-
-        // then
-        verify(impulseCounterLogDao).deleteImpulseCounterMeasurements(channelId);
-        verifyNoMoreInteractions(impulseCounterLogDao);
-        verifyZeroInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
-    }
+  private static final double DELTA = 1e-15;
+
+  @Mock private ImpulseCounterLogDao impulseCounterLogDao;
+  @Mock private ElectricityMeterLogDao electricityMeterLogDao;
+  @Mock private ThermostatLogDao thermostatLogDao;
+  @Mock private TempHumidityLogDao tempHumidityLogDao;
+  @Mock private TemperatureLogDao temperatureLogDao;
+  @InjectMocks private DefaultMeasurableItemsRepository measurableItemsRepository;
+
+  @Test
+  public void shouldGetLastImpulseCounterMeasurementValue() {
+    // given
+    int monthOffset = 1;
+    int channelId = 2;
+    double expected = 4.5;
+    when(impulseCounterLogDao.getLastImpulseCounterMeasurementValue(monthOffset, channelId))
+        .thenReturn(expected);
+
+    // when
+    double result =
+        measurableItemsRepository.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
+
+    // then
+    assertEquals(expected, result, DELTA);
+
+    verify(impulseCounterLogDao).getLastImpulseCounterMeasurementValue(monthOffset, channelId);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetLastElectricityMeterMeasurementValue() {
+    // given
+    int monthOffset = 1;
+    int channelId = 2;
+    boolean production = true;
+    double expected = 4.5;
+    when(electricityMeterLogDao.getLastElectricityMeterMeasurementValue(
+            monthOffset, channelId, production))
+        .thenReturn(expected);
+
+    // when
+    double result =
+        measurableItemsRepository.getLastElectricityMeterMeasurementValue(
+            monthOffset, channelId, production);
+
+    // then
+    assertEquals(expected, result, DELTA);
+
+    verify(electricityMeterLogDao)
+        .getLastElectricityMeterMeasurementValue(monthOffset, channelId, production);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetElectricityMeterMeasurementTimestamp() {
+    // given
+    int channelId = 2;
+    boolean min = true;
+    int expected = 4;
+    when(electricityMeterLogDao.getElectricityMeterMeasurementTimestamp(channelId, min))
+        .thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getElectricityMeterMeasurementTimestamp(channelId, min);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(electricityMeterLogDao).getElectricityMeterMeasurementTimestamp(channelId, min);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetElectricityMeterMeasurementTotalCount() {
+    // given
+    int channelId = 2;
+    boolean withoutComplement = true;
+    int expected = 4;
+    when(electricityMeterLogDao.getElectricityMeterMeasurementTotalCount(
+            channelId, withoutComplement))
+        .thenReturn(expected);
+
+    // when
+    int result =
+        measurableItemsRepository.getElectricityMeterMeasurementTotalCount(
+            channelId, withoutComplement);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(electricityMeterLogDao)
+        .getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldAddElectricityMeasurement() {
+    // given
+    ElectricityMeasurementItem item = mock(ElectricityMeasurementItem.class);
+
+    // when
+    measurableItemsRepository.addElectricityMeasurement(item);
+
+    // then
+    verify(electricityMeterLogDao).addElectricityMeasurement(item);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetElectricityMeasurementsCursor() {
+    // given
+    int channelId = 2;
+    String groupByDateFormat = "format";
+    Date dateFrom = mock(Date.class);
+    Date dateTo = mock(Date.class);
+    Cursor expected = mock(Cursor.class);
+    when(electricityMeterLogDao.getElectricityMeasurementsCursor(
+            channelId, groupByDateFormat, dateFrom, dateTo))
+        .thenReturn(expected);
+
+    // when
+    Cursor result =
+        measurableItemsRepository.getElectricityMeasurementsCursor(
+            channelId, groupByDateFormat, dateFrom, dateTo);
+
+    // then
+    assertSame(expected, result);
+
+    verify(electricityMeterLogDao)
+        .getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldDeleteElectricityMeasurements() {
+    // given
+    int channelId = 1;
+
+    // when
+    measurableItemsRepository.deleteElectricityMeasurements(channelId);
+
+    // then
+    verify(electricityMeterLogDao).deleteElectricityMeasurements(channelId);
+    verifyNoMoreInteractions(electricityMeterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetThermostatMeasurementTimestamp() {
+    // given
+    int channelId = 2;
+    boolean min = true;
+    int expected = 4;
+    when(thermostatLogDao.getThermostatMeasurementTimestamp(channelId, min)).thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getThermostatMeasurementTimestamp(channelId, min);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(thermostatLogDao).getThermostatMeasurementTimestamp(channelId, min);
+    verifyNoMoreInteractions(thermostatLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetThermostatMeasurementTotalCount() {
+    // given
+    int channelId = 2;
+    int expected = 4;
+    when(thermostatLogDao.getThermostatMeasurementTotalCount(channelId)).thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getThermostatMeasurementTotalCount(channelId);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(thermostatLogDao).getThermostatMeasurementTotalCount(channelId);
+    verifyNoMoreInteractions(thermostatLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldDeleteThermostatMeasurements() {
+    // given
+    int channelId = 1;
+
+    // when
+    measurableItemsRepository.deleteThermostatMeasurements(channelId);
+
+    // then
+    verify(thermostatLogDao).deleteThermostatMeasurements(channelId);
+    verifyNoMoreInteractions(thermostatLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldAddThermostatMeasurement() {
+    // given
+    ThermostatMeasurementItem item = mock(ThermostatMeasurementItem.class);
+
+    // when
+    measurableItemsRepository.addThermostatMeasurement(item);
+
+    // then
+    verify(thermostatLogDao).addThermostatMeasurement(item);
+    verifyNoMoreInteractions(thermostatLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetThermostatMeasurementsCursor() {
+    // given
+    int channelId = 2;
+    Cursor expected = mock(Cursor.class);
+    when(thermostatLogDao.getThermostatMeasurements(channelId)).thenReturn(expected);
+
+    // when
+    Cursor result = measurableItemsRepository.getThermostatMeasurements(channelId);
+
+    // then
+    assertSame(expected, result);
+
+    verify(thermostatLogDao).getThermostatMeasurements(channelId);
+    verifyNoMoreInteractions(thermostatLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetTempHumidityMeasurementTimestamp() {
+    // given
+    int channelId = 2;
+    boolean min = true;
+    int expected = 4;
+    when(tempHumidityLogDao.getTempHumidityMeasurementTimestamp(channelId, min))
+        .thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getTempHumidityMeasurementTimestamp(channelId, min);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(tempHumidityLogDao).getTempHumidityMeasurementTimestamp(channelId, min);
+    verifyNoMoreInteractions(tempHumidityLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetTempHumidityMeasurementTotalCount() {
+    // given
+    int channelId = 2;
+    int expected = 4;
+    when(tempHumidityLogDao.getTempHumidityMeasurementTotalCount(channelId)).thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getTempHumidityMeasurementTotalCount(channelId);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(tempHumidityLogDao).getTempHumidityMeasurementTotalCount(channelId);
+    verifyNoMoreInteractions(tempHumidityLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldDeleteTempHumidityMeasurements() {
+    // given
+    int channelId = 1;
+
+    // when
+    measurableItemsRepository.deleteTempHumidityMeasurements(channelId);
+
+    // then
+    verify(tempHumidityLogDao).deleteTempHumidityMeasurements(channelId);
+    verifyNoMoreInteractions(tempHumidityLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldAddTempHumidityMeasurement() {
+    // given
+    TempHumidityMeasurementItem item = mock(TempHumidityMeasurementItem.class);
+
+    // when
+    measurableItemsRepository.addTempHumidityMeasurement(item);
+
+    // then
+    verify(tempHumidityLogDao).addTempHumidityMeasurement(item);
+    verifyNoMoreInteractions(tempHumidityLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetTempHumidityMeasurementsCursor() {
+    // given
+    int channelId = 2;
+    Date dateFrom = mock(Date.class);
+    Date dateTo = mock(Date.class);
+    Cursor expected = mock(Cursor.class);
+    when(tempHumidityLogDao.getTempHumidityMeasurements(channelId, dateFrom, dateTo))
+        .thenReturn(expected);
+
+    // when
+    Cursor result =
+        measurableItemsRepository.getTempHumidityMeasurements(channelId, dateFrom, dateTo);
+
+    // then
+    assertSame(expected, result);
+
+    verify(tempHumidityLogDao).getTempHumidityMeasurements(channelId, dateFrom, dateTo);
+    verifyNoMoreInteractions(tempHumidityLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldGetTemperatureMeasurementTimestamp() {
+    // given
+    int channelId = 2;
+    boolean min = true;
+    int expected = 4;
+    when(temperatureLogDao.getTemperatureMeasurementTimestamp(channelId, min)).thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getTemperatureMeasurementTimestamp(channelId, min);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(temperatureLogDao).getTemperatureMeasurementTimestamp(channelId, min);
+    verifyNoMoreInteractions(temperatureLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetTemperatureMeasurementTotalCount() {
+    // given
+    int channelId = 2;
+    int expected = 4;
+    when(temperatureLogDao.getTemperatureMeasurementTotalCount(channelId)).thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getTemperatureMeasurementTotalCount(channelId);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(temperatureLogDao).getTemperatureMeasurementTotalCount(channelId);
+    verifyNoMoreInteractions(temperatureLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldDeleteTemperatureMeasurements() {
+    // given
+    int channelId = 1;
+
+    // when
+    measurableItemsRepository.deleteTemperatureMeasurements(channelId);
+
+    // then
+    verify(temperatureLogDao).deleteTemperatureMeasurements(channelId);
+    verifyNoMoreInteractions(temperatureLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldAddTemperatureMeasurement() {
+    // given
+    TemperatureMeasurementItem item = mock(TemperatureMeasurementItem.class);
+
+    // when
+    measurableItemsRepository.addTemperatureMeasurement(item);
+
+    // then
+    verify(temperatureLogDao).addTemperatureMeasurement(item);
+    verifyNoMoreInteractions(temperatureLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetTemperatureMeasurementsCursor() {
+    // given
+    int channelId = 2;
+    Date dateFrom = mock(Date.class);
+    Date dateTo = mock(Date.class);
+    Cursor expected = mock(Cursor.class);
+    when(temperatureLogDao.getTemperatureMeasurements(channelId, dateFrom, dateTo))
+        .thenReturn(expected);
+
+    // when
+    Cursor result =
+        measurableItemsRepository.getTemperatureMeasurements(channelId, dateFrom, dateTo);
+
+    // then
+    assertSame(expected, result);
+
+    verify(temperatureLogDao).getTemperatureMeasurements(channelId, dateFrom, dateTo);
+    verifyNoMoreInteractions(temperatureLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldAddImpulseCounterMeasurement() {
+    // given
+    ImpulseCounterMeasurementItem item = mock(ImpulseCounterMeasurementItem.class);
+
+    // when
+    measurableItemsRepository.addImpulseCounterMeasurement(item);
+
+    // then
+    verify(impulseCounterLogDao).addImpulseCounterMeasurement(item);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetImpulseCounterMeasurementTimestamp() {
+    // given
+    int channelId = 2;
+    boolean min = true;
+    int expected = 4;
+    when(impulseCounterLogDao.getImpulseCounterMeasurementTimestamp(channelId, min))
+        .thenReturn(expected);
+
+    // when
+    int result = measurableItemsRepository.getImpulseCounterMeasurementTimestamp(channelId, min);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(impulseCounterLogDao).getImpulseCounterMeasurementTimestamp(channelId, min);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetImpulseCounterMeasurementsStartsWithTheCurrentMonth() {
+    // given
+    int channelId = 2;
+    boolean expected = true;
+    when(impulseCounterLogDao.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId))
+        .thenReturn(expected);
+
+    // when
+    boolean result =
+        measurableItemsRepository.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(impulseCounterLogDao).impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetImpulseCounterMeasurementTotalCount() {
+    // given
+    int channelId = 2;
+    boolean withoutComplement = true;
+    int expected = 4;
+    when(impulseCounterLogDao.getImpulseCounterMeasurementTotalCount(channelId, withoutComplement))
+        .thenReturn(expected);
+
+    // when
+    int result =
+        measurableItemsRepository.getImpulseCounterMeasurementTotalCount(
+            channelId, withoutComplement);
+
+    // then
+    assertEquals(expected, result);
+
+    verify(impulseCounterLogDao)
+        .getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+  }
+
+  @Test
+  public void shouldGetImpulseCounterMeasurementsCursor() {
+    // given
+    int channelId = 2;
+    String groupByDateFormat = "format";
+    Date dateFrom = mock(Date.class);
+    Date dateTo = mock(Date.class);
+    Cursor expected = mock(Cursor.class);
+    when(impulseCounterLogDao.getImpulseCounterMeasurements(
+            channelId, groupByDateFormat, dateFrom, dateTo))
+        .thenReturn(expected);
+
+    // when
+    Cursor result =
+        measurableItemsRepository.getImpulseCounterMeasurements(
+            channelId, groupByDateFormat, dateFrom, dateTo);
+
+    // then
+    assertSame(expected, result);
+
+    verify(impulseCounterLogDao)
+        .getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
+
+  @Test
+  public void shouldDeleteImpulseCounterMeasurements() {
+    // given
+    int channelId = 1;
+
+    // when
+    measurableItemsRepository.deleteImpulseCounterMeasurements(channelId);
+
+    // then
+    verify(impulseCounterLogDao).deleteImpulseCounterMeasurements(channelId);
+    verifyNoMoreInteractions(impulseCounterLogDao);
+    verifyZeroInteractions(
+        electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
+  }
 }

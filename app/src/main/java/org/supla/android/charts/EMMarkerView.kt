@@ -20,47 +20,34 @@ package org.supla.android.charts
 
 import android.content.Context
 import android.widget.TextView
-import android.view.View
-
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
-
 import org.supla.android.R
 
-class EMMarkerView(private val ihelper: IncrementalMeterChartHelper, 
-                   context: Context): 
-    IncrementalMeterMarkerView(ihelper, context, R.layout.em_chart_helper) {
-    private val tvSelLabel: TextView
-    private val tvSelValue1: TextView
-    private val tvSelValue2: TextView
+class EMMarkerView(
+  private val ihelper: IncrementalMeterChartHelper,
+  context: Context
+) : IncrementalMeterMarkerView(ihelper, context, R.layout.em_chart_helper) {
+  private val tvSelLabel: TextView = findViewById(R.id.tvmSelLabel)
+  private val tvSelValue1: TextView = findViewById(R.id.tvmSelValue1)
+  private val tvSelValue2: TextView = findViewById(R.id.tvmSelValue2)
 
-    init {
-        tvSelLabel = findViewById(R.id.tvmSelLabel)
-        tvSelValue1 = findViewById(R.id.tvmSelValue1)
-        tvSelValue2 = findViewById(R.id.tvmSelValue2)
+  override fun refreshContent(e: Entry, h: Highlight) {
+    super.refreshContent(e, h)
+
+    val si = h.stackIndex
+    val lbl = context.getText(R.string.em_chart_phase_n).toString().format(si + 1)
+    tvSelLabel.text = lbl
+
+    if (e is BarEntry) {
+      val vals = e.yVals
+      if (vals != null && si >= 0 && vals.size > si) {
+        val pv = e.yVals[si]
+        val cur = ihelper.getCurrency() ?: ""
+        tvSelValue1.text = String.format("%.2f $cur", pv * ihelper.getPricePerUnit())
+        tvSelValue2.text = String.format("%.2f " + getString(ihelper.getUnit()), pv)
+      }
     }
-
-    override public fun refreshContent(e: Entry, h: Highlight) {
-
-        super.refreshContent(e, h)
-
-
-        val si = h.getStackIndex()
-        val lbl = getContext().getText(R.string.em_chart_phase_n)
-            .toString().format(si + 1)
-        tvSelLabel.setText(lbl)
-
-        if(e is BarEntry) {
-            val vals = e.getYVals()
-            if(vals != null && si >= 0 && vals.size > si) {
-                val pv = e.getYVals()[si]
-                val cur = ihelper.getCurrency() ?: ""
-                tvSelValue1.setText(String.format("%.2f " + cur, 
-                                                  pv * ihelper.getPricePerUnit()))
-                tvSelValue2.setText(String.format("%.2f " + getString(ihelper.getUnit()),
-                                                  pv))
-            }
-        }
-    }
+  }
 }
