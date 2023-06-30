@@ -104,6 +104,13 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     }
 
     val showTimer = state.timerData != null
+    binding.detailsTimerState.deviceStateLabel.text = if (showTimer) {
+      val formatString = getString(R.string.hour_string_format)
+      getString(R.string.details_timer_state_label_for_timer, DateFormat.format(formatString, state.timerData!!.endTime))
+    } else {
+      getString(R.string.details_timer_state_label)
+    }
+
     binding.detailsTimerConfiguration.visibleIf(showTimer.not() || state.editMode)
     binding.detailsTimerConfiguration.editMode = state.editMode
     binding.detailsTimerProgress.visibleIf(showTimer)
@@ -132,9 +139,12 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
       )
       binding.detailsTimerCancelButton.text = getString(
         R.string.details_timer_cancel_and,
-        resources.getQuantityString(
-          if (state.timerData.timerValue == TimerValue.ON) R.plurals.details_timer_info_off else R.plurals.details_timer_info_on,
-          3
+        getString(
+          if (state.timerData.timerValue == TimerValue.ON) {
+            R.string.details_timer_cancel_turn_off
+          } else {
+            R.string.details_timer_cancel_turn_on
+          }
         )
       )
     } else {

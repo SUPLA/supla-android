@@ -40,7 +40,6 @@ class MainFragment :
   override fun handleViewState(state: MainViewState) {
   }
 
-
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
     binding.mainViewPager.setCurrentItem(pages.map { it.menuId }.indexOf(menuItem.itemId), false)
     return true

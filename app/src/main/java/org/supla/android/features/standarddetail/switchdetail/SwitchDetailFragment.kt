@@ -18,6 +18,7 @@ package org.supla.android.features.standarddetail.switchdetail
  */
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -61,6 +62,12 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
       binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(getBitmap(context, it.imageIdx))
       binding.switchDetailButtonOn.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 1))
       binding.switchDetailButtonOff.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 0))
+    }
+    binding.switchDetailDeviceState.deviceStateLabel.text = if (state.timerEndDate != null) {
+      val formatString = getString(R.string.hour_string_format)
+      getString(R.string.details_timer_state_label_for_timer, DateFormat.format(formatString, state.timerEndDate))
+    } else {
+      getString(R.string.details_timer_state_label)
     }
     binding.switchDetailDeviceState.deviceStateValue.text = if (state.isOn) {
       getString(R.string.details_timer_device_on)

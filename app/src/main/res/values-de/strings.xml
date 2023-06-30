@@ -475,6 +475,10 @@
   <string name="settings_notifications">Notifikationen</string>
  <string name="settings_localization">Lokalization</string>
   <string name="settings_permissions">Berechtigungen</string>
+
+ <string translatable="false" name="details_general">Allgemain</string>
+ <string translatable="false" name="details_history">Messungen</string>
+ <string translatable="false" name="details_settings">Einstellungen</string>
  <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
  <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
  <string name="details_timer_turn_on_for">Einschalten für</string>
@@ -485,6 +489,7 @@
  <string name="details_timer_end_hour">do godz. %1$s</string>
  <string name="hour_string_format">HH:mm:ss</string>
  <string name="details_timer_state_label">Aktuellen Zustand:</string>
+ <string name="details_timer_state_label_for_timer">Zustand bis zum %s Uhr:</string>
  <string name="details_timer_device_on">Eingeschaltet</string>
  <string name="details_timer_device_off">Ausgeschaltet</string>
  <string name="details_timer_edit_time">Zeit ändern</string>
@@ -492,15 +497,15 @@
  <string name="details_timer_start">Start</string>
  <string name="details_timer_edit_cancel">Änderung abbrechen</string>
  <string name="details_timer_save">Speichern</string>
+ <string name="details_timer_cancel_turn_off">auschalten</string>
+ <string name="details_timer_cancel_turn_on">einschalten</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
-  <item quantity="two">eingeschaltet</item>
-  <item quantity="other">einschalten</item>
+  <item quantity="other">eingeschaltet</item>
  </plurals>
  <plurals name="details_timer_info_off">
   <item quantity="one">ausgeschaltet</item>
-  <item quantity="two">ausgeschaltet</item>
-  <item quantity="other">ausschalten</item>
+  <item quantity="other">ausgeschaltet</item>
  </plurals>
  <plurals name="hour_pattern">
   <item quantity="other">%1$d Std.</item>

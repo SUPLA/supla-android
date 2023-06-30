@@ -28,6 +28,7 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.asDate
+import org.supla.android.extensions.getTimerStateValue
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -112,7 +113,7 @@ class TimersDetailViewModel @Inject constructor(
 
   private fun handleChannel(channel: Channel) {
     val currentTime = dateProvider.currentDate()
-    val timerState = channel.extendedValue?.extendedValue?.TimerStateValue
+    val timerState = channel.getTimerStateValue()
     val isTimerOn = timerState != null && timerState.countdownEndsAt != null && timerState.countdownEndsAt.after(currentTime)
     val startDate = channel.extendedValue?.timerStartTimestamp?.asDate()
     Trace.d(TAG, "Handling channel update $timerState")

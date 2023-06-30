@@ -77,9 +77,8 @@
       android:id="@+id/details_timer_configuration"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="2dp"
       android:background="@color/surface"
-      android:elevation="@dimen/cardview_default_elevation"
+      android:elevation="0dp"
       app:layout_constraintBottom_toBottomOf="parent" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

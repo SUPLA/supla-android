@@ -384,7 +384,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   override fun onBackPressed() {
     if (menuIsVisible()) {
       setMenuVisible(false)
-    } else if(isBackHandledInChildFragment(supportFragmentManager)) {
+    } else if (isBackHandledInChildFragment(supportFragmentManager)) {
       return // Do nothing, is consumed by child fragment
     } else if (!navigator.back()) {
       finishAffinity()

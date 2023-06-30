@@ -33,10 +33,14 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.images.ImageId
+import org.supla.android.lib.SuplaChannelExtendedValue
+import org.supla.android.lib.SuplaTimerState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.model.ItemType
@@ -44,6 +48,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
 class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, SwitchDetailViewEvent>() {
@@ -59,6 +64,9 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
   @Mock
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
+
+  @Mock
+  private lateinit var dateProvider: DateProvider
 
   @InjectMocks
   override lateinit var viewModel: SwitchDetailViewModel
@@ -80,6 +88,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     val channel: Channel = mockk()
     every { channel.imageIdx } returns imageId
     every { channel.value } returns channelValue
+    every { channel.extendedValue } returns null
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -87,7 +96,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(imageId, true))
+    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(channel, true))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -108,7 +117,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(imageId, false))
+    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(group, false))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
@@ -145,5 +154,80 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     verify(executeSimpleActionUseCase).invoke(ActionId.TURN_OFF, SubjectType.GROUP, remoteId)
     verifyNoMoreInteractions(executeSimpleActionUseCase)
     verifyZeroInteractions(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `should load estimated count down end time`() {
+    // given
+    val remoteId = 123
+    val imageId = ImageId(0)
+
+    val channelValue: ChannelValue = mockk()
+    every { channelValue.hiValue() } returns true
+
+    val estimatedEndDate = Date(1000)
+    whenever(dateProvider.currentDate()).thenReturn(Date(100))
+    val extendedValue = mockTimerState(estimatedEndDate)
+
+    val channel: Channel = mockk()
+    every { channel.imageIdx } returns imageId
+    every { channel.value } returns channelValue
+    every { channel.extendedValue } returns extendedValue
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+
+    // then
+    Assertions.assertThat(events).isEmpty()
+    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(channel, true, estimatedEndDate))
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `shouldn't load estimated countdown end time when time elapsed`() {
+    // given
+    val remoteId = 123
+    val imageId = ImageId(0)
+
+    val channelValue: ChannelValue = mockk()
+    every { channelValue.hiValue() } returns true
+
+    val estimatedEndDate = Date(1000)
+    whenever(dateProvider.currentDate()).thenReturn(Date(1003))
+    val extendedValue = mockTimerState(estimatedEndDate)
+
+    val channel: Channel = mockk()
+    every { channel.imageIdx } returns imageId
+    every { channel.value } returns channelValue
+    every { channel.extendedValue } returns extendedValue
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+
+    // then
+    Assertions.assertThat(events).isEmpty()
+    Assertions.assertThat(states).containsExactly(SwitchDetailViewState(channel, true))
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+  }
+
+  private fun mockTimerState(date: Date): ChannelExtendedValue {
+    val timerStateValue: SuplaTimerState = mockk()
+    every { timerStateValue.countdownEndsAt } returns date
+
+    val suplaExtendedValue: SuplaChannelExtendedValue = mockk()
+    suplaExtendedValue.TimerStateValue = timerStateValue
+
+    val extendedValue: ChannelExtendedValue = mockk()
+    every { extendedValue.extendedValue } returns suplaExtendedValue
+
+    return extendedValue
   }
 }

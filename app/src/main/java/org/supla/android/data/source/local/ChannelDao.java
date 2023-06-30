@@ -148,7 +148,8 @@ public class ChannelDao extends BaseDao {
       SuplaContract.ChannelExtendedValueEntry._ID,
       SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
       SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
-      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID
+      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID,
+      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME
     };
 
     return getItem(

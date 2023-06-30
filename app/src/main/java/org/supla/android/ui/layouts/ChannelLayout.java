@@ -22,8 +22,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -608,11 +606,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
                 || ((Channel) cbase).getValue().getSubValueType()
                     == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
     boolean wasMeasurementChannel =
-        !mGroup && channelBase != null
+        !mGroup
+            && channelBase != null
             && (((Channel) channelBase).getValue().getSubValueType()
-            == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-            || ((Channel) channelBase).getValue().getSubValueType()
-            == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+                    == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+                || ((Channel) channelBase).getValue().getSubValueType()
+                    == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
 
     if (OldFunc != mFunc || isMeasurementChannel != wasMeasurementChannel) {
       imgl.SetDimensions();

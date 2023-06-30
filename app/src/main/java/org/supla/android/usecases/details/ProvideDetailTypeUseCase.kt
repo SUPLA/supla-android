@@ -22,6 +22,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
 import java.io.Serializable
 import javax.inject.Inject
@@ -65,7 +66,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
   private fun getSwitchDetailPages(channelBase: ChannelBase): List<DetailPage> {
     return if (channelBase is Channel) {
       val list = mutableListOf(DetailPage.GENERAL)
-      if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0) {
+      if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelBase.func != SUPLA_CHANNELFNC_STAIRCASETIMER) {
         list.add(DetailPage.TIMER)
       }
       if (channelBase.value?.subValueType == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort()) {

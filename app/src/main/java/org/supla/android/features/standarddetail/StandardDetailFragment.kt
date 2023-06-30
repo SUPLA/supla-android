@@ -26,15 +26,14 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.ChannelStatePopup
 import org.supla.android.R
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentStandardDetailBinding
+import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
-import org.supla.android.ui.ToolbarItemsClickHandler
 import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
@@ -43,15 +42,13 @@ private const val ARG_PAGES = "ARG_PAGES"
 
 @AndroidEntryPoint
 class StandardDetailFragment :
-  BaseFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail),
-  ToolbarItemsClickHandler {
+  BaseFragment<StandardDetailViewState, StandardDetailViewEvent>(R.layout.fragment_standard_detail) {
 
   @Inject
   lateinit var runtimeStateHolder: RuntimeStateHolder
 
   private val viewModel: StandardDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
-  private lateinit var statePopup: ChannelStatePopup
 
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
@@ -64,7 +61,6 @@ class StandardDetailFragment :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    statePopup = ChannelStatePopup(requireActivity())
     val openedPage = getOpenedPage()
     binding.detailBottomBar.inflateMenu(R.menu.detail_bottom)
     for (item in binding.detailBottomBar.menu.children) {
@@ -72,22 +68,14 @@ class StandardDetailFragment :
     }
     binding.detailBottomBar.selectedItemId = pages[openedPage].menuId
     binding.detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
+    binding.detailBottomBar.visibleIf(pages.count() > 1)
+    binding.detailShadow.visibleIf(pages.count() > 1)
 
     binding.detailViewPager.adapter = StandardDetailPagerAdapter(pages, remoteId, itemType, this)
     binding.detailViewPager.setCurrentItem(openedPage, false)
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
 
     viewModel.loadData(remoteId, itemType)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    setToolbarItemVisible(R.id.toolbar_info, true)
-  }
-
-  override fun onStop() {
-    setToolbarItemVisible(R.id.toolbar_info, false)
-    super.onStop()
   }
 
   override fun handleEvents(event: StandardDetailViewEvent) {
@@ -101,17 +89,9 @@ class StandardDetailFragment :
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> {
-        if (message.channelState.channelID == remoteId && statePopup.isVisible) {
-          statePopup.update(message.channelState)
-        }
-      }
       SuplaClientMsg.onDataChanged -> {
         if (message.channelId == remoteId) {
           viewModel.loadData(remoteId, itemType)
-          if (statePopup.isVisible) {
-            statePopup.update(remoteId)
-          }
         }
       }
     }
@@ -127,15 +107,6 @@ class StandardDetailFragment :
       binding.detailBottomBar.selectedItemId = pages[position].menuId
       runtimeStateHolder.setDetailOpenedPage(remoteId, position)
     }
-  }
-
-  override fun onMenuItemClick(menuItem: MenuItem): Boolean {
-    if (menuItem.itemId == R.id.toolbar_info) {
-      statePopup.show(remoteId)
-      return true
-    }
-
-    return false
   }
 
   private fun getOpenedPage(): Int {

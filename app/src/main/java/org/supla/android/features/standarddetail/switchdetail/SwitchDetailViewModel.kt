@@ -19,17 +19,20 @@ package org.supla.android.features.standarddetail.switchdetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getTimerStateValue
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +40,7 @@ class SwitchDetailViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SwitchDetailViewState, SwitchDetailViewEvent>(SwitchDetailViewState(), schedulers) {
 
@@ -48,7 +52,8 @@ class SwitchDetailViewModel @Inject constructor(
           updateState {
             it.copy(
               channelBase = channel,
-              isOn = (channel as? Channel)?.value?.hiValue() ?: false
+              isOn = (channel as? Channel)?.value?.hiValue() ?: false,
+              timerEndDate = getEstimatedCountDownEndTime(channel)
             )
           }
         }
@@ -75,11 +80,25 @@ class SwitchDetailViewModel @Inject constructor(
       .subscribeBy()
       .disposeBySelf()
   }
+
+  private fun getEstimatedCountDownEndTime(channelBase: ChannelBase): Date? {
+    return (channelBase as? Channel)?.let {
+      val currentDate = dateProvider.currentDate()
+      val estimatedEndDate = it.getTimerStateValue()?.countdownEndsAt
+
+      if (estimatedEndDate?.after(currentDate) == true) {
+        estimatedEndDate
+      } else {
+        null
+      }
+    }
+  }
 }
 
 sealed class SwitchDetailViewEvent : ViewEvent
 
 data class SwitchDetailViewState(
   val channelBase: ChannelBase? = null,
-  val isOn: Boolean = false
+  val isOn: Boolean = false,
+  val timerEndDate: Date? = null
 ) : ViewState()

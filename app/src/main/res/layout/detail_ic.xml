@@ -5,7 +5,7 @@
     android:id="@+id/icrl_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/details_background"
+    android:background="@color/background"
     android:visibility="visible">
 
     <RelativeLayout

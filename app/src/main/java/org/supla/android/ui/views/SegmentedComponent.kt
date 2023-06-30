@@ -63,27 +63,27 @@ private fun SegmentedComponentContent(items: List<String>, activeItem: Int, disa
       }
       if (activeItem == i) {
         ClickableText(
-          text = AnnotatedString(item.uppercase()),
-          style = SuplaTypography.button.copy(
+          text = AnnotatedString(item),
+          style = SuplaTypography.body2.copy(
             color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
             textAlign = TextAlign.Center
           ),
           onClick = { },
           modifier = Modifier
             .background(MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(6.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .weight(1f)
         )
       } else {
         ClickableText(
-          text = AnnotatedString(item.uppercase()),
-          style = SuplaTypography.button.copy(
+          text = AnnotatedString(item),
+          style = SuplaTypography.body2.copy(
             color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
             textAlign = TextAlign.Center
           ),
           onClick = { onClick(i) },
           modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .weight(1f)
         )
       }

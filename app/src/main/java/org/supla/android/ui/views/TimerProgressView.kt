@@ -78,16 +78,18 @@ fun TimerProgressView(progress: Float, indeterminate: Boolean) {
     Animatable(0f)
   }
 
-  LaunchedEffect(position) {
-    launch {
-      position.animateTo(
-        targetValue = 1f,
-        animationSpec = repeatable(
-          iterations = 999999,
-          animation = tween(3000),
-          repeatMode = RepeatMode.Reverse
+  if (indeterminate) {
+    LaunchedEffect(position) {
+      launch {
+        position.animateTo(
+          targetValue = 1f,
+          animationSpec = repeatable(
+            iterations = 999999,
+            animation = tween(3000),
+            repeatMode = RepeatMode.Reverse
+          )
         )
-      )
+      }
     }
   }
 
