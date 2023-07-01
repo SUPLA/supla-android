@@ -535,7 +535,7 @@
   <string translatable="false" name="details_history">Pomiary</string>
   <string translatable="false" name="details_settings">Ustawienia</string>
   <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
-  <string name="details_timer_text">Okreś czas, w którym urządzenie powinno być:</string>
+  <string name="details_timer_text">Określ czas, w którym urządzenie powinno być:</string>
   <string name="details_timer_turn_on_for">Włączone</string>
   <string name="details_timer_turn_off_for">Wyłączone</string>
   <string name="details_timer_info">Urządzenie będzie %1$s przez %2$s, a następnie się %3$s</string>
