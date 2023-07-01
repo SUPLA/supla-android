@@ -64,11 +64,11 @@
     <string name="channel_caption_rgblighting">Oświetlenie RGB</string>
     <string name="channel_caption_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
     <string name="channel_caption_noliquidsensor">Czujnik braku cieczy</string>
-    <string name="channel_caption_gatewayopeningsensor">Czujnik otwacia furtki</string>
+    <string name="channel_caption_gatewayopeningsensor">Czujnik otwarcia furtki</string>
     <string name="channel_caption_gateopeningsensor">Czujnik otwarcia bramy</string>
-    <string name="channel_caption_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
-    <string name="channel_caption_dooropeningsensor">Czujnik otwacia drzwi</string>
-    <string name="channel_caption_rsopeningsensor">Czujnik otwacia rolet</string>
+    <string name="channel_caption_garagedooropeningsensor">Czujnik otwarcia bramy garażowej</string>
+    <string name="channel_caption_dooropeningsensor">Czujnik otwarcia drzwi</string>
+    <string name="channel_caption_rsopeningsensor">Czujnik otwarcia rolet</string>
     <string name="channel_caption_depthsensor">Czujnik głębokości</string>
     <string name="channel_caption_distancesensor">Czujnik odległości</string>
     <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
