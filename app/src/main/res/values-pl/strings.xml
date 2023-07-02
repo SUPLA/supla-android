@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="confirm_button_text">OK</string>
     <string name="profiles_title">Konta</string>
     <string name="profile_name_label">NAZWA KONTA</string>
@@ -554,21 +554,21 @@
   <string name="details_timer_save">Zapisz</string>
   <string name="details_timer_cancel_turn_off">wyłącz</string>
   <string name="details_timer_cancel_turn_on">włącz</string>
-  <plurals name="details_timer_info_on">
+  <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>
   </plurals>
-  <plurals name="details_timer_info_off">
+  <plurals name="details_timer_info_off" tools:ignore="MissingQuantity">
     <item quantity="one">wyłączone</item>
     <item quantity="other">wyłączy</item>
   </plurals>
-  <plurals name="hour_pattern">
+  <plurals name="hour_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d godz.</item>
   </plurals>
-  <plurals name="minute_pattern">
+  <plurals name="minute_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d min.</item>
   </plurals>
-  <plurals name="second_pattern">
+  <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d sek.</item>
   </plurals>
 </resources>
