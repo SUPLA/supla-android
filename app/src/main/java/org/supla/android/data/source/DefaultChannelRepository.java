@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -179,30 +180,36 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public boolean updateChannelExtendedValue(
+  public ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
     ChannelExtendedValue value = channelDao.getChannelExtendedValue(channelId);
+
+    boolean timerUpdated = false;
     if (value == null) {
       value = new ChannelExtendedValue();
       value.setExtendedValue(suplaChannelExtendedValue);
       value.setChannelId(channelId);
-      if (value.hasTimerSet()) {
+      if (value.getTimerEstimatedEndDate() != null) {
         value.setTimerStartTimestamp(dateProvider.currentTimestamp());
+        timerUpdated = true;
       } else {
         value.setTimerStartTimestamp(null);
       }
 
       channelDao.insert(value);
     } else {
+      Date oldDate = value.getExtendedValue().getTimerEstimatedEndDate();
       value.setExtendedValue(suplaChannelExtendedValue);
-      if (value.getTimerStartTimestamp() == null && value.hasTimerSet()) {
+      if (value.getTimerEstimatedEndDate() != null && !value.getTimerEstimatedEndDate().equals(oldDate)) {
         value.setTimerStartTimestamp(dateProvider.currentTimestamp());
-      } else if (value.getTimerStartTimestamp() != null && !value.hasTimerSet()) {
+        timerUpdated = true;
+      } else if (value.getTimerStartTimestamp() != null && value.getTimerEstimatedEndDate() == null) {
         value.setTimerStartTimestamp(null);
+        timerUpdated = true;
       }
       channelDao.update(value);
     }
-    return true;
+    return new ResultTuple(true, timerUpdated);
   }
 
   @Override

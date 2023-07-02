@@ -190,7 +190,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override fun onSuplaMessage(message: SuplaClientMsg) {
     super.onSuplaMessage(message)
     when (message.type) {
-      SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId) {
+      SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId && message.isTimerValue) {
         Trace.i(TAG, "Detail got data changed event")
         timer?.cancel()
         timerActive = false

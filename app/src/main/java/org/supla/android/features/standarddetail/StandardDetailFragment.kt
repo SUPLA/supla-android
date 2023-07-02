@@ -87,16 +87,6 @@ class StandardDetailFragment :
     }
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId) {
-          viewModel.loadData(remoteId, itemType)
-        }
-      }
-    }
-  }
-
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
     binding.detailViewPager.currentItem = pages.map { it.menuId }.indexOf(menuItem.itemId)
     return true

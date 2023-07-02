@@ -43,6 +43,7 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
 import org.supla.android.core.storage.EncryptedPreferences;
+import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
@@ -1154,9 +1155,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void channelExtendedValueUpdate(
       SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-    if (DbH.updateChannelExtendedValue(
-        channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id)) {
-      onDataChanged(channelExtendedValueUpdate.Id, 0, true);
+    ResultTuple result = DbH.updateChannelExtendedValue(
+        channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id);
+    if (Boolean.TRUE.equals(result.asBoolean(0))) {
+      onDataChanged(channelExtendedValueUpdate.Id, 0, true, Boolean.TRUE.equals(result.asBoolean(1)));
     }
   }
 
@@ -1281,22 +1283,23 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue) {
+  private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue, boolean timerValue) {
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
     msg.setChannelId(ChannelId);
     msg.setChannelGroupId(GroupId);
     msg.setExtendedValue(extendedValue);
+    msg.setTimerValue(timerValue);
 
     sendMessage(msg);
   }
 
   private void onDataChanged(int ChannelId, int GroupId) {
-    onDataChanged(ChannelId, GroupId, false);
+    onDataChanged(ChannelId, GroupId, false, false);
   }
 
   private void onDataChanged() {
-    onDataChanged(0, 0, false);
+    onDataChanged(0, 0, false, false);
   }
 
   private void onZWaveResetAndClearResult(int result) {

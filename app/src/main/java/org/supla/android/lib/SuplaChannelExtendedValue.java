@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class SuplaChannelExtendedValue implements Serializable {
   public SuplaChannelElectricityMeterValue ElectricityMeterValue = null;
@@ -29,5 +30,12 @@ public class SuplaChannelExtendedValue implements Serializable {
 
   public SuplaChannelExtendedValue() {
     // This constructor is used by native code
+  }
+
+  public Date getTimerEstimatedEndDate() {
+    if (TimerStateValue == null) {
+      return null;
+    }
+    return TimerStateValue.getCountdownEndsAt();
   }
 }

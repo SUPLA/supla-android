@@ -50,7 +50,7 @@ public interface ChannelRepository {
 
   boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
 
-  boolean updateChannelExtendedValue(
+  ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);

@@ -63,6 +63,7 @@ class TimerConfigurationView @JvmOverloads constructor(
       binding.detailsTimerSecond.value = (time % 60)
       binding.detailsTimerMinute.value = ((time / 60) % 60)
       binding.detailsTimerHour.value = (time / 3600)
+      updateInfoText()
     }
 
   init {

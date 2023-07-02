@@ -79,7 +79,7 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId) {
+        if (message.channelId == remoteId && !message.isExtendedValue) {
           viewModel.loadData(remoteId, itemType)
         }
       }
