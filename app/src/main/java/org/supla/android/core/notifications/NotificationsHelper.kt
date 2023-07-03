@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -94,7 +95,7 @@ class NotificationsHelper @Inject constructor(
     }
 
     val workRequest = UpdateTokenWorker.build(token, currentProfileUpdated.not())
-    WorkManager.getInstance(context).enqueue(workRequest)
+    WorkManager.getInstance(context).enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
   }
 
   @RequiresApi(VERSION_CODES.TIRAMISU)

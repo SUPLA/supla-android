@@ -91,6 +91,8 @@ public interface ChannelRepository {
 
   Cursor getAllProfileChannelGroups(Long profileId);
 
+  Cursor getAllExistingProfileChannels(Long profileId);
+
   @NotNull
   List<Location> getAllLocations();
 }
