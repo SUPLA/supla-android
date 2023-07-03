@@ -44,7 +44,7 @@ class RuntimeStateHolder @Inject constructor() {
     if (lastTimerValueMap.containsKey(channelId)) {
       lastTimerValueMap[channelId]!!
     } else {
-      1
+      3 * 60 // Return 3 minus as default timer value
     }
 
   fun setLastTimerValue(channelId: Int, timerValue: Int) {

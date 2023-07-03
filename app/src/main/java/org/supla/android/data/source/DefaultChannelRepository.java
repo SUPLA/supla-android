@@ -198,12 +198,13 @@ public class DefaultChannelRepository implements ChannelRepository {
 
       channelDao.insert(value);
     } else {
-      Date oldDate = value.getExtendedValue().getTimerEstimatedEndDate();
+      Date oldDate = value.getTimerEstimatedEndDate();
       value.setExtendedValue(suplaChannelExtendedValue);
-      if (value.getTimerEstimatedEndDate() != null && !value.getTimerEstimatedEndDate().equals(oldDate)) {
+      Date newValue = value.getTimerEstimatedEndDate();
+      if (newValue != null && !newValue.equals(oldDate)) {
         value.setTimerStartTimestamp(dateProvider.currentTimestamp());
         timerUpdated = true;
-      } else if (value.getTimerStartTimestamp() != null && value.getTimerEstimatedEndDate() == null) {
+      } else if (value.getTimerStartTimestamp() != null && newValue == null) {
         value.setTimerStartTimestamp(null);
         timerUpdated = true;
       }
@@ -421,7 +422,8 @@ public class DefaultChannelRepository implements ChannelRepository {
 
   @Override
   public Cursor getAllExistingProfileChannels(Long profileId) {
-    return channelDao.getAllChannels("C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
+    return channelDao.getAllChannels(
+        "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
   }
 
   @NonNull

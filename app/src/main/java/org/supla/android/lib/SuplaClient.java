@@ -1155,10 +1155,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void channelExtendedValueUpdate(
       SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-    ResultTuple result = DbH.updateChannelExtendedValue(
-        channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id);
+    ResultTuple result =
+        DbH.updateChannelExtendedValue(
+            channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id);
     if (Boolean.TRUE.equals(result.asBoolean(0))) {
-      onDataChanged(channelExtendedValueUpdate.Id, 0, true, Boolean.TRUE.equals(result.asBoolean(1)));
+      onDataChanged(
+          channelExtendedValueUpdate.Id, 0, true, Boolean.TRUE.equals(result.asBoolean(1)));
     }
   }
 
@@ -1283,7 +1285,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue, boolean timerValue) {
+  private void onDataChanged(
+      int ChannelId, int GroupId, boolean extendedValue, boolean timerValue) {
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
     msg.setChannelId(ChannelId);

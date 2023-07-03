@@ -66,6 +66,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
       stateHolder.setLastTimerValue(remoteId, timeInSeconds)
       viewModel.startTimer(remoteId, action == TimerTargetAction.TURN_ON, timeInSeconds)
     }
+    binding.detailsTimerConfiguration.onTimeChangedListener = { stateHolder.setLastTimerValue(remoteId, it) }
     binding.detailsTimerConfiguration.onEditCancelClickListener = { viewModel.cancelEditMode() }
     binding.detailsTimerConfiguration.timeInSeconds = stateHolder.getLastTimerValue(remoteId)
     binding.detailsTimerStopButton.setOnClickListener { viewModel.stopTimer(remoteId) }
