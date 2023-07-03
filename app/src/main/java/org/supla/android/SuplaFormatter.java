@@ -21,57 +21,57 @@ import java.text.DecimalFormat;
 
 public class SuplaFormatter {
 
-	private static SuplaFormatter _sharedInstance = null;
-	private DecimalFormat _df;
+  private static SuplaFormatter _sharedInstance = null;
+  private DecimalFormat _df;
 
-	public static SuplaFormatter sharedFormatter() {
-		if(_sharedInstance == null) {
-			_sharedInstance = new SuplaFormatter();
-		}
-		// TODO: Invalidate and reinit in case system number format
-		// has changed
-
-		return _sharedInstance;
-	}
-	
-	private SuplaFormatter() {
-		_df = new DecimalFormat();
-        _df.setMaximumFractionDigits(50);
-        _df.setMinimumFractionDigits(2);
-	}
-	
-    String doubleToStringWithUnit(double dbl, String unit, int maxPrecision) {
-        String sdbl = _df.format(dbl);
-
-        for(int a=sdbl.length()-1;a>=0;a--) {
-            char c = sdbl.charAt(a);
-
-            if (c == ',' || c == '.') {
-                int p = sdbl.length()-a-1;
-                if (maxPrecision < p) {
-                    sdbl = sdbl.substring(0, a+maxPrecision+(maxPrecision > 0 ? 1 : 0));
-                }
-
-                if (maxPrecision > 0) {
-                    p = a;
-                    a = sdbl.length()-1;
-
-                    while(a >= p) {
-                        if (sdbl.charAt(a) != '0' || a-p <= 2) {
-                            sdbl = sdbl.substring(0, a+1);
-                            break;
-                        }
-                        a--;
-                    }
-                }
-                break;
-            }
-        }
-
-        if (unit == null) {
-            return sdbl;
-        }
-
-        return sdbl + " " + unit;
+  public static SuplaFormatter sharedFormatter() {
+    if (_sharedInstance == null) {
+      _sharedInstance = new SuplaFormatter();
     }
+    // TODO: Invalidate and reinit in case system number format
+    // has changed
+
+    return _sharedInstance;
+  }
+
+  private SuplaFormatter() {
+    _df = new DecimalFormat();
+    _df.setMaximumFractionDigits(50);
+    _df.setMinimumFractionDigits(2);
+  }
+
+  String doubleToStringWithUnit(double dbl, String unit, int maxPrecision) {
+    String sdbl = _df.format(dbl);
+
+    for (int a = sdbl.length() - 1; a >= 0; a--) {
+      char c = sdbl.charAt(a);
+
+      if (c == ',' || c == '.') {
+        int p = sdbl.length() - a - 1;
+        if (maxPrecision < p) {
+          sdbl = sdbl.substring(0, a + maxPrecision + (maxPrecision > 0 ? 1 : 0));
+        }
+
+        if (maxPrecision > 0) {
+          p = a;
+          a = sdbl.length() - 1;
+
+          while (a >= p) {
+            if (sdbl.charAt(a) != '0' || a - p <= 2) {
+              sdbl = sdbl.substring(0, a + 1);
+              break;
+            }
+            a--;
+          }
+        }
+        break;
+      }
+    }
+
+    if (unit == null) {
+      return sdbl;
+    }
+
+    return sdbl + " " + unit;
+  }
 }

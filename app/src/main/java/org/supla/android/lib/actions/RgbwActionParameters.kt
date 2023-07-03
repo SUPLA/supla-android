@@ -24,7 +24,14 @@ const val IGNORE_BRIGHTNESS = -1
 const val IGNORE_COLOR = 0
 
 @UsedFromNativeCode
-class RgbwActionParameters(action: ActionId, subjectType: SubjectType, subjectId: Int,
-                           var brightness: Short, var colorBrightness: Short, var color: Long,
-                           var colorRandom: Boolean, var onOff: Boolean) :
-    ActionParameters(action, subjectType, subjectId)
+class RgbwActionParameters(
+  action: ActionId,
+  subjectType: SubjectType,
+  subjectId: Int,
+  var brightness: Short,
+  var colorBrightness: Short,
+  var color: Long,
+  var colorRandom: Boolean,
+  var onOff: Boolean
+) :
+  ActionParameters(action, subjectType, subjectId)

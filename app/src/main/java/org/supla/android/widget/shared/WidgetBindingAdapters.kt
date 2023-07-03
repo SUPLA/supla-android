@@ -20,7 +20,6 @@ package org.supla.android.widget.shared
 import android.view.View
 import android.widget.Spinner
 import androidx.databinding.BindingAdapter
-import org.supla.android.Trace
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbItem
 import org.supla.android.widget.shared.configuration.*
@@ -39,7 +38,7 @@ fun setSpinnerChannels(spinner: Spinner, items: List<SpinnerItem<DbItem>>?) {
   items?.let {
     // Reassigning the same adapter sets mOldSelectedPosition to INVALID_POSITION.
     // Without it, ItemSelectedListener was not called when moving from channels to scenes.
-    spinner.adapter = spinner.adapter;
+    spinner.adapter = spinner.adapter
     (spinner.adapter as WidgetConfigurationChannelsSpinnerAdapter).postItems(it)
     if (items.size > 1) {
       spinner.setSelection(1)

@@ -6,7 +6,7 @@ steps:
   image: devel/supla-android-ci
   pull: never
   commands:
-    - ./gradlew build connectedCheck
+    - mv app/drone.google-services.json app/google-services.json; mv app/src/internaltest/drone.google-services.json app/src/internaltest/google-services.json; ./gradlew build connectedCheck
      
 
 - name: notify

@@ -158,8 +158,6 @@ kapt {
 }
 
 spotless {
-  ratchetFrom("origin/develop")
-
   java {
     target(fileTree("dir" to "src", "include" to "**/*.java"))
 

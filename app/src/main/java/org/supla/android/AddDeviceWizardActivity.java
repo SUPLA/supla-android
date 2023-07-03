@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -866,6 +867,14 @@ public class AddDeviceWizardActivity extends WizardActivity
             unregisterReceiver(scanResultReceiver);
             scanResultReceiver = null;
 
+            if (ActivityCompat.checkSelfPermission(
+                    AddDeviceWizardActivity.this, permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+              showError(
+                  getResources()
+                      .getString(R.string.wizard_not_enought_permissions, getApplicationName()));
+              return;
+            }
             List<ScanResult> scanned = manager.getScanResults();
             boolean match = false;
 
@@ -921,7 +930,13 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   private void processScanResults() {
-    Pattern mPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
+    if (ActivityCompat.checkSelfPermission(
+            AddDeviceWizardActivity.this, permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      showError(
+          getResources().getString(R.string.wizard_not_enought_permissions, getApplicationName()));
+      return;
+    }
     List<ScanResult> scanned = manager.getScanResults();
 
     ArrayList<String> spinnerArray = new ArrayList<String>();

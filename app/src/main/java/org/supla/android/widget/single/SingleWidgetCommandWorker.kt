@@ -60,7 +60,7 @@ class SingleWidgetCommandWorker(
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER-> {
+        SUPLA_CHANNELFNC_STAIRCASETIMER -> {
           if (action == null) {
             return callCommon(widgetId, configuration)
           }

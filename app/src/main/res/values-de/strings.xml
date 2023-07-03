@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="about">Über das Programm</string>
     <string name="settings">Einstellungen</string>
@@ -507,13 +507,13 @@
   <item quantity="one">ausgeschaltet</item>
   <item quantity="other">ausgeschaltet</item>
  </plurals>
- <plurals name="hour_pattern">
+ <plurals name="hour_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d Std.</item>
  </plurals>
- <plurals name="minute_pattern">
+ <plurals name="minute_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d Min.</item>
  </plurals>
- <plurals name="second_pattern">
+ <plurals name="second_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d Sek.</item>
  </plurals>
 </resources>
