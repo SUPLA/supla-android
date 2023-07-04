@@ -69,6 +69,11 @@ class TimerConfigurationView @JvmOverloads constructor(
     setupView()
   }
 
+  override fun setEnabled(enabled: Boolean) {
+    super.setEnabled(enabled)
+    binding.detailsTimerStartButton.isEnabled = enabled
+  }
+
   private fun setupView() {
     binding.detailsTimerHour.maxValue = 23
     binding.detailsTimerHour.displayedValues = displayValues(R.plurals.hour_pattern, 24)

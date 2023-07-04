@@ -19,7 +19,7 @@ val SuplaTypography = Typography(
   h3 = TextStyle(fontSize = 48.sp, fontWeight = FontWeight.Normal),
   h4 = TextStyle(fontSize = 34.sp, letterSpacing = 0.025.sp, fontWeight = FontWeight.Normal),
   h5 = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Normal),
-  h6 = TextStyle(fontSize = 20.sp, letterSpacing = 0.015.sp, fontWeight = FontWeight.Medium),
+  h6 = TextStyle(fontSize = 20.sp, letterSpacing = 0.015.sp, fontWeight = FontWeight.Normal),
   subtitle1 = TextStyle(fontSize = 16.sp, letterSpacing = 0.015.sp, fontWeight = FontWeight.Normal),
   subtitle2 = TextStyle(fontSize = 14.sp, letterSpacing = 0.01.sp, fontWeight = FontWeight.Medium),
   body1 = TextStyle(fontSize = 16.sp, letterSpacing = 0.05.sp, fontWeight = FontWeight.Normal),

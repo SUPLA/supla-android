@@ -95,11 +95,7 @@ public abstract class WizardActivity extends NavigationActivity {
     mBtnNextMiddlePart.setEnabled(enabled);
     mBtnNextRightPart.setEnabled(enabled);
     mBtnNextMiddlePart.setTextColor(
-        getResources()
-            .getColor(
-                enabled
-                    ? R.color.wizart_next_btn_text_enabled
-                    : R.color.wizart_next_btn_text_disabled));
+        getResources().getColor(enabled ? R.color.wizart_next_btn_text_enabled : R.color.disabled));
 
     setArrowVisible(enabled);
   }

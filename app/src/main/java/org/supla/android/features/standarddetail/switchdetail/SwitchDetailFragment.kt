@@ -60,7 +60,9 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   override fun handleViewState(state: SwitchDetailViewState) {
     state.channelBase?.let {
       binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(getBitmap(context, it.imageIdx))
+      binding.switchDetailButtonOn.disabled = it.onLine.not()
       binding.switchDetailButtonOn.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 1))
+      binding.switchDetailButtonOff.disabled = it.onLine.not()
       binding.switchDetailButtonOff.icon = getBitmap(context, it.getImageIdx(false, ChannelBase.WhichOne.First, 0))
     }
     binding.switchDetailDeviceState.deviceStateLabel.text = if (state.timerEndDate != null) {
@@ -69,17 +71,17 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
     } else {
       getString(R.string.details_timer_state_label)
     }
-    binding.switchDetailDeviceState.deviceStateValue.text = if (state.isOn) {
-      getString(R.string.details_timer_device_on)
-    } else {
-      getString(R.string.details_timer_device_off)
+    binding.switchDetailDeviceState.deviceStateValue.text = when {
+      state.channelBase?.onLine?.not() == true -> getString(R.string.offline)
+      state.isOn -> getString(R.string.details_timer_device_on)
+      else -> getString(R.string.details_timer_device_off)
     }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId && !message.isExtendedValue) {
+        if (message.channelId == remoteId && (message.isTimerValue || !message.isExtendedValue)) {
           viewModel.loadData(remoteId, itemType)
         }
       }

@@ -96,11 +96,12 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override fun handleViewState(state: TimersDetailViewState) {
     state.channel?.let {
       binding.detailsTimerConfiguration.deviceStateOn = it.value.hiValue()
+      binding.detailsTimerConfiguration.isEnabled = it.onLine
       binding.detailsTimerState.deviceStateIcon.setImageBitmap(ImageCache.getBitmap(requireContext(), it.imageIdx))
-      binding.detailsTimerState.deviceStateValue.text = if (it.value.hiValue()) {
-        getString(R.string.details_timer_device_on)
-      } else {
-        getString(R.string.details_timer_device_off)
+      binding.detailsTimerState.deviceStateValue.text = when {
+        it.onLine.not() -> getString(R.string.offline)
+        it.value.hiValue() -> getString(R.string.details_timer_device_on)
+        else -> getString(R.string.details_timer_device_off)
       }
     }
 
@@ -191,7 +192,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override fun onSuplaMessage(message: SuplaClientMsg) {
     super.onSuplaMessage(message)
     when (message.type) {
-      SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId && message.isTimerValue) {
+      SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId && (message.isTimerValue || !message.isExtendedValue)) {
         Trace.i(TAG, "Detail got data changed event")
         timer?.cancel()
         timerActive = false

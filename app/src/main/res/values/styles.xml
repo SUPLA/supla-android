@@ -78,7 +78,7 @@
   </style>
 
   <style name="FormLabel" parent="">
-    <item name="android:textColor">#B4B7BA</item>
+    <item name="android:textColor">@color/disabled</item>
   </style>
 
   <style name="SegmentedButtonGroup">
