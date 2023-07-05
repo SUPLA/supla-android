@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -42,13 +44,11 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import dagger.hilt.android.EntryPointAccessors;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.supla.android.Preferences;
@@ -58,6 +58,13 @@ import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.profile.ProfileManager;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
+
+  private static final int[] COLORS =
+      new int[] {
+        rgb("#e74c3c"), rgb("#3498db"), rgb("#2ecc71"), rgb("#f1c40f"),
+        rgb("#984ea3"), rgb("#e41a1c"), rgb("#999999"), rgb("#ff7f00"),
+        rgb("#377eb8"), rgb("#a65628")
+      };
 
   protected String unit;
   protected Context context;
@@ -421,17 +428,18 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     Collections.sort(
         entries,
-        new Comparator<PieEntry>() {
-          @Override
-          public int compare(PieEntry p1, PieEntry p2) {
-            if (p1.getValue() > p2.getValue()) return 1;
-            if (p1.getValue() < p2.getValue()) return -1;
-            return 0;
+        (p1, p2) -> {
+          if (p1.getValue() > p2.getValue()) {
+            return 1;
           }
+          if (p1.getValue() < p2.getValue()) {
+            return -1;
+          }
+          return 0;
         });
 
     SuplaPieDataSet set = new SuplaPieDataSet(entries, "");
-    set.setColors(ColorTemplate.MATERIAL_COLORS);
+    set.setColors(COLORS);
 
     PieData data = new PieData(set);
     setMarker(pieChart);
@@ -854,7 +862,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         case Bar_Comparsion_YearYear:
         case Bar_AritmeticBalance_Years:
         case Bar_VectorBalance_Years:
+        case Pie_HourRank:
         case Pie_MonthRank:
+        case Pie_WeekdayRank:
           position = 4;
           break;
       }
@@ -945,6 +955,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   private class ZoomSettings {
+
     float scaleX;
     float scaleY;
     float x;

@@ -80,6 +80,7 @@ public class SuplaClientMsg {
   private String Text;
   private short Progress;
   private boolean ExtendedValue;
+  private boolean TimerValue;
   private ZWaveWakeUpSettings WakeUpSettings;
 
   public SuplaClientMsg(Object sender, int type) {
@@ -281,6 +282,14 @@ public class SuplaClientMsg {
 
   public void setExtendedValue(boolean extendedValue) {
     ExtendedValue = extendedValue;
+  }
+
+  public boolean isTimerValue() {
+    return TimerValue;
+  }
+
+  public void setTimerValue(boolean value) {
+    TimerValue = value;
   }
 
   public ZWaveWakeUpSettings getWakeUpSettings() {

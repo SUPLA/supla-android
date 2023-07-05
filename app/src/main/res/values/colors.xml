@@ -8,6 +8,9 @@
     <color name="on_primary">#ffffff</color>
     <color name="surface">#ffffff</color>
     <color name="background">#F5F6F7</color>
+    <color name="on_background">#000000</color>
+
+    <color name="disabled">#B4B7BA</color>
 
     <color name="gray">#7E8082</color>
     <color name="gray_light">#EFEFF0</color>
@@ -18,8 +21,6 @@
     <color name="supla_text_light">#000000</color>
     
     <color name="dialog_scrim">#80363738</color>
-
-    <color name="on_background">#000000</color>
     <!-- new color definitions end here -->
 
     <color name="splash_bg">#12a71e</color>
@@ -63,31 +64,26 @@
     <color name="vl_btn_disabled">#CECECE</color>
     <color name="vl_infotitle">#000000</color>
     <color name="vl_infotext">#606060</color>
-    <color name="vl_infoline">#B4B7BA</color>
+    <color name="vl_infoline">@color/disabled</color>
 
     <color name="diw_settings_bg">#ffededed</color>
 
     <color name="wizart_next_btn_text_enabled">#12a71e</color>
-    <color name="wizart_next_btn_text_disabled">#B4B7BA</color>
-    <color name="zwave_btn_separator">#B4B7BA</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
     <color name="zwave_info_table_bg">@color/background</color>
     <color name="zwave_info_table_text">#000000</color>
-    <color name="zwave_info_table_separator">#B4B7BA</color>
 
     <color name="channelstate_infotitle">#000000</color>
     <color name="channelstate_infotext">#000000</color>
-    <color name="channelstate_infoline">#B4B7BA</color>
+    <color name="channelstate_infoline">@color/disabled</color>
 
     <color name="lifespan_infotitle">#000000</color>
     <color name="lifespan_infotext">#000000</color>
-    <color name="lifespan_infoline">#B4B7BA</color>
     <color name="lifespan_warning">#FF0000</color>
 
     <color name="wake_up_settings_infotitle">#000000</color>
     <color name="wake_up_settings_infotext">#000000</color>
-    <color name="wake_up_settings_infoline">#B4B7BA</color>
 
     <color name="list_separator_bg">#AAAAAA</color>
     <color name="red_alert">#EB3A28</color>
@@ -104,7 +100,6 @@
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
     <color name="button_background">@color/supla_green</color>
-    <color name="button_background_disabled">#B4B7BA</color>
 
     <color name="widget_text">@color/supla_text_light</color>
     <color name="widget_background">@color/background</color>

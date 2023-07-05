@@ -39,6 +39,7 @@ import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultSceneRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
+import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.UserIconRepository;
 import org.supla.android.data.source.local.ChannelDao;
@@ -1269,7 +1270,7 @@ public class DbHelper extends BaseDbHelper {
         channelValue.Value, channelValue.Id, channelValue.OnLine);
   }
 
-  public boolean updateChannelExtendedValue(
+  public ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
     return channelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
   }

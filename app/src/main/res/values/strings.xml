@@ -570,6 +570,7 @@
     <string name="details_timer_save" translatable="false">Save</string>
     <string name="details_timer_cancel_turn_off" translatable="false">off</string>
     <string name="details_timer_cancel_turn_on" translatable="false">on</string>
+    <string name="offline" translatable="false">offline</string>
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>

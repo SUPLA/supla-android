@@ -29,10 +29,12 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.hilt.android.EntryPointAccessors.fromApplication
 import org.supla.android.Trace
+import org.supla.android.di.entrypoints.ChannelRepositoryEntryPoint
 import org.supla.android.di.entrypoints.EncryptedPreferencesEntryPoint
 import org.supla.android.di.entrypoints.ProfileManagerEntryPoint
 import org.supla.android.di.entrypoints.SingleCallProviderEntryPoint
 import org.supla.android.extensions.TAG
+import org.supla.android.extensions.toListOfChannels
 import org.supla.android.lib.SuplaClient
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -42,6 +44,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
   private val profileManager = fromApplication(appContext, ProfileManagerEntryPoint::class.java).provideProfileManager()
   private val singleCallProvider = fromApplication(appContext, SingleCallProviderEntryPoint::class.java).provideSingleCallProvider()
   private val encryptedPreferences = fromApplication(appContext, EncryptedPreferencesEntryPoint::class.java).provideEncryptedPreferences()
+  private val channelRepository = fromApplication(appContext, ChannelRepositoryEntryPoint::class.java).provide()
 
   override fun doWork(): Result {
     Trace.d(TAG, "Token update worker started")
@@ -65,6 +68,18 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
         Trace.d(TAG, "Active profile skipped because of updateSelf: `$updateSelf`")
         return@forEach
       }
+      if (profile.authInfo.emailAuth && profile.authInfo.serverForEmail.isEmpty()) {
+        Trace.w(TAG, "Profile `${profile.name}` has server address not set - skipping")
+        return@forEach
+      }
+      if (!profile.authInfo.emailAuth && profile.authInfo.serverForAccessID.isEmpty()) {
+        Trace.w(TAG, "Profile `${profile.name}` has server address not set - skipping")
+        return@forEach
+      }
+      if (channelRepository.getAllExistingProfileChannels(profile.id).toListOfChannels().isEmpty()) {
+        Trace.w(TAG, "Profile `${profile.name}` has no channels - skipping")
+        return@forEach
+      }
 
       Trace.i(TAG, "Updating token for profile `${profile.name}` (id: `${profile.id}`)")
       try {
@@ -81,7 +96,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
       encryptedPreferences.fcmTokenLastUpdate = Date()
     }
 
-    Trace.d(TAG, "Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
+    Trace.i(TAG, "Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
     return Result.success()
   }
 
@@ -91,6 +106,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
 
     private const val RETRY_TIME_IN_SEC = 30L
     const val UPDATE_PAUSE_IN_DAYS = 7
+    const val WORK_ID = "UpdateTokenWorker"
 
     fun build(token: String, updateSelf: Boolean): OneTimeWorkRequest {
       val constraints = Constraints.Builder()

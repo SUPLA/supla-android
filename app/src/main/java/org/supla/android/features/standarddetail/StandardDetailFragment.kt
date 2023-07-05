@@ -32,7 +32,6 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentStandardDetailBinding
 import org.supla.android.extensions.visibleIf
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.model.ItemType
 import javax.inject.Inject
 
@@ -50,10 +49,11 @@ class StandardDetailFragment :
   private val viewModel: StandardDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
+  @Suppress("DEPRECATION") // Not deprecated method can be accessed from API 33
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
 
-  @Suppress("UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
   private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
 
   override fun getViewModel(): BaseViewModel<StandardDetailViewState, StandardDetailViewEvent> = viewModel
@@ -84,16 +84,6 @@ class StandardDetailFragment :
   override fun handleViewState(state: StandardDetailViewState) {
     state.channelBase?.let {
       setToolbarTitle(it.getNotEmptyCaption(context))
-    }
-  }
-
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId) {
-          viewModel.loadData(remoteId, itemType)
-        }
-      }
     }
   }
 

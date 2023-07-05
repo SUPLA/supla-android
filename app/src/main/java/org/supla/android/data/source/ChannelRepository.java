@@ -50,7 +50,7 @@ public interface ChannelRepository {
 
   boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
 
-  boolean updateChannelExtendedValue(
+  ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
@@ -90,6 +90,8 @@ public interface ChannelRepository {
   Cursor getAllProfileChannels(Long profileId);
 
   Cursor getAllProfileChannelGroups(Long profileId);
+
+  Cursor getAllExistingProfileChannels(Long profileId);
 
   @NotNull
   List<Location> getAllLocations();

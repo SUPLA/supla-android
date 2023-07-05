@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,10 +50,9 @@ import org.supla.android.core.ui.theme.SuplaTypography
 import org.supla.android.extensions.innerShadow
 
 // special colors
-private val borderColorNormal = Color(0xFFB4B7BA)
 private val negativeColor = Color(0xFFEB3A28)
 private val transparentColor = Color(0x00FFFFFF)
-private val innerShadowColor = Color(0xFFB4B7BA)
+private val disabledOverlay = Color(0xDDFFFFFF)
 
 class PowerButtonView @JvmOverloads constructor(
   context: Context,
@@ -63,6 +63,7 @@ class PowerButtonView @JvmOverloads constructor(
   var icon: Bitmap? by mutableStateOf(null)
   var text: String? by mutableStateOf(null)
   var type: Type by mutableStateOf(Type.POSITIVE)
+  var disabled: Boolean by mutableStateOf(false)
   var clickListener: () -> Unit = { }
 
   init {
@@ -79,7 +80,7 @@ class PowerButtonView @JvmOverloads constructor(
   @Composable
   override fun Content() {
     SuplaTheme {
-      PowerButtonView(icon, text, type, clickListener)
+      PowerButtonView(icon, text, type, clickListener, disabled)
     }
   }
 
@@ -104,18 +105,20 @@ fun PowerButtonView(
   text: String? = null,
   type: PowerButtonView.Type = PowerButtonView.Type.POSITIVE,
   onClick: () -> Unit,
+  disabled: Boolean = false,
   size: Dp = 140.dp,
   padding: Dp = 10.dp
 ) {
   val interactionSource = remember { MutableInteractionSource() }
 
+  val colorDisabled = colorResource(id = R.color.disabled)
   val pressedColor = when (type) {
     PowerButtonView.Type.POSITIVE -> MaterialTheme.colors.primary
     PowerButtonView.Type.NEGATIVE -> negativeColor
   }
-  val borderColor = remember { AnimatableColor(pressedColor, borderColorNormal) }
+  val borderColor = remember { AnimatableColor(pressedColor, colorDisabled) }
   val outerShadowColor = remember { AnimatableColor(pressedColor, DefaultShadowColor) }
-  val innerShadowColor = remember { AnimatableColor(innerShadowColor, transparentColor) }
+  val innerShadowColor = remember { AnimatableColor(colorDisabled, transparentColor) }
   val primaryVariantColor = MaterialTheme.colors.primaryVariant
   val onSurfaceColor = MaterialTheme.colors.onSurface
   val textColor = when (type) {
@@ -158,7 +161,11 @@ fun PowerButtonView(
       .shadow(elevation = 4.dp, shape = CircleShape, ambientColor = outerShadowColor.color, spotColor = outerShadowColor.color)
       .innerShadow(color = innerShadowColor.color, blur = 5.dp, cornersRadius = size.minus(padding.times(2)), offsetY = 4.dp)
       .background(color = MaterialTheme.colors.surface)
-      .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
+      .clickable(interactionSource = interactionSource, indication = null) {
+        if (!disabled) {
+          onClick()
+        }
+      }
   ) {
     Column(
       modifier = Modifier.fillMaxSize(),
@@ -176,6 +183,14 @@ fun PowerButtonView(
       text?.let {
         Text(text = text, style = SuplaTypography.button, color = textColor.color)
       }
+    }
+
+    if (disabled) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(color = disabledOverlay)
+      ) {}
     }
   }
 }
@@ -202,6 +217,7 @@ private fun Preview() {
     Column(modifier = Modifier.background(color = Color(0xFFF5F6F7))) {
       PowerButtonView(onClick = {})
       PowerButtonView(text = "Turn on", onClick = {})
+      PowerButtonView(text = "Turn on", onClick = {}, disabled = true)
     }
   }
 }

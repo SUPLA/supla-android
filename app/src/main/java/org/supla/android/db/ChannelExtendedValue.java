@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import org.supla.android.db.SuplaContract.ChannelExtendedValueEntry;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 
@@ -74,15 +75,15 @@ public class ChannelExtendedValue extends DbItem {
     return ExtendedValue;
   }
 
-  public boolean hasTimerSet() {
+  public Date getTimerEstimatedEndDate() {
     if (ExtendedValue == null) {
-      return false;
+      return null;
     }
     if (ExtendedValue.TimerStateValue == null) {
-      return false;
+      return null;
     }
 
-    return ExtendedValue.TimerStateValue.getCountdownEndsAt() != null;
+    return ExtendedValue.TimerStateValue.getCountdownEndsAt();
   }
 
   public void setExtendedValue(SuplaChannelExtendedValue extendedValue) {

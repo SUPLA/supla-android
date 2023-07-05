@@ -38,6 +38,7 @@ class TimerConfigurationView @JvmOverloads constructor(
     ViewTimerConfigurationBinding.inflate(LayoutInflater.from(context), this)
 
   var onStartClickListener: (timeInSeconds: Int, action: TimerTargetAction) -> Unit = { _, _ -> }
+  var onTimeChangedListener: (timeInSeconds: Int) -> Unit = { }
   var onEditCancelClickListener: () -> Unit = { }
 
   var editMode = false
@@ -56,29 +57,42 @@ class TimerConfigurationView @JvmOverloads constructor(
     )
 
   var timeInSeconds: Int
-    get() = binding.detailsTimerSecond.value
-      .plus(binding.detailsTimerMinute.value.times(60))
-      .plus(binding.detailsTimerHour.value.times(3600))
+    get() = calculateTimeInSeconds()
     set(time) {
       binding.detailsTimerSecond.value = (time % 60)
       binding.detailsTimerMinute.value = ((time / 60) % 60)
       binding.detailsTimerHour.value = (time / 3600)
+      updateInfoText()
     }
 
   init {
     setupView()
   }
 
+  override fun setEnabled(enabled: Boolean) {
+    super.setEnabled(enabled)
+    binding.detailsTimerStartButton.isEnabled = enabled
+  }
+
   private fun setupView() {
     binding.detailsTimerHour.maxValue = 23
     binding.detailsTimerHour.displayedValues = displayValues(R.plurals.hour_pattern, 24)
-    binding.detailsTimerHour.setOnValueChangedListener { _, _, _ -> updateInfoText() }
+    binding.detailsTimerHour.setOnValueChangedListener { _, _, _ ->
+      updateInfoText()
+      onTimeChangedListener(calculateTimeInSeconds())
+    }
     binding.detailsTimerMinute.maxValue = 59
     binding.detailsTimerMinute.displayedValues = displayValues(R.plurals.minute_pattern, 60)
-    binding.detailsTimerMinute.setOnValueChangedListener { _, _, _ -> updateInfoText() }
+    binding.detailsTimerMinute.setOnValueChangedListener { _, _, _ ->
+      updateInfoText()
+      onTimeChangedListener(calculateTimeInSeconds())
+    }
     binding.detailsTimerSecond.maxValue = 59
     binding.detailsTimerSecond.displayedValues = displayValues(R.plurals.second_pattern, 60)
-    binding.detailsTimerSecond.setOnValueChangedListener { _, _, _ -> updateInfoText() }
+    binding.detailsTimerSecond.setOnValueChangedListener { _, _, _ ->
+      updateInfoText()
+      onTimeChangedListener(calculateTimeInSeconds())
+    }
     binding.detailsTimerActionSwitch.items = listOf(
       context.getString(R.string.details_timer_turn_on_for),
       context.getString(R.string.details_timer_turn_off_for)
@@ -161,6 +175,10 @@ class TimerConfigurationView @JvmOverloads constructor(
   private fun updatePrimaryButtonText() {
     binding.detailsTimerStartButton.setText(if (editMode) R.string.details_timer_save else R.string.details_timer_start)
   }
+
+  private fun calculateTimeInSeconds() = binding.detailsTimerSecond.value
+    .plus(binding.detailsTimerMinute.value.times(60))
+    .plus(binding.detailsTimerHour.value.times(3600))
 }
 
 enum class TimerTargetAction(val id: Int) {
