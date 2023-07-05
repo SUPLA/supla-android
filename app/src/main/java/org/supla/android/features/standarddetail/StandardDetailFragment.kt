@@ -74,6 +74,7 @@ class StandardDetailFragment :
     binding.detailViewPager.adapter = StandardDetailPagerAdapter(pages, remoteId, itemType, this)
     binding.detailViewPager.setCurrentItem(openedPage, false)
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
+    binding.detailViewPager.isUserInputEnabled = false
 
     viewModel.loadData(remoteId, itemType)
   }
