@@ -22,7 +22,7 @@ android {
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
     versionCode = 186
-    versionName = "23.07-BETA2"
+    versionName = "23.07-BETA3"
 
     ndk {
       moduleName = "suplaclient"
