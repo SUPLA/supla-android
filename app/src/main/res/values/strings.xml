@@ -550,7 +550,7 @@
     <string translatable="false" name="details_history">Metrics</string>
     <string translatable="false" name="details_settings">Settings</string>
     <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
-    <string name="details_timer_text" translatable="false">Define time for each device should stay:</string>
+    <string name="details_timer_text" translatable="false">Define time for which device should stay:</string>
     <string name="details_timer_turn_on_for" translatable="false">Turned on</string>
     <string name="details_timer_turn_off_for" translatable="false">Turned off</string>
     <string name="details_timer_info" translatable="false">Device will be %1$s for %2$s, and then turn %3$s</string>
@@ -561,8 +561,8 @@
     <string name="hour_string_format">hh:mm:ss a</string>
     <string name="details_timer_state_label" translatable="false">Current state:</string>
     <string name="details_timer_state_label_for_timer" translatable="false">State until %s:</string>
-    <string name="details_timer_device_on" translatable="false">turned on</string>
-    <string name="details_timer_device_off" translatable="false">turned off</string>
+    <string name="details_timer_device_on" translatable="false">on</string>
+    <string name="details_timer_device_off" translatable="false">off</string>
     <string name="details_timer_edit_time" translatable="false">Edit time</string>
     <string name="details_timer_edit_header" translatable="false">Edit turned %1$s time</string>
     <string name="details_timer_start" translatable="false">Start</string>
