@@ -37,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
-import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
@@ -1467,7 +1466,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
           SuplaCfg cfg = new SuplaCfg();
           cfgInit(cfg);
 
-          Preferences prefs = new Preferences(_context);
           AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
           if (profile != null) {
             AuthInfo info = profile.getAuthInfo();

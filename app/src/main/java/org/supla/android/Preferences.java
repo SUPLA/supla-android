@@ -25,11 +25,11 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
-import java.util.Random;
-import org.supla.android.lib.SuplaConst;
 import org.supla.android.model.appsettings.TemperatureUnit;
 
 public class Preferences {
+
+  private static final String TAG = Preferences.class.getSimpleName();
 
   private static final String pref_guid = "pref_guid";
   private static final String pref_authkey = "pref_authkey";
@@ -62,63 +62,36 @@ public class Preferences {
   }
 
   public static String getDeviceID(Context ctx) {
-    String Id = null;
+    String id = null;
 
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        Id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+        id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
       } else {
-        Id = Build.SERIAL;
+        id = Build.SERIAL;
       }
 
-      Id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
+      id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
     } catch (Exception e) {
-      e.printStackTrace();
+      Trace.e(TAG, "getDeviceID error", e);
     }
 
-    return (Id == null || Id.length() == 0) ? "unknown" : Id;
+    return (id == null || id.length() == 0) ? "unknown" : id;
   }
 
   private String getDeviceID() {
     return Preferences.getDeviceID(_context);
   }
 
-  private void encryptAndSave(String pref_key, byte[] data) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putString(
-        pref_key,
-        Base64.encodeToString(
-            Encryption.encryptDataWithNullOnException(data, getDeviceID()), Base64.DEFAULT));
-    editor.putBoolean(pref_key + "_encrypted_gcm", true);
-    editor.apply();
-  }
-
-  private byte[] getRandom(String pref_key, int size) {
+  private byte[] getRandom(String pref_key) {
     byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
     if (!_prefs.getBoolean(pref_key + "_encrypted_gcm", false)) {
       if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
         result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
       }
-
-      if (result != null) {
-        encryptAndSave(pref_key, result);
-      }
-
     } else {
       result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
-    }
-
-    if (result == null || result.length != size) {
-
-      Random random = new Random();
-      result = new byte[size];
-
-      for (int a = 0; a < size; a++) {
-        result[a] = (byte) random.nextInt(255);
-      }
-
-      encryptAndSave(pref_key, result);
     }
 
     return result;
@@ -127,13 +100,13 @@ public class Preferences {
   /** Legacy method. Should not be used in new code. */
   @Deprecated
   public byte[] getClientGUID() {
-    return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
+    return getRandom(pref_guid);
   }
 
   /** Legacy method. Should not be used in new code. */
   @Deprecated
   public byte[] getAuthKey() {
-    return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
+    return getRandom(pref_authkey);
   }
 
   public boolean wizardSavePasswordEnabled(String SSID) {
