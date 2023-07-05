@@ -10,7 +10,15 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.*
+import org.supla.android.ChannelDetailDigiglass
+import org.supla.android.ChannelDetailEM
+import org.supla.android.ChannelDetailIC
+import org.supla.android.ChannelDetailRGBW
+import org.supla.android.ChannelDetailRS
+import org.supla.android.ChannelDetailTempHumidity
+import org.supla.android.ChannelDetailTemperature
+import org.supla.android.ChannelDetailThermostatHP
+import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentLegacyDetailBinding

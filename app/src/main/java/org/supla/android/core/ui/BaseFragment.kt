@@ -37,8 +37,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   }
 
   @CallSuper
-  override fun onStart() {
-    super.onStart()
+  override fun onResume() {
+    super.onResume()
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(suplaMessageListener)
     if (this is ToolbarItemsClickHandler) {
       (requireActivity() as? MainActivity)?.registerMenuItemClickHandler(this)
@@ -46,12 +46,12 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   }
 
   @CallSuper
-  override fun onStop() {
+  override fun onPause() {
     if (this is ToolbarItemsClickHandler) {
       (requireActivity() as? MainActivity)?.unregisterMenuItemClickHandler(this)
     }
     SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(suplaMessageListener)
-    super.onStop()
+    super.onPause()
   }
 
   protected abstract fun handleViewState(state: S)
