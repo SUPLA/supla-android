@@ -23,6 +23,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Region
+import android.util.Log
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
 import android.view.MotionEvent.ACTION_UP
@@ -36,10 +38,11 @@ import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import org.supla.android.R
+import org.supla.android.extensions.toPx
 
 @SuppressLint("ClickableViewAccessibility")
 abstract class BaseListCallback(
-  context: Context,
+  private val context: Context,
   private val adapter: Adapter<ViewHolder>
 ) : ItemTouchHelper.SimpleCallback(
   ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -48,6 +51,7 @@ abstract class BaseListCallback(
 
   private val buttonWidth =
     context.resources.getDimensionPixelSize(R.dimen.channel_layout_button_width)
+  private val reorderingElevation = 15.toPx().toFloat()
 
   var onMovedListener: (fromPos: Int, toPos: Int) -> Unit = { _: Int, _: Int -> }
   var onMoveFinishedListener: () -> Unit = { }
@@ -130,6 +134,11 @@ abstract class BaseListCallback(
     return super.convertToAbsoluteDirection(flags, layoutDirection)
   }
 
+  override fun onSelectedChanged(viewHolder: ViewHolder?, actionState: Int) {
+    super.onSelectedChanged(viewHolder, actionState)
+    Log.d("!@#", "onSelectedChanged")
+  }
+
   override fun onChildDraw(
     c: Canvas,
     recyclerView: RecyclerView,
@@ -167,14 +176,20 @@ abstract class BaseListCallback(
         }
       }
     }
-
     if (actionState == ACTION_STATE_DRAG) {
-      super.onChildDraw(c, recyclerView, viewHolder, 0f, dY, actionState, isCurrentlyActive)
+      super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     } else if (isCurrentlyActive) {
       (viewHolder.itemView as SlideableItem).slide(correctedX.toInt())
     }
 
     lastActiveFlag = isCurrentlyActive
+
+    // Elevation change need to be made after onChildDraw, because there is other logic which makes changes
+    if (isCurrentlyActive) {
+      viewHolder.itemView.elevation = reorderingElevation
+    } else {
+      viewHolder.itemView.elevation = 0f
+    }
   }
 
   override fun isLongPressDragEnabled(): Boolean {
@@ -250,6 +265,10 @@ abstract class BaseListCallback(
       }
     }
     animator.start()
+  }
+
+  fun Int.toPx(): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, toFloat(), context.resources.displayMetrics).toInt()
   }
 }
 
