@@ -177,7 +177,7 @@ abstract class BaseListCallback(
       }
     }
     if (actionState == ACTION_STATE_DRAG) {
-      super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+      super.onChildDraw(c, recyclerView, viewHolder, 0f, dY, actionState, isCurrentlyActive)
     } else if (isCurrentlyActive) {
       (viewHolder.itemView as SlideableItem).slide(correctedX.toInt())
     }
@@ -185,7 +185,7 @@ abstract class BaseListCallback(
     lastActiveFlag = isCurrentlyActive
 
     // Elevation change need to be made after onChildDraw, because there is other logic which makes changes
-    if (isCurrentlyActive) {
+    if (isCurrentlyActive && actionState == ACTION_STATE_DRAG) {
       viewHolder.itemView.elevation = reorderingElevation
     } else {
       viewHolder.itemView.elevation = 0f
