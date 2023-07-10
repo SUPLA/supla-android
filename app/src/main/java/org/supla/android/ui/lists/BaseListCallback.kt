@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Region
-import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
@@ -35,10 +34,10 @@ import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.recyclerview.widget.ItemTouchHelperVariables
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import org.supla.android.R
-import org.supla.android.extensions.toPx
 
 @SuppressLint("ClickableViewAccessibility")
 abstract class BaseListCallback(
@@ -129,14 +128,9 @@ abstract class BaseListCallback(
   override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
     if (swipeBack) {
       swipeBack = false
-      return 0
+      return flags and ItemTouchHelperVariables.ACTION_MODE_DRAG_MASK
     }
     return super.convertToAbsoluteDirection(flags, layoutDirection)
-  }
-
-  override fun onSelectedChanged(viewHolder: ViewHolder?, actionState: Int) {
-    super.onSelectedChanged(viewHolder, actionState)
-    Log.d("!@#", "onSelectedChanged")
   }
 
   override fun onChildDraw(
