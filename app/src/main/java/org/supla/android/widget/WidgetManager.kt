@@ -27,15 +27,15 @@ import javax.inject.Singleton
 
 @Singleton
 class WidgetManager @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val appWidgetManager: AppWidgetManager,
-        private val widgetPreferences: WidgetPreferences
+  @ApplicationContext private val context: Context,
+  private val appWidgetManager: AppWidgetManager,
+  private val widgetPreferences: WidgetPreferences
 ) {
 
-    fun hasProfileWidgets(profileId: Long): Boolean {
-        return appWidgetManager.getAllWidgetIds(context).filter {
-            val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@filter false
-            return@filter widgetConfig.profileId == profileId
-        }.isNotEmpty()
-    }
+  fun hasProfileWidgets(profileId: Long): Boolean {
+    return appWidgetManager.getAllWidgetIds(context).filter {
+      val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@filter false
+      return@filter widgetConfig.profileId == profileId
+    }.isNotEmpty()
+  }
 }

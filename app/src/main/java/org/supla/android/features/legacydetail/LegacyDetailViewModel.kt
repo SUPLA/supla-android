@@ -6,6 +6,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.ChannelBase
+import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
@@ -18,9 +19,7 @@ class LegacyDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
-  fun loadData(remoteId: Int, itemType: LegacyDetailFragment.ItemType) {
+  fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
       .attach()
       .subscribeBy(
@@ -29,9 +28,9 @@ class LegacyDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun getDataSource(remoteId: Int, itemType: LegacyDetailFragment.ItemType) = when (itemType) {
-    LegacyDetailFragment.ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId)
-    LegacyDetailFragment.ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
+  private fun getDataSource(remoteId: Int, itemType: ItemType) = when (itemType) {
+    ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId)
+    ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
   }
 }
 
@@ -39,4 +38,4 @@ sealed class LegacyDetailViewEvent : ViewEvent {
   data class LoadDetailView(val channelBase: ChannelBase) : LegacyDetailViewEvent()
 }
 
-data class LegacyDetailViewState(override val loading: Boolean = false) : ViewState(loading)
+class LegacyDetailViewState : ViewState()

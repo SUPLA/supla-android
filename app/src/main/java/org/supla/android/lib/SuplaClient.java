@@ -37,15 +37,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
-import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.storage.EncryptedPreferences;
+import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.di.entrypoints.EncryptedPreferencesEntryPoint;
 import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
@@ -58,6 +60,7 @@ import org.supla.android.profile.ProfileManager;
 public class SuplaClient extends Thread implements SuplaClientApi {
 
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
+  public static final int SUPLA_APP_ID = 1;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
   private static SuplaRegisterError lastRegisterError = null;
@@ -80,6 +83,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
   private final ListsEventsManager listsEventsManager;
+  private final EncryptedPreferences preferences;
 
   public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
     super();
@@ -90,6 +94,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         EntryPointAccessors.fromApplication(
                 context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
             .provideListsEventsManager();
+    this.preferences =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), EncryptedPreferencesEntryPoint.class)
+            .provideEncryptedPreferences();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -861,11 +869,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     regTryCounter = 0;
     AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
 
-    if (getMaxProtoVersion() > 0
-        && profile.getAuthInfo().getPreferredProtocolVersion() < getMaxProtoVersion()
-        && registerResult.Version > profile.getAuthInfo().getPreferredProtocolVersion()
-        && registerResult.Version <= getMaxProtoVersion()) {
-      profile.getAuthInfo().setPreferredProtocolVersion(registerResult.Version);
+    int maxVersionSupportedByLibrary = getMaxProtoVersion();
+    int storedVersion = profile.getAuthInfo().getPreferredProtocolVersion();
+    int serverVersion = registerResult.Version;
+    if (maxVersionSupportedByLibrary > 0
+        && storedVersion < maxVersionSupportedByLibrary
+        && serverVersion > storedVersion) {
+      int newVersion = serverVersion;
+      if (newVersion > maxVersionSupportedByLibrary) {
+        newVersion = maxVersionSupportedByLibrary;
+      }
+
+      profile.getAuthInfo().setPreferredProtocolVersion(newVersion);
       profileManager.update(profile).blockingSubscribe();
     }
 
@@ -891,6 +906,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
     msg.setRegisterResult(registerResult);
     sendMessage(msg);
+
+    String token = preferences.getFcmToken();
+    if (token != null) {
+      registerPushNotificationClientToken(SUPLA_APP_ID, token);
+    }
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
@@ -1134,9 +1154,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void channelExtendedValueUpdate(
       SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-    if (DbH.updateChannelExtendedValue(
-        channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id)) {
-      onDataChanged(channelExtendedValueUpdate.Id, 0, true);
+    ResultTuple result =
+        DbH.updateChannelExtendedValue(
+            channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id);
+    if (Boolean.TRUE.equals(result.asBoolean(0))) {
+      onDataChanged(
+          channelExtendedValueUpdate.Id, 0, true, Boolean.TRUE.equals(result.asBoolean(1)));
     }
   }
 
@@ -1261,22 +1284,24 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onDataChanged(int ChannelId, int GroupId, boolean extendedValue) {
+  private void onDataChanged(
+      int ChannelId, int GroupId, boolean extendedValue, boolean timerValue) {
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
     msg.setChannelId(ChannelId);
     msg.setChannelGroupId(GroupId);
     msg.setExtendedValue(extendedValue);
+    msg.setTimerValue(timerValue);
 
     sendMessage(msg);
   }
 
   private void onDataChanged(int ChannelId, int GroupId) {
-    onDataChanged(ChannelId, GroupId, false);
+    onDataChanged(ChannelId, GroupId, false, false);
   }
 
   private void onDataChanged() {
-    onDataChanged(0, 0, false);
+    onDataChanged(0, 0, false, false);
   }
 
   private void onZWaveResetAndClearResult(int result) {
@@ -1441,7 +1466,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
           SuplaCfg cfg = new SuplaCfg();
           cfgInit(cfg);
 
-          Preferences prefs = new Preferences(_context);
           AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
           if (profile != null) {
             AuthInfo info = profile.getAuthInfo();

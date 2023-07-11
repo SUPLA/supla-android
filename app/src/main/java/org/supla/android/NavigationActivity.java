@@ -105,14 +105,6 @@ public class NavigationActivity extends BaseActivity
     showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0, null);
   }
 
-  public static void showCfg(Activity sender) {
-    showActivity(
-        sender,
-        org.supla.android.cfg.CfgActivity.class,
-        0,
-        org.supla.android.cfg.CfgActivity.ACTION_CONFIG);
-  }
-
   @Override
   protected void onResume() {
 

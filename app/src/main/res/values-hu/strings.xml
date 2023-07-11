@@ -456,4 +456,5 @@
     <string name="rs_display_mode_opening">Kinyitások</string>
     <string name="rs_display_mode_closing">Bezárások</string>
     <string name="status_accessid_inactive">A hozzáférési azonosító inaktív </string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

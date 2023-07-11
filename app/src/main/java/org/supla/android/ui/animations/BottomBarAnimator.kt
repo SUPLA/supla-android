@@ -8,8 +8,8 @@ import com.google.android.material.bottomappbar.BottomAppBar
 
 const val DEFAULT_ANIMATION_DURATION = 300L
 
-fun animateFadeOut(bar: BottomAppBar, barHeight: Float) {
-  ObjectAnimator.ofFloat(bar, "translationY", barHeight).apply {
+fun animateFadeOut(bar: BottomAppBar) {
+  ObjectAnimator.ofFloat(bar, "translationX", -bar.width.toFloat()).apply {
     duration = DEFAULT_ANIMATION_DURATION
     addListener(BottomBarAnimatorListener { bar.visibility = View.GONE })
     start()
@@ -19,7 +19,7 @@ fun animateFadeOut(bar: BottomAppBar, barHeight: Float) {
 fun animateFadeIn(bar: BottomAppBar, animationEndCallback: () -> Unit) {
   bar.visibility = View.VISIBLE
 
-  ObjectAnimator.ofFloat(bar, "translationY", 0f).apply {
+  ObjectAnimator.ofFloat(bar, "translationX", 0f).apply {
     duration = DEFAULT_ANIMATION_DURATION
     addListener(BottomBarAnimatorListener { animationEndCallback() })
     start()
@@ -28,7 +28,7 @@ fun animateFadeIn(bar: BottomAppBar, animationEndCallback: () -> Unit) {
 
 private class BottomBarAnimatorListener(private val animationEndCallback: () -> Unit) : AnimatorListenerAdapter() {
 
-  override fun onAnimationEnd(p0: Animator?) {
+  override fun onAnimationEnd(p0: Animator) {
     animationEndCallback()
   }
 }

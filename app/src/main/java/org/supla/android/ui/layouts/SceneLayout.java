@@ -18,7 +18,6 @@ package org.supla.android.ui.layouts;
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -54,6 +53,7 @@ import org.supla.android.ui.lists.SlideableItem;
 public class SceneLayout extends LinearLayout implements SlideableItem {
 
   @Inject ListsEventsManager eventsManager;
+  @Inject DurationTimerHelper durationTimerHelper;
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -152,16 +152,11 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     left_onlineStatus.setId(ViewHelper.generateViewId());
     content.addView(left_onlineStatus);
 
-    sceneDurationTimer = newTimerView(context);
+    sceneDurationTimer = durationTimerHelper.createTimerView(context);
     content.addView(sceneDurationTimer);
-    RelativeLayout.LayoutParams sdlp =
-        new RelativeLayout.LayoutParams(
-            (int) getResources().getDimension(R.dimen.channel_imgtext_width),
-            (int) (getResources().getDimension(R.dimen.default_text_size) * 1.5));
-    sdlp.addRule(RelativeLayout.ABOVE, right_onlineStatus.getId());
-    sdlp.addRule(RelativeLayout.ALIGN_RIGHT, right_onlineStatus.getId());
-    sdlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.form_element_spacing));
-    sceneDurationTimer.setLayoutParams(sdlp);
+    sceneDurationTimer.setLayoutParams(
+        durationTimerHelper.getTimerViewLayoutParams(
+            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
@@ -246,19 +241,6 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
     return lp;
-  }
-
-  private TextView newTimerView(Context context) {
-
-    TextView tv = new TextView(context);
-    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
-    tv.setTextSize(
-        TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size));
-    tv.setTextColor(getResources().getColor(R.color.label_grey));
-    tv.setGravity(Gravity.BOTTOM | Gravity.END);
-
-    return tv;
   }
 
   private TextView newTextView(Context context) {
@@ -451,7 +433,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
             uiThreadHandler.post(
                 () -> {
                   long restTime = endTime - System.currentTimeMillis();
-                  sceneDurationTimer.setText(formatMillis(restTime));
+                  sceneDurationTimer.setText(durationTimerHelper.formatMillis(restTime));
 
                   if (firstTick) {
                     sceneDurationTimer.setVisibility(VISIBLE);
@@ -474,18 +456,6 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     SuplaChannelStatus.ShapeType state = SuplaChannelStatus.ShapeType.Ring;
     left_onlineStatus.setShapeType(state);
     right_onlineStatus.setShapeType(state);
-  }
-
-  @SuppressLint("DefaultLocale")
-  private String formatMillis(long leftTimeMillis) {
-    // Plus 1 because we don't want to see 00:00:00 for one second, last second should be shown
-    // as 00:00:01 and after that view should disappear.
-    long leftTimeSecs = leftTimeMillis / 1000 + 1;
-    int leftHours = (int) leftTimeSecs / 3600;
-    int leftMinutes = (int) (leftTimeSecs % 3600) / 60;
-    int leftSeconds = (int) (leftTimeSecs % 60);
-
-    return String.format("%02d:%02d:%02d", leftHours, leftMinutes, leftSeconds);
   }
 
   static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {

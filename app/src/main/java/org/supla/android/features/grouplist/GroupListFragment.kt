@@ -30,8 +30,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentGroupListBinding
 import org.supla.android.db.ChannelGroup
 import org.supla.android.extensions.toPx
-import org.supla.android.features.legacydetail.LegacyDetailFragment
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.model.ItemType
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
@@ -78,36 +77,23 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
         navigator.navigateToLegacyDetails(
           event.remoteId,
           event.type,
-          LegacyDetailFragment.ItemType.GROUP
+          ItemType.GROUP
         )
       }
       is GroupListViewEvent.ReassignAdapter -> {
         binding.groupsList.adapter = null
         binding.groupsList.adapter = adapter
       }
-      is GroupListViewEvent.UpdateGroup -> adapter.updateListItem(event.channelGroup)
       else -> {}
     }
   }
 
   override fun handleViewState(state: GroupListViewState) {
-    if (state.groups != null) {
-      adapter.setItems(state.groups)
+    adapter.setItems(state.groups)
 
-      if (scrollDownOnReload) {
-        binding.groupsList.smoothScrollBy(0, 50.toPx())
-        scrollDownOnReload = false
-      }
-    }
-  }
-
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelGroupId > 0) {
-          viewModel.onGroupUpdate(message.channelGroupId)
-        }
-      }
+    if (scrollDownOnReload) {
+      binding.groupsList.smoothScrollBy(0, 50.toPx())
+      scrollDownOnReload = false
     }
   }
 

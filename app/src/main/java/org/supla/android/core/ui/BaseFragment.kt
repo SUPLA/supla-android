@@ -6,16 +6,21 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import org.supla.android.MainActivity
 import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.ui.ChangeableToolbarTitle
 import org.supla.android.ui.LoadableContent
+import org.supla.android.ui.ToolbarItemsClickHandler
+import org.supla.android.ui.ToolbarItemsController
+import org.supla.android.ui.ToolbarTitleController
 
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
   private val suplaMessageListener: OnSuplaClientMessageListener = OnSuplaClientMessageListener { onSuplaMessage(it) }
+
+  constructor() : this(0)
 
   protected abstract fun getViewModel(): BaseViewModel<S, E>
 
@@ -32,15 +37,21 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   }
 
   @CallSuper
-  override fun onStart() {
-    super.onStart()
+  override fun onResume() {
+    super.onResume()
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(suplaMessageListener)
+    if (this is ToolbarItemsClickHandler) {
+      (requireActivity() as? MainActivity)?.registerMenuItemClickHandler(this)
+    }
   }
 
   @CallSuper
-  override fun onStop() {
+  override fun onPause() {
+    if (this is ToolbarItemsClickHandler) {
+      (requireActivity() as? MainActivity)?.unregisterMenuItemClickHandler(this)
+    }
     SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(suplaMessageListener)
-    super.onStop()
+    super.onPause()
   }
 
   protected abstract fun handleViewState(state: S)
@@ -51,6 +62,10 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   }
 
   protected fun setToolbarTitle(title: String) {
-    (requireActivity() as? ChangeableToolbarTitle)?.setToolbarTitle(title)
+    (requireActivity() as? ToolbarTitleController)?.setToolbarTitle(title)
+  }
+
+  protected fun setToolbarItemVisible(itemId: Int, visible: Boolean) {
+    (requireActivity() as? ToolbarItemsController)?.setToolbarItemVisible(itemId, visible)
   }
 }

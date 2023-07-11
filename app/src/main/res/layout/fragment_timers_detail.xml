@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <include
+      android:id="@+id/details_timer_state"
+      layout="@layout/inc_device_state" />
+
+    <org.supla.android.ui.views.TimerProgressView
+      android:id="@+id/details_timer_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toTopOf="@+id/details_timer_stop_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/details_timer_progress_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
+      app:layout_constraintBottom_toTopOf="@+id/details_timer_progress_end_hour"
+      app:layout_constraintEnd_toEndOf="@id/details_timer_progress"
+      app:layout_constraintStart_toStartOf="@id/details_timer_progress"
+      app:layout_constraintTop_toTopOf="@id/details_timer_progress"
+      app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+      android:id="@+id/details_timer_progress_end_hour"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body1"
+      app:layout_constraintBottom_toBottomOf="@id/details_timer_progress"
+      app:layout_constraintEnd_toEndOf="@id/details_timer_progress"
+      app:layout_constraintStart_toStartOf="@id/details_timer_progress"
+      app:layout_constraintTop_toBottomOf="@id/details_timer_progress_time" />
+
+    <Button
+      android:id="@+id/details_timer_edit_time"
+      style="@style/AppTheme.Button.Text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/details_timer_edit_time"
+      android:textColor="@color/on_background"
+      android:drawableEnd="@drawable/pencil"
+      android:drawablePadding="@dimen/distance_tiny"
+      app:layout_constraintBottom_toTopOf="@+id/details_timer_stop_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_timer_progress" />
+
+    <Button
+      android:id="@+id/details_timer_stop_button"
+      style="@style/AppTheme.Button.Outlined"
+      android:layout_width="match_parent"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:layout_marginBottom="@dimen/distance_small"
+      app:layout_constraintBottom_toTopOf="@+id/details_timer_cancel_button" />
+
+    <Button
+      android:id="@+id/details_timer_cancel_button"
+      style="@style/AppTheme.Button.Contained"
+      android:layout_width="match_parent"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:layout_marginBottom="@dimen/distance_default"
+      app:layout_constraintBottom_toBottomOf="parent" />
+
+    <org.supla.android.features.standarddetail.timersdetail.TimerConfigurationView
+      android:id="@+id/details_timer_configuration"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/surface"
+      android:elevation="0dp"
+      app:layout_constraintBottom_toBottomOf="parent" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

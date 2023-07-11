@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature android:name="android.hardware.wifi" />
     <supports-screens
@@ -32,6 +33,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+          android:name="com.google.firebase.messaging.default_notification_icon"
+          android:resource="@drawable/logo" />
+        <meta-data
+          android:name="com.google.firebase.messaging.default_notification_color"
+          android:resource="@color/primary_variant" />
+        <meta-data
+          android:name="com.google.firebase.messaging.default_notification_channel_id"
+          android:value="@string/default_notification_channel_id" />
+
         <receiver
             android:name=".widget.onoff.OnOffWidget"
             android:exported="true">
@@ -74,36 +86,36 @@
         </activity>
 
         <activity
-            android:name=".StatusActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true"></activity>
+          android:name=".StatusActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait"
+          android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+          android:name=".MainActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait" />
 
         <activity
-            android:name=".cfg.CfgActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+          android:name=".cfg.CfgActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait" />
 
         <activity
-            android:name=".AboutActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+          android:name=".AboutActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait" />
 
         <activity
-            android:name=".AddDeviceWizardActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+          android:name=".AddDeviceWizardActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait" />
 
         <activity
-            android:name=".ZWaveConfigurationWizardActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true"></activity>
+          android:name=".ZWaveConfigurationWizardActivity"
+          android:launchMode="singleTop"
+          android:screenOrientation="sensorPortrait"
+          android:exported="true" />
 
         <activity
             android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
@@ -121,6 +133,14 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <service
+          android:name=".core.notifications.NotificationMessagingService"
+          android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

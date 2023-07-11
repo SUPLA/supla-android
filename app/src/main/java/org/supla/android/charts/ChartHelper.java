@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -42,19 +44,27 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import dagger.hilt.android.EntryPointAccessors;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.db.MeasurementsDbHelper;
+import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
+import org.supla.android.profile.ProfileManager;
 
 public abstract class ChartHelper implements IAxisValueFormatter {
+
+  private static final int[] COLORS =
+      new int[] {
+        rgb("#e74c3c"), rgb("#3498db"), rgb("#2ecc71"), rgb("#f1c40f"),
+        rgb("#984ea3"), rgb("#e41a1c"), rgb("#999999"), rgb("#ff7f00"),
+        rgb("#377eb8"), rgb("#a65628")
+      };
 
   protected String unit;
   protected Context context;
@@ -69,24 +79,20 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   private LineDataSet lineDataSet;
   private Double downloadProgress;
   private Preferences prefs;
-  private int channelId;
   private ZoomSettings persistedZoom;
+  private final ProfileManager profileManager;
 
   public ChartHelper(Context context) {
     this.context = context;
     this.prefs = new Preferences(context);
-  }
-
-  public CombinedChart getCombinedChart() {
-    return combinedChart;
+    this.profileManager =
+        EntryPointAccessors.fromApplication(
+                context.getApplicationContext(), ProfileManagerEntryPoint.class)
+            .provideProfileManager();
   }
 
   public void setCombinedChart(CombinedChart chart) {
     combinedChart = chart;
-  }
-
-  public PieChart getPieChart() {
-    return pieChart;
   }
 
   public void setPieChart(PieChart chart) {
@@ -422,17 +428,18 @@ public abstract class ChartHelper implements IAxisValueFormatter {
 
     Collections.sort(
         entries,
-        new Comparator<PieEntry>() {
-          @Override
-          public int compare(PieEntry p1, PieEntry p2) {
-            if (p1.getValue() > p2.getValue()) return 1;
-            if (p1.getValue() < p2.getValue()) return -1;
-            return 0;
+        (p1, p2) -> {
+          if (p1.getValue() > p2.getValue()) {
+            return 1;
           }
+          if (p1.getValue() < p2.getValue()) {
+            return -1;
+          }
+          return 0;
         });
 
     SuplaPieDataSet set = new SuplaPieDataSet(entries, "");
-    set.setColors(ColorTemplate.MATERIAL_COLORS);
+    set.setColors(COLORS);
 
     PieData data = new PieData(set);
     setMarker(pieChart);
@@ -509,12 +516,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     updateDescription();
   }
 
-  public long getMinTimestamp() {
-    return minTimestamp;
-  }
-
   public void load(int channelId, ChartType ctype) {
-    this.channelId = channelId;
     this.ctype = ctype;
 
     if (isPieChartType(ctype)) {
@@ -790,16 +792,19 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   public void persistSpinners(int func, Spinner master, Spinner slave) {
-    prefs.setChartType(func, 0, master.getSelectedItemPosition());
-    prefs.setChartType(func, 1, slave.getSelectedItemPosition());
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    prefs.setChartType(profileId, func, 0, master.getSelectedItemPosition());
+    prefs.setChartType(profileId, func, 1, slave.getSelectedItemPosition());
   }
 
   public void persistSpinner(int func, Spinner master) {
-    prefs.setChartType(func, 3, master.getSelectedItemPosition());
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    prefs.setChartType(profileId, func, 3, master.getSelectedItemPosition());
   }
 
   public void restoreSpinner(int func, Spinner master) {
-    int mct = prefs.getChartType(func, 3, -1);
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+    int mct = prefs.getChartType(profileId, func, 3, -1);
     if (mct > -1) {
       master.setSelection(mct);
     }
@@ -820,9 +825,11 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   public void restoreSpinners(int func, Spinner master, Spinner slave, Runnable slaveReload) {
+    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
+
     int mct, sct;
-    mct = prefs.getChartType(func, 0, -1);
-    sct = prefs.getChartType(func, 1, -1);
+    mct = prefs.getChartType(profileId, func, 0, -1);
+    sct = prefs.getChartType(profileId, func, 1, -1);
 
     master.setSelection(getCorrectPosition(master, mct));
     slaveReload.run();
@@ -855,7 +862,9 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         case Bar_Comparsion_YearYear:
         case Bar_AritmeticBalance_Years:
         case Bar_VectorBalance_Years:
+        case Pie_HourRank:
         case Pie_MonthRank:
+        case Pie_WeekdayRank:
           position = 4;
           break;
       }
@@ -946,6 +955,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
   }
 
   private class ZoomSettings {
+
     float scaleX;
     float scaleY;
     float x;

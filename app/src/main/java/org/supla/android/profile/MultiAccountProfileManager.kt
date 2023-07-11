@@ -20,11 +20,15 @@ package org.supla.android.profile
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.Trace
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.extensions.TAG
+import org.supla.android.lib.SuplaClient
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.WidgetVisibilityHandler
 
 class MultiAccountProfileManager(
@@ -33,7 +37,8 @@ class MultiAccountProfileManager(
   private val profileIdHolder: ProfileIdHolder,
   private val widgetVisibilityHandler: WidgetVisibilityHandler,
   private val listsEventsManager: ListsEventsManager,
-  private val suplaAppProvider: SuplaAppProvider
+  private val suplaAppProvider: SuplaAppProvider,
+  private val singleCallProvider: SingleCall.Provider
 ) : ProfileManager {
 
   override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -44,7 +49,7 @@ class MultiAccountProfileManager(
   }
 
   override fun read(id: Long): Maybe<AuthProfileItem> = Maybe.fromCallable {
-    profileRepository.getProfile(id)
+    profileRepository.getProfile(id)!!
   }
 
   override fun update(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -55,6 +60,11 @@ class MultiAccountProfileManager(
   }
 
   override fun delete(id: Long): Completable = Completable.fromRunnable {
+    try {
+      singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
+    } catch (ex: Exception) {
+      Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
+    }
     profileRepository.deleteProfile(id)
     widgetVisibilityHandler.onProfileRemoved(id)
   }

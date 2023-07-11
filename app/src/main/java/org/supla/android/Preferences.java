@@ -25,14 +25,11 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
-import dagger.hilt.android.EntryPointAccessors;
-import java.util.Random;
-import org.supla.android.cfg.TemperatureUnit;
-import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
-import org.supla.android.lib.SuplaConst;
-import org.supla.android.profile.ProfileManager;
+import org.supla.android.model.appsettings.TemperatureUnit;
 
 public class Preferences {
+
+  private static final String TAG = Preferences.class.getSimpleName();
 
   private static final String pref_guid = "pref_guid";
   private static final String pref_authkey = "pref_authkey";
@@ -51,80 +48,50 @@ public class Preferences {
 
   private static final String pref_any_account_registered = "pref_any_account_registered";
   private static final String pref_new_gesture_info = "pref_new_gesture_info";
+  private static final String pref_notifications_asked = "pref_notifications_asked";
+  private static final String pref_should_show_new_gesture_info =
+      "pref_should_show_new_gesture_info";
 
   private final Context _context;
-  private final ProfileManager profileManager;
   private final SharedPreferences _prefs;
 
   public Preferences(Context context) {
     _prefs = PreferenceManager.getDefaultSharedPreferences(context);
     _context = context;
-    profileManager =
-        EntryPointAccessors.fromApplication(
-                context.getApplicationContext(), ProfileManagerEntryPoint.class)
-            .provideProfileManager();
-
     context.getContentResolver();
   }
 
   public static String getDeviceID(Context ctx) {
-    String Id = null;
+    String id = null;
 
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        Id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+        id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
       } else {
-        Id = Build.SERIAL;
+        id = Build.SERIAL;
       }
 
-      Id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
+      id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
     } catch (Exception e) {
-      e.printStackTrace();
+      Trace.e(TAG, "getDeviceID error", e);
     }
 
-    return (Id == null || Id.length() == 0) ? "unknown" : Id;
+    return (id == null || id.length() == 0) ? "unknown" : id;
   }
 
   private String getDeviceID() {
     return Preferences.getDeviceID(_context);
   }
 
-  private void encryptAndSave(String pref_key, byte[] data) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putString(
-        pref_key,
-        Base64.encodeToString(
-            Encryption.encryptDataWithNullOnException(data, getDeviceID()), Base64.DEFAULT));
-    editor.putBoolean(pref_key + "_encrypted_gcm", true);
-    editor.apply();
-  }
-
-  private byte[] getRandom(String pref_key, int size) {
+  private byte[] getRandom(String pref_key) {
     byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
 
     if (!_prefs.getBoolean(pref_key + "_encrypted_gcm", false)) {
       if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
         result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
       }
-
-      if (result != null) {
-        encryptAndSave(pref_key, result);
-      }
-
     } else {
       result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
-    }
-
-    if (result == null || result.length != size) {
-
-      Random random = new Random();
-      result = new byte[size];
-
-      for (int a = 0; a < size; a++) {
-        result[a] = (byte) random.nextInt(255);
-      }
-
-      encryptAndSave(pref_key, result);
     }
 
     return result;
@@ -133,13 +100,13 @@ public class Preferences {
   /** Legacy method. Should not be used in new code. */
   @Deprecated
   public byte[] getClientGUID() {
-    return getRandom(pref_guid, SuplaConst.SUPLA_GUID_SIZE);
+    return getRandom(pref_guid);
   }
 
   /** Legacy method. Should not be used in new code. */
   @Deprecated
   public byte[] getAuthKey() {
-    return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
+    return getRandom(pref_authkey);
   }
 
   public boolean wizardSavePasswordEnabled(String SSID) {
@@ -249,18 +216,17 @@ public class Preferences {
     ed.apply();
   }
 
-  private String getChartTypeKey(int channel, int idx) {
-    int pid = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-    return String.format(pref_chart_type, channel, pid, idx);
+  private String getChartTypeKey(int profileId, int channel, int idx) {
+    return String.format(pref_chart_type, channel, profileId, idx);
   }
 
-  public int getChartType(int channel, int idx, int def) {
-    return _prefs.getInt(getChartTypeKey(channel, idx), def);
+  public int getChartType(int profileId, int channel, int idx, int def) {
+    return _prefs.getInt(getChartTypeKey(profileId, channel, idx), def);
   }
 
-  public void setChartType(int channel, int idx, int charttype) {
+  public void setChartType(int profileId, int channel, int idx, int charttype) {
     SharedPreferences.Editor ed = _prefs.edit();
-    ed.putInt(getChartTypeKey(channel, idx), charttype);
+    ed.putInt(getChartTypeKey(profileId, channel, idx), charttype);
     ed.apply();
   }
 
@@ -278,6 +244,22 @@ public class Preferences {
 
   public void setNewGestureInfoPresented(boolean presented) {
     _prefs.edit().putBoolean(pref_new_gesture_info, presented).apply();
+  }
+
+  public boolean isNotificationsPopupDisplayed() {
+    return _prefs.getBoolean(pref_notifications_asked, false);
+  }
+
+  public void setNotificationsPopupDisplayed(boolean displayed) {
+    _prefs.edit().putBoolean(pref_notifications_asked, displayed).apply();
+  }
+
+  public boolean shouldShowNewGestureInfo() {
+    return _prefs.getBoolean(pref_should_show_new_gesture_info, false);
+  }
+
+  public void setShouldShowNewGestureInfo() {
+    _prefs.edit().putBoolean(pref_should_show_new_gesture_info, true).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {

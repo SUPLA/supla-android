@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/settings_header"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/new_screen_margin"
+  android:layout_marginTop="@dimen/new_screen_margin"
+  android:layout_marginEnd="@dimen/new_screen_margin"
+  android:layout_marginBottom="6dp"
+  android:textAllCaps="true"
+  android:textAppearance="@style/AppTheme.TextAppearance.Body2" />

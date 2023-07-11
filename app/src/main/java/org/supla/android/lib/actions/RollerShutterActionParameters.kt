@@ -21,6 +21,11 @@ import org.supla.android.tools.UsedFromNativeCode
  */
 
 @UsedFromNativeCode
-class RollerShutterActionParameters(action: ActionId, subjectType: SubjectType,
-                                    subjectId: Int, var percentage: Short, var delta: Boolean)
-    : ActionParameters(action, subjectType, subjectId)
+class RollerShutterActionParameters(
+  action: ActionId,
+  subjectType: SubjectType,
+  subjectId: Int,
+  var percentage: Short,
+  var delta: Boolean
+) :
+  ActionParameters(action, subjectType, subjectId)

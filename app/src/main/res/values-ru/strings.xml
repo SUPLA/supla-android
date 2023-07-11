@@ -462,5 +462,6 @@
     <string name="rs_display_mode_opening">Открытия</string>
     <string name="rs_display_mode_closing">Закрытия</string>
     <string name="status_accessid_inactive">Идентификатор доступа неактивен</string>
+ <string name="hour_string_format">HH:mm:ss</string>
 </resources>
 

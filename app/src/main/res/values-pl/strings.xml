@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="confirm_button_text">OK</string>
     <string name="profiles_title">Konta</string>
     <string name="profile_name_label">NAZWA KONTA</string>
@@ -64,11 +64,11 @@
     <string name="channel_caption_rgblighting">Oświetlenie RGB</string>
     <string name="channel_caption_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
     <string name="channel_caption_noliquidsensor">Czujnik braku cieczy</string>
-    <string name="channel_caption_gatewayopeningsensor">Czujnik otwacia furtki</string>
+    <string name="channel_caption_gatewayopeningsensor">Czujnik otwarcia furtki</string>
     <string name="channel_caption_gateopeningsensor">Czujnik otwarcia bramy</string>
-    <string name="channel_caption_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
-    <string name="channel_caption_dooropeningsensor">Czujnik otwacia drzwi</string>
-    <string name="channel_caption_rsopeningsensor">Czujnik otwacia rolet</string>
+    <string name="channel_caption_garagedooropeningsensor">Czujnik otwarcia bramy garażowej</string>
+    <string name="channel_caption_dooropeningsensor">Czujnik otwarcia drzwi</string>
+    <string name="channel_caption_rsopeningsensor">Czujnik otwarcia rolet</string>
     <string name="channel_caption_depthsensor">Czujnik głębokości</string>
     <string name="channel_caption_distancesensor">Czujnik odległości</string>
     <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
@@ -134,10 +134,10 @@
     <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
     <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
     <string name="next">Dalej</string>
-    <string name="start">START</string><![CDATA[>
-
-
-    ]]>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="turn_on">Włącz</string>
+    <string name="turn_off">Wyłącz</string>
     <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
 
     <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
@@ -521,6 +521,54 @@
   <string name="general_failure">Wykonanie akcji nie powiodło się</string>
   <string name="push_notification_limit_exceeded">Przekroczono limit powiadomień PUSH, który wynosi %1$s na godzinę.</string>
 
-  <string name="new_gesture_descirption">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
+  <string name="new_gesture_description">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
   <string name="channel_offline">Kanał jest offline</string>
+  <string name="notification_info_title">Powiadomienia!</string>
+  <string name="notification_info_message">Włącz powiadomienia, aby być na bieżąco z informacjami z Twojego domu! Potrzebujemy Twojej zgody, aby wyświetlać je na Twoim urządzeniu.\n\nPowiadomienia już wkrótce będzie można skonfigurować w Supla Cloud.</string>
+  <string name="skip">Pomiń</string>
+  <string name="settings_notifications">Powiadomienia</string>
+  <string name="settings_localization">Lokalizacja</string>
+  <string name="settings_permissions">Uprawnienia</string>
+
+  <string translatable="false" name="details_general">Ogólne</string>
+  <string translatable="false" name="details_schedule">Harmonogram</string>
+  <string translatable="false" name="details_history">Pomiary</string>
+  <string translatable="false" name="details_settings">Ustawienia</string>
+  <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
+  <string name="details_timer_text">Określ czas, w którym urządzenie powinno być:</string>
+  <string name="details_timer_turn_on_for">Włączone</string>
+  <string name="details_timer_turn_off_for">Wyłączone</string>
+  <string name="details_timer_info">Urządzenie będzie %1$s przez %2$s, a następnie się %3$s</string>
+  <string name="details_timer_leave_it">Pozostaw %1$s</string>
+  <string name="details_timer_cancel_and">Anuluj i %1$s</string>
+  <string name="details_timer_end_hour">do godz. %1$s</string>
+  <string name="hour_string_format">HH:mm:ss</string>
+  <string name="details_timer_state_label">Aktualny stan:</string>
+  <string name="details_timer_state_label_for_timer">Stan do godz. %s:</string>
+  <string name="details_timer_device_on">włączony</string>
+  <string name="details_timer_device_off">wyłączony</string>
+  <string name="details_timer_edit_time">Edytuj czas</string>
+  <string name="details_timer_edit_header">Edytuj czas, w którym urządzenie będzie %1$s</string>
+  <string name="details_timer_start">Start</string>
+  <string name="details_timer_edit_cancel">Anuluj edycję</string>
+  <string name="details_timer_save">Zapisz</string>
+  <string name="details_timer_cancel_turn_off">wyłącz</string>
+  <string name="details_timer_cancel_turn_on">włącz</string>
+  <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
+    <item quantity="one">włączone</item>
+    <item quantity="other">włączy</item>
+  </plurals>
+  <plurals name="details_timer_info_off" tools:ignore="MissingQuantity">
+    <item quantity="one">wyłączone</item>
+    <item quantity="other">wyłączy</item>
+  </plurals>
+  <plurals name="hour_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d godz.</item>
+  </plurals>
+  <plurals name="minute_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d min.</item>
+  </plurals>
+  <plurals name="second_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d sek.</item>
+  </plurals>
 </resources>

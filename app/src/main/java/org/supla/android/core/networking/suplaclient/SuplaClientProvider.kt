@@ -26,4 +26,10 @@ interface SuplaClientApi {
   ): Boolean
 
   fun executeAction(parameters: ActionParameters): Boolean
+
+  fun registerPushNotificationClientToken(appId: Int, token: String): Boolean
+
+  fun registered(): Boolean
+
+  fun timerArm(remoteId: Int, setOn: Boolean, durationInMs: Int): Boolean
 }

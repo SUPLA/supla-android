@@ -4,14 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-
-        <import type="org.supla.android.cfg.TemperatureUnit" />
-
-        <import type="org.supla.android.cfg.ChannelHeight" />
-
-        <import type="android.R" />
 
         <variable
             name="viewModel"

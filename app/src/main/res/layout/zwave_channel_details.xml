@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_channel_detail_description"
         android:layout_marginTop="20dp"
-        android:background="@color/zwave_info_table_separator"
+        android:background="@color/disabled"
         android:orientation="vertical">
 
         <LinearLayout

@@ -81,9 +81,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // then
     val state = SceneListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, scenes = items),
-      state.copy()
+      state.copy(scenes = items)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileScenesListUseCase)
@@ -125,9 +123,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // then
     val state = SceneListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, scenes = list),
-      state.copy()
+      state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileScenesListUseCase, toggleLocationUseCase)
@@ -145,9 +141,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // then
     val state = SceneListViewState()
     Assertions.assertThat(states).containsExactly(
-      state.copy(loading = true),
-      state.copy(loading = true, scenes = list),
-      state.copy()
+      state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileScenesListUseCase)

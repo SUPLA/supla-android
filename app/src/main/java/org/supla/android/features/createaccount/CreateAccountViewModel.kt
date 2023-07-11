@@ -49,8 +49,6 @@ class CreateAccountViewModel @Inject constructor(
   private val deleteAccountUseCase: DeleteAccountUseCase
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
 
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading)
-
   fun loadProfile(profileId: Long?) {
     updateState {
       it.copy(

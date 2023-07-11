@@ -20,13 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
@@ -47,10 +50,13 @@ public class DefaultChannelRepository implements ChannelRepository {
 
   private final ChannelDao channelDao;
   private final LocationDao locationDao;
+  private final DateProvider dateProvider;
 
-  public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
+  public DefaultChannelRepository(
+      ChannelDao channelDao, LocationDao locationDao, DateProvider dateProvider) {
     this.channelDao = channelDao;
     this.locationDao = locationDao;
+    this.dateProvider = dateProvider;
   }
 
   @Override
@@ -174,20 +180,37 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public boolean updateChannelExtendedValue(
+  public ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
     ChannelExtendedValue value = channelDao.getChannelExtendedValue(channelId);
+
+    boolean timerUpdated = false;
     if (value == null) {
       value = new ChannelExtendedValue();
       value.setExtendedValue(suplaChannelExtendedValue);
       value.setChannelId(channelId);
+      if (value.getTimerEstimatedEndDate() != null) {
+        value.setTimerStartTimestamp(dateProvider.currentTimestamp());
+        timerUpdated = true;
+      } else {
+        value.setTimerStartTimestamp(null);
+      }
 
       channelDao.insert(value);
     } else {
+      Date oldDate = value.getTimerEstimatedEndDate();
       value.setExtendedValue(suplaChannelExtendedValue);
+      Date newValue = value.getTimerEstimatedEndDate();
+      if (newValue != null && !newValue.equals(oldDate)) {
+        value.setTimerStartTimestamp(dateProvider.currentTimestamp());
+        timerUpdated = true;
+      } else if (value.getTimerStartTimestamp() != null && newValue == null) {
+        value.setTimerStartTimestamp(null);
+        timerUpdated = true;
+      }
       channelDao.update(value);
     }
-    return true;
+    return new ResultTuple(true, timerUpdated);
   }
 
   @Override
@@ -395,6 +418,18 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public Cursor getAllProfileChannelGroups(Long profileId) {
     return channelDao.getAllChannelGroupsForProfileId(profileId);
+  }
+
+  @Override
+  public Cursor getAllExistingProfileChannels(Long profileId) {
+    return channelDao.getAllChannels(
+        "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
+  }
+
+  @NonNull
+  @Override
+  public List<Location> getAllLocations() {
+    return locationDao.getLocations();
   }
 
   private void doReorderChannels(Long firstItemId, int firstItemLocationId, Long secondItemId) {

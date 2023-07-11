@@ -3,6 +3,7 @@ package org.supla.android
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -10,6 +11,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
@@ -21,21 +24,21 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.onNavDestinationSelected
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.core.notifications.NotificationsHelper
+import org.supla.android.core.ui.BackHandleOwner
 import org.supla.android.db.MeasurementsDbHelper
+import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
-import org.supla.android.ui.ChangeableToolbarTitle
 import org.supla.android.ui.LoadableContent
-import org.supla.android.ui.animations.animateFadeIn
-import org.supla.android.ui.animations.animateFadeOut
+import org.supla.android.ui.ToolbarItemsClickHandler
+import org.supla.android.ui.ToolbarItemsController
+import org.supla.android.ui.ToolbarTitleController
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -59,7 +62,7 @@ syays GNU General Public License for more details.
  */
 
 @AndroidEntryPoint
-class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableContent {
+class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableContent, ToolbarItemsController, BackHandleOwner {
 
   private var downloadUserIcons: DownloadUserIcons? = null
   private var NotificationView: RelativeLayout? = null
@@ -67,16 +70,14 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   private var notif_nrunnable: Runnable? = null
   private var notif_img: ImageView? = null
   private var notif_text: TextView? = null
-  private lateinit var bottomNavigation: BottomNavigationView
-  private lateinit var bottomBar: BottomAppBar
   private var animatingMenu = false
 
   private val toolbar: Toolbar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
+  private val toolbarItemsClickHandlers = mutableListOf<ToolbarItemsClickHandler>()
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
   private val newGestureInfoClose: AppCompatImageView by lazy { findViewById(R.id.new_gesture_info_close) }
 
-  private val rootDestinations = setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment)
   private var lastDestinationId: Int? = null
 
   private val menuListener: Openable = object : Openable {
@@ -102,14 +103,27 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   @Inject
   lateinit var preferences: Preferences
 
+  @Inject
+  lateinit var notificationsHelper: NotificationsHelper
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+    if (isGranted) {
+      notificationsHelper.setupNotificationChannel(this)
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     legacySetup()
     navigationSetup()
     toolbarSetup()
+    notificationsHelper.setup(this) {
+      NotificationInfoDialog.create().show(supportFragmentManager, null)
+    }
 
-    if (preferences.isNewGestureInfoPresented.not()) {
+    if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
       newGestureInfo.visibility = View.VISIBLE
       newGestureInfoClose.setOnClickListener { newGestureInfo.visibility = View.GONE }
@@ -119,12 +133,18 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     menuLayout.setOnClickListener(this::handleMenuClicks)
   }
 
+  fun registerMenuItemClickHandler(handler: ToolbarItemsClickHandler) {
+    toolbarItemsClickHandlers.add(handler)
+  }
+
+  fun unregisterMenuItemClickHandler(handler: ToolbarItemsClickHandler) {
+    toolbarItemsClickHandlers.remove(handler)
+  }
+
   private fun legacySetup() {
     notif_handler = null
     notif_nrunnable = null
     setContentView(R.layout.activity_main)
-    bottomNavigation = findViewById(R.id.bottomnavbar)
-    bottomBar = findViewById(R.id.bottombar)
     NotificationView = Inflate(R.layout.notification, null) as RelativeLayout
     NotificationView!!.visibility = View.GONE
     val NotifBgLayout = NotificationView!!.findViewById<RelativeLayout>(R.id.notif_bg_layout)
@@ -150,25 +170,25 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       toolbar,
       navController,
       AppBarConfiguration(
-        setOf(R.id.channel_list_fragment, R.id.group_list_fragment, R.id.scene_list_fragment),
+        navGraph = navController.graph,
         menuListener
       )
     )
-    bottomNavigation.setOnItemSelectedListener {
-      newGestureInfo.visibility = View.GONE
-      return@setOnItemSelectedListener it.onNavDestinationSelected(navController) || super.onOptionsItemSelected(it)
-    }
   }
 
   private fun toolbarSetup() {
     toolbar.inflateMenu(R.menu.toolbar)
-    toolbar.menu.findItem(R.id.toolbar_accounts).isVisible = false
     toolbar.setOnMenuItemClickListener { item ->
       newGestureInfo.visibility = View.GONE
 
       if (item.itemId == R.id.toolbar_accounts) {
         showProfileSelector()
         return@setOnMenuItemClickListener true
+      }
+      for (handler in toolbarItemsClickHandlers) {
+        if (handler.onMenuItemClick(item)) {
+          return@setOnMenuItemClickListener true
+        }
       }
 
       false
@@ -183,26 +203,16 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
 
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     lastDestinationId = destination.id
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
 
-    if (destination.id == R.id.channel_list_fragment) {
-      bottomNavigation.selectedItemId = R.id.channel_list_fragment
-    }
-
-    val barHeight = resources.getDimension(R.dimen.bottom_bar_height)
-    if (destination.id == R.id.legacy_detail_fragment) {
+    if (destination.id != R.id.main_fragment) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
-      animateFadeOut(bottomBar, barHeight)
-    } else {
-      animateFadeIn(bottomBar) {
-        findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, barHeight.toInt())
-      }
     }
   }
 
   override fun onResume() {
     super.onResume()
-    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && rootDestinations.contains(lastDestinationId))
+    setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
@@ -374,6 +384,8 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
   override fun onBackPressed() {
     if (menuIsVisible()) {
       setMenuVisible(false)
+    } else if (isBackHandledInChildFragment(supportFragmentManager)) {
+      return // Do nothing, is consumed by child fragment
     } else if (!navigator.back()) {
       finishAffinity()
     }
@@ -395,7 +407,7 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
     setMenuVisible(false)
 
     when (MenuItemsLayout.getButtonId(v)) {
-      MenuItemsLayout.BTN_SETTINGS -> showCfg(this)
+      MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
       MenuItemsLayout.BTN_ABOUT -> showAbout()
       MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
@@ -405,5 +417,9 @@ class MainActivity : NavigationActivity(), ChangeableToolbarTitle, LoadableConte
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
     }
+  }
+
+  override fun setToolbarItemVisible(itemId: Int, visible: Boolean) {
+    toolbar.menu.findItem(itemId).isVisible = visible
   }
 }

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.database.Cursor;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelValue;
@@ -49,7 +50,7 @@ public interface ChannelRepository {
 
   boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
 
-  boolean updateChannelExtendedValue(
+  ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
@@ -89,4 +90,9 @@ public interface ChannelRepository {
   Cursor getAllProfileChannels(Long profileId);
 
   Cursor getAllProfileChannelGroups(Long profileId);
+
+  Cursor getAllExistingProfileChannels(Long profileId);
+
+  @NotNull
+  List<Location> getAllLocations();
 }

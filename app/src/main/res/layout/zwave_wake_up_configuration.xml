@@ -38,7 +38,7 @@
         android:id="@+id/view23"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/wake_up_settings_infoline" />
+        android:background="@color/disabled" />
 
     <LinearLayout
         android:id="@+id/llMain"

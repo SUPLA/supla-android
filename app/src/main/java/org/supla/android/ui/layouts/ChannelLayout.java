@@ -22,8 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.Date;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
@@ -47,22 +47,25 @@ import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
+import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.SlideableItem;
 
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem {
 
   @Inject ListsEventsManager eventsManager;
+  @Inject DurationTimerHelper durationTimerHelper;
 
-  private int mRemoteId;
+  private ChannelBase channelBase;
   private int mFunc;
-  private boolean mMeasurementSubChannel;
   private boolean mGroup;
 
   public String locationCaption;
@@ -100,6 +103,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   private Listener listener;
 
   private Disposable changesDisposable = null;
+
+  private TextView durationTimer;
+  private CountDownTimer countDownTimer;
 
   public interface Listener {
 
@@ -186,6 +192,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     left_onlineStatus.setId(ViewHelper.generateViewId());
     content.addView(left_onlineStatus);
 
+    durationTimer = durationTimerHelper.createTimerView(context);
+    content.addView(durationTimer);
+    durationTimer.setLayoutParams(
+        durationTimerHelper.getTimerViewLayoutParams(
+            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
+
     channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
     channelIconContainer.setLayoutParams(getChannelIconContainerLayoutParams());
@@ -226,8 +238,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
     channelIconContainer.addView(caption_text);
 
-    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(mRemoteId));
-    right_btn.setOnClickListener(v -> listener.onRightButtonClick(mRemoteId));
+    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(channelBase.getRemoteId()));
+    right_btn.setOnClickListener(v -> listener.onRightButtonClick(channelBase.getRemoteId()));
 
     right_onlineStatus.setVisibility(INVISIBLE);
     left_onlineStatus.setVisibility(INVISIBLE);
@@ -257,14 +269,14 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     if (mGroup) {
       changesDisposable =
           eventsManager
-              .observeGroup(mRemoteId)
+              .observeGroup(channelBase.getRemoteId())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
               .subscribe(this::configureBasedOnData);
     } else {
       changesDisposable =
           eventsManager
-              .observeChannel(mRemoteId)
+              .observeChannel(channelBase.getRemoteId())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
               .subscribe(this::configureBasedOnData);
@@ -558,6 +570,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     if (content != null) content.setBackgroundColor(color);
   }
 
+  public ChannelBase getChannelBase() {
+    return channelBase;
+  }
+
   public void setChannelData(ChannelBase cbase) {
     configureBasedOnData(cbase);
     observeChanges();
@@ -568,10 +584,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   }
 
   private void configureBasedOnData(ChannelBase cbase) {
-
     int OldFunc = mFunc;
     mFunc = cbase.getFunc();
-    mRemoteId = cbase.getRemoteId();
     boolean OldGroup = mGroup;
     mGroup = cbase instanceof ChannelGroup;
 
@@ -585,18 +599,26 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     channelStateIcon.setVisibility(INVISIBLE);
     channelWarningIcon.setChannel(cbase);
 
-    boolean _mMeasurementSubChannel =
+    boolean isMeasurementChannel =
         !mGroup
             && (((Channel) cbase).getValue().getSubValueType()
                     == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
                 || ((Channel) cbase).getValue().getSubValueType()
                     == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+    boolean wasMeasurementChannel =
+        !mGroup
+            && channelBase != null
+            && (((Channel) channelBase).getValue().getSubValueType()
+                    == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+                || ((Channel) channelBase).getValue().getSubValueType()
+                    == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
 
-    if (OldFunc != mFunc || _mMeasurementSubChannel != mMeasurementSubChannel) {
-      mMeasurementSubChannel = _mMeasurementSubChannel;
+    if (OldFunc != mFunc || isMeasurementChannel != wasMeasurementChannel) {
       imgl.SetDimensions();
       shouldUpdateChannelStateLayout = true;
     }
+
+    channelBase = cbase;
 
     {
       SuplaChannelStatus.ShapeType shapeType =
@@ -692,6 +714,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
         case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
           left_onlineStatus.setVisibility(View.VISIBLE);
           right_onlineStatus.setVisibility(View.VISIBLE);
 
@@ -709,6 +734,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
           left_onlineStatus.setVisibility(View.VISIBLE);
           left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
           right_onlineStatus.setVisibility(View.VISIBLE);
@@ -721,10 +749,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
         case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
         case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
         case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
           left_onlineStatus.setVisibility(View.INVISIBLE);
@@ -733,9 +758,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
           lenabled = true;
           renabled = true;
 
@@ -756,11 +778,62 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     caption_text.setOnLongClickListener(
         v -> {
-          listener.onCaptionLongPress(mRemoteId);
+          listener.onCaptionLongPress(channelBase.getRemoteId());
           return true;
         });
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
+
+    setupTimer(cbase);
+  }
+
+  private void setupTimer(ChannelBase cbase) {
+    if (!(cbase instanceof Channel)) {
+      return;
+    }
+
+    if (countDownTimer != null) {
+      countDownTimer.cancel();
+      durationTimer.setVisibility(GONE);
+    }
+
+    ChannelExtendedValue extendedValue = ((Channel) cbase).getExtendedValue();
+    if (extendedValue == null) {
+      return;
+    }
+    SuplaChannelExtendedValue suplaExtendedValue = extendedValue.getExtendedValue();
+    if (suplaExtendedValue == null) {
+      return;
+    }
+    SuplaTimerState timerState = suplaExtendedValue.TimerStateValue;
+    if (timerState == null) {
+      return;
+    }
+    Date endsAt = timerState.getCountdownEndsAt();
+    if (endsAt == null) {
+      return;
+    }
+    Date now = new Date();
+    if (endsAt.before(now)) {
+      return;
+    }
+    Long leftTime = endsAt.getTime() - now.getTime();
+
+    durationTimer.setVisibility(VISIBLE);
+    countDownTimer =
+        new CountDownTimer(leftTime, 100) {
+          @Override
+          public void onTick(long millisUntilFinished) {
+            durationTimer.setText(durationTimerHelper.formatMillis(millisUntilFinished));
+          }
+
+          @Override
+          public void onFinish() {
+            countDownTimer = null;
+            durationTimer.setVisibility(GONE);
+          }
+        };
+    countDownTimer.start();
   }
 
   private class AnimParams {
@@ -1001,32 +1074,5 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     public void setText2(CharSequence text) {
       setText(text, Text2);
     }
-  }
-
-  private boolean iconTouched(int x, int y, ImageView icon) {
-    if (icon.getVisibility() == VISIBLE) {
-      Rect rect1 = new Rect();
-      Rect rect2 = new Rect();
-
-      getHitRect(rect1);
-      icon.getHitRect(rect2);
-
-      rect2.left += rect1.left;
-      rect2.right += rect1.left;
-      rect2.top += rect1.top;
-      rect2.bottom += rect1.top;
-
-      return rect2.contains(x, y);
-    }
-
-    return false;
-  }
-
-  public Point stateIconTouched(int x, int y) {
-    return iconTouched(x, y, channelStateIcon) ? new Point(x, y) : null;
-  }
-
-  public int getRemoteId() {
-    return mRemoteId;
   }
 }

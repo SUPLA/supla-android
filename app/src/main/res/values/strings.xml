@@ -140,10 +140,10 @@
     <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
     <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
     <string name="next">Next</string>
-    <string name="start">START</string><![CDATA[>
-
-
-    ]]>
+    <string name="start">START</string>
+    <string name="stop" translatable="false">STOP</string>
+    <string name="turn_on" translatable="false">Turn on</string>
+    <string name="turn_off" translatable="false">Turn off</string>
     <string name="wizard_remember_passwd">Remember password</string>
 
     <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
@@ -531,6 +531,61 @@
     <string translatable="false" name="general_failure">Action was not performed successfully</string>
     <string translatable="false" name="push_notification_limit_exceeded">The push notification limit of %1$s per hour has been exceeded.</string>
 
-    <string translatable="false" name="new_gesture_descirption">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
+    <string translatable="false" name="new_gesture_description">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
     <string translatable="false" name="channel_offline">Channel is offline</string>
+    <string translatable="false" name="notification_info_title">Get notified!</string>
+    <string translatable="false" name="notification_info_message">Turn on notifications if you want to be notified!\n\nYou will soon be able to configure notifications in Supla Cloud.</string>
+    <string translatable="false" name="skip">Skip</string>
+
+    <string translatable="false" name="default_notification_channel_id">org.supla.android.main_channel</string>
+    <string translatable="false" name="settings_notifications">Notifications</string>
+    <string translatable="false" name="notifications_active">✓</string>
+    <string translatable="false" name="notifications_inactive">𐄂</string>
+    <string translatable="false" name="settings_localization">Localization</string>
+    <string translatable="false" name="settings_permissions">Permissions</string>
+
+    <string translatable="false" name="details_general">General</string>
+    <string translatable="false" name="details_schedule">Schedule</string>
+    <string translatable="false" name="details_timer">Timer</string>
+    <string translatable="false" name="details_history">Metrics</string>
+    <string translatable="false" name="details_settings">Settings</string>
+    <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
+    <string name="details_timer_text" translatable="false">Define time for which device should stay:</string>
+    <string name="details_timer_turn_on_for" translatable="false">Turned on</string>
+    <string name="details_timer_turn_off_for" translatable="false">Turned off</string>
+    <string name="details_timer_info" translatable="false">Device will be %1$s for %2$s, and then turn %3$s</string>
+  <string name="details_timer_leave_it" translatable="false">Leave it %1$s</string>
+    <string name="details_timer_cancel_and" translatable="false">Cancel and turn %1$s</string>
+    <string name="details_timer_format" translatable="false">%1$02d:%2$02d:%3$02d</string>
+    <string name="details_timer_end_hour" translatable="false">until %1$s</string>
+    <string name="hour_string_format">hh:mm:ss a</string>
+    <string name="details_timer_state_label" translatable="false">Current state:</string>
+    <string name="details_timer_state_label_for_timer" translatable="false">State until %s:</string>
+    <string name="details_timer_device_on" translatable="false">on</string>
+    <string name="details_timer_device_off" translatable="false">off</string>
+    <string name="details_timer_edit_time" translatable="false">Edit time</string>
+    <string name="details_timer_edit_header" translatable="false">Edit turned %1$s time</string>
+    <string name="details_timer_start" translatable="false">Start</string>
+    <string name="details_timer_edit_cancel" translatable="false">Cancel editing</string>
+    <string name="details_timer_save" translatable="false">Save</string>
+    <string name="details_timer_cancel_turn_off" translatable="false">off</string>
+    <string name="details_timer_cancel_turn_on" translatable="false">on</string>
+    <string name="offline" translatable="false">offline</string>
+    <plurals name="details_timer_info_on" translatable="false">
+        <item quantity="other">on</item>
+    </plurals>
+    <plurals name="details_timer_info_off" translatable="false">
+        <item quantity="other">off</item>
+    </plurals>
+    <plurals name="hour_pattern" translatable="false">
+        <item quantity="zero">%1$d hours</item>
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="minute_pattern" translatable="false">
+        <item quantity="other">%1$d min</item>
+    </plurals>
+    <plurals name="second_pattern" translatable="false">
+        <item quantity="other">%1$d sec</item>
+    </plurals>
 </resources>

@@ -456,4 +456,5 @@
     <string name="delete_account_confirm_title">Apagar Conta</string>
     <string name="em_chart_phase_n">Fase %d</string>
     <string name="rs_display_mode">Persianas %</string>
+  <string name="hour_string_format">HH:mm:ss</string>
 </resources>

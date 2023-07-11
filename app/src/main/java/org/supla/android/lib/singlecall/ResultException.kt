@@ -42,8 +42,9 @@ import org.supla.android.tools.UsedFromNativeCode
  * SUPLA_RESULTCODE_INCORRECT_PARAMETERS
  * SUPLA_RESULTCODE_SUBJECT_NOT_FOUND
  * SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE
+ * SUPLA_RESULTCODE_INCORRECT_PARAMETERS
+ * SUPLA_RESULTCODE_UNAUTHORIZED
  */
 
 @UsedFromNativeCode
 class ResultException(val result: Int) : Exception("The server returned a result number $result")
-

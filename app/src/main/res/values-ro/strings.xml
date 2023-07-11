@@ -456,4 +456,5 @@
     <string name="rs_display_mode_opening">Deschidere</string>
     <string name="rs_display_mode_closing">Închidere</string>
     <string name="status_accessid_inactive">Identificator de acces inactiv</string>
+    <string name="hour_string_format">HH:mm:ss</string>
 </resources>

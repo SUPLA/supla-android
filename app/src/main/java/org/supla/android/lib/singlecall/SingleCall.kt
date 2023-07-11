@@ -54,6 +54,13 @@ class SingleCall private constructor(
     channelId: Int
   ): ChannelValue
 
+  private external fun registerPushNotificationClientToken(
+    context: Context,
+    authInfo: AuthInfo,
+    appId: Int,
+    token: String
+  )
+
   @Throws(NoSuchProfileException::class)
   private fun getProfile(): AuthProfileItem {
     if (Thread.currentThread().equals(Looper.getMainLooper().thread)) {
@@ -74,6 +81,12 @@ class SingleCall private constructor(
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun getChannelValue(channelId: Int): ChannelValue {
     return getChannelValue(context, getProfile().authInfo, channelId)
+  }
+
+  @WorkerThread
+  @Throws(NoSuchProfileException::class, ResultException::class)
+  fun registerPushNotificationClientToken(appId: Int, token: String) {
+    registerPushNotificationClientToken(context, getProfile().authInfo, appId, token)
   }
 
   @Singleton

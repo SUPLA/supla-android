@@ -15,8 +15,8 @@
     <item name="brandPrimaryForegroundColor">#ffffff</item>
     <item name="brandPrimaryBackgroundColor">@color/supla_green</item>
     <item name="linkColor">#007AFF</item>
-    <item name="labelColor">#7e8082</item>
-    <item name="switcherBackgroundColor">@color/switcher_background_light</item>
+    <item name="labelColor">@color/gray</item>
+    <item name="switcherBackgroundColor">@color/gray_light</item>
     <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
   </style>
 
@@ -78,7 +78,7 @@
   </style>
 
   <style name="FormLabel" parent="">
-    <item name="android:textColor">#B4B7BA</item>
+    <item name="android:textColor">@color/disabled</item>
   </style>
 
   <style name="SegmentedButtonGroup">
@@ -105,5 +105,9 @@
     <item name="android:layout_margin">8dp</item>
     <item name="android:padding">4dp</item>
     <item name="android:textSize">16sp</item>
+  </style>
+
+  <style name="SuplaNumberPicker" parent="Theme.AppCompat.Light">
+    <item name="colorControlNormal">@android:color/transparent</item>
   </style>
 </resources>

@@ -17,15 +17,15 @@ package org.supla.android.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.cfg.AppConfigurationProvider
-import org.supla.android.cfg.TemperatureUnit
+import org.supla.android.Preferences
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.model.appsettings.TemperatureUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ValuesFormatter @Inject constructor(
-  private val appConfigurationProvider: AppConfigurationProvider
+  private val preferences: Preferences
 ) {
 
   fun isTemperatureDefined(rawValue: Double?): Boolean {
@@ -81,12 +81,10 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > 0
   }
 
-  private fun isCelsius(): Boolean =
-    appConfigurationProvider.getConfiguration().temperatureUnit.value == TemperatureUnit.CELSIUS
+  private fun isCelsius(): Boolean = preferences.temperatureUnit == TemperatureUnit.CELSIUS
 
   private fun getUnitString(): String {
-    val config = appConfigurationProvider.getConfiguration()
-    return if (config.temperatureUnit.value == TemperatureUnit.FAHRENHEIT) {
+    return if (preferences.temperatureUnit == TemperatureUnit.FAHRENHEIT) {
       "\u00B0F"
     } else {
       "\u00B0C"

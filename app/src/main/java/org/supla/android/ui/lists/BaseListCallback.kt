@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Region
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
 import android.view.MotionEvent.ACTION_UP
@@ -33,13 +34,14 @@ import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.recyclerview.widget.ItemTouchHelperVariables
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import org.supla.android.R
 
 @SuppressLint("ClickableViewAccessibility")
 abstract class BaseListCallback(
-  context: Context,
+  private val context: Context,
   private val adapter: Adapter<ViewHolder>
 ) : ItemTouchHelper.SimpleCallback(
   ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -48,6 +50,7 @@ abstract class BaseListCallback(
 
   private val buttonWidth =
     context.resources.getDimensionPixelSize(R.dimen.channel_layout_button_width)
+  private val reorderingElevation = 15.toPx().toFloat()
 
   var onMovedListener: (fromPos: Int, toPos: Int) -> Unit = { _: Int, _: Int -> }
   var onMoveFinishedListener: () -> Unit = { }
@@ -125,7 +128,7 @@ abstract class BaseListCallback(
   override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
     if (swipeBack) {
       swipeBack = false
-      return 0
+      return flags and ItemTouchHelperVariables.ACTION_MODE_DRAG_MASK
     }
     return super.convertToAbsoluteDirection(flags, layoutDirection)
   }
@@ -167,7 +170,6 @@ abstract class BaseListCallback(
         }
       }
     }
-
     if (actionState == ACTION_STATE_DRAG) {
       super.onChildDraw(c, recyclerView, viewHolder, 0f, dY, actionState, isCurrentlyActive)
     } else if (isCurrentlyActive) {
@@ -175,6 +177,13 @@ abstract class BaseListCallback(
     }
 
     lastActiveFlag = isCurrentlyActive
+
+    // Elevation change need to be made after onChildDraw, because there is other logic which makes changes
+    if (isCurrentlyActive && actionState == ACTION_STATE_DRAG) {
+      viewHolder.itemView.elevation = reorderingElevation
+    } else {
+      viewHolder.itemView.elevation = 0f
+    }
   }
 
   override fun isLongPressDragEnabled(): Boolean {
@@ -250,6 +259,10 @@ abstract class BaseListCallback(
       }
     }
     animator.start()
+  }
+
+  fun Int.toPx(): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, toFloat(), context.resources.displayMetrics).toInt()
   }
 }
 

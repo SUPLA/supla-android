@@ -27,12 +27,13 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.DetailType
+import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -50,8 +51,6 @@ class GroupListViewModel @Inject constructor(
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers) {
-
-  override fun loadingState(isLoading: Boolean) = currentState().copy(loading = isLoading, groups = null)
 
   override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
 
@@ -109,13 +108,26 @@ class GroupListViewModel @Inject constructor(
     openDetailsByChannelFunction(channelGroup)
   }
 
-  fun onGroupUpdate(remoteId: Int) {
-    findGroupByRemoteIdUseCase(remoteId = remoteId)
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { sendEvent(GroupListViewEvent.UpdateGroup(it)) }
-      )
-      .disposeBySelf()
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onDataChanged -> updateGroup(message.channelGroupId)
+    }
+  }
+
+  private fun updateGroup(remoteId: Int) {
+    if (remoteId > 0) {
+      findGroupByRemoteIdUseCase(remoteId = remoteId)
+        .attachSilent()
+        .subscribeBy(
+          onSuccess = { channel ->
+            currentState().groups
+              .filterIsInstance(ListItem.ChannelItem::class.java)
+              .first { it.channelBase.remoteId == channel.remoteId }
+              .channelBase = channel
+          }
+        )
+        .disposeBySelf()
+    }
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroup) {
@@ -128,9 +140,9 @@ class GroupListViewModel @Inject constructor(
       return
     }
 
-    val detailType = provideDetailTypeUseCase(group)
-    if (detailType != null) {
-      sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+    when (val detailType = provideDetailTypeUseCase(group)) {
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+      else -> {} // no action
     }
   }
 }
@@ -138,13 +150,11 @@ class GroupListViewModel @Inject constructor(
 sealed class GroupListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
-  data class OpenLegacyDetails(val remoteId: Int, val type: DetailType) : GroupListViewEvent()
+  data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
-  data class UpdateGroup(val channelGroup: ChannelGroup) : GroupListViewEvent()
 }
 
 data class GroupListViewState(
-  override val loading: Boolean = false,
-  val groups: List<ListItem>? = null
-) : ViewState(loading)
+  val groups: List<ListItem> = emptyList()
+) : ViewState()

@@ -15,16 +15,6 @@
   </fragment>
 
   <fragment
-    android:id="@+id/cfgMain"
-    android:name="org.supla.android.cfg.CfgFragment"
-    android:label="@string/menubar_appsettings" />
-
-  <fragment
-    android:id="@+id/cfgLocationOrdering"
-    android:name="org.supla.android.cfg.LocationOrderingFragment"
-    android:label="@string/location_ordering" />
-
-  <fragment
     android:id="@+id/cfgEditProfile"
     android:name="org.supla.android.features.createaccount.CreateAccountFragment"
     android:label="@string/edit_account" />

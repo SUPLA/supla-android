@@ -1,5 +1,6 @@
 package org.supla.android.di
 
+import android.app.NotificationManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import dagger.Module
@@ -17,6 +18,7 @@ import org.supla.android.db.DbHelper
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
+import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
@@ -40,7 +42,8 @@ class ApplicationModule {
     profileIdHolder: ProfileIdHolder,
     widgetVisibilityHandler: WidgetVisibilityHandler,
     listsEventsManager: ListsEventsManager,
-    suplaAppProvider: SuplaAppProvider
+    suplaAppProvider: SuplaAppProvider,
+    singleCallProvider: SingleCall.Provider
   ): ProfileManager {
     return MultiAccountProfileManager(
       dbHelper,
@@ -48,7 +51,8 @@ class ApplicationModule {
       profileIdHolder,
       widgetVisibilityHandler,
       listsEventsManager,
-      suplaAppProvider
+      suplaAppProvider,
+      singleCallProvider
     )
   }
 
@@ -83,4 +87,8 @@ class ApplicationModule {
   @Singleton
   fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
     SuplaClientMessageHandler.getGlobalInstance()
+
+  @Provides
+  fun provideNotificationManager(@ApplicationContext context: Context) =
+    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }

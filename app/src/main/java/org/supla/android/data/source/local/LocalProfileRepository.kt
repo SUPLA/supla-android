@@ -33,9 +33,11 @@ import kotlin.random.Random
 
 class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileRepository, BaseDao(provider) {
 
+  private val randomGenerator = Random(System.nanoTime())
+
   override fun createProfile(profile: AuthProfileItem): Long {
-    profile.authInfo.guid = encrypted(Random.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
-    profile.authInfo.authKey = encrypted(Random.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
+    profile.authInfo.guid = encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
+    profile.authInfo.authKey = encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
     return insert(profile, SuplaContract.AuthProfileEntry.TABLE_NAME)
   }
 

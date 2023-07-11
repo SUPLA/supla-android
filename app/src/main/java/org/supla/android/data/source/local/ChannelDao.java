@@ -56,6 +56,7 @@ public class ChannelDao extends BaseDao {
       SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
       SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
       SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
+      SuplaContract.ChannelViewEntry.COLUMN_NAME_TIMER_START_TIME,
       SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
       SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
       SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
@@ -147,7 +148,8 @@ public class ChannelDao extends BaseDao {
       SuplaContract.ChannelExtendedValueEntry._ID,
       SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
       SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
-      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID
+      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID,
+      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME
     };
 
     return getItem(
@@ -718,6 +720,10 @@ public class ChannelDao extends BaseDao {
                   + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
                   + " "
                   + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
+                  + ", C."
+                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_TIMER_START_TIME
+                  + " "
+                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_TIMER_START_TIME
                   + ", C."
                   + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
                   + " "
