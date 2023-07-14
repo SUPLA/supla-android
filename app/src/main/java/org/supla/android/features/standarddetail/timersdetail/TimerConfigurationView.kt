@@ -74,6 +74,10 @@ class TimerConfigurationView @JvmOverloads constructor(
     binding.detailsTimerStartButton.isEnabled = enabled
   }
 
+  fun setTargetAction(action: TimerTargetAction) {
+    binding.detailsTimerActionSwitch.activeItem = action.id
+  }
+
   private fun setupView() {
     binding.detailsTimerHour.maxValue = 23
     binding.detailsTimerHour.displayedValues = displayValues(R.plurals.hour_pattern, 24)

@@ -210,7 +210,13 @@ class ChannelActionUseCaseTest {
     verifyZeroInteractions(suplaClientProvider)
   }
 
-  private fun testActionExecution(channelId: Int, channelFunc: Int, buttonType: ButtonType, flags: Int = 0, actionAssertion: (ActionParameters) -> Unit) {
+  private fun testActionExecution(
+    channelId: Int,
+    channelFunc: Int,
+    buttonType: ButtonType,
+    flags: Int = 0,
+    actionAssertion: (ActionParameters) -> Unit
+  ) {
     // given
     val channel: Channel = mockk()
     every { channel.channelId } returns channelId
