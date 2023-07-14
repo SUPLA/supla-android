@@ -201,7 +201,10 @@ public class DefaultChannelRepository implements ChannelRepository {
       Date oldDate = value.getTimerEstimatedEndDate();
       value.setExtendedValue(suplaChannelExtendedValue);
       Date newValue = value.getTimerEstimatedEndDate();
-      if (newValue != null && !newValue.equals(oldDate)) {
+      if (newValue != null
+          && (oldDate == null || Math.abs(oldDate.getTime() - newValue.getTime()) > 1000)) {
+        // Time difference must be bigger then 1s, because sometimes even without change there is 1s
+        // difference
         value.setTimerStartTimestamp(dateProvider.currentTimestamp());
         timerUpdated = true;
       } else if (value.getTimerStartTimestamp() != null && newValue == null) {

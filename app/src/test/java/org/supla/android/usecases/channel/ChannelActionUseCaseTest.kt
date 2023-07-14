@@ -120,6 +120,38 @@ class ChannelActionUseCaseTest {
   }
 
   @Test
+  fun `should open or stop roller shutter`() {
+    val channelId = 123
+
+    testActionExecution(
+      channelId,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+      ButtonType.RIGHT,
+      SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS
+    ) {
+      assertThat(it.action).isEqualTo(ActionId.UP_OR_STOP)
+      assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
+      assertThat(it.subjectId).isEqualTo(channelId)
+    }
+  }
+
+  @Test
+  fun `should close or stop roller shutter`() {
+    val channelId = 123
+
+    testActionExecution(
+      channelId,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
+      ButtonType.LEFT,
+      SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS
+    ) {
+      assertThat(it.action).isEqualTo(ActionId.DOWN_OR_STOP)
+      assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
+      assertThat(it.subjectId).isEqualTo(channelId)
+    }
+  }
+
+  @Test
   fun `should turn on power switch`() {
     val channelId = 123
 
@@ -178,12 +210,19 @@ class ChannelActionUseCaseTest {
     verifyZeroInteractions(suplaClientProvider)
   }
 
-  private fun testActionExecution(channelId: Int, channelFunc: Int, buttonType: ButtonType, actionAssertion: (ActionParameters) -> Unit) {
+  private fun testActionExecution(
+    channelId: Int,
+    channelFunc: Int,
+    buttonType: ButtonType,
+    flags: Int = 0,
+    actionAssertion: (ActionParameters) -> Unit
+  ) {
     // given
     val channel: Channel = mockk()
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
     every { channel.func } returns channelFunc
+    every { channel.flags } returns flags
 
     whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
 

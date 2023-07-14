@@ -20,9 +20,6 @@ package org.supla.android.core.storage
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val SHARED_PREFERENCES_FILE = "InternalPreferences"
-private const val DETAIL_OPENED_PAGE = "$SHARED_PREFERENCES_FILE.DETAIL_OPENED_PAGE_"
-
 @Singleton
 class RuntimeStateHolder @Inject constructor() {
 
