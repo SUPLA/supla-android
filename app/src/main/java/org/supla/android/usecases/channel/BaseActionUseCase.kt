@@ -37,7 +37,11 @@ open class BaseActionUseCase<T : ChannelBase>(
     if (isRGBW(channelBase.func)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
     } else if (isRollerShutter(channelBase.func)) {
-      client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+      if (channelBase.flags.and(SuplaConst.SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS) > 0) {
+        client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+      } else {
+        client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+      }
     } else {
       client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
     }
@@ -65,6 +69,11 @@ open class BaseActionUseCase<T : ChannelBase>(
   private fun getRevealShutActionId(buttonType: ButtonType): ActionId = when (buttonType) {
     ButtonType.LEFT -> ActionId.SHUT
     ButtonType.RIGHT -> ActionId.REVEAL
+  }
+
+  private fun getRevealShutStopActionId(buttonType: ButtonType): ActionId = when (buttonType) {
+    ButtonType.LEFT -> ActionId.DOWN_OR_STOP
+    ButtonType.RIGHT -> ActionId.UP_OR_STOP
   }
 
   private fun getSubjectType(group: Boolean) = if (group) {
