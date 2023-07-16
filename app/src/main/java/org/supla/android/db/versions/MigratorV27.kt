@@ -4,11 +4,13 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Preferences
+import org.supla.android.Trace
 import org.supla.android.data.source.local.BaseDao.DatabaseAccessProvider
 import org.supla.android.data.source.local.SceneDao
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.SuplaContract
 import org.supla.android.db.SuplaContract.AuthProfileEntry
+import org.supla.android.extensions.TAG
 import org.supla.android.profile.AuthInfo
 
 class MigratorV27(private val db: SQLiteDatabase, private val context: Context) {
@@ -30,11 +32,15 @@ class MigratorV27(private val db: SQLiteDatabase, private val context: Context) 
       if (cursor.moveToFirst()) {
         val prefs = Preferences(context)
         do {
-          val profile: AuthProfileItem = makeEmptyAuthItem()
-          profile.AssignCursorData(cursor)
-          if (profile.authInfo.isAuthDataComplete) {
-            prefs.isAnyAccountRegistered = true
-            validAccountAvailable = true
+          try {
+            val profile: AuthProfileItem = makeEmptyAuthItem()
+            profile.AssignCursorData(cursor)
+            if (profile.authInfo.isAuthDataComplete) {
+              prefs.isAnyAccountRegistered = true
+              validAccountAvailable = true
+            }
+          } catch (ex: Exception) {
+            Trace.e(TAG, "Could not migrate profile", ex)
           }
         } while (cursor.moveToNext())
       }
