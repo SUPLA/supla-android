@@ -36,8 +36,7 @@ data class AuthProfileItem(
     }
 
     fun string(cur: Cursor, idx: Int, default: String = ""): String {
-      val str = stringOrNull(cur, idx)
-      return if (str == null) default else str
+      return stringOrNull(cur, idx) ?: default
     }
 
     name = cur.getString(1)
@@ -50,8 +49,8 @@ data class AuthProfileItem(
       accessID = cur.getInt(7),
       accessIDpwd = string(cur, 8),
       preferredProtocolVersion = cur.getInt(9),
-      guid = cur.getBlob(12),
-      authKey = cur.getBlob(13)
+      guid = if (cur.isNull(12)) byteArrayOf() else cur.getBlob(12),
+      authKey = if (cur.isNull(13)) byteArrayOf() else cur.getBlob(13)
     )
     isActive = cur.getInt(10) > 0
     advancedAuthSetup = cur.getInt(11) > 0
