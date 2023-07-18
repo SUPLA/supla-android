@@ -150,6 +150,8 @@ public class SuplaConst {
   public static final int SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
   public static final int SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
   public static final int SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
+
+  public static final int SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS = 0x0080;
   public static final int SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION = 0x1000;
   public static final int SUPLA_CHANNEL_FLAG_CALCFG_RESET_COUNTERS = 0x2000;
   public static final int SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE = 0x4000;

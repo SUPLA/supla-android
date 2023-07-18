@@ -108,6 +108,7 @@ class GroupActionUseCaseTest {
     every { group.groupId } returns groupId
     every { group.remoteId } returns groupId
     every { group.func } returns channelFunc
+    every { group.flags } returns 0
 
     whenever(channelRepository.getChannelGroup(groupId)).thenReturn(group)
 

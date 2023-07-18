@@ -470,23 +470,23 @@
  <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal is offline</string>
   <string name="notification_info_title">Benachrichtigungen!</string>
- <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie bald in Supla Cloud konfigurieren.</string>
+ <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie in Supla Cloud konfigurieren.</string>
  <string name="skip">Überspringen</string>
   <string name="settings_notifications">Notifikationen</string>
  <string name="settings_localization">Lokalization</string>
   <string name="settings_permissions">Berechtigungen</string>
 
- <string translatable="false" name="details_general">Allgemain</string>
+ <string translatable="false" name="details_general">Allgemein</string>
  <string translatable="false" name="details_history">Messungen</string>
  <string translatable="false" name="details_settings">Einstellungen</string>
  <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
  <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
  <string name="details_timer_turn_on_for">Einschalten für</string>
  <string name="details_timer_turn_off_for">Ausschalten für</string>
- <string name="details_timer_info">Das Gerät wird für %2$s Uhr %1$s und dann %3$s</string>
+ <string name="details_timer_info">Das Gerät wird bis zum %2$s Uhr %1$s und dann %3$s</string>
   <string name="details_timer_leave_it">Lass es %1$s</string>
  <string name="details_timer_cancel_and">Abbrechen und %1$s</string>
- <string name="details_timer_end_hour">do godz. %1$s</string>
+ <string name="details_timer_end_hour">bis %1$s</string>
  <string name="hour_string_format">HH:mm:ss</string>
  <string name="details_timer_state_label">Aktuellen Zustand:</string>
  <string name="details_timer_state_label_for_timer">Zustand bis zum %s Uhr:</string>

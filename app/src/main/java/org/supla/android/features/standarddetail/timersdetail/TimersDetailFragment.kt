@@ -113,6 +113,11 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
       getString(R.string.details_timer_state_label)
     }
 
+    if (state.editMode && state.channel?.value?.hiValue() == false) {
+      binding.detailsTimerConfiguration.setTargetAction(TimerTargetAction.TURN_OFF)
+    } else {
+      binding.detailsTimerConfiguration.setTargetAction(TimerTargetAction.TURN_ON)
+    }
     binding.detailsTimerConfiguration.visibleIf(showTimer.not() || state.editMode)
     binding.detailsTimerConfiguration.editMode = state.editMode
     binding.detailsTimerProgress.visibleIf(showTimer)
