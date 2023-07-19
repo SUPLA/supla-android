@@ -51,6 +51,10 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
     super.onViewCreated(view, savedInstanceState)
     binding.switchDetailButtonOn.clickListener = { viewModel.turnOn(remoteId, itemType) }
     binding.switchDetailButtonOff.clickListener = { viewModel.turnOff(remoteId, itemType) }
+  }
+
+  override fun onResume() {
+    super.onResume()
     viewModel.loadData(remoteId, itemType)
   }
 

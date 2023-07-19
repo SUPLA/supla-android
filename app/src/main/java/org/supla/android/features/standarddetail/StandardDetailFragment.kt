@@ -77,6 +77,10 @@ class StandardDetailFragment :
     binding.detailViewPager.isUserInputEnabled = false
 
     viewModel.observeUpdates(remoteId, itemType)
+  }
+
+  override fun onResume() {
+    super.onResume()
     viewModel.loadData(remoteId, itemType)
   }
 

@@ -21,7 +21,7 @@ object Versions {
     const val Firebase = "32.1.0"
 
     object Androidx {
-        const val Fragment = "1.4.1"
+        const val Fragment = "1.5.7"
         const val Lifecycle = "2.4.1"
         const val LifecycleExtensions = "2.2.0"
         const val Navigation = "2.4.1"

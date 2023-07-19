@@ -77,14 +77,14 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     }
   }
 
-  override fun onStart() {
-    super.onStart()
+  override fun onResume() {
+    super.onResume()
     viewModel.loadData(remoteId)
   }
 
-  override fun onStop() {
+  override fun onPause() {
     timer?.cancel()
-    super.onStop()
+    super.onPause()
   }
 
   override fun handleEvents(event: TimersDetailViewEvent) {
