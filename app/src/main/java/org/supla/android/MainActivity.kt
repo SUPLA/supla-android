@@ -110,6 +110,9 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
     if (isGranted) {
       notificationsHelper.setupNotificationChannel(this)
+      
+      // Because for disabled we're sending an empty token, after right is granted we need to update token on server
+      notificationsHelper.updateToken()
     }
   }
 

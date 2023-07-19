@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,6 +42,7 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
@@ -907,9 +909,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     msg.setRegisterResult(registerResult);
     sendMessage(msg);
 
+    NotificationManager notificationManager =
+        (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
     String token = preferences.getFcmToken();
-    if (token != null) {
+    if (NotificationsHelper.Companion.areNotificationsEnabled(notificationManager)
+        && token != null) {
       registerPushNotificationClientToken(SUPLA_APP_ID, token);
+    } else {
+      registerPushNotificationClientToken(SUPLA_APP_ID, "");
     }
   }
 
