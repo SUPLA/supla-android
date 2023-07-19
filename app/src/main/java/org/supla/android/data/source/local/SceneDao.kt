@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.supla.android.data.source.local
 
 /*
@@ -21,9 +23,9 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.LegacyScene
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.SuplaContract
-import org.supla.android.db.entity.LegacyScene
-import org.supla.android.db.entity.Scene
 import org.supla.android.extensions.TAG
 
 class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {

@@ -27,10 +27,10 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
-import org.supla.android.db.entity.Scene
 
 abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 

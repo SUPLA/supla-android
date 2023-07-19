@@ -1,4 +1,21 @@
 package org.supla.android.features.channellist
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -20,7 +37,8 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.StandardDetailType
+import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -127,7 +145,8 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(channel)) {
-      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId, channel.func, detailType.pages))
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(channel.remoteId, channel.func, detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(channel.remoteId, channel.func, detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -140,6 +159,13 @@ class ChannelListViewModel @Inject constructor(
     SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
     SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER -> true
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
@@ -158,10 +184,10 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetails(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenSwitchDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermostatDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
-  data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(

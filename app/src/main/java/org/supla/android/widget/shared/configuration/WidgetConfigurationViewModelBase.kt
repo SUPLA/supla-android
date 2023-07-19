@@ -28,9 +28,10 @@ import org.supla.android.Preferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.*
-import org.supla.android.db.entity.Scene
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
@@ -102,6 +103,7 @@ abstract class WidgetConfigurationViewModelBase(
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   fun onDisplayNameChanged(s: CharSequence, `_`: Int, `__`: Int, `___`: Int) {
     displayName = s.toString()
   }
@@ -351,27 +353,3 @@ enum class ItemType(val id: Int) {
 class NoItemSelectedException : RuntimeException()
 
 class EmptyDisplayNameException : RuntimeException()
-
-internal fun ChannelBase.isSwitch() =
-  func == SUPLA_CHANNELFNC_LIGHTSWITCH ||
-    func == SUPLA_CHANNELFNC_DIMMER ||
-    func == SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ||
-    func == SUPLA_CHANNELFNC_RGBLIGHTING ||
-    func == SUPLA_CHANNELFNC_POWERSWITCH ||
-    func == SUPLA_CHANNELFNC_STAIRCASETIMER
-
-internal fun ChannelBase.isRollerShutter() =
-  func == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
-    func == SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-
-internal fun ChannelBase.isGateController() =
-  func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATE ||
-    func == SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
-
-internal fun ChannelBase.isDoorLock() =
-  func == SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK ||
-    func == SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
-
-internal fun ChannelBase.isThermometer() =
-  func == SUPLA_CHANNELFNC_THERMOMETER ||
-    func == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE

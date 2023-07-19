@@ -29,7 +29,6 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentSettingsBinding
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
@@ -37,14 +36,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.layout.fragment_settings) {
 
-  private val viewModel: SettingsViewModel by activityViewModels()
+  override val viewModel: SettingsViewModel by activityViewModels()
   private val binding by viewBinding(FragmentSettingsBinding::bind)
 
   @Inject lateinit var navigator: MainNavigator
 
   @Inject lateinit var adapter: SettingsListAdapter
-
-  override fun getViewModel(): BaseViewModel<SettingsViewState, SettingsViewEvent> = viewModel
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

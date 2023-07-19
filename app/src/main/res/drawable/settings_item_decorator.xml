@@ -3,7 +3,7 @@
   <item android:gravity="bottom">
     <shape>
       <size android:height="1dp" />
-      <solid android:color="@color/list_separator_bg" />
+      <solid android:color="@color/separator" />
     </shape>
   </item>
 </layer-list>

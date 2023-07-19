@@ -24,8 +24,8 @@ import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel

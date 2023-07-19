@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.progressPointShadow
+import org.supla.android.ui.views.tools.drawControlPoint
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -71,7 +72,7 @@ private val progressRadius = 100.dp
 @Composable
 fun TimerProgressView(progress: Float, indeterminate: Boolean) {
   val progressBackgroundColor = MaterialTheme.colors.surface
-  val progressColor = MaterialTheme.colors.primary
+  val progressColor = MaterialTheme.colors.primaryVariant
   val pointShadowColor = MaterialTheme.colors.progressPointShadow
   val progressAlpha = convertProgressToAngle(progress)
   val position = remember {
@@ -98,126 +99,117 @@ fun TimerProgressView(progress: Float, indeterminate: Boolean) {
       timerProgressLine(
         progressAlpha = progressAlpha,
         backgroundColor = progressBackgroundColor,
-        progressColor = progressColor,
-        drawScope = this
+        progressColor = progressColor
       )
       timerProgressPoint(
         progressAlpha = progressAlpha,
         progressColor = progressColor,
-        pointShadowColor = pointShadowColor,
-        drawScope = this
+        pointShadowColor = pointShadowColor
       )
     } else {
       timerProgressLine(
         progressAlpha = 360f,
         backgroundColor = progressBackgroundColor,
-        progressColor = progressColor,
-        drawScope = this
+        progressColor = progressColor
       )
       indeterminateWave(
         position = position.value,
-        progressColor = progressColor,
-        drawScope = this
+        progressColor = progressColor
       )
     }
   }
 }
 
+context(DrawScope)
 private fun timerProgressLine(
   progressAlpha: Float,
   backgroundColor: Color,
-  progressColor: Color,
-  drawScope: DrawScope
+  progressColor: Color
 ) {
-  drawScope.apply {
-    drawCircle(
-      color = backgroundColor,
-      radius = progressRadius.toPx(),
-      style = Stroke(width = 12.dp.toPx())
-    )
+  drawCircle(
+    color = backgroundColor,
+    radius = progressRadius.toPx(),
+    style = Stroke(width = 12.dp.toPx())
+  )
 
-    val paint = shadowedPaint.apply {
-      strokeWidth = 6.dp.toPx()
-      color = progressColor.toArgb()
-      setShadowLayer(
-        10.dp.toPx(),
-        0f,
-        0f,
-        progressColor.copy(alpha = 0.7f).toArgb()
-      )
-    }
-    drawContext.canvas.nativeCanvas.drawArc(
-      RectF(
-        center.x.minus(progressRadius.toPx()),
-        center.y.minus(progressRadius.toPx()),
-        center.x.plus(progressRadius.toPx()),
-        center.y.plus(progressRadius.toPx())
-      ),
-      270f,
-      progressAlpha,
-      false,
-      paint
+  val paint = shadowedPaint.apply {
+    strokeWidth = 6.dp.toPx()
+    color = progressColor.toArgb()
+    setShadowLayer(
+      10.dp.toPx(),
+      0f,
+      0f,
+      progressColor.copy(alpha = 0.7f).toArgb()
     )
   }
+  drawContext.canvas.nativeCanvas.drawArc(
+    RectF(
+      center.x.minus(progressRadius.toPx()),
+      center.y.minus(progressRadius.toPx()),
+      center.x.plus(progressRadius.toPx()),
+      center.y.plus(progressRadius.toPx())
+    ),
+    270f,
+    progressAlpha,
+    false,
+    paint
+  )
 }
 
+context(DrawScope)
 private fun timerProgressPoint(
   progressAlpha: Float,
   progressColor: Color,
-  pointShadowColor: Color,
-  drawScope: DrawScope
+  pointShadowColor: Color
 ) {
-  drawScope.apply {
-    val alpha = progressAlpha.minus(90).times(Math.PI).div(180)
-    val x = 100.dp.toPx() * cos(alpha).toFloat() + center.x
-    val y = 100.dp.toPx() * sin(alpha).toFloat() + center.y
+  val alpha = progressAlpha.minus(90).times(Math.PI).div(180)
+  val x = 100.dp.toPx() * cos(alpha).toFloat() + center.x
+  val y = 100.dp.toPx() * sin(alpha).toFloat() + center.y
 
-    drawCircle(
-      color = pointShadowColor,
-      radius = 12.dp.toPx(),
-      style = Fill,
-      center = Offset(x, y)
-    )
-    drawCircle(
-      color = progressColor,
-      radius = 8.dp.toPx(),
-      style = Fill,
-      center = Offset(x, y)
-    )
-  }
+  drawControlPoint(Offset(x, y), progressColor, pointShadowColor)
+  drawCircle(
+    color = pointShadowColor,
+    radius = 12.dp.toPx(),
+    style = Fill,
+    center = Offset(x, y)
+  )
+  drawCircle(
+    color = progressColor,
+    radius = 8.dp.toPx(),
+    style = Fill,
+    center = Offset(x, y)
+  )
 }
 
+context(DrawScope)
 private fun indeterminateWave(
   position: Float,
-  progressColor: Color,
-  drawScope: DrawScope
+  progressColor: Color
 ) {
-  drawScope.apply {
-    val paint = indeterminatePaint.apply {
-      strokeWidth = 6.dp.toPx()
-      color = progressColor.toArgb()
-      shader = RadialGradientShader(
-        Offset(position * viewSize.toPx(), center.y),
-        40f,
-        listOf(Color.White.copy(alpha = 0.7f), progressColor),
-        listOf(0.01f, 1f),
-        TileMode.Mirror
-      )
-      isDither = true
-    }
-    drawContext.canvas.nativeCanvas.drawArc(
-      RectF(
-        center.x.minus(progressRadius.toPx()),
-        center.y.minus(progressRadius.toPx()),
-        center.x.plus(progressRadius.toPx()),
-        center.y.plus(progressRadius.toPx())
-      ),
-      270f,
-      360f,
-      false,
-      paint
+  val paint = indeterminatePaint.apply {
+    strokeWidth = 6.dp.toPx()
+    color = progressColor.toArgb()
+    shader = RadialGradientShader(
+      Offset(position * viewSize.toPx(), center.y),
+      40f,
+      listOf(Color.White.copy(alpha = 0.7f), progressColor),
+      listOf(0.01f, 1f),
+      TileMode.Mirror
     )
+    isDither = true
   }
+  drawContext.canvas.nativeCanvas.drawArc(
+    RectF(
+      center.x.minus(progressRadius.toPx()),
+      center.y.minus(progressRadius.toPx()),
+      center.x.plus(progressRadius.toPx()),
+      center.y.plus(progressRadius.toPx())
+    ),
+    270f,
+    360f,
+    false,
+    paint
+  )
 }
 
 private fun convertProgressToAngle(progress: Float): Float =

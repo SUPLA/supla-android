@@ -52,9 +52,16 @@ object Deps {
         }
 
         object Compose {
-            const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose}"
-            const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose}"
-            const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose}"
+            const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
+            const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
+            const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose.Core}"
+            const val ConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:${Versions.Androidx.Compose.ConstaintLayout}"
+        }
+
+        object Room {
+            const val Runtime = "androidx.room:room-runtime:${Versions.Androidx.Room}"
+            const val Compiler = "androidx.room:room-compiler:${Versions.Androidx.Room}"
+            const val RxJava = "androidx.room:room-rxjava3:${Versions.Androidx.Room}"
         }
     }
 

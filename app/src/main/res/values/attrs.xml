@@ -13,4 +13,9 @@
       <enum name="negative" value="1" />
     </attr>
   </declare-styleable>
+
+  <declare-styleable name="ThermostatListItemView">
+    <attr name="hasLeftButton" format="boolean" />
+    <attr name="hasRightButton" format="boolean" />
+  </declare-styleable>
 </resources>

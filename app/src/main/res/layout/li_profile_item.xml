@@ -72,7 +72,7 @@
           android:layout_height="@dimen/list_separator_thickness"
           android:layout_alignParentLeft="true"
           android:layout_alignParentBottom="true"
-          android:background="@color/list_separator_bg" />
+          android:background="@color/separator" />
     
   </RelativeLayout>
 

@@ -4,7 +4,6 @@
   <string name="dont_have_account_yet">У вас ще немає облікового запису в Supla Cloud?</string>
   <string name="profiles_title">Облікові записи</string>
   <string name="profile_name_label">НАЗВА ОБЛІКОВОГО ЗАПИСУ</string>
-  <string name="form_cannot_delete_active_profile">Активний обліковий запис не можна видалити</string>
   <string name="profile_default_name">За замовчуванням</string>
   <string name="profile_select_active">Виберіть активний обліковий запис</string>
   <string name="profile_act_info">Торкніться облікового запису, щоб увійти</string>
@@ -83,7 +82,6 @@
   <string name="advanced_settings">Розширений</string>
   <string name="create_account">Створити обліковий запис</string>
   <string name="delete_account">Видалити</string>
-  <string name="delete_account_confirm_title" translatable="false">Видалити обліковий запси</string>
   <string name="delete_account_confirm_message" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис?</string>
   <string name="delete_account_confirm_message_with_widgets" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис? Підтвердження видалить пов’язані віджети.</string>
   <string name="cfg_label_access_id_auth">ID</string>

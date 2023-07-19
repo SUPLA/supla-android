@@ -21,5 +21,8 @@ enum class QuarterOfHour(val startingMinute: Int) {
   FIRST(0),
   SECOND(15),
   THIRD(30),
-  FOURTH(45)
+  FOURTH(45);
+
+  val startingMinuteString: String
+    get() = if (startingMinute < 10) "0$startingMinute" else "$startingMinute"
 }

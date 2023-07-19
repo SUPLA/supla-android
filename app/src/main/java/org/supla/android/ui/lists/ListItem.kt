@@ -17,12 +17,13 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
+import org.supla.android.usecases.channel.ChannelChild
 
 sealed interface ListItem {
   data class SceneItem(val scene: Scene, val location: Location) : ListItem
-  data class ChannelItem(var channelBase: ChannelBase, val location: Location) : ListItem
+  data class ChannelItem(var channelBase: ChannelBase, val location: Location, val children: List<ChannelChild>? = null) : ListItem
   data class LocationItem(val location: Location) : ListItem
 }

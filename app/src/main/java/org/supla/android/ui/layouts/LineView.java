@@ -28,7 +28,7 @@ public class LineView extends View {
   public LineView(Context context) {
     super(context);
 
-    setBackgroundColor(getResources().getColor(R.color.channel_separetor));
+    setBackgroundColor(getResources().getColor(R.color.separator));
 
     RelativeLayout.LayoutParams lp =
         new RelativeLayout.LayoutParams(

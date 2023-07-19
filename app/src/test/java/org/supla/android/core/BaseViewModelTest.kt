@@ -17,12 +17,12 @@ import org.supla.android.tools.SuplaSchedulers
 
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
-abstract class BaseViewModelTest<S : ViewState, E : ViewEvent>(
+abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewModel<S, E>>(
   private val mockSchedulers: Boolean = true
 ) {
 
   protected abstract val schedulers: SuplaSchedulers
-  protected abstract val viewModel: BaseViewModel<S, E>
+  protected abstract val viewModel: VM
 
   protected val states = mutableListOf<S>()
   protected val events = mutableListOf<E>()

@@ -25,12 +25,13 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.databinding.LiSceneItemBinding
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
 import org.supla.android.ui.dialogs.SceneCaptionEditor
 import org.supla.android.ui.layouts.SceneLayout
 import org.supla.android.ui.lists.BaseListAdapter
+import org.supla.android.ui.lists.ListCallback
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class ScenesAdapter @Inject constructor(
   preferences: Preferences
 ) : BaseListAdapter<ListItem, Scene>(context, preferences), SceneLayout.Listener {
 
-  override val callback = SceneListCallback(context, this).also {
+  override val callback = ListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }
     it.onMoveFinishedListener = {
       val scenesOrdered = items
@@ -73,17 +74,17 @@ class ScenesAdapter @Inject constructor(
     }
   }
 
-  override fun onBindViewHolder(vh: ViewHolder, pos: Int) {
-    when (vh) {
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    when (holder) {
       is SceneListItemViewHolder -> {
-        val item = (items[pos] as ListItem.SceneItem)
-        vh.binding.sceneLayout.tag = item.scene.sceneId
-        vh.binding.sceneLayout.setSceneListener(this)
-        vh.binding.sceneLayout.setScene(item.scene)
-        vh.binding.sceneLayout.locationCaption = item.location.caption
-        vh.binding.sceneLayout.setOnLongClickListener { onLongPress(vh) }
+        val item = (items[position] as ListItem.SceneItem)
+        holder.binding.sceneLayout.tag = item.scene.sceneId
+        holder.binding.sceneLayout.setSceneListener(this)
+        holder.binding.sceneLayout.setScene(item.scene)
+        holder.binding.sceneLayout.setLocationCaption(item.location.caption)
+        holder.binding.sceneLayout.setOnLongClickListener { onLongPress(holder) }
       }
-      else -> super.onBindViewHolder(vh, pos)
+      else -> super.onBindViewHolder(holder, position)
     }
   }
 

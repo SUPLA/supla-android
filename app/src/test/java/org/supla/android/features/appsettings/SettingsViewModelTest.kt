@@ -17,12 +17,12 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
-import org.supla.android.model.appsettings.ChannelHeight
-import org.supla.android.model.appsettings.TemperatureUnit
+import org.supla.android.data.source.runtime.appsettings.ChannelHeight
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.tools.SuplaSchedulers
 
 @RunWith(MockitoJUnitRunner::class)
-class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewEvent>() {
+class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewEvent, SettingsViewModel>() {
 
   @Mock
   private lateinit var preferences: Preferences

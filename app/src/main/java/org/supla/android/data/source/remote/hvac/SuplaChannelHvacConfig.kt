@@ -38,7 +38,7 @@ data class SuplaHvacTemperatures(
   val histeresisMin: Short?,
   val histeresisMax: Short?,
   val autoOffsetMin: Short?,
-  val autoOffsetMax: Short?,
+  val autoOffsetMax: Short?
 )
 
 enum class SuplaHvacThermometerType(value: Int) {

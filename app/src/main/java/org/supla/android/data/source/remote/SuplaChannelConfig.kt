@@ -19,7 +19,7 @@ package org.supla.android.data.source.remote
 
 enum class ChannelConfigType(val value: Int) {
   DEFAULT(0),
-  WEEKLY_SCHEDULE (2)
+  WEEKLY_SCHEDULE(2)
 }
 
 enum class ChannelConfigResult(val value: Int) {
@@ -32,7 +32,4 @@ enum class ChannelConfigResult(val value: Int) {
   NOT_ALLOWED(6)
 }
 
-open class SuplaChannelConfig(remoteId: Int, func: Int?) {
-  open val remoteId: Int = remoteId
-  open val func: Int? = func
-}
+open class SuplaChannelConfig(open val remoteId: Int, open val func: Int?)

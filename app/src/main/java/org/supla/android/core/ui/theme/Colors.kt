@@ -17,7 +17,7 @@ class SuplaLightColors(context: Context) {
   val OnBackground = Color(0xFF000000)
   val Surface = colorResource(context, R.color.surface)
   val OnSurface = Color(0xFF000000)
-  val Error = Color(0xFFEB3A28)
+  val Error = colorResource(context, R.color.red_alert)
   val OnError = Color(0xFFFFFFFF)
 
   fun toMaterial() = lightColors(
@@ -41,7 +41,7 @@ class SuplaDarkColors(context: Context) {
   val OnBackground = Color(0xFF000000)
   val Surface = colorResource(context, R.color.surface)
   val OnSurface = Color(0xFF000000)
-  val Error = Color(0xFFEB3A28)
+  val Error = colorResource(context, R.color.red_alert)
   val OnError = Color(0xFFF5F6F7)
 
   fun toMaterial() = darkColors(
@@ -59,6 +59,24 @@ class SuplaDarkColors(context: Context) {
 
 val Colors.progressPointShadow: Color
   get() = Color(0x99B2F4B8)
+
+val Colors.blue: Color
+  get() = Color(0xFF5AC8FA)
+
+val Color.Companion.lightBlue: Color
+  get() = Color(0xFF8C9DFF)
+
+val Color.Companion.lightGreen: Color
+  get() = Color(0xFFB0E0A8)
+
+val Color.Companion.lightOrange: Color
+  get() = Color(0xFFFFD19A)
+
+val Color.Companion.lightRed: Color
+  get() = Color(0xFFFFAA8C)
+
+val Color.Companion.disabled: Color
+  get() = Color(0xFFB4B7BA)
 
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
   return if (Build.VERSION.SDK_INT >= 23) {

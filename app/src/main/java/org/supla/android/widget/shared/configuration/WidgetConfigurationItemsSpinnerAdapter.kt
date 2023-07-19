@@ -28,10 +28,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import org.supla.android.R
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
 import org.supla.android.images.ImageCache
 
 class WidgetConfigurationChannelsSpinnerAdapter(

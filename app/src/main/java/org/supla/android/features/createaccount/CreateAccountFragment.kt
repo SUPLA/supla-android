@@ -30,7 +30,6 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentCreateAccountBinding
 import org.supla.android.extensions.getLongOrNull
 import org.supla.android.extensions.toPx
@@ -47,8 +46,7 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
   @Inject
   internal lateinit var navigator: CfgActivityNavigator
 
-  private val viewModel: CreateAccountViewModel by viewModels()
-  override fun getViewModel(): BaseViewModel<CreateAccountViewState, CreateAccountViewEvent> = viewModel
+  override val viewModel: CreateAccountViewModel by viewModels()
 
   private val profileId: Long? by lazy { arguments?.getLongOrNull(ARG_PROFILE_ID) }
 

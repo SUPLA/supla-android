@@ -24,6 +24,8 @@ import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.supla.android.R
+import org.supla.android.data.source.runtime.appsettings.ChannelHeight
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
 import org.supla.android.databinding.LiSettingsHeaderBinding
@@ -31,8 +33,6 @@ import org.supla.android.databinding.LiSettingsPermissionBinding
 import org.supla.android.databinding.LiSettingsRollerShutterBinding
 import org.supla.android.databinding.LiSettingsSwitchBinding
 import org.supla.android.databinding.LiSettingsTemperatureUnitBinding
-import org.supla.android.model.appsettings.ChannelHeight
-import org.supla.android.model.appsettings.TemperatureUnit
 import javax.inject.Inject
 
 class SettingsListAdapter @Inject constructor() : RecyclerView.Adapter<SettingItemViewHolder<*>>() {
@@ -155,7 +155,7 @@ sealed class SettingItem(val viewResource: Int) {
         settingsPermissionLabel.setText(R.string.settings_notifications)
         if (allowed) {
           settingsPermissionsStatus.setText(R.string.notifications_active)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary_variant, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))
@@ -174,7 +174,7 @@ sealed class SettingItem(val viewResource: Int) {
         settingsPermissionLabel.setText(R.string.settings_localization)
         if (allowed) {
           settingsPermissionsStatus.setText(R.string.notifications_active)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary_variant, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))

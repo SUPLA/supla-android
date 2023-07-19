@@ -35,7 +35,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent>() {
+class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
 
   @Mock
   private lateinit var channelRepository: ChannelRepository

@@ -1,7 +1,7 @@
 package org.supla.android.data.source.remote.hvac
 
-import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.calendar.DayOfWeek
+import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.SuplaChannelConfig
 
 /*
@@ -31,7 +31,19 @@ enum class SuplaHvacMode(val value: Int) {
   FAN_ONLY(6),
   DRY(7),
   CMD_TURN_ON(8),
-  CMD_WEEKLY_SCHEDULE(9)
+  CMD_WEEKLY_SCHEDULE(9);
+
+  companion object {
+    fun from(byte: Byte): SuplaHvacMode {
+      for (state in SuplaHvacMode.values()) {
+        if (state.value == byte.toInt()) {
+          return state
+        }
+      }
+
+      throw IllegalArgumentException("Could not create ThermostatMode from $byte")
+    }
+  }
 }
 
 enum class SuplaScheduleProgram(val value: Int) {
@@ -43,10 +55,10 @@ enum class SuplaScheduleProgram(val value: Int) {
 }
 
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
-                                       val program: SuplaScheduleProgram,
-                                       val mode: SuplaHvacMode,
-                                       val setpointTemperatureMin: Short?,
-                                       val setpointTemperatureMax: Short?
+  val program: SuplaScheduleProgram,
+  val mode: SuplaHvacMode,
+  val setpointTemperatureMin: Short?,
+  val setpointTemperatureMax: Short?
 )
 
 data class SuplaWeeklyScheduleEntry(
@@ -57,8 +69,8 @@ data class SuplaWeeklyScheduleEntry(
 )
 
 data class SuplaChannelWeeklyScheduleConfig( /* aka TChannelConfig_WeeklySchedule */
-                                             override val remoteId: Int,
-                                             override val func: Int?,
-                                             val programConfigurations: List<SuplaWeeklyScheduleProgram>,
-                                             val schedule: List<SuplaWeeklyScheduleEntry>
+  override val remoteId: Int,
+  override val func: Int?,
+  val programConfigurations: List<SuplaWeeklyScheduleProgram>,
+  val schedule: List<SuplaWeeklyScheduleEntry>
 ) : SuplaChannelConfig(remoteId, func)

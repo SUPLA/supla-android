@@ -20,8 +20,8 @@ import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
 import org.supla.android.events.ListsEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
@@ -30,7 +30,7 @@ import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent>() {
+class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>() {
 
   @Mock
   private lateinit var sceneRepository: SceneRepository

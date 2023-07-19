@@ -37,5 +37,5 @@ interface SuplaClientApi {
 
   fun getChannelConfig(remoteId: Int, type: ChannelConfigType): Boolean
 
-  fun setChannelConfig(config: SuplaChannelConfig) : Boolean
+  fun setChannelConfig(config: SuplaChannelConfig): Boolean
 }
