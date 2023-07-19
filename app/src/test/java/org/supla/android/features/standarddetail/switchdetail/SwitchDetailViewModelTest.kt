@@ -40,6 +40,7 @@ import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
+import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -89,6 +90,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     every { channel.imageIdx } returns imageId
     every { channel.value } returns channelValue
     every { channel.extendedValue } returns null
+    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -110,6 +112,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     val imageId = ImageId(0)
     val group: ChannelGroup = mockk()
     every { group.imageIdx } returns imageId
+    every { group.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
 
     // when
@@ -173,6 +176,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     every { channel.imageIdx } returns imageId
     every { channel.value } returns channelValue
     every { channel.extendedValue } returns extendedValue
+    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -204,6 +208,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     every { channel.imageIdx } returns imageId
     every { channel.value } returns channelValue
     every { channel.extendedValue } returns extendedValue
+    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -212,6 +217,27 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // then
     Assertions.assertThat(events).isEmpty()
     Assertions.assertThat(states).containsExactly(SwitchDetailViewState(channel, true))
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `should close when loaded channel has switch detail not available`() {
+    // given
+    val remoteId = 123
+
+    val channel: Channel = mockk()
+    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+
+    // then
+    Assertions.assertThat(events).containsExactly(SwitchDetailViewEvent.Close)
+    Assertions.assertThat(states).isEmpty()
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)

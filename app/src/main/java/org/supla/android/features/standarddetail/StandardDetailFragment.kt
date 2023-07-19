@@ -76,10 +76,14 @@ class StandardDetailFragment :
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
     binding.detailViewPager.isUserInputEnabled = false
 
+    viewModel.observeUpdates(remoteId, itemType)
     viewModel.loadData(remoteId, itemType)
   }
 
   override fun handleEvents(event: StandardDetailViewEvent) {
+    when (event) {
+      StandardDetailViewEvent.Close -> requireActivity().finish()
+    }
   }
 
   override fun handleViewState(state: StandardDetailViewState) {

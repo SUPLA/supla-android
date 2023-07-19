@@ -17,8 +17,10 @@ package org.supla.android.features.standarddetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -33,6 +35,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
+import org.supla.android.events.ListsEventsManager
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -46,6 +49,9 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
 
   @Mock
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+
+  @Mock
+  private lateinit var listsEventsManager: ListsEventsManager
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -63,6 +69,7 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
     // given
     val remoteId = 123
     val channel: Channel = mockk()
+    every { channel.visible } returns 1
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -74,7 +81,27 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+  }
+
+  @Test
+  fun `should close activity when loaded channel is not visible`() {
+    // given
+    val remoteId = 123
+    val channel: Channel = mockk()
+    every { channel.visible } returns 0
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+
+    // then
+    assertThat(events).containsExactly(StandardDetailViewEvent.Close)
+    assertThat(states).isEmpty()
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
   }
 
   @Test
@@ -82,6 +109,7 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
     // given
     val remoteId = 123
     val group: ChannelGroup = mockk()
+    every { group.visible } returns 1
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
 
     // when
@@ -93,6 +121,50 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelByRemoteIdUseCase, listsEventsManager)
+  }
+
+  @Test
+  fun `should reload channel when channels updated`() {
+    // given
+    val remoteId = 123
+    val channel: Channel = mockk()
+    every { channel.visible } returns 1
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    whenever(listsEventsManager.observeChannelUpdates()).thenReturn(Observable.just(Any()))
+
+    // when
+    viewModel.observeUpdates(remoteId, ItemType.CHANNEL)
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(StandardDetailViewState(channel))
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verify(listsEventsManager).observeChannelUpdates()
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, listsEventsManager)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+  }
+
+  @Test
+  fun `should reload group when channels updated`() {
+    // given
+    val remoteId = 123
+    val group: ChannelGroup = mockk()
+    every { group.visible } returns 1
+    whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
+    whenever(listsEventsManager.observeGroupUpdates()).thenReturn(Observable.just(Any()))
+
+    // when
+    viewModel.observeUpdates(remoteId, ItemType.GROUP)
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(StandardDetailViewState(group))
+
+    verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
+    verify(listsEventsManager).observeGroupUpdates()
+    verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
     verifyZeroInteractions(readChannelByRemoteIdUseCase)
   }
 }

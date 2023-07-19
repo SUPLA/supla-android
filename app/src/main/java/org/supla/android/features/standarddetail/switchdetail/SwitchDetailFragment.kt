@@ -55,6 +55,9 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   }
 
   override fun handleEvents(event: SwitchDetailViewEvent) {
+    when (event) {
+      SwitchDetailViewEvent.Close -> requireActivity().finish()
+    }
   }
 
   override fun handleViewState(state: SwitchDetailViewState) {
