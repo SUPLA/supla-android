@@ -223,27 +223,6 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
-  @Test
-  fun `should close when loaded channel has switch detail not available`() {
-    // given
-    val remoteId = 123
-
-    val channel: Channel = mockk()
-    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-
-    // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
-
-    // then
-    Assertions.assertThat(events).containsExactly(SwitchDetailViewEvent.Close)
-    Assertions.assertThat(states).isEmpty()
-
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
-  }
-
   private fun mockTimerState(date: Date): ChannelExtendedValue {
     val timerStateValue: SuplaTimerState = mockk()
     every { timerStateValue.countdownEndsAt } returns date

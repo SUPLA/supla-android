@@ -36,6 +36,9 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -68,12 +71,14 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   fun `should load channel`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_THERMOSTAT
     val channel: Channel = mockk()
     every { channel.visible } returns 1
+    every { channel.func } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, function)
 
     // then
     assertThat(events).isEmpty()
@@ -88,12 +93,36 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   fun `should close activity when loaded channel is not visible`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_THERMOSTAT
     val channel: Channel = mockk()
     every { channel.visible } returns 0
+    every { channel.func } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, function)
+
+    // then
+    assertThat(events).containsExactly(StandardDetailViewEvent.Close)
+    assertThat(states).isEmpty()
+
+    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+  }
+
+  @Test
+  fun `should close activity when loaded channel has different function`() {
+    // given
+    val remoteId = 123
+    val function = SUPLA_CHANNELFNC_THERMOSTAT
+    val channel: Channel = mockk()
+    every { channel.visible } returns 1
+    every { channel.func } returns function
+    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SUPLA_CHANNELFNC_LIGHTSWITCH)
 
     // then
     assertThat(events).containsExactly(StandardDetailViewEvent.Close)
@@ -108,12 +137,14 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   fun `should load group`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_DIMMER
     val group: ChannelGroup = mockk()
     every { group.visible } returns 1
+    every { group.func } returns function
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
 
     // when
-    viewModel.loadData(remoteId, ItemType.GROUP)
+    viewModel.loadData(remoteId, ItemType.GROUP, function)
 
     // then
     assertThat(events).isEmpty()
@@ -128,13 +159,15 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   fun `should reload channel when channels updated`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_DIMMER
     val channel: Channel = mockk()
     every { channel.visible } returns 1
+    every { channel.func } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
     whenever(listsEventsManager.observeChannelUpdates()).thenReturn(Observable.just(Any()))
 
     // when
-    viewModel.observeUpdates(remoteId, ItemType.CHANNEL)
+    viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
 
     // then
     assertThat(events).isEmpty()
@@ -150,13 +183,15 @@ class StandardDetailViewModelTest : BaseViewModelTest<StandardDetailViewState, S
   fun `should reload group when channels updated`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_DIMMER
     val group: ChannelGroup = mockk()
     every { group.visible } returns 1
+    every { group.func } returns function
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
     whenever(listsEventsManager.observeGroupUpdates()).thenReturn(Observable.just(Any()))
 
     // when
-    viewModel.observeUpdates(remoteId, ItemType.GROUP)
+    viewModel.observeUpdates(remoteId, ItemType.GROUP, function)
 
     // then
     assertThat(events).isEmpty()

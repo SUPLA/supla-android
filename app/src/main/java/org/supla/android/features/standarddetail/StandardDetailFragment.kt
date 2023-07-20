@@ -37,6 +37,7 @@ import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
+private const val ARG_FUNCTION = "ARG_FUNCTION"
 private const val ARG_PAGES = "ARG_PAGES"
 
 @AndroidEntryPoint
@@ -52,6 +53,7 @@ class StandardDetailFragment :
   @Suppress("DEPRECATION") // Not deprecated method can be accessed from API 33
   private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val function: Int by lazy { arguments!!.getInt(ARG_FUNCTION) }
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
   private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
@@ -76,12 +78,8 @@ class StandardDetailFragment :
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
     binding.detailViewPager.isUserInputEnabled = false
 
-    viewModel.observeUpdates(remoteId, itemType)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    viewModel.loadData(remoteId, itemType)
+    viewModel.observeUpdates(remoteId, itemType, function)
+    viewModel.loadData(remoteId, itemType, function)
   }
 
   override fun handleEvents(event: StandardDetailViewEvent) {
@@ -118,9 +116,10 @@ class StandardDetailFragment :
   }
 
   companion object {
-    fun bundle(remoteId: Int, itemType: ItemType, pages: Array<DetailPage>) = bundleOf(
+    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) = bundleOf(
       ARG_REMOTE_ID to remoteId,
       ARG_ITEM_TYPE to itemType,
+      ARG_FUNCTION to function,
       ARG_PAGES to pages
     )
   }

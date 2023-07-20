@@ -1,6 +1,5 @@
 package org.supla.android.features.legacydetail
 
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -47,8 +46,8 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
 
   private lateinit var detailView: DetailLayout
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
+  override fun onResume() {
+    super.onResume()
     viewModel.loadData(remoteId, itemType)
   }
 

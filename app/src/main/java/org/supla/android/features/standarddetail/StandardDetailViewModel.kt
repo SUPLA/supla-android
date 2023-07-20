@@ -21,23 +21,23 @@ class StandardDetailViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<StandardDetailViewState, StandardDetailViewEvent>(StandardDetailViewState(), schedulers) {
 
-  fun observeUpdates(remoteId: Int, itemType: ItemType) {
+  fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: Int) {
     getEventsSource(itemType)
       .flatMapMaybe { getDataSource(remoteId, itemType) }
       .attachSilent()
-      .subscribeBy(onNext = { handleChannelBase(it) })
+      .subscribeBy(onNext = { handleChannelBase(it, initialFunction) })
       .disposeBySelf()
   }
 
-  fun loadData(remoteId: Int, itemType: ItemType) {
+  fun loadData(remoteId: Int, itemType: ItemType, initialFunction: Int) {
     getDataSource(remoteId, itemType)
       .attach()
-      .subscribeBy(onSuccess = { handleChannelBase(it) })
+      .subscribeBy(onSuccess = { handleChannelBase(it, initialFunction) })
       .disposeBySelf()
   }
 
-  private fun handleChannelBase(channelBase: ChannelBase) {
-    if (channelBase.visible > 0) {
+  private fun handleChannelBase(channelBase: ChannelBase, initialFunction: Int) {
+    if (channelBase.visible > 0 && channelBase.func == initialFunction) {
       updateState { it.copy(channelBase = channelBase) }
     } else {
       sendEvent(StandardDetailViewEvent.Close)

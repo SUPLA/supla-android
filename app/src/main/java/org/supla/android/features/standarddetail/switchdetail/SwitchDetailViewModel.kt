@@ -26,7 +26,6 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.getTimerStateValue
-import org.supla.android.extensions.hasSwitchDetail
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
@@ -50,16 +49,12 @@ class SwitchDetailViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onSuccess = { channel ->
-          if (channel.hasSwitchDetail()) {
-            updateState {
-              it.copy(
-                channelBase = channel,
-                isOn = (channel as? Channel)?.value?.hiValue() ?: false,
-                timerEndDate = getEstimatedCountDownEndTime(channel)
-              )
-            }
-          } else {
-            sendEvent(SwitchDetailViewEvent.Close)
+          updateState {
+            it.copy(
+              channelBase = channel,
+              isOn = (channel as? Channel)?.value?.hiValue() ?: false,
+              timerEndDate = getEstimatedCountDownEndTime(channel)
+            )
           }
         }
       )
@@ -100,9 +95,7 @@ class SwitchDetailViewModel @Inject constructor(
   }
 }
 
-sealed class SwitchDetailViewEvent : ViewEvent {
-  object Close : SwitchDetailViewEvent()
-}
+sealed class SwitchDetailViewEvent : ViewEvent
 
 data class SwitchDetailViewState(
   val channelBase: ChannelBase? = null,
