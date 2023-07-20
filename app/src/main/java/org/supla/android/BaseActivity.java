@@ -28,14 +28,9 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaChannelState;
-import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaConnError;
@@ -53,19 +48,7 @@ public class BaseActivity extends FragmentActivity
 
   protected static Activity CurrentActivity = null;
 
-  private static Date BackgroundTime = null;
-  private static Timer bgTimer = null;
   private DbHelper dbHelper;
-
-  public static long getBackgroundTime() {
-
-    if (BackgroundTime != null) {
-      long diffInMs = (new Date()).getTime() - BackgroundTime.getTime();
-      return TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-    }
-
-    return 0;
-  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,53 +60,8 @@ public class BaseActivity extends FragmentActivity
   @Override
   protected void onResume() {
     super.onResume();
-
     invalidateDbHelper();
-
-    if (bgTimer != null) {
-      bgTimer.cancel();
-      bgTimer = null;
-    }
-
-    BackgroundTime = null;
-
     SuplaApp.getApp().SuplaClientInitIfNeed(getApplicationContext());
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    BackgroundTime = new Date();
-
-    if (bgTimer == null) {
-      bgTimer = new Timer();
-      bgTimer.schedule(
-          new TimerTask() {
-            @Override
-            public void run() {
-
-              if (bgTimer != null) {
-                SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-                if (client == null
-                    || getBackgroundTime()
-                        >= getResources().getInteger(R.integer.background_timeout)) {
-
-                  if (client != null) {
-                    client.cancel();
-                  }
-
-                  if (bgTimer != null) {
-                    bgTimer.cancel();
-                    bgTimer = null;
-                  }
-                }
-              }
-            }
-          },
-          1000,
-          1000);
-    }
   }
 
   @Override

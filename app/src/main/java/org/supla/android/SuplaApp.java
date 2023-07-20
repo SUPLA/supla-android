@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -40,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
 import org.supla.android.core.notifications.NotificationsHelper;
+import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
@@ -79,6 +81,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject ChannelStateObserverUseCase channelStateObserver;
   @Inject ChannelGroupStateObserverUseCase groupStateObserver;
   @Inject NotificationsHelper notificationsHelper;
+  @Inject AppLifecycleObserver appLifecycleObserver;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -100,6 +103,7 @@ public class SuplaApp extends MultiDexApplication
     channelStateObserver.register();
     groupStateObserver.register();
     notificationsHelper.registerForToken();
+    ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
 
     SuplaFormatter.sharedFormatter();
 
