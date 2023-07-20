@@ -38,9 +38,9 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val viewModel: LegacyDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentLegacyDetailBinding::bind)
 
-  private val legacyDetailType: LegacyDetailType by lazy { arguments!!.getSerializable(ARG_DETAIL_TYPE) as LegacyDetailType }
-  private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val legacyDetailType: LegacyDetailType by lazy { requireArguments().getSerializable(ARG_DETAIL_TYPE) as LegacyDetailType }
+  private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
   override fun getViewModel(): BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent> = viewModel
 

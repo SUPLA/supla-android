@@ -42,8 +42,8 @@ class SwitchDetailFragment : BaseFragment<SwitchDetailViewState, SwitchDetailVie
   private val viewModel: SwitchDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentSwitchDetailBinding::bind)
 
-  private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
   override fun getViewModel(): BaseViewModel<SwitchDetailViewState, SwitchDetailViewEvent> = viewModel
 

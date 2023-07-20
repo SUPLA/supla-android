@@ -51,12 +51,12 @@ class StandardDetailFragment :
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
   @Suppress("DEPRECATION") // Not deprecated method can be accessed from API 33
-  private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
-  private val function: Int by lazy { arguments!!.getInt(ARG_FUNCTION) }
+  private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
+  private val function: Int by lazy { requireArguments().getInt(ARG_FUNCTION) }
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
-  private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
+  private val pages by lazy { (requireArguments().getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
 
   override fun getViewModel(): BaseViewModel<StandardDetailViewState, StandardDetailViewEvent> = viewModel
 

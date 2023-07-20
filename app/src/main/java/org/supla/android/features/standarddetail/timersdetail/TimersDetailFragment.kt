@@ -50,7 +50,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   private val viewModel: TimersDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentTimersDetailBinding::bind)
 
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
   private var timer: CountDownTimer? = null
   private var leftTimeInSecs: Int = 0
 
