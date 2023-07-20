@@ -127,7 +127,7 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(channel)) {
-      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId, detailType.pages))
+      is StandardDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetails(channel.remoteId, channel.func, detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -158,7 +158,7 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetails(val remoteId: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenSwitchDetails(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
   data class UpdateChannel(val channel: Channel) : ChannelListViewEvent()

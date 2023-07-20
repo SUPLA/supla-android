@@ -17,7 +17,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.BuildConfig
@@ -25,12 +24,13 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.StartActivity
 import org.supla.android.Trace
+import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.extensions.TAG
 import org.supla.android.features.updatetoken.UpdateTokenWorker
 import org.supla.android.lib.SuplaClient
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -43,7 +43,9 @@ class NotificationsHelper @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
-  private val suplaClientProvider: SuplaClientProvider
+  private val suplaClientProvider: SuplaClientProvider,
+  private val workManagerProxy: WorkManagerProxy,
+  private val dateProvider: DateProvider
 ) {
 
   private val notificationIdRandomizer = Random.Default
@@ -79,23 +81,34 @@ class NotificationsHelper @Inject constructor(
     }
   }
 
-  fun updateToken(token: String) {
-    if (token == encryptedPreferences.fcmToken && tokenUpdateNotNeeded()) {
+  fun updateToken(token: String = encryptedPreferences.fcmToken ?: "") {
+    val currentEnabled = areNotificationsEnabled(notificationManager)
+    val previousEnabled = encryptedPreferences.notificationsLastEnabled
+    if (token == encryptedPreferences.fcmToken && tokenUpdateNotNeeded() && currentEnabled == previousEnabled) {
       Trace.d(TAG, "Token update skipped. Tokens are equal")
       return
     }
     Trace.i(TAG, "Updating FCM Token: $token")
     encryptedPreferences.fcmToken = token
+    encryptedPreferences.notificationsLastEnabled = currentEnabled
 
     var currentProfileUpdated = false
     suplaClientProvider.provide()?.let {
       if (it.registered()) {
-        currentProfileUpdated = it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
+        currentProfileUpdated = if (areNotificationsEnabled(notificationManager)) {
+          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
+        } else {
+          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
+        }
       }
     }
 
-    val workRequest = UpdateTokenWorker.build(token, currentProfileUpdated.not())
-    WorkManager.getInstance(context).enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
+    val workRequest = if (areNotificationsEnabled(notificationManager)) {
+      UpdateTokenWorker.build(token, currentProfileUpdated.not())
+    } else {
+      UpdateTokenWorker.build("", currentProfileUpdated.not())
+    }
+    workManagerProxy.enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
   }
 
   @RequiresApi(VERSION_CODES.TIRAMISU)
@@ -143,8 +156,18 @@ class NotificationsHelper @Inject constructor(
   private fun tokenUpdateNotNeeded(): Boolean {
     return encryptedPreferences.fcmTokenLastUpdate?.let {
       val pauseTimeInMillis = UpdateTokenWorker.UPDATE_PAUSE_IN_DAYS.times(ONE_DAY_MILLIS)
-      it.time.plus(pauseTimeInMillis) > Date().time
+      it.time.plus(pauseTimeInMillis) > dateProvider.currentTimestamp()
     } ?: false
+  }
+
+  companion object {
+    fun areNotificationsEnabled(notificationManager: NotificationManager): Boolean {
+      return if (VERSION.SDK_INT >= VERSION_CODES.N) {
+        notificationManager.areNotificationsEnabled()
+      } else {
+        true
+      }
+    }
   }
 }
 

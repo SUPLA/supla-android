@@ -34,6 +34,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
     lifecycleScope.launchWhenStarted { getViewModel().getViewEvents().collect { event -> handleEvents(event) } }
     lifecycleScope.launchWhenStarted { getViewModel().getViewState().collect { state -> handleViewState(state) } }
+
+    getViewModel().onViewCreated()
   }
 
   @CallSuper

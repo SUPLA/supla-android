@@ -29,6 +29,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.hilt.android.EntryPointAccessors.fromApplication
 import org.supla.android.Trace
+import org.supla.android.db.AuthProfileItem
 import org.supla.android.di.entrypoints.ChannelRepositoryEntryPoint
 import org.supla.android.di.entrypoints.EncryptedPreferencesEntryPoint
 import org.supla.android.di.entrypoints.ProfileManagerEntryPoint
@@ -62,8 +63,30 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
       return Result.failure()
     }
 
+    val allProfiles = profileManager.getAllProfiles().blockingFirst()
+    if (allProfiles.size == 1) {
+      Trace.i(TAG, "Token update worker canceled - only one profile found")
+      return Result.success()
+    }
+
+    val allProfilesUpdated = updateTokenInAllProfiles(token, allProfiles, currentProfile, updateSelf)
+    if (allProfilesUpdated) {
+      // Worker updated all profiles, last update time can be saved
+      encryptedPreferences.fcmTokenLastUpdate = Date()
+    }
+
+    Trace.i(TAG, "Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
+    return Result.success()
+  }
+
+  private fun updateTokenInAllProfiles(
+    token: String,
+    allProfiles: List<AuthProfileItem>,
+    currentProfile: AuthProfileItem,
+    updateSelf: Boolean
+  ): Boolean {
     var allProfilesUpdated = true
-    profileManager.getAllProfiles().blockingFirst().forEach { profile ->
+    allProfiles.forEach { profile ->
       if (profile.id == currentProfile.id && updateSelf.not()) {
         Trace.d(TAG, "Active profile skipped because of updateSelf: `$updateSelf`")
         return@forEach
@@ -91,13 +114,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
       }
     }
 
-    if (allProfilesUpdated) {
-      // Worker updated all profiles, last update time can be saved
-      encryptedPreferences.fcmTokenLastUpdate = Date()
-    }
-
-    Trace.i(TAG, "Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
-    return Result.success()
+    return allProfilesUpdated
   }
 
   companion object {
