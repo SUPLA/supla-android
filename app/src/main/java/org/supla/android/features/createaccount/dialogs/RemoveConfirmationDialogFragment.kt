@@ -15,7 +15,7 @@ private const val ARG_PROFILE_ID = "arg_profile_id"
 class RemoveConfirmationDialogFragment : DialogFragment() {
 
   private val viewModel: CreateAccountViewModel by viewModels(ownerProducer = { requireParentFragment() })
-  private val profileId: Long by lazy { arguments!!.getLong(ARG_PROFILE_ID) }
+  private val profileId: Long by lazy { requireArguments().getLong(ARG_PROFILE_ID) }
 
   private lateinit var binding: DialogRemoveConfirmationDialogBinding
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

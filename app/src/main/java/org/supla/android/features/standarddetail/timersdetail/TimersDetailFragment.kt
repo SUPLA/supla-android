@@ -50,7 +50,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   private val viewModel: TimersDetailViewModel by viewModels()
   private val binding by viewBinding(FragmentTimersDetailBinding::bind)
 
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
   private var timer: CountDownTimer? = null
   private var leftTimeInSecs: Int = 0
 
@@ -77,14 +77,14 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     }
   }
 
-  override fun onStart() {
-    super.onStart()
+  override fun onResume() {
+    super.onResume()
     viewModel.loadData(remoteId)
   }
 
-  override fun onStop() {
+  override fun onPause() {
     timer?.cancel()
-    super.onStop()
+    super.onPause()
   }
 
   override fun handleEvents(event: TimersDetailViewEvent) {

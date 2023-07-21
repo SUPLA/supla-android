@@ -250,12 +250,13 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open details of switch with EM when item is offline`() {
     // given
     val channelId = 123
+    val function = SUPLA_CHANNELFNC_LIGHTSWITCH
     val channelValue = mockk<ChannelValue>()
     every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
 
     val channel = mockk<Channel>()
     every { channel.onLine } returns false
-    every { channel.func } returns SUPLA_CHANNELFNC_LIGHTSWITCH
+    every { channel.func } returns function
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
     every { channel.value } returns channelValue
@@ -269,7 +270,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSwitchDetails(channelId, detailType.pages)
+      ChannelListViewEvent.OpenSwitchDetails(channelId, function, detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

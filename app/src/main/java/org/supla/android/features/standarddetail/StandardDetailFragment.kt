@@ -37,6 +37,7 @@ import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
+private const val ARG_FUNCTION = "ARG_FUNCTION"
 private const val ARG_PAGES = "ARG_PAGES"
 
 @AndroidEntryPoint
@@ -50,11 +51,12 @@ class StandardDetailFragment :
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
   @Suppress("DEPRECATION") // Not deprecated method can be accessed from API 33
-  private val itemType: ItemType by lazy { arguments!!.getSerializable(ARG_ITEM_TYPE) as ItemType }
-  private val remoteId: Int by lazy { arguments!!.getInt(ARG_REMOTE_ID) }
+  private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
+  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
+  private val function: Int by lazy { requireArguments().getInt(ARG_FUNCTION) }
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
-  private val pages by lazy { (arguments!!.getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
+  private val pages by lazy { (requireArguments().getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
 
   override fun getViewModel(): BaseViewModel<StandardDetailViewState, StandardDetailViewEvent> = viewModel
 
@@ -76,10 +78,14 @@ class StandardDetailFragment :
     binding.detailViewPager.registerOnPageChangeCallback(pagerCallback)
     binding.detailViewPager.isUserInputEnabled = false
 
-    viewModel.loadData(remoteId, itemType)
+    viewModel.observeUpdates(remoteId, itemType, function)
+    viewModel.loadData(remoteId, itemType, function)
   }
 
   override fun handleEvents(event: StandardDetailViewEvent) {
+    when (event) {
+      StandardDetailViewEvent.Close -> requireActivity().finish()
+    }
   }
 
   override fun handleViewState(state: StandardDetailViewState) {
@@ -110,9 +116,10 @@ class StandardDetailFragment :
   }
 
   companion object {
-    fun bundle(remoteId: Int, itemType: ItemType, pages: Array<DetailPage>) = bundleOf(
+    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) = bundleOf(
       ARG_REMOTE_ID to remoteId,
       ARG_ITEM_TYPE to itemType,
+      ARG_FUNCTION to function,
       ARG_PAGES to pages
     )
   }
