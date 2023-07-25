@@ -19,11 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 public class SuplaChannel extends SuplaChannelBase {
-
-  public int ParentChannel1Id;
-  public int ParentChannel1RelationType;
-  public int ParentChannel2Id;
-  public int ParentChannel2RelationType;public int Type;
+  public int Type;
   public int ProtocolVersion;
   public short ManufacturerID;
   public short ProductID;

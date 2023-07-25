@@ -1052,6 +1052,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
+  private void channelRelationUpdate(SuplaChannelRelation channel_relation) {
+  }
   private void channelGroupRelationUpdate(SuplaChannelGroupRelation channelgroup_relation) {
 
     boolean _DataChanged = false;

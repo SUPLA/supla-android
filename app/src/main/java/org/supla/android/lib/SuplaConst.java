@@ -165,7 +165,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
   public static final int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
   public static final int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
-
+  public static final int SUPLA_CHANNEL_FLAG_HAS_PARENT = 0x20000000;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
