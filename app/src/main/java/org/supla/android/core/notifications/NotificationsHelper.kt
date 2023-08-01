@@ -148,6 +148,7 @@ class NotificationsHelper @Inject constructor(
       .setColor(ResourcesCompat.getColor(context.resources, R.color.supla, null))
       .setContentIntent(PendingIntent.getActivity(context, 0, intent, flag))
       .setAutoCancel(true)
+      .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
 
     notificationManager.notify(notificationIdRandomizer.nextInt(), notification)
