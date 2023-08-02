@@ -68,6 +68,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     }
     binding.detailsTimerConfiguration.onTimeChangedListener = { stateHolder.setLastTimerValue(remoteId, it) }
     binding.detailsTimerConfiguration.onEditCancelClickListener = { viewModel.cancelEditMode() }
+    binding.detailsTimerConfiguration.onActionChangeListener = { viewModel.updateAction(it) }
     binding.detailsTimerConfiguration.timeInSeconds = stateHolder.getLastTimerValue(remoteId)
     binding.detailsTimerStopButton.setOnClickListener { viewModel.stopTimer(remoteId) }
     binding.detailsTimerCancelButton.setOnClickListener { viewModel.cancelTimer(remoteId) }
@@ -113,11 +114,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
       getString(R.string.details_timer_state_label)
     }
 
-    if (state.editMode && state.channel?.value?.hiValue() == false) {
-      binding.detailsTimerConfiguration.setTargetAction(TimerTargetAction.TURN_OFF)
-    } else {
-      binding.detailsTimerConfiguration.setTargetAction(TimerTargetAction.TURN_ON)
-    }
+    state.targetAction?.let { binding.detailsTimerConfiguration.setTargetAction(it) }
     binding.detailsTimerConfiguration.visibleIf(showTimer.not() || state.editMode)
     binding.detailsTimerConfiguration.editMode = state.editMode
     binding.detailsTimerProgress.visibleIf(showTimer)

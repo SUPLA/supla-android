@@ -154,7 +154,7 @@ public class ChannelDetailIC extends DetailLayout
   private void channelExtendedDataToViews() {
     Channel channel = (Channel) getChannelFromDatabase();
 
-    if (!icImgIcon.getTag().equals(channel.getImageIdx())) {
+    if (icImgIcon.getTag() == null || !icImgIcon.getTag().equals(channel.getImageIdx())) {
       icImgIcon.setBackgroundColor(Color.TRANSPARENT);
       icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
       icImgIcon.setTag(channel.getImageIdx());

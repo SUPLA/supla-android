@@ -87,7 +87,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     // then
     assertThat(events).isEmpty()
     assertThat(states).containsExactly(
-      TimersDetailViewState(null, channel, false)
+      TimersDetailViewState(null, channel, false, TimerTargetAction.TURN_ON)
     )
   }
 
@@ -123,7 +123,8 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
           timerValue = TimerValue.OFF
         ),
         channel,
-        false
+        false,
+        TimerTargetAction.TURN_ON
       )
     )
   }
@@ -157,7 +158,8 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
           timerValue = TimerValue.ON
         ),
         channel,
-        false
+        false,
+        TimerTargetAction.TURN_ON
       )
     )
   }
@@ -193,7 +195,8 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
           timerValue = TimerValue.ON
         ),
         channel,
-        false
+        false,
+        TimerTargetAction.TURN_ON
       )
     )
   }

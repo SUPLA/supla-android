@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -71,6 +72,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private var notif_img: ImageView? = null
   private var notif_text: TextView? = null
   private var animatingMenu = false
+  private val handler = Handler(Looper.getMainLooper())
 
   private val toolbar: Toolbar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
@@ -221,8 +223,15 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       return
     }
     runDownloadTask()
-    val ra = RateApp(this)
-    ra.showDialog(1000)
+
+    RateApp(this).showDialog {
+      handler.postDelayed({ it.run() }, 1000)
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    handler.removeCallbacksAndMessages(null)
   }
 
   private fun setAccountItemVisible(visible: Boolean) {

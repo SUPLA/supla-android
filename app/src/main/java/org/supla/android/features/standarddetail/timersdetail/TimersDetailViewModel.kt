@@ -94,6 +94,10 @@ class TimersDetailViewModel @Inject constructor(
     updateState { it.copy(editMode = false) }
   }
 
+  fun updateAction(action: TimerTargetAction) {
+    updateState { it.copy(targetAction = action) }
+  }
+
   fun calculateProgressViewData(startTime: Date, endTime: Date): ProgressViewData {
     val leftTime = calculateLeftTime(endTime)
     val wholeTime = endTime.time.minus(startTime.time)
@@ -124,6 +128,12 @@ class TimersDetailViewModel @Inject constructor(
         // To avoid screen blinking, edit mode is canceled when new timer values will come
         editMode = false
       }
+      val targetAction = state.targetAction
+        ?: if (state.editMode && state.channel?.value?.hiValue() == false) {
+          TimerTargetAction.TURN_OFF
+        } else {
+          TimerTargetAction.TURN_ON
+        }
 
       state.copy(
         channel = channel,
@@ -137,7 +147,8 @@ class TimersDetailViewModel @Inject constructor(
         } else {
           null
         },
-        editMode = editMode
+        editMode = editMode,
+        targetAction = targetAction
       )
     }
   }
@@ -150,7 +161,8 @@ sealed class TimersDetailViewEvent : ViewEvent {
 data class TimersDetailViewState(
   val timerData: TimerProgressData? = null,
   val channel: Channel? = null,
-  val editMode: Boolean = false
+  val editMode: Boolean = false,
+  val targetAction: TimerTargetAction? = null
 ) : ViewState()
 
 data class TimerProgressData(
