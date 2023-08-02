@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Window;
 import java.util.Calendar;
@@ -95,9 +94,7 @@ public class RateApp {
     alert.show();
   }
 
-  boolean showDialog(int delay) {
-
-    boolean result = false;
+  void showDialog(ShowCallback callback) {
 
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     long rt = prefs.getLong(PN_RATE_TIME, 0L);
@@ -115,13 +112,12 @@ public class RateApp {
 
         moreTime(1);
 
-        Handler handler = new Handler();
-        handler.postDelayed(this::ShowAlertDialog, delay);
-
-        result = true;
+        callback.show(this::ShowAlertDialog);
       }
     }
+  }
 
-    return result;
+  public interface ShowCallback {
+    void show(Runnable runnable);
   }
 }

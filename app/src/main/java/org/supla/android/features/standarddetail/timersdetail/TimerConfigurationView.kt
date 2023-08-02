@@ -40,6 +40,7 @@ class TimerConfigurationView @JvmOverloads constructor(
   var onStartClickListener: (timeInSeconds: Int, action: TimerTargetAction) -> Unit = { _, _ -> }
   var onTimeChangedListener: (timeInSeconds: Int) -> Unit = { }
   var onEditCancelClickListener: () -> Unit = { }
+  var onActionChangeListener: (action: TimerTargetAction) -> Unit = { }
 
   var editMode = false
     set(value) {
@@ -102,7 +103,10 @@ class TimerConfigurationView @JvmOverloads constructor(
       context.getString(R.string.details_timer_turn_off_for)
     )
     binding.detailsTimerActionSwitch.selectedItemListener = { position ->
-      TimerTargetAction.from(position)?.let { updateInfoText(it) }
+      TimerTargetAction.from(position)?.let {
+        onActionChangeListener(it)
+        updateInfoText(it)
+      }
     }
     binding.detailsTimerStartButton.setOnClickListener { _ ->
       TimerTargetAction.from(binding.detailsTimerActionSwitch.activeItem)?.let {
