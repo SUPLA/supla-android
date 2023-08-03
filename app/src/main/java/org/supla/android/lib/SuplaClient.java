@@ -46,6 +46,9 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
+import org.supla.android.data.source.remote.ChannelConfigResult;
+import org.supla.android.data.source.remote.ChannelConfigType;
+import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
@@ -215,6 +218,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scRegisterPushNotificationClientToken(
       long _supla_client, int appId, String token);
+
+  private native boolean scGetChannelConfig(long _supla_client, int channelId, @NotNull ChannelConfigType type);
 
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
@@ -794,6 +799,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
+  public boolean  getChannelConfig(int channelId, @NotNull ChannelConfigType type) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0
+          && scGetChannelConfig(_supla_client_ptr, channelId, type);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
   private void onVersionError(SuplaVersionError versionError) {
     Trace.d(
         log_tag,
@@ -1365,6 +1380,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveSetWakeUpTimeResult);
     msg.setResult(result);
     sendMessage(msg);
+  }
+
+  private void onChannelConfigUpdate(SuplaChannelConfig config, ChannelConfigResult result) {
   }
 
   public synchronized boolean canceled() {
