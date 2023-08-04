@@ -221,6 +221,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scGetChannelConfig(long _supla_client, int channelId, @NotNull ChannelConfigType type);
 
+  private native boolean scSetChannelConfig(long _supla_client, @NotNull SuplaChannelConfig config);
+
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
       return;
@@ -808,7 +810,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       unlockClientPtr();
     }
   }
-
+  
+  public boolean  setChannelConfig(@NotNull SuplaChannelConfig config) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0
+          && scSetChannelConfig(_supla_client_ptr, config);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+  
   private void onVersionError(SuplaVersionError versionError) {
     Trace.d(
         log_tag,
