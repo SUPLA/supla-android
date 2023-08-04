@@ -29,6 +29,7 @@ enum class ChannelConfigResult(val value: Int) {
   TYPE_NOT_SUPPORTED(3),
   FUNCTION_NOT_SUPPORTED(4),
   LOCAL_CONFIG_DISABLED(5),
+  NOT_ALLOWED(6)
 }
 
 open class SuplaChannelConfig(remoteId: Int, func: Int) {
