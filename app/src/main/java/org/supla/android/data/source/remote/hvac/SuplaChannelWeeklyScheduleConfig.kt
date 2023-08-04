@@ -21,7 +21,7 @@ import java.time.DayOfWeek
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class HvacMode(val value: Int) {
+enum class SuplaHvacMode(val value: Int) {
   NOT_SET(0),
   OFF(1),
   HEAT(2),
@@ -43,7 +43,7 @@ enum class SuplaScheduleProgram(val value: Int) {
 
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
                                        val program: SuplaScheduleProgram,
-                                       val mode: HvacMode,
+                                       val mode: SuplaHvacMode,
                                        val setpointTemperatureMin: Double,
                                        val setpointTemperatureMax: Double
 )
