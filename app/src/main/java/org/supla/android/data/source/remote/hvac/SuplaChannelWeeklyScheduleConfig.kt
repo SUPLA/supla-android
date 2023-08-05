@@ -1,7 +1,8 @@
 package org.supla.android.data.source.remote.hvac
 
+import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import java.time.DayOfWeek
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -51,7 +52,7 @@ data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
 data class SuplaWeeklyScheduleEntry(
   val dayOfWeek: DayOfWeek,
   val hour: Int,
-  val quarterOfHour: Int,
+  val quarterOfHour: QuarterOfHour,
   val program: SuplaScheduleProgram
 )
 
