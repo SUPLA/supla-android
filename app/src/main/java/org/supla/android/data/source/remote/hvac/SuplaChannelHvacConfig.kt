@@ -57,7 +57,7 @@ enum class SuplaHvacAlgorithm(value: Int) {
 
 data class SuplaChannelHvacConfig(
   override val remoteId: Int,
-  override val func: Int,
+  override val func: Int?,
   val mainThermometerRemoteId: Int,
   val auxThermometerRemoteId: Int,
   val auxThermometerType: SuplaHvacThermometerType,

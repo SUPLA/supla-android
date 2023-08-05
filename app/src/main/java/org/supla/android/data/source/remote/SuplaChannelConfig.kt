@@ -32,7 +32,7 @@ enum class ChannelConfigResult(val value: Int) {
   NOT_ALLOWED(6)
 }
 
-open class SuplaChannelConfig(remoteId: Int, func: Int) {
+open class SuplaChannelConfig(remoteId: Int, func: Int?) {
   open val remoteId: Int = remoteId
-  open val func: Int = func
+  open val func: Int? = func
 }
