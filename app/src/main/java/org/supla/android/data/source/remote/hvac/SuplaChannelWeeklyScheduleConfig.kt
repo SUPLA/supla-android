@@ -45,8 +45,8 @@ enum class SuplaScheduleProgram(val value: Int) {
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
                                        val program: SuplaScheduleProgram,
                                        val mode: SuplaHvacMode,
-                                       val setpointTemperatureMin: Double,
-                                       val setpointTemperatureMax: Double
+                                       val setpointTemperatureMin: Short?,
+                                       val setpointTemperatureMax: Short?
 )
 
 data class SuplaWeeklyScheduleEntry(

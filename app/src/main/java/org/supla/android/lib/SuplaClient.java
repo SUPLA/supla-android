@@ -1394,7 +1394,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onChannelConfigUpdate(SuplaChannelConfig config, ChannelConfigResult result) {
+  private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ChannelConfigResult result) {
   }
 
   public synchronized boolean canceled() {

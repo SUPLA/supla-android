@@ -1,5 +1,6 @@
 package org.supla.android.lib.actions
 
+import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.tools.UsedFromNativeCode
 
 /*
@@ -20,21 +21,14 @@ import org.supla.android.tools.UsedFromNativeCode
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val HVAC_MODE_OFF = 1
-const val HVAC_MODE_HEAT = 2
-const val HVAC_MODE_COOL = 3
-const val HVAC_MODE_AUTO = 4
-const val HVAC_MODE_FAN_ONLY = 5
-const val HVAC_MODE_DRY = 6
-
 @UsedFromNativeCode
 class HvacActionParameters(
   action: ActionId,
   subjectType: SubjectType,
   subjectId: Int,
   var durationSec: Long?,
-  var mode: Int?,
-  var setpointTemperatureMin: Double?,
-  var setpointTemperatureMax: Double?,
+  var mode: SuplaHvacMode?,
+  var setpointTemperatureMin: Short?,
+  var setpointTemperatureMax: Short?,
 ) :
   ActionParameters(action, subjectType, subjectId)
