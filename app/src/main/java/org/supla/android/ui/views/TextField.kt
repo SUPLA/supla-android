@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.grey
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -56,7 +57,9 @@ fun TextField(
       focusedIndicatorColor = Color.Transparent,
       unfocusedIndicatorColor = Color.Transparent,
       errorCursorColor = MaterialTheme.colors.error,
-      errorIndicatorColor = Color.Transparent
+      errorIndicatorColor = Color.Transparent,
+      trailingIconColor = MaterialTheme.colors.grey,
+      focusedTrailingIconColor = MaterialTheme.colors.grey
     ),
     shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default)),
     modifier = modifier.border(

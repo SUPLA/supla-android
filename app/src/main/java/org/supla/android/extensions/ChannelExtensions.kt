@@ -32,12 +32,14 @@ fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValu
 fun Channel.toSlideableListItemData(mainThermometerChild: Channel?, valuesFormatter: ValuesFormatter?): SlideableListItemData.Thermostat {
   val thermostatValue = value.asThermostatValue()
 
-  val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMin)
-  val temperatureMax = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMax)
-  val subValue = when (thermostatValue.mode) {
-    SuplaHvacMode.COOL -> temperatureMax
-    SuplaHvacMode.AUTO -> "$temperatureMin - $temperatureMax"
-    SuplaHvacMode.HEAT -> temperatureMin
+  val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMin, true)
+  val temperatureMax = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMax, true)
+  val subValue = when {
+    onLine.not() -> ""
+    thermostatValue.mode == SuplaHvacMode.COOL -> temperatureMax
+    thermostatValue.mode == SuplaHvacMode.AUTO -> "$temperatureMin - $temperatureMax"
+    thermostatValue.mode == SuplaHvacMode.HEAT -> temperatureMin
+    thermostatValue.mode == SuplaHvacMode.OFF -> "Off"
     else -> ""
   }
 

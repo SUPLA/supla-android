@@ -63,6 +63,9 @@ val Colors.progressPointShadow: Color
 val Colors.blue: Color
   get() = Color(0xFF5AC8FA)
 
+val Colors.grey: Color
+  get() = Color(0xFF7E8082)
+
 val Color.Companion.lightBlue: Color
   get() = Color(0xFF8C9DFF)
 
