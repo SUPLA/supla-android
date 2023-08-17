@@ -38,4 +38,8 @@ val Typography.listItemCaption: TextStyle
 
 @Composable
 fun Typography.listItemValue(): TextStyle =
-  TextStyle(fontSize = fontDimensionResource(id = R.dimen.channel_imgtext_size), fontWeight = FontWeight.Normal)
+  TextStyle(
+    fontSize = fontDimensionResource(id = R.dimen.channel_imgtext_size),
+    fontWeight = FontWeight.Normal,
+    fontFamily = FontFamily(Font(R.font.open_sans_regular))
+  )
