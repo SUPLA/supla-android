@@ -543,7 +543,7 @@
     <string translatable="false" name="settings_permissions">Permissions</string>
 
     <string translatable="false" name="details_general">General</string>
-    <string translatable="false" name="details_schedule">Schedule</string>
+    <string translatable="false" name="details_schedule">Week</string>
     <string translatable="false" name="details_timer">Timer</string>
     <string translatable="false" name="details_history">Metrics</string>
     <string translatable="false" name="details_settings">Settings</string>
