@@ -107,8 +107,8 @@ public class ChannelDetailRGBW extends DetailLayout
     Resources r = getResources();
 
     status = findViewById(R.id.rgbwstatus);
-    status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
-    status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
+    status.setOnlineColor(getResources().getColor(R.color.primary));
+    status.setOfflineColor(getResources().getColor(R.color.red));
 
     clPicker = findViewById(R.id.clPicker);
     clPicker.addItem(Color.WHITE, (short) 100);

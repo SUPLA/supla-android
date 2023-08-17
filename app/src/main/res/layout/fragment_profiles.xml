@@ -45,7 +45,7 @@
             android:id="@+id/sep1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_separator_thickness"
-            android:background="@color/list_separator_bg" />
+            android:background="@color/separator" />
 
 
         <androidx.recyclerview.widget.RecyclerView

@@ -6,6 +6,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.FlowPreview
 import org.supla.android.MainActivity
 import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -22,20 +23,21 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   constructor() : this(0)
 
-  protected abstract fun getViewModel(): BaseViewModel<S, E>
+  protected abstract val viewModel: BaseViewModel<S, E>
 
+  @OptIn(FlowPreview::class)
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     lifecycleScope.launchWhenStarted {
-      getViewModel().isLoadingEvent().collect {
+      viewModel.isLoadingEvent().collect {
         (requireActivity() as? LoadableContent)?.getLoadingIndicator()?.visibleIf(it)
       }
     }
 
-    lifecycleScope.launchWhenStarted { getViewModel().getViewEvents().collect { event -> handleEvents(event) } }
-    lifecycleScope.launchWhenStarted { getViewModel().getViewState().collect { state -> handleViewState(state) } }
+    lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvents(event) } }
+    lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
-    getViewModel().onViewCreated()
+    viewModel.onViewCreated()
   }
 
   @CallSuper

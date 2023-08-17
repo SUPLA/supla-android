@@ -43,14 +43,15 @@ import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
-import org.supla.android.db.entity.Scene;
+import org.supla.android.data.source.local.entity.Scene;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.ui.lists.SlideableItem;
+import org.supla.android.ui.lists.SwapableListItem;
 
 @AndroidEntryPoint
-public class SceneLayout extends LinearLayout implements SlideableItem {
+public class SceneLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
   @Inject ListsEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
@@ -121,14 +122,14 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+    right_btn.setBackgroundColor(getResources().getColor(R.color.primary));
 
     left_btn.setLayoutParams(
         new LayoutParams(
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+    left_btn.setBackgroundColor(getResources().getColor(R.color.primary));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
@@ -164,7 +165,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
 
     SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -264,7 +265,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
 
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size, dot_size);
 
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
 
     if (right) {
       lp.rightMargin = margin;
@@ -283,8 +284,8 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
     SuplaChannelStatus result = new SuplaChannelStatus(context);
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
-    result.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
-    result.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+    result.setOfflineColor(getResources().getColor(R.color.red));
+    result.setOnlineColor(getResources().getColor(R.color.primary));
 
     return result;
   }
@@ -300,7 +301,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem {
   public void slide(int delta) {
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
-    int bcolor = getResources().getColor(R.color.channel_btn);
+    int bcolor = getResources().getColor(R.color.primary);
 
     left_btn.setBackgroundColor(bcolor);
     right_btn.setBackgroundColor(bcolor);

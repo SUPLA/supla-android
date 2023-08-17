@@ -32,7 +32,7 @@
         android:layout_toRightOf="@id/addAccountLabel"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/menuitem_iamge_margin"
-        app:srcCompat="@drawable/plus" />
+        app:srcCompat="@drawable/ic_plus" />
     
   </RelativeLayout>
 

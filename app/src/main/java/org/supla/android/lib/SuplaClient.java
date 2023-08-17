@@ -25,7 +25,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import dagger.hilt.android.EntryPointAccessors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,17 +45,22 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
+import org.supla.android.data.source.remote.ChannelConfigResult;
+import org.supla.android.data.source.remote.ChannelConfigType;
+import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
-import org.supla.android.di.entrypoints.EncryptedPreferencesEntryPoint;
-import org.supla.android.di.entrypoints.ListsEventsManagerEntryPoint;
+import org.supla.android.events.ConfigEventsManager;
 import org.supla.android.events.ListsEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
+import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
+import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
@@ -85,21 +89,32 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
   private final ListsEventsManager listsEventsManager;
+  private final ConfigEventsManager configEventsManager;
   private final EncryptedPreferences preferences;
+  private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
+  private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
+  private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
 
-  public SuplaClient(Context context, String oneTimePassword, ProfileManager profileManager) {
+  public SuplaClient(
+      Context context,
+      String oneTimePassword,
+      ProfileManager profileManager,
+      ListsEventsManager listsEventsManager,
+      ConfigEventsManager configEventsManager,
+      EncryptedPreferences encryptedPreferences,
+      MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
+      InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase,
+      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase) {
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
-    this.listsEventsManager =
-        EntryPointAccessors.fromApplication(
-                context.getApplicationContext(), ListsEventsManagerEntryPoint.class)
-            .provideListsEventsManager();
-    this.preferences =
-        EntryPointAccessors.fromApplication(
-                context.getApplicationContext(), EncryptedPreferencesEntryPoint.class)
-            .provideEncryptedPreferences();
+    this.listsEventsManager = listsEventsManager;
+    this.configEventsManager = configEventsManager;
+    this.preferences = encryptedPreferences;
+    this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
+    this.insertChannelRelationForProfileUseCase = insertChannelRelationForProfileUseCase;
+    this.deleteRemovableChannelRelationsUseCase = deleteRemovableChannelRelationsUseCase;
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -215,6 +230,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native boolean scRegisterPushNotificationClientToken(
       long _supla_client, int appId, String token);
+
+  private native boolean scGetChannelConfig(
+      long _supla_client, int channelId, @NotNull ChannelConfigType type);
+
+  private native boolean scSetChannelConfig(long _supla_client, @NotNull SuplaChannelConfig config);
 
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
@@ -794,6 +814,24 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
+  public boolean getChannelConfig(int channelId, @NotNull ChannelConfigType type) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scGetChannelConfig(_supla_client_ptr, channelId, type);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
+  public boolean setChannelConfig(@NotNull SuplaChannelConfig config) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scSetChannelConfig(_supla_client_ptr, config);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
   private void onVersionError(SuplaVersionError versionError) {
     Trace.d(
         log_tag,
@@ -884,6 +922,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
       profile.getAuthInfo().setPreferredProtocolVersion(newVersion);
       profileManager.update(profile).blockingSubscribe();
+
+      reconnect();
+      return;
     }
 
     _client_id = registerResult.ClientID;
@@ -1049,6 +1090,22 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (_DataChanged) {
       Trace.d(log_tag, "Channel Group updated");
       onDataChanged(0, channel_group.Id);
+    }
+  }
+
+  private void channelRelationUpdate(SuplaChannelRelation channel_relation) {
+    Trace.d(
+        log_tag,
+        "Channel Relation channel ID: "
+            + channel_relation.getChannelId()
+            + " parent ID: "
+            + channel_relation.getParentId()
+            + " relation type: "
+            + channel_relation.getRelationType());
+    insertChannelRelationForProfileUseCase.invoke(channel_relation).blockingSubscribe();
+
+    if (channel_relation.isEol()) {
+      deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
     }
   }
 
@@ -1365,6 +1422,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
+  private void onChannelConfigUpdateOrResult(
+      SuplaChannelConfig config, ChannelConfigResult result) {
+    configEventsManager.emitConfig(result, config);
+  }
+
   public synchronized boolean canceled() {
     return _canceled;
   }
@@ -1467,6 +1529,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       onConnecting();
       setVisible(0, 2); // Cleanup
       setVisible(2, 1);
+      markChannelRelationsAsRemovableUseCase.invoke().blockingSubscribe();
 
       try {
         {

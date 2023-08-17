@@ -50,12 +50,12 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.StandardDetailType
+import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent>() {
+class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
 
   @Mock
   private lateinit var channelRepository: ChannelRepository
@@ -261,7 +261,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.remoteId } returns channelId
     every { channel.value } returns channelValue
 
-    val detailType = StandardDetailType(listOf())
+    val detailType = SwitchDetailType(listOf())
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
@@ -270,7 +270,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSwitchDetails(channelId, function, detailType.pages)
+      ChannelListViewEvent.OpenSwitchDetail(channelId, function, detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

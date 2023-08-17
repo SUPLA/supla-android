@@ -21,8 +21,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 190
-    versionName = "23.08"
+    versionCode = 191
+    versionName = "23.08.01"
 
     ndk {
       moduleName = "suplaclient"
@@ -89,12 +89,12 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = Versions.Androidx.Compose
+    kotlinCompilerExtensionVersion = Versions.Androidx.Compose.Core
   }
 
   kotlinOptions {
     jvmTarget = "1.8"
-    freeCompilerArgs = listOf("-Xcontext-receivers")
+    freeCompilerArgs = listOf("-Xcontext-receivers", "-Xjvm-default=all")
   }
 }
 
@@ -115,6 +115,8 @@ dependencies {
   implementation(Deps.Androidx.Core.Ktx)
   implementation(Deps.Androidx.Lifecycle.Runtime)
   implementation(Deps.Androidx.Lifecycle.Viewmodel)
+  implementation(Deps.Androidx.Room.Runtime)
+  implementation(Deps.Androidx.Room.RxJava)
   implementation(Deps.Kotlin)
   implementation(Deps.Coroutines)
   implementation(Deps.Androidx.Fragment)
@@ -133,7 +135,12 @@ dependencies {
   implementation(Deps.Androidx.Compose.UI)
   implementation(Deps.Androidx.Compose.Material)
   implementation(Deps.Androidx.Compose.Tooling)
+  implementation(Deps.Androidx.Compose.ConstraintLayout)
+
+  annotationProcessor(Deps.Androidx.Room.Compiler)
+
   kapt(Deps.Hilt.Kapt)
+  kapt(Deps.Androidx.Room.Compiler)
 
   testImplementation(Deps.Testing.Androidx.Core)
   testImplementation(Deps.Testing.Androidx.Runner)

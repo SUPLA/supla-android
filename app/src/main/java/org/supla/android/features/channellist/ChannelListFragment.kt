@@ -1,4 +1,21 @@
 package org.supla.android.features.channellist
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.os.Bundle
 import android.view.View
@@ -10,14 +27,14 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
-import org.supla.android.features.standarddetail.StandardDetailFragment
+import org.supla.android.features.switchdetail.SwitchDetailFragment
+import org.supla.android.features.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.model.ItemType
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
@@ -27,7 +44,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEvent>(R.layout.fragment_channel_list) {
 
-  private val viewModel: ChannelListViewModel by viewModels()
+  override val viewModel: ChannelListViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
   private lateinit var statePopup: ChannelStatePopup
   private var scrollDownOnReload = false
@@ -54,8 +71,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     viewModel.loadChannels()
   }
 
-  override fun getViewModel(): BaseViewModel<ChannelListViewState, ChannelListViewEvent> = viewModel
-
   override fun handleEvents(event: ChannelListViewEvent) {
     val suplaClient = suplaClientProvider.provide()
     when (event) {
@@ -73,9 +88,13 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
-      is ChannelListViewEvent.OpenSwitchDetails -> navigator.navigateTo(
+      is ChannelListViewEvent.OpenSwitchDetail -> navigator.navigateTo(
         R.id.switch_detail_fragment,
-        StandardDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
+        SwitchDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
+      )
+      is ChannelListViewEvent.OpenThermostatDetail -> navigator.navigateTo(
+        R.id.thermostat_detail_fragment,
+        ThermostatDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
       )
       else -> {}
     }

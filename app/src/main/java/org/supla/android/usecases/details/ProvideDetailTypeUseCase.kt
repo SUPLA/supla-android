@@ -42,7 +42,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      StandardDetailType(getSwitchDetailPages(channelBase))
+      SwitchDetailType(getSwitchDetailPages(channelBase))
     }
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
       LegacyDetailType.EM
@@ -57,6 +57,14 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       LegacyDetailType.TEMPERATURE_HUMIDITY
     SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
       LegacyDetailType.DIGIGLASS
@@ -65,7 +73,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 
   private fun getSwitchDetailPages(channelBase: ChannelBase): List<DetailPage> {
     return if (channelBase is Channel) {
-      val list = mutableListOf(DetailPage.GENERAL)
+      val list = mutableListOf(DetailPage.SWITCH)
       if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelBase.func != SUPLA_CHANNELFNC_STAIRCASETIMER) {
         list.add(DetailPage.TIMER)
       }
@@ -76,7 +84,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       }
       list
     } else {
-      listOf(DetailPage.GENERAL)
+      listOf(DetailPage.SWITCH)
     }
   }
 }
@@ -94,6 +102,10 @@ enum class LegacyDetailType : DetailType {
   DIGIGLASS
 }
 
-data class StandardDetailType(
+data class SwitchDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class ThermostatDetailType(
   val pages: List<DetailPage>
 ) : DetailType

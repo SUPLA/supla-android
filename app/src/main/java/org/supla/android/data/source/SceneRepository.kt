@@ -19,8 +19,8 @@ package org.supla.android.data.source
  */
 
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Location
-import org.supla.android.db.entity.Scene
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 

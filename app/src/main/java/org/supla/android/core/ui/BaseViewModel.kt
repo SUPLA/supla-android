@@ -26,10 +26,21 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
+
+interface BaseViewProxy<S : ViewState> {
+  fun getViewState(): StateFlow<S>
+}
 
 abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   defaultState: S,

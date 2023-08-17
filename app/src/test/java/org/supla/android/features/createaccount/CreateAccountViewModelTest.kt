@@ -27,7 +27,7 @@ import org.supla.android.usecases.account.DeleteAccountUseCase
 import org.supla.android.usecases.account.SaveAccountUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent>() {
+class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent, CreateAccountViewModel>() {
 
   @get:Rule
   var instantTaskExecutorRule = InstantTaskExecutorRule()

@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.util.Base64;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import org.supla.android.data.source.local.entity.ThermostatValue;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaChannelValue;
@@ -462,6 +463,10 @@ public class ChannelValue extends DbItem {
 
   public boolean motorProblem() {
     return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_MOTOR_PROBLEM) > 0;
+  }
+
+  public ThermostatValue asThermostatValue() {
+    return ThermostatValue.Companion.from(Value);
   }
 
   @Override

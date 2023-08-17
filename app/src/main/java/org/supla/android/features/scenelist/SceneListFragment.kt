@@ -25,7 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentSceneListBinding
 import org.supla.android.extensions.toPx
 import javax.inject.Inject
@@ -33,7 +32,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R.layout.fragment_scene_list) {
 
-  private val viewModel: SceneListViewModel by viewModels()
+  override val viewModel: SceneListViewModel by viewModels()
   private val binding by viewBinding(FragmentSceneListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -51,8 +50,6 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
     super.onStart()
     viewModel.loadScenes()
   }
-
-  override fun getViewModel(): BaseViewModel<SceneListViewState, SceneListViewEvent> = viewModel
 
   override fun handleEvents(event: SceneListViewEvent) {
     when (event) {

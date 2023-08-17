@@ -31,8 +31,8 @@ import org.supla.android.core.permissions.PermissionsHelper
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.model.appsettings.ChannelHeight
-import org.supla.android.model.appsettings.TemperatureUnit
+import org.supla.android.data.source.runtime.appsettings.ChannelHeight
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.tools.SuplaSchedulers
 import javax.inject.Inject
 

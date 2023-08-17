@@ -2,6 +2,7 @@ package org.supla.android.usecases.channel
 
 import android.database.Cursor
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,12 +11,14 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Location
 import org.supla.android.db.SuplaContract
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.channelrelation.FindChannelChildrenUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 
 @RunWith(MockitoJUnitRunner::class)
@@ -25,6 +28,12 @@ class CreateProfileChannelsListUseCaseTest {
 
   @Mock
   private lateinit var profileManager: ProfileManager
+
+  @Mock
+  private lateinit var channelRelationRepository: ChannelRelationRepository
+
+  @Mock
+  private lateinit var findChannelChildrenUseCase: FindChannelChildrenUseCase
 
   @InjectMocks
   private lateinit var usecase: CreateProfileChannelsListUseCase
@@ -68,6 +77,7 @@ class CreateProfileChannelsListUseCaseTest {
     whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
+    whenever(channelRelationRepository.findListOfParents(profileId)).thenReturn(Observable.just(emptyList()))
 
     // when
     val testObserver = usecase().test()
@@ -130,6 +140,7 @@ class CreateProfileChannelsListUseCaseTest {
     whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
+    whenever(channelRelationRepository.findListOfParents(profileId)).thenReturn(Observable.just(emptyList()))
 
     // when
     val testObserver = usecase().test()

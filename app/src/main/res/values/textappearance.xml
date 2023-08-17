@@ -67,9 +67,15 @@
     <item name="android:textSize">14sp</item>
   </style>
 
-  <style name="AppTheme.TextAppearance.Caption">
+  <style name="AppTheme.TextAppearance.ListButton">
     <item name="android:fontFamily">@font/open_sans_regular</item>
-    <item name="android:textSize">12sp</item>
+    <item name="android:textSize">@dimen/channel_btn_text_size</item>
+    <item name="android:textColor">@color/on_primary</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.Caption">
+    <item name="android:fontFamily">@font/open_sans_bold</item>
+    <item name="android:textSize">11sp</item>
     <item name="android:letterSpacing">0.04</item>
   </style>
 
@@ -78,11 +84,5 @@
     <item name="android:textSize">10sp</item>
     <item name="android:letterSpacing">0.15</item>
     <item name="android:textAllCaps">true</item>
-  </style>
-
-  <style name="AppTheme.TextAppearance.OnOffButton">
-    <item name="android:fontFamily">@font/open_sans_bold</item>
-    <item name="android:textSize">34sp</item>
-    <item name="android:letterSpacing">0.025</item>
   </style>
 </resources>

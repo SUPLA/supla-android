@@ -24,6 +24,7 @@ import org.supla.android.Preferences
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.SuplaContract
 import org.supla.android.extensions.TAG
@@ -153,7 +154,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       SuplaContract.ChannelGroupEntry.TABLE_NAME,
       SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
       SuplaContract.SceneEntry.TABLE_NAME,
-      SuplaContract.UserIconsEntry.TABLE_NAME
+      SuplaContract.UserIconsEntry.TABLE_NAME,
+      ChannelRelationEntity.TABLE_NAME
     )
     for (table in tables) {
       delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))

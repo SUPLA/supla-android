@@ -18,8 +18,8 @@ package org.supla.android.data
  */
 
 import org.supla.android.Preferences
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
-import org.supla.android.model.appsettings.TemperatureUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +32,10 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false): String {
+  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
+    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
+
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
@@ -46,7 +49,7 @@ class ValuesFormatter @Inject constructor(
       else -> String.format(
         "%.1f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
-        getUnitString().substring(0, 1)
+        if (withDegree) getUnitString().substring(0, 1) else ""
       )
     }
   }
@@ -96,7 +99,7 @@ class ValuesFormatter @Inject constructor(
   }
 
   companion object {
-    private const val NO_VALUE_TEXT = "---"
+    const val NO_VALUE_TEXT = "---"
 
     /**
      * Special magic constant used to represent temperature value representing

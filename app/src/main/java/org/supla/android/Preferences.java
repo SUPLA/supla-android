@@ -25,7 +25,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
-import org.supla.android.model.appsettings.TemperatureUnit;
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit;
 
 public class Preferences {
 

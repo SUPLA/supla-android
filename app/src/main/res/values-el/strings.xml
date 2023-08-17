@@ -370,7 +370,6 @@
     <string name="dont_have_account_yet">Δεν έχετε ακόμα λογαριασμό στο Supla Cloud;</string>
     <string name="profile_name_label">ΟΝΟΜΑ ΛΟΓΑΡΙΑΣΜΟΥ</string>
     <string name="profiles_title">Λογαριασμοί</string>
-    <string name="form_cannot_delete_active_profile">Δεν είναι δυνατή η διαγραφή ενός ενεργού λογαριασμού</string>
     <string name="profile_default_name">Προεπιλογή</string>
     <string name="profile_select_active">Επιλέξτε έναν ενεργό λογαριασμό</string>
     <string name="profile_act_info">Πατήστε τον λογαριασμό σας για να συνδεθείτε</string>
@@ -381,7 +380,6 @@
     <string name="add_account">Προσθήκη λογαριασμού</string>
     <string name="edit_account">Επεξεργασία λογαριασμού</string>
     <string name="delete_account">Αφαιρώ</string>
-    <string name="delete_account_confirm_title">Διαγραφή λογαριασμού</string>
     <string name="delete_account_confirm_message">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας;</string>
     <string name="delete_account_confirm_message_with_widgets">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Η επιβεβαίωση θα σημαίνει την κατάργηση των σχετικών γραφικών στοιχείων.</string>
     <string name="cfg_label_access_id_auth">Αναγνωριστικό</string>

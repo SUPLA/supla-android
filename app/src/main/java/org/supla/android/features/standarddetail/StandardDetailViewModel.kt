@@ -1,25 +1,40 @@
 package org.supla.android.features.standarddetail
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import dagger.hilt.android.lifecycle.HiltViewModel
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelBase
 import org.supla.android.events.ListsEventsManager
-import org.supla.android.model.ItemType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
-import javax.inject.Inject
 
-@HiltViewModel
-class StandardDetailViewModel @Inject constructor(
+abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val listsEventsManager: ListsEventsManager,
+  defaultState: S,
   schedulers: SuplaSchedulers
-) : BaseViewModel<StandardDetailViewState, StandardDetailViewEvent>(StandardDetailViewState(), schedulers) {
+) : BaseViewModel<S, E>(defaultState, schedulers) {
 
   fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: Int) {
     getEventsSource(itemType)
@@ -36,11 +51,15 @@ class StandardDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  protected abstract fun closeEvent(): E
+
+  protected abstract fun updatedState(state: S, channelBase: ChannelBase): S
+
   private fun handleChannelBase(channelBase: ChannelBase, initialFunction: Int) {
     if (channelBase.visible > 0 && channelBase.func == initialFunction) {
-      updateState { it.copy(channelBase = channelBase) }
+      updateState { updatedState(it, channelBase) }
     } else {
-      sendEvent(StandardDetailViewEvent.Close)
+      sendEvent(closeEvent())
     }
   }
 
@@ -55,10 +74,6 @@ class StandardDetailViewModel @Inject constructor(
   }
 }
 
-sealed class StandardDetailViewEvent : ViewEvent {
-  object Close : StandardDetailViewEvent()
-}
+interface StandardDetailViewEvent : ViewEvent
 
-data class StandardDetailViewState(
-  val channelBase: ChannelBase? = null
-) : ViewState()
+open class StandardDetailViewState() : ViewState()
