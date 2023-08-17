@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.testhelpers
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,12 +17,18 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlin.math.roundToInt
+import io.mockk.every
+import io.mockk.mockk
+import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.db.AuthProfileItem
+import org.supla.android.lib.SuplaChannelRelation
 
-/**
- * Converts temperature to short which is used in supla protocols to present temperature.
- * Temperature is presented as a float value multiplied by 100 without fractional part.
- * In this method we're additional cutting of second position after decimal point, because
- * in the application you're able to change only first position.
- */
-fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
+fun profileMock(profileId: Long) = mockk<AuthProfileItem>().also {
+  every { it.id } returns profileId
+}
+
+fun relationMock(channelId: Int, parentId: Int, relationType: ChannelRelationType) = mockk<SuplaChannelRelation>().also {
+  every { it.channelId } returns channelId
+  every { it.parentId } returns parentId
+  every { it.relationType } returns relationType.value
+}

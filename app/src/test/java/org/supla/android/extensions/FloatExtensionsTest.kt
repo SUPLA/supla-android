@@ -17,12 +17,35 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlin.math.roundToInt
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 
-/**
- * Converts temperature to short which is used in supla protocols to present temperature.
- * Temperature is presented as a float value multiplied by 100 without fractional part.
- * In this method we're additional cutting of second position after decimal point, because
- * in the application you're able to change only first position.
- */
-fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
+@RunWith(MockitoJUnitRunner::class)
+class FloatExtensionsTest {
+
+  @Test
+  fun `should convert positive temperature`() {
+    // given
+    val temperature = 12.2333f
+
+    // when
+    val suplaTemperature = temperature.toSuplaTemperature()
+
+    // then
+    assertThat(suplaTemperature).isEqualTo(1220)
+  }
+
+  @Test
+  fun `should convert negative temperature`() {
+    // given
+    val temperature = -12.2333f
+
+    // when
+    val suplaTemperature = temperature.toSuplaTemperature()
+
+    // then
+    assertThat(suplaTemperature).isEqualTo(-1220)
+  }
+}

@@ -51,7 +51,7 @@ import org.supla.android.features.thermostatdetail.scheduledetail.data.QuartersS
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailProgramBox
-import org.supla.android.features.thermostatdetail.scheduledetail.extensions.viewProgramBoxesMap
+import org.supla.android.features.thermostatdetail.scheduledetail.extensions.viewProgramBoxesList
 import org.supla.android.features.thermostatdetail.scheduledetail.extensions.viewScheduleBoxesMap
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.ScheduleDetailViewProxy
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
@@ -452,7 +452,7 @@ class ScheduleDetailViewModel @Inject constructor(
         loadingState = it.loadingState.copy(false),
         channelFunction = channelFunction,
         schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
-        programs = data.weeklyScheduleConfig.viewProgramBoxesMap(),
+        programs = data.weeklyScheduleConfig.viewProgramBoxesList(),
         configTemperatureMin = configTemperatureMin,
         configTemperatureMax = configTemperatureMax,
         currentDayOfWeek = DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1),

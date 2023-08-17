@@ -29,7 +29,10 @@ import org.supla.android.ui.lists.data.SlideableListItemData
 
 fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValue?.TimerStateValue
 
-fun Channel.toSlideableListItemData(mainThermometerChild: Channel?, valuesFormatter: ValuesFormatter?): SlideableListItemData.Thermostat {
+fun Channel.toThermostatSlideableListItemData(
+  mainThermometerChild: Channel?,
+  valuesFormatter: ValuesFormatter?
+): SlideableListItemData.Thermostat {
   val thermostatValue = value.asThermostatValue()
 
   val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMin, true)

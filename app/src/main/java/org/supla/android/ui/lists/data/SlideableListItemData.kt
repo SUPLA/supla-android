@@ -20,12 +20,6 @@ package org.supla.android.ui.lists.data
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.db.Channel
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.toSlideableListItemData
-import org.supla.android.ui.lists.ListItem
 
 sealed class SlideableListItemData {
   abstract val online: Boolean
@@ -59,12 +53,3 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     subValue = "",
     indicatorIcon = null
   )
-
-fun ListItem.ChannelItem.data(valuesFormatter: ValuesFormatter): SlideableListItemData.Thermostat {
-  val (channel) = guardLet(channelBase as? Channel) {
-    throw IllegalArgumentException("Expected Channel but got $channelBase")
-  }
-  val child = children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
-
-  return channel.toSlideableListItemData(child?.channel, valuesFormatter)
-}
