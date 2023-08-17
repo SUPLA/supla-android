@@ -922,6 +922,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
       profile.getAuthInfo().setPreferredProtocolVersion(newVersion);
       profileManager.update(profile).blockingSubscribe();
+
+      reconnect();
+      return;
     }
 
     _client_id = registerResult.ClientID;
