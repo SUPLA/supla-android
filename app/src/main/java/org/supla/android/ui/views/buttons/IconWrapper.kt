@@ -32,14 +32,14 @@ import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
 
 @Composable
-fun IconWrapper(bitmap: Bitmap? = null, painter: Painter? = null, color: Color = MaterialTheme.colors.onBackground) {
+fun IconWrapper(bitmap: Bitmap? = null, painter: Painter? = null, color: Color? = null) {
   bitmap?.let {
     Image(
       bitmap = bitmap.asImageBitmap(),
       contentDescription = null,
       alignment = Alignment.Center,
       modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
-      colorFilter = ColorFilter.tint(color = color)
+      colorFilter = if (color == null) null else ColorFilter.tint(color = color)
     )
   }
   painter?.let {
@@ -48,7 +48,7 @@ fun IconWrapper(bitmap: Bitmap? = null, painter: Painter? = null, color: Color =
       contentDescription = null,
       alignment = Alignment.Center,
       modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
-      colorFilter = ColorFilter.tint(color = color)
+      colorFilter = if (color == null) null else ColorFilter.tint(color = color)
     )
   }
 }

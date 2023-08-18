@@ -86,7 +86,7 @@ class RoundedControlButtonView @JvmOverloads constructor(
 fun RoundedControlButton(
   modifier: Modifier = Modifier,
   icon: Painter? = null,
-  iconColor: Color = MaterialTheme.colors.onBackground,
+  iconColor: Color? = null,
   text: String? = null,
   backgroundColor: Color = MaterialTheme.colors.surface,
   type: AnimatableButtonType = AnimatableButtonType.POSITIVE,
