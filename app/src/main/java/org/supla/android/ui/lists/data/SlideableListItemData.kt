@@ -25,11 +25,13 @@ sealed class SlideableListItemData {
   abstract val online: Boolean
   abstract val titleProvider: StringProvider
   abstract val iconProvider: BitmapProvider?
+  abstract val issueIconType: IssueIconType?
 
   data class Thermostat(
     override val online: Boolean,
     override val titleProvider: StringProvider,
     override val iconProvider: BitmapProvider?,
+    override val issueIconType: IssueIconType?,
     val value: String,
     val subValue: String,
     @DrawableRes val indicatorIcon: Int?
@@ -40,7 +42,8 @@ sealed class SlideableListItemData {
   data class Default(
     override val online: Boolean,
     override val titleProvider: StringProvider,
-    override val iconProvider: BitmapProvider?
+    override val iconProvider: BitmapProvider?,
+    override val issueIconType: IssueIconType?
   ) : SlideableListItemData()
 }
 
@@ -51,5 +54,6 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     iconProvider = null,
     value = "",
     subValue = "",
-    indicatorIcon = null
+    indicatorIcon = null,
+    issueIconType = null
   )

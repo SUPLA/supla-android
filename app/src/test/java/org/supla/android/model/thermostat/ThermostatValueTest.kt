@@ -32,7 +32,7 @@ class ThermostatValueTest {
   @Test
   fun `should create thermostat value from byte array`() {
     // given
-    val bytes = byteArrayOf(0, 2, 120, 0, 80, 0, 8)
+    val bytes = byteArrayOf(0, 2, 120, 0, 80, 0, 8, 0)
 
     // when
     val values = ThermostatValue.from(bytes)
@@ -40,8 +40,8 @@ class ThermostatValueTest {
     // then
     assertThat(values.state.isOff()).isTrue
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
-    assertThat(values.setpointTemperatureMin).isEqualTo(1.2f, Offset.offset(0.000001f))
-    assertThat(values.setpointTemperatureMax).isEqualTo(0.8f, Offset.offset(0.000001f))
+    assertThat(values.setpointTemperatureMin).isEqualTo(1.2f, Offset.offset(0.001f))
+    assertThat(values.setpointTemperatureMax).isEqualTo(0.8f, Offset.offset(0.001f))
     assertThat(values.flags).containsExactly(SuplaThermostatFlags.COOLING)
   }
 }

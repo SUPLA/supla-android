@@ -46,6 +46,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
   private var remoteId: Int? = null
   private var itemType: ItemType? = null
   private var onInfoClick: () -> Unit = { }
+  private var onIssueClick: () -> Unit = { }
+  private var onTitleLongClick: () -> Unit = { }
 
   override var locationCaption: String? = null
 
@@ -92,6 +94,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
         (leftItem == null && position > 0) ||
         (rightItem == null && position < 0) ||
         data?.online?.not() == true -> 0
+
       else -> position
     }
 
@@ -104,6 +107,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
     super.onAttachedToWindow()
 
     content.onInfoClick = onInfoClick
+    content.onIssueClick = onIssueClick
+    content.onTitleLongClick = onTitleLongClick
 
     val (itemType) = guardLet(itemType) { return }
     val (remoteId) = guardLet(remoteId) { return }
@@ -127,12 +132,22 @@ class SlideableListItemLayout @JvmOverloads constructor(
     }
   }
 
-  fun bind(itemType: ItemType, remoteId: Int, locationCaption: String, data: SlideableListItemData, onInfoClick: () -> Unit) {
+  fun bind(
+    itemType: ItemType,
+    remoteId: Int,
+    locationCaption: String,
+    data: SlideableListItemData,
+    onInfoClick: () -> Unit,
+    onIssueClick: () -> Unit,
+    onTitleLongClick: () -> Unit
+  ) {
     this.itemType = itemType
     this.remoteId = remoteId
     this.locationCaption = locationCaption
     this.data = data
     this.onInfoClick = onInfoClick
+    this.onIssueClick = onIssueClick
+    this.onTitleLongClick = onTitleLongClick
   }
 
   private fun updateLeftItemPosition(item: View) {

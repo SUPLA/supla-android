@@ -17,6 +17,7 @@ package org.supla.android.features.channellist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -84,18 +85,22 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
           ItemType.CHANNEL
         )
       }
+
       is ChannelListViewEvent.ReassignAdapter -> {
         binding.channelsList.adapter = null
         binding.channelsList.adapter = adapter
       }
+
       is ChannelListViewEvent.OpenSwitchDetail -> navigator.navigateTo(
         R.id.switch_detail_fragment,
         SwitchDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
       )
+
       is ChannelListViewEvent.OpenThermostatDetail -> navigator.navigateTo(
         R.id.thermostat_detail_fragment,
         ThermostatDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
       )
+
       else -> {}
     }
   }
@@ -125,6 +130,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
+    adapter.issueButtonClickCallback = { showAlertPopup(it) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it as Channel) }
   }
 
@@ -145,5 +151,16 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     if (statePopup.isVisible && statePopup.remoteId == channelId) {
       statePopup.update(channelId)
     }
+  }
+
+  private fun showAlertPopup(messageId: Int?) {
+    if (messageId == null) {
+      return
+    }
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle(android.R.string.dialog_alert_title)
+    builder.setMessage(messageId)
+    builder.setNeutralButton(R.string.ok) { dialog, _ -> dialog.cancel() }
+    builder.create().show()
   }
 }

@@ -51,6 +51,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.listItemValue
 import org.supla.android.extensions.max
 import org.supla.android.ui.layouts.BaseSlideableContent
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.ListItemScaffold
@@ -83,10 +84,13 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
     SuplaTheme {
       ThermostatListItemView(
         data = data,
+        showInfoIcon = preferences.isShowChannelInfo,
         scale = scale,
         hasLeftButton = hasLeftButton,
         hasRightButton = hasRightButton,
-        onInfoClick = onInfoClick
+        onInfoClick = onInfoClick,
+        onIssueClick = onIssueClick,
+        onTitleLongClick = onTitleLongClick
       )
     }
   }
@@ -106,10 +110,13 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
 @Composable
 fun ThermostatListItemView(
   data: SlideableListItemData.Thermostat,
+  showInfoIcon: Boolean,
   scale: Float = 1f,
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
-  onInfoClick: () -> Unit = { }
+  onInfoClick: () -> Unit = { },
+  onIssueClick: () -> Unit = { },
+  onTitleLongClick: () -> Unit = { }
 ) {
   ListItemScaffold(
     itemTitle = data.titleProvider(LocalContext.current),
@@ -117,7 +124,11 @@ fun ThermostatListItemView(
     scale = scale,
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
-    onInfoClick = onInfoClick
+    onInfoClick = onInfoClick,
+    onTitleLongClick = onTitleLongClick,
+    showInfoIcon = showInfoIcon,
+    issueIconType = data.issueIconType,
+    onIssueClick = onIssueClick
   ) {
     Row(
       modifier = Modifier
@@ -203,8 +214,10 @@ private fun Preview() {
             iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
-            indicatorIcon = R.drawable.ic_cooling
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = IssueIconType.WARNING
           ),
+          true,
           scale = 1.5f
         )
       }
@@ -220,8 +233,10 @@ private fun Preview() {
             iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
-            indicatorIcon = R.drawable.ic_cooling
-          )
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = IssueIconType.ERROR
+          ),
+          false
         )
       }
       Column(
@@ -236,8 +251,10 @@ private fun Preview() {
             iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
-            indicatorIcon = R.drawable.ic_cooling
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = null
           ),
+          true,
           scale = 0.6f
         )
       }
@@ -253,8 +270,10 @@ private fun Preview() {
             iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
-            indicatorIcon = R.drawable.ic_cooling
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = IssueIconType.WARNING
           ),
+          false,
           scale = 0.6f
         )
       }

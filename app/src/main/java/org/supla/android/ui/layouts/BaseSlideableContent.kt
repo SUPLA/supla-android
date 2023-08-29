@@ -33,6 +33,8 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
   var onInfoClick: () -> Unit = { }
+  var onIssueClick: () -> Unit = { }
+  var onTitleLongClick: () -> Unit = { }
 
   protected var data: T? by mutableStateOf(null)
 

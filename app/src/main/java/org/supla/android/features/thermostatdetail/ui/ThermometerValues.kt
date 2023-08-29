@@ -76,7 +76,7 @@ fun ThermometersValues(temperatures: List<ThermostatTemperature>) {
           modifier = Modifier
             .background(MaterialTheme.colors.surface)
             .height(80.dp)
-            .padding(vertical = dimensionResource(id = R.dimen.distance_small))
+            .padding(top = dimensionResource(id = R.dimen.distance_small))
             .weight(weight)
         )
       }

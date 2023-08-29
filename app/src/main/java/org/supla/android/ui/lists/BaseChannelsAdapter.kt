@@ -26,6 +26,7 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.databinding.LiThermostatItemBinding
@@ -44,6 +45,7 @@ abstract class BaseChannelsAdapter(
 ) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
+  var issueButtonClickCallback: (messageId: Int?) -> Unit = { _ -> }
   var listItemClickCallback: (channelBase: ChannelBase) -> Unit = { _ -> }
 
   override val callback = ListCallback(context, this).also {
@@ -129,7 +131,9 @@ abstract class BaseChannelsAdapter(
         remoteId = item.channelBase.remoteId,
         locationCaption = item.location.caption,
         data = data(item),
-        onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) }
+        onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) },
+        onIssueClick = { issueButtonClickCallback(getIssueMessage(item)) },
+        onTitleLongClick = { onCaptionLongPress(item.channelBase.remoteId) }
       )
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channelBase) }
@@ -145,6 +149,19 @@ abstract class BaseChannelsAdapter(
       val child = item.children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
 
       return channel.toThermostatSlideableListItemData(child?.channel, valuesFormatter)
+    }
+
+    private fun getIssueMessage(item: ListItem.ChannelItem): Int? {
+      val (channel) = guardLet(item.channelBase as? Channel) { return null }
+      val value = channel.value.asThermostatValue()
+
+      if (value.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
+        return R.string.thermostat_thermometer_error
+      } else if (value.flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
+        return R.string.thermostat_clock_error
+      } else {
+        return null
+      }
     }
   }
 }

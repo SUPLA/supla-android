@@ -41,14 +41,18 @@ import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.events.ConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.mapMerged
+import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ui.ThermostatGeneralViewProxy
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
@@ -268,11 +272,11 @@ class ThermostatGeneralViewModel @Inject constructor(
     val channel = data.channelWithChildren.channel
     val value = channel.value.asThermostatValue()
 
-    val setpointMinTemperature = getSetpointMinTemperature(channel.func, value)
-    val setpointMaxTemperature = getSetpointMaxTemperature(channel.func, value)
+    val setpointMinTemperature = getSetpointMinTemperature(channel, value)
+    val setpointMaxTemperature = getSetpointMaxTemperature(channel, value)
 
-    val (configMinTemperature) = guardLet(data.config.temperatures.roomMin?.toFloat()?.div(100)) { return }
-    val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.toFloat()?.div(100)) { return }
+    val (configMinTemperature) = guardLet(data.config.temperatures.roomMin?.fromSuplaTemperature()) { return }
+    val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.fromSuplaTemperature()) { return }
 
     val range = configMaxTemperature - configMinTemperature
     val isOff = channel.onLine.not() || value.mode == SuplaHvacMode.OFF || value.mode == SuplaHvacMode.NOT_SET
@@ -338,6 +342,8 @@ class ThermostatGeneralViewModel @Inject constructor(
         manualModeActive = isOff.not() && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE).not(),
         programmedModeActive = channel.onLine && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE),
 
+        issues = createThermostatIssues(value.flags),
+
         loadingState = it.loadingState.copy(false)
       )
     }
@@ -398,17 +404,22 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun getSetpointMinTemperature(function: Int, thermostatValue: ThermostatValue): Float? =
-    (
-      (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT || function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO) &&
-        thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET)
-      ).ifTrue(thermostatValue.setpointTemperatureMin)
+  private fun Channel.setpointMinTemperatureSupported(): Boolean =
+    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT ||
+      func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ||
+      func == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 
-  private fun getSetpointMaxTemperature(function: Int, thermostatValue: ThermostatValue): Float? =
-    (
-      (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL || function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO) &&
-        thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET)
-      ).ifTrue(thermostatValue.setpointTemperatureMax)
+  private fun Channel.setpointMaxTemperatureSupported(): Boolean =
+    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL ||
+      func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+
+  private fun getSetpointMinTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
+    (channel.setpointMinTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET))
+      .ifTrue(thermostatValue.setpointTemperatureMin)
+
+  private fun getSetpointMaxTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
+    (channel.setpointMaxTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET))
+      .ifTrue(thermostatValue.setpointTemperatureMax)
 
   private fun changeMinTemperature(viewModelState: ThermostatGeneralViewModelState, step: Float) {
     viewModelState.setpointMinTemperature?.let {
@@ -484,6 +495,16 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
+  private fun createThermostatIssues(flags: List<SuplaThermostatFlags>): List<ThermostatIssueItem> =
+    mutableListOf<ThermostatIssueItem>().apply {
+      if (flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
+        add(ThermostatIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
+      }
+      if (flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
+        add(ThermostatIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
+      }
+    }
+
   private data class LoadedData(
     val channelWithChildren: ChannelWithChildren,
     val temperatures: List<ThermostatTemperature>,
@@ -522,6 +543,8 @@ data class ThermostatGeneralViewState(
 
   val manualModeActive: Boolean = false,
   val programmedModeActive: Boolean = false,
+
+  val issues: List<ThermostatIssueItem> = emptyList(),
 
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val lastInteractionTime: Long? = null,

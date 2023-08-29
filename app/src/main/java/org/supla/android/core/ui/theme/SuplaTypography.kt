@@ -2,6 +2,7 @@ package org.supla.android.core.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -33,12 +34,20 @@ val SuplaTypography = Typography(
   overline = TextStyle(fontSize = 10.sp, letterSpacing = 0.15.sp, fontWeight = FontWeight.Normal)
 )
 
-val Typography.listItemCaption: TextStyle
-  get() = TextStyle(fontSize = 11.sp, letterSpacing = 0.04.sp, fontWeight = FontWeight.Bold)
+@Composable
+fun Typography.listItemCaption(): TextStyle =
+  TextStyle(
+    color = colorResource(id = R.color.channel_caption_text),
+    fontSize = fontDimensionResource(id = R.dimen.channel_caption_text_size),
+    letterSpacing = 0.04.sp,
+    fontWeight = FontWeight.Bold,
+    fontFamily = FontFamily(Font(R.font.open_sans_bold))
+  )
 
 @Composable
 fun Typography.listItemValue(): TextStyle =
   TextStyle(
+    color = colorResource(id = R.color.channel_imgtext_color),
     fontSize = fontDimensionResource(id = R.dimen.channel_imgtext_size),
     fontWeight = FontWeight.Normal,
     fontFamily = FontFamily(Font(R.font.open_sans_regular))
