@@ -52,7 +52,8 @@ enum class SuplaHvacThermometerType(value: Int) {
 
 enum class SuplaHvacAlgorithm(value: Int) {
   NOT_SET(0),
-  ON_OFF(1)
+  ON_OFF_SETPOINT_MIDDLE(1),
+  ON_OFF_SETPOINT_AT_MOST(2)
 }
 
 data class SuplaChannelHvacConfig(
