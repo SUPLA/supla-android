@@ -224,7 +224,13 @@ class ThermostatGeneralViewModel @Inject constructor(
         else -> SuplaHvacMode.HEAT
       }
 
-      delayedThermostatActionSubject.sendImmediately(viewModelState.copy(mode = newMode))
+      delayedThermostatActionSubject.sendImmediately(
+        viewModelState.copy(
+          mode = newMode,
+          setpointMinTemperature = null,
+          setpointMaxTemperature = null
+        )
+      )
         .attachSilent()
         .subscribeBy()
         .disposeBySelf()

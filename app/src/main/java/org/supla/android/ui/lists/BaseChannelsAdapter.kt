@@ -155,12 +155,12 @@ abstract class BaseChannelsAdapter(
       val (channel) = guardLet(item.channelBase as? Channel) { return null }
       val value = channel.value.asThermostatValue()
 
-      if (value.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
-        return R.string.thermostat_thermometer_error
+      return if (value.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
+        R.string.thermostat_thermometer_error
       } else if (value.flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
-        return R.string.thermostat_clock_error
+        R.string.thermostat_clock_error
       } else {
-        return null
+        null
       }
     }
   }

@@ -856,12 +856,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
       super(context);
-
-      float fontScale = getResources().getConfiguration().fontScale;
-      float textSize = getResources().getInteger(R.integer.channel_caption_text_size) * fontScale;
+      float textSize = getResources().getDimension(R.dimen.channel_caption_text_size);
       if (heightScaleFactor > 1.0) textSize *= heightScaleFactor;
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
-      setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+      setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
       setTextColor(getResources().getColor(R.color.channel_caption_text));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
@@ -944,11 +942,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
-      float fontScale = getResources().getConfiguration().fontScale;
-      float textSize = getResources().getInteger(R.integer.channel_imgtext_size) * fontScale;
+      float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
       float sts = scaledDimension((int) textSize);
-      textSize = (sts > textSize) ? sts : textSize;
-      Text.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+      textSize = Math.max(sts, textSize);
+      Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
       Text.setMaxLines(1);
 

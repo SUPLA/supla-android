@@ -20,7 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.annotation.DimenRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -54,4 +55,11 @@ fun max(a: TextUnit, b: TextUnit): TextUnit {
 
 @Composable
 @ReadOnlyComposable
-fun fontDimensionResource(@DimenRes id: Int) = dimensionResource(id = id).value.sp
+fun fontDimensionResource(@DimenRes id: Int): TextUnit {
+  val density = LocalDensity.current.density
+  val resources = LocalContext.current.resources
+  val fontScale = resources.configuration.fontScale
+  val dimension = resources.getDimension(id)
+
+  return dimension.div(density).div(fontScale).sp
+}
