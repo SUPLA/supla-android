@@ -44,7 +44,7 @@ data class MotionEventStateHolder(
   ): Boolean {
     when (event.action) {
       MotionEvent.ACTION_DOWN -> handleDownEvent(event, boxes, boxSize, coroutineScope, context, viewProxy)
-      MotionEvent.ACTION_MOVE -> handleMoveEvent(event, boxes, boxSize, viewProxy)
+      MotionEvent.ACTION_MOVE -> handleMoveEvent(event, boxes, boxSize, viewProxy, context)
       MotionEvent.ACTION_UP -> handleUpEvent(boxes, event, boxSize, viewProxy, context)
       else -> viewProxy.invalidateSchedule()
     }
@@ -83,14 +83,17 @@ data class MotionEventStateHolder(
     event: MotionEvent,
     boxes: Map<ScheduleDetailEntryBoxKey, Offset>,
     boxSize: Size,
-    viewProxy: ScheduleDetailViewProxy
+    viewProxy: ScheduleDetailViewProxy,
+    context: Context
   ) {
     if (state?.isConsumed() == true) {
       return // Long press watcher used this event
     }
 
     // Mark touched boxes
-    boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { viewProxy.changeScheduleEntry(it) }
+    if (state?.moved(context) == true) {
+      boxes.entries.firstOrNull { event.inside(it.value, boxSize) }?.key?.let { viewProxy.changeScheduleEntry(it) }
+    }
 
     // Update distance for long press
     val moveOffset = Offset(event.rawX, event.rawY)

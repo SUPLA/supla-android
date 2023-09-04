@@ -576,6 +576,9 @@
   <string name="friday_short">PT</string>
   <string name="saturday_short">SO</string>
   <string name="sunday_short">ND</string>
+  <string name="thermostat_thermometer_error">Błąd odczytu temperatury</string>
+  <string name="thermostat_clock_error">Błąd zegara</string>
+  <string name="channel_not_supported">Niewspierana funkcja</string>
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>

@@ -428,10 +428,10 @@ public class SuplaConst {
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT:
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
         idx = R.string.channel_caption_thermostat;
@@ -446,9 +446,11 @@ public class SuplaConst {
       case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
         idx = R.string.channel_caption_digiglass;
         break;
+      default:
+        idx = R.string.channel_not_supported;
     }
 
-    return idx == -1 || context == null ? "" : context.getResources().getString(idx);
+    return context == null ? "" : context.getResources().getString(idx);
   }
 
   public static String getNotEmptyCaption(String caption, int func, Context context) {

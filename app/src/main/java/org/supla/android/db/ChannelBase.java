@@ -665,19 +665,21 @@ public abstract class ChannelBase extends DbItem {
         }
 
         break;
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
+        img_idx = R.drawable.ic_thermostat_dhw;
+        break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT:
         img_idx = R.drawable.ic_thermostat_heat;
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL:
         img_idx = R.drawable.ic_thermostat_cool;
         break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
-        img_idx = R.drawable.ic_thermostat_auto;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+        //        img_idx = R.drawable.ic_thermostat_auto;
+        //        break;
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         img_idx = R.drawable.thermometer;
         break;

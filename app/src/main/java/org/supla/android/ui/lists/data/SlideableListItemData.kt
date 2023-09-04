@@ -20,22 +20,18 @@ package org.supla.android.ui.lists.data
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.db.Channel
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.toSlideableListItemData
-import org.supla.android.ui.lists.ListItem
 
 sealed class SlideableListItemData {
   abstract val online: Boolean
   abstract val titleProvider: StringProvider
   abstract val iconProvider: BitmapProvider?
+  abstract val issueIconType: IssueIconType?
 
   data class Thermostat(
     override val online: Boolean,
     override val titleProvider: StringProvider,
     override val iconProvider: BitmapProvider?,
+    override val issueIconType: IssueIconType?,
     val value: String,
     val subValue: String,
     @DrawableRes val indicatorIcon: Int?
@@ -46,7 +42,8 @@ sealed class SlideableListItemData {
   data class Default(
     override val online: Boolean,
     override val titleProvider: StringProvider,
-    override val iconProvider: BitmapProvider?
+    override val iconProvider: BitmapProvider?,
+    override val issueIconType: IssueIconType?
   ) : SlideableListItemData()
 }
 
@@ -57,14 +54,6 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     iconProvider = null,
     value = "",
     subValue = "",
-    indicatorIcon = null
+    indicatorIcon = null,
+    issueIconType = null
   )
-
-fun ListItem.ChannelItem.data(valuesFormatter: ValuesFormatter): SlideableListItemData.Thermostat {
-  val (channel) = guardLet(channelBase as? Channel) {
-    throw IllegalArgumentException("Expected Channel but got $channelBase")
-  }
-  val child = children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
-
-  return channel.toSlideableListItemData(child?.channel, valuesFormatter)
-}

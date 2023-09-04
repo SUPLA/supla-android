@@ -9,7 +9,9 @@
     <dimen name="channel_btn_text_size">27sp</dimen>
     <dimen name="channel_caption_top_margin">25dp</dimen>
     <dimen name="channel_caption_text_size">17sp</dimen>
+    <integer name="channel_caption_text_size">17</integer>
     <dimen name="channel_imgtext_size">35sp</dimen>
+    <integer name="channel_imgtext_size">35</integer>
     <dimen name="channel_img_width">100dp</dimen>
     <dimen name="channel_img_height">90dp</dimen>
     <dimen name="channel_imgtext_width">250dp</dimen>

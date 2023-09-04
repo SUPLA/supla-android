@@ -595,6 +595,9 @@
     <string translatable="false" name="friday_short">FR</string>
     <string translatable="false" name="saturday_short">SA</string>
     <string translatable="false" name="sunday_short">SU</string>
+    <string translatable="false" name="thermostat_thermometer_error">Temperature reading error</string>
+    <string translatable="false" name="thermostat_clock_error">Clock error</string>
+    <string translatable="false" name="channel_not_supported">Not supported function</string>
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>

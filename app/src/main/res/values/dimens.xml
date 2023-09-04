@@ -28,7 +28,9 @@
     <dimen name="channel_btn_text_size">18sp</dimen>
     <dimen name="channel_caption_top_margin">18dp</dimen>
     <dimen name="channel_caption_text_size">11sp</dimen>
+    <integer name="channel_caption_text_size">11</integer>
     <dimen name="channel_imgtext_size">20sp</dimen>
+    <integer name="channel_imgtext_size">20</integer>
     <dimen name="channel_img_top_margin">24dp</dimen>
     <dimen name="channel_img_width">60dp</dimen>
     <dimen name="channel_img_height">50dp</dimen>

@@ -20,7 +20,6 @@ package org.supla.android.ui.views.buttons
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +38,7 @@ fun IconWrapper(bitmap: Bitmap? = null, painter: Painter? = null, color: Color? 
       contentDescription = null,
       alignment = Alignment.Center,
       modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
-      colorFilter = if (color == null) null else ColorFilter.tint(color = color)
+      colorFilter = color?.let { ColorFilter.tint(color = it) }
     )
   }
   painter?.let {
@@ -48,7 +47,7 @@ fun IconWrapper(bitmap: Bitmap? = null, painter: Painter? = null, color: Color? 
       contentDescription = null,
       alignment = Alignment.Center,
       modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
-      colorFilter = if (color == null) null else ColorFilter.tint(color = color)
+      colorFilter = color?.let { ColorFilter.tint(color = it) }
     )
   }
 }

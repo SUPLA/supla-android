@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.extensions.fromSuplaTemperature
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
+import org.supla.android.extensions.toShort
+import org.supla.android.extensions.toShortVararg
 
 data class ThermostatValue(
   val state: ThermostatState,
@@ -37,7 +37,7 @@ data class ThermostatValue(
         mode = SuplaHvacMode.from(bytes[1]),
         setpointTemperatureMin = bytes.toTemperature(2, 3),
         setpointTemperatureMax = bytes.toTemperature(4, 5),
-        flags = SuplaThermostatFlags.from(bytes[6])
+        flags = SuplaThermostatFlags.from(bytes.toShortVararg(6, 7))
       )
     }
   }
@@ -51,5 +51,5 @@ data class ThermostatState(val value: Short) {
 private fun ByteArray.toTemperature(vararg byteIndices: Int): Float {
   val bytes = ByteArray(byteIndices.size)
   byteIndices.sorted().forEachIndexed { index, byte -> bytes[index] = this[byte] }
-  return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).short.fromSuplaTemperature()
+  return toShort(byteIndices).fromSuplaTemperature()
 }

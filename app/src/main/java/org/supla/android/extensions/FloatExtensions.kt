@@ -19,4 +19,10 @@ package org.supla.android.extensions
 
 import kotlin.math.roundToInt
 
+/**
+ * Converts temperature to short which is used in supla protocols to present temperature.
+ * Temperature is presented as a float value multiplied by 100 without fractional part.
+ * In this method we're additional cutting of second position after decimal point, because
+ * in the application you're able to change only first position.
+ */
 fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()

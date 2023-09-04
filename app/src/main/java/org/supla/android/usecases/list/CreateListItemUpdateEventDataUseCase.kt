@@ -23,7 +23,7 @@ import org.supla.android.events.ListsEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import org.supla.android.usecases.list.eventmappers.ThermostatUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,10 +32,10 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val eventsManager: ListsEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  thermostatUpdateEventMapper: ThermostatUpdateEventMapper
+  channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper
 ) {
 
-  private val mappers: List<Mapper> = listOf(thermostatUpdateEventMapper)
+  private val mappers: List<Mapper> = listOf(channelWithChildrenToThermostatUpdateEventMapper)
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {
     return when (itemType) {

@@ -52,7 +52,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
     }
   }
 
-fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesMap() =
+fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList() =
   mutableListOf<ScheduleDetailProgramBox>().apply {
     for (program in programConfigurations) {
       val icon = when {
@@ -76,7 +76,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesMap() =
     ScheduleDetailProgramBox(
       channelFunction = func ?: 0,
       program = SuplaScheduleProgram.OFF,
-      mode = SuplaHvacMode.AUTO,
+      mode = SuplaHvacMode.OFF,
       iconRes = R.drawable.ic_power_button
     ).also { add(it) }
   }

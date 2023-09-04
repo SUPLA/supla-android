@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.thermostat
+package org.supla.android.features.thermostatdetail.thermostatgeneral.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,27 +17,10 @@ package org.supla.android.data.source.remote.thermostat
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaThermostatFlags(val value: Int) {
-  SETPOINT_TEMP_MIN_SET(1),
-  SETPOINT_TEMP_MAX_SET(1 shl 1),
-  HEATING(1 shl 2),
-  COOLING(1 shl 3),
-  WEEKLY_SCHEDULE(1 shl 4),
-  COUNTDOWN_TIMER(1 shl 5),
-  FAN_ENABLED(1 shl 6),
-  THERMOMETER_ERROR(1 shl 7),
-  CLOCK_ERROR(1 shl 8);
+import androidx.annotation.StringRes
+import org.supla.android.ui.lists.data.IssueIconType
 
-  companion object {
-    fun from(short: Short): List<SuplaThermostatFlags> {
-      val result = mutableListOf<SuplaThermostatFlags>()
-      for (flag in SuplaThermostatFlags.values()) {
-        if (flag.value and short.toInt() > 0) {
-          result.add(flag)
-        }
-      }
-
-      return result
-    }
-  }
-}
+data class ThermostatIssueItem(
+  val issueIconType: IssueIconType,
+  @StringRes val descriptionRes: Int
+)

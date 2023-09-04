@@ -21,7 +21,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.isHvacThermostat
-import org.supla.android.extensions.toSlideableListItemData
+import org.supla.android.extensions.toThermostatSlideableListItemData
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
@@ -29,7 +29,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThermostatUpdateEventMapper @Inject constructor(private val valuesFormatter: ValuesFormatter) :
+class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(private val valuesFormatter: ValuesFormatter) :
   CreateListItemUpdateEventDataUseCase.Mapper {
   override fun handle(item: Any): Boolean {
     return (item as? ChannelWithChildren)?.channel?.isHvacThermostat() == true
@@ -41,6 +41,6 @@ class ThermostatUpdateEventMapper @Inject constructor(private val valuesFormatte
     }
 
     val mainThermometerChild = channel.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
-    return channel.channel.toSlideableListItemData(mainThermometerChild?.channel, valuesFormatter)
+    return channel.channel.toThermostatSlideableListItemData(mainThermometerChild?.channel, valuesFormatter)
   }
 }

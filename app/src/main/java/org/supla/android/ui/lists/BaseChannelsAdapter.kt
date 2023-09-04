@@ -25,13 +25,18 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.databinding.LiThermostatItemBinding
+import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.isHvacThermostat
+import org.supla.android.extensions.toThermostatSlideableListItemData
 import org.supla.android.ui.layouts.ChannelLayout
-import org.supla.android.ui.lists.data.data
+import org.supla.android.ui.lists.data.SlideableListItemData
 
 abstract class BaseChannelsAdapter(
   private val context: Context,
@@ -40,6 +45,7 @@ abstract class BaseChannelsAdapter(
 ) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
+  var issueButtonClickCallback: (messageId: Int?) -> Unit = { _ -> }
   var listItemClickCallback: (channelBase: ChannelBase) -> Unit = { _ -> }
 
   override val callback = ListCallback(context, this).also {
@@ -124,14 +130,38 @@ abstract class BaseChannelsAdapter(
         itemType = ItemType.CHANNEL,
         remoteId = item.channelBase.remoteId,
         locationCaption = item.location.caption,
-        data = item.data(valuesFormatter),
-        onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) }
+        data = data(item),
+        onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) },
+        onIssueClick = { issueButtonClickCallback(getIssueMessage(item)) },
+        onTitleLongClick = { onCaptionLongPress(item.channelBase.remoteId) }
       )
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channelBase) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
       binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channelBase.remoteId) }
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channelBase.remoteId) }
+    }
+
+    private fun data(item: ListItem.ChannelItem): SlideableListItemData.Thermostat {
+      val (channel) = guardLet(item.channelBase as? Channel) {
+        throw IllegalArgumentException("Expected Channel but got ${item.channelBase}")
+      }
+      val child = item.children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
+
+      return channel.toThermostatSlideableListItemData(child?.channel, valuesFormatter)
+    }
+
+    private fun getIssueMessage(item: ListItem.ChannelItem): Int? {
+      val (channel) = guardLet(item.channelBase as? Channel) { return null }
+      val value = channel.value.asThermostatValue()
+
+      if (value.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
+        return R.string.thermostat_thermometer_error
+      } else if (value.flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
+        return R.string.thermostat_clock_error
+      } else {
+        return null
+      }
     }
   }
 }

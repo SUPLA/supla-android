@@ -17,6 +17,7 @@ package org.supla.android.features.thermostatdetail.thermostatgeneral.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -43,6 +47,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
@@ -50,7 +56,10 @@ import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
+import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralViewState
+import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatTemperature
+import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.ui.ThermometersValues
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.AnimatableButtonType
@@ -95,36 +104,40 @@ fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
       } else {
         // To avoid screen jumping
         Shadow(orientation = ShadowOrientation.STARTING_TOP)
-        Spacer(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-        )
+        EmptyThermometerValues()
       }
 
-      BoxWithConstraints(modifier = Modifier.weight(1f)) {
-        if (maxHeight < 350.dp) {
-          if (viewState.isOff.not() && viewState.isAutoFunction) {
-            HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
-          }
-          TemperatureControlRow(viewState, viewProxy)
-        } else {
-          Column {
-            if (viewState.isOff.not() && viewState.isAutoFunction) {
-              HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
-            } else {
-              Spacer(modifier = Modifier.height(96.dp))
-            }
-            TemperatureControlRow(viewState, viewProxy)
-          }
-        }
-      }
+      ThermostatView(viewState = viewState, viewProxy = viewProxy, modifier = Modifier.weight(1f))
 
       BottomButtonsRow(viewState, viewProxy)
     }
 
     if (viewState.loadingState.loading) {
       LoadingScrim()
+    }
+  }
+}
+
+context (ColumnScope)
+@Composable
+private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy, modifier: Modifier = Modifier) {
+  BoxWithConstraints(modifier = modifier) {
+    if (maxHeight < 350.dp) {
+      if (viewState.isOff.not() && viewState.isAutoFunction) {
+        HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
+      }
+      TemperatureControlRow(viewState, viewProxy)
+      WarningsRow(viewState.issues, modifier = Modifier.align(Alignment.BottomStart))
+    } else {
+      Column {
+        if (viewState.isOff.not() && viewState.isAutoFunction) {
+          HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
+        } else {
+          Spacer(modifier = Modifier.height(96.dp))
+        }
+        TemperatureControlRow(viewState, viewProxy)
+        WarningsRow(viewState.issues)
+      }
     }
   }
 }
@@ -153,6 +166,7 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
   ConstraintLayout(
     modifier = Modifier
       .weight(1f)
+      .fillMaxWidth()
   ) {
     val (control, row) = createRefs()
     val context = LocalContext.current
@@ -237,6 +251,29 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
+private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier) {
+  val defaultPadding = dimensionResource(id = R.dimen.distance_default)
+  Column(
+    modifier = modifier.padding(start = defaultPadding, end = defaultPadding),
+    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
+  ) {
+    warnings.forEach {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small))
+      ) {
+        Image(
+          painter = painterResource(id = it.issueIconType.icon),
+          contentDescription = null,
+          modifier = Modifier.size(dimensionResource(id = R.dimen.channel_warning_image_size))
+        )
+        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.body2)
+      }
+    }
+  }
+}
+
+@Composable
 private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy) {
   Row(
     modifier = Modifier
@@ -281,6 +318,13 @@ private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) 
   )
 }
 
+@Composable
+private fun EmptyThermometerValues() = Spacer(
+  modifier = Modifier
+    .fillMaxWidth()
+    .height(80.dp)
+)
+
 @Preview
 @Composable
 private fun Preview() {
@@ -289,9 +333,27 @@ private fun Preview() {
   }
 }
 
+@Preview
+@Composable
+private fun PreviewSmall() {
+  SuplaTheme {
+    Box(modifier = Modifier.height(500.dp)) {
+      ThermostatDetail(PreviewProxy())
+    }
+  }
+}
+
 private class PreviewProxy : ThermostatGeneralViewProxy {
   override fun getViewState(): StateFlow<ThermostatGeneralViewState> =
-    MutableStateFlow(value = ThermostatGeneralViewState(isAutoFunction = true))
+    MutableStateFlow(
+      value = ThermostatGeneralViewState(
+        isAutoFunction = true,
+        loadingState = LoadingTimeoutManager.LoadingState(loading = false),
+        temperatures = listOf(
+          ThermostatTemperature(123, { ResourcesCompat.getDrawable(it.resources, R.drawable.thermometer, null)!!.toBitmap() }, "12.3")
+        )
+      )
+    )
 
   override fun heatingModeChanged() {}
 

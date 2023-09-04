@@ -22,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -51,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.listItemCaption
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
 import java.lang.Float.max
 
@@ -59,6 +62,10 @@ fun ListItemScaffold(
   itemTitle: String,
   online: Boolean,
   onInfoClick: () -> Unit,
+  onIssueClick: () -> Unit,
+  onTitleLongClick: () -> Unit,
+  showInfoIcon: Boolean,
+  issueIconType: IssueIconType?,
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
   scale: Float = 1f,
@@ -69,7 +76,7 @@ fun ListItemScaffold(
       .fillMaxWidth()
       .fillMaxHeight()
   ) {
-    if (online) {
+    if (online && showInfoIcon) {
       ListItemInfoIcon(onInfoClick)
     }
     Row(
@@ -93,9 +100,11 @@ fun ListItemScaffold(
         .fillMaxWidth(),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      ListItemTitle(text = itemTitle, scale = scale)
+      ListItemTitle(text = itemTitle, onLongClick = onTitleLongClick, scale = scale)
       Separator()
     }
+
+    issueIconType?.let { ListItemIssueIcon(it, onIssueClick) }
   }
 }
 
@@ -146,16 +155,37 @@ private fun ListItemInfoIcon(onClick: () -> Unit) {
   )
 }
 
+context (BoxScope)
 @Composable
-private fun ListItemTitle(text: String, scale: Float = 1f) {
-  val textSize = MaterialTheme.typography.listItemCaption.fontSize.times(max(scale, 1f))
+private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit) {
+  val endPadding = dimensionResource(id = R.dimen.channel_dot_size)
+    .plus(dimensionResource(id = R.dimen.distance_default).times(2))
+
+  Image(
+    painter = painterResource(id = issueIconType.icon),
+    contentDescription = null,
+    modifier = Modifier
+      .align(Alignment.CenterEnd)
+      .padding(end = endPadding)
+      .size(dimensionResource(id = R.dimen.channel_warning_image_size))
+      .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+  )
+}
+
+@Composable
+private fun ListItemTitle(text: String, onLongClick: () -> Unit, scale: Float = 1f) {
+  val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
   Text(
     text = text,
-    style = MaterialTheme.typography.listItemCaption,
-    modifier = Modifier.padding(
-      horizontal = dimensionResource(id = R.dimen.distance_default),
-      vertical = dimensionResource(id = R.dimen.distance_small).times(scale)
-    ),
+    style = MaterialTheme.typography.listItemCaption(),
+    modifier = Modifier
+      .padding(
+        horizontal = dimensionResource(id = R.dimen.distance_default),
+        vertical = dimensionResource(id = R.dimen.distance_small).times(scale)
+      )
+      .pointerInput(Unit) {
+        detectTapGestures(onLongPress = { onLongClick() })
+      },
     maxLines = 1,
     overflow = TextOverflow.Ellipsis,
     fontSize = textSize
@@ -176,7 +206,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = true, { }) {
+        ListItemScaffold(itemTitle = "Power Switch", online = true, { }, { }, { }, true, IssueIconType.WARNING) {
         }
       }
       Box(
@@ -184,7 +214,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = false, { }) {
+        ListItemScaffold(itemTitle = "Power Switch", online = false, { }, { }, { }, false, null) {
         }
       }
     }

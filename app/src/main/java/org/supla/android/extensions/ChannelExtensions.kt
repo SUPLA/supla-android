@@ -25,11 +25,15 @@ import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaTimerState
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 
 fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValue?.TimerStateValue
 
-fun Channel.toSlideableListItemData(mainThermometerChild: Channel?, valuesFormatter: ValuesFormatter?): SlideableListItemData.Thermostat {
+fun Channel.toThermostatSlideableListItemData(
+  mainThermometerChild: Channel?,
+  valuesFormatter: ValuesFormatter?
+): SlideableListItemData.Thermostat {
   val thermostatValue = value.asThermostatValue()
 
   val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMin, true)
@@ -50,12 +54,19 @@ fun Channel.toSlideableListItemData(mainThermometerChild: Channel?, valuesFormat
     else -> null
   }
 
+  val issueIconType = when {
+    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR) -> IssueIconType.ERROR
+    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.CLOCK_ERROR) -> IssueIconType.WARNING
+    else -> null
+  }
+
   return SlideableListItemData.Thermostat(
     online = onLine,
     titleProvider = { getNotEmptyCaption(it) },
     iconProvider = { ImageCache.getBitmap(it, imageIdx) },
     value = mainThermometerChild?.humanReadableValue?.toString() ?: NO_VALUE_TEXT,
     subValue = subValue ?: NO_VALUE_TEXT,
-    indicatorIcon = indicatorIcon
+    indicatorIcon = indicatorIcon,
+    issueIconType = issueIconType
   )
 }
