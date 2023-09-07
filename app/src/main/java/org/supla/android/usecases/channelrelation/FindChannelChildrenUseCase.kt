@@ -36,10 +36,12 @@ class FindChannelChildrenUseCase @Inject constructor(
         Maybe.fromCallable {
           mutableListOf<ChannelChild>().apply {
             for (relation in childrenRelations) {
+              val channel = channelRepository.getChannel(relation.channelId) ?: continue
+
               add(
                 ChannelChild(
                   relationType = relation.channelRelationType,
-                  channel = channelRepository.getChannel(relation.channelId)
+                  channel = channel
                 )
               )
             }
