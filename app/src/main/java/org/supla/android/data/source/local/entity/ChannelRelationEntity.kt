@@ -42,6 +42,7 @@ data class ChannelRelationEntity(
 }
 
 enum class ChannelRelationType(val value: Short) {
+  DEFAULT(0),
   OPENING_SENSOR(1),
   PARTIAL_OPENING_SENSOR(2),
   METER(3),
@@ -50,6 +51,17 @@ enum class ChannelRelationType(val value: Short) {
   AUX_THERMOMETER_WATER(6),
   AUX_THERMOMETER_GENERIC_HEATER(7),
   AUX_THERMOMETER_GENERIC_COOLER(8);
+
+  fun isThermometer(): Boolean {
+    return when (this) {
+      MAIN_THERMOMETER,
+      AUX_THERMOMETER_FLOOR,
+      AUX_THERMOMETER_WATER,
+      AUX_THERMOMETER_GENERIC_HEATER,
+      AUX_THERMOMETER_GENERIC_COOLER -> true
+      else -> false
+    }
+  }
 
   companion object {
     fun from(value: Short): ChannelRelationType {

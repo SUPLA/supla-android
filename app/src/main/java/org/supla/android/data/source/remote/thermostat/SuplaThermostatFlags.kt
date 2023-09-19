@@ -26,7 +26,10 @@ enum class SuplaThermostatFlags(val value: Int) {
   COUNTDOWN_TIMER(1 shl 5),
   FAN_ENABLED(1 shl 6),
   THERMOMETER_ERROR(1 shl 7),
-  CLOCK_ERROR(1 shl 8);
+  CLOCK_ERROR(1 shl 8),
+  FORCED_OFF_BY_SENSOR(1 shl 9),
+  HEAT_OR_COOL(1 shl 10), // If set cool else heat
+  WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE(1 shl 11);
 
   companion object {
     fun from(short: Short): List<SuplaThermostatFlags> {

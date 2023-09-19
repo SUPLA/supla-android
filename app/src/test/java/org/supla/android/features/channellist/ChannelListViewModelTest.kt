@@ -323,7 +323,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open thermostat detail fragment when online`() {
     // given
     val channelId = 123
-    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val channel = mockk<Channel>()
     val pages = emptyList<DetailPage>()
     every { channel.onLine } returns true
@@ -349,7 +349,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open thermostat detail fragment when offline`() {
     // given
     val channelId = 123
-    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val channel = mockk<Channel>()
     val pages = emptyList<DetailPage>()
     every { channel.onLine } returns false

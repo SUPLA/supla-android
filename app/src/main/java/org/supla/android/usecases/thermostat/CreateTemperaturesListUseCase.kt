@@ -28,7 +28,10 @@ class CreateTemperaturesListUseCase @Inject constructor() {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<ThermostatTemperature> =
     mutableListOf<ThermostatTemperature>().apply {
-      val sortedChildren = channelWithChildren.children.sortedBy { item -> item.relationType.value }
+      val sortedChildren = channelWithChildren.children
+        .filter { it.relationType.isThermometer() }
+        .sortedBy { item -> item.relationType.value }
+
       for (child in sortedChildren) {
         add(
           ThermostatTemperature(

@@ -40,6 +40,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.ConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.TAG
@@ -54,9 +55,9 @@ import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleD
 import org.supla.android.features.thermostatdetail.scheduledetail.extensions.viewProgramBoxesList
 import org.supla.android.features.thermostatdetail.scheduledetail.extensions.viewScheduleBoxesMap
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.ScheduleDetailViewProxy
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Calendar
 import javax.inject.Inject
@@ -409,10 +410,15 @@ class ScheduleDetailViewModel @Inject constructor(
     return null
   }
 
-  private fun programAvailableModes(state: ScheduleDetailViewState) = when (state.channelFunction) {
-    SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT -> listOf(SuplaHvacMode.HEAT)
-    SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL -> listOf(SuplaHvacMode.COOL)
-    SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+  private fun programAvailableModes(state: ScheduleDetailViewState) = when {
+    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.HEAT ->
+      listOf(SuplaHvacMode.HEAT)
+    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.COOL ->
+      listOf(SuplaHvacMode.COOL)
+    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ->
+      listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+    state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
+      listOf(SuplaHvacMode.HEAT)
     else -> listOf()
   }
 
@@ -447,16 +453,18 @@ class ScheduleDetailViewModel @Inject constructor(
         reloadConfig(it.remoteId)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
+      val thermostatFunction = data.defaultConfig.subfunction
 
       it.copy(
         loadingState = it.loadingState.copy(false),
         channelFunction = channelFunction,
         schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
-        programs = data.weeklyScheduleConfig.viewProgramBoxesList(),
+        programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
         configTemperatureMin = configTemperatureMin,
         configTemperatureMax = configTemperatureMax,
         currentDayOfWeek = DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1),
-        currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        currentHour = calendar.get(Calendar.HOUR_OF_DAY),
+        thermostatFunction = thermostatFunction
       )
     }
   }
@@ -478,6 +486,7 @@ data class ScheduleDetailViewState(
 
   val remoteId: Int = 0,
   val channelFunction: Int = 0,
+  val thermostatFunction: ThermostatSubfunction? = null,
   val configTemperatureMin: Float = 0f,
   val configTemperatureMax: Float = 0f,
 
@@ -515,6 +524,7 @@ data class ScheduleDetailViewState(
 
             ScheduleDetailProgramBox(
               channelFunction = function,
+              thermostatFunction = thermostatFunction!!,
               program = programToUpdate.program,
               mode = programToUpdate.selectedMode,
               setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat,

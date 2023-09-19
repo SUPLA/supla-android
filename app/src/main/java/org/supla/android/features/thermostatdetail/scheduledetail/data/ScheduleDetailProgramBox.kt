@@ -23,14 +23,15 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
+  val thermostatFunction: ThermostatSubfunction,
   val program: SuplaScheduleProgram,
   val mode: SuplaHvacMode,
   val setpointTemperatureHeat: Float? = null,
@@ -53,11 +54,11 @@ data class ScheduleDetailProgramBox(
 
   val modeForModify: SuplaHvacMode
     get() = if (mode == SuplaHvacMode.NOT_SET) {
-      when (channelFunction) {
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
-        SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL -> SuplaHvacMode.COOL
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
+      when {
+        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
+        channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
+        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
+        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
         else -> mode
       }
     } else {
@@ -87,7 +88,8 @@ data class ScheduleDetailProgramBox(
   companion object {
     fun default() = listOf(
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+        ThermostatSubfunction.HEAT,
         SuplaScheduleProgram.PROGRAM_1,
         SuplaHvacMode.HEAT,
         20f,
@@ -95,7 +97,8 @@ data class ScheduleDetailProgramBox(
         R.drawable.ic_heat
       ),
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+        ThermostatSubfunction.HEAT,
         SuplaScheduleProgram.PROGRAM_2,
         SuplaHvacMode.COOL,
         null,
@@ -103,7 +106,8 @@ data class ScheduleDetailProgramBox(
         R.drawable.ic_cool
       ),
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+        ThermostatSubfunction.HEAT,
         SuplaScheduleProgram.PROGRAM_3,
         SuplaHvacMode.AUTO,
         21f,
@@ -111,7 +115,8 @@ data class ScheduleDetailProgramBox(
         R.drawable.ic_heat
       ),
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+        ThermostatSubfunction.HEAT,
         SuplaScheduleProgram.PROGRAM_4,
         SuplaHvacMode.HEAT,
         23f,
@@ -119,7 +124,8 @@ data class ScheduleDetailProgramBox(
         R.drawable.ic_cool
       ),
       ScheduleDetailProgramBox(
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
+        SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+        ThermostatSubfunction.HEAT,
         SuplaScheduleProgram.OFF,
         SuplaHvacMode.OFF,
         null,

@@ -240,15 +240,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   @Test
   fun `should provide detail for hvac thermostat heat`() {
     testDetailType(
-      SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
-    )
-  }
-
-  @Test
-  fun `should provide detail for hvac thermostat cool`() {
-    testDetailType(
-      SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL,
+      SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
       ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
     )
   }
