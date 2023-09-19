@@ -56,6 +56,12 @@ enum class SuplaHvacAlgorithm(value: Int) {
   ON_OFF_SETPOINT_AT_MOST(2)
 }
 
+enum class ThermostatSubfunction(value: Int) {
+  NOT_SET(0),
+  HEAT(1),
+  COOL(2)
+}
+
 data class SuplaChannelHvacConfig(
   override val remoteId: Int,
   override val func: Int?,
@@ -68,5 +74,7 @@ data class SuplaChannelHvacConfig(
   val minOnTimeSec: Int,
   val minOffTimeSec: Int,
   val outputValueOnError: Int,
+  val subfunction: ThermostatSubfunction,
+  val temperatureSetpointChangeSwitchesToManualMode: Boolean,
   val temperatures: SuplaHvacTemperatures
 ) : SuplaChannelConfig(remoteId, func)
