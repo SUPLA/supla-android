@@ -40,8 +40,8 @@ class ThermostatValueTest {
     // then
     assertThat(values.state.isOff()).isTrue
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
-    assertThat(values.setpointTemperatureMin).isEqualTo(1.2f, Offset.offset(0.001f))
-    assertThat(values.setpointTemperatureMax).isEqualTo(0.8f, Offset.offset(0.001f))
+    assertThat(values.setpointTemperatureHeat).isEqualTo(1.2f, Offset.offset(0.001f))
+    assertThat(values.setpointTemperatureCool).isEqualTo(0.8f, Offset.offset(0.001f))
     assertThat(values.flags).containsExactly(SuplaThermostatFlags.COOLING)
   }
 }

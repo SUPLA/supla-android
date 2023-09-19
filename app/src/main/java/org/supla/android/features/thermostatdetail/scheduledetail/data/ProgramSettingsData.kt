@@ -29,17 +29,17 @@ data class ProgramSettingsData(
   val program: SuplaScheduleProgram,
   val modes: List<SuplaHvacMode>,
   val selectedMode: SuplaHvacMode,
-  val setpointTemperatureMin: Float?,
-  val setpointTemperatureMax: Float?,
-  val setpointTemperatureMinString: String?,
-  val setpointTemperatureMaxString: String?,
+  val setpointTemperatureHeat: Float?,
+  val setpointTemperatureCool: Float?,
+  val setpointTemperatureHeatString: String?,
+  val setpointTemperatureCoolString: String?,
   val temperatureUnit: TemperatureUnit,
-  val setpointTemperatureMinMinusAllowed: Boolean = true,
-  val setpointTemperatureMinPlusAllowed: Boolean = true,
-  val setpointTemperatureMaxMinusAllowed: Boolean = true,
-  val setpointTemperatureMaxPlusAllowed: Boolean = true,
-  val temperatureMinCorrect: Boolean = true,
-  val temperatureMaxCorrect: Boolean = true
+  val setpointTemperatureHeatMinusAllowed: Boolean = true,
+  val setpointTemperatureHeatPlusAllowed: Boolean = true,
+  val setpointTemperatureCoolMinusAllowed: Boolean = true,
+  val setpointTemperatureCoolPlusAllowed: Boolean = true,
+  val temperatureHeatCorrect: Boolean = true,
+  val temperatureCoolCorrect: Boolean = true
 ) {
   @Composable
   fun spinnerModes(): Map<SuplaHvacMode, String> {
@@ -50,9 +50,9 @@ data class ProgramSettingsData(
     return returns
   }
 
-  fun cleanSetpointMin(): ProgramSettingsData = copy(setpointTemperatureMin = 0f, setpointTemperatureMinString = "")
+  fun cleanSetpointMin(): ProgramSettingsData = copy(setpointTemperatureHeat = 0f, setpointTemperatureHeatString = "")
 
-  fun cleanSetpointMax(): ProgramSettingsData = copy(setpointTemperatureMax = 0f, setpointTemperatureMaxString = "")
+  fun cleanSetpointMax(): ProgramSettingsData = copy(setpointTemperatureCool = 0f, setpointTemperatureCoolString = "")
 
   companion object
 }

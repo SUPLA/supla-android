@@ -71,26 +71,26 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_1,
           mode = SuplaHvacMode.HEAT,
-          setpointTemperatureMin = 2300,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = 2300,
+          setpointTemperatureCool = null
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_2,
           mode = SuplaHvacMode.OFF,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = null
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_3,
           mode = SuplaHvacMode.COOL,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = 2100
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = 2100
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_4,
           mode = SuplaHvacMode.AUTO,
-          setpointTemperatureMin = 2100,
-          setpointTemperatureMax = 2300
+          setpointTemperatureHeat = 2100,
+          setpointTemperatureCool = 2300
         )
       ),
       schedule = emptyList()
@@ -120,20 +120,20 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_1,
           mode = SuplaHvacMode.HEAT,
-          setpointTemperatureMin = 2300,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = 2300,
+          setpointTemperatureCool = null
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_2,
           mode = SuplaHvacMode.OFF,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = null
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_3,
           mode = SuplaHvacMode.NOT_SET,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = null
         )
       ),
       schedule = emptyList()
@@ -162,20 +162,20 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_1,
           mode = SuplaHvacMode.COOL,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = 2300
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = 2300
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_2,
           mode = SuplaHvacMode.OFF,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = null
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_3,
           mode = SuplaHvacMode.NOT_SET,
-          setpointTemperatureMin = null,
-          setpointTemperatureMax = null
+          setpointTemperatureHeat = null,
+          setpointTemperatureCool = null
         )
       ),
       schedule = emptyList()

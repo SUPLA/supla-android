@@ -31,7 +31,8 @@ enum class SuplaHvacMode(val value: Int) {
   FAN_ONLY(6),
   DRY(7),
   CMD_TURN_ON(8),
-  CMD_WEEKLY_SCHEDULE(9);
+  CMD_WEEKLY_SCHEDULE(9),
+  CMD_SWITCH_TO_MANUAL(10);
 
   companion object {
     fun from(byte: Byte): SuplaHvacMode {
@@ -57,8 +58,8 @@ enum class SuplaScheduleProgram(val value: Int) {
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
   val program: SuplaScheduleProgram,
   val mode: SuplaHvacMode,
-  val setpointTemperatureMin: Short?,
-  val setpointTemperatureMax: Short?
+  val setpointTemperatureHeat: Short?,
+  val setpointTemperatureCool: Short?
 )
 
 data class SuplaWeeklyScheduleEntry(

@@ -49,8 +49,8 @@ class ExecuteThermostatActionUseCaseTest {
     val type = SubjectType.CHANNEL
     val remoteId = 123
     val mode = SuplaHvacMode.HEAT
-    val setpointTemperatureMin = 12f
-    val setpointTemperatureMax = 21f
+    val setpointTemperatureHeat = 12f
+    val setpointTemperatureCool = 21f
     val durationInSec = 231L
 
     val argumentSlot = slot<HvacActionParameters>()
@@ -60,7 +60,7 @@ class ExecuteThermostatActionUseCaseTest {
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
     // when
-    val observer = useCase.invoke(type, remoteId, mode, setpointTemperatureMin, setpointTemperatureMax, durationInSec).test()
+    val observer = useCase.invoke(type, remoteId, mode, setpointTemperatureHeat, setpointTemperatureCool, durationInSec).test()
 
     // then
     observer.assertComplete()
@@ -69,8 +69,8 @@ class ExecuteThermostatActionUseCaseTest {
     assertThat(argumentSlot.captured.subjectType).isEqualTo(type)
     assertThat(argumentSlot.captured.subjectId).isEqualTo(remoteId)
     assertThat(argumentSlot.captured.mode).isEqualTo(mode)
-    assertThat(argumentSlot.captured.setpointTemperatureMin).isEqualTo(1200)
-    assertThat(argumentSlot.captured.setpointTemperatureMax).isEqualTo(2100)
+    assertThat(argumentSlot.captured.setpointTemperatureHeat).isEqualTo(1200)
+    assertThat(argumentSlot.captured.setpointTemperatureCool).isEqualTo(2100)
     assertThat(argumentSlot.captured.durationSec).isEqualTo(durationInSec)
   }
 }

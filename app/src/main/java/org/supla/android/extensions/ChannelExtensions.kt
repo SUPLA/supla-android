@@ -36,8 +36,8 @@ fun Channel.toThermostatSlideableListItemData(
 ): SlideableListItemData.Thermostat {
   val thermostatValue = value.asThermostatValue()
 
-  val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMin, true)
-  val temperatureMax = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureMax, true)
+  val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureHeat, true)
+  val temperatureMax = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureCool, true)
   val subValue = when {
     onLine.not() -> ""
     thermostatValue.mode == SuplaHvacMode.COOL -> temperatureMax

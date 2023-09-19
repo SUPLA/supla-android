@@ -258,14 +258,14 @@ class ScheduleDetailViewModel @Inject constructor(
         else -> currentState().programSettings?.let { settings ->
           val textProvider: (Float) -> String = when {
             value == "-" -> { _ -> "-" }
-            modeForTemperature == SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureMinString ?: "" }
-            modeForTemperature == SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureMaxString ?: "" }
+            modeForTemperature == SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureHeatString ?: "" }
+            modeForTemperature == SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureCoolString ?: "" }
             else -> { _ -> "" }
           }
 
           val temperatureModifier: (Float) -> Float = when (modeForTemperature) {
-            SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureMin ?: 0f }
-            SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureMax ?: 0f }
+            SuplaHvacMode.HEAT -> { _ -> settings.setpointTemperatureHeat ?: 0f }
+            SuplaHvacMode.COOL -> { _ -> settings.setpointTemperatureCool ?: 0f }
             else -> { _ -> 0f }
           }
 
@@ -311,7 +311,7 @@ class ScheduleDetailViewModel @Inject constructor(
           temperatureModifier,
           textProvider,
           withCorrection,
-          state.programSettings?.setpointTemperatureMax
+          state.programSettings?.setpointTemperatureCool
         )
 
       programMode == SuplaHvacMode.AUTO && modeForTemperature == SuplaHvacMode.COOL ->
@@ -319,7 +319,7 @@ class ScheduleDetailViewModel @Inject constructor(
           temperatureModifier,
           textProvider,
           withCorrection,
-          state.programSettings?.setpointTemperatureMin
+          state.programSettings?.setpointTemperatureHeat
         )
 
       else -> throw IllegalStateException("Trying to change temperature for illegal mode: $modeForTemperature")
@@ -330,10 +330,10 @@ class ScheduleDetailViewModel @Inject constructor(
     temperatureModifier: (Float) -> Float,
     textProvider: (Float) -> String,
     withCorrection: Boolean = false,
-    setpointTemperatureMax: Float? = null
+    setpointTemperatureCool: Float? = null
   ) {
     val state = currentState()
-    state.programSettings?.setpointTemperatureMin?.let { oldTemperature ->
+    state.programSettings?.setpointTemperatureHeat?.let { oldTemperature ->
       val newTemperature = temperatureModifier(oldTemperature).let {
         when {
           withCorrection && it > state.configTemperatureMax -> state.configTemperatureMax
@@ -341,17 +341,17 @@ class ScheduleDetailViewModel @Inject constructor(
           else -> it
         }
       }
-      val maxTemperature = setpointTemperatureMax ?: state.configTemperatureMax
+      val maxTemperature = setpointTemperatureCool ?: state.configTemperatureMax
       val temperatureCorrect = newTemperature >= state.configTemperatureMin && newTemperature <= maxTemperature
 
       updateState {
         it.copy(
           programSettings = it.programSettings?.copy(
-            setpointTemperatureMin = newTemperature,
-            setpointTemperatureMinString = textProvider(newTemperature),
-            setpointTemperatureMinMinusAllowed = newTemperature > it.configTemperatureMin,
-            setpointTemperatureMinPlusAllowed = newTemperature < it.configTemperatureMax,
-            temperatureMinCorrect = temperatureCorrect
+            setpointTemperatureHeat = newTemperature,
+            setpointTemperatureHeatString = textProvider(newTemperature),
+            setpointTemperatureHeatMinusAllowed = newTemperature > it.configTemperatureMin,
+            setpointTemperatureHeatPlusAllowed = newTemperature < it.configTemperatureMax,
+            temperatureHeatCorrect = temperatureCorrect
           )
         )
       }
@@ -362,10 +362,10 @@ class ScheduleDetailViewModel @Inject constructor(
     temperatureModifier: (Float) -> Float,
     textProvider: (Float) -> String,
     withCorrection: Boolean = false,
-    setpointTemperatureMin: Float? = null
+    setpointTemperatureHeat: Float? = null
   ) {
     val state = currentState()
-    state.programSettings?.setpointTemperatureMax?.let { oldTemperature ->
+    state.programSettings?.setpointTemperatureCool?.let { oldTemperature ->
       val newTemperature = temperatureModifier(oldTemperature).let {
         when {
           withCorrection && it > state.configTemperatureMax -> state.configTemperatureMax
@@ -373,17 +373,17 @@ class ScheduleDetailViewModel @Inject constructor(
           else -> it
         }
       }
-      val minTemperature = setpointTemperatureMin ?: state.configTemperatureMin
+      val minTemperature = setpointTemperatureHeat ?: state.configTemperatureMin
       val temperatureCorrect = newTemperature >= minTemperature && newTemperature <= state.configTemperatureMax
 
       updateState {
         it.copy(
           programSettings = it.programSettings?.copy(
-            setpointTemperatureMax = newTemperature,
-            setpointTemperatureMaxString = textProvider(newTemperature),
-            setpointTemperatureMaxMinusAllowed = newTemperature > it.configTemperatureMin,
-            setpointTemperatureMaxPlusAllowed = newTemperature < it.configTemperatureMax,
-            temperatureMaxCorrect = temperatureCorrect
+            setpointTemperatureCool = newTemperature,
+            setpointTemperatureCoolString = textProvider(newTemperature),
+            setpointTemperatureCoolMinusAllowed = newTemperature > it.configTemperatureMin,
+            setpointTemperatureCoolPlusAllowed = newTemperature < it.configTemperatureMax,
+            temperatureCoolCorrect = temperatureCorrect
           )
         )
       }
@@ -397,10 +397,10 @@ class ScheduleDetailViewModel @Inject constructor(
           program = program,
           modes = programAvailableModes(state),
           selectedMode = programBox.modeForModify,
-          setpointTemperatureMin = programBox.temperatureMinForModify,
-          setpointTemperatureMax = programBox.temperatureMaxForModify,
-          setpointTemperatureMinString = valuesFormatter.getTemperatureString(programBox.temperatureMinForModify, withDegree = false),
-          setpointTemperatureMaxString = valuesFormatter.getTemperatureString(programBox.temperatureMaxForModify, withDegree = false),
+          setpointTemperatureHeat = programBox.temperatureMinForModify,
+          setpointTemperatureCool = programBox.temperatureMaxForModify,
+          setpointTemperatureHeatString = valuesFormatter.getTemperatureString(programBox.temperatureMinForModify, withDegree = false),
+          setpointTemperatureCoolString = valuesFormatter.getTemperatureString(programBox.temperatureMaxForModify, withDegree = false),
           temperatureUnit = preferences.temperatureUnit
         )
       }
@@ -517,8 +517,8 @@ data class ScheduleDetailViewState(
               channelFunction = function,
               program = programToUpdate.program,
               mode = programToUpdate.selectedMode,
-              setpointTemperatureMin = programToUpdate.setpointTemperatureMin,
-              setpointTemperatureMax = programToUpdate.setpointTemperatureMax,
+              setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat,
+              setpointTemperatureCool = programToUpdate.setpointTemperatureCool,
               iconRes = icon
             ).also {
               add(it)
@@ -539,8 +539,8 @@ data class ScheduleDetailViewState(
         SuplaWeeklyScheduleProgram(
           program = program.program,
           mode = program.mode,
-          setpointTemperatureMin = program.setpointTemperatureMin?.toSuplaTemperature(),
-          setpointTemperatureMax = program.setpointTemperatureMax?.toSuplaTemperature()
+          setpointTemperatureHeat = program.setpointTemperatureHeat?.toSuplaTemperature(),
+          setpointTemperatureCool = program.setpointTemperatureCool?.toSuplaTemperature()
         )
       )
     }

@@ -26,8 +26,8 @@ import org.supla.android.extensions.toShortVararg
 data class ThermostatValue(
   val state: ThermostatState,
   val mode: SuplaHvacMode,
-  val setpointTemperatureMin: Float,
-  val setpointTemperatureMax: Float,
+  val setpointTemperatureHeat: Float,
+  val setpointTemperatureCool: Float,
   val flags: List<SuplaThermostatFlags>
 ) {
   companion object {
@@ -35,8 +35,8 @@ data class ThermostatValue(
       return ThermostatValue(
         state = ThermostatState(bytes[0].toShort()),
         mode = SuplaHvacMode.from(bytes[1]),
-        setpointTemperatureMin = bytes.toTemperature(2, 3),
-        setpointTemperatureMax = bytes.toTemperature(4, 5),
+        setpointTemperatureHeat = bytes.toTemperature(2, 3),
+        setpointTemperatureCool = bytes.toTemperature(4, 5),
         flags = SuplaThermostatFlags.from(bytes.toShortVararg(6, 7))
       )
     }

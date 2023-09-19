@@ -38,8 +38,8 @@ class ExecuteThermostatActionUseCase @Inject constructor(
     type: SubjectType,
     remoteId: Int,
     mode: SuplaHvacMode? = null,
-    setpointTemperatureMin: Float? = null,
-    setpointTemperatureMax: Float? = null,
+    setpointTemperatureHeat: Float? = null,
+    setpointTemperatureCool: Float? = null,
     durationInSec: Long? = null
   ): Completable =
     Completable.fromRunnable {
@@ -50,8 +50,8 @@ class ExecuteThermostatActionUseCase @Inject constructor(
           subjectId = remoteId,
           durationSec = durationInSec,
           mode = mode,
-          setpointTemperatureMin = setpointTemperatureMin?.toSuplaTemperature(),
-          setpointTemperatureMax = setpointTemperatureMax?.toSuplaTemperature()
+          setpointTemperatureHeat = setpointTemperatureHeat?.toSuplaTemperature(),
+          setpointTemperatureCool = setpointTemperatureCool?.toSuplaTemperature()
         )
         Trace.d(TAG, "Executing thermostat action with parameters: $parameters")
 

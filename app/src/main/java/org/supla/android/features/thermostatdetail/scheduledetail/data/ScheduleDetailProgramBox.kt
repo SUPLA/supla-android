@@ -33,19 +33,19 @@ data class ScheduleDetailProgramBox(
   val channelFunction: Int,
   val program: SuplaScheduleProgram,
   val mode: SuplaHvacMode,
-  val setpointTemperatureMin: Float? = null,
-  val setpointTemperatureMax: Float? = null,
+  val setpointTemperatureHeat: Float? = null,
+  val setpointTemperatureCool: Float? = null,
   @DrawableRes val iconRes: Int? = null
 ) {
 
   val textProvider: StringProvider
     get() = when {
       program == SuplaScheduleProgram.OFF -> { context -> context.resources.getString(R.string.turn_off) }
-      mode == SuplaHvacMode.HEAT -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureMin?.toDouble()) }
-      mode == SuplaHvacMode.COOL -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureMax?.toDouble()) }
+      mode == SuplaHvacMode.HEAT -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureHeat?.toDouble()) }
+      mode == SuplaHvacMode.COOL -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureCool?.toDouble()) }
       mode == SuplaHvacMode.AUTO -> { context ->
-        val minTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureMin?.toDouble())
-        val maxTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureMax?.toDouble())
+        val minTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureHeat?.toDouble())
+        val maxTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureCool?.toDouble())
         "$minTemperature - $maxTemperature"
       }
       else -> { _ -> ValuesFormatter.NO_VALUE_TEXT }
@@ -66,8 +66,8 @@ data class ScheduleDetailProgramBox(
 
   val temperatureMinForModify: Float
     get() {
-      if (setpointTemperatureMin != null && setpointTemperatureMin > 0) {
-        return setpointTemperatureMin
+      if (setpointTemperatureHeat != null && setpointTemperatureHeat > 0) {
+        return setpointTemperatureHeat
       }
       return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && mode == SuplaHvacMode.HEAT) {
         40f
@@ -78,8 +78,8 @@ data class ScheduleDetailProgramBox(
 
   val temperatureMaxForModify: Float
     get() {
-      if (setpointTemperatureMax != null && setpointTemperatureMax > 0) {
-        return setpointTemperatureMax
+      if (setpointTemperatureCool != null && setpointTemperatureCool > 0) {
+        return setpointTemperatureCool
       }
       return 24f
     }

@@ -421,11 +421,11 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointMinTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
     (channel.setpointMinTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET))
-      .ifTrue(thermostatValue.setpointTemperatureMin)
+      .ifTrue(thermostatValue.setpointTemperatureHeat)
 
   private fun getSetpointMaxTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
     (channel.setpointMaxTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET))
-      .ifTrue(thermostatValue.setpointTemperatureMax)
+      .ifTrue(thermostatValue.setpointTemperatureCool)
 
   private fun changeMinTemperature(viewModelState: ThermostatGeneralViewModelState, step: Float) {
     viewModelState.setpointMinTemperature?.let {

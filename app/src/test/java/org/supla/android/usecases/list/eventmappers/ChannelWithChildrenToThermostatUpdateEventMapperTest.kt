@@ -80,8 +80,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   @Test
   fun `should map channel with thermometer to thermostat slideable item (cool mode)`() {
     // given
-    val setpointTemperatureMax = 23f
-    val thermostatValue = mockThermostatValue(setpointTemperatureMax = setpointTemperatureMax)
+    val setpointTemperatureCool = 23f
+    val thermostatValue = mockThermostatValue(setpointTemperatureCool = setpointTemperatureCool)
 
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
@@ -97,8 +97,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
     val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
 
-    val setpointTemperatureMaxString = "23.0"
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureMax, true)).thenReturn(setpointTemperatureMaxString)
+    val setpointTemperatureCoolString = "23.0"
+    whenever(valuesFormatter.getTemperatureString(setpointTemperatureCool, true)).thenReturn(setpointTemperatureCoolString)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
@@ -106,15 +106,15 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     // then
     assertThat(result.online).isTrue
     assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo(setpointTemperatureMaxString)
+    assertThat(result.subValue).isEqualTo(setpointTemperatureCoolString)
     assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
   }
 
   @Test
   fun `should map channel with thermometer to thermostat slideable item (heat mode)`() {
     // given
-    val setpointTemperatureMin = 23f
-    val thermostatValue = mockThermostatValue(setpointTemperatureMin = setpointTemperatureMin, mode = SuplaHvacMode.HEAT)
+    val setpointTemperatureHeat = 23f
+    val thermostatValue = mockThermostatValue(setpointTemperatureHeat = setpointTemperatureHeat, mode = SuplaHvacMode.HEAT)
 
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
@@ -130,8 +130,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
     val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
 
-    val setpointTemperatureMinString = "23.0"
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureMin, true)).thenReturn(setpointTemperatureMinString)
+    val setpointTemperatureHeatString = "23.0"
+    whenever(valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)).thenReturn(setpointTemperatureHeatString)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
@@ -139,7 +139,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     // then
     assertThat(result.online).isTrue
     assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo(setpointTemperatureMinString)
+    assertThat(result.subValue).isEqualTo(setpointTemperatureHeatString)
     assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
   }
 
@@ -218,11 +218,11 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
   private fun testMappingChannelWithThermometer_autoFunction(flags: List<SuplaThermostatFlags>, indicatorIcon: Int) {
     // given
-    val setpointTemperatureMin = 23f
-    val setpointTemperatureMax = 26f
+    val setpointTemperatureHeat = 23f
+    val setpointTemperatureCool = 26f
     val thermostatValue = mockThermostatValue(
-      setpointTemperatureMin = setpointTemperatureMin,
-      setpointTemperatureMax = setpointTemperatureMax,
+      setpointTemperatureHeat = setpointTemperatureHeat,
+      setpointTemperatureCool = setpointTemperatureCool,
       mode = SuplaHvacMode.AUTO,
       flags = flags
     )
@@ -241,8 +241,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
     val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
 
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureMin, true)).thenReturn("23.0")
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureMax, true)).thenReturn("26.0")
+    whenever(valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)).thenReturn("23.0")
+    whenever(valuesFormatter.getTemperatureString(setpointTemperatureCool, true)).thenReturn("26.0")
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
@@ -256,13 +256,13 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
   private fun mockThermostatValue(
     mode: SuplaHvacMode = SuplaHvacMode.COOL,
-    setpointTemperatureMin: Float = 0f,
-    setpointTemperatureMax: Float = 0f,
+    setpointTemperatureHeat: Float = 0f,
+    setpointTemperatureCool: Float = 0f,
     flags: List<SuplaThermostatFlags> = emptyList()
   ) = mockk<ThermostatValue>().also {
     every { it.mode } returns mode
-    every { it.setpointTemperatureMax } returns setpointTemperatureMax
-    every { it.setpointTemperatureMin } returns setpointTemperatureMin
+    every { it.setpointTemperatureCool } returns setpointTemperatureCool
+    every { it.setpointTemperatureHeat } returns setpointTemperatureHeat
     every { it.flags } returns flags
   }
 }

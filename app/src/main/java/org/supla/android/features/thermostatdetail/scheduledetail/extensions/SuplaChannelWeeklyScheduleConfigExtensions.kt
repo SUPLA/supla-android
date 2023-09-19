@@ -64,8 +64,8 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList() =
         channelFunction = func ?: 0,
         program = program.program,
         mode = program.mode,
-        setpointTemperatureMin = program.setpointTemperatureMin?.fromSuplaTemperature(),
-        setpointTemperatureMax = program.setpointTemperatureMax?.fromSuplaTemperature(),
+        setpointTemperatureHeat = program.setpointTemperatureHeat?.fromSuplaTemperature(),
+        setpointTemperatureCool = program.setpointTemperatureCool?.fromSuplaTemperature(),
         iconRes = icon
       ).also {
         add(it)

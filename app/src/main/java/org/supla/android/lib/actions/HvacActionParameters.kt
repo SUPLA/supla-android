@@ -28,11 +28,11 @@ class HvacActionParameters(
   subjectId: Int,
   var durationSec: Long?,
   var mode: SuplaHvacMode?,
-  var setpointTemperatureMin: Short?,
-  var setpointTemperatureMax: Short?
+  var setpointTemperatureHeat: Short?,
+  var setpointTemperatureCool: Short?
 ) : ActionParameters(action, subjectType, subjectId) {
   override fun toString(): String {
     return "HvacActionParameters(durationSec=$durationSec, mode=$mode, " +
-      "setpointTemperatureMin=$setpointTemperatureMin, setpointTemperatureMax=$setpointTemperatureMax)"
+      "setpointTemperatureHeat=$setpointTemperatureHeat, setpointTemperatureCool=$setpointTemperatureCool)"
   }
 }

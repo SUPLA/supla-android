@@ -92,10 +92,10 @@ fun ProgramSettingsDialog(
     if (data.selectedMode == SuplaHvacMode.AUTO) {
       TemperatureControlRow(
         headerTextRes = SuplaHvacMode.HEAT.temperatureTextRes(),
-        temperature = data.setpointTemperatureMinString!!,
-        isError = data.temperatureMinCorrect.not(),
-        plusAllowed = data.setpointTemperatureMinPlusAllowed,
-        minusAllowed = data.setpointTemperatureMinMinusAllowed,
+        temperature = data.setpointTemperatureHeatString!!,
+        isError = data.temperatureHeatCorrect.not(),
+        plusAllowed = data.setpointTemperatureHeatPlusAllowed,
+        minusAllowed = data.setpointTemperatureHeatMinusAllowed,
         unit = data.temperatureUnit,
         onDownClicked = { onTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.DOWN) },
         onUpClicked = { onTemperatureClickChange(SuplaHvacMode.HEAT, TemperatureCorrection.UP) },
@@ -103,10 +103,10 @@ fun ProgramSettingsDialog(
       )
       TemperatureControlRow(
         headerTextRes = SuplaHvacMode.COOL.temperatureTextRes(),
-        temperature = data.setpointTemperatureMaxString!!,
-        isError = data.temperatureMaxCorrect.not(),
-        plusAllowed = data.setpointTemperatureMaxPlusAllowed,
-        minusAllowed = data.setpointTemperatureMaxMinusAllowed,
+        temperature = data.setpointTemperatureCoolString!!,
+        isError = data.temperatureCoolCorrect.not(),
+        plusAllowed = data.setpointTemperatureCoolPlusAllowed,
+        minusAllowed = data.setpointTemperatureCoolMinusAllowed,
         unit = data.temperatureUnit,
         onDownClicked = { onTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.DOWN) },
         onUpClicked = { onTemperatureClickChange(SuplaHvacMode.COOL, TemperatureCorrection.UP) },
@@ -114,10 +114,10 @@ fun ProgramSettingsDialog(
       )
     } else {
       val mode = data.selectedMode
-      val temperature = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureMaxString!! else data.setpointTemperatureMinString!!
-      val temperatureCorrect = if (mode == SuplaHvacMode.COOL) data.temperatureMaxCorrect else data.temperatureMinCorrect
-      val plus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureMaxPlusAllowed else data.setpointTemperatureMinPlusAllowed
-      val minus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureMaxMinusAllowed else data.setpointTemperatureMinMinusAllowed
+      val temperature = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolString!! else data.setpointTemperatureHeatString!!
+      val temperatureCorrect = if (mode == SuplaHvacMode.COOL) data.temperatureCoolCorrect else data.temperatureHeatCorrect
+      val plus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolPlusAllowed else data.setpointTemperatureHeatPlusAllowed
+      val minus = if (mode == SuplaHvacMode.COOL) data.setpointTemperatureCoolMinusAllowed else data.setpointTemperatureHeatMinusAllowed
 
       TemperatureControlRow(
         headerTextRes = data.selectedMode.temperatureTextRes(),
@@ -139,9 +139,9 @@ fun ProgramSettingsDialog(
         onClick = onPositiveClick,
         text = stringResource(id = R.string.save),
         enabled = when (data.selectedMode) {
-          SuplaHvacMode.HEAT -> data.temperatureMinCorrect
-          SuplaHvacMode.COOL -> data.temperatureMaxCorrect
-          SuplaHvacMode.AUTO -> data.temperatureMinCorrect && data.temperatureMaxCorrect
+          SuplaHvacMode.HEAT -> data.temperatureHeatCorrect
+          SuplaHvacMode.COOL -> data.temperatureCoolCorrect
+          SuplaHvacMode.AUTO -> data.temperatureHeatCorrect && data.temperatureCoolCorrect
           else -> false
         },
         modifier = Modifier.weight(1f)
@@ -251,10 +251,10 @@ private fun ProgramSettingsData.Companion.auto() = ProgramSettingsData(
   program = SuplaScheduleProgram.PROGRAM_1,
   modes = listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL),
   selectedMode = SuplaHvacMode.AUTO,
-  setpointTemperatureMax = 21.0f,
-  setpointTemperatureMin = 22.0f,
-  setpointTemperatureMaxString = "21.0",
-  setpointTemperatureMinString = "22.0",
+  setpointTemperatureCool = 21.0f,
+  setpointTemperatureHeat = 22.0f,
+  setpointTemperatureCoolString = "21.0",
+  setpointTemperatureHeatString = "22.0",
   temperatureUnit = TemperatureUnit.CELSIUS
 )
 
@@ -262,9 +262,9 @@ private fun ProgramSettingsData.Companion.heat() = ProgramSettingsData(
   program = SuplaScheduleProgram.PROGRAM_1,
   modes = listOf(SuplaHvacMode.HEAT),
   selectedMode = SuplaHvacMode.HEAT,
-  setpointTemperatureMax = null,
-  setpointTemperatureMin = 22.0f,
-  setpointTemperatureMaxString = null,
-  setpointTemperatureMinString = "22.0",
+  setpointTemperatureCool = null,
+  setpointTemperatureHeat = 22.0f,
+  setpointTemperatureCoolString = null,
+  setpointTemperatureHeatString = "22.0",
   temperatureUnit = TemperatureUnit.FAHRENHEIT
 )
