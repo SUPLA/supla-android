@@ -1106,6 +1106,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel_relation.isEol()) {
       deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
+      listsEventsManager.emitChannelUpdate();
     }
   }
 

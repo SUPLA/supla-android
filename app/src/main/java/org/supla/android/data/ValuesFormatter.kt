@@ -18,6 +18,8 @@ package org.supla.android.data
  */
 
 import org.supla.android.Preferences
+import org.supla.android.R
+import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import javax.inject.Inject
@@ -70,6 +72,16 @@ class ValuesFormatter @Inject constructor(
     val humidityString = getHumidityString(temperatureAndHumidity?.humidity)
 
     return String.format("%s\n%s", temperatureString, humidityString)
+  }
+
+  fun getHourWithMinutes(minutes: Int): StringProvider {
+    val hours = minutes.div(60)
+
+    if (hours < 1) {
+      return { context -> context.getString(R.string.time_just_minutes, minutes) }
+    } else {
+      return { context -> context.getString(R.string.time_hours_and_minutes, hours, minutes) }
+    }
   }
 
   private fun getHumidityString(rawValue: Double?): String {

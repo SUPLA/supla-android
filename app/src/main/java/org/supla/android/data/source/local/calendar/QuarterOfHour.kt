@@ -25,4 +25,16 @@ enum class QuarterOfHour(val startingMinute: Int) {
 
   val startingMinuteString: String
     get() = if (startingMinute < 10) "0$startingMinute" else "$startingMinute"
+
+  companion object {
+    fun from(minuteOfHour: Int): QuarterOfHour {
+      for (quarter in QuarterOfHour.values()) {
+        if (minuteOfHour < quarter.startingMinute + 15) {
+          return quarter
+        }
+      }
+
+      throw IllegalStateException("Quarter not found for `$minuteOfHour`")
+    }
+  }
 }

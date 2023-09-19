@@ -46,7 +46,7 @@ fun ScheduleProgramButton(
   RoundedControlButton(
     modifier = modifier,
     height = 32.dp,
-    backgroundColor = programBox.program.color(),
+    backgroundColor = programBox.scheduleProgram.program.color(),
     animationMode = AnimationMode.Toggle(active = active),
     icon = iconPainter,
     text = programBox.textProvider(LocalContext.current),

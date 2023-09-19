@@ -20,6 +20,7 @@ package org.supla.android.events
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.infrastructure.DateProvider
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -54,7 +55,7 @@ class LoadingTimeoutManager @Inject constructor() {
     val loading: Boolean = true,
     val lastLoadingStartTimestamp: Long? = null
   ) {
-    fun copy(loading: Boolean): LoadingState =
-      copy(initialLoading = false, loading = loading, lastLoadingStartTimestamp = if (loading) System.currentTimeMillis() else null)
+    fun changingLoading(loading: Boolean, dateProvider: DateProvider): LoadingState =
+      copy(initialLoading = false, loading = loading, lastLoadingStartTimestamp = if (loading) dateProvider.currentTimestamp() else null)
   }
 }

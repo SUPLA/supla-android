@@ -16,6 +16,7 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailProgramBox
+import org.supla.android.features.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
 
@@ -105,30 +106,41 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaScheduleProgram.PROGRAM_1,
-        SuplaHvacMode.HEAT,
-        23f,
-        null,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_1,
+          SuplaHvacMode.HEAT,
+          2300,
+          null
+        ),
         R.drawable.ic_heat
       ),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaScheduleProgram.PROGRAM_3,
-        SuplaHvacMode.COOL,
-        null,
-        21f,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_3,
+          SuplaHvacMode.COOL,
+          null,
+          2100
+        ),
         R.drawable.ic_cool
       ),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 21f, 23f, null),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaScheduleProgram.OFF,
-        SuplaHvacMode.OFF,
-        null,
-        null,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 2100, 2300),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram.OFF,
         R.drawable.ic_power_button
       )
     )
@@ -170,16 +182,28 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
 
     // then
     assertThat(programs).containsExactly(
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 23f, null, null),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaScheduleProgram.OFF,
-        SuplaHvacMode.OFF,
-        null,
-        null,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 2300, null),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram.OFF,
         R.drawable.ic_power_button
       )
     )
@@ -221,16 +245,28 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
 
     // then
     assertThat(programs).containsExactly(
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.COOL, null, 23f, null),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
-      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaScheduleProgram.OFF,
-        SuplaHvacMode.OFF,
-        null,
-        null,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.COOL, null, 2300),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET),
+        null
+      ),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaWeeklyScheduleProgram.OFF,
         R.drawable.ic_power_button
       )
     )

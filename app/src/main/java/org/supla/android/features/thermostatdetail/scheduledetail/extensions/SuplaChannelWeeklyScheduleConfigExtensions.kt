@@ -22,11 +22,12 @@ import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailProgramBox
+import org.supla.android.features.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst
 
 fun SuplaChannelWeeklyScheduleConfig.viewScheduleBoxesMap() =
@@ -64,10 +65,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList(subfunction: Thermosta
       ScheduleDetailProgramBox(
         channelFunction = func ?: 0,
         thermostatFunction = subfunction,
-        program = program.program,
-        mode = program.mode,
-        setpointTemperatureHeat = program.setpointTemperatureHeat?.fromSuplaTemperature(),
-        setpointTemperatureCool = program.setpointTemperatureCool?.fromSuplaTemperature(),
+        scheduleProgram = program,
         iconRes = icon
       ).also {
         add(it)
@@ -78,8 +76,7 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList(subfunction: Thermosta
     ScheduleDetailProgramBox(
       channelFunction = func ?: 0,
       thermostatFunction = subfunction,
-      program = SuplaScheduleProgram.OFF,
-      mode = SuplaHvacMode.OFF,
-      iconRes = R.drawable.ic_power_button
+      scheduleProgram = SuplaWeeklyScheduleProgram.OFF,
+      iconRes = SuplaHvacMode.OFF.icon
     ).also { add(it) }
   }

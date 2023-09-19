@@ -27,6 +27,7 @@ class ThermostatGeneralFragment : BaseFragment<ThermostatGeneralViewState, Therm
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    viewModel.observeData(remoteId)
 
     binding.composeContent.setContent {
       SuplaTheme {
@@ -37,8 +38,7 @@ class ThermostatGeneralFragment : BaseFragment<ThermostatGeneralViewState, Therm
 
   override fun onResume() {
     super.onResume()
-
-    viewModel.loadChannel(remoteId = remoteId)
+    viewModel.triggerDataLoad(remoteId = remoteId)
   }
 
   override fun handleEvents(event: ThermostatGeneralViewEvent) {
@@ -51,7 +51,7 @@ class ThermostatGeneralFragment : BaseFragment<ThermostatGeneralViewState, Therm
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
         if (message.channelId == remoteId) {
-          viewModel.loadChannel(remoteId)
+          viewModel.triggerDataLoad(remoteId)
         } else {
           viewModel.loadTemperature(message.channelId)
         }

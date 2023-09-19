@@ -38,7 +38,7 @@ class DelayedThermostatActionSubject @Inject constructor(
       SubjectType.CHANNEL,
       state.remoteId,
       state.mode,
-      state.setpointMinTemperature,
-      state.setpointMaxTemperature
+      state.setpointHeatTemperature,
+      state.setpointCoolTemperature
     )
 }

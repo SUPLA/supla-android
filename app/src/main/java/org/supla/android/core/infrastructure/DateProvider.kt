@@ -17,6 +17,7 @@ package org.supla.android.core.infrastructure
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.calendar.DayOfWeek
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,4 +28,19 @@ class DateProvider @Inject constructor() {
   fun currentDate() = Date()
 
   fun currentTimestamp() = currentDate().time
+
+  fun currentDayOfWeek(): DayOfWeek {
+    val calendar = Calendar.getInstance()
+    return DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)
+  }
+
+  fun currentHour(): Int {
+    val calendar = Calendar.getInstance()
+    return calendar.get(Calendar.HOUR_OF_DAY)
+  }
+
+  fun currentMinute(): Int {
+    val calendar = Calendar.getInstance()
+    return calendar.get(Calendar.MINUTE)
+  }
 }

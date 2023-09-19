@@ -120,17 +120,23 @@ fun ThermostatControl(
   isOffline: Boolean = false,
   isHeating: Boolean = false,
   isCooling: Boolean = false,
-  isInManualMode: Boolean = false,
   onPositionChangeStarted: () -> Unit,
   onPositionChangeEnded: (Float?, Float?) -> Unit
 ) {
   val primaryColor = colorResource(id = R.color.primary)
+  val disabledColor = colorResource(id = R.color.disabled)
   val textColor = MaterialTheme.colors.onBackground
   val pointShadowColor = MaterialTheme.colors.progressPointShadow
-  val minPointColor = MaterialTheme.colors.error
-  val minPointShadowColor = minPointColor.copy(alpha = 0.4f)
-  val maxPointColor = MaterialTheme.colors.blue
-  val maxPointShadowColor = maxPointColor.copy(alpha = 0.4f)
+  val (minPointColor, minPointShadowColor) = if (isOff) {
+    listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
+  } else {
+    listOf(MaterialTheme.colors.error, MaterialTheme.colors.error.copy(alpha = 0.4f))
+  }
+  val (maxPointColor, maxPointShadowColor) = if (isOff) {
+    listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
+  } else {
+    listOf(MaterialTheme.colors.blue, MaterialTheme.colors.blue.copy(alpha = 0.4f))
+  }
   val indicatorShadowColor = when {
     isOff -> DefaultShadowColor
     isHeating -> MaterialTheme.colors.error
@@ -167,20 +173,18 @@ fun ThermostatControl(
 
   Canvas(
     modifier = modifier.pointerInteropFilter {
-      if (isInManualMode) {
-        when (it.action) {
-          MotionEvent.ACTION_DOWN -> {
-            initialTouchPoint = Offset(it.x, it.y)
-            currentTouchPoint = Offset(it.x, it.y)
-            onPositionChangeStarted()
-          }
+      when (it.action) {
+        MotionEvent.ACTION_DOWN -> {
+          initialTouchPoint = Offset(it.x, it.y)
+          currentTouchPoint = Offset(it.x, it.y)
+          onPositionChangeStarted()
+        }
 
-          MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
-          MotionEvent.ACTION_UP -> {
-            onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
-            initialTouchPoint = null
-            currentTouchPoint = null
-          }
+        MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
+        MotionEvent.ACTION_UP -> {
+          onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
+          initialTouchPoint = null
+          currentTouchPoint = null
         }
       }
 
@@ -233,7 +237,6 @@ fun ThermostatControl(
       center = center,
       initialPoint = initialTouchPoint,
       movingPoint = currentTouchPoint,
-      isOff = isOff,
       isOffline = isOffline
     )
   }
@@ -377,7 +380,6 @@ private fun drawControlPoints(
   center: Offset,
   initialPoint: Offset?,
   movingPoint: Offset?,
-  isOff: Boolean,
   isOffline: Boolean
 ) {
   val radiusForPoints = outerRadius - controlCircleWidth.toPx().div(2)
@@ -396,12 +398,12 @@ private fun drawControlPoints(
     )
   }
 
-  if (minSetpointConfig != null && isOff.not()) {
+  if (minSetpointConfig != null) {
     val maxAlpha = maxSetpointConfig?.value
     drawSetPoint(minSetpointConfig, radiusForPoints, center, initialPoint, movingPoint, null, maxAlpha)
   }
 
-  if (maxSetpointConfig != null && isOff.not()) {
+  if (maxSetpointConfig != null) {
     val minAlpha = minSetpointConfig?.value
     drawSetPoint(maxSetpointConfig, radiusForPoints, center, initialPoint, movingPoint, minAlpha, null)
   }

@@ -598,6 +598,11 @@
     <string translatable="false" name="thermostat_thermometer_error">Temperature reading error</string>
     <string translatable="false" name="thermostat_clock_error">Clock error</string>
     <string translatable="false" name="channel_not_supported">Not supported function</string>
+    <string translatable="false" name="thermostat_detail_program_current">Current:</string>
+    <string translatable="false" name="thermostat_detail_program_next">Next:</string>
+    <string translatable="false" name="time_just_minutes">%1$d min.</string>
+    <string translatable="false" name="time_hours_and_minutes">%1$d hours %2$d min.</string>
+    <string translatable="false" name="thermostat_detail_program_time">for %1$s</string>
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>
