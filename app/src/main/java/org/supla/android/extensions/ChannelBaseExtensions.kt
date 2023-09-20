@@ -21,8 +21,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaConst
 
 fun ChannelBase.isHvacThermostat(): Boolean =
-  func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT ||
-    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL ||
+  func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
 //    Temporarily commented out, because is not supported yet.
 //    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ||
 //    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER ||

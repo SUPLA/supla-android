@@ -18,7 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags.HEAT_OR_COOL
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.toShort
 import org.supla.android.extensions.toShortVararg
@@ -30,6 +32,10 @@ data class ThermostatValue(
   val setpointTemperatureCool: Float,
   val flags: List<SuplaThermostatFlags>
 ) {
+
+  val subfunction: ThermostatSubfunction
+    get() = if (flags.contains(HEAT_OR_COOL)) ThermostatSubfunction.COOL else ThermostatSubfunction.HEAT
+
   companion object {
     fun from(bytes: ByteArray): ThermostatValue {
       return ThermostatValue(

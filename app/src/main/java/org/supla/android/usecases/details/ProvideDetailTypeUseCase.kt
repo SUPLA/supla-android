@@ -65,8 +65,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
 
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,

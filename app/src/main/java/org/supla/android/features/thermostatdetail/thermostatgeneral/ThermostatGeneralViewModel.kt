@@ -48,9 +48,8 @@ import org.supla.android.extensions.mapMerged
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ui.ThermostatGeneralViewProxy
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -92,7 +91,7 @@ class ThermostatGeneralViewModel @Inject constructor(
       configEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelHvacConfig && it.result == ChannelConfigResult.RESULT_TRUE }.firstElement()
     ) { pair, config ->
-      LoadedData(pair.first, pair.second, config.config as SuplaChannelHvacConfig, config.result)
+      LoadedData(pair.first, pair.second, config.config as SuplaChannelHvacConfig)
     }
       .attachSilent()
       .subscribeBy(
@@ -205,7 +204,13 @@ class ThermostatGeneralViewModel @Inject constructor(
         else -> SuplaHvacMode.OFF
       }
 
-      delayedThermostatActionSubject.sendImmediately(viewModelState.copy(mode = newMode))
+      delayedThermostatActionSubject.sendImmediately(
+        viewModelState.copy(
+          mode = newMode,
+          setpointMaxTemperature = null,
+          setpointMinTemperature = null
+        )
+      )
         .attachSilent()
         .subscribeBy()
         .disposeBySelf()
@@ -218,15 +223,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     state.viewModelState?.let { viewModelState ->
       updateState { it.copy(loadingState = it.loadingState.copy(true), lastInteractionTime = null) }
 
-      val newMode = when (viewModelState.function) {
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL -> SuplaHvacMode.COOL
-        SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
-        else -> SuplaHvacMode.HEAT
-      }
-
       delayedThermostatActionSubject.sendImmediately(
         viewModelState.copy(
-          mode = newMode,
+          mode = SuplaHvacMode.CMD_SWITCH_TO_MANUAL,
           setpointMinTemperature = null,
           setpointMaxTemperature = null
         )
@@ -243,7 +242,13 @@ class ThermostatGeneralViewModel @Inject constructor(
     state.viewModelState?.let { viewModelState ->
       updateState { it.copy(loadingState = it.loadingState.copy(true), lastInteractionTime = null) }
 
-      delayedThermostatActionSubject.sendImmediately(viewModelState.copy(mode = SuplaHvacMode.CMD_WEEKLY_SCHEDULE))
+      delayedThermostatActionSubject.sendImmediately(
+        viewModelState.copy(
+          mode = SuplaHvacMode.CMD_WEEKLY_SCHEDULE,
+          setpointMinTemperature = null,
+          setpointMaxTemperature = null
+        )
+      )
         .attachSilent()
         .subscribeBy()
         .disposeBySelf()
@@ -270,9 +275,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private fun getTemperatureForPosition(percentagePosition: Float, viewModelState: ThermostatGeneralViewModelState) =
     viewModelState.configMinTemperature.plus(
       viewModelState.configMaxTemperature.minus(viewModelState.configMinTemperature).times(percentagePosition)
-    ).let {
-      it.times(10).roundToInt().toFloat().div(10)
-    }
+    ).times(10).roundToInt().toFloat().div(10)
 
   private fun handleData(data: LoadedData) {
     val channel = data.channelWithChildren.channel
@@ -302,7 +305,7 @@ class ThermostatGeneralViewModel @Inject constructor(
       }
       if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > System.currentTimeMillis()) {
         it.viewModelState?.remoteId?.let { id -> loadChannel(id) }
-        return@updateState it // Do not change anything during 4 secs after last user interaction
+        return@updateState it // Do not change anything during 3 secs after last user interaction
       }
 
       it.copy(
@@ -411,20 +414,28 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   private fun Channel.setpointMinTemperatureSupported(): Boolean =
-    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT ||
+    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
       func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ||
       func == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 
   private fun Channel.setpointMaxTemperatureSupported(): Boolean =
-    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL ||
+    func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
       func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
 
   private fun getSetpointMinTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
-    (channel.setpointMinTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET))
+    (
+      channel.setpointMinTemperatureSupported() &&
+        thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET) &&
+        (thermostatValue.mode == SuplaHvacMode.HEAT || thermostatValue.mode == SuplaHvacMode.AUTO)
+      )
       .ifTrue(thermostatValue.setpointTemperatureHeat)
 
   private fun getSetpointMaxTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? =
-    (channel.setpointMaxTemperatureSupported() && thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET))
+    (
+      channel.setpointMaxTemperatureSupported() &&
+        thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET) &&
+        (thermostatValue.mode == SuplaHvacMode.COOL || thermostatValue.mode == SuplaHvacMode.AUTO)
+      )
       .ifTrue(thermostatValue.setpointTemperatureCool)
 
   private fun changeMinTemperature(viewModelState: ThermostatGeneralViewModelState, step: Float) {
@@ -514,8 +525,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   private data class LoadedData(
     val channelWithChildren: ChannelWithChildren,
     val temperatures: List<ThermostatTemperature>,
-    val config: SuplaChannelHvacConfig,
-    val configResult: ChannelConfigResult
+    val config: SuplaChannelHvacConfig
   )
 }
 

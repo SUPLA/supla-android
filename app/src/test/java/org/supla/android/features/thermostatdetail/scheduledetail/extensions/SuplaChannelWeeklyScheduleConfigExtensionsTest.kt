@@ -12,12 +12,12 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailProgramBox
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 
 @RunWith(MockitoJUnitRunner::class)
 class SuplaChannelWeeklyScheduleConfigExtensionsTest {
@@ -64,6 +64,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
   fun `should create program list for schedule detail`() {
     // given
     val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    val thermostatFunction = ThermostatSubfunction.HEAT
     val config = SuplaChannelWeeklyScheduleConfig(
       remoteId = 123,
       func = function,
@@ -97,22 +98,47 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
     )
 
     // when
-    val programs = config.viewProgramBoxesList()
+    val programs = config.viewProgramBoxesList(thermostatFunction)
 
     // then
     assertThat(programs).containsExactly(
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 23f, null, R.drawable.ic_heat),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.COOL, null, 21f, R.drawable.ic_cool),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 21f, 23f, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.OFF, SuplaHvacMode.OFF, null, null, R.drawable.ic_power_button)
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaScheduleProgram.PROGRAM_1,
+        SuplaHvacMode.HEAT,
+        23f,
+        null,
+        R.drawable.ic_heat
+      ),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaScheduleProgram.PROGRAM_3,
+        SuplaHvacMode.COOL,
+        null,
+        21f,
+        R.drawable.ic_cool
+      ),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 21f, 23f, null),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        R.drawable.ic_power_button
+      )
     )
   }
 
   @Test
   fun `should not add icon for program when function is heat`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
+    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val thermostatFunction = ThermostatSubfunction.HEAT
     val config = SuplaChannelWeeklyScheduleConfig(
       remoteId = 123,
       func = function,
@@ -140,21 +166,30 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
     )
 
     // when
-    val programs = config.viewProgramBoxesList()
+    val programs = config.viewProgramBoxesList(thermostatFunction)
 
     // then
     assertThat(programs).containsExactly(
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 23f, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.OFF, SuplaHvacMode.OFF, null, null, R.drawable.ic_power_button)
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.HEAT, 23f, null, null),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        R.drawable.ic_power_button
+      )
     )
   }
 
   @Test
   fun `should not add icon for program when function is cool`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
+    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val thermostatFunction = ThermostatSubfunction.COOL
     val config = SuplaChannelWeeklyScheduleConfig(
       remoteId = 123,
       func = function,
@@ -182,14 +217,22 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
     )
 
     // when
-    val programs = config.viewProgramBoxesList()
+    val programs = config.viewProgramBoxesList(thermostatFunction)
 
     // then
     assertThat(programs).containsExactly(
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.COOL, null, 23f, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
-      ScheduleDetailProgramBox(function, SuplaScheduleProgram.OFF, SuplaHvacMode.OFF, null, null, R.drawable.ic_power_button)
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_1, SuplaHvacMode.COOL, null, 23f, null),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_2, SuplaHvacMode.OFF, null, null, null),
+      ScheduleDetailProgramBox(function, thermostatFunction, SuplaScheduleProgram.PROGRAM_3, SuplaHvacMode.NOT_SET, null, null, null),
+      ScheduleDetailProgramBox(
+        function,
+        thermostatFunction,
+        SuplaScheduleProgram.OFF,
+        SuplaHvacMode.OFF,
+        null,
+        null,
+        R.drawable.ic_power_button
+      )
     )
   }
 }

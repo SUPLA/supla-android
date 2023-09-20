@@ -34,9 +34,8 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -54,7 +53,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   fun `should handle channel with children`() {
     // given
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
 
@@ -86,7 +85,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_COOL
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
 
@@ -119,7 +118,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
 
