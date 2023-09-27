@@ -182,7 +182,7 @@ class ThermostatGeneralViewModelTest :
           setpointHeatTemperature = null,
           setpointCoolTemperature = 20.8f
         ),
-        isCurrentlyCooling = true,
+        showCoolingIndicator = true,
         currentTemperaturePercentage = 0.17666666f,
         configMinTemperatureString = "10,0",
         configMaxTemperatureString = "40,0",
@@ -503,7 +503,7 @@ class ThermostatGeneralViewModelTest :
       currentTemperaturePercentage = 0.17666666f,
       configMinTemperatureString = "10,0",
       configMaxTemperatureString = "40,0",
-      isCurrentlyCooling = currentlyCooling,
+      showCoolingIndicator = currentlyCooling,
       loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
     )
 

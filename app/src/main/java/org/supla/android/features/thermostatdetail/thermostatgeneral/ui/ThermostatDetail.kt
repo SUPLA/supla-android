@@ -17,6 +17,11 @@ package org.supla.android.features.thermostatdetail.thermostatgeneral.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +51,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,6 +77,7 @@ import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.buttons.RoundedControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import org.supla.android.ui.views.tools.THERMOSTAT_VERTICAL_POSITION_CORRECTION
 import org.supla.android.ui.views.tools.ThermostatControl
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
@@ -83,6 +91,8 @@ interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState>
   fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider
   fun markChanging()
 }
+
+private val INDICATOR_SIZE = 20.dp
 
 @Composable
 fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
@@ -171,7 +181,7 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       .weight(1f)
       .fillMaxWidth()
   ) {
-    val (control, row) = createRefs()
+    val (control, heating, cooling, row) = createRefs()
     val context = LocalContext.current
 
     ThermostatControl(
@@ -189,13 +199,15 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       minSetpoint = viewState.setpointHeatTemperaturePercentage,
       maxSetpoint = viewState.setpointCoolTemperaturePercentage,
       currentValue = viewState.currentTemperaturePercentage,
-      isHeating = viewState.isCurrentlyHeating,
-      isCooling = viewState.isCurrentlyCooling,
+      isHeating = viewState.showHeatingIndicator,
+      isCooling = viewState.showCoolingIndicator,
       isOff = viewState.isOff,
       isOffline = viewState.isOffline,
       onPositionChangeStarted = { viewProxy.markChanging() },
       onPositionChangeEnded = { minPercentage, maxPercentage -> viewProxy.setpointTemperatureChanged(minPercentage, maxPercentage) }
     )
+
+    ThermostatIndicators(viewState, listOf(control, heating, cooling))
 
     if ((!viewState.isOff || viewState.programmedModeActive) && !viewState.isOffline) {
       Row(
@@ -213,6 +225,58 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       }
     }
   }
+}
+
+context (ConstraintLayoutScope)
+@Composable
+private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constraints: List<ConstrainedLayoutReference>) {
+  val (control, heating, cooling) = constraints
+  val yCorrection = THERMOSTAT_VERTICAL_POSITION_CORRECTION.times(2)
+  val distanceFromCenterPoint = 94.dp
+
+  if (viewState.showHeatingIndicator) {
+    val margin = yCorrection.minus(INDICATOR_SIZE).minus(distanceFromCenterPoint)
+    IndicatorIcon(
+      iconRes = R.drawable.ic_heating,
+      modifier = Modifier.constrainAs(heating) {
+        top.linkTo(control.top, margin = margin)
+        bottom.linkTo(control.bottom)
+        start.linkTo(control.start)
+        end.linkTo(control.end)
+      }
+    )
+  }
+
+  if (viewState.showCoolingIndicator) {
+    val margin = yCorrection.plus(INDICATOR_SIZE).plus(distanceFromCenterPoint)
+    IndicatorIcon(
+      iconRes = R.drawable.ic_cooling,
+      modifier = Modifier.constrainAs(cooling) {
+        top.linkTo(control.top, margin = margin)
+        bottom.linkTo(control.bottom)
+        start.linkTo(control.start)
+        end.linkTo(control.end)
+      }
+    )
+  }
+}
+
+@Composable
+private fun IndicatorIcon(iconRes: Int, modifier: Modifier = Modifier) {
+  val transition = rememberInfiniteTransition(label = "Indicator alpha transition")
+  val alpha by transition.animateFloat(
+    initialValue = 1f,
+    targetValue = 0.2f,
+    animationSpec = infiniteRepeatable(animation = tween(800), repeatMode = RepeatMode.Reverse),
+    label = "indicator alpha value"
+  )
+
+  Image(
+    painter = painterResource(id = iconRes),
+    contentDescription = null,
+    alpha = alpha,
+    modifier = modifier.size(INDICATOR_SIZE)
+  )
 }
 
 @Composable

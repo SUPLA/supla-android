@@ -76,6 +76,8 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+val THERMOSTAT_VERTICAL_POSITION_CORRECTION = (-24).dp
+
 private const val START_ANGLE = 150f
 private const val SWEEP_ANGLE = 240f
 
@@ -86,8 +88,6 @@ private val setpointIconSize = 18.dp
 private val controlCircleWidth = 16.dp
 private val controlMinMaxStrokeWidth = 6.dp
 private val controlShadowWidth = 20.dp
-private val verticalPositionCorrection = (-24).dp
-private val indicatorCorrection = 16.dp
 
 private val setpointTemperatureSizeBig = 48.sp
 private val setpointTemperatureSizeSmall = 32.sp
@@ -155,8 +155,6 @@ fun ThermostatControl(
 
   val minPointIcon = painterResource(id = R.drawable.ic_heat)
   val maxPointIcon = painterResource(id = R.drawable.ic_cool)
-  val heatingIndicatorIcon = painterResource(id = R.drawable.ic_heating)
-  val coolingIndicatorIcon = painterResource(id = R.drawable.ic_cooling)
 
   var initialTouchPoint by remember { mutableStateOf<Offset?>(null) }
   var currentTouchPoint by remember { mutableStateOf<Offset?>(null) }
@@ -193,7 +191,7 @@ fun ThermostatControl(
   ) {
     val availableRadius = size.width.div(2).minus(paddings.toPx().times(2)) // half of width minus paddings
     val outerRadius = min(desiredRadius.toPx(), availableRadius)
-    val center = Offset(center.x, center.y + verticalPositionCorrection.toPx())
+    val center = Offset(center.x, center.y + THERMOSTAT_VERTICAL_POSITION_CORRECTION.toPx())
 
     drawControlTemperatureCircle(
       outerRadius = outerRadius,
@@ -216,16 +214,6 @@ fun ThermostatControl(
       shadowColor = indicatorShadowColor,
       outerRadius = outerRadius,
       center = center
-    )
-
-    drawStateIndicators(
-      heatingIndicatorIcon = heatingIndicatorIcon,
-      coolingIndicatorIcon = coolingIndicatorIcon,
-      positionCorrection = temperatureControlTextSize.height.div(2) + indicatorCorrection.toPx(),
-      center = center,
-      isOffline = isOffline,
-      isHeating = isHeating,
-      isCooling = isCooling
     )
 
     drawControlPoints(
@@ -336,38 +324,6 @@ fun drawSetTemperatureCircle(
 
   // temperature text inside of the circle
   drawText(text, textColor, topLeft = Offset(center.x - textSize.width.div(2f), center.y - textSize.height.div(2f)))
-}
-
-context(DrawScope)
-fun drawStateIndicators(
-  heatingIndicatorIcon: Painter,
-  coolingIndicatorIcon: Painter,
-  positionCorrection: Float,
-  center: Offset,
-  isOffline: Boolean,
-  isHeating: Boolean,
-  isCooling: Boolean
-) {
-  if (isHeating && isOffline.not()) {
-    with(heatingIndicatorIcon) {
-      translate(
-        left = center.x - intrinsicSize.width.div(2),
-        top = center.y - positionCorrection - intrinsicSize.height
-      ) {
-        draw(intrinsicSize)
-      }
-    }
-  }
-  if (isCooling && isOffline.not()) {
-    with(coolingIndicatorIcon) {
-      translate(
-        left = center.x - intrinsicSize.width.div(2),
-        top = center.y + positionCorrection
-      ) {
-        draw(intrinsicSize)
-      }
-    }
-  }
 }
 
 context(DrawScope)

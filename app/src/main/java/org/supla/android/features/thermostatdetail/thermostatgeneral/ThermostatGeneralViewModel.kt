@@ -334,8 +334,8 @@ class ThermostatGeneralViewModel @Inject constructor(
         heatingModeActive = isHeatingModeActive(channel, value),
         coolingModeActive = isCoolingModeActive(channel, value),
 
-        isCurrentlyHeating = value.state.isOn() && value.flags.contains(SuplaThermostatFlags.HEATING),
-        isCurrentlyCooling = value.state.isOn() && value.flags.contains(SuplaThermostatFlags.COOLING),
+        showHeatingIndicator = channel.onLine && value.state.isOn() && value.flags.contains(SuplaThermostatFlags.HEATING),
+        showCoolingIndicator = channel.onLine && value.state.isOn() && value.flags.contains(SuplaThermostatFlags.COOLING),
 
         configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
         configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
@@ -574,8 +574,8 @@ data class ThermostatGeneralViewState(
   val isAutoFunction: Boolean = false,
   val heatingModeActive: Boolean = false,
   val coolingModeActive: Boolean = false,
-  val isCurrentlyHeating: Boolean = false,
-  val isCurrentlyCooling: Boolean = false,
+  val showHeatingIndicator: Boolean = false,
+  val showCoolingIndicator: Boolean = false,
 
   val configMinTemperatureString: String = "",
   val configMaxTemperatureString: String = "",
