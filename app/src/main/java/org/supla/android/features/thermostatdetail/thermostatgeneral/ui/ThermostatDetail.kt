@@ -17,6 +17,11 @@ package org.supla.android.features.thermostatdetail.thermostatgeneral.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +51,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,6 +67,7 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralViewState
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatTemperature
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
+import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.ui.ThermometersValues
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.AnimatableButtonType
@@ -69,6 +77,7 @@ import org.supla.android.ui.views.buttons.PlusIconButton
 import org.supla.android.ui.views.buttons.RoundedControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import org.supla.android.ui.views.tools.THERMOSTAT_VERTICAL_POSITION_CORRECTION
 import org.supla.android.ui.views.tools.ThermostatControl
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
@@ -82,6 +91,8 @@ interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState>
   fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider
   fun markChanging()
 }
+
+private val INDICATOR_SIZE = 20.dp
 
 @Composable
 fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
@@ -123,15 +134,17 @@ context (ColumnScope)
 private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy, modifier: Modifier = Modifier) {
   BoxWithConstraints(modifier = modifier) {
     if (maxHeight < 350.dp) {
-      if (viewState.isOff.not() && viewState.isAutoFunction) {
+      if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
         HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
       }
       TemperatureControlRow(viewState, viewProxy)
-      WarningsRow(viewState.issues, modifier = Modifier.align(Alignment.BottomStart))
+      WarningsRow(viewState.issues, true, modifier = Modifier.align(Alignment.BottomStart))
     } else {
       Column {
-        if (viewState.isOff.not() && viewState.isAutoFunction) {
+        if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
           HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
+        } else if (viewState.temporaryProgramInfo.isNotEmpty()) {
+          ProgramInfoRow(infos = viewState.temporaryProgramInfo)
         } else {
           Spacer(modifier = Modifier.height(96.dp))
         }
@@ -168,7 +181,7 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       .weight(1f)
       .fillMaxWidth()
   ) {
-    val (control, row) = createRefs()
+    val (control, heating, cooling, row) = createRefs()
     val context = LocalContext.current
 
     ThermostatControl(
@@ -183,19 +196,20 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       mainTemperatureTextProvider = { min, max -> viewProxy.getTemperatureText(min, max, viewState)(context) },
       minTemperature = viewState.configMinTemperatureString,
       maxTemperature = viewState.configMaxTemperatureString,
-      minSetpoint = viewState.setpointMinTemperaturePercentage,
-      maxSetpoint = viewState.setpointMaxTemperaturePercentage,
+      minSetpoint = viewState.setpointHeatTemperaturePercentage,
+      maxSetpoint = viewState.setpointCoolTemperaturePercentage,
       currentValue = viewState.currentTemperaturePercentage,
-      isHeating = viewState.isCurrentlyHeating,
-      isCooling = viewState.isCurrentlyCooling,
+      isHeating = viewState.showHeatingIndicator,
+      isCooling = viewState.showCoolingIndicator,
       isOff = viewState.isOff,
       isOffline = viewState.isOffline,
-      isInManualMode = viewState.manualModeActive,
       onPositionChangeStarted = { viewProxy.markChanging() },
       onPositionChangeEnded = { minPercentage, maxPercentage -> viewProxy.setpointTemperatureChanged(minPercentage, maxPercentage) }
     )
 
-    if (viewState.manualModeActive) {
+    ThermostatIndicators(viewState, listOf(control, heating, cooling))
+
+    if ((!viewState.isOff || viewState.programmedModeActive) && !viewState.isOffline) {
       Row(
         modifier = Modifier.constrainAs(row) { bottom.linkTo(control.bottom, margin = 60.dp) },
         horizontalArrangement = Arrangement.spacedBy(40.dp)
@@ -211,6 +225,58 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       }
     }
   }
+}
+
+context (ConstraintLayoutScope)
+@Composable
+private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constraints: List<ConstrainedLayoutReference>) {
+  val (control, heating, cooling) = constraints
+  val yCorrection = THERMOSTAT_VERTICAL_POSITION_CORRECTION.times(2)
+  val distanceFromCenterPoint = 94.dp
+
+  if (viewState.showHeatingIndicator) {
+    val margin = yCorrection.minus(INDICATOR_SIZE).minus(distanceFromCenterPoint)
+    IndicatorIcon(
+      iconRes = R.drawable.ic_heating,
+      modifier = Modifier.constrainAs(heating) {
+        top.linkTo(control.top, margin = margin)
+        bottom.linkTo(control.bottom)
+        start.linkTo(control.start)
+        end.linkTo(control.end)
+      }
+    )
+  }
+
+  if (viewState.showCoolingIndicator) {
+    val margin = yCorrection.plus(INDICATOR_SIZE).plus(distanceFromCenterPoint)
+    IndicatorIcon(
+      iconRes = R.drawable.ic_cooling,
+      modifier = Modifier.constrainAs(cooling) {
+        top.linkTo(control.top, margin = margin)
+        bottom.linkTo(control.bottom)
+        start.linkTo(control.start)
+        end.linkTo(control.end)
+      }
+    )
+  }
+}
+
+@Composable
+private fun IndicatorIcon(iconRes: Int, modifier: Modifier = Modifier) {
+  val transition = rememberInfiniteTransition(label = "Indicator alpha transition")
+  val alpha by transition.animateFloat(
+    initialValue = 1f,
+    targetValue = 0.2f,
+    animationSpec = infiniteRepeatable(animation = tween(800), repeatMode = RepeatMode.Reverse),
+    label = "indicator alpha value"
+  )
+
+  Image(
+    painter = painterResource(id = iconRes),
+    contentDescription = null,
+    alpha = alpha,
+    modifier = modifier.size(INDICATOR_SIZE)
+  )
 }
 
 @Composable
@@ -251,10 +317,10 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier) {
+private fun WarningsRow(warnings: List<ThermostatIssueItem>, smallScreen: Boolean = false, modifier: Modifier = Modifier) {
   val defaultPadding = dimensionResource(id = R.dimen.distance_default)
   Column(
-    modifier = modifier.padding(start = defaultPadding, end = defaultPadding),
+    modifier = modifier.padding(start = defaultPadding, end = defaultPadding, bottom = defaultPadding),
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
   ) {
     warnings.forEach {
@@ -269,6 +335,10 @@ private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier 
         )
         Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.body2)
       }
+
+      if (smallScreen) {
+        return
+      }
     }
   }
 }
@@ -277,7 +347,11 @@ private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier 
 private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy) {
   Row(
     modifier = Modifier
-      .padding(all = dimensionResource(id = R.dimen.distance_default)),
+      .padding(
+        start = dimensionResource(id = R.dimen.distance_default),
+        end = dimensionResource(id = R.dimen.distance_default),
+        bottom = dimensionResource(id = R.dimen.distance_default)
+      ),
     horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     PowerButton(
@@ -300,7 +374,7 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
       disabled = viewState.isOffline,
       animationMode = AnimationMode.Stated(active = viewState.programmedModeActive)
     ) {
-      if (viewState.isOffline.not() && viewState.programmedModeActive.not()) {
+      if (viewState.isOffline.not() && (viewState.programmedModeActive.not() || viewState.temporaryChangeActive)) {
         viewProxy.weeklyScheduledModeClicked()
       }
     }
@@ -335,6 +409,31 @@ private fun Preview() {
 
 @Preview
 @Composable
+private fun PreviewTemporarOverride() {
+  SuplaTheme {
+    ThermostatDetail(
+      PreviewProxy(
+        ThermostatGeneralViewState(
+          temporaryChangeActive = true,
+          temporaryProgramInfo = listOf(
+            ThermostatProgramInfo(
+              ThermostatProgramInfo.Type.CURRENT,
+              { "vor 7 hours 10 min." },
+              R.drawable.ic_heat,
+              R.color.red,
+              { "22.7" },
+              true
+            ),
+            ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Wyłącz" })
+          )
+        )
+      )
+    )
+  }
+}
+
+@Preview
+@Composable
 private fun PreviewSmall() {
   SuplaTheme {
     Box(modifier = Modifier.height(500.dp)) {
@@ -343,11 +442,11 @@ private fun PreviewSmall() {
   }
 }
 
-private class PreviewProxy : ThermostatGeneralViewProxy {
+private class PreviewProxy(private var initialState: ThermostatGeneralViewState = ThermostatGeneralViewState(isAutoFunction = true)) :
+  ThermostatGeneralViewProxy {
   override fun getViewState(): StateFlow<ThermostatGeneralViewState> =
     MutableStateFlow(
-      value = ThermostatGeneralViewState(
-        isAutoFunction = true,
+      value = initialState.copy(
         loadingState = LoadingTimeoutManager.LoadingState(loading = false),
         temperatures = listOf(
           ThermostatTemperature(123, { ResourcesCompat.getDrawable(it.resources, R.drawable.thermometer, null)!!.toBitmap() }, "12.3")

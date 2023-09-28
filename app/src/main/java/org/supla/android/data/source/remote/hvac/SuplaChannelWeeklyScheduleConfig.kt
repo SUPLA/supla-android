@@ -1,5 +1,6 @@
 package org.supla.android.data.source.remote.hvac
 
+import org.supla.android.R
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.SuplaChannelConfig
@@ -34,6 +35,26 @@ enum class SuplaHvacMode(val value: Int) {
   CMD_WEEKLY_SCHEDULE(9),
   CMD_SWITCH_TO_MANUAL(10);
 
+  val icon: Int?
+    get() {
+      return when (this) {
+        OFF -> R.drawable.ic_power_button
+        HEAT -> R.drawable.ic_heat
+        COOL -> R.drawable.ic_cool
+        else -> null
+      }
+    }
+
+  val iconColor: Int?
+    get() {
+      return when (this) {
+        OFF -> R.color.gray
+        HEAT -> R.color.red
+        COOL -> R.color.blue
+        else -> null
+      }
+    }
+
   companion object {
     fun from(byte: Byte): SuplaHvacMode {
       for (state in SuplaHvacMode.values()) {
@@ -58,9 +79,11 @@ enum class SuplaScheduleProgram(val value: Int) {
 data class SuplaWeeklyScheduleProgram( /* aka TWeeklyScheduleProgram */
   val program: SuplaScheduleProgram,
   val mode: SuplaHvacMode,
-  val setpointTemperatureHeat: Short?,
-  val setpointTemperatureCool: Short?
-)
+  val setpointTemperatureHeat: Short? = null,
+  val setpointTemperatureCool: Short? = null
+) {
+  companion object
+}
 
 data class SuplaWeeklyScheduleEntry(
   val dayOfWeek: DayOfWeek,

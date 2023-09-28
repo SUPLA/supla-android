@@ -84,8 +84,8 @@ fun QuartersSelectionDialog(
         ScheduleProgramButton(
           programBox = programBox,
           modifier = Modifier.padding(vertical = 4.dp),
-          active = programBox.program == data.activeProgram,
-          onClick = { viewProxy.onQuartersDialogProgramChange(programBox.program) }
+          active = programBox.scheduleProgram.program == data.activeProgram,
+          onClick = { viewProxy.onQuartersDialogProgramChange(programBox.scheduleProgram.program) }
         )
       }
     }

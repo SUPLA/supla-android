@@ -1,4 +1,4 @@
-package org.supla.android.data.source.local.calendar
+package org.supla.android.extensions
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,24 +17,23 @@ package org.supla.android.data.source.local.calendar
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class QuarterOfHour(val startingMinute: Int) {
-  FIRST(0),
-  SECOND(15),
-  THIRD(30),
-  FOURTH(45);
+import androidx.compose.ui.geometry.Offset
+import kotlin.math.pow
+import kotlin.math.sqrt
 
-  val startingMinuteString: String
-    get() = if (startingMinute < 10) "0$startingMinute" else "$startingMinute"
-
-  companion object {
-    fun from(minuteOfHour: Int): QuarterOfHour {
-      for (quarter in QuarterOfHour.values()) {
-        if (minuteOfHour < quarter.startingMinute + 15) {
-          return quarter
-        }
-      }
-
-      throw IllegalStateException("Quarter not found for `$minuteOfHour`")
-    }
+fun Offset?.isInside(midPoint: Offset, radius: Float): Boolean {
+  if (this == null) {
+    return false
   }
+
+  return x > midPoint.x.minus(radius) && x < midPoint.x.plus(radius) &&
+    y > midPoint.y.minus(radius) && y < midPoint.y.plus(radius)
+}
+
+fun Offset?.distanceTo(other: Offset?): Float? {
+  if (this == null || other == null) {
+    return null
+  }
+
+  return sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
 }

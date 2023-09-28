@@ -120,9 +120,9 @@ fun ScheduleDetail(viewProxy: ScheduleDetailViewProxy) {
         for (programOption in viewState.programs) {
           ScheduleProgramButton(
             programBox = programOption,
-            active = programOption.program == viewState.activeProgram,
-            onClick = { viewProxy.changeProgram(programOption.program) },
-            onLongClick = { viewProxy.startProgramDialog(programOption.program) }
+            active = programOption.scheduleProgram.program == viewState.activeProgram,
+            onClick = { viewProxy.changeProgram(programOption.scheduleProgram.program) },
+            onLongClick = { viewProxy.startProgramDialog(programOption.scheduleProgram.program) }
           )
         }
       }

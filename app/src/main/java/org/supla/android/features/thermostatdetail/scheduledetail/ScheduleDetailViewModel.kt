@@ -20,9 +20,11 @@ package org.supla.android.features.thermostatdetail.scheduledetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -60,6 +62,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val REFRESH_DELAY_MS = 3000L
@@ -72,19 +75,27 @@ class ScheduleDetailViewModel @Inject constructor(
   private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val preferences: Preferences,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
+
+  private val updateSubject = PublishSubject.create<Int>()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
       updateState { state ->
         reloadConfig(state.remoteId)
-        state.copy(loadingState = state.loadingState.copy(false))
+        state.copy(loadingState = state.loadingState.changingLoading(false, dateProvider))
       }
     }
   }
 
   fun observeConfig(remoteId: Int) {
+    updateSubject.attachSilent()
+      .debounce(1, TimeUnit.SECONDS)
+      .subscribeBy(onNext = { reloadConfig(remoteId) })
+      .disposeBySelf()
+
     Observable.combineLatest(
       configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelWeeklyScheduleConfig },
       configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelHvacConfig }
@@ -100,7 +111,7 @@ class ScheduleDetailViewModel @Inject constructor(
         onNext = { onConfigLoaded(it) }
       ).disposeBySelf()
 
-    updateState { it.copy(loadingState = it.loadingState.copy(true), remoteId = remoteId) }
+    updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider), remoteId = remoteId) }
     reloadConfig(remoteId)
   }
 
@@ -288,7 +299,7 @@ class ScheduleDetailViewModel @Inject constructor(
     }
 
     for (programConfiguration in state.programs) {
-      if (programConfiguration.program == program && programConfiguration.mode == SuplaHvacMode.NOT_SET) {
+      if (programConfiguration.scheduleProgram.program == program && programConfiguration.scheduleProgram.mode == SuplaHvacMode.NOT_SET) {
         return null // Don't allow to set program with NOT_SET mode
       }
     }
@@ -393,7 +404,7 @@ class ScheduleDetailViewModel @Inject constructor(
 
   private fun createProgramSettingData(state: ScheduleDetailViewState, program: SuplaScheduleProgram): ProgramSettingsData? {
     for (programBox in state.programs) {
-      if (programBox.program == program) {
+      if (programBox.scheduleProgram.program == program) {
         return ProgramSettingsData(
           program = program,
           modes = programAvailableModes(state),
@@ -447,16 +458,19 @@ class ScheduleDetailViewModel @Inject constructor(
 
     updateState {
       if (it.changing) {
+        Trace.d(TAG, "update skipped because of changing")
         return@updateState it // Do not change anything, when user makes manual operations
       }
       if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > System.currentTimeMillis()) {
-        reloadConfig(it.remoteId)
+        Trace.d(TAG, "update skipped because of last interaction time")
+        updateSubject.onNext(0)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
       val thermostatFunction = data.defaultConfig.subfunction
 
+      Trace.d(TAG, "updating state with data")
       it.copy(
-        loadingState = it.loadingState.copy(false),
+        loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,
         schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
         programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
@@ -515,20 +529,22 @@ data class ScheduleDetailViewState(
     programSettings?.let { programToUpdate ->
       mutableListOf<ScheduleDetailProgramBox>().apply {
         for (program in programs) {
-          if (program.program == programToUpdate.program) {
+          if (program.scheduleProgram.program == programToUpdate.program) {
             val icon = when {
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.scheduleProgram.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.scheduleProgram.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
               else -> null
             }
 
             ScheduleDetailProgramBox(
               channelFunction = function,
               thermostatFunction = thermostatFunction!!,
-              program = programToUpdate.program,
-              mode = programToUpdate.selectedMode,
-              setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat,
-              setpointTemperatureCool = programToUpdate.setpointTemperatureCool,
+              SuplaWeeklyScheduleProgram(
+                program = programToUpdate.program,
+                mode = programToUpdate.selectedMode,
+                setpointTemperatureHeat = programToUpdate.setpointTemperatureHeat?.toSuplaTemperature(),
+                setpointTemperatureCool = programToUpdate.setpointTemperatureCool?.toSuplaTemperature()
+              ),
               iconRes = icon
             ).also {
               add(it)
@@ -542,17 +558,10 @@ data class ScheduleDetailViewState(
 
   fun suplaPrograms(): List<SuplaWeeklyScheduleProgram> = mutableListOf<SuplaWeeklyScheduleProgram>().apply {
     for (program in programs) {
-      if (program.program == SuplaScheduleProgram.OFF) {
+      if (program.scheduleProgram.program == SuplaScheduleProgram.OFF) {
         continue
       }
-      add(
-        SuplaWeeklyScheduleProgram(
-          program = program.program,
-          mode = program.mode,
-          setpointTemperatureHeat = program.setpointTemperatureHeat?.toSuplaTemperature(),
-          setpointTemperatureCool = program.setpointTemperatureCool?.toSuplaTemperature()
-        )
-      )
+      add(program.scheduleProgram.copy())
     }
   }
 

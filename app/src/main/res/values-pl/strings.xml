@@ -579,6 +579,11 @@
   <string name="thermostat_thermometer_error">Błąd odczytu temperatury</string>
   <string name="thermostat_clock_error">Błąd zegara</string>
   <string name="channel_not_supported">Niewspierana funkcja</string>
+  <string name="thermostat_detail_program_current">Aktualnie:</string>
+  <string name="thermostat_detail_program_next">Następnie:</string>
+  <string name="time_just_minutes">%1$d min.</string>
+  <string name="time_hours_and_minutes">%1$d godz. %2$d min.</string>
+  <string name="thermostat_detail_program_time">przez %1$s</string>
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>

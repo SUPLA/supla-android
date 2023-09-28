@@ -521,6 +521,11 @@
  <string name="friday_short">FR</string>
  <string name="saturday_short">SA</string>
  <string name="sunday_short">SO</string>
+  <string name="thermostat_detail_program_current">Aktuell:</string>
+ <string name="thermostat_detail_program_next">Danach:</string>
+ <string name="time_just_minutes">%1$d Min.</string>
+ <string name="time_hours_and_minutes">%1$d Std. %2$d Min.</string>
+ <string name="thermostat_detail_program_time">Für %1$s</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

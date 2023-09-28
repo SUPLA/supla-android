@@ -68,13 +68,17 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
+import org.supla.android.extensions.distanceTo
 import java.lang.Float.min
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+
+val THERMOSTAT_VERTICAL_POSITION_CORRECTION = (-24).dp
 
 private const val START_ANGLE = 150f
 private const val SWEEP_ANGLE = 240f
@@ -86,8 +90,6 @@ private val setpointIconSize = 18.dp
 private val controlCircleWidth = 16.dp
 private val controlMinMaxStrokeWidth = 6.dp
 private val controlShadowWidth = 20.dp
-private val verticalPositionCorrection = (-24).dp
-private val indicatorCorrection = 16.dp
 
 private val setpointTemperatureSizeBig = 48.sp
 private val setpointTemperatureSizeSmall = 32.sp
@@ -120,17 +122,23 @@ fun ThermostatControl(
   isOffline: Boolean = false,
   isHeating: Boolean = false,
   isCooling: Boolean = false,
-  isInManualMode: Boolean = false,
   onPositionChangeStarted: () -> Unit,
   onPositionChangeEnded: (Float?, Float?) -> Unit
 ) {
   val primaryColor = colorResource(id = R.color.primary)
+  val disabledColor = colorResource(id = R.color.disabled)
   val textColor = MaterialTheme.colors.onBackground
   val pointShadowColor = MaterialTheme.colors.progressPointShadow
-  val minPointColor = MaterialTheme.colors.error
-  val minPointShadowColor = minPointColor.copy(alpha = 0.4f)
-  val maxPointColor = MaterialTheme.colors.blue
-  val maxPointShadowColor = maxPointColor.copy(alpha = 0.4f)
+  val (minPointColor, minPointShadowColor) = if (isOff) {
+    listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
+  } else {
+    listOf(MaterialTheme.colors.error, MaterialTheme.colors.error.copy(alpha = 0.4f))
+  }
+  val (maxPointColor, maxPointShadowColor) = if (isOff) {
+    listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
+  } else {
+    listOf(MaterialTheme.colors.blue, MaterialTheme.colors.blue.copy(alpha = 0.4f))
+  }
   val indicatorShadowColor = when {
     isOff -> DefaultShadowColor
     isHeating -> MaterialTheme.colors.error
@@ -149,8 +157,6 @@ fun ThermostatControl(
 
   val minPointIcon = painterResource(id = R.drawable.ic_heat)
   val maxPointIcon = painterResource(id = R.drawable.ic_cool)
-  val heatingIndicatorIcon = painterResource(id = R.drawable.ic_heating)
-  val coolingIndicatorIcon = painterResource(id = R.drawable.ic_cooling)
 
   var initialTouchPoint by remember { mutableStateOf<Offset?>(null) }
   var currentTouchPoint by remember { mutableStateOf<Offset?>(null) }
@@ -167,20 +173,18 @@ fun ThermostatControl(
 
   Canvas(
     modifier = modifier.pointerInteropFilter {
-      if (isInManualMode) {
-        when (it.action) {
-          MotionEvent.ACTION_DOWN -> {
-            initialTouchPoint = Offset(it.x, it.y)
-            currentTouchPoint = Offset(it.x, it.y)
-            onPositionChangeStarted()
-          }
+      when (it.action) {
+        MotionEvent.ACTION_DOWN -> {
+          initialTouchPoint = Offset(it.x, it.y)
+          currentTouchPoint = Offset(it.x, it.y)
+          onPositionChangeStarted()
+        }
 
-          MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
-          MotionEvent.ACTION_UP -> {
-            onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
-            initialTouchPoint = null
-            currentTouchPoint = null
-          }
+        MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
+        MotionEvent.ACTION_UP -> {
+          onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
+          initialTouchPoint = null
+          currentTouchPoint = null
         }
       }
 
@@ -189,7 +193,7 @@ fun ThermostatControl(
   ) {
     val availableRadius = size.width.div(2).minus(paddings.toPx().times(2)) // half of width minus paddings
     val outerRadius = min(desiredRadius.toPx(), availableRadius)
-    val center = Offset(center.x, center.y + verticalPositionCorrection.toPx())
+    val center = Offset(center.x, center.y + THERMOSTAT_VERTICAL_POSITION_CORRECTION.toPx())
 
     drawControlTemperatureCircle(
       outerRadius = outerRadius,
@@ -214,16 +218,6 @@ fun ThermostatControl(
       center = center
     )
 
-    drawStateIndicators(
-      heatingIndicatorIcon = heatingIndicatorIcon,
-      coolingIndicatorIcon = coolingIndicatorIcon,
-      positionCorrection = temperatureControlTextSize.height.div(2) + indicatorCorrection.toPx(),
-      center = center,
-      isOffline = isOffline,
-      isHeating = isHeating,
-      isCooling = isCooling
-    )
-
     drawControlPoints(
       outerRadius = outerRadius,
       maxSetpointConfig = maxPointConfig,
@@ -233,7 +227,6 @@ fun ThermostatControl(
       center = center,
       initialPoint = initialTouchPoint,
       movingPoint = currentTouchPoint,
-      isOff = isOff,
       isOffline = isOffline
     )
   }
@@ -336,38 +329,6 @@ fun drawSetTemperatureCircle(
 }
 
 context(DrawScope)
-fun drawStateIndicators(
-  heatingIndicatorIcon: Painter,
-  coolingIndicatorIcon: Painter,
-  positionCorrection: Float,
-  center: Offset,
-  isOffline: Boolean,
-  isHeating: Boolean,
-  isCooling: Boolean
-) {
-  if (isHeating && isOffline.not()) {
-    with(heatingIndicatorIcon) {
-      translate(
-        left = center.x - intrinsicSize.width.div(2),
-        top = center.y - positionCorrection - intrinsicSize.height
-      ) {
-        draw(intrinsicSize)
-      }
-    }
-  }
-  if (isCooling && isOffline.not()) {
-    with(coolingIndicatorIcon) {
-      translate(
-        left = center.x - intrinsicSize.width.div(2),
-        top = center.y + positionCorrection
-      ) {
-        draw(intrinsicSize)
-      }
-    }
-  }
-}
-
-context(DrawScope)
 private fun drawControlPoints(
   outerRadius: Float,
   maxSetpointConfig: ControlPointConfig?,
@@ -377,7 +338,6 @@ private fun drawControlPoints(
   center: Offset,
   initialPoint: Offset?,
   movingPoint: Offset?,
-  isOff: Boolean,
   isOffline: Boolean
 ) {
   val radiusForPoints = outerRadius - controlCircleWidth.toPx().div(2)
@@ -396,12 +356,12 @@ private fun drawControlPoints(
     )
   }
 
-  if (minSetpointConfig != null && isOff.not()) {
+  if (minSetpointConfig != null) {
     val maxAlpha = maxSetpointConfig?.value
     drawSetPoint(minSetpointConfig, radiusForPoints, center, initialPoint, movingPoint, null, maxAlpha)
   }
 
-  if (maxSetpointConfig != null && isOff.not()) {
+  if (maxSetpointConfig != null) {
     val minAlpha = minSetpointConfig?.value
     drawSetPoint(maxSetpointConfig, radiusForPoints, center, initialPoint, movingPoint, minAlpha, null)
   }
@@ -430,7 +390,8 @@ private fun drawSetPoint(
 ) {
   val angle = START_ANGLE + SWEEP_ANGLE.times(config.value)
   val centerPoint = getPositionOnCircle(angle, radius, center).run {
-    if (initialPoint.isInside(this, touchPointRadius.toPx())) {
+    val distance = initialPoint.distanceTo(center)
+    if (distance != null && abs(radius - distance) < setpointRadius.toPx()) {
       getNearestCirclePoint(movingPoint!!, center, radius, minAlpha, maxAlpha, config.positionObserver!!)
     } else {
       this
@@ -503,15 +464,6 @@ private fun getAlphaPosition(correctedPoint: Offset, sinAlpha: Float) =
       it
     }
   }
-
-fun Offset?.isInside(midPoint: Offset, radius: Float): Boolean {
-  if (this == null) {
-    return false
-  }
-
-  return x > midPoint.x.minus(radius) && x < midPoint.x.plus(radius) &&
-    y > midPoint.y.minus(radius) && y < midPoint.y.plus(radius)
-}
 
 @OptIn(ExperimentalTextApi::class)
 private fun mainTemperature(text: String, textMeasurer: TextMeasurer): TextLayoutResult {

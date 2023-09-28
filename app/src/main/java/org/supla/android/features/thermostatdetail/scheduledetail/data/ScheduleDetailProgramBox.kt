@@ -20,11 +20,13 @@ package org.supla.android.features.thermostatdetail.scheduledetail.data
 import androidx.annotation.DrawableRes
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
+import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.extensions.valuesFormatter
+import org.supla.android.extensions.fromSuplaTemperature
+import org.supla.android.features.thermostatdetail.ui.OFF
+import org.supla.android.features.thermostatdetail.ui.description
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
@@ -32,45 +34,41 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
   val thermostatFunction: ThermostatSubfunction,
-  val program: SuplaScheduleProgram,
-  val mode: SuplaHvacMode,
-  val setpointTemperatureHeat: Float? = null,
-  val setpointTemperatureCool: Float? = null,
+  val scheduleProgram: SuplaWeeklyScheduleProgram,
   @DrawableRes val iconRes: Int? = null
 ) {
 
+  val setpointTemperatureHeat: Float?
+    get() = scheduleProgram.setpointTemperatureHeat?.fromSuplaTemperature()
+
+  val setpointTemperatureCool: Float?
+    get() = scheduleProgram.setpointTemperatureCool?.fromSuplaTemperature()
+
   val textProvider: StringProvider
-    get() = when {
-      program == SuplaScheduleProgram.OFF -> { context -> context.resources.getString(R.string.turn_off) }
-      mode == SuplaHvacMode.HEAT -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureHeat?.toDouble()) }
-      mode == SuplaHvacMode.COOL -> { context -> context.valuesFormatter.getTemperatureString(setpointTemperatureCool?.toDouble()) }
-      mode == SuplaHvacMode.AUTO -> { context ->
-        val minTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureHeat?.toDouble())
-        val maxTemperature = context.valuesFormatter.getTemperatureString(setpointTemperatureCool?.toDouble())
-        "$minTemperature - $maxTemperature"
-      }
-      else -> { _ -> ValuesFormatter.NO_VALUE_TEXT }
-    }
+    get() = scheduleProgram.description
 
   val modeForModify: SuplaHvacMode
-    get() = if (mode == SuplaHvacMode.NOT_SET) {
+    get() = if (scheduleProgram.mode == SuplaHvacMode.NOT_SET) {
       when {
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
-        else -> mode
+        else -> scheduleProgram.mode
       }
     } else {
-      mode
+      scheduleProgram.mode
     }
 
   val temperatureMinForModify: Float
     get() {
-      if (setpointTemperatureHeat != null && setpointTemperatureHeat > 0) {
-        return setpointTemperatureHeat
+      setpointTemperatureHeat?.let {
+        if (it > 0) {
+          return it
+        }
       }
-      return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && mode == SuplaHvacMode.HEAT) {
+
+      return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && scheduleProgram.mode == SuplaHvacMode.HEAT) {
         40f
       } else {
         21f
@@ -79,8 +77,10 @@ data class ScheduleDetailProgramBox(
 
   val temperatureMaxForModify: Float
     get() {
-      if (setpointTemperatureCool != null && setpointTemperatureCool > 0) {
-        return setpointTemperatureCool
+      setpointTemperatureCool?.let {
+        if (it > 0) {
+          return it
+        }
       }
       return 24f
     }
@@ -90,46 +90,51 @@ data class ScheduleDetailProgramBox(
       ScheduleDetailProgramBox(
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
         ThermostatSubfunction.HEAT,
-        SuplaScheduleProgram.PROGRAM_1,
-        SuplaHvacMode.HEAT,
-        20f,
-        null,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_1,
+          SuplaHvacMode.HEAT,
+          2000,
+          null
+        ),
         R.drawable.ic_heat
       ),
       ScheduleDetailProgramBox(
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
         ThermostatSubfunction.HEAT,
-        SuplaScheduleProgram.PROGRAM_2,
-        SuplaHvacMode.COOL,
-        null,
-        22.5f,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_2,
+          SuplaHvacMode.COOL,
+          null,
+          2250
+        ),
         R.drawable.ic_cool
       ),
       ScheduleDetailProgramBox(
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
         ThermostatSubfunction.HEAT,
-        SuplaScheduleProgram.PROGRAM_3,
-        SuplaHvacMode.AUTO,
-        21f,
-        22.5f,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_3,
+          SuplaHvacMode.AUTO,
+          2100,
+          2250
+        ),
         R.drawable.ic_heat
       ),
       ScheduleDetailProgramBox(
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
         ThermostatSubfunction.HEAT,
-        SuplaScheduleProgram.PROGRAM_4,
-        SuplaHvacMode.HEAT,
-        23f,
-        null,
+        SuplaWeeklyScheduleProgram(
+          SuplaScheduleProgram.PROGRAM_4,
+          SuplaHvacMode.HEAT,
+          2300,
+          null
+        ),
         R.drawable.ic_cool
       ),
       ScheduleDetailProgramBox(
         SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
         ThermostatSubfunction.HEAT,
-        SuplaScheduleProgram.OFF,
-        SuplaHvacMode.OFF,
-        null,
-        null,
+        SuplaWeeklyScheduleProgram.OFF,
         R.drawable.ic_power_button
       )
     )
