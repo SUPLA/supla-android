@@ -19,7 +19,7 @@ abstract class BaseListAdapter<T, D>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   protected val items: MutableList<T> = mutableListOf()
-  protected abstract val callback: BaseListCallback
+  protected abstract val callback: ListCallback
   protected val itemTouchHelper by lazy { ItemTouchHelper(callback) }
 
   var movementFinishedCallback: (items: List<D>) -> Unit = { }

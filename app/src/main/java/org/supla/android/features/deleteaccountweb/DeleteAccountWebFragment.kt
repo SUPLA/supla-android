@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BackHandler
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.features.webcontent.WebContentFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import java.io.Serializable
@@ -19,10 +18,11 @@ private const val ARG_SERVER_ADDRESS = "ARG_SERVER_ADDRESS"
 class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(), BackHandler {
 
   override val url: String by lazy { viewModel.getUrl(getString(R.string.delete_url), serverAddress) }
-  private val viewModel: DeleteAccountWebViewModel by viewModels()
-  override fun getViewModel(): BaseViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent> = viewModel
+  override val viewModel: DeleteAccountWebViewModel by viewModels()
 
   private val serverAddress: String? by lazy { arguments?.getString(ARG_SERVER_ADDRESS) }
+
+  @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
   private val destination: EndDestination? by lazy { arguments?.getSerializable(ARG_DESTINATION) as? EndDestination }
 
   @Inject lateinit var navigator: CfgActivityNavigator

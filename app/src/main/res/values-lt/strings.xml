@@ -348,7 +348,6 @@
     <string name="dont_have_account_yet">Dar neturite paskyros Supla Cloud?</string>
     <string name="profiles_title">Paskyros</string>
     <string name="profile_name_label">PASKYROS PAVADINIMAS</string>
-    <string name="form_cannot_delete_active_profile">Aktyvios paskyros negalima pašalinti</string>
     <string name="profile_default_name">Numatyta</string>
     <string name="profile_select_active">Pasirinkite aktyvią paskyrą</string>
     <string name="profile_act_info">Spustelėkite ant paskyros, kad prisijungtumėte</string>
@@ -359,7 +358,6 @@
     <string name="add_account">Pridėti paskyrą</string>
     <string name="edit_account">Koreguoti paskyrą</string>
     <string name="delete_account">Pašalinti</string>
-    <string name="delete_account_confirm_title">Pašalinti paskyrą</string>
     <string name="delete_account_confirm_message">Ar tikrai norite pašalinti paskyrą?</string>
     <string name="delete_account_confirm_message_with_widgets">Ar tikrai norite pašalinti paskyrą? Patvirtinus bus pašalinti susiję valdikliai.</string>
     <string name="cfg_label_access_id_auth">Identifikatorius</string>

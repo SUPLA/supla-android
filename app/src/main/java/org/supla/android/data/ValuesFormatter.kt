@@ -18,8 +18,10 @@ package org.supla.android.data
  */
 
 import org.supla.android.Preferences
+import org.supla.android.R
+import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
-import org.supla.android.model.appsettings.TemperatureUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +34,10 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false): String {
+  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
+    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
+
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
@@ -46,7 +51,7 @@ class ValuesFormatter @Inject constructor(
       else -> String.format(
         "%.1f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
-        getUnitString().substring(0, 1)
+        if (withDegree) getUnitString().substring(0, 1) else ""
       )
     }
   }
@@ -67,6 +72,16 @@ class ValuesFormatter @Inject constructor(
     val humidityString = getHumidityString(temperatureAndHumidity?.humidity)
 
     return String.format("%s\n%s", temperatureString, humidityString)
+  }
+
+  fun getHourWithMinutes(minutes: Int): StringProvider {
+    val hours = minutes.div(60)
+
+    if (hours < 1) {
+      return { context -> context.getString(R.string.time_just_minutes, minutes) }
+    } else {
+      return { context -> context.getString(R.string.time_hours_and_minutes, hours, minutes) }
+    }
   }
 
   private fun getHumidityString(rawValue: Double?): String {
@@ -96,7 +111,7 @@ class ValuesFormatter @Inject constructor(
   }
 
   companion object {
-    private const val NO_VALUE_TEXT = "---"
+    const val NO_VALUE_TEXT = "---"
 
     /**
      * Special magic constant used to represent temperature value representing

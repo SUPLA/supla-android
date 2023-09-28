@@ -431,7 +431,6 @@
     <string name="cfg_checkbox_server_auto">Auto</string>
     <string name="profiles_title">Account</string>
     <string name="profile_name_label">NOME ACCOUNT</string>
-    <string name="form_cannot_delete_active_profile">Non è possibile rimuovere l\'account attivo</string>
     <string name="profile_select_active">Seleziona l’account attivo</string>
     <string name="profile_act_info">Seleziona l’account per effettuare il log in.</string>
     <string name="form_error">Errore</string>
@@ -440,7 +439,6 @@
     <string name="form_profile_duplicate">Un account con lo stesso nome è già esistente</string>
     <string name="add_account">Aggiungi un account</string>
     <string name="edit_account">Modifica account</string>
-    <string name="delete_account_confirm_title">Rimuovi account</string>
     <string name="delete_account_confirm_message">Confermi di voler rimuovere l’account?</string>
     <string name="delete_account">Rimuovi</string>
     <string name="delete_account_confirm_message_with_widgets">Sei sicuro di voler rimuovere l\'account? Se confermi verranno rimossi tutti i widget relativi alll\'account</string>

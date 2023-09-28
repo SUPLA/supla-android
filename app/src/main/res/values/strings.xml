@@ -5,7 +5,6 @@
     <string name="app_name" translatable="false">SUPLA</string>
     <string name="profiles_title">Accounts</string>
     <string name="profile_name_label">ACCOUNT NAME</string>
-    <string name="form_cannot_delete_active_profile">Cannot remove active account</string>
     <string name="profile_default_name">Default account</string>
     <string name="profile_select_active">Select active account</string>
     <string name="profile_act_info">Tap the account to log in.</string>
@@ -102,7 +101,6 @@
     <string name="advanced_settings">Advanced</string>
     <string name="create_account">Create</string>
     <string name="delete_account">Delete</string>
-    <string name="delete_account_confirm_title">Delete account</string>
     <string name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
     <string translatable="false" name="delete_account_confirm_message_with_widgets">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
 
@@ -388,7 +386,7 @@
     <string name="vl_dimmer_cfg_info_txt7">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
     <string name="vl_dimmer_cfg_info_txt8">More information on can be found at</string>
     <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
-    
+
     <string name="time_exceeded">Time exceeded. Try again.</string>
 
     <string name="IP" translatable="false">IP</string>
@@ -545,17 +543,17 @@
     <string translatable="false" name="settings_permissions">Permissions</string>
 
     <string translatable="false" name="details_general">General</string>
-    <string translatable="false" name="details_schedule">Schedule</string>
+    <string translatable="false" name="details_schedule">Week</string>
     <string translatable="false" name="details_timer">Timer</string>
     <string translatable="false" name="details_history">Metrics</string>
     <string translatable="false" name="details_settings">Settings</string>
     <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
-    <string name="details_timer_text" translatable="false">Define time for which device should stay:</string>
-    <string name="details_timer_turn_on_for" translatable="false">Turned on</string>
-    <string name="details_timer_turn_off_for" translatable="false">Turned off</string>
-    <string name="details_timer_info" translatable="false">Device will be %1$s for %2$s, and then turn %3$s</string>
+    <string name="details_timer_text" translatable="false">How long should the device stay:</string>
+    <string name="details_timer_turn_on_for" translatable="false">Switched on</string>
+    <string name="details_timer_turn_off_for" translatable="false">Switched off</string>
+    <string name="details_timer_info" translatable="false">Te device will be switched %1$s for %2$s, and then switch %3$s</string>
   <string name="details_timer_leave_it" translatable="false">Leave it %1$s</string>
-    <string name="details_timer_cancel_and" translatable="false">Cancel and turn %1$s</string>
+    <string name="details_timer_cancel_and" translatable="false">Cancel and switch %1$s</string>
     <string name="details_timer_format" translatable="false">%1$02d:%2$02d:%3$02d</string>
     <string name="details_timer_end_hour" translatable="false">until %1$s</string>
     <string name="hour_string_format">hh:mm:ss a</string>
@@ -567,10 +565,44 @@
     <string name="details_timer_edit_header" translatable="false">Edit turned %1$s time</string>
     <string name="details_timer_start" translatable="false">Start</string>
     <string name="details_timer_edit_cancel" translatable="false">Cancel editing</string>
-    <string name="details_timer_save" translatable="false">Save</string>
+    <string name="save" translatable="false">Save</string>
     <string name="details_timer_cancel_turn_off" translatable="false">off</string>
     <string name="details_timer_cancel_turn_on" translatable="false">on</string>
     <string name="offline" translatable="false">offline</string>
+    <string translatable="false" name="thermostat_detail_off">Off</string>
+    <string translatable="false" name="thermostat_detail_mode_manual">Manual</string>
+    <string translatable="false" name="thermostat_detail_mode_weekly_schedule">Program</string>
+    <string translatable="false" name="monday">Monday</string>
+    <string translatable="false" name="tuesday">Tuesday</string>
+    <string translatable="false" name="wednesday">Wednesday</string>
+    <string translatable="false" name="thursday">Thursday</string>
+    <string translatable="false" name="friday">Friday</string>
+    <string translatable="false" name="saturday">Saturday</string>
+    <string translatable="false" name="sunday">Sunday</string>
+    <string translatable="false" name="schedule_detail_quarters_dialog_header">Time %1$02d:00</string>
+    <string translatable="false" name="schedule_detail_program_dialog_header">Program %1$d Settings</string>
+    <string translatable="false" name="schedule_detail_program_dialog_program">Program</string>
+    <string translatable="false" name="hvac_mode_heating">Heating</string>
+    <string translatable="false" name="hvac_mode_cooling">Cooling</string>
+    <string translatable="false" name="hvac_mode_auto">Heating and cooling</string>
+    <string translatable="false" name="hvac_mode_no_caption">Unknown</string>
+    <string translatable="false" name="hvac_mode_temperature_heating">Heating temperature</string>
+    <string translatable="false" name="hvac_mode_temperature_cooling">Cooling temperature</string>
+    <string translatable="false" name="monday_short">MO</string>
+    <string translatable="false" name="tuesday_short">TU</string>
+    <string translatable="false" name="wednesday_short">WE</string>
+    <string translatable="false" name="thursday_short">TH</string>
+    <string translatable="false" name="friday_short">FR</string>
+    <string translatable="false" name="saturday_short">SA</string>
+    <string translatable="false" name="sunday_short">SU</string>
+    <string translatable="false" name="thermostat_thermometer_error">Temperature reading error</string>
+    <string translatable="false" name="thermostat_clock_error">Clock error</string>
+    <string translatable="false" name="channel_not_supported">Not supported function</string>
+    <string translatable="false" name="thermostat_detail_program_current">Current:</string>
+    <string translatable="false" name="thermostat_detail_program_next">Next:</string>
+    <string translatable="false" name="time_just_minutes">%1$d min.</string>
+    <string translatable="false" name="time_hours_and_minutes">%1$d hours %2$d min.</string>
+    <string translatable="false" name="thermostat_detail_program_time">for %1$s</string>
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>

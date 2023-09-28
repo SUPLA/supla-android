@@ -118,6 +118,12 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_IC_HEAT_METER = 340;
   public static final int SUPLA_CHANNELFNC_THERMOSTAT = 400;
   public static final int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
+  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT = 420;
+  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO = 422;
+  //  public static final int SUPLA_CHANNELFNC_HVAC_DRYER = 423;
+  //  public static final int SUPLA_CHANNELFNC_HVAC_FAN = 424;
+  //  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL = 425;
+  public static final int SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER = 426;
   public static final int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
   public static final int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
@@ -165,7 +171,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
   public static final int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
   public static final int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
-
+  public static final int SUPLA_CHANNEL_FLAG_HAS_PARENT = 0x20000000;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
@@ -419,6 +425,12 @@ public class SuplaConst {
       case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
         idx = R.string.channel_caption_heatmeter;
         break;
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
         idx = R.string.channel_caption_thermostat;
         break;
@@ -432,9 +444,11 @@ public class SuplaConst {
       case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
         idx = R.string.channel_caption_digiglass;
         break;
+      default:
+        idx = R.string.channel_not_supported;
     }
 
-    return idx == -1 || context == null ? "" : context.getResources().getString(idx);
+    return context == null ? "" : context.getResources().getString(idx);
   }
 
   public static String getNotEmptyCaption(String caption, int func, Context context) {
@@ -559,6 +573,12 @@ public class SuplaConst {
         resId = R.string.channel_func_heat_meter;
         break;
       case SUPLA_CHANNELFNC_THERMOSTAT:
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
         resId = R.string.channel_func_thermostat;
         break;
       case SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:

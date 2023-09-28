@@ -30,9 +30,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.db.entity.Scene
+import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
@@ -40,7 +41,6 @@ import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.shared.configuration.WidgetAction
-import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -100,7 +100,7 @@ class SingleWidget : WidgetProviderBase() {
     appWidgetManager.updateAppWidget(widgetId, views)
   }
 
-  override fun onReceive(context: Context?, intent: Intent?) {
+  override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
     Trace.i(TAG, "Got intent with action: " + intent?.action)
 
@@ -115,7 +115,7 @@ class SingleWidget : WidgetProviderBase() {
         .build()
 
       // Work for widget ID is unique, so no other worker for the same ID will be started
-      WorkManager.getInstance().enqueueUniqueWork(
+      WorkManager.getInstance(context).enqueueUniqueWork(
         getWorkId(widgetIds),
         ExistingWorkPolicy.KEEP,
         removeWidgetsWork

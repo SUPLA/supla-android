@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -57,9 +58,10 @@ import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.SlideableItem;
+import org.supla.android.ui.lists.SwapableListItem;
 
 @AndroidEntryPoint
-public class ChannelLayout extends LinearLayout implements SlideableItem {
+public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
   @Inject ListsEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
@@ -106,6 +108,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
   private TextView durationTimer;
   private CountDownTimer countDownTimer;
+
+  @NonNull
+  @Override
+  public String getLocationCaption() {
+    return locationCaption;
+  }
 
   public interface Listener {
 
@@ -161,14 +169,14 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    right_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+    right_btn.setBackgroundColor(getResources().getColor(R.color.supla_green));
 
     left_btn.setLayoutParams(
         new LayoutParams(
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    left_btn.setBackgroundColor(getResources().getColor(R.color.channel_btn));
+    left_btn.setBackgroundColor(getResources().getColor(R.color.supla_green));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
@@ -214,7 +222,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.supla_green));
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -299,7 +307,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     TextView tv = new TextView(context);
     tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+    tv.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
@@ -317,7 +325,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
         new RelativeLayout.LayoutParams(
             mGroup ? dot_size / 2 : dot_size, mGroup ? dot_size * 2 : dot_size);
 
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
 
     if (right) {
       lp.rightMargin = margin;
@@ -334,7 +342,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
 
     int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
 
     if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) margin = 0;
 
@@ -354,7 +362,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
   protected RelativeLayout.LayoutParams getChannelWarningImageLayoutParams() {
 
     int size = getResources().getDimensionPixelSize(R.dimen.channel_warning_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.channel_dot_margin);
+    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
 
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
     lp.rightMargin = margin;
@@ -374,8 +382,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
     SuplaChannelStatus result = new SuplaChannelStatus(context);
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
-    result.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
-    result.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
+    result.setOfflineColor(getResources().getColor(R.color.red));
+    result.setOnlineColor(getResources().getColor(R.color.supla_green));
 
     return result;
   }
@@ -396,7 +404,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
-    int bcolor = getResources().getColor(R.color.channel_btn);
+    int bcolor = getResources().getColor(R.color.primary);
 
     left_btn.setBackgroundColor(bcolor);
     right_btn.setBackgroundColor(bcolor);
@@ -936,7 +944,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem {
 
       float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
       float sts = scaledDimension((int) textSize);
-      textSize = (sts > textSize) ? sts : textSize;
+      textSize = Math.max(sts, textSize);
       Text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
       Text.setMaxLines(1);

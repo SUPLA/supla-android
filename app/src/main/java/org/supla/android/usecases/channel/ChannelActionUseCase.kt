@@ -35,16 +35,20 @@ class ChannelActionUseCase @Inject constructor(
   operator fun invoke(channelId: Int, buttonType: ButtonType): Completable =
     getChannel(channelId).flatMapCompletable { performActionCompletable(it, buttonType, false) }
 
-  override fun performAction(channel: Channel, buttonType: ButtonType, forGroup: Boolean) {
-    if (isOnOff(channel.func) && buttonType == ButtonType.RIGHT && channel.value.hiValue().not() && channel.value.overcurrentRelayOff()) {
-      throw ActionException.ChannelExceedAmperage(channel.channelId)
+  override fun performAction(channelBase: Channel, buttonType: ButtonType, forGroup: Boolean) {
+    if (isOnOff(channelBase.func) &&
+      buttonType == ButtonType.RIGHT &&
+      channelBase.value.hiValue().not() &&
+      channelBase.value.overcurrentRelayOff()
+    ) {
+      throw ActionException.ChannelExceedAmperage(channelBase.channelId)
     }
 
-    if (buttonType == ButtonType.LEFT && isValveChannel(channel.func) && isChannelManuallyClosedOrIsFlooding(channel)) {
-      throw ActionException.ChannelClosedManually(channel.remoteId)
+    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.func) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
+      throw ActionException.ChannelClosedManually(channelBase.remoteId)
     }
 
-    super.performAction(channel, buttonType, forGroup)
+    super.performAction(channelBase, buttonType, forGroup)
   }
 
   private fun getChannel(channelId: Int): Maybe<Channel> = Maybe.fromCallable { channelRepository.getChannel(channelId) }

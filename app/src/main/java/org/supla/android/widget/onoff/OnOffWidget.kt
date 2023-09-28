@@ -32,11 +32,11 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
-import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 

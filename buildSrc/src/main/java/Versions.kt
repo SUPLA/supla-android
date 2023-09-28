@@ -5,8 +5,8 @@ object Versions {
     const val MinSdk = 21
     const val BuildTools = "30.0.3"
 
-    const val Kotlin = "1.7.0"
-    const val Hilt = "2.42"
+    const val Kotlin = "1.8.10"
+    const val Hilt = "2.44"
     const val Multidex = "2.0.1"
     const val AndroidChart = "v3.0.3"
     const val Coroutines = "1.6.4"
@@ -31,7 +31,12 @@ object Versions {
         const val Worker = "2.7.1"
         const val RecyclerView = "1.2.1"
         const val Security = "1.1.0-alpha06"
-        const val Compose = "1.2.0"
+        const val Room = "2.5.2"
+
+        object Compose {
+            const val Core = "1.4.3"
+            const val ConstaintLayout = "1.0.1"
+        }
     }
 
     object RxJava {

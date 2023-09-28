@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <integer name="background_timeout">30</integer>
     <integer name="widget_name_max_length">30</integer>
-
 </resources>

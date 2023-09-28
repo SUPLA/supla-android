@@ -3,10 +3,8 @@
     <string name="confirm_button_text">OK</string>
     <string name="profiles_title">Konta</string>
     <string name="profile_name_label">NAZWA KONTA</string>
-    <string name="form_cannot_delete_active_profile">Nie można usunąć aktywnego konta</string>
     <string name="delete_account">Usuń</string>
 
-    <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
     <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto?</string>
     <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
     <string name="profile_default_name">Domyślne</string>
@@ -531,7 +529,7 @@
   <string name="settings_permissions">Uprawnienia</string>
 
   <string translatable="false" name="details_general">Ogólne</string>
-  <string translatable="false" name="details_schedule">Harmonogram</string>
+  <string translatable="false" name="details_schedule">Tydzień</string>
   <string translatable="false" name="details_history">Pomiary</string>
   <string translatable="false" name="details_settings">Ustawienia</string>
   <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
@@ -551,9 +549,41 @@
   <string name="details_timer_edit_header">Edytuj czas, w którym urządzenie będzie %1$s</string>
   <string name="details_timer_start">Start</string>
   <string name="details_timer_edit_cancel">Anuluj edycję</string>
-  <string name="details_timer_save">Zapisz</string>
+  <string name="save">Zapisz</string>
   <string name="details_timer_cancel_turn_off">wyłącz</string>
   <string name="details_timer_cancel_turn_on">włącz</string>
+  <string name="thermostat_detail_mode_manual">Ręczny</string>
+  <string name="thermostat_detail_mode_weekly_schedule">Program</string>
+  <string name="monday">Poniedziałek</string>
+  <string name="tuesday">Wtorek</string>
+  <string name="wednesday">Środa</string>
+  <string name="thursday">Czwartek</string>
+  <string name="friday">Piątek</string>
+  <string name="saturday">Sobota</string>
+  <string name="sunday">Niedziela</string>
+  <string name="schedule_detail_quarters_dialog_header">Godzina %1$02d:00</string>
+  <string name="schedule_detail_program_dialog_header">Ustawienia program %1$d </string>
+  <string name="hvac_mode_heating">Grzanie</string>
+  <string name="hvac_mode_cooling">Chłodzenie</string>
+  <string name="hvac_mode_auto">Grzanie i chłodzenie</string>
+  <string name="hvac_mode_no_caption">Nieznany</string>
+  <string name="hvac_mode_temperature_heating">Temperatura grzania</string>
+  <string name="hvac_mode_temperature_cooling">Temperatura chłodzenia</string>
+  <string name="monday_short">PN</string>
+  <string name="tuesday_short">WT</string>
+  <string name="wednesday_short">ŚR</string>
+  <string name="thursday_short">CZ</string>
+  <string name="friday_short">PT</string>
+  <string name="saturday_short">SO</string>
+  <string name="sunday_short">ND</string>
+  <string name="thermostat_thermometer_error">Błąd odczytu temperatury</string>
+  <string name="thermostat_clock_error">Błąd zegara</string>
+  <string name="channel_not_supported">Niewspierana funkcja</string>
+  <string name="thermostat_detail_program_current">Aktualnie:</string>
+  <string name="thermostat_detail_program_next">Następnie:</string>
+  <string name="time_just_minutes">%1$d min.</string>
+  <string name="time_hours_and_minutes">%1$d godz. %2$d min.</string>
+  <string name="thermostat_detail_program_time">przez %1$s</string>
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>

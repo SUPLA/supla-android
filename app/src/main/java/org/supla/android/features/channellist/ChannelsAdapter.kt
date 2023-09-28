@@ -19,17 +19,19 @@ package org.supla.android.features.channellist
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
-import org.supla.android.*
+import org.supla.android.Preferences
+import org.supla.android.SuplaApp
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.db.Location
 import org.supla.android.ui.dialogs.ChannelCaptionEditor
-import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
 
 class ChannelsAdapter @Inject constructor(
   @ActivityContext private val context: Context,
+  valuesFormatter: ValuesFormatter,
   preferences: Preferences
-) : BaseChannelsAdapter(context, preferences), ChannelLayout.Listener {
+) : BaseChannelsAdapter(context, valuesFormatter, preferences) {
 
   override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x1) > 0)
 

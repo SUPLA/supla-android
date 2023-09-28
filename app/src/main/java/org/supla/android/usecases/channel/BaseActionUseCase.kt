@@ -20,6 +20,7 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
@@ -41,6 +42,12 @@ open class BaseActionUseCase<T : ChannelBase>(
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
       } else {
         client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
+      }
+    } else if (channelBase.isHvacThermostat()) {
+      if (buttonType == ButtonType.RIGHT) {
+        client.executeAction(ActionParameters(ActionId.TURN_ON, getSubjectType(forGroup), channelBase.remoteId))
+      } else {
+        client.executeAction(ActionParameters(ActionId.TURN_OFF, getSubjectType(forGroup), channelBase.remoteId))
       }
     } else {
       client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))

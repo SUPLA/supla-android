@@ -244,12 +244,6 @@ public class NavigationActivity extends BaseActivity
     startActivity(browserIntent);
   }
 
-  public void donate() {
-    Intent browserIntent =
-        new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.donate_url)));
-    startActivity(browserIntent);
-  }
-
   public void showAbout() {
     showActivity(this, AboutActivity.class, 0);
   }

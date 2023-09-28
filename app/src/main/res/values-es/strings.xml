@@ -371,7 +371,6 @@
     <string name="dont_have_account_yet">¿Todavía no tienes una cuenta Supla Cloud?</string>
    <string name="profiles_title">Cuentas</string>
    <string name="profile_name_label">NOMBRE DE LA CUENTA</string>
-   <string name="form_cannot_delete_active_profile">Una cuenta activa no se puede eliminar</string>
    <string name="profile_default_name">Defecto</string>
    <string name="profile_select_active">Seleccionar una cuenta activa</string>
    <string name="profile_act_info">Toca la cuenta para iniciar sesión</string>
@@ -382,7 +381,6 @@
    <string name="add_account">Añadir cuenta</string>
    <string name="edit_account">Editar cuenta</string>
    <string name="delete_account">Borrar</string>
-   <string name="delete_account_confirm_title">Borrar cuenta</string>
    <string name="delete_account_confirm_message">¿Estás seguro de que deseas eliminar la cuenta?</string>
     <string name="delete_account_confirm_message_with_widgets">¿Estás seguro de que deseas eliminar la cuenta? La confirmación eliminará los widgets relacionados.</string>
     <string name="cfg_label_access_id_auth">Identificación</string>

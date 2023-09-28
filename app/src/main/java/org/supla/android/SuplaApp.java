@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
+import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
@@ -82,6 +83,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject ChannelGroupStateObserverUseCase groupStateObserver;
   @Inject NotificationsHelper notificationsHelper;
   @Inject AppLifecycleObserver appLifecycleObserver;
+  @Inject SuplaClientBuilder suplaClientBuilder;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -144,7 +146,7 @@ public class SuplaApp extends MultiDexApplication
 
     synchronized (_lck1) {
       if (_SuplaClient == null || _SuplaClient.canceled()) {
-        _SuplaClient = new SuplaClient(context, oneTimePassword, profileManager);
+        _SuplaClient = suplaClientBuilder.build(context, oneTimePassword);
         _SuplaClient.start();
       }
 

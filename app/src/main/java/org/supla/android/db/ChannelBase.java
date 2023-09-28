@@ -80,14 +80,14 @@ public abstract class ChannelBase extends DbItem {
     String preset;
     ValuesFormatter tp = getTemperaturePresenter();
 
-    measured = tp.getTemperatureString(measuredTempFrom, true);
+    measured = tp.getTemperatureString(measuredTempFrom, true, true);
     if (tp.isTemperatureDefined(measuredTempTo)) {
-      measured += " - " + tp.getTemperatureString(measuredTempTo, true);
+      measured += " - " + tp.getTemperatureString(measuredTempTo, true, true);
     }
 
-    preset = "/" + tp.getTemperatureString(presetTempFrom, true);
+    preset = "/" + tp.getTemperatureString(presetTempFrom, true, true);
     if (tp.isTemperatureDefined(presetTempTo)) {
-      preset += " - " + tp.getTemperatureString(presetTempTo, true);
+      preset += " - " + tp.getTemperatureString(presetTempTo, true, true);
     }
 
     SpannableString ss = new SpannableString(measured + preset);
@@ -665,6 +665,15 @@ public abstract class ChannelBase extends DbItem {
         }
 
         break;
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
+        img_idx = R.drawable.ic_thermostat_dhw;
+        break;
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
+        //        img_idx = R.drawable.ic_thermostat_auto;
+        //        break;
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
+        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         img_idx = R.drawable.thermometer;
         break;
@@ -818,6 +827,8 @@ public abstract class ChannelBase extends DbItem {
             img_idx = active == 1 ? R.drawable.digiglassvtransparent : R.drawable.digiglass;
         }
         break;
+      default:
+        img_idx = R.drawable.ic_unknown_channel;
     }
 
     return img_idx;
@@ -907,7 +918,7 @@ public abstract class ChannelBase extends DbItem {
       case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
         double temperature = value.getTemp(getFunc());
         if (getOnLine() && getTemperaturePresenter().isTemperatureDefined(temperature)) {
-          return getTemperaturePresenter().getTemperatureString(temperature, true);
+          return getTemperaturePresenter().getTemperatureString(temperature, true, true);
         } else {
           return "---";
         }

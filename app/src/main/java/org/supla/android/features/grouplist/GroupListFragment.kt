@@ -26,11 +26,10 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentGroupListBinding
 import org.supla.android.db.ChannelGroup
 import org.supla.android.extensions.toPx
-import org.supla.android.model.ItemType
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
@@ -40,7 +39,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R.layout.fragment_group_list) {
 
-  private val viewModel: GroupListViewModel by viewModels()
+  override val viewModel: GroupListViewModel by viewModels()
   private val binding by viewBinding(FragmentGroupListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -64,8 +63,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     super.onStart()
     viewModel.loadGroups()
   }
-
-  override fun getViewModel(): BaseViewModel<GroupListViewState, GroupListViewEvent> = viewModel
 
   override fun handleEvents(event: GroupListViewEvent) {
     val suplaClient = suplaClientProvider.provide()

@@ -137,10 +137,10 @@ class LocationReorderAdapter(
       )
       dragHolder = rv?.findViewById(R.id.ivDragHolder)
       dragHolder?.setOnTouchListener { v, event ->
-        val pos = v.tag as? Int
-        if (event.action == MotionEvent.ACTION_DOWN && !isDragging && pos != null) {
-          val itmView = listView.getChildAt(pos - listView.firstVisiblePosition)
-          enableDrag(itmView, pos)
+        val position = v.tag as? Int
+        if (event.action == MotionEvent.ACTION_DOWN && !isDragging && position != null) {
+          val itmView = listView.getChildAt(position - listView.firstVisiblePosition)
+          enableDrag(itmView, position)
           true
         } else {
           false

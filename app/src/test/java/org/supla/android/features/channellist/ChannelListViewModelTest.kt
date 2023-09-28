@@ -42,6 +42,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelValue
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst.*
@@ -50,12 +51,13 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.StandardDetailType
+import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent>() {
+class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
 
   @Mock
   private lateinit var channelRepository: ChannelRepository
@@ -261,7 +263,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.remoteId } returns channelId
     every { channel.value } returns channelValue
 
-    val detailType = StandardDetailType(listOf())
+    val detailType = SwitchDetailType(listOf())
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
@@ -270,7 +272,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSwitchDetails(channelId, function, detailType.pages)
+      ChannelListViewEvent.OpenSwitchDetail(channelId, function, detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -313,6 +315,58 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenLegacyDetails(channelId, legacyDetailType)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open thermostat detail fragment when online`() {
+    // given
+    val channelId = 123
+    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val channel = mockk<Channel>()
+    val pages = emptyList<DetailPage>()
+    every { channel.onLine } returns true
+    every { channel.func } returns channelFunction
+    every { channel.channelId } returns channelId
+    every { channel.remoteId } returns channelId
+
+    val thermostatDetailType = ThermostatDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
+
+    // when
+    viewModel.onListItemClick(channel)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenThermostatDetail(channelId, channelFunction, pages)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open thermostat detail fragment when offline`() {
+    // given
+    val channelId = 123
+    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val channel = mockk<Channel>()
+    val pages = emptyList<DetailPage>()
+    every { channel.onLine } returns false
+    every { channel.func } returns channelFunction
+    every { channel.channelId } returns channelId
+    every { channel.remoteId } returns channelId
+
+    val thermostatDetailType = ThermostatDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
+
+    // when
+    viewModel.onListItemClick(channel)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenThermostatDetail(channelId, channelFunction, pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

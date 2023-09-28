@@ -57,7 +57,7 @@
             android:layout_marginBottom="20dp"
             android:layout_weight="0"
             android:text="@string/reset_lightsource_usage_counter"
-            android:textColor="@color/lifespan_warning"
+            android:textColor="@color/red"
             android:translationX="-5dp" />
 
         <EditText

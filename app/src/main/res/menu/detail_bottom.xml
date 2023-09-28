@@ -7,12 +7,6 @@
     android:visible="false" />
 
   <item
-    android:id="@+id/detail_schedule"
-    android:icon="@drawable/ic_schedule"
-    android:title="@string/details_schedule"
-    android:visible="false" />
-
-  <item
     android:id="@+id/detail_timer"
     android:icon="@drawable/ic_timer"
     android:title="@string/details_timer"
@@ -22,6 +16,12 @@
     android:id="@+id/detail_history"
     android:icon="@drawable/ic_history"
     android:title="@string/details_history"
+    android:visible="false" />
+
+  <item
+    android:id="@+id/detail_schedule"
+    android:icon="@drawable/ic_schedule"
+    android:title="@string/details_schedule"
     android:visible="false" />
 
   <item

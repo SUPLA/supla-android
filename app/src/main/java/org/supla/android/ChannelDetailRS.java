@@ -106,8 +106,8 @@ public class ChannelDetailRS extends DetailLayout
     roofWindow.setOnClosingPercentageChangeListener(this);
 
     status = findViewById(R.id.rsstatus);
-    status.setOnlineColor(getResources().getColor(R.color.channel_dot_on));
-    status.setOfflineColor(getResources().getColor(R.color.channel_dot_off));
+    status.setOnlineColor(getResources().getColor(R.color.primary));
+    status.setOfflineColor(getResources().getColor(R.color.red));
 
     btnUp = findViewById(R.id.rsBtnUp);
     btnDown = findViewById(R.id.rsBtnDown);

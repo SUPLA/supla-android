@@ -67,14 +67,14 @@
   </style>
 
   <style name="Switch" parent="">
-    <item name="colorControlActivated">@color/channel_btn</item>
-    <item name="android:buttonTint">@color/channel_btn</item>
+    <item name="colorControlActivated">@color/primary</item>
+    <item name="android:buttonTint">@color/primary</item>
     <item name="colorSwitchThumbNormal">#f1f1f1</item>
     <item name="android:colorForeground">#42221f1f</item>
   </style>
 
   <style name="CheckBox" parent="">
-    <item name="android:buttonTint">@color/channel_btn</item>
+    <item name="android:buttonTint">@color/primary</item>
   </style>
 
   <style name="FormLabel" parent="">

@@ -47,6 +47,7 @@ import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.entity.ChannelRelationEntity;
 import org.supla.android.db.SuplaContract.ChannelExtendedValueEntry;
 import org.supla.android.db.versions.MigratorV27;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
@@ -63,8 +64,8 @@ import org.supla.android.profile.ProfileMigrator;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 28;
-  private static final String DATABASE_NAME = "supla.db";
+  public static final int DATABASE_VERSION = 29;
+  public static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
   private static DbHelper instance;
@@ -754,6 +755,33 @@ public class DbHelper extends BaseDbHelper {
     execSQL(db, SQL_CREATE_INDEX);
   }
 
+  private void createChannelRelationTable(SQLiteDatabase db) {
+
+    final String SQL_CREATE_CHANNEL_RELATION_TABLE =
+        "CREATE TABLE "
+            + ChannelRelationEntity.TABLE_NAME
+            + " ("
+            + ChannelRelationEntity.COLUMN_CHANNEL_ID
+            + " INTEGER NOT NULL,"
+            + ChannelRelationEntity.COLUMN_PARENT_ID
+            + " INTEGER NOT NULL,"
+            + ChannelRelationEntity.COLUMN_CHANNEL_RELATION_TYPE
+            + " INTEGER NOT NULL,"
+            + ChannelRelationEntity.COLUMN_PROFILE_ID
+            + " INTEGER NOT NULL,"
+            + ChannelRelationEntity.COLUMN_DELETE_FLAG
+            + " INTEGER NOT NULL,"
+            + " PRIMARY KEY ("
+            + ChannelRelationEntity.COLUMN_CHANNEL_ID
+            + ","
+            + ChannelRelationEntity.COLUMN_PARENT_ID
+            + ","
+            + ChannelRelationEntity.COLUMN_PROFILE_ID
+            + "))";
+
+    execSQL(db, SQL_CREATE_CHANNEL_RELATION_TABLE);
+  }
+
   private void insertDefaultProfile(SQLiteDatabase db) {
     ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
     AuthProfileItem itm = migrator.makeProfileUsingPreferences();
@@ -783,6 +811,8 @@ public class DbHelper extends BaseDbHelper {
     // Do not call upgradeToV25(db) here, it relates only for migration (see onUpgrade)
     upgradeToV26(db);
     upgradeToV27(db);
+
+    createChannelRelationTable(db);
 
     // Create views at the end
     createChannelView(db);
@@ -1142,6 +1172,10 @@ public class DbHelper extends BaseDbHelper {
     createChannelView(db);
   }
 
+  private void upgradeToV29(SQLiteDatabase db) {
+    createChannelRelationTable(db);
+  }
+
   private void dropViews(SQLiteDatabase db) {
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelViewEntry.VIEW_NAME);
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME);
@@ -1223,6 +1257,9 @@ public class DbHelper extends BaseDbHelper {
             break;
           case 27:
             upgradeToV28(db);
+            break;
+          case 28:
+            upgradeToV29(db);
             break;
         }
       }

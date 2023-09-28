@@ -370,7 +370,6 @@
     <string name="dont_have_account_yet">Nimate še računa v Supla Cloud?</string>
     <string name="profiles_title">Računi</string>
     <string name="profile_name_label">IME RAČUNA</string>
-    <string name="form_cannot_delete_active_profile">Aktivnega računa ni mogoče izbrisati</string>
     <string name="profile_default_name">Privzeti</string>
     <string name="profile_select_active">Izberite aktivni račun</string>
     <string name="profile_act_info">Dotaknite se računa za prijavo</string>
@@ -381,7 +380,6 @@
     <string name="add_account">Dodajte račun</string>
     <string name="edit_account">Uredite račun</string>
     <string name="delete_account">Izbišite</string>
-    <string name="delete_account_confirm_title">Izbrišite račun</string>
     <string name="delete_account_confirm_message">Ali ste prepričani, da želite izbrisati račun?</string>
     <string name="delete_account_confirm_message_with_widgets">Ali ste prepričani, da želite izbrisati račun? S potrdilom boste odstranili povezane pripomočke.</string>
     <string name="cfg_label_access_id_auth">Identifikator</string>

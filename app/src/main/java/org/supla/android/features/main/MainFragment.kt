@@ -10,18 +10,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BackHandler
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.databinding.FragmentMainBinding
 
 @AndroidEntryPoint
 class MainFragment :
   BaseFragment<MainViewState, MainViewEvent>(R.layout.fragment_main), BackHandler {
 
-  private val viewModel: MainViewModel by viewModels()
+  override val viewModel: MainViewModel by viewModels()
   private val binding by viewBinding(FragmentMainBinding::bind)
   private val pages = ListPage.values()
-
-  override fun getViewModel(): BaseViewModel<MainViewState, MainViewEvent> = viewModel
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

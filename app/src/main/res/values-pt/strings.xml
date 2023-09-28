@@ -370,7 +370,6 @@
     <string name="dont_have_account_yet">Ainda não tem uma conta Supla Cloud?</string>
    <string name="profiles_title">Conta</string>
    <string name="profile_name_label">NOME DA CONTA</string>
-   <string name="form_cannot_delete_active_profile">Incapaz de apagar uma conta ativa</string>
    <string name="profile_default_name">Predefinição</string>
    <string name="profile_select_active">Selecione uma conta ativa</string>
    <string name="profile_act_info">Toque aqui para fazer login</string>
@@ -453,7 +452,6 @@
    <string name="rs_display_mode_closing">Encerramentos</string>
    <string name="status_accessid_inactive">Acesso ID inativo</string>
     <string name="wizard_done_explentations">Se o seu dispositivo não aparecer na aplicação, repita este procedimento de adicionar novamente e leia o \"Estado anterior\" acima indicado. Contém informações para determinar por que razão o dispositivo não se ligou ao servidor. A mensagem \"SSID não encontrado\" significa que o nome de rede WiFi de 2,4 GHz que inseriu não foi encontrado ou a rede está fora de alcance.</string>
-    <string name="delete_account_confirm_title">Apagar Conta</string>
     <string name="em_chart_phase_n">Fase %d</string>
     <string name="rs_display_mode">Persianas %</string>
   <string name="hour_string_format">HH:mm:ss</string>

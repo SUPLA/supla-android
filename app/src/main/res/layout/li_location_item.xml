@@ -39,7 +39,7 @@
       android:id="@+id/view2"
       android:layout_width="match_parent"
       android:layout_height="1dp"
-      android:background="@color/channel_separetor"
+      android:background="@color/separator"
       app:layout_constraintBottom_toBottomOf="parent" />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

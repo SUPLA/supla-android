@@ -370,7 +370,6 @@
     <string name="dont_have_account_yet">Heeft u nog geen Supla Cloud account?</string>
     <string name="profiles_title">Rekeningen</string>
     <string name="profile_name_label">Naam rekening</string>
-    <string name="form_cannot_delete_active_profile">Actief account kan niet worden verwijderd</string>
     <string name="profile_default_name">Standaard</string>
     <string name="profile_select_active">Selecteer actieve rekening</string>
     <string name="profile_act_info">Tik op uw account om in te loggen</string>
@@ -381,7 +380,6 @@
     <string name="add_account">Rekening toevoegen</string>
     <string name="edit_account">Rekening bewerken</string>
     <string name="delete_account">Delete</string>
-    <string name="delete_account_confirm_title">Account verwijderen</string>
     <string name="delete_account_confirm_message">Weet u zeker dat u uw rekening wilt verwijderen?</string>
     <string name="delete_account_confirm_message_with_widgets">Weet u zeker dat u uw rekening wilt verwijderen? Bevestiging zal betekenen dat de bijbehorende widgets worden verwijderd.</string>
     <string name="cfg_label_access_id_auth">Identifier</string>

@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class DurationTimerHelper @Inject constructor() {
     val timerView = TextView(context)
     timerView.typeface = SuplaApp.getApp().typefaceQuicksandRegular
     timerView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.default_text_size))
-    timerView.setTextColor(context.resources.getColor(R.color.gray))
+    timerView.setTextColor(ResourcesCompat.getColor(context.resources, R.color.gray, null))
     timerView.gravity = Gravity.BOTTOM or Gravity.END
 
     return timerView

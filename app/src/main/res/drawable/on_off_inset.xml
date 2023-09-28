@@ -1,7 +1,0 @@
-<inset
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/on_off"
-    android:insetTop="16dp"
-    android:insetLeft="16dp"
-    android:insetRight="16dp"
-    android:insetBottom="16dp" />

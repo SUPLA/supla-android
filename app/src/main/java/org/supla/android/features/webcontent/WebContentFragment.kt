@@ -20,7 +20,7 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
 
   private val client = object : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
-      (getViewModel() as WebContentViewModel).urlLoaded(url)
+      (viewModel as WebContentViewModel).urlLoaded(url)
     }
   }
 

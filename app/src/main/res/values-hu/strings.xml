@@ -370,7 +370,6 @@
     <string name="dont_have_account_yet">Nincs még fiókja a Supla Cloud-ban?</string>
     <string name="profiles_title">Számlái</string>
     <string name="profile_name_label">FIÓK NEVE</string>
-    <string name="form_cannot_delete_active_profile">Nem lehet törölni aktív fiókot</string>
     <string name="profile_default_name">Alapértelmezett</string>
     <string name="profile_select_active">Válassza az aktív fiókot</string>
     <string name="profile_act_info">Érintse meg a fiókot a belépéshez</string>
@@ -381,7 +380,6 @@
     <string name="add_account">Fiók hozzáadása</string>
     <string name="edit_account">Fiók módosítása</string>
     <string name="delete_account">Törlés</string>
-    <string name="delete_account_confirm_title">Törölje a fiókot</string>
     <string name="delete_account_confirm_message">Biztosan törölni akarja a fiókot?</string>
     <string name="delete_account_confirm_message_with_widgets">Biztosan törölni akarja a fiókot? A megerősítés a kapcsolódó widgetek eltávolítását jelenti.</string>
     <string name="cfg_label_access_id_auth">Azonosító</string>

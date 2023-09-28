@@ -154,7 +154,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     NotificationView!!.visibility = View.GONE
     val NotifBgLayout = NotificationView!!.findViewById<RelativeLayout>(R.id.notif_bg_layout)
     NotifBgLayout.setOnClickListener(this)
-    NotifBgLayout.setBackgroundColor(resources.getColor(R.color.notification_bg))
+    NotifBgLayout.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.notification_bg, null))
     rootLayout.addView(NotificationView)
     notif_img = NotificationView!!.findViewById(R.id.notif_img)
     notif_text = NotificationView!!.findViewById<TextView?>(R.id.notif_txt).also {
@@ -256,7 +256,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
   override fun onEventMsg(event: SuplaEvent) {
     super.onEventMsg(event)
-    if ((event == null || event.Owner) && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED || event.ChannelID == 0) return
+    if (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED || event.ChannelID == 0) return
     val channel = dbHelper.getChannel(event.ChannelID) ?: return
     var imgResId = 0
     var imgId: ImageId? = null
@@ -327,7 +327,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     if (notif_handler != null && notif_nrunnable != null) {
       notif_handler!!.removeCallbacks(notif_nrunnable!!)
     }
-    notif_handler = Handler()
+    notif_handler = Handler(Looper.getMainLooper())
     notif_nrunnable = Runnable {
       hideNotificationMessage()
       notif_handler = null
@@ -423,7 +423,6 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       MenuItemsLayout.BTN_ABOUT -> showAbout()
       MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
-      MenuItemsLayout.BTN_DONATE -> donate()
       MenuItemsLayout.BTN_HELP -> openForumpage()
       MenuItemsLayout.BTN_CLOUD -> openCloud()
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
