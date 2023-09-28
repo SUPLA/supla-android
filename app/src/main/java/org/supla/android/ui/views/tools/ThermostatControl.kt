@@ -68,8 +68,10 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
+import org.supla.android.extensions.distanceTo
 import java.lang.Float.min
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.pow
@@ -388,7 +390,8 @@ private fun drawSetPoint(
 ) {
   val angle = START_ANGLE + SWEEP_ANGLE.times(config.value)
   val centerPoint = getPositionOnCircle(angle, radius, center).run {
-    if (initialPoint.isInside(this, touchPointRadius.toPx())) {
+    val distance = initialPoint.distanceTo(center)
+    if (distance != null && abs(radius - distance) < setpointRadius.toPx()) {
       getNearestCirclePoint(movingPoint!!, center, radius, minAlpha, maxAlpha, config.positionObserver!!)
     } else {
       this
@@ -461,15 +464,6 @@ private fun getAlphaPosition(correctedPoint: Offset, sinAlpha: Float) =
       it
     }
   }
-
-fun Offset?.isInside(midPoint: Offset, radius: Float): Boolean {
-  if (this == null) {
-    return false
-  }
-
-  return x > midPoint.x.minus(radius) && x < midPoint.x.plus(radius) &&
-    y > midPoint.y.minus(radius) && y < midPoint.y.plus(radius)
-}
 
 @OptIn(ExperimentalTextApi::class)
 private fun mainTemperature(text: String, textMeasurer: TextMeasurer): TextLayoutResult {

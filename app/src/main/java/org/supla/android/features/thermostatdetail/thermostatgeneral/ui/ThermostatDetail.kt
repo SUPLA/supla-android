@@ -138,7 +138,7 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
         HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
       }
       TemperatureControlRow(viewState, viewProxy)
-      WarningsRow(viewState.issues, modifier = Modifier.align(Alignment.BottomStart))
+      WarningsRow(viewState.issues, true, modifier = Modifier.align(Alignment.BottomStart))
     } else {
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
@@ -317,10 +317,10 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier) {
+private fun WarningsRow(warnings: List<ThermostatIssueItem>, smallScreen: Boolean = false, modifier: Modifier = Modifier) {
   val defaultPadding = dimensionResource(id = R.dimen.distance_default)
   Column(
-    modifier = modifier.padding(start = defaultPadding, end = defaultPadding),
+    modifier = modifier.padding(start = defaultPadding, end = defaultPadding, bottom = defaultPadding),
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
   ) {
     warnings.forEach {
@@ -335,6 +335,10 @@ private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier 
         )
         Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.body2)
       }
+
+      if (smallScreen) {
+        return
+      }
     }
   }
 }
@@ -343,7 +347,11 @@ private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier 
 private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy) {
   Row(
     modifier = Modifier
-      .padding(all = dimensionResource(id = R.dimen.distance_default)),
+      .padding(
+        start = dimensionResource(id = R.dimen.distance_default),
+        end = dimensionResource(id = R.dimen.distance_default),
+        bottom = dimensionResource(id = R.dimen.distance_default)
+      ),
     horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     PowerButton(
