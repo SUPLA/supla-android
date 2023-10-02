@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">JAls het apparaat niet werkt in de configuratiemodus na het inschakelen van de stroom, houdt u de knop <b>CONFIG</b> minimaal 5 seconden ingedrukt.</string>
     <string name="wizard_step3_txt3">Druk op de knop <b>START</b> om de configuratie te starten.</string>
 
-    <string name="wizard_server_compat_error">De server waarmee u verbonden bent, ondersteunt deze functie niet!</string>
     <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
     <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
     <string name="wizard_location_error">De wizard Toevoegen werkt alleen correct als de Locatieservice op dit toestel is ingeschakeld. Ga naar je systeeminstellingen, selecteer dan "Locatie" en vergewis je ervan dat de optie ingeschakeld is.</string>

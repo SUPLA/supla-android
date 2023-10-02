@@ -118,7 +118,6 @@
     <string name="wizard_step1_txt1">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
     <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
     <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red WiFi que será la utilizada por el actuador para conectarse al servidor.</string>
-    <string name="wizard_server_compat_error">¡El servidor al que ha conectado no es compatible con esta característica!</string>
     <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pase al administrador de aplicaciones en los ajustes del sistema. A continuación, busque la aplicación %1$s y active todos los permisos que exija.</string>
     <string name="help">Ayuda</string>
     <string name="channel_caption_staircasetimer">Automático de escalera</string>
