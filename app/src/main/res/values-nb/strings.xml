@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">Hvis enheten etter å ha blitt satt til lading ikke jobber i konfigurasjonsmodus hold inne knappen <b>CONFIG</b> i 5 sekunder.</string>
     <string name="wizard_step3_txt3">Trykk på knappen <b>START</b> for å starte konfigurasjonen.</string>
 
-    <string name="wizard_server_compat_error">Serveren du er koblet til, støtter ikke denne funksjonen!</string>
     <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
     <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
     <string name="wizard_location_error">For at veiviseren for å legge til nye enheter skal fungere ordentlig, må Posisjon være aktivert på denne enheten. Gå til systeminnstillinger, deretter velg «Posisjon» og kontroller at den er slått på.</string>

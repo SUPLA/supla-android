@@ -109,7 +109,6 @@
     <string name="wizard_step3_txt2">Ak zariadenie po pripojení k el. napätiu nie je spustené v konfiguračnom režime, stlačte a na aspoň 5 sekúnd podržte tlačidlo <b>CONFIG</b>.</string>
     <string name="wizard_step3_txt3">Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.</string>
 
-    <string name="wizard_server_compat_error">Server, s ktorým bolo nadviazané spojenie, túto funkciu nepodporuje!</string>
     <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez WiFi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
     <string name="wizard_wifi_error">WiFi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
     <string name="wizard_location_error">Ak má sprievodca pridávania fungovať správne, musí byť na danom zariadení zapnutá služba lokalizácie. Prejdite na nastavenia systému, následne si vyberte možnosť „Lokalizácia” a uistite sa, že je zapnutá.</string>

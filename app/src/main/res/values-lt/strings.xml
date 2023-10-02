@@ -77,7 +77,6 @@
     <string name="wizard_step3_txt1">Savo vykdomąjį įrenginį prijunkite prie maitinimo šaltinio. Įrenginys standartiškai turi veikti konfigūracijos režime, signalizuojant tai statuso diodo mirksėjimu šiuo būdu</string>
     <string name="wizard_step3_txt2">minimum 5 sekund. Jei įrenginys įjungus maitinimą neveikia konfigūracijos režimu, palaikykite paspaustą mygtuką <b>CONFIG</b> bent 5 sekundes.</string>
     <string name="wizard_step3_txt3">Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.</string>
-    <string name="wizard_server_compat_error">Serveris, prie kurio prisijungta, nepaliko šios funkcijos!</string>
     <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto WiFi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
     <string name="wizard_wifi_error">WiFi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
     <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>

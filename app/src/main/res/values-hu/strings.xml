@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">Ha a készülék a tápellátás bekapcsolása után nem működik konfigurációs módban, tartsa lenyomva a <b> CONFIG </b> gombot legalább 5 másodpercig.</string>
     <string name="wizard_step3_txt3">A konfiguráció elindításához nyomja meg a <b> START </b> gombot.</string>
 
-    <string name="wizard_server_compat_error">A szerver, amelyhez csatlakozott, nem támogatja ezt a funkciót!</string>
     <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
     <string name="wizard_wifi_error">A WiFi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
     <string name="wizard_location_error">Ahhoz, hogy a hozzáadási varázsló megfelelően működjön, engedélyezni kell a helyinformációt ezen az eszközön. Lépjen a rendszerbeállításokba, majd válassza a „Helyinformáció” lehetőséget, és győződjön meg róla, hogy engedélyezve van.</string>

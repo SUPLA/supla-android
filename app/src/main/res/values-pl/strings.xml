@@ -142,7 +142,6 @@
     <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
     <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
 
-    <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
     <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
     <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
     <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>

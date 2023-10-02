@@ -148,7 +148,6 @@
     <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
     <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
-    <string name="wizard_server_compat_error">The connected Server does not support this function!</string>
     <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
     <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
     <string name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>

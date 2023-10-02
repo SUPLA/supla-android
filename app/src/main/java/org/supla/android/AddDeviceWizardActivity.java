@@ -423,15 +423,9 @@ public class AddDeviceWizardActivity extends WizardActivity
 
       showError(R.string.wizard_no_internetwifi);
       return;
-
-    } else if (SuplaApp.getApp().getSuplaClient() != null) {
-      int version = SuplaApp.getApp().getSuplaClient().getProtoVersion();
-
-      if (version > 0 && version < 7) {
-        showError(R.string.wizard_server_compat_error);
-        return;
-      }
     }
+
+    SuplaApp.getApp().getSuplaClient();
 
     watchDog = new Timer();
     watchDog.scheduleAtFixedRate(

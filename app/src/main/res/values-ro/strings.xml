@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">Dacă, după pornirea alimentării, dispozitivul nu funcționează în modul de configurare, țineți apăsat butonul<b>CONFIG</b>timp de cel puțin 5 secunde.</string>
     <string name="wizard_step3_txt3">Apăsați butonul<b>START</b>pentru a începe configurarea.</string>
 
-    <string name="wizard_server_compat_error">Serverul conectat nu suportă această funcție!</string>
     <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea WiFi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
     <string name="wizard_wifi_error">Rețeaua WiFi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
     <string name="wizard_location_error">Pentru funcționarea corectă al asistentului de adăugare, serviciul de localizare trebuie să fie activat pe acest dispozitiv. Accesați setările sistemului, apoi selectați opțiunea „Locație” și vă asigurați că este pornită.</string>

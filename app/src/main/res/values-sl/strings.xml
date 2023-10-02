@@ -96,7 +96,6 @@
     <string name="wizard_step3_txt2">Če naprava po vklopu napajanja ne deluje v konfiguracijskem načinu, držite gumb <b> CONFIG </b> najmanj 5 sekund.</string>
     <string name="wizard_step3_txt3">Pritisnite tipko <b> START </b> da začnete konfiguracijo.</string>
 
-    <string name="wizard_server_compat_error">Strežnik, na katerega ste se povezali, ne podpira te funkcije!</string>
     <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja WiFi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
     <string name="wizard_wifi_error">Omrežje WiFi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
     <string name="wizard_location_error">Za pravilno delovanje čarovnika za dodajanje mora biti v tej napravi omogočena storitev lokacije. Pojdite v sistemske nastavitve, nato izberite »Lokacija« in se prepričajte, da je ta vklopljena.</string>
